@@ -86,3 +86,6 @@ git@github.com:purpen/mallache.git
  
  ######生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
+ 
+ ######请求api版本
+Accept: application/x.saas.v1+json

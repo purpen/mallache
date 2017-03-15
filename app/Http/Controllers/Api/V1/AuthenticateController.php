@@ -87,8 +87,9 @@ class AuthenticateController extends BaseController
      *     }
      *   }
      *   "data": {
-     *      "token": "token"
- *         }
+     *      "token": "token",
+     *      "status": 0
+     *    }
      *  }
      */
     public function authenticate (Request $request)
@@ -110,6 +111,14 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
+            // 验证是否首次登录
+            $user = User::where('account', $request->input('account'))->first();
+            if (empty($user)) {
+                return $this->response->array($this->apiError('此账号不存在', 404));
+            }
+            // 首次登录
+            $status = $user->status;
+
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('invalid_credentials', 401));
@@ -118,8 +127,64 @@ class AuthenticateController extends BaseController
             return $this->response->array($this->apiError('could_not_create_token', 500));
         }
 
+        // 更新用户登录状态
+        if (!$status) {
+            $user->status = 1;
+            $user->save();
+        }
+
         // return the token
-        return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token', 'first_login')));
+        return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token', 'status')));
+    }
+
+    /**
+     * @api {post} /auth/logout 退出登录
+     *
+     * @apiVersion 1.0.0
+     * @apiName user logout
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "A token is required",
+     *       "status_code": 500
+     *     }
+     *  }
+     */
+    public function logout()
+    {
+        // 强制Token失效
+        $res = JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /auth/upToken 更新或换取新Token
+     * @apiVersion 1.0.0
+     * @apiName user token
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "更新Token成功！",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlzcyI6Imh0dHA6XC9cL2ZpZmlzaC5tZVwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTQ2OTg4NjExNCwiZXhwIjoxNDY5ODg5NzE0LCJuYmYiOjE0Njk4ODYxMTQsImp0aSI6IjAxN2JhNTRjNjJjMWU0ZWM4OTU1YzExYjg0MDk0YjIxIn0.G25OQH2047nC9_DLyfc6s88cm_5IdYuhIVxYgXGsDjk"
+     *    }
+     *   }
+     */
+    public function upToken()
+    {
+        $token = JWTAuth::refresh();
+        return $this->response->array($this->apiSuccess('更新Token成功！', 200, compact('token')));
     }
 
 }
