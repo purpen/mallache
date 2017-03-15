@@ -13,7 +13,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiSuccess($message='Success.', $status_code=200, $data=array(), $meta=array())
+    public function apiSuccess($message='Success', $status_code=200, $data=array(), $meta=array())
     {
         $result['meta'] = array(
             'message' => $message,
@@ -38,7 +38,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiMeta($message='Success.', $status_code=200)
+    public function apiMeta($message='Success', $status_code=200)
     {
         return [
             'message' => $message,
@@ -53,7 +53,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiError($message='Error!', $status_code=200)
+    public function apiError($message='Error', $status_code=200)
     {
         $result['meta'] = array(
             'message' => $message,

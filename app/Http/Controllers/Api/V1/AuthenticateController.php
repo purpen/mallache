@@ -30,7 +30,7 @@ class AuthenticateController extends BaseController
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
-     *       "message": "Success.",
+     *       "message": "Success",
      *       "status_code": 200
      *     }
      *   }
