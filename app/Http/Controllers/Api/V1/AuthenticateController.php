@@ -24,7 +24,7 @@ class AuthenticateController extends BaseController
      * @apiName user register
      * @apiGroup User
      *
-     * @apiParam {string} account 用户账号
+     * @apiParam {string} account 用户账号(手机号)
      * @apiParam {string} password 设置密码
      *
      * @apiSuccessExample 成功响应:
@@ -39,7 +39,7 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'account' => ['required', 'unique:users'],
+            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6']
         ];
 
@@ -52,8 +52,6 @@ class AuthenticateController extends BaseController
         $res = User::create([
             'account' => $payload['account'],
             'phone' => $payload['account'],
-            'email' => $payload['account'],
-            'name' => $payload['account'],
             'type' => 0,
             'password' => bcrypt($payload['password']),
         ]);
@@ -88,6 +86,10 @@ class AuthenticateController extends BaseController
      *       "status_code": 200
      *     }
      *   }
+     *   "data": {
+     *      "token": "token"
+ *         }
+     *  }
      */
     public function authenticate (Request $request)
     {
@@ -96,7 +98,7 @@ class AuthenticateController extends BaseController
         try {
             // 验证规则
             $rules = [
-                'account' => ['required'],
+                'account' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
                 'password' => ['required', 'min:6']
             ];
 
