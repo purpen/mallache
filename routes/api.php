@@ -42,5 +42,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/auth/upToken', [
             'as' => 'auth.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
+
+        //获取城市列表
+        $api->get('/city', [ 'as' => 'city', 'uses' => 'CommonController@city']);
     });
 });

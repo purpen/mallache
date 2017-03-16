@@ -19,7 +19,7 @@ class ChinaCity extends BaseModel
     /**
      * 获取关联信息
      */
-    public function fetchCity($pid=0)
+    static public function fetchCity($pid=0)
     {
         $query['pid'] = (int)$pid;
         $query['status'] = 1;

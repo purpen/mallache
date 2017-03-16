@@ -4,10 +4,8 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\ApiHelper;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
-use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -15,9 +13,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticateController extends BaseController
 {
-    use Helpers;
-    use ApiHelper;
-
     /**
      * @api {post} /auth/register 用户注册
      * @apiVersion 1.0.0
