@@ -1,12 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/19
- * Time: 下午5:42
- */
+namespace Lib\YunPianSdk\Lib;
 
-require_once 'HttpUtil.php';
+use Lib\YunPianSdk\Yunpian;
+
+/**
+ * 语音发送
+ *
+ * @User llh
+ */
 
 class VoiceOperator
 {
@@ -16,15 +17,16 @@ class VoiceOperator
 
     public function __construct($apikey = null, $api_secret = null)
     {
-        $this->yunpian_config = $GLOBALS['YUNPIAN_CONFIG'];
+        $yunpian = new Yunpian();
+        $this->yunpian_config = $yunpian->config;
         if ($api_secret == null)
             $this->api_secret = $this->yunpian_config['API_SECRET'];
         else
-            $this->api_secret = $apikey;
+            $this->api_secret = $api_secret;
         if ($apikey == null)
             $this->apikey = $this->yunpian_config['APIKEY'];
         else
-            $this->apikey = $api_secret;
+            $this->apikey = $apikey;
     }
 
     public function encrypt(&$data)
@@ -39,7 +41,6 @@ class VoiceOperator
         if (!array_key_exists('code', $data))
             return new Result($error = 'code 为空');
         $data['apikey'] = $this->apikey;
-//        encrypt($data);
         return HttpUtil::PostCURL($this->yunpian_config['URI_SEND_VOICE_SMS'], $data);
     }
 
@@ -48,5 +49,4 @@ class VoiceOperator
         $data['apikey'] = $this->apikey;
         return HttpUtil::PostCURL($this->yunpian_config['URI_PULL_VOICE_STATUS'], $data);
     }
-
 }

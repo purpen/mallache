@@ -1,12 +1,17 @@
 <?php
 /**
  * 用户登录注册
+ *
+ * @user llh
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helper\Tools;
+use App\Jobs\SendOneSms;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -21,6 +26,7 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} account 用户账号(手机号)
      * @apiParam {string} password 设置密码
+     * @apiParam {integer} sms_code 短信验证码
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -35,19 +41,30 @@ class AuthenticateController extends BaseController
         // 验证规则
         $rules = [
             'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-            'password' => ['required', 'min:6']
+            'password' => ['required', 'min:6'],
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/']
         ];
 
-        $payload = $request->only('account', 'password');
+        $payload = $request->only('account', 'password', 'sms_code');
         $validator = Validator::make($payload, $rules);
         if($validator->fails()){
             throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
         }
+
+        //验证手机验证码
+        $key = 'sms_code:' . strval($payload['account']);
+        $sms_code_value = Cache::get($key);
+        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+            return $this->response->array($this->apiError('验证码错误', 412));
+        }else{
+            Cache::forget($key);
+        }
+
         // 创建用户
         $res = User::create([
             'account' => $payload['account'],
             'phone' => $payload['account'],
-            'type' => 0,
+            'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);
 
@@ -82,8 +99,7 @@ class AuthenticateController extends BaseController
      *     }
      *   }
      *   "data": {
-     *      "token": "token",
-     *      "status": 0
+     *      "token": "token"
      *    }
      *  }
      */
@@ -106,26 +122,12 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
-            // 验证是否首次登录
-            $user = User::where('account', $request->input('account'))->first();
-            if (empty($user)) {
-                return $this->response->array($this->apiError('此账号不存在', 404));
-            }
-            // 首次登录
-            $status = $user->status;
-
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('invalid_credentials', 401));
             }
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
-        }
-
-        // 更新用户登录状态
-        if (!$status) {
-            $user->status = 1;
-            $user->save();
         }
 
         // return the token
@@ -180,6 +182,87 @@ class AuthenticateController extends BaseController
     {
         $token = JWTAuth::refresh();
         return $this->response->array($this->apiSuccess('更新Token成功！', 200, compact('token')));
+    }
+
+    /**
+     * @api {post} /auth/sms 获取手机验证码
+     * @apiVersion 1.0.0
+     * @apiName user sms_code
+     * @apiGroup User
+     *
+     * @apiParam {integer} phone
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "请求成功！",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *       "sms_code": "233333"
+     *    }
+     *   }
+     */
+    public function getSmsCode(Request $request)
+    {
+        $rules = [
+            'phone' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+        ];
+
+        $payload = $request->only('phone');
+        $validator = app('validator')->make($payload, $rules);
+
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $phone = $payload['phone'];
+
+        //短信验证码加入缓存
+        $key = 'sms_code:' . strval($phone);
+        $sms_code = Tools::randNumber();
+        Cache::put($key, $sms_code, 10);
+
+        $text = ' 【太火鸟】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        //插入单条短信发送队列
+        $this->dispatch(new SendOneSms($phone,$text));
+
+        return $this->response->array($this->apiSuccess('请求成功！', 200, compact('sms_code')));
+
+    }
+
+    /**
+     * @api {post} /auth/changePassword 修改密码
+     * @apiVersion 1.0.0
+     * @apiName user changePassword
+     * @apiGroup User
+     *
+     * @apiParam {string} password
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "请求成功！",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *       "token": "sdfs1sfcd"
+     *    }
+     *   }
+     */
+    public function changePassword(Request $request)
+    {
+        $newPassword = $request->input('password');
+        $user  =  JWTAuth::parseToken()->authenticate();
+
+        $user->password = bcrypt($newPassword);
+        if($user->save()){
+            $token = JWTAuth::refresh();
+            return $this->response->array($this->apiSuccess('请求成功', 200, compact('token')));
+        }else{
+            return $this->response->array($this->apiError('Error', 500));
+        }
     }
 
 }

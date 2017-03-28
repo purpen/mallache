@@ -34,7 +34,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->default('');
             $table->string('password');
             $table->integer('design_company_id')->default(0);
-            $table->tinyInteger('type')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->integer('item_sum')->default(0);
             $table->decimal('price_total',10,2)->default(0);

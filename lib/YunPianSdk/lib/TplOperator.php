@@ -1,11 +1,12 @@
 <?php
+namespace Lib\YunPianSdk\Lib;
+
+use Lib\YunPianSdk\Yunpian;
+
+
 /**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/20
- * Time: 上午10:37
+ * Use: 模板短信发送实现
  */
-require_once 'HttpUtil.php';
 
 class TplOperator
 {
@@ -15,27 +16,30 @@ class TplOperator
 
     public function __construct($apikey = null, $api_secret = null)
     {
-        $this->yunpian_config = $GLOBALS['YUNPIAN_CONFIG'];
+        $yunpian = new Yunpian();
+        $this->yunpian_config = $yunpian->config;
         if ($api_secret == null)
             $this->api_secret = $this->yunpian_config['API_SECRET'];
         else
-            $this->api_secret = $apikey;
+            $this->api_secret = $api_secret;
         if ($apikey == null)
             $this->apikey = $this->yunpian_config['APIKEY'];
         else
-            $this->apikey = $api_secret;
+            $this->apikey = $apikey;
     }
 
     public function encrypt(&$data)
     {
 
     }
+    
     public function get_default($data = array())
     {
         $data['apikey'] = $this->apikey;
 
         return HttpUtil::PostCURL($this->yunpian_config['URI_GET_DEFAULT_TEMPLATE'], $data);
     }
+    
     public function get($data = array())
     {
         $data['apikey'] = $this->apikey;
@@ -71,5 +75,4 @@ class TplOperator
 
         return HttpUtil::PostCURL($this->yunpian_config['URI_DEL_TEMPLATE'], $data);
     }
-
 }
