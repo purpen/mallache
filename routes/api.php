@@ -30,6 +30,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
 
+    //生产七牛token
+    $api->get('/upload/upToken' , [
+        'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
+    ]);
+    // 七牛图片上传回调地址
+    $api->post('/asset/callback',[
+        'as' => 'upload.callback', 'uses' => 'UploadController@callback'
+    ]);
+
     /**
      * 需验证用户token
      */
@@ -44,6 +53,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         ]);
 
         //获取城市列表
-        $api->get('/city', [ 'as' => 'city', 'uses' => 'CommonController@city']);
+        $api->get('/city', [
+            'as' => 'city', 'uses' => 'CommonController@city'
+        ]);
+
+
     });
 });

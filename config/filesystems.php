@@ -63,6 +63,23 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'qiniu' => [
+            'driver'  => 'qiniu',
+            'upload_url' => 'https://up-z1.qbox.me',
+//            'domains' => [
+//                'default'   => 'oni525j96.bkt.clouddn.com', // 你的七牛域名
+////                'https'     => 'saas.taihuoniao.com',         // 你的HTTPS域名
+//                'custom'    => 'http://oni525j96.bkt.clouddn.com',         // 你的自定义域名
+//            ],
+            'access_key'=> 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i',  //AccessKey
+            'secret_key'=> 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6',  //SecretKey
+            'bucket'    => 'frmallache',  //Bucket名字
+            'domain' => 'saas',                                              //存储域
+            'call_back_url' => 'http://sa.taihuoniao.com/asset/callback',
+//            'url' => '',                    //图片服务器
+            'small' => '-sm'              //缩略图
+        ],
+
     ],
 
 ];
