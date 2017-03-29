@@ -84,7 +84,9 @@ git@github.com:purpen/mallache.git
      try_files $uri $uri/ /index.php?$query_string;
  }
  
- ######生成API文档
+ ###### 
+ 
+ ###### 生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
  
  ######请求api版本
