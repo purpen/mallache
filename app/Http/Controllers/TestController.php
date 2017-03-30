@@ -19,7 +19,8 @@ class TestController extends Controller
         }
         $upload_url = config('filesystems.disks.qiniu.upload_url');
         $token = QiniuApi::upToken();
-        return view('test.index',compact('token' , 'upload_url' , 'random'));
+        $user_id = 1;
+        return view('test.index',compact('token' , 'upload_url' , 'random' , 'user_id'));
     }
 
     public function create()
