@@ -66,17 +66,19 @@ class UploadController extends BaseController
 //            ];
 //            return $this->response->array($callBackDate);
 //        }
-        $accessKey = 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i';
-        $secretKey = 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6';
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
         //获取回调的body信息
         $callbackBody = file_get_contents('php://input');
+        $body = json_decode($callbackBody, true);
+        dd($body);
         //回调的contentType
         $contentType = 'application/x-www-form-urlencoded';
         //回调的签名信息，可以验证该回调是否来自七牛
         $authorization = $_SERVER['HTTP_AUTHORIZATION'];
         //七牛回调的url，具体可以参考
-        $url = 'http://sa.taihuoniao.com/asset/callback';
+        $url = config('filesystems.disks.qiniu.call_back_url');
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
