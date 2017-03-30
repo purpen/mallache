@@ -14,6 +14,7 @@
             <input name="token" type="hidden"  value="{{$token}}">
             <input name="random" type="hidden"  value="{{$random[0]}}">
             <input name="user_id" type="hidden"  value="{{$user_id}}">
+            <input name="target_id" type="hidden"  value="1">
             <input name="file" type="file">
             <input type="submit" name="submit" value="开始上传">
 
