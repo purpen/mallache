@@ -198,9 +198,6 @@ class AuthenticateController extends BaseController
      *       "message": "请求成功！",
      *       "status_code": 200
      *     },
-     *     "data": {
-     *       "sms_code": "233333"
-     *    }
      *   }
      */
     public function getSmsCode(Request $request)
@@ -227,8 +224,7 @@ class AuthenticateController extends BaseController
         //插入单条短信发送队列
         $this->dispatch(new SendOneSms($phone,$text));
 
-        return $this->response->array($this->apiSuccess('请求成功！', 200, compact('sms_code')));
-
+        return $this->response->array($this->apiSuccess('请求成功！', 200));
     }
 
     /**

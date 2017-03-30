@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('account')->unique();
             $table->string('phone',20)->unique();
             $table->string('username',50)->default('');
-            $table->string('email')->default('');
+            $table->string('email')->nullable();
             $table->string('password');
             $table->integer('design_company_id')->default(0);
             $table->tinyInteger('status')->default(0);
