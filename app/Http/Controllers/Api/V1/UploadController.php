@@ -90,7 +90,7 @@ class UploadController extends BaseController
             $asset = new AssetModel();
             $asset->fill($post);
             if($res = $asset->save()) {
-                return $res;
+                Log::info($res);
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
