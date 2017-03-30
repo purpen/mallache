@@ -27,7 +27,7 @@ class QiniuApi
         // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
         $policy = array(
             'callbackUrl' => config('filesystems.disks.qiniu.call_back_url'),
-//            'callbackFetchKey' => 1,
+            'callbackFetchKey' => 1,
             'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=123&user_id=1&target_id=1',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
