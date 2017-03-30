@@ -12,7 +12,7 @@
     <form action="{{$upload_url}}" method="post" id="imgForm" enctype="multipart/form-data" accept-charset="UTF-8">
         <div class="form-group">
             <input name="token" type="hidden"  value="{{$upToken}}">
-            <input name="file" type="file"  value="">
+            <input name="file" type="file">
             <input type="submit" name="submit" value="开始上传">
 
         </div>

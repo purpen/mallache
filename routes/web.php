@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 七牛图片上传回调地址
+$api->post('/asset/callback',[
+    'as' => 'upload.callback', 'uses' => 'UploadController@callback'
+]);
+
 Route::get('/test' , 'TestController@index');
 Route::get('/test/create' , 'TestController@create');
 Route::post('/test/store' , 'TestController@store');
