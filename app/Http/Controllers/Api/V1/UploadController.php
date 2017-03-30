@@ -89,8 +89,9 @@ class UploadController extends BaseController
         if ($isQiniuCallback) {
             $asset = new AssetModel();
             $asset->fill($post);
+            Log::info($post);
             if($res = $asset->save()) {
-                Log::info($res);
+//                Log::info($res);
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
