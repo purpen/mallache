@@ -39,33 +39,6 @@ class UploadController extends BaseController
     //七牛回调方法
     public function callback(Request $request)
     {
-//        $post = $request->all();
-//        \Log::error($post);
-//        $imageData = [];
-//        $imageData['user_id'] = $post['user_id'];
-//        $imageData['name'] = $post['name'];
-//        $imageData['random'] = $post['random'];
-//        $imageData['size'] = $post['size'];
-//        $imageData['width'] = $post['width'];
-//        $imageData['height'] = $post['height'];
-//        $imageData['mime'] = $post['mime'];
-//        $imageData['domain'] = config('filesystems.disks.qiniu.domain');
-//        $imageData['target_id'] = $post['target_id'];
-//        $key = uniqid();
-//        $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-//        if($asset = AssetModel::create($imageData)){
-//            $id = $asset->id;
-//            $callBackDate = [
-//                'key' => $asset->path,
-//                'payload' => [
-//                    'success' => 1,
-//                    'name' => config('filesystems.disks.qiniu.url').$asset->path,
-//                    'small' => config('filesystems.disks.qiniu.url').$asset->path.config('filesystems.disks.qiniu.small'),
-//                    'asset_id' => $id
-//                ]
-//            ];
-//            return $this->response->array($callBackDate);
-//        }
         $post = $request->all();
         $post['domain'] = config('filesystems.disks.qiniu.domain');
         $key = uniqid();
@@ -87,10 +60,8 @@ class UploadController extends BaseController
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
-            $asset = new AssetModel();
-            $asset->fill($post);
-            $res = $asset->save();
-            if($res) {
+            //数据库里面创建数据
+            if($asset = AssetsModel::create($post)) {
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
@@ -104,7 +75,11 @@ class UploadController extends BaseController
                 return $this->response->array($callBackDate);
             }
         } else {
-            $resp = array('ret' => 'failed');
+            $callBackDate = [
+                'error' => 2,
+                'message' => '上传失败'
+            ];
+            return $this->response->array($callBackDate );
         }
     }
 }
