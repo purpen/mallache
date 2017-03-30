@@ -72,7 +72,6 @@ class UploadController extends BaseController
         //获取回调的body信息
         $callbackBody = file_get_contents('php://input');
         $body = json_decode($callbackBody, true);
-        dd($body);
         //回调的contentType
         $contentType = 'application/x-www-form-urlencoded';
         //回调的签名信息，可以验证该回调是否来自七牛
@@ -86,6 +85,6 @@ class UploadController extends BaseController
         } else {
             $resp = array('ret' => 'failed');
         }
-        echo json_encode($resp);
+        echo json_encode($body);
     }
 }
