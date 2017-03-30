@@ -60,8 +60,9 @@ class UploadController extends BaseController
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
-            //数据库里面创建数据
-            if($asset = AssetsModel::create($post)) {
+            $asset = new AssetModel();
+            $asset->fill($post);
+            if($asset->save()) {
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
