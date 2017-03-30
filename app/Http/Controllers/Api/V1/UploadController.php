@@ -81,10 +81,10 @@ class UploadController extends BaseController
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
-            $resp = array('ret' => 'success');
+            $resp = $request->all();
         } else {
             $resp = array('ret' => 'failed');
         }
-        echo json_encode($body);
+        echo json_encode($resp);
     }
 }
