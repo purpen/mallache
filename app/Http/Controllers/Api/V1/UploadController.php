@@ -87,9 +87,22 @@ class UploadController extends BaseController
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
-//            $resp = $request->all();
-            echo json_encode($post);
 
+            if($asset = AssetModel::create($post)) {
+                return 1111;
+                $id = $asset->id;
+                return 2222;
+                $callBackDate = [
+                    'key' => $asset->path,
+                    'payload' => [
+                        'success' => 1,
+                        'name' => config('filesystems.disks.qiniu.url') . $asset->path,
+                        'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
+                        'asset_id' => $id
+                    ]
+                ];
+                return $this->response->array($callBackDate);
+            }
         } else {
             $resp = array('ret' => 'failed');
         }
