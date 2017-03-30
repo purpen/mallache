@@ -65,7 +65,7 @@ return [
 
         'qiniu' => [
             'driver'  => 'qiniu',
-            'upload_url' => 'https://up-z1.qbox.me',
+            'upload_url' => 'http://up-z1.qiniu.com',
 //            'domains' => [
 //                'default'   => 'oni525j96.bkt.clouddn.com', // 你的七牛域名
 ////                'https'     => 'saas.taihuoniao.com',         // 你的HTTPS域名
@@ -76,7 +76,7 @@ return [
             'bucket'    => 'frmallache',  //Bucket名字
             'domain' => 'saas',                                              //存储域
             'call_back_url' => 'http://sa.taihuoniao.com/asset/callback',
-//            'url' => '',                    //图片服务器
+            'url' => 'http://oni525j96.bkt.clouddn.com',                    //图片服务器
             'small' => '-sm'              //缩略图
         ],
 

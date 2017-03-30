@@ -39,7 +39,6 @@ class UploadController extends BaseController
     public function callback(Request $request)
     {
         $post = $request->all();
-        dd($post);
         $imageData = [];
         $imageData['user_id'] = $post['user_id'];
         $imageData['name'] = $post['name'];
@@ -52,6 +51,7 @@ class UploadController extends BaseController
         $imageData['target_id'] = $post['target_id'];
         $key = uniqid();
         $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+        dd($imageData);
 
         if($asset = AssetModel::create($imageData)){
             $id = $asset->id;
