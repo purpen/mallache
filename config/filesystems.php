@@ -65,7 +65,8 @@ return [
 
         'qiniu' => [
             'driver'  => 'qiniu',
-            'upload_url' => 'http://up-z1.qiniu.com',
+//            'upload_url' => 'http://up-z1.qiniu.com',
+            'upload_url' => 'http://oni525j96.bkt.clouddn.com',
 //            'domains' => [
 //                'default'   => 'oni525j96.bkt.clouddn.com', // 你的七牛域名
 ////                'https'     => 'saas.taihuoniao.com',         // 你的HTTPS域名
