@@ -28,7 +28,7 @@ class QiniuApi
         $policy = array(
             'callbackUrl' => config('filesystems.disks.qiniu.call_back_url'),
 //            'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(random)&user_id=$(user_id)&target_id=$(target_id)',
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=123&user_id=1&target_id=1',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         return $upToken;

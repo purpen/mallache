@@ -39,33 +39,21 @@ class UploadController extends BaseController
     //七牛回调方法
     public function callback(Request $request)
     {
-//        $post = $request->all();
+        $post = $request->all();
 //        \Log::error($post);
-//        $imageData = [];
-//        $imageData['user_id'] = $post['user_id'];
-//        $imageData['name'] = $post['name'];
-//        $imageData['random'] = $post['random'];
-//        $imageData['size'] = $post['size'];
-//        $imageData['width'] = $post['width'];
-//        $imageData['height'] = $post['height'];
-//        $imageData['mime'] = $post['mime'];
-//        $imageData['domain'] = config('filesystems.disks.qiniu.domain');
-//        $imageData['target_id'] = $post['target_id'];
-//        $key = uniqid();
-//        $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-//        if($asset = AssetModel::create($imageData)){
-//            $id = $asset->id;
-//            $callBackDate = [
-//                'key' => $asset->path,
-//                'payload' => [
-//                    'success' => 1,
-//                    'name' => config('filesystems.disks.qiniu.url').$asset->path,
-//                    'small' => config('filesystems.disks.qiniu.url').$asset->path.config('filesystems.disks.qiniu.small'),
-//                    'asset_id' => $id
-//                ]
-//            ];
-//            return $this->response->array($callBackDate);
-//        }
+        $imageData = [];
+        $imageData['user_id'] = $post->input('user_id');
+        $imageData['name'] = $post->input('name');
+        $imageData['random'] = $post->input('random');
+        $imageData['size'] = $post->input('size');
+        $imageData['width'] = $post->input('width');
+        $imageData['height'] = $post->input('height');
+        $imageData['mime'] = $post->input('mime');
+        $imageData['domain'] = config('filesystems.disks.qiniu.domain');
+        $imageData['target_id'] = $post->input('target_id');
+        $key = uniqid();
+        $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
@@ -78,13 +66,26 @@ class UploadController extends BaseController
         $authorization = $_SERVER['HTTP_AUTHORIZATION'];
         //七牛回调的url，具体可以参考
         $url = config('filesystems.disks.qiniu.call_back_url');
-        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
+        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $imageData);
 
         if ($isQiniuCallback) {
-            $resp = $request->all();
+            if($asset = AssetModel::create($imageData)){
+                $id = $asset->id;
+                $callBackDate = [
+                    'key' => $asset->path,
+                    'payload' => [
+                        'success' => 1,
+                        'name' => config('filesystems.disks.qiniu.url').$asset->path,
+                        'small' => config('filesystems.disks.qiniu.url').$asset->path.config('filesystems.disks.qiniu.small'),
+                        'asset_id' => $id
+                    ]
+                ];
+//                return $this->response->array($callBackDate);
+                echo json_encode($callBackDate);
+
+            }
         } else {
             $resp = array('ret' => 'failed');
         }
-        echo json_encode($resp);
     }
 }
