@@ -48,9 +48,10 @@ class UploadController extends BaseController
         $imageData['height'] = $post['height'];
         $imageData['mime'] = $post['mime'];
         $imageData['domain'] = config('filesystems.disks.qiniu.domain');
-        $imageData['target_id'] = $post['target_id'];
+//        $imageData['target_id'] = $post['target_id'];
         $key = uniqid();
         $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+
         if($asset = AssetModel::create($imageData)){
             $id = $asset->id;
             $callBackDate = [
@@ -62,7 +63,7 @@ class UploadController extends BaseController
                     'asset_id' => $id
                 ]
             ];
-            return response()->json($callBackDate);
+            return $this->response->array($callBackDate);
         }
     }
 }
