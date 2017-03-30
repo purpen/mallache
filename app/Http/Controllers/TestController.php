@@ -12,9 +12,14 @@ class TestController extends Controller
      */
     public function index()
     {
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
         $upload_url = config('filesystems.disks.qiniu.upload_url');
-        $upToken = QiniuApi::upToken();
-        return view('test.index',compact('upToken' , 'upload_url'));
+        $token = QiniuApi::upToken();
+        return view('test.index',compact('token' , 'upload_url' , 'random'));
     }
 
     public function create()
