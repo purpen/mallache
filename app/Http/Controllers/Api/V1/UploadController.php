@@ -67,6 +67,10 @@ class UploadController extends BaseController
 //            return $this->response->array($callBackDate);
 //        }
         $post = $request->all();
+        $post['domain'] = config('filesystems.disks.qiniu.domain');
+        $key = uniqid();
+        $post['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
@@ -80,24 +84,13 @@ class UploadController extends BaseController
         $authorization = $_SERVER['HTTP_AUTHORIZATION'];
         //七牛回调的url，具体可以参考
         $url = config('filesystems.disks.qiniu.call_back_url');
-
-        $asset = new AssetModel();
-        $asset->name = $post['name'];
-        $asset->size = $post['size'];
-        $asset->width = $post['width'];
-        $asset->height = $post['height'];
-        $asset->random = $post['random'];
-        $asset->user_id = $post['user_id'];
-        $asset->target_id = $post['target_id'];
-        $asset->domain = config('filesystems.disks.qiniu.domain');
-        $key = uniqid();
-        $asset->path =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-        $asset->save();
-        Log::info($asset);
-
         $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
         if ($isQiniuCallback) {
+            $asset = new AssetModel();
+            $asset->fill($post);
+            $res = $asset->save();
+            if($res) {
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
@@ -109,6 +102,7 @@ class UploadController extends BaseController
                     ]
                 ];
                 return $this->response->array($callBackDate);
+            }
         } else {
             $resp = array('ret' => 'failed');
         }
