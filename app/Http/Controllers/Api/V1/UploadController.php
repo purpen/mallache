@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\QiniuApi;
 use App\Models\AssetModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 
@@ -38,32 +39,51 @@ class UploadController extends BaseController
     //七牛回调方法
     public function callback(Request $request)
     {
-        $post = $request->all();
-        $imageData = [];
-        $imageData['user_id'] = $post['user_id'];
-        $imageData['name'] = $post['name'];
-        $imageData['random'] = $post['random'];
-        $imageData['size'] = $post['size'];
-        $imageData['width'] = $post['width'];
-        $imageData['height'] = $post['height'];
-        $imageData['mime'] = $post['mime'];
-        $imageData['domain'] = config('filesystems.disks.qiniu.domain');
-        $imageData['target_id'] = $post['target_id'];
-        $key = uniqid();
-        $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+//        $post = $request->all();
+//        \Log::error($post);
+//        $imageData = [];
+//        $imageData['user_id'] = $post['user_id'];
+//        $imageData['name'] = $post['name'];
+//        $imageData['random'] = $post['random'];
+//        $imageData['size'] = $post['size'];
+//        $imageData['width'] = $post['width'];
+//        $imageData['height'] = $post['height'];
+//        $imageData['mime'] = $post['mime'];
+//        $imageData['domain'] = config('filesystems.disks.qiniu.domain');
+//        $imageData['target_id'] = $post['target_id'];
+//        $key = uniqid();
+//        $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+//        if($asset = AssetModel::create($imageData)){
+//            $id = $asset->id;
+//            $callBackDate = [
+//                'key' => $asset->path,
+//                'payload' => [
+//                    'success' => 1,
+//                    'name' => config('filesystems.disks.qiniu.url').$asset->path,
+//                    'small' => config('filesystems.disks.qiniu.url').$asset->path.config('filesystems.disks.qiniu.small'),
+//                    'asset_id' => $id
+//                ]
+//            ];
+//            return $this->response->array($callBackDate);
+//        }
+        $accessKey = 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i';
+        $secretKey = 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6';
+        $auth = new Auth($accessKey, $secretKey);
+        //获取回调的body信息
+        $callbackBody = file_get_contents('php://input');
+        //回调的contentType
+        $contentType = 'application/x-www-form-urlencoded';
+        //回调的签名信息，可以验证该回调是否来自七牛
+        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
+        //七牛回调的url，具体可以参考
+        $url = 'http://sa.taihuoniao.com/asset/callback';
+        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
 
-        if($asset = AssetModel::create($imageData)){
-            $id = $asset->id;
-            $callBackDate = [
-                'key' => $asset->path,
-                'payload' => [
-                    'success' => 1,
-                    'name' => config('filesystems.disks.qiniu.url').$asset->path,
-                    'small' => config('filesystems.disks.qiniu.url').$asset->path.config('filesystems.disks.qiniu.small'),
-                    'asset_id' => $id
-                ]
-            ];
-            return $this->response->array($callBackDate);
+        if ($isQiniuCallback) {
+            $resp = array('ret' => 'success');
+        } else {
+            $resp = array('ret' => 'failed');
         }
+        echo json_encode($resp);
     }
 }
