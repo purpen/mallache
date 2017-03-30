@@ -12,9 +12,9 @@
     <form action="{{$upload_url}}" method="post" id="imgForm" enctype="multipart/form-data" accept-charset="UTF-8">
         <div class="form-group">
             <input name="token" type="hidden"  value="{{$token}}">
-            <input name="random" type="hidden" value="{{$random[0]}}">
-            <input name="user_id" type="hidden" value="{{$user_id}}">
-            <input name="target_id" type="hidden"  value="1">
+            <input name="random" value="123">
+            <input name="user_id" value="1">
+            <input name="target_id" value="1">
             <input name="file" type="file">
             <input type="submit" name="submit" value="开始上传">
 
