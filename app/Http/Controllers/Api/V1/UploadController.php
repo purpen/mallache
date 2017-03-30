@@ -66,6 +66,12 @@ class UploadController extends BaseController
 //            ];
 //            return $this->response->array($callBackDate);
 //        }
+        $post = $request->all();
+        $post->domain = config('filesystems.disks.qiniu.domain');
+        $key = uniqid();
+        $post->path =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+
+
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
@@ -85,6 +91,6 @@ class UploadController extends BaseController
         } else {
             $resp = array('ret' => 'failed');
         }
-        echo json_encode($resp);
+        echo json_encode($post);
     }
 }
