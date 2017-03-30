@@ -51,8 +51,6 @@ class UploadController extends BaseController
         $imageData['target_id'] = $post['target_id'];
         $key = uniqid();
         $imageData['path'] = config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-        dd($imageData);
-
         if($asset = AssetModel::create($imageData)){
             $id = $asset->id;
             $callBackDate = [
