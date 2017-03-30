@@ -35,6 +35,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
     ]);
 
+    // 七牛图片上传回调地址
+    $api->post('/asset/callback',[
+        'as' => 'upload.callback', 'uses' => 'UploadController@callback'
+    ]);
+
 
     /**
      * 需验证用户token
