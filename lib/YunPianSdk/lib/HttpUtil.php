@@ -1,15 +1,19 @@
 <?php
+namespace Lib\YunPianSdk\Lib;
+
+use Lib\YunPianSdk\Yunpian;
 
 /**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/19
- * Time: 下午3:39
+ * Use: 使用curl方式发送请求
  */
-require_once('Result.php');
+
 class HttpUtil
 {
     public static function PostCURL($url,$post_data){
+        
+        $yunpian = new Yunpian();
+        $yunpian_config = $yunpian->config;
+        
         $ch = curl_init();
 
         /* 设置验证方式 */
@@ -28,13 +32,13 @@ class HttpUtil
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt ($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+        
         $retry=0;
         // 若执行失败则重试
         do{
             $output = curl_exec($ch);
             $retry++;
-//            echo $retry."\n";
-        }while((curl_errno($ch) !== 0) && $retry<$GLOBALS['YUNPIAN_CONFIG']['RETRY_TIMES']);
+        }while((curl_errno($ch) !== 0) && $retry<$yunpian_config['RETRY_TIMES']);
 
         if (curl_errno($ch) !== 0) {
             $r = new Result(null, $post_data, null,curl_error($ch));

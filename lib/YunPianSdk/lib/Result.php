@@ -1,10 +1,9 @@
 <?php
 
+namespace Lib\YunPianSdk\Lib;
+
 /**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/19
- * Time: 下午4:15
+ * Use: 发送结果
  */
 
 class Result
@@ -14,6 +13,7 @@ class Result
     public $requestData;
     public $responseData;
     public $error;
+    
     public function __construct($statusCode=null,$requestData = null, $responseData = null,$error=null )
     {
         $this->success = false;
@@ -29,6 +29,7 @@ class Result
     {
         return $this->responseData;
     }
+    
     public function isSuccess(){
         return $this->success;
     }

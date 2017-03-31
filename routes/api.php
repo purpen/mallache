@@ -29,6 +29,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
+    //获取手机验证码
+    $api->post('/auth/sms', ['as' => 'auth.sms', 'uses' => 'AuthenticateController@getSmsCode']);
 
     // 七牛图片上传回调地址
     $api->post('/asset/callback',[
@@ -47,6 +49,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //刷新token
         $api->post('/auth/upToken', [
             'as' => 'auth.upToken', 'uses' => 'AuthenticateController@upToken'
+        ]);
+        //修改密码
+        $api->post('/auth/changePassword', [
+            'as' => 'auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
         ]);
 
         //获取城市列表

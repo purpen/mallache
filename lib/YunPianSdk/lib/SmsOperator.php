@@ -1,12 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/19
- * Time: 下午5:42
- */
+namespace Lib\YunPianSdk\Lib;
 
-require_once('HttpUtil.php');
+use Lib\YunPianSdk\Yunpian;
+
+
+/**
+ * Author: caowei<caoyuanlianni@foxmail.com>
+ * Time: 2016.05.22
+ * Use: 短信发送实现
+ */
 
 class SmsOperator
 {
@@ -16,15 +18,16 @@ class SmsOperator
 
     public function __construct($apikey = null, $api_secret = null)
     {
-        $this->yunpian_config = $GLOBALS['YUNPIAN_CONFIG'];
+        $yunpian = new Yunpian();
+        $this->yunpian_config = $yunpian->config;
         if ($api_secret == null)
             $this->api_secret = $this->yunpian_config['API_SECRET'];
         else
-            $this->api_secret = $apikey;
+            $this->api_secret = $api_secret;
         if ($apikey == null)
             $this->apikey = $this->yunpian_config['APIKEY'];
         else
-            $this->apikey = $api_secret;
+            $this->apikey = $apikey;
     }
 
     public function encrypt(&$data)
@@ -71,7 +74,8 @@ class SmsOperator
         $data['text'] = substr($data['text'],0,-1);
         return HttpUtil::PostCURL($this->yunpian_config['URI_SEND_MULTI_SMS'], $data);
     }
-
+    
+    // 模板发送方式[不推荐]
     public function tpl_send($data = array())
     {
         if (!array_key_exists('mobile', $data))

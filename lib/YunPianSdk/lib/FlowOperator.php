@@ -1,11 +1,12 @@
 <?php
+namespace Lib\YunPianSdk\Lib;
+
+use Lib\YunPianSdk\Yunpian;
 
 /**
- * Created by PhpStorm.
- * User: bingone
- * Date: 16/1/19
- * Time: 下午5:42
+ * Use: 流量发送方式
  */
+
 class FlowOperator
 {
     public $apikey;
@@ -14,35 +15,38 @@ class FlowOperator
 
     public function __construct($apikey = null, $api_secret = null)
     {
-        $this->yunpian_config = $GLOBALS['YUNPIAN_CONFIG'];
+        $yunpian = new Yunpian();
+        $this->yunpian_config = $yunpian->config;
         if ($api_secret == null)
             $this->api_secret = $this->yunpian_config['API_SECRET'];
         else
-            $this->api_secret = $apikey;
+            $this->api_secret = $api_secret;
         if ($apikey == null)
             $this->apikey = $this->yunpian_config['APIKEY'];
         else
-            $this->apikey = $api_secret;
+            $this->apikey = $apikey;
     }
-
-    public function encrypt(&$data)
+    
+    public static function decrypt(&$data)
     {
-
+        // decrypt
     }
-
+    
+    // 查询流量包
     public function get_package($data=array())
     {
         $data['apikey'] = $this->apikey;
-
         return HttpUtil::PostCURL($this->yunpian_config['URI_GET_FLOW_PACKAGE'], $data);
     }
-
+    
+    // 获取状态报告
     public function pull_status($data=array())
     {
         $data['apikey'] = $this->apikey;
         return HttpUtil::PostCURL($this->yunpian_config['URI_PULL_FLOW_STATUS'], $data);
     }
-
+    
+    // 充值流量
     public function recharge($data=array())
     {
         if (!array_key_exists('mobile', $data))

@@ -47,6 +47,7 @@ class UploadController extends BaseController
         $post['domain'] = config('filesystems.disks.qiniu.domain');
         $key = uniqid();
         $post['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+        Log::info($post);
 
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
