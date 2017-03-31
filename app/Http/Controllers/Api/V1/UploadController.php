@@ -43,12 +43,10 @@ class UploadController extends BaseController
     //七牛回调方法
     public function callback(Request $request)
     {
-        $post = $request->all();
-        $post['domain'] = config('filesystems.disks.qiniu.domain');
+        $upload = $request->all();
+        $upload['domain'] = config('filesystems.disks.qiniu.domain');
         $key = uniqid();
-        $post['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-        Log::info($post);
-
+        $upload['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
@@ -66,7 +64,7 @@ class UploadController extends BaseController
 
         if ($isQiniuCallback) {
             $asset = new AssetModel();
-            $asset->fill($post);
+            $asset->fill($upload);
             if($asset->save()) {
                 $id = $asset->id;
                 $callBackDate = [
