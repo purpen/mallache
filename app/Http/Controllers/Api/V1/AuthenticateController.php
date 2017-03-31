@@ -129,7 +129,6 @@ class AuthenticateController extends BaseController
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
         }
-
         // return the token
         return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token', 'status')));
     }

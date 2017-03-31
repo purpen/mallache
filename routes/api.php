@@ -65,6 +65,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
 
+        //需求公司信息
+        $api->resource('/demandCompany', 'DemandCompanyController');
 
     });
 });
