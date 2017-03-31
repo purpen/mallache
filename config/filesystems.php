@@ -66,11 +66,6 @@ return [
         'qiniu' => [
             'driver'  => 'qiniu',
             'upload_url' => 'http://up-z1.qiniu.com',
-//            'domains' => [
-//                'default'   => 'oni525j96.bkt.clouddn.com', // 你的七牛域名
-////                'https'     => 'saas.taihuoniao.com',         // 你的HTTPS域名
-//                'custom'    => 'http://oni525j96.bkt.clouddn.com',         // 你的自定义域名
-//            ],
             'access_key'=> 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i',  //AccessKey
             'secret_key'=> 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6',  //SecretKey
             'bucket'    => 'frmallache',  //Bucket名字

@@ -30,11 +30,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
 
-    //生产七牛token
-    $api->get('/upload/upToken' , [
-        'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
-    ]);
-
     // 七牛图片上传回调地址
     $api->post('/asset/callback',[
         'as' => 'upload.callback', 'uses' => 'UploadController@callback'
@@ -59,6 +54,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
 
+        //生产七牛token
+        $api->get('/upload/upToken' , [
+            'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
+        ]);
 
     });
 });
