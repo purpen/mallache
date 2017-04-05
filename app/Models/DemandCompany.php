@@ -18,7 +18,19 @@ class DemandCompany extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id', 'company_name', 'company_size', 'company_web', 'province', 'city', 'area', 'address', 'contact_name', 'phone', 'email'];
+    protected $fillable = [
+        'user_id',
+        'company_name',
+        'company_size',
+        'company_web',
+        'province',
+        'city',
+        'area',
+        'address',
+        'contact_name',
+        'phone',
+        'email'
+    ];
 
 
 
