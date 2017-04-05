@@ -21,6 +21,8 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
 
+    //验证注册手机号
+    $api->get('/auth/phoneState/{phone}');
     //用户注册
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'

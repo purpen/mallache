@@ -260,4 +260,28 @@ class AuthenticateController extends BaseController
         }
     }
 
+    /**
+     * @api {get} /auth/phoneState/18624343456 验证手机号
+     * @apiVersion 1.0.0
+     * @apiName user phoneState
+     * @apiGroup User
+     *
+     * @apiParam {int} phone
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function phoneState($phone)
+    {
+        if(User::where('account', intval($phone))->count() > 0){
+            return $this->response->array($this->apiError('手机号已注册！', 412));
+        };
+
+        return $this->response->array($this->apiSuccess());
+    }
 }

@@ -9,3 +9,4 @@ Homestead.yaml
 .env
 .DS_Store
 /public/apidoc
+/apidoc.json
