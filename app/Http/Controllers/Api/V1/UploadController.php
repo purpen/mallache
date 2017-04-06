@@ -16,9 +16,8 @@ class UploadController extends BaseController
      * @apiVersion 1.0.0
      * @apiName upload asset
      *
-     *
      * @apiGroup Upload
-     *
+     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *  {

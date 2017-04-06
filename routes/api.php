@@ -64,6 +64,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/upload/upToken' , [
             'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
         ]);
+        //需求公司信息
+        $api->resource('/demandCompany', 'DemandCompanyController');
+
+        //设计公司信息
+        $api->resource('/designCompany', 'DesignCompanyController');
+
+
+        //设计公司案例
+        $api->resource('/designCase', 'DesignCaseController');
 
     });
 });

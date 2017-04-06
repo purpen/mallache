@@ -1,1 +1,0 @@
-define({  "name": "saas API文档",  "version": "1.0.0",  "description": "",  "title": "saas API文档",  "url": "https://api.qysea.com",  "sampleUrl": "http://sa.taihuoniao.com",  "defaultVersion": "0.0.0",  "apidoc": "0.3.0",  "generator": {    "name": "apidoc",    "time": "2017-03-31T03:23:58.494Z",    "url": "http://apidocjs.com",    "version": "0.17.5"  }});

@@ -15,7 +15,7 @@ class CreateDesignCasesTable extends Migration
         mass_production	tinyint(4)	    否		是否量产
         sales_volume	decimal(10,2)	是		销售金额
         customer	    varchar(50)	    否		服务客户
-        product_type	tinyint(4)	    否		所属领域
+        field	        tinyint(4)	    否		所属领域 class_id
         profile	        varchar(500)	否		项目描述
         status	        tinyint(4)	    否		状态
      */
@@ -35,7 +35,7 @@ class CreateDesignCasesTable extends Migration
             $table->tinyInteger('mass_production');
             $table->decimal('sales_volume' , 10 , 2)->nullable();
             $table->string('customer' , 50);
-            $table->tinyInteger('product_type');
+            $table->tinyInteger('field');
             $table->string('profile' , 500);
             $table->tinyInteger('status');
             $table->timestamps();
