@@ -53,7 +53,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiError($message='Error', $status_code=200)
+    public function apiError($message='Error', $status_code=500)
     {
         $result['meta'] = array(
             'message' => $message,

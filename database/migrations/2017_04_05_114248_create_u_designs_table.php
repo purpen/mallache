@@ -36,20 +36,20 @@ class CreateUDesignsTable extends Migration
     {
         Schema::create('u_design', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id')->default(0);
-            $table->tinyInteger('system');
-            $table->tinyInteger('design_content');
-            $table->tinyInteger('page_number');
-            $table->string('name',50);
+            $table->integer('item_id');
+            $table->tinyInteger('system')->default(0);
+            $table->tinyInteger('design_content')->default(0);
+            $table->tinyInteger('page_number')->default(0);
+            $table->string('name',50)->default('');
             $table->tinyInteger('stage')->default(0);
             $table->tinyInteger('complete_content')->default(0);
             $table->string('other_content',20)->default('');
             $table->tinyInteger('style')->default(0);
-            $table->tinyInteger('start_time');
-            $table->tinyInteger('cycle');
-            $table->tinyInteger('design_cost');
-            $table->integer('province');
-            $table->integer('city');
+            $table->tinyInteger('start_time')->default(0);
+            $table->tinyInteger('cycle')->default(0);
+            $table->tinyInteger('design_cost')->default(0);
+            $table->integer('province')->default(0);
+            $table->integer('city')->default(0);
             $table->string('summary', 500)->default('');
             $table->tinyInteger('artificial')->default(0);
             $table->timestamps();

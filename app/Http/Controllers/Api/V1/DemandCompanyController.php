@@ -13,7 +13,6 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 class DemandCompanyController extends BaseController
 {
@@ -94,7 +93,7 @@ class DemandCompanyController extends BaseController
             $demand = DemandCompany::create($all);
         }
         catch (\Exception $e){
-            throw new HttpException('Error');
+            return $this->response->array($this->apiError('Error', 500));
         }
 
         return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());

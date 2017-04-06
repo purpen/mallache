@@ -22,7 +22,9 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
 
     //验证注册手机号
-    $api->get('/auth/phoneState/{phone}');
+    $api->get('/auth/phoneState/{phone}', [
+        'as' => 'auth.phoneState', 'uses' => 'AuthenticateController@phoneState'
+    ]);
     //用户注册
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
@@ -69,6 +71,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //需求公司信息
         $api->resource('/demandCompany', 'DemandCompanyController');
+
+        /**
+         * 项目需求相关路由
+         */
+        //项目类型、领域
+        $api->resource('/demand', 'DemandController');
+        //UX UI 设计详情
+        $api->resource('/UDesign', 'UDesignInfoController');
 
     });
 });

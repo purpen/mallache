@@ -52,8 +52,8 @@ class CreateProductDesignsTable extends Migration
             $table->tinyInteger('percentage_completion')->default(0);
             $table->integer('special_technical_require')->default(0);
             $table->tinyInteger('design_cost')->default(0);
-            $table->integer('province');
-            $table->integer('city');
+            $table->integer('province')->default(0);
+            $table->integer('city')->default(0);
             $table->tinyInteger('divided_into_cooperation')->default(0);
             $table->tinyInteger('stock_cooperation')->default(0);
             $table->string('summary', 500)->default('');

@@ -24,8 +24,9 @@ class CreateItemsTable extends Migration
     {
         Schema::create('item', function (Blueprint $table) {
             $table->increments('id');
-            $table->tinyInteger('design_type');
-            $table->integer('field');
+            $table->integer('user_id');
+            $table->tinyInteger('design_type')->default(0);
+            $table->integer('field')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
