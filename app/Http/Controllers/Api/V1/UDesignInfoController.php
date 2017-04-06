@@ -153,7 +153,6 @@ class UDesignInfoController extends BaseController
             $design = UDesign::firstOrCreate(['item_id' => intval($item_id)]);
             $design->update($all);
         }catch(\Exception $e){
-            dd($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 
