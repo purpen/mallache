@@ -10,6 +10,7 @@ class UDesign extends Model
 
     //允许批量赋值的属性
     protected $fillable = [
+        'item_id',
         'system',
         'design_content',
         'page_number',
@@ -26,5 +27,11 @@ class UDesign extends Model
         'summary',
         'artificial',
     ];
+
+    //一对一关联项目表
+    public function item()
+    {
+        return $this->belongsTo('App\Models\item', 'item_id');
+    }
 
 }

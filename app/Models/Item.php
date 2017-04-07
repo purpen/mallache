@@ -18,4 +18,16 @@ class Item extends Model
      */
 
     protected $fillable = ['user_id', 'design_type', 'field', 'status'];
+
+    //一对一关联UX UI设计表
+    public function uDesign()
+    {
+        return $this->hasOne('App\Models\UDesign', 'item_id');
+    }
+
+    //一对一关联 产品设计表
+    public function productDesign()
+    {
+        return $this->hasOne('App\Models\ProductDesign', 'item_id');
+    }
 }

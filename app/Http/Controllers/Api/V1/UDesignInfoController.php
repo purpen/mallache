@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Item;
+use App\Models\ProductDesign;
 use App\Models\UDesign;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -59,13 +60,14 @@ class UDesignInfoController extends BaseController
 
     }
 
+
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $item_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($item_id)
     {
         //
     }
@@ -78,7 +80,7 @@ class UDesignInfoController extends BaseController
      */
     public function edit($id)
     {
-        /**/
+        //
     }
 
     /**
@@ -145,7 +147,7 @@ class UDesignInfoController extends BaseController
         }
         try{
             if(!$item = Item::find($item_id)){
-                return $this->response->array($this->apiError());
+                return $this->response->array($this->apiError('not found!', 404));
             }else if(!in_array($item->design_type, [4, 5])){
                 return $this->response->array($this->apiError());
             }

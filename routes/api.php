@@ -79,6 +79,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情
         $api->resource('/UDesign', 'UDesignInfoController');
-
+        //产品设计详情
+        $api->resource('/ProductDesign', 'ProductDesignInfoController');
     });
 });

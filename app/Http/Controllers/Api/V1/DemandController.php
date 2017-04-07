@@ -93,7 +93,7 @@ class DemandController extends BaseController
 
 
     /**
-     * @api {get} /demand/{id} 获取项目类型、领域
+     * @api {get} /demand/{id} 获取项目类型、领域、详细信息
      * @apiVersion 1.0.0
      * @apiName demand show
      * @apiGroup demandType
@@ -124,8 +124,7 @@ class DemandController extends BaseController
         if(!$item){
             return $this->response->array($this->apiError());
         }
-
-        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiSuccess());
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**
