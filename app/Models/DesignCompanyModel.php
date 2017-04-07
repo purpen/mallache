@@ -21,4 +21,11 @@ class DesignCompanyModel extends Model
     protected $fillable = ['user_id', 'company_type', 'company_name', 'registration_number', 'province', 'city', 'area', 'address', 'contact_name', 'position' , 'phone', 'email' , 'company_size' , 'branch_office' , 'item_quantity' , 'company_profile' , 'good_field' , 'web' , 'design_type' , 'establishment_time' , 'professional_advantage' , 'awards'];
 
 
+    /**
+     * 获取拥有设计公司的报价
+     */
+    public function quotation()
+    {
+        return $this->belongsTo('App\Models\QuotationModel');
+    }
 }

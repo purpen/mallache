@@ -74,5 +74,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //设计公司案例
         $api->resource('/designCase', 'DesignCaseController');
 
+
+        //报价
+        $api->resource('/quotation', 'QuotationController');
+
+        //项目类型
+        $api->resource('/designItem', 'DesignItemController');
+
     });
 });

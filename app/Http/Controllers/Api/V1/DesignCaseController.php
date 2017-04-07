@@ -275,7 +275,6 @@ class DesignCaseController extends BaseController
      */
     public function destroy($id)
     {
-        Log::info($id);
         $designCase = DesignCaseModel::where('id', intval($id))->delete();
         if(!$designCase){
             return $this->response->array($this->apiError());
