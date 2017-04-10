@@ -12,6 +12,7 @@ use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -59,7 +60,6 @@ class AuthenticateController extends BaseController
         }else{
             Cache::forget($key);
         }
-
         // 创建用户
         $res = User::create([
             'account' => $payload['account'],
@@ -221,9 +221,9 @@ class AuthenticateController extends BaseController
 
         $text = ' 【太火鸟】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         //插入单条短信发送队列
-        $this->dispatch(new SendOneSms($phone,$text));
+//        $this->dispatch(new SendOneSms($phone,$text));
 
-        return $this->response->array($this->apiSuccess('请求成功！', 200));
+        return $this->response->array($this->apiSuccess('请求成功！', 200 , $sms_code));
     }
 
     /**

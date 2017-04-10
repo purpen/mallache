@@ -15,7 +15,10 @@ class UploadController extends BaseController
      * @api {get} /upload/upToken  生成上传图片upToken
      * @apiVersion 1.0.0
      * @apiName upload asset
+     *
      * @apiGroup Upload
+     * @apiParam {string} token
+     *
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
@@ -24,7 +27,7 @@ class UploadController extends BaseController
      *     },
      *     "data": {
      *       "upToken": "AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:csOk9LcG2lM0_3qvbDqmEUa87V8=:eyJjYWxsYmFja1VybCI6bnVsbCwiY2FsbGJhY2tGZXRjaEtleSI6MSwiY2FsbGJhY2tCb2R5IjoibmFtZT0kKGZuYW1lKSZzaXplPSQoZnNpemUpJm1pbWU9JChtaW1lVHlwZSkmd2lkdGg9JChpbWFnZUluZm8ud2lkdGgpJmhlaWdodD0kKGltYWdlSW5mby5oZWlnaHQpJnJhbmRvbT0kKHg6cmFuZG9tKSZ1c2VyX2lkPSQoeDp1c2VyX2lkKSZ0YXJnZXRfaWQ9JCh4OnRhcmdldF9pZCkiLCJzY29wZSI6bnVsbCwiZGVhZGxpbmUiOjE0OTA3NTUyMDh9"
-     *       "upload_url": "https://up-z1.qbox.me"
+     *       "upload_url": "http://up-z1.qiniu.come"
      *      }
      *  }
      */
@@ -39,11 +42,10 @@ class UploadController extends BaseController
     //七牛回调方法
     public function callback(Request $request)
     {
-        $post = $request->all();
-        $post['domain'] = config('filesystems.disks.qiniu.domain');
+        $upload = $request->all();
+        $upload['domain'] = config('filesystems.disks.qiniu.domain');
         $key = uniqid();
-        $post['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-
+        $upload['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
@@ -61,7 +63,7 @@ class UploadController extends BaseController
 
         if ($isQiniuCallback) {
             $asset = new AssetModel();
-            $asset->fill($post);
+            $asset->fill($upload);
             if($asset->save()) {
                 $id = $asset->id;
                 $callBackDate = [

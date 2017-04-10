@@ -36,11 +36,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     //获取手机验证码
     $api->post('/auth/sms', ['as' => 'auth.sms', 'uses' => 'AuthenticateController@getSmsCode']);
 
-    //生产七牛token
-    $api->get('/upload/upToken' , [
-        'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
-    ]);
-
     // 七牛图片上传回调地址
     $api->post('/asset/callback',[
         'as' => 'upload.callback', 'uses' => 'UploadController@callback'
@@ -69,8 +64,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
 
+        //生产七牛token
+        $api->get('/upload/upToken' , [
+            'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
+        ]);
         //需求公司信息
         $api->resource('/demandCompany', 'DemandCompanyController');
+
 
         /**
          * 项目需求相关路由
@@ -81,5 +81,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
+
+        //设计公司信息
+        $api->resource('/designCompany', 'DesignCompanyController');
+        //设计公司案例
+        $api->resource('/designCase', 'DesignCaseController');
+        //报价
+        $api->resource('/quotation', 'QuotationController');
+        //项目类型
+        $api->resource('/designItem', 'DesignItemController');
+
     });
 });

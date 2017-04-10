@@ -32,6 +32,12 @@ class DemandCompany extends Model
         'email'
     ];
 
-
+    /**
+     * 获取拥有设计公司的报价
+     */
+    public function quotation()
+    {
+        return $this->belongsTo('App\Models\QuotationModel');
+    }
 
 }
