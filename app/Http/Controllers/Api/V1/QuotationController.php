@@ -34,7 +34,7 @@ class QuotationController extends BaseController
     }
 
     /**
-     * @api {post} /quotation 账单添加
+     * @api {post} /quotation 报价单添加
      * @apiVersion 1.0.0
      * @apiName quotation store
      * @apiGroup quotation
@@ -89,7 +89,7 @@ class QuotationController extends BaseController
     }
 
     /**
-     * @api {get} /quotation/3  账单ID查看详情
+     * @api {get} /quotation/3  报价单ID查看详情
      * @apiVersion 1.0.0
      * @apiName quotation show
      * @apiGroup quotation
@@ -130,7 +130,7 @@ class QuotationController extends BaseController
     }
 
     /**
-     * @api {put} /quotation/1 根据账单id更新
+     * @api {put} /quotation/1 根据报价单id更新
      * @apiVersion 1.0.0
      * @apiName quotation update
      * @apiGroup quotation
