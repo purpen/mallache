@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignCompanyTransformer;
+use App\Models\DesignItemModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,24 +36,22 @@ class DesignCompanyController extends BaseController
      * @apiVersion 1.0.0
      * @apiName designCompany store
      * @apiGroup designCompany
-     * @apiParam {string} design_type 设计类型
+     * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} registration_number 公司注册号
      * @apiParam {string} establishment_time 成立时间
-     * @apiParam {integer} company_size 公司规模
-     * @apiParam {integer} company_size 公司规模
-     * @apiParam {integer} company_size 公司规模
+     * @apiParam {integer} company_size 公司规模 1.10以下；2.10-50；3.50-100；4.100以上;
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {integer} area 区域
      * @apiParam {string} address 详细地址
-     * @apiParam {string} contact_name 联系人
-     * @apiParam {string} position 联系人
+     * @apiParam {string} contact_name 联系人姓名
+     * @apiParam {string} position 职位
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
-     * @apiParam {integer} item_quantity 服务项目
-     * @apiParam {integer} company_type 公司类型
+     * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
+     * @apiParam {integer} company_type 公司类型 	企业类型：1.普通；2.多证合一；
      * @apiParam {string} good_field 擅长领域
      * @apiParam {string} web 公司网站
      * @apiParam {string} company_profile 公司简介
@@ -78,30 +77,75 @@ class DesignCompanyController extends BaseController
         $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
-            'design_type'  => 'required',
+            'design_type'  => 'required|max:50',
+            'company_type'  => 'nullable|integer',
+            'company_name'  => 'max:50',
+            'registration_number'  => 'max:15',
+            'province'  => 'nullable|integer',
+            'city'  => 'nullable|integer',
+            'area'  => 'nullable|integer',
+            'address'  => 'max:50',
+            'contact_name'  => 'max:20',
+            'position'  => 'max:20',
+            'phone'  => ['nullable','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'email'  => 'nullable|email',
+            'company_size'  => 'nullable|integer',
+            'branch_office'  => 'nullable|integer',
+            'item_quantity'  => 'nullable|integer',
+            'web'  => 'max:50',
+            'company_profile'  => 'max:500',
+            'establishment_time'  => 'nullable|date',
+            'good_field'  => 'max:50',
+            'professional_advantage'  => 'max:500',
+            'awards'  => 'max:500'
         ];
         $messages = [
             'design_type.required' => '设计类型不能为空',
+            'design_type.max' => '产品设计不能超过50个字',
+            'company_type.integer' => '企业类型必须为整形',
+            'company_name.max' => '公司名称不能超过50个字',
+            'registration_number.max' => '注册号不能超过50个字',
+            'province.integer' => '省份必须为整形',
+            'city.integer' => '城市必须为整形',
+            'area.integer' => '区域必须为整形',
+            'address.max' => '详细地址不能超过50个字',
+            'contact_name.max' => '联系人姓名不能超过20个字',
+            'position.max' => '职位不能超过20个字',
+            'phone.regex' => '手机号格式不正确',
+            'email.email' => '邮箱格式不正确',
+            'company_size.integer' => '公司规模必须是整形',
+            'branch_office.integer' => '分公司必须是整形',
+            'item_quantity.integer' => '服务项目必须是整形',
+            'web.max' => '公司网站不能超过50个字',
+            'establishment_time.date' => '公司成立时间格式不正确',
+            'good_field.max' => '擅长领域不能超过50个字',
+            'professional_advantage.max' => '专业优势不能超过500个字',
+            'awards.max' => '荣誉奖项不能超过500个字'
         ];
 
-        $validator = Validator::make($request->only('design_type'), $rules, $messages);
+        $validator = Validator::make($all , $rules, $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
         try{
+            Log::info(3333);
             $design = DesignCompanyModel::create($all);
+            Log::info(444);
         }
         catch (\Exception $e){
+            Log::info(222);
+
             throw new HttpException('Error');
         }
+        Log::info(5555);
 
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {get} /designCompany/1  设计公司展示
+     * @api {get} /designCompany/1  根据用户id设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
      * @apiGroup designCompany
@@ -111,9 +155,8 @@ class DesignCompanyController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-     *      "data": {
      *          "id": 8,
-     *          "company_type": 0,
+     *          "company_type": 1, 1.普通；2.多证合一；
      *          "company_name": "",
      *          "registration_number": "",
      *          "province": 0,
@@ -124,31 +167,54 @@ class DesignCompanyController extends BaseController
      *          "position": "",
      *          "phone": 0,
      *          "email": "",
-     *          "company_size": 0,
+     *          "company_size": 1,  1.10以下；2.10-50；3.50-100；4.100以上;
      *          "branch_office": 0,
-     *          "item_quantity": 0,
+     *          "item_quantity": 1,  1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
-     *          "design_type": "12345",
+     *          "design_type": "2",  1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      *          "establishment_time": "",
      *          "professional_advantage": "",
-     *          "awards": ""
-     *      },
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
+     *          "awards": "",
+     *          "created_at": "2017-04-05 18:55:54",
+     *          "updated_at": "2017-04-05 19:40:14",
+     *          "deleted_at": null,
+     *          "item": [
+     *          {
+     *              "id": 1,
+     *              "user_id": 1,
+     *              "good_field": 1,
+     *              "project_cycle": 1,
+     *              "min_price": "1.00",
+     *              "max_price": "1.00",
+     *              "created_at": "2017-04-07 16:50:30",
+     *              "updated_at": "2017-04-07 17:54:37",
+     *              "deleted_at": null
+     *          },
+     *          {
+     *              "id": 2,
+     *              "user_id": 1,
+     *              "good_field": 22,
+     *              "project_cycle": 22,
+     *              "min_price": "22.00",
+     *              "max_price": "22.00",
+     *              "created_at": "2017-04-07 17:07:12",
+     *              "updated_at": "2017-04-07 17:54:05",
+     *              "deleted_at": null
+     *          }
+     *      ]
      *   }
      */
     public function show(Request $request)
     {
         $user_id = intval($request->input('user_id'));
         $demand = DesignCompanyModel::where('user_id', $user_id)->first();
+        $demand->item = DesignItemModel::where('user_id' , $user_id)->get();
         if(!$demand){
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($demand, new DesignCompanyTransformer())->setMeta($this->apiMeta());
+        return $this->response->array($demand->toArray());
     }
 
     /**
@@ -163,18 +229,16 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /designCompany/1 更新设计公司信息
+     * @api {put} /designCompany/1 根据用户id更新设计公司信息
      * @apiVersion 1.0.0
      * @apiName designCompany update
      * @apiGroup designCompany
      *
-     * @apiParam {string} design_type 设计类型
+     * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} registration_number 公司注册号
      * @apiParam {string} establishment_time 成立时间
-     * @apiParam {integer} company_size 公司规模
-     * @apiParam {integer} company_size 公司规模
-     * @apiParam {integer} company_size 公司规模
+     * @apiParam {integer} company_size 公司规模 1.10以下；2.10-50；3.50-100；4.100以上;
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {integer} area 区域
@@ -184,8 +248,8 @@ class DesignCompanyController extends BaseController
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
-     * @apiParam {integer} item_quantity 服务项目
-     * @apiParam {integer} company_type 公司类型
+     * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
+     * @apiParam {integer} company_type 公司类型 	企业类型：1.普通；2.多证合一；
      * @apiParam {string} good_field 擅长领域
      * @apiParam {string} web 公司网站
      * @apiParam {string} company_profile 公司简介
@@ -203,7 +267,61 @@ class DesignCompanyController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        // 验证规则
+        // 验证规则
+        $rules = [
+            'design_type'  => 'required|max:50',
+            'company_type'  => 'nullable|integer',
+            'company_name'  => 'max:50',
+            'registration_number'  => 'max:15',
+            'province'  => 'nullable|integer',
+            'city'  => 'nullable|integer',
+            'area'  => 'nullable|integer',
+            'address'  => 'max:50',
+            'contact_name'  => 'max:20',
+            'position'  => 'max:20',
+            'phone'  => ['nullable','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'email'  => 'nullable|email',
+            'company_size'  => 'nullable|integer',
+            'branch_office'  => 'nullable|integer',
+            'item_quantity'  => 'nullable|integer',
+            'web'  => 'max:50',
+            'company_profile'  => 'max:500',
+            'establishment_time'  => 'nullable|date',
+            'good_field'  => 'max:50',
+            'professional_advantage'  => 'max:500',
+            'awards'  => 'max:500'
+        ];
+        $messages = [
+            'design_type.required' => '设计类型不能为空',
+            'design_type.max' => '产品设计不能超过50个字',
+            'company_type.integer' => '企业类型必须为整形',
+            'company_name.max' => '公司名称不能超过50个字',
+            'registration_number.max' => '注册号不能超过50个字',
+            'province.integer' => '省份必须为整形',
+            'city.integer' => '城市必须为整形',
+            'area.integer' => '区域必须为整形',
+            'address.max' => '详细地址不能超过50个字',
+            'contact_name.max' => '联系人姓名不能超过20个字',
+            'position.max' => '职位不能超过20个字',
+            'phone.regex' => '手机号格式不正确',
+            'email.email' => '邮箱格式不正确',
+            'company_size.integer' => '公司规模必须是整形',
+            'branch_office.integer' => '分公司必须是整形',
+            'item_quantity.integer' => '服务项目必须是整形',
+            'web.max' => '公司网站不能超过50个字',
+            'establishment_time.date' => '公司成立时间格式不正确',
+            'good_field.max' => '擅长领域不能超过50个字',
+            'professional_advantage.max' => '专业优势不能超过500个字',
+            'awards.max' => '荣誉奖项不能超过500个字'
+        ];
         $all = $request->except(['token']);
+
+        $validator = Validator::make($all , $rules, $messages);
+
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
 
         $demand = DesignCompanyModel::where('user_id', intval($id))->update($all);
         if(!$demand){

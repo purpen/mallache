@@ -11,7 +11,7 @@ class DesignCompanyModel extends Model
      *
      * @var string
      */
-    protected $table = 'design_companys';
+    protected $table = 'design_company';
 
 
     /**
