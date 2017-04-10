@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DesignItemController extends BaseController
 {
     /**
-     * @api {get} /designItem 展示项目类别
+     * @api {get} /designItem 展示服务项目类别
      * @apiVersion 1.0.0
      * @apiName designItem index
      * @apiGroup designItem
@@ -70,13 +70,13 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * @api {post} /designItem 保存项目类型
+     * @api {post} /designItem 保存服务项目类型
      * @apiVersion 1.0.0
      * @apiName designItem store
      * @apiGroup designItem
      *
      * @apiParam {integer} good_field 擅长领域id
-     * @apiParam {integer} project_cycle 项目周期
+     * @apiParam {integer} project_cycle 服务项目周期
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
      * @apiParam {string} token
@@ -133,12 +133,12 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * @api {get} /designItem/2  项目类型ID查看详情
+     * @api {get} /designItem/2  服务项目类型ID查看详情
      * @apiVersion 1.0.0
      * @apiName designItem show
      * @apiGroup designItem
      *
-     * @apiParam {integer} id 项目类型ID
+     * @apiParam {integer} id 服务项目类型ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -179,13 +179,13 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * @api {put} /designItem/1 更新项目类型
+     * @api {put} /designItem/1 更新服务项目类型
      * @apiVersion 1.0.0
      * @apiName designItem update
      * @apiGroup designItem
      *
      * @apiParam {integer} good_field 擅长领域id
-     * @apiParam {integer} project_cycle 项目周期
+     * @apiParam {integer} project_cycle 服务项目周期
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
      * @apiParam {string} token
