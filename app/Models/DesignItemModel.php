@@ -11,7 +11,7 @@ class DesignItemModel extends Model
      *
      * @var string
      */
-    protected $table = 'design_items';
+    protected $table = 'design_item';
 
     /**
      * 允许批量赋值字段

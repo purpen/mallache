@@ -11,7 +11,7 @@ class QuotationModel extends Model
      *
      * @var string
      */
-    protected $table = 'quotations';
+    protected $table = 'quotation';
 
 
     /**

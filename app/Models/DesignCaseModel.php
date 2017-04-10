@@ -11,7 +11,7 @@ class DesignCaseModel extends Model
      *
      * @var string
      */
-    protected $table = 'design_cases';
+    protected $table = 'design_case';
 
     /**
      * 允许批量赋值字段
