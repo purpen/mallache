@@ -145,6 +145,7 @@ class UDesignInfoController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+
         try{
             if(!$item = Item::find($item_id)){
                 return $this->response->array($this->apiError('not found!', 404));

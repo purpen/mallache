@@ -59,19 +59,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
         ]);
 
+
+        /**
+         * 公共接口
+         */
         //获取城市列表
         $api->get('/city', [
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
-
         //生产七牛token
         $api->get('/upload/upToken' , [
             'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
         ]);
+        //获取领域列表
+        $api->get('/field', ['as' => 'field', 'uses' => 'CommonController@field']);
+
         //需求公司信息
         $api->resource('/demandCompany', 'DemandCompanyController');
-
-
         /**
          * 项目需求相关路由
          */
