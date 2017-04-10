@@ -17,6 +17,12 @@ class ItemTransformer extends TransformerAbstract
         ];
     }
 
+    /**
+     * 判断并添加对应的详细信息
+     *
+     * @param Item $item
+     * @return mixed|string
+     */
     public function info(Item $item)
     {
         $info = '';
@@ -24,11 +30,11 @@ class ItemTransformer extends TransformerAbstract
             case 1:
             case 2:
             case 3:
-                $info = $item->productDesign?? 'pro';
+                $info = $item->productDesign ?? '';
                 break;
             case 4:
             case 5:
-                $info = $item->uDesign?? 'ux';
+                $info = $item->uDesign ?? '';
                 break;
         }
         return $info;

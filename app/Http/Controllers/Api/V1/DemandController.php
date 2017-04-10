@@ -180,14 +180,15 @@ class DemandController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        $all['status'] = 1;
 
+        $all['status'] = 1;
         try{
             $item = Item::find(intval($id))->update($all);
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
         }
+
         return $this->response->array($this->apiSuccess());
     }
 
