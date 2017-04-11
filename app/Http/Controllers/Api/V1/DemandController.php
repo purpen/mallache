@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\ItemTransformer;
+use App\Jobs\Recommend;
 use App\Models\Item;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -203,9 +204,37 @@ class DemandController extends BaseController
         //
     }
 
-//    //项目推荐
-//    public function Recommend()
-//    {
-//
-//    }
+    /**
+     * @api {post} /demand/release 发布项目
+     * @apiVersion 1.0.0
+     * @apiName demand release
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function release(Request $request)
+    {
+        if(!$item = Item::find((int)$request->input('id'))){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        try{
+            $item->status = 2;
+            $item = $item->save();
+        }
+        catch (\Exception $e){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+        $this->dispatch(new Recommend($item));
+        return $this->response->array($this->apiSuccess());
+    }
 }

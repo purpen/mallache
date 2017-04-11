@@ -86,6 +86,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
 
+        $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
+
         //设计公司信息
         $api->resource('/designCompany', 'DesignCompanyController');
         //设计公司案例

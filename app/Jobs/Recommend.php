@@ -47,19 +47,24 @@ class Recommend implements ShouldQueue
 
         //获取符合做设计类型的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
+            ->where('status' != 0)
             ->whereIn('user_id',$design_id_arr)
             ->Where(DB::raw("find_in_set($design_type, design_type)"))
             ->orderBy('score', 'desc')
             ->toArray();
 
-        if(count($design) > 0){
+        if($count = count($design) > 0){
+            $design = array_slice($design, 0, 5);
             $recommend = implode(',',$design);
 
-
+            $this->item->recommend = $recommend;
+            $this->item->save();
         }else{
             $recommend = '';
         }
 
+        //注销变量
+        unset($design_type, $field, $design_id_arr, $design, $recommend);
 
     }
 
