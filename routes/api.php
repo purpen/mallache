@@ -58,6 +58,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/auth/changePassword', [
             'as' => 'auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
         ]);
+        //获取用户信息
+        $api->get('/auth/user/{id}', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
 
         /**

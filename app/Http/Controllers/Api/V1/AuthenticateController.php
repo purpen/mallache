@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -115,6 +116,8 @@ class AuthenticateController extends BaseController
                 'password' => ['required', 'min:6']
             ];
 
+
+
             $payload = app('request')->only('account', 'password');
             $validator = app('validator')->make($payload, $rules);
 
@@ -125,7 +128,7 @@ class AuthenticateController extends BaseController
 
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                return $this->response->array($this->apiError('invalid_credentials', 401));
+                return $this->response->array($this->apiError('账户名或密码错误', 401));
             }
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
@@ -284,5 +287,33 @@ class AuthenticateController extends BaseController
         };
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /auth/user/1 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName user user
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *      "data": {
+     *
+     *      }
+     *   }
+     */
+    public function AuthUser($id)
+    {
+        if(!$user = User::find((int)$id)){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        return $this->response->item($user, new UserTransformer)->setMeta($this->apiMeta());
     }
 }
