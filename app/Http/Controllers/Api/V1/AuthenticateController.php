@@ -290,7 +290,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {get} /auth/user/1 获取用户信息
+     * @api {get} /auth/user 获取用户信息
      * @apiVersion 1.0.0
      * @apiName user user
      * @apiGroup User
@@ -308,12 +308,8 @@ class AuthenticateController extends BaseController
      *      }
      *   }
      */
-    public function AuthUser($id)
+    public function AuthUser()
     {
-        if(!$user = User::find((int)$id)){
-            return $this->response->array($this->apiError('not found', 404));
-        }
-
-        return $this->response->item($user, new UserTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
     }
 }
