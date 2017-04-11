@@ -28,4 +28,15 @@ class DesignCompanyModel extends Model
     {
         return $this->belongsTo('App\Models\QuotationModel');
     }
+
+
+    /**
+     * 更新设计公司状态
+     */
+    static public function upStatus($id, $status=1)
+    {
+        $design_company = self::findOrFail($id);
+        $design_company->status = $status;
+        return $design_company->save();
+    }
 }
