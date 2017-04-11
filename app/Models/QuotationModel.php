@@ -18,7 +18,7 @@ class QuotationModel extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['item_demand_id' , 'design_company_id' , 'price' , 'summary' , 'status'];
+    protected $fillable = ['user_id' , 'item_demand_id' , 'design_company_id' , 'price' , 'summary' , 'status'];
 
 
     /**

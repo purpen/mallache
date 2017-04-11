@@ -30,7 +30,9 @@ class DesignCompanyTransformer extends TransformerAbstract
         design_type	varchar(50)	    否		产品设计：1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
         establishment_time	date	是		公司成立时间
         professional_advantage	varchar(500)	是		专业优势
-        awards	varchar(500)	是		荣誉奖项
+        awards	                varchar(500)	是		荣誉奖项
+        score	                int(10)	否	0	设计公司评分
+        status	                tinyint(4)	否	0	设计公司状态：0、关闭；1、审核通过；
 
     */
 
@@ -38,6 +40,7 @@ class DesignCompanyTransformer extends TransformerAbstract
     {
         return [
             'id' => intval($DesignCompany->id),
+            'user_id' => intval($DesignCompany->user_id),
             'company_type' => intval($DesignCompany->company_type),
             'company_name' => strval($DesignCompany->company_name),
             'registration_number' => strval($DesignCompany->registration_number),
@@ -59,7 +62,8 @@ class DesignCompanyTransformer extends TransformerAbstract
             'establishment_time' => strval($DesignCompany->establishment_time),
             'professional_advantage' => strval($DesignCompany->professional_advantage),
             'awards' => strval($DesignCompany->awards),
-
+            'score' => intval($DesignCompany->score),
+            'status' => intval($DesignCompany->status),
         ];
     }
 }

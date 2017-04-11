@@ -57,18 +57,44 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
+     * @apiParam {integer} score 设计公司评分
+     * @apiParam {integer} status 设计公司状态
+     * @apiParam {integer} user_id 用户id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *   {
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
-     *   }
-     *   "data": {
-     *
-     *    }
+     *      "data": {
+     *          "id": 4,
+     *          "user_id": 1,
+     *          "company_type": 0,
+     *          "company_name": "",
+     *          "registration_number": "",
+     *          "province": 0,
+     *          "city": 0,
+     *          "area": 0,
+     *          "address": "",
+     *          "contact_name": "",
+     *          "position": "",
+     *          "phone": 0,
+     *          "email": "",
+     *          "company_size": 0,
+     *          "branch_office": 0,
+     *          "item_quantity": 0,
+     *          "good_field": "",
+     *          "web": "",
+     *          "company_profile": "",
+     *          "design_type": "3",
+     *          "establishment_time": "",
+     *          "professional_advantage": "",
+     *          "awards": "",
+     *          "score": 0,
+     *          "status": 0
+     *      },
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
      *  }
      */
     public function store(Request $request)
@@ -122,7 +148,7 @@ class DesignCompanyController extends BaseController
             'professional_advantage.max' => '专业优势不能超过500个字',
             'awards.max' => '荣誉奖项不能超过500个字'
         ];
-
+        $all = $request->except(['token']);
         $validator = Validator::make($all , $rules, $messages);
 
         if($validator->fails()){
@@ -130,7 +156,7 @@ class DesignCompanyController extends BaseController
         }
 
         try{
-            $design = DesignCompanyModel::create($all);
+            $design = DesignCompanyModel::firstOrCreate($all);
         }
         catch (\Exception $e){
 
@@ -172,6 +198,8 @@ class DesignCompanyController extends BaseController
      *          "establishment_time": "",
      *          "professional_advantage": "",
      *          "awards": "",
+     *          "score": 0,
+     *          "status": 1
      *          "created_at": "2017-04-05 18:55:54",
      *          "updated_at": "2017-04-05 19:40:14",
      *          "deleted_at": null,
@@ -250,6 +278,8 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
+     * @apiParam {integer} score 设计公司评分
+     * @apiParam {integer} status 设计公司状态
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {

@@ -38,6 +38,7 @@ class QuotationController extends BaseController
      * @apiVersion 1.0.0
      * @apiName quotation store
      * @apiGroup quotation
+     * @apiParam {integer} user_id 用户id
      * @apiParam {integer} item_demand_id 项目需求id
      * @apiParam {integer} design_company_id 设计公司id
      * @apiParam {string} price 报价
@@ -57,6 +58,7 @@ class QuotationController extends BaseController
     public function store(Request $request)
     {
         $all = $request->all();
+        $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
             'item_demand_id'  => 'required|integer',
@@ -74,12 +76,12 @@ class QuotationController extends BaseController
             'status.required' => '状态不能为空',
         ];
         $validator = Validator::make($all, $rules, $messages);
-
+        $all = $request->except(['token']);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $quotation = QuotationModel::create($all);
+            $quotation = QuotationModel::firstOrCreate($all);
         }
         catch (\Exception $e){
             throw new HttpException('Error');

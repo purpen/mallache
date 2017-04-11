@@ -95,6 +95,7 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} field 所属领域 class_id
      * @apiParam {integer} status 状态
      * @apiParam {string} profile   功能描述
+     * @apiParam {integer} user_id 用户id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -130,13 +131,14 @@ class DesignCaseController extends BaseController
             'profile.max' => '最多500字符',
             'status.required' => '状态不能为空',
         ];
-        $validator = Validator::make($request->only(['title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
+        $all = $request->except(['token']);
 
+        $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $designCase = DesignCaseModel::create($all);
+            $designCase = DesignCaseModel::firstOrCreate($all);
         }
         catch (\Exception $e){
             throw new HttpException('Error');

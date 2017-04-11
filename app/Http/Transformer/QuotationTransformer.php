@@ -9,6 +9,7 @@ class QuotationTransformer extends TransformerAbstract
 {
     /*
         id	                int(10)	        否
+        user_id	            int(10)	        否		用户ID
         item_demand_id	    int(10)	        否		项目需求ID
         design_company_id	int(10)	        否		设计公司id
         price	            decimal(10,2)	否		报价
@@ -20,6 +21,7 @@ class QuotationTransformer extends TransformerAbstract
     {
         return [
             'id' => intval($quotation->id),
+            'user_id' => intval($quotation->user_id),
             'item_demand_id' => intval($quotation->item_demand_id),
             'design_company_id' => intval($quotation->design_company_id),
             'price' => strval($quotation->price),
