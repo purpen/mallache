@@ -239,7 +239,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {integer} area 区域
      * @apiParam {string} address 详细地址
      * @apiParam {string} contact_name 联系人
-     * @apiParam {string} position 联系人
+     * @apiParam {string} position 职位
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
