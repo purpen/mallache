@@ -94,3 +94,6 @@ Accept: application/x.saas.v1+json
 
 ###### 启动队列监听
 php artisan queue:work --sleep=3
+
+###### 计算设计公司加权分数score
+php artisan Weighted:calculation

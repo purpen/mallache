@@ -14,7 +14,6 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DemandController extends BaseController
 {
@@ -223,18 +222,19 @@ class DemandController extends BaseController
      */
     public function release(Request $request)
     {
-        if(!$item = Item::find((int)$request->input('id'))){
+        $id = (int)$request->input('id');
+        if(!$item = Item::find($id)){
             return $this->response->array($this->apiError('not found', 404));
         }
 
         try{
             $item->status = 2;
-            $item = $item->save();
+            $item->save();
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
         }
-        $this->dispatch(new Recommend($item));
+        dispatch(new Recommend($item));
         return $this->response->array($this->apiSuccess());
     }
 }

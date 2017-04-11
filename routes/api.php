@@ -85,7 +85,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
-
+        //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
 
         //设计公司信息
