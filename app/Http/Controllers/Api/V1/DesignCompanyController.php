@@ -130,17 +130,12 @@ class DesignCompanyController extends BaseController
         }
 
         try{
-            Log::info(3333);
             $design = DesignCompanyModel::create($all);
-            Log::info(444);
         }
         catch (\Exception $e){
-            Log::info(222);
 
             throw new HttpException('Error');
         }
-        Log::info(5555);
-
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
     }
 
@@ -209,12 +204,12 @@ class DesignCompanyController extends BaseController
     public function show(Request $request)
     {
         $user_id = intval($request->input('user_id'));
-        $demand = DesignCompanyModel::where('user_id', $user_id)->first();
-        $demand->item = DesignItemModel::where('user_id' , $user_id)->get();
-        if(!$demand){
+        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        $design->item = DesignItemModel::where('user_id' , $user_id)->get();
+        if(!$design){
             return $this->response->array($this->apiError());
         }
-        return $this->response->array($demand->toArray());
+        return $this->response->array($design->toArray());
     }
 
     /**
@@ -323,8 +318,8 @@ class DesignCompanyController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $demand = DesignCompanyModel::where('user_id', intval($id))->update($all);
-        if(!$demand){
+        $design = DesignCompanyModel::where('user_id', intval($id))->update($all);
+        if(!$design){
             return $this->response->array($this->apiError());
         }
         return $this->response->array($this->apiSuccess());
@@ -339,5 +334,32 @@ class DesignCompanyController extends BaseController
     public function destroy(DesignCompanyModel $designCompanyModel)
     {
         //
+    }
+
+
+    /**
+     * @api {put} /designCompany/1/upStatus 更新设计公司审核状态
+     * @apiVersion 1.0.0
+     * @apiName designCompany upStatus
+     * @apiGroup designCompany
+     *
+     * @apiParam {Integer} id 设计公司ID.
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function upStatus($id)
+    {
+        $design = DesignCompanyModel::upStatus($id);
+        if(!$design){
+            return $this->response->array($this->apiError());
+        }
+        return $this->response->array($this->apiSuccess());
     }
 }
