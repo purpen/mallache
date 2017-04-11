@@ -49,7 +49,7 @@ class Recommend implements ShouldQueue
     public function handle()
     {
         //设计类型
-        $design_type = $this->item->design_type;
+        $design_type = (string)$this->item->design_type;
         //领域
         $field = $this->item->field;
 
@@ -62,12 +62,13 @@ class Recommend implements ShouldQueue
 Log::info($design_id_arr);
         //获取符合做设计类型的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
-            ->where('status','==', 1)
+            ->where('status','=', 1)
             ->whereIn('user_id',$design_id_arr)
-            ->Where(DB::raw("find_in_set($design_type, design_type)"))
+            ->Where(DB::raw('find_in_set(' . $design_type . ', design_type)'))
             ->orderBy('score', 'desc')
             ->get()
-            ->toArray();
+            ->pluck('user_id')
+            ->all();
 Log::info($design);
         if($count = count($design) > 0){
             $design = array_slice($design, 0, 5);
