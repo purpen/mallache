@@ -17,6 +17,17 @@ class DesignCaseModel extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id' , 'title' , 'prize' , 'prize_time' , 'mass_production' , 'sales_volume' , 'customer' , 'field' , 'profile' , 'status'];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'prize',
+        'prize_time',
+        'mass_production',
+        'sales_volume',
+        'customer',
+        'field',
+        'profile',
+        'status'
+    ];
 
 }

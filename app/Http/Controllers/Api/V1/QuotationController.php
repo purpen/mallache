@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\QuotationTransformer;
+use App\Models\DesignCompanyModel;
+use App\Models\Item;
 use App\Models\QuotationModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -38,9 +40,7 @@ class QuotationController extends BaseController
      * @apiVersion 1.0.0
      * @apiName quotation store
      * @apiGroup quotation
-     * @apiParam {integer} user_id 用户id
      * @apiParam {integer} item_demand_id 项目需求id
-     * @apiParam {integer} design_company_id 设计公司id
      * @apiParam {string} price 报价
      * @apiParam {string} summary 报价说明
      * @apiParam {integer} status 状态
@@ -57,7 +57,12 @@ class QuotationController extends BaseController
      */
     public function store(Request $request)
     {
-        $all = $request->all();
+        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        $all['item_demand_id'] = $request->input('item_demand_id');
+        $all['design_company_id'] = $design->id;
+        $all['price'] = $request->input('price');
+        $all['summary'] = $request->input('summary');
+        $all['status'] = $request->input('status');
         $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
@@ -75,8 +80,8 @@ class QuotationController extends BaseController
             'summary.max' => '最多500字符',
             'status.required' => '状态不能为空',
         ];
+        Log::info($all);
         $validator = Validator::make($all, $rules, $messages);
-        $all = $request->except(['token']);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
@@ -116,6 +121,8 @@ class QuotationController extends BaseController
      */
     public function show(Request $request)
     {
+        $item = Item::where('user_id' , $this->auth_user_id)->get();
+        Log::info($item->quotation->item_demand_id);
         $id = intval($request->input('id'));
         $quotation = QuotationModel::where('id', $id)->first();
         if(!$quotation){

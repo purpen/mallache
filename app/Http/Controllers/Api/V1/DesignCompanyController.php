@@ -59,7 +59,6 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} awards 荣誉奖项
      * @apiParam {integer} score 设计公司评分
      * @apiParam {integer} status 设计公司状态
-     * @apiParam {integer} user_id 用户id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -99,8 +98,6 @@ class DesignCompanyController extends BaseController
      */
     public function store(Request $request)
     {
-        $all = $request->all();
-        $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
             'design_type'  => 'required|max:50',
@@ -148,30 +145,30 @@ class DesignCompanyController extends BaseController
             'professional_advantage.max' => '专业优势不能超过500个字',
             'awards.max' => '荣誉奖项不能超过500个字'
         ];
-        $all = $request->except(['token']);
+        $all = $request->all();
+        $all['user_id'] = $this->auth_user_id;
+
         $validator = Validator::make($all , $rules, $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
         try{
-            $design = DesignCompanyModel::firstOrCreate($all);
+            $design = DesignCompanyModel::create($all);
         }
         catch (\Exception $e){
 
-            throw new HttpException('Error');
+          return $this->response->array($this->apiError('设计公司已存在', 500));
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {get} /designCompany/1  根据用户id设计公司展示
+     * @api {get} /designCompany/{user_id}  根据用户id设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
      * @apiGroup designCompany
      *
-     * @apiParam {integer} user_id 用户ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -231,7 +228,7 @@ class DesignCompanyController extends BaseController
      */
     public function show(Request $request)
     {
-        $user_id = intval($request->input('user_id'));
+        $user_id = intval($this->auth_user_id);
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
         $design->item = DesignItemModel::where('user_id' , $user_id)->get();
         if(!$design){
@@ -252,7 +249,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /designCompany/1 根据用户id更新设计公司信息
+     * @api {put} /designCompany/{user_id} 根据用户id更新设计公司信息
      * @apiVersion 1.0.0
      * @apiName designCompany update
      * @apiGroup designCompany
@@ -290,8 +287,9 @@ class DesignCompanyController extends BaseController
      *   }
      *  }
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        $user_id = $this->auth_user_id;
         // 验证规则
         // 验证规则
         $rules = [
@@ -348,7 +346,8 @@ class DesignCompanyController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $design = DesignCompanyModel::where('user_id', intval($id))->update($all);
+        $design = DesignCompanyModel::where('user_id', $user_id)->update($all);
+        Log::info($design);
         if(!$design){
             return $this->response->array($this->apiError());
         }

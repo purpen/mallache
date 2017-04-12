@@ -75,7 +75,6 @@ class DesignItemController extends BaseController
      * @apiName designItem store
      * @apiGroup designItem
      *
-     * @apiParam {integer} user_id 用户id
      * @apiParam {integer} good_field 擅长领域id
      * @apiParam {integer} project_cycle 服务项目周期
      * @apiParam {string} min_price 最低价格
@@ -100,7 +99,10 @@ class DesignItemController extends BaseController
      */
     public function store(Request $request)
     {
-        $all = $request->all();
+        $all['good_field'] = $request->input('good_field');
+        $all['project_cycle'] = $request->input('project_cycle');
+        $all['min_price'] = $request->input('min_price');
+        $all['max_price'] = $request->input('max_price');
         $all['user_id'] = $this->auth_user_id;
 
         //验证规则
@@ -117,13 +119,12 @@ class DesignItemController extends BaseController
             'min_price.required' => '最低价格不能为空' ,
             'max_price.required' => '最高价格不能为空'
         ];
-        $all = $request->except(['token']);
         $validator = Validator::make($all , $rules , $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
+        Log::info($all);
         try{
             $designItem = DesignItemModel::firstOrCreate($all);
         } catch (\Exception $e) {
