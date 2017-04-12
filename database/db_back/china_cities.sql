@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.12, for osx10.11 (x86_64)
 --
--- Host: localhost    Database: kingfisher
+-- Host: localhost    Database: mallache
 -- ------------------------------------------------------
 -- Server version	5.7.12-log
 

@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -43,7 +45,7 @@ class AuthenticateController extends BaseController
         $rules = [
             'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6'],
-            'sms_code' => ['required', 'regex:/^[0-9]{6}$/']
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
         ];
 
         $payload = $request->only('account', 'password', 'sms_code');
@@ -114,6 +116,8 @@ class AuthenticateController extends BaseController
                 'password' => ['required', 'min:6']
             ];
 
+
+
             $payload = app('request')->only('account', 'password');
             $validator = app('validator')->make($payload, $rules);
 
@@ -124,7 +128,7 @@ class AuthenticateController extends BaseController
 
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                return $this->response->array($this->apiError('invalid_credentials', 401));
+                return $this->response->array($this->apiError('账户名或密码错误', 401));
             }
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
@@ -221,7 +225,7 @@ class AuthenticateController extends BaseController
 
         $text = ' 【太火鸟】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         //插入单条短信发送队列
-//        $this->dispatch(new SendOneSms($phone,$text));
+        $this->dispatch(new SendOneSms($phone,$text));
 
         return $this->response->array($this->apiSuccess('请求成功！', 200 , $sms_code));
     }
@@ -283,5 +287,29 @@ class AuthenticateController extends BaseController
         };
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /auth/user 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName user user
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *      "data": {
+     *
+     *      }
+     *   }
+     */
+    public function AuthUser()
+    {
+        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
     }
 }

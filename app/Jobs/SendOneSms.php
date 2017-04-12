@@ -50,6 +50,8 @@ class SendOneSms implements ShouldQueue
             Log::error('短信发送：' . json_encode($result));
             throw new \Exception($result->error,$result->statusCode);
         }
+
+        unset($yun_pian, $result);
     }
 
     public function failed(\Exception $exception)
