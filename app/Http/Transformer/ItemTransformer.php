@@ -13,7 +13,8 @@ class ItemTransformer extends TransformerAbstract
             'id' => $item->id,
             'design_type' => $item->design_type,
             'field' => $item->field,
-            'info' => $this->info($item)
+            'status' => $item->status,
+            'info' => $this->info($item),
         ];
     }
 

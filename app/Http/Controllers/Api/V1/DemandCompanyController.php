@@ -100,12 +100,11 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /demandCompany/1 使用ID获取需求用户信息
+     * @api {get} /demandCompany 获取需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany show
      * @apiGroup demandCompany
      *
-     * @apiParam {integer} user_id 用户ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -129,10 +128,9 @@ class DemandCompanyController extends BaseController
      *      }
      *  }
      */
-    public function show(Request $request)
+    public function show()
     {
-        $user_id = intval($request->input('user_id'));
-        $demand = DemandCompany::where('user_id', $user_id)->first();
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
         if(!$demand){
             return $this->response->array($this->apiError());
         }
@@ -152,7 +150,7 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /demandCompany/1 使用用户ID更新需求用户信息
+     * @api {put} /demandCompany 更新需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany update
      * @apiGroup demandCompany
@@ -178,7 +176,7 @@ class DemandCompanyController extends BaseController
      *   }
      *  }
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $rules = [
             'company_name' => 'max:50',
@@ -199,7 +197,7 @@ class DemandCompanyController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $demand = DemandCompany::where('user_id', intval($id))->update($all);
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());
         }

@@ -77,7 +77,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/field', ['as' => 'field', 'uses' => 'CommonController@field']);
 
         //需求公司信息
-        $api->resource('/demandCompany', 'DemandCompanyController');
+        $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
+        $api->put('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
+        $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
         /**
          * 项目需求相关路由
          */

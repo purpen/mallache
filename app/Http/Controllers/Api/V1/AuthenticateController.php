@@ -304,8 +304,17 @@ class AuthenticateController extends BaseController
      *       "status_code": 200
      *     }
      *      "data": {
-     *
-     *      }
+     *          "id": 1,
+     *          "account": "18629493221",
+     *          "username": "",
+     *          "email": null,
+     *          "phone": "18629493221",
+     *          "status": 0, //状态：；-1：禁用；0.激活;
+     *          "item_sum": 0, //项目数量
+     *          "price_total": "0.00", //总金额
+     *          "price_frozen": "0.00", //冻结金额
+     *           "img": ""
+            }
      *   }
      */
     public function AuthUser()
