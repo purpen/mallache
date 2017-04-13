@@ -61,19 +61,42 @@ class CommonController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      }
-     *   }
-     *   "data":[
-     *       {
+     *   "data":{
      *          "1": "领域1",
      *          "2": "领域2",
      *          "3": "领域3"
      *        }
-     *      ]
      *  }
      */
-    public function Field()
+    public function field()
     {
         $field = config('constant.field');
-        return $this->response()->array($this->apiSuccess('Success', 200 ,$field));
+        return $this->response()->array($this->apiSuccess('Success', 200 , $field));
+    }
+
+    /**
+     * @api {get} /industry 获取行业列表
+     * @apiVersion 1.0.0
+     * @apiName industry list
+     * @apiGroup Common
+     *
+     * @apiParam {string} token
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *   "data":{
+     *          "1": "1",
+     *          "2": "行业2",
+     *          "3": "行业3"
+     *        }
+     *  }
+     */
+    public function industry()
+    {
+        $industry = config('constant.industry');
+        return $this->response()->array($this->apiSuccess('Success', 200 , $industry));
     }
 }

@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\ItemTransformer;
 use App\Jobs\Recommend;
 use App\Models\Item;
+use App\Models\ProductDesign;
+use App\Models\UDesign;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -52,6 +54,9 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} design_type 设计类别：1.产品策略；2.产品设计；3.结构设计；4.app设计；5.网页设计；
      * @apiParam {integer} field 所属领域
+     * @apiParam {integer} industry 行业
+     * @apiParam {integer} system 系统：1.ios；2.安卓；
+     * @apiParam {integer} design_content 设计内容：1.视觉设计；2.交互设计；
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -66,29 +71,83 @@ class DemandController extends BaseController
      */
     public function store(Request $request)
     {
-        //表单验证
-        $rules = [
-            'design_type' => [Rule::in([1, 2, 3, 4, 5])],
-            'field' => 'integer',
-        ];
+        $design_type = $request->input('design_type');
 
-        $all = $request->only(['design_type', 'field']);
+        //产品设计
+        if(in_array($design_type, [1, 2, 3])){
 
-        $validator = Validator::make($all, $rules);
-        if($validator->fails()){
-            throw new StoreResourceFailedException('Error', $validator->errors());
+            $rules = [
+                'design_type' => ['required', Rule::in([1, 2, 3])],
+                'field' => 'required|integer',
+                'industry' => 'required|integer',
+            ];
+
+            $all = $request->only(['design_type','field', 'industry']);
+
+            $validator = Validator::make($all, $rules);
+            if($validator->fails()){
+                throw new StoreResourceFailedException('Error', $validator->errors());
+            }
+
+            $all['user_id'] = $this->auth_user_id;
+            $all['status'] = 1;
+
+
+
+            try{
+                $item = Item::create($all);
+
+                $product_design = ProductDesign::create([
+                    'item_id' => intval($item->id),
+                    'field' => $request->input('field'),
+                    'industry' => $request->input('industry')
+                ]);
+            }
+            catch (\Exception $e){
+                dd($e);
+                return $this->response->array($this->apiError('Error', 500));
+            }
+
+            return $this->response->array($this->apiSuccess());
+
         }
-        $all['user_id'] = $this->auth_user_id;
-        $all['status'] = 1;
+        //UX UI设计
+        elseif (in_array($design_type, [4, 5])){
+            $rules = [
+                'design_type' => ['required', Rule::in([4, 5])],
+                'system' => 'required|integer',
+                'design_content' => 'required|integer',
+            ];
 
-        try{
-            $item = Item::create($all);
-        }
-        catch (\Exception $e){
-            return $this->response->array($this->apiError('Error', 500));
+            $all = $request->only(['design_type','system','design_content']);
+
+            $validator = Validator::make($all, $rules);
+            if($validator->fails()){
+                throw new StoreResourceFailedException('Error', $validator->errors());
+            }
+
+            $all['user_id'] = $this->auth_user_id;
+            $all['status'] = 1;
+
+            try{
+                $item = Item::create($all);
+
+                $u_design = UDesign::create([
+                    'item_id' => intval($item->id),
+                    'system' => $request->input('system'),
+                    'design_content' => $request->input('design_content')
+                ]);
+            }
+            catch (\Exception $e){
+                dd($e);
+                return $this->response->array($this->apiError('Error', 500));
+            }
+
+            return $this->response->array($this->apiSuccess());
+        }else{
+            return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
 
@@ -102,33 +161,7 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-        "data": {
-            "id": 1,
-            "design_type": 4,  //设计类型
-            "field": 4,  //领域
-            "status": 2, //状态：1.填写资料；2.人工干预；3.推荐；4.发布；5失败；6成功；7.取消；
-            "info": {
-                "id": 2,
-                "item_id": 1, //项目ID
-                "system": 1,  //系统：1.ios；2.安卓；
-                "design_content": 0,
-                "page_number": 0,
-                "name": "",
-                "stage": 0,
-                "complete_content": 0,
-                "other_content": "",
-                "style": 0,
-                "start_time": 0,
-                "cycle": 0,
-                "design_cost": 0,
-                "province": 0,
-                "city": 0,
-                "summary": "",
-                "artificial": 0,
-                "created_at": "2017-04-06 18:03:16",
-                "updated_at": "2017-04-06 18:03:16"
-             }
-        },
+
         "meta": {
             "message": "Success",
             "status_code": 200
@@ -177,12 +210,12 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} design_type 设计类别：1.产品策略；2.产品设计；3.结构设计；4.app设计；5.网页设计；
      * @apiParam {integer} field 所属领域
+     * @apiParam {integer} industry 行业
+     * @apiParam {integer} system 系统：1.ios；2.安卓；
+     * @apiParam {integer} design_content 设计内容：1.视觉设计；2.交互设计；
      *
      * @apiSuccessExample 成功响应:
      *   {
-     *      "data": {
-     *
-     *      },
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
@@ -198,37 +231,88 @@ class DemandController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //表单验证
-        $rules = [
-            'design_type' => [Rule::in([1, 2, 3, 4, 5])],
-            'field' => 'integer',
-        ];
+        $design_type = $request->input('design_type');
 
-        $all = $request->only(['design_type', 'field']);
+        //产品设计
+        if(in_array($design_type, [1, 2, 3])){
 
-        $validator = Validator::make($all, $rules);
-        if($validator->fails()){
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
+            $rules = [
+                'design_type' => ['required', Rule::in([1, 2, 3])],
+                'field' => 'required|integer',
+                'industry' => 'required|integer',
+            ];
 
-        $all['status'] = 1;
-        try{
+            $all = $request->only(['design_type', 'field', 'industry']);
 
-            if(!$item = Item::find(intval($id))){
-                return $this->response->array($this->apiError('not found!', 404));
-            }
-            //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id){
-                return $this->response->array($this->apiError('not found!', 404));
+            $validator = Validator::make($all, $rules);
+            if($validator->fails()){
+                throw new StoreResourceFailedException('Error', $validator->errors());
             }
 
-            $item->update($all);
+            try{
+
+                if(!$item = Item::find(intval($id))){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+                //验证是否是当前用户对应的项目
+                if($item->user_id !== $this->auth_user_id){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+
+                $item->update($all);
+
+                $product_design = ProductDesign::firstOrCreate(['item_id' => intval($item->id)]);
+                $product_design->field = $request->input('field');
+                $product_design->industry = $request->input('industry');
+                $product_design->save();
+            }
+            catch (\Exception $e){
+                return $this->response->array($this->apiError('Error', 500));
+            }
+
+            return $this->response->array($this->apiSuccess());
+
         }
-        catch (\Exception $e){
-            return $this->response->array($this->apiError('Error', 500));
+        //UX UI设计
+        elseif (in_array($design_type, [4, 5])){
+            $rules = [
+                'design_type' => ['required', Rule::in([4, 5])],
+                'system' => 'required|integer',
+                'design_content' => 'required|integer',
+            ];
+
+            $all = $request->only(['design_type', 'system', 'design_content']);
+
+            $validator = Validator::make($all, $rules);
+            if($validator->fails()){
+                throw new StoreResourceFailedException('Error', $validator->errors());
+            }
+
+            try{
+                if(!$item = Item::find(intval($id))){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+                //验证是否是当前用户对应的项目
+                if($item->user_id !== $this->auth_user_id){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+
+                $item->update($all);
+
+                $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
+                $product_design->system = $request->input('system');
+                $product_design->design_content = $request->input('design_content');
+                $product_design->save();
+            }
+            catch (\Exception $e){
+                return $this->response->array($this->apiError('Error', 500));
+            }
+
+            return $this->response->array($this->apiSuccess());
+        }else{
+            return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->array($this->apiSuccess());
     }
 
     /**
@@ -282,10 +366,4 @@ class DemandController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
-    public function getRecommend($item_id)
-    {
-        if(!$item = Item::find((int)$item_id)){
-
-        }
-    }
 }

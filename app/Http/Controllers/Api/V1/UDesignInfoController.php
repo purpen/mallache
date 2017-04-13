@@ -89,21 +89,13 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
-     * @apiParam {integer} system 系统：1.ios；2.安卓；
-     * @apiParam {integer} design_content 设计内容：1.视觉设计；2.交互设计；
-     * @apiParam {integer} page_number 页面数量：1.10页以内；2.10-30'；3.30-50;4.50-；
      * @apiParam {string} name 项目名称
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {integer} complete_content 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
      * @apiParam {string} other_content 其他设计内容
-     * @apiParam {integer} style ui设计风格：1.简约；2.扁平化；3.拟物；
-     * @apiParam {integer} start_time 项目开始时间：1、可商议；2、马上开始；3、有具体时间；
-     * @apiParam {integer} cycle 项目周期：1.1-2周；2.2-4周；3.1-2月；4.2月以上；5.不确定
-     * @apiParam {integer} design_cost 设计费用：
+     * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
      * @apiParam {integer}province  省份
      * @apiParam {integer} city 城市
-     * @apiParam {string} summary 备注
-     * @apiParam {integer} artificial 人工服务
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -125,21 +117,13 @@ class UDesignInfoController extends BaseController
     {
         $all = $request->all();
         $rules = [
-            'system' => ['integer', Rule::in([1, 2])],
-            'design_content' => ['integer', Rule::in([1, 2])],
-            'page_number' => ['integer', Rule::in([1, 2, 3, 4])],
-            'name' => 'max:50',
-            'stage' => ['integer', Rule::in([1, 2])],
-            'complete_content' => ['integer', Rule::in([1, 2, 3, 4, 5])],
-            'other_content' => 'max:20',
-            'style' => ['integer', Rule::in([1, 2, 3])],
-            'start_time' => ['integer', Rule::in([1, 2, 3])],
-            'cycle' => ['integer', Rule::in([1, 2, 3, 4, 5])],
-            'design_cost' => ['integer'],
-            'province' => 'integer',
-            'city' => 'integer',
-            'summary' => 'max:500',
-            'artificial' => ['integer', Rule::in([1, 0])],
+            'name' => 'required|max:50',
+            'stage' => ['required', 'integer', Rule::in([1, 2])],
+            'complete_content' => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
+            'other_content' => 'filled|max:20',
+            'design_cost' => ['required', 'integer'],
+            'province' => 'required|integer',
+            'city' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
         if($validator->fails()){
@@ -152,17 +136,14 @@ class UDesignInfoController extends BaseController
             }
 
             //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id){
+            if($item->user_id !== $this->auth_user_id || !in_array($item->design_type, [4, 5])){
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
-            if(!in_array($item->design_type, [4, 5])){
-                return $this->response->array($this->apiError());
-            }
-
-            $design = UDesign::firstOrCreate(['item_id' => intval($item_id)]);
+            $design = UDesign::where(['item_id' => intval($item_id)])->first();
             $design->update($all);
         }catch(\Exception $e){
+            dd($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 

@@ -75,6 +75,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         ]);
         //获取领域列表
         $api->get('/field', ['as' => 'field', 'uses' => 'CommonController@field']);
+        //获取行业列表
+        $api->get('/industry', ['as' => 'industry', 'uses' => 'CommonController@industry']);
 
         //需求公司信息
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
