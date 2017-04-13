@@ -57,9 +57,9 @@ class QuotationController extends BaseController
      */
     public function store(Request $request)
     {
-        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        $design =
         $all['item_demand_id'] = $request->input('item_demand_id');
-        $all['design_company_id'] = $design->id;
+        $all['design_company_id'] = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
         $all['price'] = $request->input('price');
         $all['summary'] = $request->input('summary');
         $all['status'] = $request->input('status');

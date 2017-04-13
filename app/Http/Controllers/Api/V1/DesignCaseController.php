@@ -258,9 +258,9 @@ class DesignCaseController extends BaseController
         $all = $request->except(['token']);
 
         $designCase = DesignCaseModel::where('id', intval($id))->update($all);
-//        if(!$designCase){
-//            return $this->response->array($this->apiError());
-//        }
+        if(!$designCase){
+            return $this->response->array($this->apiError());
+        }
         return $this->response->array($this->apiSuccess());
     }
 
