@@ -38,6 +38,7 @@ class DesignCompanyController extends BaseController
      * @apiGroup designCompany
      * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {string} registration_number 公司注册号
      * @apiParam {string} establishment_time 成立时间
      * @apiParam {integer} company_size 公司规模 1.10以下；2.10-50；3.50-100；4.100以上;
@@ -68,6 +69,7 @@ class DesignCompanyController extends BaseController
      *          "user_id": 1,
      *          "company_type": 0,
      *          "company_name": "",
+     *          "company_abbreviation": "",
      *          "registration_number": "",
      *          "province": 0,
      *          "city": 0,
@@ -103,6 +105,7 @@ class DesignCompanyController extends BaseController
             'design_type'  => 'nullable|max:50',
             'company_type'  => 'required|integer',
             'company_name'  => 'required|max:50',
+            'company_abbreviation'  => 'required|max:50',
             'registration_number'  => 'required|max:15',
             'province'  => 'required|integer',
             'city'  => 'required|integer',
@@ -127,6 +130,8 @@ class DesignCompanyController extends BaseController
             'company_type.integer' => '企业类型必须为整形',
             'company_type.required' => '企业类型不能为空',
             'company_name.required' => '公司名称不能为空',
+            'company_abbreviation.required' => '公司简称不能为空',
+            'company_abbreviation.max' => '公司简称不能超过50个字',
             'company_name.max' => '公司名称不能超过50个字',
             'registration_number.required' => '注册号不能为空',
             'registration_number.max' => '注册号不能超过50个字',
@@ -164,10 +169,14 @@ class DesignCompanyController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $design = DesignCompanyModel::create($all);
+            $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->count();
+            if($design > 0){
+                return $this->response->array($this->apiError('已存在该设计公司'));
+            }else{
+                $design = DesignCompanyModel::create($all);
+            }
         }
         catch (\Exception $e){
-
           return $this->response->array($this->apiError('设计公司已存在', 500));
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
@@ -186,6 +195,7 @@ class DesignCompanyController extends BaseController
      *          "id": 8,
      *          "company_type": 1, 1.普通；2.多证合一；
      *          "company_name": "",
+     *          "company_abbreviation": "",
      *          "registration_number": "",
      *          "province": 0,
      *          "city": 0,
@@ -266,6 +276,7 @@ class DesignCompanyController extends BaseController
      *
      * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {string} registration_number 公司注册号
      * @apiParam {string} establishment_time 成立时间
      * @apiParam {integer} company_size 公司规模 1.10以下；2.10-50；3.50-100；4.100以上;
@@ -305,6 +316,7 @@ class DesignCompanyController extends BaseController
             'design_type'  => 'nullable|max:50',
             'company_type'  => 'required|integer',
             'company_name'  => 'required|max:50',
+            'company_abbreviation'  => 'required|max:50',
             'registration_number'  => 'required|max:15',
             'province'  => 'required|integer',
             'city'  => 'required|integer',
@@ -330,6 +342,8 @@ class DesignCompanyController extends BaseController
             'company_type.required' => '企业类型不能为空',
             'company_name.required' => '公司名称不能为空',
             'company_name.max' => '公司名称不能超过50个字',
+            'company_abbreviation.required' => '公司简称不能为空',
+            'company_abbreviation.max' => '公司简称不能超过50个字',
             'registration_number.required' => '注册号不能为空',
             'registration_number.max' => '注册号不能超过50个字',
             'province.required' => '省份不能为空',

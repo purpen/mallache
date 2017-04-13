@@ -124,10 +124,16 @@ class DesignItemController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        Log::info($all);
         try{
-            $designItem = DesignItemModel::firstOrCreate($all);
+            //根据设计类型查询有无存在
+            $designItem = DesignItemModel::where('design_type' , $request->input('design_type'))->count();
+            if($designItem > 0){
+                return $this->response->array($this->apiError('已存在该类型'));
+            }else{
+                $designItem = DesignItemModel::create($all);
+            }
         } catch (\Exception $e) {
+
             throw new HttpException('Error');
         }
 

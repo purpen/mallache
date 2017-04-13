@@ -12,6 +12,7 @@ class DesignCompanyTransformer extends TransformerAbstract
         user_id	        int(10)	    是		用户表ID
         company_type	tinyint(1)	是		企业类型：1.普通；2.多证合一；
         company_name	varchar(50)	是		公司名称
+        company_abbreviation	varchar(50)	是		公司简称
         registration_number	varchar(15)	是		注册号
         province	    int(10)	    是		省份
         city	        int(10)	    是		城市
@@ -43,6 +44,7 @@ class DesignCompanyTransformer extends TransformerAbstract
             'user_id' => intval($DesignCompany->user_id),
             'company_type' => intval($DesignCompany->company_type),
             'company_name' => strval($DesignCompany->company_name),
+            'company_abbreviation' => strval($DesignCompany->company_abbreviation),
             'registration_number' => strval($DesignCompany->registration_number),
             'province' => intval($DesignCompany->province),
             'city' => intval($DesignCompany->city),

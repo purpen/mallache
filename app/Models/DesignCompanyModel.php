@@ -42,7 +42,8 @@ class DesignCompanyModel extends Model
         'professional_advantage',
         'awards',
         'score',
-        'status'
+        'status',
+        'company_abbreviation'
     ];
 
 
