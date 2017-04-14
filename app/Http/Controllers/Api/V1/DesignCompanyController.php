@@ -36,7 +36,6 @@ class DesignCompanyController extends BaseController
      * @apiVersion 1.0.0
      * @apiName designCompany store
      * @apiGroup designCompany
-     * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {string} registration_number 公司注册号
@@ -58,8 +57,6 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
-     * @apiParam {integer} score 设计公司评分
-     * @apiParam {integer} status 设计公司状态
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -85,12 +82,9 @@ class DesignCompanyController extends BaseController
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
-     *          "design_type": "3",
      *          "establishment_time": "",
      *          "professional_advantage": "",
      *          "awards": "",
-     *          "score": 0,
-     *          "status": 0
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -192,7 +186,7 @@ class DesignCompanyController extends BaseController
             }
         }
         catch (\Exception $e){
-          return $this->response->array($this->apiError('设计公司已存在', 500));
+            return $this->response->array($this->apiError());
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
     }
@@ -289,7 +283,6 @@ class DesignCompanyController extends BaseController
      * @apiName designCompany update
      * @apiGroup designCompany
      *
-     * @apiParam {string} design_type 设计类型 1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {string} registration_number 公司注册号
@@ -311,8 +304,6 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
-     * @apiParam {integer} score 设计公司评分
-     * @apiParam {integer} status 设计公司状态
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
@@ -387,14 +378,12 @@ class DesignCompanyController extends BaseController
             'awards.max' => '荣誉奖项不能超过500个字'
         ];
         $all = $request->except(['token']);
-Log::info($all);
         $validator = Validator::make($all , $rules, $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $design = DesignCompanyModel::where('user_id', $user_id)->update($all);
-        Log::info($design);
         if(!$design){
             return $this->response->array($this->apiError());
         }

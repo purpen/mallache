@@ -125,16 +125,18 @@ class DesignItemController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            //根据设计类型查询有无存在
-            $designItem = DesignItemModel::where('design_type' , $request->input('design_type'))->count();
+            //根据设计类型查询是否存在
+            $designItem = DesignItemModel::
+                where('design_type' , $request->input('design_type'))
+                ->where('user_id' , $this->auth_user_id)
+                ->count();
             if($designItem > 0){
                 return $this->response->array($this->apiError('已存在该类型'));
             }else{
                 $designItem = DesignItemModel::create($all);
             }
         } catch (\Exception $e) {
-
-            throw new HttpException('Error');
+            return $this->response->array($this->apiError());
         }
 
         return $this->response->item($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());

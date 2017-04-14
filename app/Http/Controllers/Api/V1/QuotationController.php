@@ -58,7 +58,11 @@ class QuotationController extends BaseController
     public function store(Request $request)
     {
         $all['item_demand_id'] = $request->input('item_demand_id');
-        $all['design_company_id'] = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        if(!$design){
+            return $this->response->array($this->apiError('设计公司不存在'));
+        }
+        $all['design_company_id'] = $design->id;
         $all['price'] = $request->input('price');
         $all['summary'] = $request->input('summary');
         $all['status'] = $request->input('status');
@@ -88,7 +92,7 @@ class QuotationController extends BaseController
             $quotation = QuotationModel::firstOrCreate($all);
         }
         catch (\Exception $e){
-            throw new HttpException('Error');
+            return $this->response->array($this->apiError());
         }
 
         return $this->response->item($quotation, new QuotationTransformer())->setMeta($this->apiMeta());
@@ -183,6 +187,13 @@ class QuotationController extends BaseController
 
         $all = $request->except(['token']);
 
+        $design = QuotationModel::find($id);
+        if(!$design){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        if($design->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
         $quotation = QuotationModel::where('id', $id)->update($all);
         if(!$quotation){
             return $this->response->array($this->apiError());

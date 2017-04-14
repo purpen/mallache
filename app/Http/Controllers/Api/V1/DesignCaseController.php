@@ -144,10 +144,10 @@ class DesignCaseController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $designCase = DesignCaseModel::firstOrCreate($all);
+            $designCase = DesignCaseModel::create($all);
         }
         catch (\Exception $e){
-            throw new HttpException('Error');
+            return $this->response->array($this->apiError());
         }
 
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
@@ -256,7 +256,15 @@ class DesignCaseController extends BaseController
         }
 
         $all = $request->except(['token']);
-
+        //检验是否存在该案例
+        $case = DesignCaseModel::find($id);
+        if(!$case){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        //检验是否是当前用户创建的案例
+        if($case->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
         $designCase = DesignCaseModel::where('id', intval($id))->update($all);
         if(!$designCase){
             return $this->response->array($this->apiError());
@@ -283,6 +291,15 @@ class DesignCaseController extends BaseController
      */
     public function destroy($id)
     {
+        //检验是否存在该案例
+        $case = DesignCaseModel::find($id);
+        if(!$case){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        //检验是否是当前用户创建的案例
+        if($case->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
         $designCase = DesignCaseModel::where('id', intval($id))->delete();
         if(!$designCase){
             return $this->response->array($this->apiError());
