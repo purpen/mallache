@@ -102,6 +102,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/quotation', 'QuotationController');
         //项目类型
         $api->resource('/designItem', 'DesignItemController');
+        //栏目位
+        $api->resource('/column', 'ColumnController');
         //更新设计公司审核状态
         $api->put('designCompany/{id}/upStatus', [
             'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@upStatus'

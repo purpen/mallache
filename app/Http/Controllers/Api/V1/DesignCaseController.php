@@ -108,8 +108,6 @@ class DesignCaseController extends BaseController
      */
     public function store(Request $request)
     {
-        $all = $request->all();
-        $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
             'title'  => 'required|max:50',
@@ -130,13 +128,23 @@ class DesignCaseController extends BaseController
             'profile.max' => '最多500字符',
             'status.required' => '状态不能为空',
         ];
-        $validator = Validator::make($request->only(['title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
+        $all['title'] = $request->input('title');
+        $all['prize'] = $request->input('prize');
+        $all['prize_time'] = $request->input('prize_time');
+        $all['sales_volume'] = $request->input('sales_volume');
+        $all['mass_production'] = $request->input('mass_production');
+        $all['customer'] = $request->input('customer');
+        $all['field'] = $request->input('field');
+        $all['status'] = $request->input('status');
+        $all['profile'] = $request->input('profile');
+        $all['user_id'] = $this->auth_user_id;
 
+        $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $designCase = DesignCaseModel::create($all);
+            $designCase = DesignCaseModel::firstOrCreate($all);
         }
         catch (\Exception $e){
             throw new HttpException('Error');
@@ -195,7 +203,7 @@ class DesignCaseController extends BaseController
     }
 
     /**
-     * @api {put} /designCase/4 根据公司案例ID更新案例数据
+     * @api {put} /designCase/12 根据公司案例ID更新案例数据
      * @apiVersion 1.0.0
      * @apiName designCase update
      * @apiGroup designCase

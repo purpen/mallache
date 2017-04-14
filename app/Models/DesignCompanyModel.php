@@ -18,15 +18,41 @@ class DesignCompanyModel extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id', 'company_type', 'company_name', 'registration_number', 'province', 'city', 'area', 'address', 'contact_name', 'position' , 'phone', 'email' , 'company_size' , 'branch_office' , 'item_quantity' , 'company_profile' , 'good_field' , 'web' , 'design_type' , 'establishment_time' , 'professional_advantage' , 'awards'];
+    protected $fillable = [
+        'user_id',
+        'company_type',
+        'company_name',
+        'registration_number',
+        'province',
+        'city',
+        'area',
+        'address',
+        'contact_name',
+        'position',
+        'phone',
+        'email',
+        'company_size',
+        'branch_office',
+        'item_quantity',
+        'company_profile',
+        'good_field',
+        'web',
+        'design_type',
+        'establishment_time',
+        'professional_advantage',
+        'awards',
+        'score',
+        'status',
+        'company_abbreviation'
+    ];
 
 
     /**
-     * 获取拥有设计公司的报价
+     * 一对多关联报价
      */
     public function quotation()
     {
-        return $this->belongsTo('App\Models\QuotationModel');
+        return $this->hasMany('App\Models\QuotationModel' , 'design_company_id');
     }
 
 

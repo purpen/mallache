@@ -29,4 +29,12 @@ class Item extends Model
     {
         return $this->hasOne('App\Models\ProductDesign', 'item_id');
     }
+
+    /**
+     * 一对多关联报价
+     */
+    public function quotation()
+    {
+        return $this->hasMany('App\Models\QuotationModel', 'item_demand_id');
+    }
 }

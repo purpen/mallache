@@ -27,7 +27,7 @@ class DesignItemController extends BaseController
      *           {
      *               "id": 1,
      *               "user_id": 1,
-     *               "good_field": 1,
+     *               "design_type": 1,
      *               "project_cycle": 1,
      *               "min_price": "1.00",
      *               "max_price": "1.00",
@@ -38,7 +38,7 @@ class DesignItemController extends BaseController
      *           {
      *               "id": 2,
      *               "user_id": 1,
-     *               "good_field": 2,
+     *               "design_type": 2,
      *               "project_cycle": 2,
      *               "min_price": "2.00",
      *               "max_price": "2.00",
@@ -75,7 +75,7 @@ class DesignItemController extends BaseController
      * @apiName designItem store
      * @apiGroup designItem
      *
-     * @apiParam {integer} good_field 擅长领域id
+     * @apiParam {integer} design_type 设计类型
      * @apiParam {integer} project_cycle 服务项目周期
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
@@ -86,7 +86,7 @@ class DesignItemController extends BaseController
      *       "data": {
      *           "id": 1,
      *           "user_id": 1,
-     *           "good_field": "1",
+     *           "design_type": "1",
      *           "project_cycle": "1",
      *           "min_price": "1",
      *           "max_price": "1"
@@ -99,33 +99,41 @@ class DesignItemController extends BaseController
      */
     public function store(Request $request)
     {
-        $all = $request->all();
+        $all['design_type'] = $request->input('design_type');
+        $all['project_cycle'] = $request->input('project_cycle');
+        $all['min_price'] = $request->input('min_price');
+        $all['max_price'] = $request->input('max_price');
         $all['user_id'] = $this->auth_user_id;
 
         //验证规则
         $rules = [
-            'good_field' => 'required|integer' ,
+            'design_type' => 'required|integer' ,
             'project_cycle' => 'required|integer' ,
             'min_price' => 'required' ,
             'max_price' => 'required'
         ];
 
         $messages = [
-            'good_field.required' => '擅长领域id不能为空' ,
+            'design_type.required' => '设计类型不能为空' ,
             'roject_cycle.required' => '项目周期不能为空' ,
             'min_price.required' => '最低价格不能为空' ,
             'max_price.required' => '最高价格不能为空'
         ];
-
         $validator = Validator::make($all , $rules , $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
         try{
-            $designItem = DesignItemModel::create($all);
+            //根据设计类型查询有无存在
+            $designItem = DesignItemModel::where('design_type' , $request->input('design_type'))->count();
+            if($designItem > 0){
+                return $this->response->array($this->apiError('已存在该类型'));
+            }else{
+                $designItem = DesignItemModel::create($all);
+            }
         } catch (\Exception $e) {
+
             throw new HttpException('Error');
         }
 
@@ -146,7 +154,7 @@ class DesignItemController extends BaseController
      *           "data": {
      *              "id": 2,
      *              "user_id": 1,
-     *              "good_field": "2",
+     *              "design_type": "2",
      *              "project_cycle": "2",
      *              "min_price": "2.00",
      *              "max_price": "2.00"
@@ -184,7 +192,7 @@ class DesignItemController extends BaseController
      * @apiName designItem update
      * @apiGroup designItem
      *
-     * @apiParam {integer} good_field 擅长领域id
+     * @apiParam {integer} design_type 设计类型
      * @apiParam {integer} project_cycle 服务项目周期
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
@@ -202,20 +210,20 @@ class DesignItemController extends BaseController
     {
         //验证规则
         $rules = [
-            'good_field' => 'required|integer' ,
+            'design_type' => 'required|integer' ,
             'project_cycle' => 'required|integer' ,
             'min_price' => 'required' ,
             'max_price' => 'required'
         ];
 
         $messages = [
-            'good_field.required' => '擅长领域id不能为空' ,
+            'design_type.required' => '	设计类型不能为空' ,
             'roject_cycle.required' => '项目周期不能为空' ,
             'min_price.required' => '最低价格不能为空' ,
             'max_price.required' => '最高价格不能为空'
         ];
 
-        $validator = Validator::make($request->only(['good_field' , 'project_cycle' , 'min_price' , 'max_price']) , $rules , $messages);
+        $validator = Validator::make($request->only(['design_type' , 'project_cycle' , 'min_price' , 'max_price']) , $rules , $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());

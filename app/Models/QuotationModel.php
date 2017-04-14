@@ -18,23 +18,23 @@ class QuotationModel extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['item_demand_id' , 'design_company_id' , 'price' , 'summary' , 'status'];
+    protected $fillable = ['user_id' , 'item_demand_id' , 'design_company_id' , 'price' , 'summary' , 'status'];
 
 
     /**
-     * 获取报价与设计公司关联
+     * 报价与设计公司关联
      */
     public function designCompany()
     {
-        return $this->hasOne('App\Models\DesignCompanyModel');
+        return $this->belongsTo('App\Models\DesignCompanyModel' , 'design_company_id');
     }
 
     /**
      * 获取报价与需求公司关联
      */
-    public function demandCompany()
+    public function item()
     {
-        return $this->hasOne('App\Models\DemandCompanyModel');
+        return $this->belongsTo('App\Models\Item' , 'item_demand_id');
     }
 
 }
