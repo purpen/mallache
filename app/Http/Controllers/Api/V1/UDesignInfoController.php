@@ -149,7 +149,14 @@ class UDesignInfoController extends BaseController
         try{
             if(!$item = Item::find($item_id)){
                 return $this->response->array($this->apiError('not found!', 404));
-            }else if(!in_array($item->design_type, [4, 5])){
+            }
+
+            //验证是否是当前用户对应的项目
+            if($item->user_id !== $this->auth_user_id){
+                return $this->response->array($this->apiError('not found!', 404));
+            }
+
+            if(!in_array($item->design_type, [4, 5])){
                 return $this->response->array($this->apiError());
             }
 

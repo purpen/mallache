@@ -37,6 +37,9 @@ class AuthenticateController extends BaseController
      *       "message": "Success",
      *       "status_code": 200
      *     }
+     *     "data": {
+     *          "token": ""
+     *      }
      *   }
      */
     public function register (Request $request)
@@ -63,15 +66,17 @@ class AuthenticateController extends BaseController
             Cache::forget($key);
         }
         // 创建用户
-        $res = User::create([
+        $user = User::create([
             'account' => $payload['account'],
             'phone' => $payload['account'],
             'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);
 
-        if ($res) {
-            return $this->response->array($this->apiSuccess());
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+
+            return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
@@ -227,7 +232,7 @@ class AuthenticateController extends BaseController
         //插入单条短信发送队列
         $this->dispatch(new SendOneSms($phone,$text));
 
-        return $this->response->array($this->apiSuccess('请求成功！', 200 , $sms_code));
+        return $this->response->array($this->apiSuccess('请求成功！', 200, compact('sms_code')));
     }
 
     /**
@@ -304,8 +309,17 @@ class AuthenticateController extends BaseController
      *       "status_code": 200
      *     }
      *      "data": {
-     *
-     *      }
+     *          "id": 1,
+     *          "account": "18629493221",
+     *          "username": "",
+     *          "email": null,
+     *          "phone": "18629493221",
+     *          "status": 0, //状态：；-1：禁用；0.激活;
+     *          "item_sum": 0, //项目数量
+     *          "price_total": "0.00", //总金额
+     *          "price_frozen": "0.00", //冻结金额
+     *           "img": ""
+            }
      *   }
      */
     public function AuthUser()

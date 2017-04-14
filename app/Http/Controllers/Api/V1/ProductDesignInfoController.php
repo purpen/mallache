@@ -150,7 +150,9 @@ class ProductDesignInfoController extends BaseController
         try{
             if(!$item = Item::find($item_id)){
                 return $this->response->array($this->apiError('not found!', 404));
-            }else if(!in_array($item->design_type, [1, 2, 3])){
+            }
+            //判断设计类型，用户权限是否正确
+            else if (!in_array($item->design_type, [1, 2, 3]) || $item->user_id !== $this->auth_user_id){
                 return $this->response->array($this->apiError());
             }
 

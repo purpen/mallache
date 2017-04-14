@@ -60,7 +60,7 @@ class Recommend implements ShouldQueue
             ->pluck('user_id')->all();
 
 Log::info($design_id_arr);
-        //获取符合做设计类型的设计公司ID数组
+        //获取符合设计类型的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
             ->where('status','=', 1)
             ->whereIn('user_id',$design_id_arr)

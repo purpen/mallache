@@ -101,15 +101,39 @@ class DemandController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     *   {
-     *      "data": {
-     *
-     *      },
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *  }
+     * {
+        "data": {
+            "id": 1,
+            "design_type": 4,  //设计类型
+            "field": 4,  //领域
+            "status": 2, //状态：1.填写资料；2.人工干预；3.推荐；4.发布；5失败；6成功；7.取消；
+            "info": {
+                "id": 2,
+                "item_id": 1, //项目ID
+                "system": 1,  //系统：1.ios；2.安卓；
+                "design_content": 0,
+                "page_number": 0,
+                "name": "",
+                "stage": 0,
+                "complete_content": 0,
+                "other_content": "",
+                "style": 0,
+                "start_time": 0,
+                "cycle": 0,
+                "design_cost": 0,
+                "province": 0,
+                "city": 0,
+                "summary": "",
+                "artificial": 0,
+                "created_at": "2017-04-06 18:03:16",
+                "updated_at": "2017-04-06 18:03:16"
+             }
+        },
+        "meta": {
+            "message": "Success",
+            "status_code": 200
+        }
+    }
      */
     /**
      * Display the specified resource.
@@ -119,7 +143,13 @@ class DemandController extends BaseController
      */
     public function show($id)
     {
-        $item = Item::find(intval($id));
+        if(!$item = Item::find(intval($id))){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        //验证是否是当前用户对应的项目
+        if($item->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
 
         if(!$item){
             return $this->response->array($this->apiError());
@@ -183,7 +213,16 @@ class DemandController extends BaseController
 
         $all['status'] = 1;
         try{
-            $item = Item::find(intval($id))->update($all);
+
+            if(!$item = Item::find(intval($id))){
+                return $this->response->array($this->apiError('not found!', 404));
+            }
+            //验证是否是当前用户对应的项目
+            if($item->user_id !== $this->auth_user_id){
+                return $this->response->array($this->apiError('not found!', 404));
+            }
+
+            $item->update($all);
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
@@ -227,6 +266,11 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
+        //验证是否是当前用户对应的项目
+        if($item->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+
         try{
             $item->status = 2;
             $item->save();
@@ -236,5 +280,12 @@ class DemandController extends BaseController
         }
         dispatch(new Recommend($item));
         return $this->response->array($this->apiSuccess());
+    }
+
+    public function getRecommend($item_id)
+    {
+        if(!$item = Item::find((int)$item_id)){
+
+        }
     }
 }
