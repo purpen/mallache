@@ -8,7 +8,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
+use App\Models\DesignCompanyModel;
+use App\Models\DesignItemModel;
 use App\Models\Item;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
@@ -364,6 +367,45 @@ class DemandController extends BaseController
         }
         dispatch(new Recommend($item));
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /demand/recommendList/{item_id} 项目ID获取推荐的设计公司
+     * @apiVersion 1.0.0
+     * @apiName demand recommendList
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function recommendList($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        //验证是否是当前用户对应的项目
+        if($item->user_id !== $this->auth_user_id || $item->status !== 3){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+
+        $recommend_arr = explode(',', $item->recommend);
+
+        //如果推荐为空，则返回
+        if(empty($recommend_arr)){
+            return $this->response->array($this->apiSuccess('Success', 200, []));
+        }
+
+        $design = DesignCompanyModel::whereIn('user_id',$recommend_arr)->get();
+
+        return $this->response->collection($design, new RecommendListTransformer())->setMeta($this->apiMeta());
     }
 
 }
