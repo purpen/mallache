@@ -21,6 +21,7 @@ class DemandCompany extends Model
     protected $fillable = [
         'user_id',
         'company_name',
+        'company_abbreviation',
         'company_size',
         'company_web',
         'province',

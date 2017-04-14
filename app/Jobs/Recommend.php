@@ -90,7 +90,7 @@ class Recommend implements ShouldQueue
         //获取符合设计类型和设计费用的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('design_type', $design_type)
-            ->where($max, '>', 'min_price')
+            ->where('min_price', '<', $max)
             ->get()
             ->pluck('user_id')->all();
 
@@ -116,15 +116,15 @@ class Recommend implements ShouldQueue
 
         //所属领域
         $field =  $this->item->productDesign->field;
-        //获取符合设计类型和设计费用的设计公司ID数组
+        //获取符合 设计类型 和 设计费用 的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('design_type', $design_type)
-            ->where($max, '>', 'min_price')
+            ->where('min_price', '<', $max)
             ->get()
             ->pluck('user_id')->all();
 
-//Log::info($design_id_arr);
-        //获取擅长的设计公司ID数组
+Log::info($design_id_arr);
+        //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
             ->where('status','=', 1)
             ->whereIn('user_id',$design_id_arr)
