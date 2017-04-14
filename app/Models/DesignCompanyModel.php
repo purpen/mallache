@@ -52,7 +52,23 @@ class DesignCompanyModel extends Model
      */
     public function quotation()
     {
-        return $this->hasMany('App\Models\QuotationModel' , 'design_company_id');
+        return $this->hasOne('App\Models\QuotationModel' , 'design_company_id');
+    }
+
+    /**
+     * 一对多关联项目类型
+     */
+    public function designItem()
+    {
+        return $this->hasMany('App\Models\DesignItemModel');
+    }
+
+    /**
+     * 一对多关联案例
+     */
+    public function designCase()
+    {
+        return $this->hasMany('App\Models\DesignCaseModel');
     }
 
 
@@ -64,5 +80,13 @@ class DesignCompanyModel extends Model
         $design_company = self::findOrFail($id);
         $design_company->status = $status;
         return $design_company->save();
+    }
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

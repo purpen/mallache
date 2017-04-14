@@ -19,4 +19,18 @@ class DesignItemModel extends Model
      */
     protected $fillable = ['user_id' , 'design_type' , 'project_cycle' , 'min_price' , 'max_price'];
 
+
+    //相对关联设计公司表
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel');
+    }
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
 }

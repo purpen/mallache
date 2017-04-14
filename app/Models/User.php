@@ -39,4 +39,38 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    /*
+     * 一对一关联设计公司
+     */
+    public function designCompany()
+    {
+        return $this->hasOne('App\Models\DesignCompanyModel' , 'user_id');
+    }
+
+    /*
+     * 一对多关联案例
+     */
+    public function designCase()
+    {
+        return $this->hasMany('App\Models\DesignCaseModel' , 'user_id');
+    }
+
+    /*
+     * 一对多关联服务项目
+     */
+    public function designItem()
+    {
+        return $this->hasMany('App\Models\DesignCaseModel' , 'user_id');
+    }
+
+    /*
+     * 一对多关联报价
+     */
+    public function quotation()
+    {
+        return $this->hasMany('App\Models\QuotationModel' , 'user_id');
+    }
+
+
 }
