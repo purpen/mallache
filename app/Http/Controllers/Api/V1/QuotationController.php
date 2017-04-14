@@ -57,7 +57,6 @@ class QuotationController extends BaseController
      */
     public function store(Request $request)
     {
-        $design =
         $all['item_demand_id'] = $request->input('item_demand_id');
         $all['design_company_id'] = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
         $all['price'] = $request->input('price');
@@ -121,8 +120,6 @@ class QuotationController extends BaseController
      */
     public function show(Request $request)
     {
-        $item = Item::where('user_id' , $this->auth_user_id)->get();
-        Log::info($item->quotation->item_demand_id);
         $id = intval($request->input('id'));
         $quotation = QuotationModel::where('id', $id)->first();
         if(!$quotation){
