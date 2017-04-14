@@ -94,7 +94,7 @@ class ColumnController extends BaseController
             $quotation = Column::firstOrCreate($all);
         }
         catch (\Exception $e){
-            throw new HttpException('Error');
+            return $this->response->array($this->apiError());
         }
 
         return $this->response->item($quotation, new $column())->setMeta($this->apiMeta());
