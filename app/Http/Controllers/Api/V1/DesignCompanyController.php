@@ -161,14 +161,29 @@ class DesignCompanyController extends BaseController
             'awards.max' => '荣誉奖项不能超过500个字'
         ];
         $all = $request->all();
+        $city = $request->input('city');
+        $area = $request->input('area');
+        $branch_office = $request->input('branch_office');
+        //如果城市为空，默认为0
+        if($city == null){
+            $all['city'] = 0 ;
+        }
+        //如果地区为空，默认为0
+        if($area == null){
+            $all['area'] = 0 ;
+        }
+        //如果分公司为空，默认为0
+        if($branch_office == null){
+            $all['branch_office'] = 0 ;
+        }
         $all['user_id'] = $this->auth_user_id;
-        Log::info($all);
         $validator = Validator::make($all , $rules, $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
+            //检查用户的唯一性
             $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->count();
             if($design > 0){
                 return $this->response->array($this->apiError('已存在该设计公司'));
