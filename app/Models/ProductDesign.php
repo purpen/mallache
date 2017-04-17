@@ -38,4 +38,14 @@ class ProductDesign extends Model
     {
         return $this->belongsTo('App\Models\item', 'item_id');
     }
+
+    /**
+     * 获取图片url
+     *
+     * @return array
+     */
+    public function getImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->item_id, 4, 1);
+    }
 }

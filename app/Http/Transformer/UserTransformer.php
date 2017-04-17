@@ -30,7 +30,7 @@ price_frozen	decimal(10,2)	否	0	冻结金额*/
             'item_sum' => $user->item_sum,
             'price_total' => $user-> price_total,
             'price_frozen' => $user->price_frozen,
-            'img' => '',
+            'img' => $user->image,
         ];
     }
 }

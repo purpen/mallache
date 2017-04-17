@@ -38,7 +38,8 @@ class ItemTransformer extends TransformerAbstract
                     'competing_product' => $info->competing_product,
                     'design_cost' => $info->design_cost,
                     'province' => $info->province,
-                    'city' => $info->city
+                    'city' => $info->city,
+                    'image' => $info->image,
                 ];
                 break;
             case 4:
@@ -57,6 +58,7 @@ class ItemTransformer extends TransformerAbstract
                     'design_cost' => $info->design_cost,
                     'province' => $info->province,
                     'city' => $info->city,
+                    'image' => $info->image,
                 ];
                 break;
         }

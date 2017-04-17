@@ -11,6 +11,20 @@ use Qiniu\Storage\BucketManager;
 
 class UploadController extends BaseController
 {
+//'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(random)&user_id=$(user_id)&target_id=$(target_id)&type=$(type)'
+    /**
+     * @api {post} http://upload.qiniu.com  上传图片
+     * @apiVersion 1.0.0
+     * @apiName upload image
+     *
+     * @apiGroup Upload
+     * @apiParam {string} token 图片上传upToken
+     * @apiParam {string} random 随机数
+     * @apiParam {integer} user_id
+     * @apiParam {integer} target_id 目标ID
+     * @apiParam {type} type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；
+     */
+
     /**
      * @api {get} /upload/upToken  生成上传图片upToken
      * @apiVersion 1.0.0
@@ -27,7 +41,8 @@ class UploadController extends BaseController
      *     },
      *     "data": {
      *       "upToken": "AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:csOk9LcG2lM0_3qvbDqmEUa87V8=:eyJjYWxsYmFja1VybCI6bnVsbCwiY2FsbGJhY2tGZXRjaEtleSI6MSwiY2FsbGJhY2tCb2R5IjoibmFtZT0kKGZuYW1lKSZzaXplPSQoZnNpemUpJm1pbWU9JChtaW1lVHlwZSkmd2lkdGg9JChpbWFnZUluZm8ud2lkdGgpJmhlaWdodD0kKGltYWdlSW5mby5oZWlnaHQpJnJhbmRvbT0kKHg6cmFuZG9tKSZ1c2VyX2lkPSQoeDp1c2VyX2lkKSZ0YXJnZXRfaWQ9JCh4OnRhcmdldF9pZCkiLCJzY29wZSI6bnVsbCwiZGVhZGxpbmUiOjE0OTA3NTUyMDh9"
-     *       "upload_url": "http://up-z1.qiniu.come"
+     *       "upload_url": "http://up-z1.qiniu.come",
+ *           "random" : ""
      *      }
      *  }
      */
@@ -35,14 +50,30 @@ class UploadController extends BaseController
     {
         $upload_url = config('filesystems.disks.qiniu.upload_url');
         $upToken = QiniuApi::upToken();
-        return $this->response->array($this->apiSuccess('Success', 200, compact('upToken' , 'upload_url')));
+
+        $random = uniqid('', true);
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('upToken' , 'upload_url', 'random')));
     }
 
 
     //七牛回调方法
     public function callback(Request $request)
     {
+        if(!$request->input('type')){
+            return $this->response->array([
+                'payload' => [
+                        'success' => 0,
+                        'message' => 'type not empty',
+                    ]
+            ]);
+        }
         $upload = $request->all();
+        foreach($upload as &$value){
+            if(empty($value)){
+                unset($value);
+            }
+        }
         $upload['domain'] = config('filesystems.disks.qiniu.domain');
         $key = uniqid();
         $upload['path'] =  config('filesystems.disks.qiniu.domain') . '/' .date("Ymd") . '/' . $key;

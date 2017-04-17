@@ -23,4 +23,68 @@ class AssetModel extends Model
      */
     protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id','type'];
 
+    /**
+     * 获取图片列表
+     *
+     * @param integer $target_id  目标ID
+     * @param integer $type 图片类型 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；
+     * @param int $sort  排序（可选，默认倒序）：1.倒序；2.正序；
+     * @param null $limit 数量（可选）：获取数量
+     * @return array
+     * @throws \Exception
+     */
+    public static function getImageUrl($target_id, $type, $sort = 1, $limit = null)
+    {
+        if($sort === 1){
+            $sort = 'desc';
+        }else if ($sort === -1){
+            $sort = 'asc';
+        }else{
+            throw new \Exception('sort set error');
+        }
+
+        $query = self::select('path')
+                    ->where(['target_id' => $target_id, 'type' => $type])
+                    ->orderBy('created_at', $sort);
+        if($limit !== null){
+            $query = $query->limit($limit);
+        }
+        $assets = $query->get();
+
+        $images = [];
+        foreach($assets as $asset)
+        {
+            $images[] = [
+                'id' => $asset->id,
+                'file' => config('filesystems.disks.qiniu.url') . $asset->path,
+                'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
+            ];
+        }
+
+        return $images;
+    }
+
+    /**
+     * @param integer $id 目标ID
+     * @param string $random 随机数值
+     * @return bool
+     */
+    public static function setRandom($id, $random)
+    {
+        $assets = AssetModel::select('id')
+            ->where('random', $random)
+            ->get();
+
+        if($assets->isEmpty()){
+            return true;
+        }
+
+        foreach($assets as $asset){
+            $asset->target_id = $id;
+            $asset->save();
+        }
+
+        return true;
+    }
+
 }
