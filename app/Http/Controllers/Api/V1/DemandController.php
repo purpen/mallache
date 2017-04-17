@@ -15,6 +15,7 @@ use App\Models\DesignItemModel;
 use App\Models\Item;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -414,9 +415,9 @@ class DemandController extends BaseController
             return $this->response->array($this->apiSuccess('Success', 200, []));
         }
 
-        $design = DesignCompanyModel::whereIn('user_id',$recommend_arr)->get();
+        $users = User::select('id')->whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($design, new RecommendListTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($users, new RecommendListTransformer())->setMeta($this->apiMeta());
     }
 
 }

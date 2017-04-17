@@ -41,8 +41,6 @@ class DesignCompanyModel extends Model
         'establishment_time',
         'professional_advantage',
         'awards',
-        'score',
-        'status',
         'company_abbreviation'
     ];
 
