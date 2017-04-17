@@ -134,7 +134,7 @@ class DemandCompanyController extends BaseController
     {
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
         if(!$demand){
-            return $this->response->array($this->apiError());
+            return $this->response->array([])->setMata($this->apiMeta());
         }
 
         return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
