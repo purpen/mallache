@@ -91,13 +91,13 @@ class ColumnController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $quotation = Column::firstOrCreate($all);
+            $column = Column::firstOrCreate($all);
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
         }
 
-        return $this->response->item($quotation, new $column())->setMeta($this->apiMeta());
+        return $this->response->item($column, new ColumnTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -111,19 +111,21 @@ class ColumnController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     *   "columns": [
-     *           {
-     *              "id": 2,
-     *              "type": 2,
-     *              "name": "1",
-     *              "content": "1",
-     *              "url": "1",
-     *              "sort": 1,
-     *              "status": 1,
-     *              "created_at": "2017-04-12 18:24:52",
-     *              "updated_at": "2017-04-12 18:24:52"
+     *      "data": [
+     *          {
+     *          "id": 1,
+     *          "type": 2,
+     *          "name": "2",
+     *          "content": "2",
+     *          "url": "2",
+     *          "sort": 2,
+     *          "status": 2
      *          }
-     *      ]
+     *      ],
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
      *  }
      *
      */
@@ -135,7 +137,7 @@ class ColumnController extends BaseController
         if(!$column){
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($column, new $column())->setMeta($this->apiMeta());
+        return $this->response->collection($column, new ColumnTransformer())->setMeta($this->apiMeta());
     }
 
     /**

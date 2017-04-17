@@ -5,7 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\DesignCompanyModel;
 use League\Fractal\TransformerAbstract;
 
-class DesignCompanyTransformer extends TransformerAbstract
+class DesignCompanyShowTransformer extends TransformerAbstract
 {
     /*
      *  id	            int(10)	    否		ID
@@ -57,7 +57,7 @@ class DesignCompanyTransformer extends TransformerAbstract
             'company_size' => intval($DesignCompany->company_size),
             'branch_office' => intval($DesignCompany->branch_office),
             'item_quantity' => intval($DesignCompany->item_quantity),
-            'good_field' => explode(",",$DesignCompany->good_field),
+            'good_field' => explode(",",implode($DesignCompany->good_field)),
             'web' => strval($DesignCompany->web),
             'company_profile' => strval($DesignCompany->company_profile),
             'design_type' => strval($DesignCompany->design_type),

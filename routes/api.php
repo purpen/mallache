@@ -93,7 +93,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
 
         //设计公司信息
-        $api->resource('/designCompany', 'DesignCompanyController');
+//        $api->resource('/designCompany', 'DesignCompanyController');
+        $api->get('/designCompany', ['as' => 'designCompany.show', 'uses' => 'DesignCompanyController@show']);
+        $api->put('/designCompany', ['as' => 'designCompany.update', 'uses' => 'DesignCompanyController@update']);
+        $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
+        //更新设计公司审核状态
+        $api->put('designCompany/upStatus', [
+            'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@upStatus'
+        ]);
         //设计公司案例
         $api->resource('/designCase', 'DesignCaseController');
         //报价
@@ -102,10 +109,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/designItem', 'DesignItemController');
         //栏目位
         $api->resource('/column', 'ColumnController');
-        //更新设计公司审核状态
-        $api->put('designCompany/{id}/upStatus', [
-            'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@upStatus'
-        ]);
+
 
     });
 });

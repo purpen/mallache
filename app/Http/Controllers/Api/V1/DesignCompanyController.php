@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\DesignCompanyTransformer;
+use App\Http\Transformer\DesignItemTransformer;
 use App\Models\DesignItemModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -95,17 +97,13 @@ class DesignCompanyController extends BaseController
         // 验证规则
         $rules = [
             'design_type'  => 'nullable|max:50',
-//            'company_type'  => 'required|integer',
             'company_name'  => 'required|max:50',
             'company_abbreviation'  => 'required|max:50',
-//            'registration_number'  => 'required|max:15',
             'province'  => 'required|integer',
-            'city'  => 'required|integer',
-            'area'  => 'required|integer',
             'address'  => 'required|max:50',
             'contact_name'  => 'required|max:20',
             'position'  => 'required|max:20',
-            'phone'  => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone'  => 'required',
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
@@ -119,20 +117,12 @@ class DesignCompanyController extends BaseController
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
-//            'company_type.integer' => '企业类型必须为整形',
-//            'company_type.required' => '企业类型不能为空',
             'company_name.required' => '公司名称不能为空',
             'company_abbreviation.required' => '公司简称不能为空',
             'company_abbreviation.max' => '公司简称不能超过50个字',
             'company_name.max' => '公司名称不能超过50个字',
-//            'registration_number.required' => '注册号不能为空',
-//            'registration_number.max' => '注册号不能超过50个字',
             'province.required' => '省份不能为空',
             'province.integer' => '省份必须为整形',
-            'city.required' => '城市不能为空',
-            'city.integer' => '城市必须为整形',
-            'area.required' => '区域不能为空',
-            'area.integer' => '区域必须为整形',
             'address.required' => '详细地址不能为空',
             'address.max' => '详细地址不能超过50个字',
             'contact_name.required' => '联系人姓名不能为空',
@@ -140,7 +130,6 @@ class DesignCompanyController extends BaseController
             'position.required' => '职位不能为空',
             'position.max' => '职位不能超过20个字',
             'phone.required' => '手机号不能为空',
-            'phone.regex' => '手机号格式不正确',
             'email.required' => '邮箱不能为空',
             'email.email' => '邮箱格式不正确',
             'company_size.integer' => '公司规模必须是整形',
@@ -197,7 +186,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/{user_id}  根据用户id设计公司展示
+     * @api {get} /designCompany  设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
      * @apiGroup designCompany
@@ -206,6 +195,7 @@ class DesignCompanyController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
+     *     "data": {
      *          "id": 8,
      *          "company_type": 1, 1.普通；2.多证合一；
      *          "company_name": "",
@@ -257,21 +247,27 @@ class DesignCompanyController extends BaseController
      *              "updated_at": "2017-04-07 17:54:05",
      *              "deleted_at": null
      *          }
-     *      ]
+     *          ]
+     *      },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
      *   }
      */
     public function show(Request $request)
     {
         $user_id = intval($this->auth_user_id);
-        $design = DesignCompanyModel::where('user_id', $user_id)->first();
-        $design->item = DesignItemModel::where('user_id' , $user_id)->get();
 
-        $goodField = $design->good_field;
-        $design->good_field = explode(',' , $goodField);
+        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        if(!empty($design)){
+            $design->item = DesignItemModel::where('user_id' , $user_id)->get();
+            $design->good_field = explode(',' , $design['good_field']);
+        }
         if(!$design){
             return $this->response->array($this->apiError());
         }
-        return $this->response->array($design->toArray());
+        return $this->response->item($design , new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -286,7 +282,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /designCompany/{user_id} 根据用户id更新设计公司信息
+     * @api {put} /designCompany 更新设计公司信息
      * @apiVersion 1.0.0
      * @apiName designCompany update
      * @apiGroup designCompany
@@ -326,17 +322,13 @@ class DesignCompanyController extends BaseController
         // 验证规则
         $rules = [
             'design_type'  => 'nullable|max:50',
-//            'company_type'  => 'required|integer',
             'company_name'  => 'required|max:50',
             'company_abbreviation'  => 'required|max:50',
-//            'registration_number'  => 'required|max:15',
             'province'  => 'required|integer',
-            'city'  => 'required|integer',
-            'area'  => 'required|integer',
             'address'  => 'required|max:50',
             'contact_name'  => 'required|max:20',
             'position'  => 'required|max:20',
-            'phone'  => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone'  => 'required',
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
@@ -350,20 +342,12 @@ class DesignCompanyController extends BaseController
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
-//            'company_type.integer' => '企业类型必须为整形',
-//            'company_type.required' => '企业类型不能为空',
             'company_name.required' => '公司名称不能为空',
             'company_name.max' => '公司名称不能超过50个字',
             'company_abbreviation.required' => '公司简称不能为空',
             'company_abbreviation.max' => '公司简称不能超过50个字',
-//            'registration_number.required' => '注册号不能为空',
-//            'registration_number.max' => '注册号不能超过50个字',
             'province.required' => '省份不能为空',
             'province.integer' => '省份必须为整形',
-            'city.required' => '城市不能为空',
-            'city.integer' => '城市必须为整形',
-            'area.required' => '区域不能为空',
-            'area.integer' => '区域必须为整形',
             'address.required' => '详细地址不能为空',
             'address.max' => '详细地址不能超过50个字',
             'contact_name.required' => '联系人姓名不能为空',
@@ -393,7 +377,7 @@ class DesignCompanyController extends BaseController
         $goodField = $request->input('good_field');
         if(!empty($goodField)){
             //合并擅长领域
-            $good_field = implode(',' , $goodField);
+            $good_field = implode(',' , [$goodField]);
             $all['good_field'] = $good_field;
         }
         $design = DesignCompanyModel::where('user_id', $user_id)->update($all);
@@ -416,12 +400,12 @@ class DesignCompanyController extends BaseController
 
 
     /**
-     * @api {put} /designCompany/1/upStatus 更新设计公司审核状态
+     * @api {put} /designCompany/upStatus 更新设计公司审核状态
      * @apiVersion 1.0.0
      * @apiName designCompany upStatus
      * @apiGroup designCompany
      *
-     * @apiParam {Integer} id 设计公司ID.
+     * @apiParam {integer} id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -432,8 +416,9 @@ class DesignCompanyController extends BaseController
      *  }
      * }
      */
-    public function upStatus($id)
+    public function upStatus(Request $request)
     {
+        $id = $request->input('id');
         $design = DesignCompanyModel::upStatus($id);
         if(!$design){
             return $this->response->array($this->apiError());

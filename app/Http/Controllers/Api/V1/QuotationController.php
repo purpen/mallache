@@ -48,6 +48,15 @@ class QuotationController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
+     *     "data": {
+     *       "id": 2,
+     *       "user_id": 1,
+     *       "item_demand_id": 1,
+     *       "design_company_id": 27,
+     *       "price": "1",
+     *       "summary": "1",
+     *       "status": 1
+     *       },
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
@@ -83,7 +92,6 @@ class QuotationController extends BaseController
             'summary.max' => '最多500字符',
             'status.required' => '状态不能为空',
         ];
-        Log::info($all);
         $validator = Validator::make($all, $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -99,7 +107,7 @@ class QuotationController extends BaseController
     }
 
     /**
-     * @api {get} /quotation/3  报价单ID查看详情
+     * @api {get} /quotation/{id}  报价单ID查看详情
      * @apiVersion 1.0.0
      * @apiName quotation show
      * @apiGroup quotation
@@ -145,7 +153,6 @@ class QuotationController extends BaseController
      * @apiName quotation update
      * @apiGroup quotation
      * @apiParam {integer} item_demand_id 项目需求id
-     * @apiParam {integer} design_company_id 设计公司id
      * @apiParam {string} price 报价
      * @apiParam {string} summary 报价说明
      * @apiParam {integer} status 状态
@@ -163,17 +170,17 @@ class QuotationController extends BaseController
     public function update(Request $request , $id)
     {
         $all = $request->all();
+
+
         // 验证规则
         $rules = [
             'item_demand_id'  => 'required|integer',
-            'design_company_id'  => 'required|integer',
             'price'  => 'required|max:50',
             'summary'  => 'required|max:500',
             'status'  => 'required|integer',
         ];
         $messages = [
             'item_demand_id.required' => '项目需求id不能为空',
-            'design_company_id.required' => '设计公司id不能为空',
             'price.required' => '报价不能为空',
             'summary.required' => '报价说明不能为空',
             'summary.max' => '最多500字符',
@@ -181,19 +188,25 @@ class QuotationController extends BaseController
         ];
         $validator = Validator::make($all , $rules, $messages);
 
+
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $all = $request->except(['token']);
+        $quotation = QuotationModel::find($id);
 
-        $design = QuotationModel::find($id);
+        if(!$quotation){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        if($quotation->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
         if(!$design){
-            return $this->response->array($this->apiError('not found!', 404));
+            return $this->response->array($this->apiError('设计公司不存在'));
         }
-        if($design->user_id != $this->auth_user_id){
-            return $this->response->array($this->apiError('not found!', 404));
-        }
+        $all = $request->except(['token']);
+        $all['design_company_id'] = $design->id;
         $quotation = QuotationModel::where('id', $id)->update($all);
         if(!$quotation){
             return $this->response->array($this->apiError());
