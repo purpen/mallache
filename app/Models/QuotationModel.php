@@ -37,4 +37,12 @@ class QuotationModel extends Model
         return $this->belongsTo('App\Models\Item' , 'item_demand_id');
     }
 
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
 }

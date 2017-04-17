@@ -11,7 +11,6 @@ use Qiniu\Storage\BucketManager;
 
 class UploadController extends BaseController
 {
-//'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(random)&user_id=$(user_id)&target_id=$(target_id)&type=$(type)'
     /**
      * @api {post} http://upload.qiniu.com  上传图片
      * @apiVersion 1.0.0
