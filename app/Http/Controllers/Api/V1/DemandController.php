@@ -142,7 +142,6 @@ class DemandController extends BaseController
                 ]);
             }
             catch (\Exception $e){
-                dd($e);
                 return $this->response->array($this->apiError('Error', 500));
             }
 
@@ -164,7 +163,19 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-
+        "data": {
+            "id": 13,
+            "design_type": 1,
+            "status": 3,
+            "field": 1,
+            "industry": 1,
+            "name": "api UI",
+            "product_features": "亮点",
+            "competing_product": "竞品",
+            "design_cost": 2, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+            "province": 2,
+            "city": 2
+        },
         "meta": {
             "message": "Success",
             "status_code": 200
@@ -180,7 +191,7 @@ class DemandController extends BaseController
     public function show($id)
     {
         if(!$item = Item::find(intval($id))){
-            return $this->response->array($this->apiError('not found!', 404));
+            return $this->response->array($this->apiSuccess());
         }
         //验证是否是当前用户对应的项目
         if($item->user_id !== $this->auth_user_id){
