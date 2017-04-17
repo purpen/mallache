@@ -71,7 +71,7 @@ return [
             'bucket'    => 'frmallache',  //Bucket名字
             'domain' => 'saas',                                              //存储域
             'call_back_url' => 'http://sa.taihuoniao.com/asset/callback',
-            'url' => 'http://oni525j96.bkt.clouddn.com',                    //图片服务器
+            'url' => 'http://oni525j96.bkt.clouddn.com/',                    //图片服务器
             'small' => '-sm'              //缩略图
         ],
 
