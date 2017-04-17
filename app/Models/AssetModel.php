@@ -31,16 +31,13 @@ class AssetModel extends Model
      * @param int $sort  排序（可选，默认倒序）：1.倒序；2.正序；
      * @param null $limit 数量（可选）：获取数量
      * @return array
-     * @throws \Exception
      */
-    public static function getImageUrl($target_id, $type, $sort = 1, $limit = null)
+    public static function getImageUrl(int $target_id, int $type, int $sort = 1, int $limit = null) :array
     {
         if($sort === 1){
             $sort = 'desc';
-        }else if ($sort === -1){
-            $sort = 'asc';
         }else{
-            throw new \Exception('sort set error');
+            $sort = 'asc';
         }
 
         $query = self::select('path')
