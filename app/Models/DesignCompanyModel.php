@@ -41,7 +41,10 @@ class DesignCompanyModel extends Model
         'establishment_time',
         'professional_advantage',
         'awards',
-        'company_abbreviation'
+        'status',
+        'company_abbreviation',
+        'is_recommend',
+        'verify_status'
     ];
 
     /**
@@ -57,7 +60,7 @@ class DesignCompanyModel extends Model
     /**
      * 更改设计公司状态
      */
-    static public function status($id, $status=0)
+    static public function unStatus($id, $status=-1)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;

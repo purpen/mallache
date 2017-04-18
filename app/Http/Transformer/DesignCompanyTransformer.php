@@ -34,6 +34,8 @@ class DesignCompanyTransformer extends TransformerAbstract
         awards	                varchar(500)	是		荣誉奖项
         score	                int(10)	否	0	设计公司评分
         status	                tinyint(4)	否	0	设计公司状态：0、关闭；1、审核通过；
+        is_recommend	tinyint(4)	否	0	是否推荐：0.否；1.是;
+        verify_status	tinyint(4)	否	0	审核状态：0.审核中；1.审核通过；
 
     */
 
@@ -66,6 +68,8 @@ class DesignCompanyTransformer extends TransformerAbstract
             'awards' => strval($DesignCompany->awards),
             'score' => intval($DesignCompany->score),
             'status' => intval($DesignCompany->status),
+            'is_recommend' => intval($DesignCompany->status),
+            'verify_status' => intval($DesignCompany->status),
             'item' => $DesignCompany->item,
         ];
     }

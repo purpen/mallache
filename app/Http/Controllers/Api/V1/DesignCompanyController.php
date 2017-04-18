@@ -87,6 +87,10 @@ class DesignCompanyController extends BaseController
      *          "establishment_time": "",
      *          "professional_advantage": "",
      *          "awards": "",
+     *          "status": 0,
+     *          "is_recommend": 0,
+     *          "verify_status": 0,
+     *          "item": null
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -223,9 +227,8 @@ class DesignCompanyController extends BaseController
      *          "awards": "",
      *          "score": 0,
      *          "status": 1
-     *          "created_at": "2017-04-05 18:55:54",
-     *          "updated_at": "2017-04-05 19:40:14",
-     *          "deleted_at": null,
+     *          "is_recommend": 0,
+     *          "verify_status": 0,
      *          "item": [
      *          {
      *              "id": 1,
@@ -483,14 +486,14 @@ class DesignCompanyController extends BaseController
      *  }
      * }
      */
-    public function status(Request $request)
+    public function okStatus(Request $request)
     {
         $id = $request->input('id');
         $design_company = DesignCompanyModel::where('id' , $id)->first();
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::status($id , 0);
+        $design = DesignCompanyModel::unStatus($id , 0);
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
@@ -521,7 +524,7 @@ class DesignCompanyController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::status($id , -1);
+        $design = DesignCompanyModel::unStatus($id , -1);
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }

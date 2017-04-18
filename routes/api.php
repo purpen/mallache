@@ -110,8 +110,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'designCompany.unVerifyStatus', 'uses' => 'DesignCompanyController@unVerifyStatus'
         ]);
         //更新设计公司状态
-        $api->put('designCompany/status', [
-            'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@status'
+        $api->put('designCompany/okStatus', [
+            'as' => 'designCompany.okStatus', 'uses' => 'DesignCompanyController@okStatus'
         ]);
         $api->put('designCompany/unStatus', [
             'as' => 'designCompany.unStatus', 'uses' => 'DesignCompanyController@unStatus'

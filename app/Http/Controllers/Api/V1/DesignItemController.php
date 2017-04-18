@@ -72,8 +72,9 @@ class DesignItemController extends BaseController
      * @apiName designItem store
      * @apiGroup designItem
      *
-     * @apiParam {integer} design_type 设计类型
-     * @apiParam {integer} project_cycle 服务项目周期
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} project_cycle 服务项目周期 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
      * @apiParam {string} token
@@ -83,6 +84,7 @@ class DesignItemController extends BaseController
      *       "data": {
      *           "id": 1,
      *           "user_id": 1,
+     *           "type": "1",
      *           "design_type": "1",
      *           "project_cycle": "1",
      *           "min_price": "1",
@@ -96,6 +98,7 @@ class DesignItemController extends BaseController
      */
     public function store(Request $request)
     {
+        $all['type'] = $request->input('type');
         $all['design_type'] = $request->input('design_type');
         $all['project_cycle'] = $request->input('project_cycle');
         $all['min_price'] = $request->input('min_price');
@@ -104,6 +107,7 @@ class DesignItemController extends BaseController
 
         //验证规则
         $rules = [
+            'type' => 'required|integer' ,
             'design_type' => 'required|integer' ,
             'project_cycle' => 'required|integer' ,
             'min_price' => 'required' ,
@@ -111,6 +115,7 @@ class DesignItemController extends BaseController
         ];
 
         $messages = [
+            'type.required' => '类型不能为空' ,
             'design_type.required' => '设计类型不能为空' ,
             'roject_cycle.required' => '项目周期不能为空' ,
             'min_price.required' => '最低价格不能为空' ,
@@ -124,7 +129,8 @@ class DesignItemController extends BaseController
         try{
             //根据设计类型查询是否存在
             $designItem = DesignItemModel::
-                where('design_type' , $request->input('design_type'))
+                where('type' , $request->input('type'))
+                ->where('design_type' , $request->input('design_type'))
                 ->where('user_id' , $this->auth_user_id)
                 ->count();
             if($designItem > 0){
@@ -191,8 +197,9 @@ class DesignItemController extends BaseController
      * @apiName designItem update
      * @apiGroup designItem
      *
-     * @apiParam {integer} design_type 设计类型
-     * @apiParam {integer} project_cycle 服务项目周期
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} project_cycle 服务项目周期 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} max_price 最高价格
      * @apiParam {string} token
@@ -209,6 +216,7 @@ class DesignItemController extends BaseController
     {
         //验证规则
         $rules = [
+            'type' => 'required|integer' ,
             'design_type' => 'required|integer' ,
             'project_cycle' => 'required|integer' ,
             'min_price' => 'required' ,
@@ -216,13 +224,14 @@ class DesignItemController extends BaseController
         ];
 
         $messages = [
+            'type.required' => '类型不能为空' ,
             'design_type.required' => '	设计类型不能为空' ,
             'roject_cycle.required' => '项目周期不能为空' ,
             'min_price.required' => '最低价格不能为空' ,
             'max_price.required' => '最高价格不能为空'
         ];
 
-        $validator = Validator::make($request->only(['design_type' , 'project_cycle' , 'min_price' , 'max_price']) , $rules , $messages);
+        $validator = Validator::make($request->only(['type' , 'design_type' , 'project_cycle' , 'min_price' , 'max_price']) , $rules , $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -240,10 +249,9 @@ class DesignItemController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\QuotationsItemModel  $quotationsItemModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(QuotationsItemModel $quotationsItemModel)
+    public function destroy()
     {
         //
     }
