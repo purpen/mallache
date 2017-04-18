@@ -50,7 +50,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} address 详细地址
      * @apiParam {string} contact_name 联系人姓名
      * @apiParam {string} position 职位
-     * @apiParam {integer} phone 手机
+     * @apiParam {string} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
      * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
@@ -108,7 +108,6 @@ class DesignCompanyController extends BaseController
             'province'  => 'required|integer',
             'address'  => 'required|max:50',
             'contact_name'  => 'required|max:20',
-            'position'  => 'required|max:20',
             'phone'  => 'required',
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
@@ -133,8 +132,6 @@ class DesignCompanyController extends BaseController
             'address.max' => '详细地址不能超过50个字',
             'contact_name.required' => '联系人姓名不能为空',
             'contact_name.max' => '联系人姓名不能超过20个字',
-            'position.required' => '职位不能为空',
-            'position.max' => '职位不能超过20个字',
             'phone.required' => '手机号不能为空',
             'email.required' => '邮箱不能为空',
             'email.email' => '邮箱格式不正确',
@@ -304,7 +301,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} address 详细地址
      * @apiParam {string} contact_name 联系人
      * @apiParam {string} position 职位
-     * @apiParam {integer} phone 手机
+     * @apiParam {string} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
      * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
@@ -334,7 +331,6 @@ class DesignCompanyController extends BaseController
             'province'  => 'required|integer',
             'address'  => 'required|max:50',
             'contact_name'  => 'required|max:20',
-            'position'  => 'required|max:20',
             'phone'  => 'required',
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
@@ -359,10 +355,7 @@ class DesignCompanyController extends BaseController
             'address.max' => '详细地址不能超过50个字',
             'contact_name.required' => '联系人姓名不能为空',
             'contact_name.max' => '联系人姓名不能超过20个字',
-            'position.required' => '职位不能为空',
-            'position.max' => '职位不能超过20个字',
             'phone.required' => '手机号不能为空',
-            'phone.regex' => '手机号格式不正确',
             'email.required' => '邮箱不能为空',
             'email.email' => '邮箱格式不正确',
             'company_size.integer' => '公司规模必须是整形',
