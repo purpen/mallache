@@ -41,13 +41,26 @@ class DesignCompanyModel extends Model
         'establishment_time',
         'professional_advantage',
         'awards',
-        'company_abbreviation'
+        'status',
+        'company_abbreviation',
+        'is_recommend',
+        'verify_status'
     ];
 
     /**
-     * 更新设计公司状态
+     * 更改设计公司审核状态
      */
-    static public function upStatus($id, $status=1)
+    static public function verifyStatus($id, $verify_status=1)
+    {
+        $design_company = self::findOrFail($id);
+        $design_company->verify_status = $verify_status;
+        return $design_company->save();
+    }
+
+    /**
+     * 更改设计公司状态
+     */
+    static public function unStatus($id, $status=-1)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;
