@@ -45,9 +45,19 @@ class DesignCompanyModel extends Model
     ];
 
     /**
-     * 更新设计公司状态
+     * 更改设计公司审核状态
      */
-    static public function upStatus($id, $status=1)
+    static public function verifyStatus($id, $verify_status=1)
+    {
+        $design_company = self::findOrFail($id);
+        $design_company->verify_status = $verify_status;
+        return $design_company->save();
+    }
+
+    /**
+     * 更改设计公司状态
+     */
+    static public function status($id, $status=0)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;

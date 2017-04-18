@@ -103,9 +103,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designCompany', ['as' => 'designCompany.update', 'uses' => 'DesignCompanyController@update']);
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
         //更新设计公司审核状态
-        $api->put('designCompany/upStatus', [
-            'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@upStatus'
+        $api->put('designCompany/verifyStatus', [
+            'as' => 'designCompany.verifyStatus', 'uses' => 'DesignCompanyController@verifyStatus'
         ]);
+        $api->put('designCompany/unVerifyStatus', [
+            'as' => 'designCompany.unVerifyStatus', 'uses' => 'DesignCompanyController@unVerifyStatus'
+        ]);
+        //更新设计公司状态
+        $api->put('designCompany/status', [
+            'as' => 'designCompany.status', 'uses' => 'DesignCompanyController@status'
+        ]);
+        $api->put('designCompany/unStatus', [
+            'as' => 'designCompany.unStatus', 'uses' => 'DesignCompanyController@unStatus'
+        ]);
+
         //设计公司案例
         $api->resource('/designCase', 'DesignCaseController');
         //报价
