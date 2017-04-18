@@ -40,6 +40,17 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+
+    /**
+     * 获取图片url
+     *
+     * @return array
+     */
+    public function getImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 2, 1, 1);
+    }
+
     /*
      * 一对一关联设计公司
      */
@@ -71,6 +82,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Models\QuotationModel' , 'user_id');
     }
-
 
 }

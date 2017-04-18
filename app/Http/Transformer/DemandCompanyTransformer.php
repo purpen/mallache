@@ -25,6 +25,7 @@ class DemandCompanyTransformer extends TransformerAbstract
         return [
             'id' => intval($demand->id),
             'company_name' => strval($demand->company_name),
+            'company_abbreviation' => strval($demand->company_abbreviation),
             'company_size' => intval($demand->company_size),
             'company_web' => strval($demand->company_web),
             'province' => intval($demand->province),

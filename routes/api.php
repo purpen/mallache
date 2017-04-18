@@ -75,6 +75,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         ]);
         //获取领域列表
         $api->get('/field', ['as' => 'field', 'uses' => 'CommonController@field']);
+        //获取行业列表
+        $api->get('/industry', ['as' => 'industry', 'uses' => 'CommonController@industry']);
 
         //需求公司信息
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
@@ -83,14 +85,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 项目需求相关路由
          */
+        //发布需求
+        $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
+        //项目ID获取推荐的设计公司
+        $api->get('/demand/recommendList/{item_id}', ['as' => 'demand.recommendList', 'uses' => 'DemandController@recommendList']);
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
-        //发布需求
-        $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
+
 
         //设计公司信息
 //        $api->resource('/designCompany', 'DesignCompanyController');

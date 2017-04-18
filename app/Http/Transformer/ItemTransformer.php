@@ -9,13 +9,8 @@ class ItemTransformer extends TransformerAbstract
 {
     public function transform(Item $item)
     {
-        return [
-            'id' => $item->id,
-            'design_type' => $item->design_type,
-            'field' => $item->field,
-            'status' => $item->status,
-            'info' => $this->info($item),
-        ];
+        $data = $this->info($item);
+        return $data;
     }
 
     /**
@@ -31,13 +26,42 @@ class ItemTransformer extends TransformerAbstract
             case 1:
             case 2:
             case 3:
-                $info = $item->productDesign ?? '';
+                $info = $item->productDesign;
+                return [
+                    'id' => $item->id,
+                    'design_type' => $item->design_type,
+                    'status' => $item->status,
+                    'field' => $info->field,
+                    'industry' => $info->industry,
+                    'name' => $info->name,
+                    'product_features' => $info->product_features,
+                    'competing_product' => $info->competing_product,
+                    'design_cost' => $info->design_cost,
+                    'province' => $info->province,
+                    'city' => $info->city,
+                    'image' => $info->image,
+                ];
                 break;
             case 4:
             case 5:
-                $info = $item->uDesign ?? '';
+                $info = $item->uDesign;
+                return [
+                    'id' => $item->id,
+                    'design_type' => $item->design_type,
+                    'status' => $item->status,
+                    'system' => $info->system,
+                    'design_content' => $info->design_content,
+                    'name' => $info->name,
+                    'stage' => $info->stage,
+                    'complete_content' => $info->complete_content,
+                    'other_content' => $info->other_content,
+                    'design_cost' => $info->design_cost,
+                    'province' => $info->province,
+                    'city' => $info->city,
+                    'image' => $info->image,
+                ];
                 break;
         }
-        return $info;
+        return [];
     }
 }

@@ -13,25 +13,35 @@ class UDesign extends Model
         'item_id',
         'system',
         'design_content',
-        'page_number',
+//        'page_number',
         'name',
         'stage',
         'complete_content',
         'other_content',
-        'style',
-        'start_time',
-        'cycle',
+//        'style',
+//        'start_time',
+//        'cycle',
         'design_cost',
         'province',
         'city',
-        'summary',
-        'artificial',
+//        'summary',
+//        'artificial',
     ];
 
     //一对一关联项目表
     public function item()
     {
         return $this->belongsTo('App\Models\item', 'item_id');
+    }
+
+    /**
+     * 获取图片url
+     *
+     * @return array
+     */
+    public function getImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->item_id, 4, 1);
     }
 
 }

@@ -44,6 +44,7 @@ class DemandCompanyController extends BaseController
      * @apiGroup demandCompany
      *
      * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {integer} company_size 公司规模
      * @apiParam {string} company_web 公司网站
      * @apiParam {integer} province 省份
@@ -72,11 +73,12 @@ class DemandCompanyController extends BaseController
         //表单验证
         $rules = [
             'company_name' => 'required|max:50',
+            'company_abbreviation' => 'required|max:50',
             'company_size' => 'required|integer',
             'company_web' => 'required|max:50',
             'province' => 'required|integer',
-            'city' => 'required|integer',
-            'area' => 'required|integer',
+            'city' => 'integer',
+            'area' => 'integer',
             'address' => 'required|max:50',
             'contact_name' => 'required|max:20',
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
@@ -132,7 +134,7 @@ class DemandCompanyController extends BaseController
     {
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
         if(!$demand){
-            return $this->response->array($this->apiError());
+            return $this->response->array([])->setMeta($this->apiMeta());
         }
 
         return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
@@ -156,6 +158,7 @@ class DemandCompanyController extends BaseController
      * @apiGroup demandCompany
      *
      * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {integer} company_size 公司规模
      * @apiParam {string} company_web 公司网站
      * @apiParam {integer} province 省份
@@ -180,6 +183,7 @@ class DemandCompanyController extends BaseController
     {
         $rules = [
             'company_name' => 'max:50',
+            'company_abbreviation' => 'max:50',
             'company_size' => 'integer',
             'company_web' => 'max:50',
             'province' => 'integer',
