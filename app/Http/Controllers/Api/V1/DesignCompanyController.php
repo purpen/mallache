@@ -265,7 +265,7 @@ class DesignCompanyController extends BaseController
             $design->good_field = explode(',' , $design['good_field']);
         }
         if(!$design){
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiSuccess());
         }
         return $this->response->item($design , new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
