@@ -18,7 +18,6 @@ class DesignItemController extends BaseController
      * @apiName designItem index
      * @apiGroup designItem
      *
-     * @apiParam {integer} user_id 用户ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -52,7 +51,7 @@ class DesignItemController extends BaseController
         $user_id = intval($this->auth_user_id);
         $designItem = DesignItemModel::where('user_id', $user_id)->get();
         if(!$designItem){
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiSuccess());
         }
         return $this->response->collection($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }
@@ -170,7 +169,7 @@ class DesignItemController extends BaseController
         $id = intval($request->input('id'));
         $designItem = DesignItemModel::where('id' , $id)->first();
         if(!$designItem){
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiSuccess());
         }
         return $this->response->item($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }

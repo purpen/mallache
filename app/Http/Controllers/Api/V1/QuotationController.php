@@ -135,7 +135,7 @@ class QuotationController extends BaseController
         $id = intval($request->input('id'));
         $quotation = QuotationModel::where('id', $id)->first();
         if(!$quotation){
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiSuccess());
         }
         return $this->response->item($quotation, new QuotationTransformer())->setMeta($this->apiMeta());
     }
