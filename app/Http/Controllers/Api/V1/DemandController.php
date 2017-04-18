@@ -485,7 +485,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiSuccess());
         }
 
-        return $this->response->collection($items, new ItemListTransformer )->setMeta($this->apiMeta());
+        return $this->response->collection($items, new ItemListTransformer)->setMeta($this->apiMeta());
     }
 
 }

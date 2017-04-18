@@ -81,7 +81,7 @@ class DemandCompanyController extends BaseController
             'area' => 'integer',
             'address' => 'required|max:50',
             'contact_name' => 'required|max:20',
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => 'required',
             'email' => 'required|email',
         ];
         $all = $request->all();
@@ -191,7 +191,6 @@ class DemandCompanyController extends BaseController
             'area' => 'integer',
             'address' => 'max:50',
             'contact_name' => 'max:20',
-            'phone' => ['regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'email' => 'email',
         ];
         $all = $request->except(['token']);

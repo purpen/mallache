@@ -9,6 +9,8 @@ class ItemListTransformer extends TransformerAbstract
 {
     public function transform(Item $item)
     {
-
+        return [
+            'item' => $item->itemInfo(),
+        ];
     }
 }
