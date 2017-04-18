@@ -30,12 +30,6 @@ class DesignCaseModel extends Model
         'status'
     ];
 
-    //相对关联设计公司表
-    public function designCompany()
-    {
-        return $this->belongsTo('App\Models\DesignCompanyModel');
-    }
-
     /**
      * 相对关联到User用户表
      */

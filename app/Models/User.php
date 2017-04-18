@@ -72,7 +72,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function designItem()
     {
-        return $this->hasMany('App\Models\DesignCaseModel' , 'user_id');
+        return $this->hasMany('App\Models\DesignItemModel' , 'user_id');
     }
 
     /*

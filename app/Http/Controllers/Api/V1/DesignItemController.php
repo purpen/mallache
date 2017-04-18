@@ -23,30 +23,28 @@ class DesignItemController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     *       "design_items": [
-     *           {
-     *               "id": 1,
-     *               "user_id": 1,
-     *               "design_type": 1,
-     *               "project_cycle": 1,
-     *               "min_price": "1.00",
-     *               "max_price": "1.00",
-     *               "created_at": "2017-04-07 16:50:30",
-     *               "updated_at": "2017-04-07 16:50:30",
-     *               "deleted_at": null
-     *           },
-     *           {
-     *               "id": 2,
-     *               "user_id": 1,
-     *               "design_type": 2,
-     *               "project_cycle": 2,
-     *               "min_price": "2.00",
-     *               "max_price": "2.00",
-     *               "created_at": "2017-04-07 17:07:12",
-     *              "updated_at": "2017-04-07 17:07:12",
-     *               "deleted_at": null
-     *           }
-     *       ]
+     *      "data": [
+     *          {
+     *              "id": 3,
+     *              "user_id": 1,
+     *              "design_type": "1",
+     *              "project_cycle": "1",
+     *              "min_price": "1.00",
+     *              "max_price": "1.00"
+     *          },
+     *          {
+     *              "id": 5,
+     *              "user_id": 1,
+     *              "design_type": "3",
+     *              "project_cycle": "1",
+     *              "min_price": "1.00",
+     *              "max_price": "1.00"
+     *          }
+     *      ],
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
      *   }
      */
     public function index()
@@ -56,7 +54,7 @@ class DesignItemController extends BaseController
         if(!$designItem){
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -143,7 +141,7 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * @api {get} /designItem/2  服务项目类型ID查看详情
+     * @api {get} /designItem/{id}  服务项目类型ID查看详情
      * @apiVersion 1.0.0
      * @apiName designItem show
      * @apiGroup designItem
@@ -232,9 +230,8 @@ class DesignItemController extends BaseController
         }
 
         $all = $request->except(['token']);
-
         $designItem = DesignItemModel::where('id' , intval($id))->update($all);
-
+        Log::info($designItem);
         if(!$designItem){
             return $this->response->array($this->apiError());
         }

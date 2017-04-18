@@ -18,47 +18,29 @@ class DesignCaseController extends BaseController
      * @apiName designCase index
      * @apiGroup designCase
      *
-     * @apiParam {integer} user_id 用户ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *
-     * {
-     *  "design_cases": [
-     *       {
-     *           "id": 3,
-     *           "user_id": 1,
-     *           "title": "1",
-     *           "prize": 1,
-     *           "prize_time": null,
-     *           "mass_production": 1,
-     *           "sales_volume": "1.00",
-     *           "customer": "1",
-     *           "field": 1,
-     *           "profile": "1",
-     *           "status": 1,
-     *           "created_at": "2017-04-06 14:56:47",
-     *           "updated_at": "2017-04-06 14:56:47",
-     *           "deleted_at": null
-     *       },
-     *       {
-     *           "id": 4,
-     *           "user_id": 1,
-     *           "title": "2",
+     *   {
+     *       "data": [
+     *           {
+     *           "id": 2,
      *           "prize": 2,
-     *           "prize_time": "1990-01-20",
-     *           "mass_production": 1,
+     *           "title": "2",
+     *           "prize_time": "1990-12-06",
      *           "sales_volume": "1.00",
      *           "customer": "1",
      *           "field": 1,
      *           "profile": "1",
-     *           "status": 1,
-     *           "created_at": "2017-04-06 15:12:46",
-     *           "updated_at": "2017-04-06 15:12:46",
-     *           "deleted_at": null
+     *           "status": 1
+     *           }
+     *       ],
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
      *       }
-     *     ]
-     * }
+     *   }
      *
      */
     public function index()
@@ -68,7 +50,8 @@ class DesignCaseController extends BaseController
         if(!$designCase){
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**
@@ -93,12 +76,22 @@ class DesignCaseController extends BaseController
      * @apiParam {string} sales_volume 销售金额
      * @apiParam {string} customer 服务客户
      * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} status 状态
      * @apiParam {string} profile   功能描述
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *   {
+     *     "data": {
+     *       "id": 2,
+     *       "prize": 2,
+     *       "title": "2",
+     *       "prize_time": "19901206",
+     *       "sales_volume": "1",
+     *       "customer": "1",
+     *       "field": 1,
+     *       "profile": "1",
+     *       "status": 1
+     *       },
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
@@ -114,7 +107,6 @@ class DesignCaseController extends BaseController
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
             'field'  => 'required|integer',
-            'status'  => 'required|integer',
             'profile'  => 'required|max:500',
         ];
         $messages = [
@@ -126,7 +118,6 @@ class DesignCaseController extends BaseController
             'field.required' => '所属领域不能为空',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
-            'status.required' => '状态不能为空',
         ];
         $all['title'] = $request->input('title');
         $all['prize'] = $request->input('prize');
@@ -135,9 +126,12 @@ class DesignCaseController extends BaseController
         $all['mass_production'] = $request->input('mass_production');
         $all['customer'] = $request->input('customer');
         $all['field'] = $request->input('field');
-        $all['status'] = $request->input('status');
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
+        $status = $request->input('status');
+        if($status == null){
+            $all['status'] = 0;
+        }
 
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
@@ -214,7 +208,6 @@ class DesignCaseController extends BaseController
      * @apiParam {string} sales_volume 销售金额
      * @apiParam {string} customer 服务客户
      * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} status 状态
      * @apiParam {string} profile   功能描述
      * @apiParam {string} token
      *
@@ -235,7 +228,6 @@ class DesignCaseController extends BaseController
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
             'field'  => 'required|integer',
-            'status'  => 'required|integer',
             'profile'  => 'required|max:500',
         ];
         $messages = [
@@ -247,7 +239,6 @@ class DesignCaseController extends BaseController
             'field.required' => '所属领域不能为空',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
-            'status.required' => '状态不能为空',
         ];
         $validator = Validator::make($request->only(['title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
 
@@ -256,6 +247,10 @@ class DesignCaseController extends BaseController
         }
 
         $all = $request->except(['token']);
+        $status = $request->input('status');
+        if($status == null){
+            $all['status'] = 0;
+        }
         //检验是否存在该案例
         $case = DesignCaseModel::find($id);
         if(!$case){
