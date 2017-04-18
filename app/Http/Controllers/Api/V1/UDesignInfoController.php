@@ -136,14 +136,13 @@ class UDesignInfoController extends BaseController
             }
 
             //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id || !in_array($item->design_type, [4, 5])){
+            if($item->user_id !== $this->auth_user_id || $item->type !== 2){
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
             $design->update($all);
         }catch(\Exception $e){
-            dd($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 

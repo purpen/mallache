@@ -7,17 +7,20 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
 use App\Models\Item;
+use App\Models\ItemRecommend;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
@@ -56,7 +59,8 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_type 设计类别：1.产品策略；2.产品设计；3.结构设计；4.app设计；5.网页设计；
+     * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
+     * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
      * @apiParam {integer} system 系统：1.ios；2.安卓；
@@ -75,18 +79,19 @@ class DemandController extends BaseController
      */
     public function store(Request $request)
     {
-        $design_type = $request->input('design_type');
+        $type = (int)$request->input('type');
 
         //产品设计
-        if(in_array($design_type, [1, 2, 3])){
+        if($type === 1){
 
             $rules = [
-                'design_type' => ['required', Rule::in([1, 2, 3])],
+                'type' => 'required|integer',
+                'design_type' => 'required|integer',
                 'field' => 'required|integer',
                 'industry' => 'required|integer',
             ];
 
-            $all = $request->only(['design_type','field', 'industry']);
+            $all = $request->only(['type','design_type','field', 'industry']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -108,7 +113,6 @@ class DemandController extends BaseController
                 ]);
             }
             catch (\Exception $e){
-                dd($e);
                 return $this->response->array($this->apiError('Error', 500));
             }
 
@@ -116,14 +120,15 @@ class DemandController extends BaseController
 
         }
         //UX UI设计
-        elseif (in_array($design_type, [4, 5])){
+        elseif ($type === 2){
             $rules = [
-                'design_type' => ['required', Rule::in([4, 5])],
+                'type' => 'require|integer',
+                'design_type' => 'required|integer',
                 'system' => 'required|integer',
                 'design_content' => 'required|integer',
             ];
 
-            $all = $request->only(['design_type','system','design_content']);
+            $all = $request->only(['type', 'design_type', 'system', 'design_content']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -223,7 +228,8 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_type 设计类别：1.产品策略；2.产品设计；3.结构设计；4.app设计；5.网页设计；
+     * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
+     * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
      * @apiParam {integer} system 系统：1.ios；2.安卓；
@@ -246,18 +252,19 @@ class DemandController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $design_type = $request->input('design_type');
+        $type = (int)$request->input('type');
 
         //产品设计
-        if(in_array($design_type, [1, 2, 3])){
+        if($type === 1){
 
             $rules = [
-                'design_type' => ['required', Rule::in([1, 2, 3])],
+                'type' => 'required|integer',
+                'design_type' => 'required|integer',
                 'field' => 'required|integer',
                 'industry' => 'required|integer',
             ];
 
-            $all = $request->only(['design_type', 'field', 'industry']);
+            $all = $request->only(['type', 'design_type', 'field', 'industry']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -289,14 +296,15 @@ class DemandController extends BaseController
 
         }
         //UX UI设计
-        elseif (in_array($design_type, [4, 5])){
+        elseif ($type === 2){
             $rules = [
-                'design_type' => ['required', Rule::in([4, 5])],
+                'type' => 'required|integer',
+                'design_type' => ['required', 'integer'],
                 'system' => 'required|integer',
                 'design_content' => 'required|integer',
             ];
 
-            $all = $request->only(['design_type', 'system', 'design_content']);
+            $all = $request->only(['type', 'design_type', 'system', 'design_content']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -418,6 +426,66 @@ class DemandController extends BaseController
         $users = User::select('id')->whereIn('id', $recommend_arr)->get();
 
         return $this->response->collection($users, new RecommendListTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {post} /pushDemand 选定设计公司推送项目需求
+     * @apiVersion 1.0.0
+     * @apiName demand pushDemand
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     * @apiParam {array} design_company_id 设计公司ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function pushDemand(Request $request)
+    {
+        $rules = [
+            'item_id' => 'required|integer',
+            'design_company_id' => 'required|array',
+        ];
+
+        $all = $request->only(['item_id', 'design_company_id']);
+
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+
+        try{
+            //遍历插入推荐表
+            foreach($all['design_company_id'] as $design_company_id)
+            {
+                ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
+            }
+        }
+        catch (\Exception $e){
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    //用户项目信息列表
+    public function itemList()
+    {
+        $items = $this->auth_user->item;
+
+        if($items->isEmpty()){
+            return $this->response->array($this->apiSuccess());
+        }
+
+        return $this->response->collection($items, new ItemListTransformer )->setMeta($this->apiMeta());
     }
 
 }

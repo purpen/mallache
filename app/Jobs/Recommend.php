@@ -49,13 +49,14 @@ class Recommend implements ShouldQueue
     public function handle()
     {
         //设计类型
-        $design_type = (string)$this->item->design_type;
+        $type = (int)$this->item->type;
+        $design_type = (int)$this->item->design_type;
 
         //产品设计
-        if(in_array($design_type, [1, 2, 3])){
-            $design = $this->productDesign($design_type);
+        if($type === 1){
+            $design = $this->productDesign($type, $design_type);
         }else{
-            $design = $this->uDesign($design_type);
+            $design = $this->uDesign($type, $design_type);
         }
 
 
@@ -80,7 +81,7 @@ class Recommend implements ShouldQueue
      * @param $design_type
      * @return array
      */
-    protected function productDesign($design_type)
+    protected function productDesign($type, $design_type)
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($this->item->productDesign->design_cost);
@@ -89,6 +90,7 @@ class Recommend implements ShouldQueue
         $field =  $this->item->productDesign->field;
         //获取符合设计类型和设计费用的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
+            ->where('type', $type)
             ->where('design_type', $design_type)
             ->where('min_price', '<', $max)
             ->get()
@@ -97,7 +99,7 @@ class Recommend implements ShouldQueue
 //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
-            ->where('status','=', 1)
+            ->where(['status' => 0, 'verify_status' => 1])
             ->whereIn('user_id',$design_id_arr)
             ->whereRaw('find_in_set(' . $field . ', good_field)')
             ->orderBy('score', 'desc')
@@ -109,7 +111,7 @@ class Recommend implements ShouldQueue
     }
 
     //UI UX 设计 推荐设计公司ID数组
-    protected function uDesign($design_type)
+    protected function uDesign($type, $design_type)
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($this->item->uDesign->design_cost);
@@ -118,6 +120,7 @@ class Recommend implements ShouldQueue
         $field =  $this->item->productDesign->field;
         //获取符合 设计类型 和 设计费用 的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
+            ->where('type', $type)
             ->where('design_type', $design_type)
             ->where('min_price', '<', $max)
             ->get()
@@ -126,7 +129,7 @@ class Recommend implements ShouldQueue
 Log::info($design_id_arr);
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select('user_id')
-            ->where('status','=', 1)
+            ->where(['status' => 0, 'verify_status' => 1])
             ->whereIn('user_id',$design_id_arr)
             ->orderBy('score', 'desc')
             ->get()

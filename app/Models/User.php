@@ -83,4 +83,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\QuotationModel' , 'user_id');
     }
 
+    /**
+     * 一对多关联项目需求
+     */
+    public function item()
+    {
+        return $this->hasMany('App\Models\Item', 'user_id');
+    }
 }

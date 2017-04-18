@@ -16,7 +16,7 @@ class Item extends Model
      * 允许批量赋值属性
      */
 
-    protected $fillable = ['user_id', 'design_type', 'status'];
+    protected $fillable = ['user_id', 'type', 'design_type', 'status'];
 
     //一对一关联UX UI设计表
     public function uDesign()
@@ -28,6 +28,14 @@ class Item extends Model
     public function productDesign()
     {
         return $this->hasOne('App\Models\ProductDesign', 'item_id');
+    }
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 
     /**

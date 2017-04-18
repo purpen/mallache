@@ -89,6 +89,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
         //项目ID获取推荐的设计公司
         $api->get('/demand/recommendList/{item_id}', ['as' => 'demand.recommendList', 'uses' => 'DemandController@recommendList']);
+        //选定设计公司推送项目需求
+        $api->post('/pushDemand', ['as' => 'pushDemand', 'uses' => 'DemandController@pushDemand']);
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情

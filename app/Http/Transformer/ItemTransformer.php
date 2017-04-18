@@ -22,13 +22,12 @@ class ItemTransformer extends TransformerAbstract
     public function info(Item $item)
     {
         $info = '';
-        switch ((int)$item->design_type){
+        switch ((int)$item->type){
             case 1:
-            case 2:
-            case 3:
                 $info = $item->productDesign;
                 return [
                     'id' => $item->id,
+                    'type' => $item->type,
                     'design_type' => $item->design_type,
                     'status' => $item->status,
                     'field' => $info->field,
@@ -36,17 +35,18 @@ class ItemTransformer extends TransformerAbstract
                     'name' => $info->name,
                     'product_features' => $info->product_features,
                     'competing_product' => $info->competing_product,
+                    'cycle' => $info->cycle,
                     'design_cost' => $info->design_cost,
                     'province' => $info->province,
                     'city' => $info->city,
                     'image' => $info->image,
                 ];
                 break;
-            case 4:
-            case 5:
+            case 2:
                 $info = $item->uDesign;
                 return [
                     'id' => $item->id,
+                    'type' => $item->type,
                     'design_type' => $item->design_type,
                     'status' => $item->status,
                     'system' => $info->system,
