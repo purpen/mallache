@@ -54,7 +54,7 @@ class DesignCompanyTransformer extends TransformerAbstract
             'address' => strval($DesignCompany->address),
             'contact_name' => strval($DesignCompany->contact_name),
             'position' => strval($DesignCompany->position),
-            'phone' => intval($DesignCompany->phone),
+            'phone' => strval($DesignCompany->phone),
             'email' => strval($DesignCompany->email),
             'company_size' => intval($DesignCompany->company_size),
             'branch_office' => intval($DesignCompany->branch_office),
