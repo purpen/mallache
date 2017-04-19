@@ -47,6 +47,14 @@ class Item extends Model
     }
 
     /**
+     * 一对多关联 推荐关联表
+     */
+    public function itemRecommend()
+    {
+        return $this->hasMany('App\Models\ItemRecommend', 'item_id');
+    }
+
+    /**
      * 判断item对应的详细信息
      *
      * @return array
@@ -72,10 +80,13 @@ class Item extends Model
                     'province' => $info->province,
                     'city' => $info->city,
                     'image' => $info->image,
+                    'price' => $item->price,
                 ];
                 break;
             case 2:
-                $info = $item->uDesign;
+                if(!$info = $item->uDesign){
+                    return [];
+                }
                 return [
                     'id' => $item->id,
                     'type' => $item->type,
@@ -91,10 +102,12 @@ class Item extends Model
                     'province' => $info->province,
                     'city' => $info->city,
                     'image' => $info->image,
+                    'price' => $item->price,
                 ];
                 break;
         }
         return [];
     }
+
 
 }

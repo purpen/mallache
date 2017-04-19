@@ -90,7 +90,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //项目ID获取推荐的设计公司
         $api->get('/demand/recommendList/{item_id}', ['as' => 'demand.recommendList', 'uses' => 'DemandController@recommendList']);
         //选定设计公司推送项目需求
-        $api->post('/pushDemand', ['as' => 'pushDemand', 'uses' => 'DemandController@pushDemand']);
+        $api->post('/demand/push', ['as' => 'demand.push', 'uses' => 'DemandController@push']);
+        //用户项目信息列表
+        $api->get('/demand/itemList', ['as' => 'demand.itemList', 'uses' => 'DemandController@itemList']);
+        //项目推荐设计公司状态列表
+        $api->get('/demand/itemDesignList/{item_id}', ['as' => 'demand.itemDesignList', 'uses' => 'DemandController@itemDesignList']);
+        //确定合作的设计公司
+        $api->post('/demand/trueDesign', ['as' => 'demand.trueDesign', 'uses' => 'DemandController@trueDesign']);
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情

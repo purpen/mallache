@@ -27,4 +27,13 @@ class QuotationModel extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+    /**
+     * 一对一关联 推荐关联表
+     */
+    public function itemRecommend()
+    {
+        return $this->hasOne('App\Models\ItemRecommend', 'quotation_id');
+    }
+
 }

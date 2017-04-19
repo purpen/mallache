@@ -48,6 +48,22 @@ class DesignCompanyModel extends Model
     ];
 
     /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
+     * 一对多关联推荐关联表
+     */
+    public function itemRecommend()
+    {
+        return $this->hasMany('App\Models\ItemRecommend', 'design_company_id');
+    }
+
+    /**
      * 更改设计公司审核状态
      */
     static public function verifyStatus($id, $verify_status=1)
@@ -67,11 +83,4 @@ class DesignCompanyModel extends Model
         return $design_company->save();
     }
 
-    /**
-     * 相对关联到User用户表
-     */
-    public function user()
-    {
-        return $this->belongsTo('App\Models\User', 'user_id');
-    }
 }
