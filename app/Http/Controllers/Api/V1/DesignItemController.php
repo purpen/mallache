@@ -263,7 +263,7 @@ class DesignItemController extends BaseController
         if($item->user_id != $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $designItem = DesignItemModel::where('id', intval($id))->delete();
+        $designItem = $item->delete();
         if(!$designItem){
             return $this->response->array($this->apiError());
         }

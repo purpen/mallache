@@ -293,7 +293,7 @@ class DesignCaseController extends BaseController
         if($case->user_id != $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $designCase = DesignCaseModel::where('id', intval($id))->delete();
+        $designCase = $case->delete();
         if(!$designCase){
             return $this->response->array($this->apiError());
         }
