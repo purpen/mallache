@@ -42,7 +42,6 @@ class ColumnController extends BaseController
      * @apiParam {string} content 内容
      * @apiParam {string} url 链接
      * @apiParam {integer} sort 排序
-     * @apiParam {integer} status 状态
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -54,7 +53,6 @@ class ColumnController extends BaseController
      *       "content": "今天的热门",
      *       "url": "www.baidu.com",
      *       "sort": 1,
-     *       "status": 1
      *      },
      *     "meta": {
      *       "message": "",
@@ -72,7 +70,6 @@ class ColumnController extends BaseController
             'content'  => 'required|max:200',
             'url'  => 'required|max:200',
             'sort'  => 'required|integer',
-            'status'  => 'required|integer',
         ];
         $messages = [
             'type.required' => '栏目类型不能为空',
@@ -83,7 +80,6 @@ class ColumnController extends BaseController
             'url.required' => '链接不能为空',
             'url.max' => '链接最多200字符',
             'sort.required' => '排序不能为空',
-            'status.required' => '状态不能为空'
         ];
         $validator = Validator::make($all, $rules, $messages);
         $all = $request->except(['token']);
@@ -119,7 +115,6 @@ class ColumnController extends BaseController
      *          "content": "2",
      *          "url": "2",
      *          "sort": 2,
-     *          "status": 2
      *          }
      *      ],
      *      "meta": {
@@ -161,7 +156,6 @@ class ColumnController extends BaseController
      * @apiParam {string} content 内容
      * @apiParam {string} url 链接
      * @apiParam {integer} sort 排序
-     * @apiParam {integer} status 状态
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -173,7 +167,6 @@ class ColumnController extends BaseController
      *       "content": "今天的热门",
      *       "url": "www.baidu.com",
      *       "sort": 1,
-     *       "status": 1
      *      },
      *     "meta": {
      *       "message": "",
@@ -192,7 +185,6 @@ class ColumnController extends BaseController
             'content'  => 'required|max:200',
             'url'  => 'required|max:200',
             'sort'  => 'required|integer',
-            'status'  => 'required|integer',
         ];
         $messages = [
             'type.required' => '栏目类型不能为空',
@@ -203,7 +195,6 @@ class ColumnController extends BaseController
             'url.required' => '链接不能为空',
             'url.max' => '链接最多200字符',
             'sort.required' => '排序不能为空',
-            'status.required' => '状态不能为空'
         ];
         $validator = Validator::make($all, $rules, $messages);
 

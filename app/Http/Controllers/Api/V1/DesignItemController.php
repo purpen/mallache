@@ -167,7 +167,7 @@ class DesignItemController extends BaseController
         $id = intval($request->input('id'));
         $designItem = DesignItemModel::where('id' , $id)->first();
         if(!$designItem){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiSuccess('没有找到该服务项目类型' , 200));
         }
         return $this->response->item($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }
@@ -236,12 +236,37 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @api {delete} /designItem/{id} 根据服务项目ID删除服务项目
+     * @apiVersion 1.0.0
+     * @apiName designItem delete
+     * @apiGroup designItem
      *
-     * @return \Illuminate\Http\Response
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *  }
      */
-    public function destroy()
+    public function destroy($id)
     {
-        //
+        //检验是否存在该服务项目
+        $item = DesignItemModel::find($id);
+        if(!$item){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        //检验是否是当前用户创建的服务项目
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $designItem = DesignItemModel::where('id', intval($id))->delete();
+        if(!$designItem){
+            return $this->response->array($this->apiError());
+        }
+        return $this->response->array($this->apiSuccess());
     }
 }
