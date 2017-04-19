@@ -133,6 +133,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/designItem', 'DesignItemController');
         //栏目位
         $api->resource('/column', 'ColumnController');
+        //分类
+        $api->resource('/category', 'CategoryController');
 
 
     });

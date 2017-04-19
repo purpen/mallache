@@ -43,7 +43,6 @@ class QuotationController extends BaseController
      * @apiParam {integer} item_demand_id 项目需求id
      * @apiParam {string} price 报价
      * @apiParam {string} summary 报价说明
-     * @apiParam {integer} status 状态
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -55,7 +54,6 @@ class QuotationController extends BaseController
      *       "design_company_id": 27,
      *       "price": "1",
      *       "summary": "1",
-     *       "status": 1
      *       },
      *     "meta": {
      *       "message": "",
@@ -74,7 +72,6 @@ class QuotationController extends BaseController
         $all['design_company_id'] = $design->id;
         $all['price'] = $request->input('price');
         $all['summary'] = $request->input('summary');
-        $all['status'] = $request->input('status');
         $all['user_id'] = $this->auth_user_id;
         // 验证规则
         $rules = [
@@ -82,7 +79,6 @@ class QuotationController extends BaseController
             'design_company_id'  => 'required|integer',
             'price'  => 'required|max:50',
             'summary'  => 'required|max:500',
-            'status'  => 'required|integer',
         ];
         $messages = [
             'item_demand_id.required' => '项目需求id不能为空',
@@ -90,7 +86,6 @@ class QuotationController extends BaseController
             'price.required' => '报价不能为空',
             'summary.required' => '报价说明不能为空',
             'summary.max' => '最多500字符',
-            'status.required' => '状态不能为空',
         ];
         $validator = Validator::make($all, $rules, $messages);
         if($validator->fails()){
@@ -122,7 +117,6 @@ class QuotationController extends BaseController
      *           "design_company_id": 1,
      *           "price": "10000.00",
      *           "summary": "项目不错",
-     *           "status": 1
      *       },
      *       "meta": {
      *           "message": "Success",
@@ -155,7 +149,6 @@ class QuotationController extends BaseController
      * @apiParam {integer} item_demand_id 项目需求id
      * @apiParam {string} price 报价
      * @apiParam {string} summary 报价说明
-     * @apiParam {integer} status 状态
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -177,14 +170,12 @@ class QuotationController extends BaseController
             'item_demand_id'  => 'required|integer',
             'price'  => 'required|max:50',
             'summary'  => 'required|max:500',
-            'status'  => 'required|integer',
         ];
         $messages = [
             'item_demand_id.required' => '项目需求id不能为空',
             'price.required' => '报价不能为空',
             'summary.required' => '报价说明不能为空',
             'summary.max' => '最多500字符',
-            'status.required' => '状态不能为空',
         ];
         $validator = Validator::make($all , $rules, $messages);
 

@@ -23,8 +23,9 @@ class DesignItemTransformer extends TransformerAbstract
             'user_id' => intval($designItem->user_id),
             'type' => intval($designItem->type),
             'design_type' => intval($designItem->design_type),
-            'project_cycle' => strval($designItem->project_cycle),
-            'min_price' => strval($designItem->min_price)
+            'project_cycle' => intval($designItem->project_cycle),
+            'min_price' => floatval($designItem->min_price)
         ];
     }
 }
+

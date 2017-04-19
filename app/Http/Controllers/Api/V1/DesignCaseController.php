@@ -90,7 +90,6 @@ class DesignCaseController extends BaseController
      *       "customer": "1",
      *       "field": 1,
      *       "profile": "1",
-     *       "status": 1
      *       },
      *     "meta": {
      *       "message": "",
@@ -167,7 +166,6 @@ class DesignCaseController extends BaseController
      *           "customer": "1",
      *           "field": 1,
      *           "profile": "1",
-     *           "status": 1
      *       },
      *       "meta": {
      *           "message": "Success",
