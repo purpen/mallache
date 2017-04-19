@@ -17,7 +17,7 @@ class DesignItemModel extends Model
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id' , 'good_field' , 'project_cycle' , 'min_price' , 'max_price' , 'type' , 'design_type'];
+    protected $fillable = ['user_id' , 'good_field' , 'project_cycle' , 'min_price' , 'type' , 'design_type'];
 
     /**
      * 相对关联到User用户表
