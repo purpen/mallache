@@ -84,16 +84,15 @@ git@github.com:purpen/mallache.git
      try_files $uri $uri/ /index.php?$query_string;
  }
  
- ###### 
  
  ###### 生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
  
- ######请求api版本
-Accept: application/x.saas.v1+json
+ ###### 请求api版本
+ Accept: application/x.saas.v1+json
 
-###### 启动队列监听
-php artisan queue:work --sleep=3 --tries=3  
+ ###### 启动队列监听
+ php artisan queue:work --sleep=3 --tries=3  
 
-###### 计算设计公司加权分数score
-php artisan Weighted:calculation
+ ###### 计算设计公司加权分数score
+ php artisan Weighted:calculation
