@@ -115,4 +115,52 @@ class UploadController extends BaseController
             return $this->response->array($callBackDate );
         }
     }
+
+    /**
+     * @api {delete} /upload/deleteFile/{asset_id}  删除图片
+     * @apiVersion 1.0.0
+     * @apiName upload deleteFile
+     *
+     * @apiGroup Upload
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function deleteFile($asset_id)
+    {
+        if(!$file = AssetModel::find((int)$asset_id)){
+            return $this->response->array($this->apiSuccess());
+        }
+
+        if($file->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError());
+        }
+
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
+        //初始化Auth状态
+        $auth = new Auth($accessKey, $secretKey);
+        //初始化BucketManager
+        $bucketMgr = new BucketManager($auth);
+        //你要测试的空间， 并且这个key在你空间中存在
+        $bucket = config('filesystems.disks.qiniu.frmallache');
+        $key = $file->path;
+
+        $file->delete();
+
+        //删除$bucket 中的文件 $key
+        $err = $bucketMgr->delete($bucket, $key);
+        if ($err !== null) {
+            return $this->response->array($this->apiError('Error', 500));
+        } else {
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
 }

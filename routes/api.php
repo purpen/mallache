@@ -73,6 +73,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/upload/upToken' , [
             'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
         ]);
+        //删除图片
+        $api->delete('/upload/deleteFile/{asset_id}', ['as' => 'upload.deleteFile', 'uses' => 'UploadController@deleteFile']);
+
         //获取领域列表
         $api->get('/field', ['as' => 'field', 'uses' => 'CommonController@field']);
         //获取行业列表

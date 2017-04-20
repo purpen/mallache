@@ -42,7 +42,7 @@ class AssetModel extends Model
 
         $query = self::select('path')
                     ->where(['target_id' => $target_id, 'type' => $type])
-                    ->orderBy('created_at', $sort);
+                    ->orderBy('id', $sort);
         if($limit !== null){
             $query = $query->limit($limit);
         }
