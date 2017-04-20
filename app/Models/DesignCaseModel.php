@@ -37,4 +37,13 @@ class DesignCaseModel extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+
+    /**
+     * 案例图片
+     */
+    public function getCaseImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id , 5 , 1);
+    }
 }

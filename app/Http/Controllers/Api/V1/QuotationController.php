@@ -153,6 +153,13 @@ class QuotationController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
+     *      "data": {
+     *           "id": 3,
+     *           "item_demand_id": 2,
+     *           "design_company_id": 1,
+     *           "price": "10000.00",
+     *           "summary": "项目不错",
+     *       },
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
@@ -198,11 +205,12 @@ class QuotationController extends BaseController
         }
         $all = $request->except(['token']);
         $all['design_company_id'] = $design->id;
-        $quotation = QuotationModel::where('id', $id)->update($all);
+        $quotation = QuotationModel::where('id', $id)->first();
+        $quotation->update($all);
         if(!$quotation){
             return $this->response->array($this->apiError());
         }
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($quotation, new QuotationTransformer())->setMeta($this->apiMeta());
     }
 
     /**
