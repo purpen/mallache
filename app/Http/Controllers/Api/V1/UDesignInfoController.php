@@ -146,7 +146,7 @@ class UDesignInfoController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
 
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**

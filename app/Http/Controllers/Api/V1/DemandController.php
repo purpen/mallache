@@ -118,7 +118,7 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('Error', 500));
             }
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
 
         }
         //UX UI设计
@@ -153,7 +153,7 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('Error', 500));
             }
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }else{
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -294,7 +294,7 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('Error', 500));
             }
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
 
         }
         //UX UI设计
@@ -333,7 +333,7 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('Error', 500));
             }
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }else{
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -737,6 +737,9 @@ class DemandController extends BaseController
                 DB::rollBack();
                 return $this->response->array($this->apiError());
             }
+            //修改报价单状态为已确认
+            $quotation->status = 1;
+            $quotation->save();
 
             $item->design_company_id = $all['design_company_id'];
             $item->price = $quotation->price;
@@ -751,5 +754,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
     }
+
+    //确认合同
 
 }

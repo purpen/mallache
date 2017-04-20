@@ -205,7 +205,7 @@ class DemandCompanyController extends BaseController
             return $this->response->array($this->apiError());
         }
 
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
     }
 
     /**
