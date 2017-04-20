@@ -115,7 +115,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designCompany', ['as' => 'designCompany.show', 'uses' => 'DesignCompanyController@show']);
         $api->put('/designCompany', ['as' => 'designCompany.update', 'uses' => 'DesignCompanyController@update']);
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
-        $api->get('/designCompany/otherShow', ['as' => 'designCompany.otherShow', 'uses' => 'DesignCompanyController@otherShow']);
+        $api->get('/designCompany/otherIndex/{id}', ['as' => 'designCompany.otherIndex', 'uses' => 'DesignCompanyController@otherIndex']);
         //更新设计公司审核状态
         $api->put('designCompany/verifyStatus', [
             'as' => 'designCompany.verifyStatus', 'uses' => 'DesignCompanyController@verifyStatus'
