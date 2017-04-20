@@ -261,14 +261,15 @@ class DesignCompanyController extends BaseController
      */
     public function otherShow($id)
     {
-        Log::info(111);
         $design = DesignCompanyModel::where('id', $id)->first();
-        Log::info($design);
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
-        $design->item->type = DesignItemModel::where('user_id', $design->user_id)->get();
-        Log::info($design->item->type);
+        $items = DesignItemModel::where('user_id', $design->user_id)->get();
+        foreach ($items as $item)
+        {
+            Log::info($item->id);
+        }
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
