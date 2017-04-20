@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\DesignCompanyOtherIndexTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\DesignCompanyTransformer;
 use App\Http\Transformer\DesignItemTransformer;
@@ -252,29 +253,30 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/otherShow/{id} 其它公司查看根据设计公司id查看信息
+     * @api {get} /designCompany/otherIndex/{id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
      * @apiName designCompanyItem index
      * @apiGroup designCompanyItem
      *
      * @apiParam {string} token
      */
-    public function otherShow($id)
+    public function otherIndex($id)
     {
         $design = DesignCompanyModel::where('id', $id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
         $items = DesignItemModel::where('user_id', $design->user_id)->get();
-        foreach ($items as $item)
-        {
-            Log::info($item->id);
-        }
+
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
-        return $this->response->item($design, new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
-
+        foreach ($items as $item)
+        {
+            $design_type_val[] = $item->design_type_val;
+            $design->design_type_val = $design_type_val;
+        }
+        return $this->response->item($design, new DesignCompanyOtherIndexTransformer())->setMeta($this->apiMeta());
     }
 
     /**
