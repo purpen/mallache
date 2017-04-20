@@ -44,7 +44,7 @@ class DesignCompanyTransformer extends TransformerAbstract
         return [
             'id' => intval($DesignCompany->id),
             'user_id' => intval($DesignCompany->user_id),
-            'company_type' => intval($DesignCompany->company_type),
+            'company_type' => $DesignCompany->company_type_val,
             'company_name' => strval($DesignCompany->company_name),
             'company_abbreviation' => strval($DesignCompany->company_abbreviation),
             'registration_number' => strval($DesignCompany->registration_number),
@@ -56,9 +56,9 @@ class DesignCompanyTransformer extends TransformerAbstract
             'position' => strval($DesignCompany->position),
             'phone' => strval($DesignCompany->phone),
             'email' => strval($DesignCompany->email),
-            'company_size' => intval($DesignCompany->company_size),
+            'company_size' => $DesignCompany->company_size_val,
             'branch_office' => intval($DesignCompany->branch_office),
-            'item_quantity' => intval($DesignCompany->item_quantity),
+            'item_quantity' => $DesignCompany->item_quantity_val,
             'good_field' => explode(",",$DesignCompany->good_field),
             'web' => strval($DesignCompany->web),
             'company_profile' => strval($DesignCompany->company_profile),
@@ -70,7 +70,8 @@ class DesignCompanyTransformer extends TransformerAbstract
             'status' => intval($DesignCompany->status),
             'is_recommend' => intval($DesignCompany->status),
             'verify_status' => intval($DesignCompany->status),
-            'item' => $DesignCompany->item,
+            'logo_image' => $DesignCompany->logo_image,
+            'license_image' => $DesignCompany->license_image
         ];
     }
 }

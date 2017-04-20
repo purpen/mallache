@@ -48,6 +48,16 @@ class DesignCompanyModel extends Model
     ];
 
     /**
+     * 返回
+     */
+    protected $appends = [
+        'company_type_val',
+        'company_size_val',
+        'item_quantity_val',
+
+    ];
+
+    /**
      * 相对关联到User用户表
      */
     public function user()
@@ -81,6 +91,82 @@ class DesignCompanyModel extends Model
         $design_company = self::findOrFail($id);
         $design_company->status = $status;
         return $design_company->save();
+    }
+
+    //企业类型
+    public function getCompanyTypeValAttribute()
+    {
+        return $this->attributes['company_type'] == 1 ? '普通' : '多证合一';
+    }
+
+    //企业人数规模
+    public function getCompanySizeValAttribute()
+    {
+        switch ($this->attributes['company_size']){
+            case 1:
+                $company_size_val = '10以下';
+                break;
+            case 2:
+                $company_size_val = '10-50';
+                break;
+            case 3:
+                $company_size_val = '50-100';
+                break;
+            case 4:
+                $company_size_val = '100以上';
+                break;
+            default:
+                $company_size_val = '';
+        }
+        return $company_size_val;
+    }
+
+    //服务项目
+    public function getItemQuantityValAttribute()
+    {
+        switch ($this->attributes['item_quantity']) {
+            case 1:
+                $item_quantity_val = '10以下';
+                break;
+            case 2:
+                $item_quantity_val = '10-50';
+                break;
+            case 3:
+                $item_quantity_val = '50-100';
+                break;
+            case 4:
+                $item_quantity_val = '100-200';
+                break;
+            case 5:
+                $item_quantity_val = '200以上';
+                break;
+            default:
+                $item_quantity_val = '';
+        }
+        return $item_quantity_val;
+    }
+
+
+
+    /**
+     * 获取图片logo
+     *
+     * @return array
+     */
+    public function getLogoImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 6, 1);
+    }
+
+
+    /**
+     * 获取图片license
+     *
+     * @return array
+     */
+    public function getLicenseImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 3, 1);
     }
 
 }

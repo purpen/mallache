@@ -128,7 +128,6 @@ class ColumnController extends BaseController
     {
         $type = $request->input('type');
         $column = Column::where('type' , $type)->get();
-        Log::info($column);
         if(!$column){
             return $this->response->array($this->apiSuccess());
         }

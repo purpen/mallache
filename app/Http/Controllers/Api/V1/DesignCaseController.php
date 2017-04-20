@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignCaseTransformer;
+use App\Models\AssetModel;
 use App\Models\DesignCaseModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -77,6 +78,7 @@ class DesignCaseController extends BaseController
      * @apiParam {string} customer 服务客户
      * @apiParam {integer} field 所属领域 class_id
      * @apiParam {string} profile   功能描述
+     * @apiParam {string} random   随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -138,6 +140,8 @@ class DesignCaseController extends BaseController
         }
         try{
             $designCase = DesignCaseModel::create($all);
+            $random = $request->input('random');
+            AssetModel::setRandom($designCase->id , $random);
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
@@ -210,13 +214,22 @@ class DesignCaseController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     *   {
+     *  {
+     *     "data": {
+     *       "id": 2,
+     *       "prize": 2,
+     *       "title": "2",
+     *       "prize_time": "19901206",
+     *       "sales_volume": "1",
+     *       "customer": "1",
+     *       "field": 1,
+     *       "profile": "1",
+     *       },
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
      *     }
      *   }
-     *  }
      */
     public function update(Request $request , $id)
     {
@@ -258,11 +271,12 @@ class DesignCaseController extends BaseController
         if($case->user_id != $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $designCase = DesignCaseModel::where('id', intval($id))->update($all);
+        $designCase = DesignCaseModel::where('id', intval($id))->first();
+        $designCase->update($all);
         if(!$designCase){
             return $this->response->array($this->apiError());
         }
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
     }
 
     /**

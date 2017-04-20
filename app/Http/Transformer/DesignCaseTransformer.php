@@ -33,6 +33,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'field' => intval($designCase->field),
             'profile' => strval($designCase->profile),
             'status' => intval($designCase->status),
+            'case_image' => $designCase->case_image,
         ];
     }
 }

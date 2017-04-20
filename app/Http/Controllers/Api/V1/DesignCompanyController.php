@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\DesignCompanyTransformer;
 use App\Http\Transformer\DesignItemTransformer;
+use App\Models\AssetModel;
 use App\Models\DesignItemModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
+     * @apiParam {string} random 随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -180,6 +182,8 @@ class DesignCompanyController extends BaseController
                 return $this->response->array($this->apiError('已存在该设计公司'));
             }else{
                 $design = DesignCompanyModel::create($all);
+                $random = $request->input('random');
+                AssetModel::setRandom($design->id , $random);
             }
         }
         catch (\Exception $e){
@@ -226,35 +230,11 @@ class DesignCompanyController extends BaseController
      *          "status": 1
      *          "is_recommend": 0,
      *          "verify_status": 0,
-     *          "item": [
-     *          {
-     *              "id": 1,
-     *              "user_id": 1,
-     *              "good_field": 1,
-     *              "project_cycle": 1,
-     *              "min_price": "1.00",
-     *              "max_price": "1.00",
-     *              "created_at": "2017-04-07 16:50:30",
-     *              "updated_at": "2017-04-07 17:54:37",
-     *              "deleted_at": null
-     *          },
-     *          {
-     *              "id": 2,
-     *              "user_id": 1,
-     *              "good_field": 22,
-     *              "project_cycle": 22,
-     *              "min_price": "22.00",
-     *              "max_price": "22.00",
-     *              "created_at": "2017-04-07 17:07:12",
-     *              "updated_at": "2017-04-07 17:54:05",
-     *              "deleted_at": null
-     *          }
-     *          ]
      *      },
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
      *   }
      */
     public function show(Request $request)
@@ -263,13 +243,35 @@ class DesignCompanyController extends BaseController
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
         if(!empty($design)){
-            $design->item = DesignItemModel::where('user_id' , $user_id)->get();
             $design->good_field = explode(',' , $design['good_field']);
         }
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
         return $this->response->item($design , new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /designCompany/otherShow/{id} 其它公司查看根据设计公司id查看信息
+     * @apiVersion 1.0.0
+     * @apiName designCompany show
+     * @apiGroup designCompany
+     *
+     * @apiParam {string} token
+     */
+    public function otherShow($id)
+    {
+        $design = DesignCompanyModel::where('id', $id)->first();
+        if(!empty($design)){
+            $design->good_field = explode(',' , $design['good_field']);
+        }
+        $design->item->type = DesignItemModel::where('user_id', $design->user_id)->get();
+        Log::info($design->item->type);
+        if(!$design){
+            return $this->response->array($this->apiSuccess());
+        }
+        return $this->response->item($design, new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**
@@ -313,6 +315,35 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
+     *      "data": {
+     *          "id": 4,
+     *          "user_id": 1,
+     *          "company_type": 0,
+     *          "company_name": "",
+     *          "company_abbreviation": "",
+     *          "registration_number": "",
+     *          "province": 0,
+     *          "city": 0,
+     *          "area": 0,
+     *          "address": "",
+     *          "contact_name": "",
+     *          "position": "",
+     *          "phone": 0,
+     *          "email": "",
+     *          "company_size": 0,
+     *          "branch_office": 0,
+     *          "item_quantity": 0,
+     *          "good_field": "",
+     *          "web": "",
+     *          "company_profile": "",
+     *          "establishment_time": "",
+     *          "professional_advantage": "",
+     *          "awards": "",
+     *          "status": 0,
+     *          "is_recommend": 0,
+     *          "verify_status": 0,
+     *          "item": null
+     *      },
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
@@ -380,11 +411,12 @@ class DesignCompanyController extends BaseController
             $good_field = implode(',' , [$goodField]);
             $all['good_field'] = $good_field;
         }
-        $design = DesignCompanyModel::where('user_id', $user_id)->update($all);
+        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        $design->update($all);
         if(!$design){
             return $this->response->array($this->apiError());
         }
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
     }
 
     /**
