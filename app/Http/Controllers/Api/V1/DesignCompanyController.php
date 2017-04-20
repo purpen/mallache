@@ -254,14 +254,16 @@ class DesignCompanyController extends BaseController
     /**
      * @api {get} /designCompany/otherShow/{id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
-     * @apiName designCompany show
-     * @apiGroup designCompany
+     * @apiName designCompanyItem index
+     * @apiGroup designCompanyItem
      *
      * @apiParam {string} token
      */
     public function otherShow($id)
     {
+        Log::info(111);
         $design = DesignCompanyModel::where('id', $id)->first();
+        Log::info($design);
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
