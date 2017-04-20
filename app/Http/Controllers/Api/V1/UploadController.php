@@ -18,10 +18,10 @@ class UploadController extends BaseController
      *
      * @apiGroup Upload
      * @apiParam {string} token 图片上传upToken
-     * @apiParam {string} random 随机数
-     * @apiParam {integer} user_id
-     * @apiParam {integer} target_id 目标ID
-     * @apiParam {type} type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.公司logo；
+     * @apiParam {string} x:random 随机数
+     * @apiParam {integer} x:user_id
+     * @apiParam {integer} x:target_id 目标ID
+     * @apiParam {type} x:type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.公司logo；
      */
 
     /**

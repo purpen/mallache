@@ -756,5 +756,47 @@ class DemandController extends BaseController
     }
 
     //确认合同
+    /**
+     * @api {post} /demand/trueContract 确定合作合同
+     * @apiVersion 1.0.0
+     * @apiName demand 确定合作合同
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function trueContract($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError());
+        }
+        if($item->user_id !== $this->auth_user_id || $item->status !== 6){
+            return $this->response->array($this->apiError());
+        }
+        try{
+            DB::beginTransaction();
+            $item->status = 7;
+            $item->save();
+
+            //修改合同状态为已确认
+            //
+
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
 
 }
