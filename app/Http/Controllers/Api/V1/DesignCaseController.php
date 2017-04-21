@@ -175,6 +175,7 @@ class DesignCaseController extends BaseController
             AssetModel::setRandom($designCase->id , $random);
         }
         catch (\Exception $e){
+            dd($e);
             return $this->response->array($this->apiError());
         }
 
