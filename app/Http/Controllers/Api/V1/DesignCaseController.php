@@ -84,18 +84,18 @@ class DesignCaseController extends BaseController
      * @apiName designCase store
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
      * @apiParam {integer} mass_production 是否量产
-     * @apiParam {integer} sales_volume 销售金额
+     * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
-     * @apiParam {integer} type   设计类型
-     * @apiParam {integer} design_type   设计类别
-     * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} industry   所属行业
-     * @apiParam {integer} system   系统
-     * @apiParam {integer} design_content   设计内容
+     * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
+     * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
+     * @apiParam {integer} system   系统：1.ios；2.安卓；
+     * @apiParam {integer} design_content  	设计内容：1.视觉设计；2.交互设计；
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
@@ -277,18 +277,18 @@ class DesignCaseController extends BaseController
      * @apiName designCase update
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
      * @apiParam {integer} mass_production 是否量产
-     * @apiParam {string} sales_volume 销售金额
+     * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
-     * @apiParam {integer} type   设计类型
-     * @apiParam {integer} design_type   设计类别
-     * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} industry   所属行业
-     * @apiParam {integer} system   系统
-     * @apiParam {integer} design_content   设计内容
+     * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
+     * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
+     * @apiParam {integer} system   系统：1.ios；2.安卓；
+     * @apiParam {integer} design_content  	设计内容：1.视觉设计；2.交互设计；
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
