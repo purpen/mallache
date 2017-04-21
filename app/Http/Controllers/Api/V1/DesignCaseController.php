@@ -166,7 +166,7 @@ class DesignCaseController extends BaseController
         $all['type'] = $request->input('type' , 0);
         $all['design_type'] = $request->input('design_type' , 0);
         $all['industry'] = $request->input('industry' , 0);
-        $all['status'] = 0;
+//        $all['status'] = 0;
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -177,8 +177,7 @@ class DesignCaseController extends BaseController
             AssetModel::setRandom($designCase->id , $random);
         }
         catch (\Exception $e){
-            dd($e);
-            return $this->response->array($this->apiError());
+            throw new HttpException('database error');
         }
 
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
