@@ -135,6 +135,7 @@ class DesignCaseController extends BaseController
             'type'  => 'integer',
             'design_type'  => 'integer',
             'industry'  => 'integer',
+            'prize_time'  => 'date',
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -148,6 +149,7 @@ class DesignCaseController extends BaseController
             'type.integer' => '设计类型必须为整形',
             'design_type.integer' => '设计类别必须为整形',
             'industry.integer' => '所属行业必须为整形',
+            'prize_time.date' => '日期格式不正确',
         ];
         $all['title'] = $request->input('title');
         $all['prize'] = $request->input('prize');
@@ -155,7 +157,7 @@ class DesignCaseController extends BaseController
             $all['other_prize'] = $request->input('other_prize');
         }
         $all['prize_time'] = $request->input('prize_time');
-        $all['sales_volume'] = $request->input('sales_volume');
+        $all['sales_volume'] = $request->input('sales_volume' , 0);
         $all['mass_production'] = $request->input('mass_production');
         $all['customer'] = $request->input('customer');
         $all['field'] = $request->input('field' , 0);
