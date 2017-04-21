@@ -149,7 +149,7 @@ class UploadController extends BaseController
         //初始化BucketManager
         $bucketMgr = new BucketManager($auth);
         //你要测试的空间， 并且这个key在你空间中存在
-        $bucket = config('filesystems.disks.qiniu.frmallache');
+        $bucket = config('filesystems.disks.qiniu.bucket');
         $key = $file->path;
 
         //删除附件表中的信息
