@@ -40,7 +40,7 @@ class AssetModel extends Model
             $sort = 'asc';
         }
 
-        $query = self::select('path')
+        $query = self::select('id','path')
                     ->where(['target_id' => $target_id, 'type' => $type])
                     ->orderBy('id', $sort);
         if($limit !== null){

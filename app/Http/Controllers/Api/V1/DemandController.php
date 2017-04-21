@@ -12,8 +12,6 @@ use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
-use App\Models\DesignCompanyModel;
-use App\Models\DesignItemModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ProductDesign;
@@ -23,7 +21,6 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 class DemandController extends BaseController

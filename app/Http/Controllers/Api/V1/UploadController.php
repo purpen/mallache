@@ -152,6 +152,7 @@ class UploadController extends BaseController
         $bucket = config('filesystems.disks.qiniu.frmallache');
         $key = $file->path;
 
+        //删除附件表中的信息
         $file->delete();
 
         //删除$bucket 中的文件 $key
