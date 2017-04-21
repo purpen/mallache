@@ -203,7 +203,8 @@ class ColumnController extends BaseController
 
         $all = $request->except(['token']);
 
-        $column = Column::where('id', $id)->update($all);
+        $column = Column::where('id', $id)->first();
+        $column->update($all);
         if(!$column){
             return $this->response->array($this->apiError());
         }

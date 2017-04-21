@@ -166,7 +166,7 @@ class DesignCompanyModel extends Model
      */
     public function getLicenseImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 3, 1);
+        return AssetModel::getImageUrl($this->id, 3, 1 , 5);
     }
 
 }

@@ -46,4 +46,28 @@ class DesignCaseModel extends Model
     {
         return AssetModel::getImageUrl($this->id , 5 , 1);
     }
+
+    public function getSalesVolumeValAttribute()
+    {
+        switch ($this->attributes['sales_volume']){
+            case 1:
+                $sales_volume_val = '100-500w';
+                break;
+            case 2:
+                $sales_volume_val = '500-1000w';
+                break;
+            case 3:
+                $sales_volume_val = '1000-5000w';
+                break;
+            case 4:
+                $sales_volume_val = '5000-10000w';
+                break;
+            case 5:
+                $sales_volume_val = '10000w以上';
+                break;
+            default:
+                $sales_volume_val = '';
+        }
+        return $sales_volume_val;
+    }
 }
