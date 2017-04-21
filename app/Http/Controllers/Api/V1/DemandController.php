@@ -62,14 +62,32 @@ class DemandController extends BaseController
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
-     * @apiParam {integer} system 系统：1.ios；2.安卓；
-     * @apiParam {integer} design_content 设计内容：1.视觉设计；2.交互设计；
      *
      * @apiSuccessExample 成功响应:
      *   {
      *      "data": {
-     *
-     *      },
+                "id": 13,
+                "type": 1,
+                "type_value": "产品设计类型",
+                "design_type": 2,
+                "design_type_value": "产品设计",
+                "status": 5,
+                "field": 1,
+                "field_value": "智能硬件",
+                "industry": 2,
+                "industry_value": "消费零售",
+                "name": "api UI",
+                "product_features": "亮点",
+                "competing_product": "竞品",
+                "cycle": 1,
+                "cycle_value": "1个月内",
+                "design_cost": 2,
+                "design_cost_value": "1-5万之间",
+                "province": 2,
+                "city": 2,
+                "image": [],
+                "price": 200000
+            },
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
@@ -123,11 +141,11 @@ class DemandController extends BaseController
             $rules = [
                 'type' => 'require|integer',
                 'design_type' => 'required|integer',
-                'system' => 'required|integer',
-                'design_content' => 'required|integer',
+//                'system' => 'required|integer',
+//                'design_content' => 'required|integer',
             ];
 
-            $all = $request->only(['type', 'design_type', 'system', 'design_content']);
+            $all = $request->only(['type', 'design_type']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -142,8 +160,8 @@ class DemandController extends BaseController
 
                 $u_design = UDesign::create([
                     'item_id' => intval($item->id),
-                    'system' => $request->input('system'),
-                    'design_content' => $request->input('design_content')
+//                    'system' => $request->input('system'),
+//                    'design_content' => $request->input('design_content')
                 ]);
             }
             catch (\Exception $e){
@@ -170,16 +188,26 @@ class DemandController extends BaseController
      * {
         "data": {
             "id": 13,
-            "design_type": 1,
-            "status": 3,
+            "type": 1,
+            "type_value": "产品设计类型",
+            "design_type": 2,
+            "design_type_value": "产品设计",
+            "status": 5,
             "field": 1,
-            "industry": 1,
+            "field_value": "智能硬件",
+            "industry": 2,
+            "industry_value": "消费零售",
             "name": "api UI",
             "product_features": "亮点",
             "competing_product": "竞品",
-            "design_cost": 2, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+            "cycle": 1,
+            "cycle_value": "1个月内",
+            "design_cost": 2,
+            "design_cost_value": "1-5万之间",
             "province": 2,
-            "city": 2
+            "city": 2,
+            "image": [],
+            "price": 200000
         },
         "meta": {
             "message": "Success",
@@ -231,11 +259,32 @@ class DemandController extends BaseController
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
-     * @apiParam {integer} system 系统：1.ios；2.安卓；
-     * @apiParam {integer} design_content 设计内容：1.视觉设计；2.交互设计；
      *
      * @apiSuccessExample 成功响应:
      *   {
+     *      "data": {
+                "id": 13,
+                "type": 1,
+                "type_value": "产品设计类型",
+                "design_type": 2,
+                "design_type_value": "产品设计",
+                "status": 5,
+                "field": 1,
+                "field_value": "智能硬件",
+                "industry": 2,
+                "industry_value": "消费零售",
+                "name": "api UI",
+                "product_features": "亮点",
+                "competing_product": "竞品",
+                "cycle": 1,
+                "cycle_value": "1个月内",
+                "design_cost": 2,
+                "design_cost_value": "1-5万之间",
+                "province": 2,
+                "city": 2,
+                "image": [],
+                "price": 200000
+            },
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
@@ -299,11 +348,11 @@ class DemandController extends BaseController
             $rules = [
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
-                'system' => 'required|integer',
-                'design_content' => 'required|integer',
+//                'system' => 'required|integer',
+//                'design_content' => 'required|integer',
             ];
 
-            $all = $request->only(['type', 'design_type', 'system', 'design_content']);
+            $all = $request->only(['type', 'design_type']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){

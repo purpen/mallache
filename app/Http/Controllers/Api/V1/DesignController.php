@@ -67,11 +67,14 @@ class DesignController extends BaseController
 
         $item_recommends = ItemRecommend
                         ::where(['design_company_id' => $design_company->id])
-//                        ->where( 'item_status', '!=' ,1)
+                        ->where( 'item_status', '!=' ,1)
                         ->get();
 
         return $this->response->collection($item_recommends, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
     }
+
+    //拒绝设计项目
+//    public function
 
 
 }

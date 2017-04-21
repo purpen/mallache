@@ -11,8 +11,8 @@ class UDesign extends Model
     //允许批量赋值的属性
     protected $fillable = [
         'item_id',
-        'system',
-        'design_content',
+//        'system',
+//        'design_content',
 //        'page_number',
         'name',
         'stage',
