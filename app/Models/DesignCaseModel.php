@@ -32,8 +32,6 @@ class DesignCaseModel extends Model
         'type',
         'design_type',
         'industry',
-        'system',
-        'design_content',
         'other_prize',
     ];
 
@@ -43,8 +41,6 @@ class DesignCaseModel extends Model
     protected $appends = [
         'field_val',
         'industry_val',
-        'system_val',
-        'design_content_val',
         'type_val',
         'design_type_val',
         'prize_val'
@@ -144,26 +140,6 @@ class DesignCaseModel extends Model
         }
     }
 
-
-    //判断领域
-    public function getSystemValAttribute()
-    {
-        if($this->attributes['type'] == 2){
-
-            switch ($this->attributes['system']){
-                case 1:
-                    $system_val = 'app设计';
-                    break;
-                case 2:
-                    $system_val = '网页设计';
-                    break;
-                default:
-                    $system_val = '' ;
-            }
-            return $system_val;
-        }
-    }
-
     //判断行业
     public function getIndustryValAttribute()
     {
@@ -174,24 +150,6 @@ class DesignCaseModel extends Model
                 return $industry_val;
             }
             return '';
-        }
-    }
-
-    //判断行业
-    public function getDesignContentValAttribute()
-    {
-        if($this->attributes['type'] == 2) {
-            switch ($this->attributes['design_content']){
-                case 1:
-                    $design_content_val = 'app设计';
-                    break;
-                case 2:
-                    $design_content_val = '网页设计';
-                    break;
-                default:
-                    $design_content_val = '' ;
-            }
-            return $design_content_val;
         }
     }
 

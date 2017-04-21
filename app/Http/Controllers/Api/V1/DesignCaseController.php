@@ -40,10 +40,6 @@ class DesignCaseController extends BaseController
      *      "case_image": [],
      *      "industry": 2,
      *      "industry_val": "消费零售",
-     *      "system": 2,
-     *      "system_val": null,
-     *      "design_content": 2,
-     *      "design_content_val": null,
      *      "type": 1,
      *      "type_val": "产品设计",
      *      "design_type": 1,
@@ -84,18 +80,16 @@ class DesignCaseController extends BaseController
      * @apiName designCase store
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
      * @apiParam {integer} mass_production 是否量产
-     * @apiParam {integer} sales_volume 销售金额
+     * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
-     * @apiParam {integer} type   设计类型
-     * @apiParam {integer} design_type   设计类别
-     * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} industry   所属行业
-     * @apiParam {integer} system   系统
-     * @apiParam {integer} design_content   设计内容
+     * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
+     * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
@@ -117,10 +111,6 @@ class DesignCaseController extends BaseController
      *      "case_image": [],
      *      "industry": 2,
      *      "industry_val": "消费零售",
-     *      "system": 2,
-     *      "system_val": null,
-     *      "design_content": 2,
-     *      "design_content_val": null,
      *      "type": 1,
      *      "type_val": "产品设计",
      *      "design_type": 1,
@@ -135,13 +125,16 @@ class DesignCaseController extends BaseController
      */
     public function store(Request $request)
     {
-        Log::info($request->all());
         // 验证规则
         $rules = [
             'title'  => 'required|max:50',
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
             'profile'  => 'required|max:500',
+            'field'  => 'integer',
+            'type'  => 'integer',
+            'design_type'  => 'integer',
+            'industry'  => 'integer',
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -151,6 +144,10 @@ class DesignCaseController extends BaseController
             'customer.max' => '最多50字符',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
+            'field.integer' => '所属领域必须为整形',
+            'type.integer' => '设计类型必须为整形',
+            'design_type.integer' => '设计类别必须为整形',
+            'industry.integer' => '所属行业必须为整形',
         ];
         $all['title'] = $request->input('title');
         $all['prize'] = $request->input('prize');
@@ -161,36 +158,13 @@ class DesignCaseController extends BaseController
         $all['sales_volume'] = $request->input('sales_volume');
         $all['mass_production'] = $request->input('mass_production');
         $all['customer'] = $request->input('customer');
-        $all['field'] = $request->input('field');
+        $all['field'] = $request->input('field' , 0);
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
-        $all['type'] = $request->input('type');
-        $all['design_type'] = $request->input('design_type');
-        $all['industry'] = $request->input('industry');
-        $all['system'] = $request->input('system');
-        $all['design_content'] = $request->input('design_content');
-        $status = $request->input('status');
-        if($status == null){
-            $all['status'] = 0;
-        }
-        if($request->input('field') == null){
-            $all['field'] = 0;
-        }
-        if($request->input('type') == null){
-            $all['type'] = 0;
-        }
-        if($request->input('design_type') == null){
-            $all['design_type'] = 0;
-        }
-        if($request->input('industry') == null){
-            $all['industry'] = 0;
-        }
-        if($request->input('system') == null){
-            $all['system'] = 0;
-        }
-        if($request->input('design_content') == null){
-            $all['design_content'] = 0;
-        }
+        $all['type'] = $request->input('type' , 0);
+        $all['design_type'] = $request->input('design_type' , 0);
+        $all['industry'] = $request->input('industry' , 0);
+        $all['status'] = $request->input('status' , 0);
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -234,10 +208,6 @@ class DesignCaseController extends BaseController
      *      "case_image": [],
      *      "industry": 2,
      *      "industry_val": "消费零售",
-     *      "system": 2,
-     *      "system_val": null,
-     *      "design_content": 2,
-     *      "design_content_val": null,
      *      "type": 1,
      *      "type_val": "产品设计",
      *      "design_type": 1,
@@ -277,18 +247,16 @@ class DesignCaseController extends BaseController
      * @apiName designCase update
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
      * @apiParam {integer} mass_production 是否量产
-     * @apiParam {string} sales_volume 销售金额
+     * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
-     * @apiParam {integer} type   设计类型
-     * @apiParam {integer} design_type   设计类别
-     * @apiParam {integer} field 所属领域 class_id
-     * @apiParam {integer} industry   所属行业
-     * @apiParam {integer} system   系统
-     * @apiParam {integer} design_content   设计内容
+     * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
+     * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
@@ -310,10 +278,6 @@ class DesignCaseController extends BaseController
      *      "case_image": [],
      *      "industry": 2,
      *      "industry_val": "消费零售",
-     *      "system": 2,
-     *      "system_val": null,
-     *      "design_content": 2,
-     *      "design_content_val": null,
      *      "type": 1,
      *      "type_val": "产品设计",
      *      "design_type": 1,
@@ -334,6 +298,10 @@ class DesignCaseController extends BaseController
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
             'profile'  => 'required|max:500',
+            'field'  => 'integer',
+            'type'  => 'integer',
+            'design_type'  => 'integer',
+            'industry'  => 'integer',
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -343,8 +311,12 @@ class DesignCaseController extends BaseController
             'customer.max' => '最多50字符',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
+            'field.integer' => '所属领域必须为整形',
+            'type.integer' => '设计类型必须为整形',
+            'design_type.integer' => '设计类别必须为整形',
+            'industry.integer' => '所属行业必须为整形',
         ];
-        $validator = Validator::make($request->only(['title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
+        $validator = Validator::make($request->only(['type' , 'design_type' , 'industry' , 'title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
 
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
