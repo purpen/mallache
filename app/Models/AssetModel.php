@@ -27,7 +27,7 @@ class AssetModel extends Model
      * 获取图片列表
      *
      * @param integer $target_id  目标ID
-     * @param integer $type 图片类型 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；
+     * @param integer $type 图片类型 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；6.设计公司logo
      * @param int $sort  排序（可选，默认倒序）：1.倒序；2.正序；
      * @param null $limit 数量（可选）：获取数量
      * @return array
@@ -55,6 +55,8 @@ class AssetModel extends Model
                 'id' => $asset->id,
                 'file' => config('filesystems.disks.qiniu.url') . $asset->path,
                 'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
+                'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
+                'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
             ];
         }
 

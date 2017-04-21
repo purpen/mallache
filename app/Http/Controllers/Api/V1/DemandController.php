@@ -611,11 +611,15 @@ class DemandController extends BaseController
      *      }
      *      "data": [
                 {
-                    "item_status": 0, //需求方项目状态：-1.拒绝；0.未响应；1.选定设计公司；
-                    "design_company_status": 0, //设计公司状态: -1.拒绝；0.未响应；1.一键成交；2.有意向报价;
+     *              "status": 5,
+                    "status_value": "选定设计公司",
+                    "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
+                    "item_status_value": "选定设计公司",
+                    "design_company_status": 0, //设计公司状态: -1.拒绝；0.待操作；1.一键成交；2.有意向报价;
+                    "design_company_status_value": "待操作",
                     "design_company": {
                         "id": 1,
-                        "user_id": 1, //用户表ID (唯一索引)
+                        "user_id": 1, //用户表ID
                         "company_type": 1, //企业类型：1.普通；2.多证合一；
                         "company_name": "测试设计公司", //公司名称
                         "registration_number": "12344556", //注册号

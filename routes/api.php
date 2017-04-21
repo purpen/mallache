@@ -143,5 +143,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
 
 
+        //设计公司相关操作
+        $api->get('/design/itemList', ['as' => 'itemList', 'uses' => 'DesignController@itemList']);
+
     });
 });
