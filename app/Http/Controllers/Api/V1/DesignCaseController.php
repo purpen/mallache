@@ -24,23 +24,36 @@ class DesignCaseController extends BaseController
      * @apiSuccessExample 成功响应:
      *
      *   {
-     *       "data": [
-     *           {
-     *           "id": 2,
-     *           "prize": 2,
-     *           "title": "2",
-     *           "prize_time": "1990-12-06",
-     *           "sales_volume": "1.00",
-     *           "customer": "1",
-     *           "field": 1,
-     *           "profile": "1",
-     *           "status": 1
-     *           }
-     *       ],
-     *       "meta": {
-     *           "message": "Success",
-     *           "status_code": 200
-     *       }
+     *    "data": {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "system": 2,
+     *      "system_val": null,
+     *      "design_content": 2,
+     *      "design_content_val": null,
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": ""
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
      *   }
      *
      */
@@ -74,40 +87,60 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} prize 奖项
      * @apiParam {string} prize_time 获奖时间
      * @apiParam {integer} mass_production 是否量产
-     * @apiParam {string} sales_volume 销售金额
+     * @apiParam {integer} sales_volume 销售金额
      * @apiParam {string} customer 服务客户
-     * @apiParam {integer} field 所属领域 class_id
      * @apiParam {string} profile   功能描述
-     * @apiParam {string} random   随机数
+     * @apiParam {integer} type   设计类型
+     * @apiParam {integer} design_type   设计类别
+     * @apiParam {integer} field 所属领域 class_id
+     * @apiParam {integer} industry   所属行业
+     * @apiParam {integer} system   系统
+     * @apiParam {integer} design_content   设计内容
+     * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *   {
-     *     "data": {
-     *       "id": 2,
-     *       "prize": 2,
-     *       "title": "2",
-     *       "prize_time": "19901206",
-     *       "sales_volume": "1",
-     *       "customer": "1",
-     *       "field": 1,
-     *       "profile": "1",
-     *       },
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
-     *   }
+     *    "data": {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "system": 2,
+     *      "system_val": null,
+     *      "design_content": 2,
+     *      "design_content_val": null,
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": ""
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
      *  }
      */
     public function store(Request $request)
     {
+        Log::info($request->all());
         // 验证规则
         $rules = [
             'title'  => 'required|max:50',
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
-            'field'  => 'required|integer',
             'profile'  => 'required|max:500',
         ];
         $messages = [
@@ -116,12 +149,14 @@ class DesignCaseController extends BaseController
             'mass_production.required' => '是否量产不能为空',
             'customer.required' => '服务客户不能为空',
             'customer.max' => '最多50字符',
-            'field.required' => '所属领域不能为空',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
         ];
         $all['title'] = $request->input('title');
         $all['prize'] = $request->input('prize');
+        if($all['prize'] == 20){
+            $all['other_prize'] = $request->input('other_prize');
+        }
         $all['prize_time'] = $request->input('prize_time');
         $all['sales_volume'] = $request->input('sales_volume');
         $all['mass_production'] = $request->input('mass_production');
@@ -129,11 +164,33 @@ class DesignCaseController extends BaseController
         $all['field'] = $request->input('field');
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
+        $all['type'] = $request->input('type');
+        $all['design_type'] = $request->input('design_type');
+        $all['industry'] = $request->input('industry');
+        $all['system'] = $request->input('system');
+        $all['design_content'] = $request->input('design_content');
         $status = $request->input('status');
         if($status == null){
             $all['status'] = 0;
         }
-
+        if($request->input('field') == null){
+            $all['field'] = 0;
+        }
+        if($request->input('type') == null){
+            $all['type'] = 0;
+        }
+        if($request->input('design_type') == null){
+            $all['design_type'] = 0;
+        }
+        if($request->input('industry') == null){
+            $all['industry'] = 0;
+        }
+        if($request->input('system') == null){
+            $all['system'] = 0;
+        }
+        if($request->input('design_content') == null){
+            $all['design_content'] = 0;
+        }
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -161,20 +218,36 @@ class DesignCaseController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     *       "data": {
-     *           "id": 3,
-     *           "prize": 1,
-     *           "title": "1",
-     *           "prize_time": "",
-     *           "sales_volume": "1.00",
-     *           "customer": "1",
-     *           "field": 1,
-     *           "profile": "1",
-     *       },
-     *       "meta": {
-     *           "message": "Success",
-     *           "status_code": 200
-     *       }
+     *    "data": {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "system": 2,
+     *      "system_val": null,
+     *      "design_content": 2,
+     *      "design_content_val": null,
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": ""
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
      *   }
      */
     public function show(Request $request)
@@ -209,26 +282,48 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} mass_production 是否量产
      * @apiParam {string} sales_volume 销售金额
      * @apiParam {string} customer 服务客户
-     * @apiParam {integer} field 所属领域 class_id
      * @apiParam {string} profile   功能描述
+     * @apiParam {integer} type   设计类型
+     * @apiParam {integer} design_type   设计类别
+     * @apiParam {integer} field 所属领域 class_id
+     * @apiParam {integer} industry   所属行业
+     * @apiParam {integer} system   系统
+     * @apiParam {integer} design_content   设计内容
+     * @apiParam {string} other_prize   其他奖项
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *  {
-     *     "data": {
-     *       "id": 2,
-     *       "prize": 2,
-     *       "title": "2",
-     *       "prize_time": "19901206",
-     *       "sales_volume": "1",
-     *       "customer": "1",
-     *       "field": 1,
-     *       "profile": "1",
-     *       },
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
+     *    "data": {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "system": 2,
+     *      "system_val": null,
+     *      "design_content": 2,
+     *      "design_content_val": null,
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": ""
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
      *   }
      */
     public function update(Request $request , $id)
@@ -238,7 +333,6 @@ class DesignCaseController extends BaseController
             'title'  => 'required|max:50',
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
-            'field'  => 'required|integer',
             'profile'  => 'required|max:500',
         ];
         $messages = [
@@ -247,7 +341,6 @@ class DesignCaseController extends BaseController
             'mass_production.required' => '是否量产不能为空',
             'customer.required' => '服务客户不能为空',
             'customer.max' => '最多50字符',
-            'field.required' => '所属领域不能为空',
             'profile.required' => '项目描述不能为空',
             'profile.max' => '最多500字符',
         ];
