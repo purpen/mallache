@@ -93,7 +93,8 @@ class DesignCompanyController extends BaseController
      *          "status": 0,
      *          "is_recommend": 0,
      *          "verify_status": 0,
-     *          "item": null
+     *          "logo_image": ""，
+     *          "license_image": ""，
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -231,6 +232,8 @@ class DesignCompanyController extends BaseController
      *          "status": 1
      *          "is_recommend": 0,
      *          "verify_status": 0,
+     *          "logo_image": ""，
+     *          "license_image": ""，
      *      },
      *       "meta": {
      *           "message": "Success",
@@ -347,7 +350,8 @@ class DesignCompanyController extends BaseController
      *          "status": 0,
      *          "is_recommend": 0,
      *          "verify_status": 0,
-     *          "item": null
+     *          "logo_image": ""，
+     *          "license_image": ""，
      *      },
      *     "meta": {
      *       "message": "",
