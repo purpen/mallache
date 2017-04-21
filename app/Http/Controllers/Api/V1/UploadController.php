@@ -152,14 +152,13 @@ class UploadController extends BaseController
         $bucket = config('filesystems.disks.qiniu.bucket');
         $key = $file->path;
 
-        //删除附件表中的信息
-        $file->delete();
-
         //删除$bucket 中的文件 $key
         $err = $bucketMgr->delete($bucket, $key);
         if ($err !== null) {
             return $this->response->array($this->apiError('Error', 500));
         } else {
+            //删除附件表中的信息
+            $file->delete();
             return $this->response->array($this->apiSuccess());
         }
     }
