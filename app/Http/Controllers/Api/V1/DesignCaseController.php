@@ -307,6 +307,9 @@ class DesignCaseController extends BaseController
             'type'  => 'integer',
             'design_type'  => 'integer',
             'industry'  => 'integer',
+            'prize_time'  => 'nullable|date',
+            'prize' => 'nullable|integer',
+            'sales_volume' => 'nullable|integer',
         ];
         $messages = [
             'title.required' => '标题不能为空',
