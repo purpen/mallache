@@ -135,7 +135,9 @@ class DesignCaseController extends BaseController
             'type'  => 'integer',
             'design_type'  => 'integer',
             'industry'  => 'integer',
-            'prize_time'  => 'date',
+            'prize_time'  => 'nullable|date',
+            'prize' => 'nullable|integer',
+            'sales_volume' => 'nullable|integer',
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -152,7 +154,7 @@ class DesignCaseController extends BaseController
             'prize_time.date' => '日期格式不正确',
         ];
         $all['title'] = $request->input('title');
-        $all['prize'] = $request->input('prize');
+        $all['prize'] = $request->input('prize') ?? 0;
         if($all['prize'] == 20){
             $all['other_prize'] = $request->input('other_prize');
         }
@@ -173,7 +175,7 @@ class DesignCaseController extends BaseController
         }
         try{
             $designCase = DesignCaseModel::create($all);
-            $random = $request->input('random','');
+            $random = $request->input('random') ?? '';
             AssetModel::setRandom($designCase->id , $random);
         }
         catch (\Exception $e){
