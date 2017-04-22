@@ -132,9 +132,10 @@ class DesignCaseModel extends Model
     {
         if($this->attributes['type'] == 1){
             $key = $this->attributes['field'];
-            if($key !==0 ){
-                $field_val = config('constant.field')[$key];
-                return $field_val;
+            if(array_key_exists($key,config('constant.field'))){
+                $prize_val = config('constant.field')[$key];
+                return $prize_val;
+
             }
             return '';
         }
@@ -145,9 +146,10 @@ class DesignCaseModel extends Model
     {
         if($this->attributes['type'] == 1){
             $key = $this->attributes['industry'];
-            if($key !==0 ){
-                $industry_val = config('constant.industry')[$key];
-                return $industry_val;
+            if(array_key_exists($key,config('constant.industry'))){
+                $prize_val = config('constant.industry')[$key];
+                return $prize_val;
+
             }
             return '';
         }
