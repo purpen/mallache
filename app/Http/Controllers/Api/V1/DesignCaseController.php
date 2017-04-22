@@ -157,7 +157,7 @@ class DesignCaseController extends BaseController
             $all['other_prize'] = $request->input('other_prize');
         }
         $all['prize_time'] = $request->input('prize_time');
-        $all['sales_volume'] = $request->input('sales_volume' , 0);
+        $all['sales_volume'] = $request->input('sales_volume', 0);
         $all['mass_production'] = $request->input('mass_production');
         $all['customer'] = $request->input('customer');
         $all['field'] = $request->input('field' , 0);
@@ -173,11 +173,12 @@ class DesignCaseController extends BaseController
         }
         try{
             $designCase = DesignCaseModel::create($all);
-            $random = $request->input('random');
+            $random = $request->input('random','');
             AssetModel::setRandom($designCase->id , $random);
         }
         catch (\Exception $e){
-            throw new HttpException('database error');
+
+            throw new HttpException($e->getMessage());
         }
 
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
