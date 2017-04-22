@@ -60,7 +60,7 @@ class DesignCaseModel extends Model
      */
     public function getCaseImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id , 5 , 1);
+        return AssetModel::getImageUrl($this->id , 5 , 1 , 1);
     }
 
     public function getSalesVolumeValAttribute()
@@ -157,9 +157,10 @@ class DesignCaseModel extends Model
     public function getPrizeValAttribute()
     {
         $key = $this->attributes['prize'];
-        if($key !==0 ){
+        if(array_key_exists($key,config('constant.prize'))){
             $prize_val = config('constant.prize')[$key];
             return $prize_val;
+
         }
         return '';
     }
