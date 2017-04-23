@@ -60,6 +60,14 @@ class DesignCaseModel extends Model
      */
     public function getCaseImageAttribute()
     {
+        return AssetModel::getImageUrl($this->id , 5 , 1 );
+    }
+
+    /**
+     * 封面图
+     */
+    public function getFirstImageAttribute()
+    {
         return AssetModel::getImageUrl($this->id , 5 , 1 , 1);
     }
 
