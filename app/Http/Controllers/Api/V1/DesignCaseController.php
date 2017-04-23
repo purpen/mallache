@@ -132,10 +132,10 @@ class DesignCaseController extends BaseController
             'mass_production'  => 'required|integer',
             'customer'  => 'required|max:50',
             'profile'  => 'required|max:500',
-            'field'  => 'integer',
+            'field'  => 'nullable|integer',
             'type'  => 'integer',
             'design_type'  => 'integer',
-            'industry'  => 'integer',
+            'industry'  => 'nullable|integer',
             'prize_time'  => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
@@ -163,12 +163,12 @@ class DesignCaseController extends BaseController
         $all['sales_volume'] = $request->input('sales_volume') ?? 0;
         $all['mass_production'] = $request->input('mass_production');
         $all['customer'] = $request->input('customer');
-        $all['field'] = $request->input('field' , 0);
+        $all['field'] = $request->input('field') ?? 0;
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
         $all['type'] = $request->input('type' , 0);
         $all['design_type'] = $request->input('design_type' , 0);
-        $all['industry'] = $request->input('industry' , 0);
+        $all['industry'] = $request->input('industry') ?? 0;
         $all['status'] = 0;
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
@@ -227,10 +227,10 @@ class DesignCaseController extends BaseController
      */
     public function show($case_id)
     {
-        $id = intval($case_id);
-        $designCase = DesignCaseModel::where('id', $id)->first();
+        $case_id = intval($case_id);
+        $designCase = DesignCaseModel::find($case_id);
         if(!$designCase){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('not found', 404));
         }
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
     }

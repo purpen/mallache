@@ -13,7 +13,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiSuccess($message='Success', $status_code=200, $data=array(), $meta=array())
+    public function apiSuccess($message='Success', $status_code=200, $data=null, $meta=array())
     {
         $result['meta'] = array(
             'message' => $message,
@@ -24,7 +24,7 @@ trait ApiHelper
             $result['meta'] = array_merge($result['meta'], $meta);
         }
 
-        if (!empty($data)) {
+        if ($data !== null) {
             $result['data'] = $data;
         }
 
