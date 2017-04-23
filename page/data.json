@@ -1,0 +1,4 @@
+{
+    "seller": {"test_01": 123, "test_02": "ABC"},
+    "goods": {"title": "自行车", "price": 23.20}
+}

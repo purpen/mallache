@@ -1,0 +1,227 @@
+/**
+ * Common Part --- Start
+ */
+
+html{
+  font-size:62.5%; /* 10÷16=62.5% */
+}
+body{
+  font-size:12px;
+  font-size:1.2rem ; /* 12÷10=1.2 */
+}
+p{
+  font-size:14px;
+  font-size:1.4rem;
+}
+
+a {
+  color: rgba(112,123,135,.92);
+  text-decoration: none;
+}
+a:hover {
+  color: #222;
+}
+a.is_active {
+  color: #222;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+  font-size: 1.2rem;
+}
+input:-moz-placeholder, textarea:-moz-placeholder {
+  font-size: 1.2rem;
+}
+input::-moz-placeholder, textarea::-moz-placeholder {
+  font-size: 1.2rem;
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+  font-size: 1.2rem;
+}
+
+.field .select {
+  font-size: 0.875rem;
+}
+
+.clear {
+  clear: both;
+}
+
+.el-form-item__content {
+  line-height: 10px;
+}
+
+
+/**
+ *  新添按钮颜色值
+ */
+.button.is-custom {
+  background-color: #FF5A5F;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-custom:hover, .button.is-custom.is-hovered {
+  background-color: #FF4500;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-custom:focus, .button.is-custom.is-focused {
+  border-color: transparent;
+  box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);
+  color: #fff;
+}
+
+.button.is-custom:active, .button.is-custom.is-active {
+  background-color: #FF4500;
+  border-color: transparent;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);
+  color: #fff;
+}
+
+.button.is-custom.is-inverted {
+  background-color: #fff;
+  color: #FF5A5F;
+}
+
+.button.is-custom.is-inverted:hover {
+  background-color: #f2f2f2;
+}
+
+.button.is-custom.is-loading:after {
+  border-color: transparent transparent #fff #fff !important;
+}
+
+.button.is-custom.is-outlined {
+  background-color: transparent;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
+}
+
+.button.is-custom.is-outlined:hover, .button.is-custom.is-outlined:focus {
+  background-color: #FF5A5F;
+  border-color: #FF5A5F;
+  color: #fff;
+}
+
+.button.is-custom.is-outlined.is-loading:after {
+  border-color: transparent transparent #FF5A5F #FF5A5F !important;
+}
+
+.button.is-custom.is-inverted.is-outlined {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+
+.button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is-outlined:focus {
+  background-color: #fff;
+  color: #FF5A5F;
+}
+
+/**
+ * Common Part --- End
+ */
+
+/**
+ * header右侧
+ */
+.el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title{
+  height: 52px;
+  line-height: 52px;
+  border: none;
+  background: #fff;
+  color: #7a7a7a;
+  padding: 0 14px;
+}
+.el-menu-info.el-menu--horizontal .el-submenu>.el-menu{
+  top: 52px;
+  border: 1px solid #ccc;
+  width: 150px;
+  height: 132px;
+  min-width: 150px;
+  padding: 0;
+}
+.el-menu-info.el-menu--horizontal .el-submenu>.el-menu .el-menu-item{
+  display: block;
+  cursor: pointer;
+  border: none;
+  height: auto;
+  text-align: left;
+  border-top: none;
+  color: rgba(112,123,135,.92);
+  line-height: 1em;
+  text-transform: none;
+  font-weight: 400;
+  box-shadow: none;
+  padding: .85rem 1.5rem .85rem 1.5rem!important;
+  text-align: center;
+}
+.el-menu-info.el-menu--horizontal .el-submenu>.el-menu .el-menu-item:hover{
+  background: rgba(0,0,0,.05);
+  color: #222;
+}
+.el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title img{
+  max-height: 1.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title .b-nickname{
+  padding-left: 8px;
+  padding-right: 3px;
+  font-size: 1.2rem;
+}
+.el-menu-info.el-menu--horizontal:hover>.el-submenu .el-submenu__title,.el-menu--horizontal:hover .el-submenu .el-submenu__icon-arrow {
+  color: #222;
+}
+
+
+/**
+ * vCenter Menu Sub --- Start
+ */
+.vcenter-menu-sub {
+  height: 25px;
+  line-height: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.vcenter-menu-sub-list {
+
+}
+.vcenter-menu-sub-list .item {
+  font-size: 1.5rem;
+  display: block;
+  margin: 0 16px 0 0;
+  float: left;
+}
+.vcenter-menu-sub-list .item.is-active {
+  color: #222;
+  border-bottom: 1px solid #222;
+  padding-bottom: 10px;
+}
+/**
+ * vCenter Menu Sub --- End
+ */
+
+.container {
+  margin: 0 100px 0 100px;
+}
+
+/**
+ * vCenter Content
+ */
+.right-content .content-box {
+  margin-top: 30px;
+  clear: both;
+  border: 1px solid #ccc;
+  padding: 0px 20px 20px 20px;
+}
+
+.form-title {
+  margin: 20px 0 20px 0px;
+}
+.form-title span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
