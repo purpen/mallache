@@ -7,12 +7,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -34,6 +37,9 @@ class AuthenticateController extends BaseController
      *       "message": "Success",
      *       "status_code": 200
      *     }
+     *     "data": {
+     *          "token": ""
+     *      }
      *   }
      */
     public function register (Request $request)
@@ -42,7 +48,7 @@ class AuthenticateController extends BaseController
         $rules = [
             'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6'],
-            'sms_code' => ['required', 'regex:/^[0-9]{6}$/']
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
         ];
 
         $payload = $request->only('account', 'password', 'sms_code');
@@ -59,17 +65,18 @@ class AuthenticateController extends BaseController
         }else{
             Cache::forget($key);
         }
-
         // 创建用户
-        $res = User::create([
+        $user = User::create([
             'account' => $payload['account'],
             'phone' => $payload['account'],
             'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);
 
-        if ($res) {
-            return $this->response->array($this->apiSuccess());
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+
+            return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
@@ -114,6 +121,8 @@ class AuthenticateController extends BaseController
                 'password' => ['required', 'min:6']
             ];
 
+
+
             $payload = app('request')->only('account', 'password');
             $validator = app('validator')->make($payload, $rules);
 
@@ -124,14 +133,13 @@ class AuthenticateController extends BaseController
 
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                return $this->response->array($this->apiError('invalid_credentials', 401));
+                return $this->response->array($this->apiError('账户名或密码错误', 401));
             }
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
         }
-
         // return the token
-        return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token', 'status')));
+        return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token')));
     }
 
     /**
@@ -198,9 +206,6 @@ class AuthenticateController extends BaseController
      *       "message": "请求成功！",
      *       "status_code": 200
      *     },
-     *     "data": {
-     *       "sms_code": "233333"
-     *    }
      *   }
      */
     public function getSmsCode(Request $request)
@@ -228,7 +233,6 @@ class AuthenticateController extends BaseController
         $this->dispatch(new SendOneSms($phone,$text));
 
         return $this->response->array($this->apiSuccess('请求成功！', 200, compact('sms_code')));
-
     }
 
     /**
@@ -265,4 +269,61 @@ class AuthenticateController extends BaseController
         }
     }
 
+    /**
+     * @api {get} /auth/phoneState/18624343456 验证手机号
+     * @apiVersion 1.0.0
+     * @apiName user phoneState
+     * @apiGroup User
+     *
+     * @apiParam {int} phone
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function phoneState($phone)
+    {
+        if(User::where('account', intval($phone))->count() > 0){
+            return $this->response->array($this->apiError('手机号已注册！', 412));
+        };
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /auth/user 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName user user
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *      "data": {
+     *          "id": 1,
+     *          "account": "18629493221",
+     *          "username": "",
+     *          "email": null,
+     *          "phone": "18629493221",
+     *          "status": 0, //状态：；-1：禁用；0.激活;
+     *          "item_sum": 0, //项目数量
+     *          "price_total": "0.00", //总金额
+     *          "price_frozen": "0.00", //冻结金额
+     *           "img": ""
+            }
+     *   }
+     */
+    public function AuthUser()
+    {
+        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
+    }
 }

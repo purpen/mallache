@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        //计算设计公司权重值命令
+        Commands\CalculationWeight::class,
     ];
 
     /**

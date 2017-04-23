@@ -10,3 +10,5 @@ Homestead.yaml
 .DS_Store
 page/node_modules
 *.swp
+/public/apidoc
+/apidoc.json
