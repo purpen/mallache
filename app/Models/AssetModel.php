@@ -53,6 +53,7 @@ class AssetModel extends Model
         {
             $images[] = [
                 'id' => $asset->id,
+                'name' => $asset->name,
                 'file' => config('filesystems.disks.qiniu.url') . $asset->path,
                 'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
                 'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
