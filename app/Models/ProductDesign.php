@@ -60,12 +60,18 @@ class ProductDesign extends Model
     public function getFieldValueAttribute()
     {
         $fields = config('constant.field');
+        if(!array_key_exists($this->field, $fields)){
+            return '';
+        }
         return $fields[$this->field];
     }
 
     public function getIndustryValueAttribute()
     {
         $industries = config('constant.industry');
+        if(!array_key_exists($this->industry, $industries)){
+            return '';
+        }
         return $industries[$this->industry];
     }
 

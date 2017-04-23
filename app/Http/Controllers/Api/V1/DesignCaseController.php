@@ -188,12 +188,11 @@ class DesignCaseController extends BaseController
     }
 
     /**
-     * @api {get} /designCase/3  公司案例ID查看详情
+     * @api {get} /designCase/{case_id}  公司案例ID查看详情
      * @apiVersion 1.0.0
      * @apiName designCase show
      * @apiGroup designCase
      *
-     * @apiParam {integer} id 案例ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -226,9 +225,9 @@ class DesignCaseController extends BaseController
      *      }
      *   }
      */
-    public function show(Request $request)
+    public function show($case_id)
     {
-        $id = intval($request->input('id'));
+        $id = intval($case_id);
         $designCase = DesignCaseModel::where('id', $id)->first();
         if(!$designCase){
             return $this->response->array($this->apiSuccess());
