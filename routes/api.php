@@ -85,6 +85,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
         $api->put('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
         $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
+        $api->get('/demandCompany/otherShow/{unique_id}', ['as' => 'demandCompany.otherShow', 'uses' => 'DemandCompanyController@otherShow']);
         /**
          * 项目需求相关路由
          */

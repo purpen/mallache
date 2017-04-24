@@ -18,7 +18,9 @@ class DemandCompanyTransformer extends TransformerAbstract
     address	varchar(50)	否		详细地址
     contact_name	varchar(20)	否		联系人姓名
     phone	varcahr(20)	否		手机
-    email	varchar(50)	否		邮箱*/
+    email	varchar(50)	否		邮箱
+    unique_id	varchar(30)	否		唯一ID
+    */
 
     public function transform(DemandCompany $demand)
     {
@@ -35,6 +37,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'contact_name' => strval($demand->contact_name),
             'phone' => intval($demand->phone),
             'email' => strval($demand->email),
+            'unique_id' => strval($demand->unique_id),
         ];
     }
 }

@@ -95,6 +95,7 @@ class DesignCompanyController extends BaseController
      *          "verify_status": 0,
      *          "logo_image": ""，
      *          "license_image": ""，
+     *          "unique_id": "58fdc5273db38"
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -171,6 +172,7 @@ class DesignCompanyController extends BaseController
         if($branch_office == null){
             $all['branch_office'] = 0 ;
         }
+        $all['unique_id'] = uniqid();
         $all['user_id'] = $this->auth_user_id;
         $validator = Validator::make($all , $rules, $messages);
 
@@ -234,6 +236,7 @@ class DesignCompanyController extends BaseController
      *          "verify_status": 0,
      *          "logo_image": ""，
      *          "license_image": ""，
+     *          "unique_id": "58fdc5273db38"
      *      },
      *       "meta": {
      *           "message": "Success",
@@ -256,16 +259,16 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/otherIndex/{id} 其它公司查看根据设计公司id查看信息
+     * @api {get} /designCompany/otherIndex/{unique_id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
      * @apiName designCompanyItem index
      * @apiGroup designCompanyItem
      *
      * @apiParam {string} token
      */
-    public function otherIndex($id)
+    public function otherIndex($unique_id)
     {
-        $design = DesignCompanyModel::where('id', $id)->first();
+        $design = DesignCompanyModel::where('unique_id', $unique_id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
@@ -352,6 +355,7 @@ class DesignCompanyController extends BaseController
      *          "verify_status": 0,
      *          "logo_image": ""，
      *          "license_image": ""，
+     *          "unique_id": "58fdc5273db38"
      *      },
      *     "meta": {
      *       "message": "",

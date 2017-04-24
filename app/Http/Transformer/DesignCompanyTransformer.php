@@ -36,6 +36,7 @@ class DesignCompanyTransformer extends TransformerAbstract
         status	                tinyint(4)	否	0	设计公司状态：0、关闭；1、审核通过；
         is_recommend	tinyint(4)	否	0	是否推荐：0.否；1.是;
         verify_status	tinyint(4)	否	0	审核状态：0.审核中；1.审核通过；
+        unique_id	    varchar(30)	否		唯一ID
 
     */
 
@@ -74,7 +75,8 @@ class DesignCompanyTransformer extends TransformerAbstract
             'is_recommend' => intval($DesignCompany->status),
             'verify_status' => intval($DesignCompany->status),
             'logo_image' => $DesignCompany->logo_image,
-            'license_image' => $DesignCompany->license_image
+            'license_image' => $DesignCompany->license_image,
+            'unique_id' => strval($DesignCompany->unique_id),
         ];
     }
 }
