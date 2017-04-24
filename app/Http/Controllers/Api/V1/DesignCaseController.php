@@ -44,7 +44,8 @@ class DesignCaseController extends BaseController
      *      "type_val": "产品设计",
      *      "design_type": 1,
      *      "design_type_val": "产品策略",
-     *      "other_prize": ""
+     *      "other_prize": "",
+     *      "mass_production": 1,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -82,7 +83,7 @@ class DesignCaseController extends BaseController
      * @apiParam {string} title 标题
      * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
-     * @apiParam {integer} mass_production 是否量产
+     * @apiParam {integer} mass_production 是否量产:0.否；1.是；
      * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
@@ -115,7 +116,8 @@ class DesignCaseController extends BaseController
      *      "type_val": "产品设计",
      *      "design_type": 1,
      *      "design_type_val": "产品策略",
-     *      "other_prize": ""
+     *      "other_prize": "",
+     *      "mass_production": 1,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -160,7 +162,7 @@ class DesignCaseController extends BaseController
         }
         $all['prize_time'] = $request->input('prize_time');
         $all['sales_volume'] = $request->input('sales_volume') ?? 0;
-        $all['mass_production'] = $request->input('mass_production');
+        $all['mass_production'] = $request->input('mass_production') ?? 0;
         $all['customer'] = $request->input('customer');
         $all['field'] = $request->input('field') ?? 0;
         $all['profile'] = $request->input('profile');
@@ -216,7 +218,8 @@ class DesignCaseController extends BaseController
      *      "type_val": "产品设计",
      *      "design_type": 1,
      *      "design_type_val": "产品策略",
-     *      "other_prize": ""
+     *      "other_prize": "",
+     *      "mass_production": 1,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -253,7 +256,7 @@ class DesignCaseController extends BaseController
      * @apiParam {string} title 标题
      * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
      * @apiParam {string} prize_time 获奖时间
-     * @apiParam {integer} mass_production 是否量产
+     * @apiParam {integer} mass_production 是否量产:0.否；1.是；
      * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
@@ -286,7 +289,8 @@ class DesignCaseController extends BaseController
      *      "type_val": "产品设计",
      *      "design_type": 1,
      *      "design_type_val": "产品策略",
-     *      "other_prize": ""
+     *      "other_prize": "",
+     *      "mass_production": 1,
      *      },
      *      "meta": {
      *      "message": "Success",
