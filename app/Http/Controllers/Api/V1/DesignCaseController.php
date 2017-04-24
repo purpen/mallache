@@ -57,7 +57,6 @@ class DesignCaseController extends BaseController
     {
         $user_id = intval($this->auth_user_id);
         $designCase = DesignCaseModel::where('user_id', $user_id)->get();
-        Log::info($designCase);
         if(!$designCase){
             return $this->response->array($this->apiSuccess());
         }

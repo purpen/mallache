@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\QuotationTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
+use App\Models\ItemRecommend;
 use App\Models\QuotationModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -92,6 +93,8 @@ class QuotationController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
+            $item_recommend = ItemRecommend::where('item_id' , $request->input('item_demand_id'))->where('design_company_id' , $design->id)->first();
+            Log::info($item_recommend);
             $quotation = QuotationModel::firstOrCreate($all);
         }
         catch (\Exception $e){
