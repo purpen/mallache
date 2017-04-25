@@ -22,6 +22,7 @@ price_frozen	decimal(10,2)	否	0	冻结金额*/
     {
         return [
             'id' => (int)$user->id,
+            'type' => (int)$user->type,
             'account' => $user->account,
             'username' => $user->username,
             'email' => $user->email,

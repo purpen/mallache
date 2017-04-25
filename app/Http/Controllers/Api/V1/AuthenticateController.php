@@ -27,6 +27,7 @@ class AuthenticateController extends BaseController
      * @apiName user register
      * @apiGroup User
      *
+     * @apiParam {integer} type 用户类型：1.需求公司；2.设计公司；
      * @apiParam {string} account 用户账号(手机号)
      * @apiParam {string} password 设置密码
      * @apiParam {integer} sms_code 短信验证码
@@ -49,9 +50,10 @@ class AuthenticateController extends BaseController
             'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+            'type' => ['required', Rule::in([1, 2])],
         ];
 
-        $payload = $request->only('account', 'password', 'sms_code');
+        $payload = $request->only('account', 'password', 'sms_code', 'type');
         $validator = Validator::make($payload, $rules);
         if($validator->fails()){
             throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
@@ -69,6 +71,8 @@ class AuthenticateController extends BaseController
         $user = User::create([
             'account' => $payload['account'],
             'phone' => $payload['account'],
+            'username' => $payload['account'],
+            'type' => $payload['type'],
             'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);

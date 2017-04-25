@@ -143,8 +143,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
 
 
-        //设计公司相关操作
-        $api->get('/design/itemList', ['as' => 'itemList', 'uses' => 'DesignController@itemList']);
+        /**
+         * 设计公司相关操作
+         */
+        //获取系统推荐的设计项目
+        $api->get('/design/itemList', ['as' => 'design.itemList', 'uses' => 'DesignController@itemList']);
+        //拒绝设计项目
+        $api->get('/design/refuseItem/{item_id}', ['as' => 'design.refuseItem', 'uses' => 'DesignController@refuseItem']);
 
     });
 });
