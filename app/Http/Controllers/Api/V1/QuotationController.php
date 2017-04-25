@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\QuotationTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
+use App\Models\ItemRecommend;
 use App\Models\QuotationModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -92,7 +93,17 @@ class QuotationController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $quotation = QuotationModel::firstOrCreate($all);
+            //查看项目id和设计公司id是否存在
+            $item_recommend = ItemRecommend::where('item_id' , $request->input('item_demand_id'))->where('design_company_id' , $design->id)->first();
+            if($item_recommend == null){
+                return $this->response->array($this->apiSuccess('项目不合法' , 200));
+            }
+            //查看报价单id是否为null,为null创建报价单并更新项目报价单id信息
+            if($item_recommend->quotation_id == null){
+                $quotation = QuotationModel::create($all);
+                $item_recommend->quotation_id = $quotation->id;
+                $item_recommend->save();
+            }
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
@@ -206,6 +217,10 @@ class QuotationController extends BaseController
         $all = $request->except(['token']);
         $all['design_company_id'] = $design->id;
         $quotation = QuotationModel::where('id', $id)->first();
+        //如果已经确认了，就不能更新报价单信息了
+        if($quotation->status == 1){
+            return $this->response->array($this->apiSuccess('该项目已确认,不能修改' , 200));
+        }
         $quotation->update($all);
         if(!$quotation){
             return $this->response->array($this->apiError());

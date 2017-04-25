@@ -44,7 +44,8 @@ class DesignCompanyModel extends Model
         'status',
         'company_abbreviation',
         'is_recommend',
-        'verify_status'
+        'verify_status',
+        'unique_id'
     ];
 
     /**
@@ -53,7 +54,7 @@ class DesignCompanyModel extends Model
     protected $appends = [
         'company_type_val',
         'company_size_val',
-        'item_quantity_val',
+//        'item_quantity_val',
 
     ];
 

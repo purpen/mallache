@@ -18,7 +18,8 @@ class DemandCompanyTransformer extends TransformerAbstract
     address	varchar(50)	否		详细地址
     contact_name	varchar(20)	否		联系人姓名
     phone	varcahr(20)	否		手机
-    email	varchar(50)	否		邮箱*/
+    email	varchar(50)	否		邮箱
+    */
 
     public function transform(DemandCompany $demand)
     {
