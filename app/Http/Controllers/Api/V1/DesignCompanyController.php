@@ -55,7 +55,6 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
-     * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
      * @apiParam {string} good_field 擅长领域
      * @apiParam {string} web 公司网站
      * @apiParam {string} company_profile 公司简介
@@ -83,7 +82,6 @@ class DesignCompanyController extends BaseController
      *          "email": "",
      *          "company_size": 0,
      *          "branch_office": 0,
-     *          "item_quantity": 0,
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
@@ -117,7 +115,7 @@ class DesignCompanyController extends BaseController
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
-            'item_quantity'  => 'nullable|integer',
+//            'item_quantity'  => 'nullable|integer',
             'web'  => 'max:50',
             'company_profile'  => 'max:500',
             'establishment_time'  => 'nullable|date',
@@ -142,7 +140,7 @@ class DesignCompanyController extends BaseController
             'email.email' => '邮箱格式不正确',
             'company_size.integer' => '公司规模必须是整形',
             'branch_office.integer' => '分公司必须是整形',
-            'item_quantity.integer' => '服务项目必须是整形',
+//            'item_quantity.integer' => '服务项目必须是整形',
             'web.max' => '公司网站不能超过50个字',
             'establishment_time.date' => '公司成立时间格式不正确',
             'good_field.max' => '擅长领域不能超过50个字',
@@ -222,7 +220,6 @@ class DesignCompanyController extends BaseController
      *          "email": "",
      *          "company_size": 1,  1.10以下；2.10-50；3.50-100；4.100以上;
      *          "branch_office": 0,
-     *          "item_quantity": 1,  1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
@@ -317,7 +314,6 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} phone 手机
      * @apiParam {string} email 邮箱
      * @apiParam {integer} branch_office 分公司
-     * @apiParam {integer} item_quantity 服务项目 1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
      * @apiParam {string} good_field 擅长领域
      * @apiParam {string} web 公司网站
      * @apiParam {string} company_profile 公司简介
@@ -343,7 +339,6 @@ class DesignCompanyController extends BaseController
      *          "email": "",
      *          "company_size": 0,
      *          "branch_office": 0,
-     *          "item_quantity": 0,
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
@@ -379,7 +374,6 @@ class DesignCompanyController extends BaseController
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
-            'item_quantity'  => 'nullable|integer',
             'web'  => 'max:50',
             'company_profile'  => 'max:500',
             'establishment_time'  => 'nullable|date',
@@ -404,7 +398,6 @@ class DesignCompanyController extends BaseController
             'email.email' => '邮箱格式不正确',
             'company_size.integer' => '公司规模必须是整形',
             'branch_office.integer' => '分公司必须是整形',
-            'item_quantity.integer' => '服务项目必须是整形',
             'web.max' => '公司网站不能超过50个字',
             'establishment_time.date' => '公司成立时间格式不正确',
             'good_field.max' => '擅长领域不能超过50个字',
