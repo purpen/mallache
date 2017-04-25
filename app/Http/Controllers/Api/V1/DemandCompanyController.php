@@ -85,7 +85,6 @@ class DemandCompanyController extends BaseController
             'email' => 'required|email',
         ];
         $all = $request->all();
-        $all['unique_id'] = uniqid();
         $all['user_id'] = $this->auth_user_id;
         $validator = Validator::make($all, $rules);
         if($validator->fails()){
@@ -124,7 +123,6 @@ class DemandCompanyController extends BaseController
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
      *          "email": "qq@qq.com",
-     *          "unique_id": "58fdc5273db38"
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -137,46 +135,6 @@ class DemandCompanyController extends BaseController
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
         if(!$demand){
             return $this->response->array([])->setMeta($this->apiMeta());
-        }
-
-        return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
-    }
-
-    /**
-     * @api {get} /demandCompany/otherShow/{unique_id} 其它用户获取需求用户信息
-     * @apiVersion 1.0.0
-     * @apiName demandCompany index
-     * @apiGroup demandCompany
-     *
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "data": {
-     *          "id": 1,
-     *          "company_name": "nihao",
-     *          "company_size": 1,
-     *          "company_web": "http://www.baidu.com",
-     *          "province": 1,
-     *          "city": 4,
-     *          "area": 5,
-     *          "address": "beijing",
-     *          "contact_name": "lisna",
-     *          "phone": 18629493221,
-     *          "email": "qq@qq.com",
-     *          "unique_id": "58fdc5273db38"
-     *      },
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *  }
-     */
-    public function otherShow($unique_id)
-    {
-        $demand = DemandCompany::where('unique_id', $unique_id)->first();
-        if(!$demand){
-            return $this->response->array($this->apiError('没有找到' , 404));
         }
 
         return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());

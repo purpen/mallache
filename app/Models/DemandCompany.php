@@ -30,8 +30,7 @@ class DemandCompany extends Model
         'address',
         'contact_name',
         'phone',
-        'email',
-        'unique_id'
+        'email'
     ];
 
 }

@@ -14,7 +14,7 @@ class AddUniqueIdToDesignCompanyTable extends Migration
     public function up()
     {
         Schema::table('design_company', function (Blueprint $table) {
-            $table->string('unique_id',30);
+            $table->string('unique_id' , 30)->nullable()->unique();
         });
     }
 
