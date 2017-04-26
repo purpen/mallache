@@ -128,7 +128,7 @@ class PayController extends BaseController
     /**
      * @api {get} /pay/aliPaySynNotify  支付宝同步回调接口
      * @apiVersion 1.0.0
-     * @apiName pay aliPayNotify
+     * @apiName pay aliSynPayNotify
      * @apiGroup pay
      *
      * @apiSuccessExample 成功响应:
