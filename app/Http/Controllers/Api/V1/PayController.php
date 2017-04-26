@@ -33,9 +33,12 @@ class PayController extends BaseController
      */
     public function demandAliPay()
     {
+        //总金额
+        $total_fee = 0.01;
+
         $pay_order = $this->createPayOrder('发布需求保证金');
         $alipay = new Alipay();
-        $html_text = $alipay->alipayApi($pay_order->uid, '发布需求保证金', 99);
+        $html_text = $alipay->alipayApi($pay_order->uid, '发布需求保证金', $total_fee);
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
     }
