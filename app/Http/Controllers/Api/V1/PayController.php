@@ -135,7 +135,7 @@ class PayController extends BaseController
      * @apiGroup pay
      *
      * @apiSuccessExample 成功响应:
-     *   "success"
+     *   转跳
      */
     public function aliPaySynNotify()
     {
