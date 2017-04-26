@@ -139,53 +139,9 @@ class PayController extends BaseController
      */
     public function aliPaySynNotify()
     {
-        $alipay = new Alipay();
-        //支付成功
-        if($alipay->notifyUrl()){
-            //商户订单号
-            $out_trade_no = $_GET['out_trade_no'];
-
-            //支付宝交易号
-            $trade_no = $_GET['trade_no'];
-
-            //交易状态
-            $trade_status = $_GET['trade_status'];
-
-            //判断是否支付完成
-            if($_GET['trade_status'] == 'TRADE_SUCCESS') {
-                try{
-                    $pay_order = PayOrder::where('uid', $out_trade_no)->first();
-                    //判断是否业务已处理
-                    if($pay_order->status === 0){
-                        $pay_order->pay_type = 1; //支付宝
-                        $pay_order->pay_no = $trade_no;
-                        $pay_order->status = 1; //支付成功
-                        $pay_order= $pay_order->save();
-
-                        event(new PayOrderEvent($pay_order));
-                    }
-                }
-                catch (\Exception $e){
-                    Log::error('支付订单操作失败');
-                    return;
-                }
-            }
-            //三个月后不可退款状态通知
-            elseif ($_GET['trade_status'] == 'TRADE_FINISHED'){
-
-            }
-
-            //处理成功转跳
-            echo '成功';
-        }
-        //支付失败转跳
-        else{
-            echo '失败';
-        }
-
+        header("Location: https://www.taihuoniao.com");
+        exit();
     }
-
-
 
 }
 
