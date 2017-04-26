@@ -648,8 +648,8 @@ class DemandController extends BaseController
     public function itemList(Request $request)
     {
         $rules = [
-            'type' => 'integer',
-            'per_page' => 'integer',
+            'type' => 'nullable|integer',
+            'per_page' => 'nullable|integer',
         ];
 
         $all = $request->only(['type', 'per_page']);
@@ -659,7 +659,10 @@ class DemandController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        switch ($request->type){
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->input('type') ?? 0;
+
+        switch ($type){
             case 0:
                 $where_in = [];
                 break;
@@ -669,8 +672,6 @@ class DemandController extends BaseController
             default:
                 $where_in = [];
         }
-
-        $per_page = $request->input('per_page', $this->per_page);
 
         $items = Item::where('user_id', $this->auth_user_id);
 
