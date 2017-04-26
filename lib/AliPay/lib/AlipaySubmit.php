@@ -7,6 +7,8 @@ namespace Lib\AliPay\lib;
  * 详细：构造支付宝各接口表单HTML文本，获取远程HTTP数据
  */
 class AlipaySubmit {
+    use AlipayCore;
+    use AlipayMd5;
 
     var $alipay_config;
     /**

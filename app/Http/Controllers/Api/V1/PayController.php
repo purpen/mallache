@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\PayOrderEvent;
 use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -10,9 +11,9 @@ use Qiniu\Http\Request;
 
 class PayController extends BaseController
 {
-    //发布需求保证金支付
+    //发布需求保证金支付-支付宝
     /**
-     * @api {get} /pay/demandAliPay/ 发布需求保证金支付
+     * @api {get} /pay/demandAliPay 发布需求保证金支付
      * @apiVersion 1.0.0
      * @apiName pay demandAliPay
      * @apiGroup pay
@@ -93,10 +94,16 @@ class PayController extends BaseController
             if($_POST['trade_status'] == 'TRADE_SUCCESS') {
                 try{
                     $pay_order = PayOrder::where('uid', $out_trade_no)->first();
-                    $pay_order->pay_type = 1; //支付宝
-                    $pay_order->pay_no = $trade_no;
-                    $pay_order->status = 1; //支付成功
-                    $pay_order->save();
+
+                    //判断是否业务已处理
+                    if($pay_order->status === 0){
+                        $pay_order->pay_type = 1; //支付宝
+                        $pay_order->pay_no = $trade_no;
+                        $pay_order->status = 1; //支付成功
+                        $pay_order= $pay_order->save();
+
+                        event(new PayOrderEvent($pay_order));
+                    }
                 }
                 catch (\Exception $e){
                     Log::error('支付订单操作失败');
@@ -117,6 +124,65 @@ class PayController extends BaseController
         }
 
     }
+
+    /**
+     * @api {get} /pay/aliPaySynNotify  支付宝同步回调接口
+     * @apiVersion 1.0.0
+     * @apiName pay aliPayNotify
+     * @apiGroup pay
+     *
+     * @apiSuccessExample 成功响应:
+     *   "success"
+     */
+    public function aliPaySynNotify()
+    {
+        $alipay = new Alipay();
+        //支付成功
+        if($alipay->notifyUrl()){
+            //商户订单号
+            $out_trade_no = $_GET['out_trade_no'];
+
+            //支付宝交易号
+            $trade_no = $_GET['trade_no'];
+
+            //交易状态
+            $trade_status = $_GET['trade_status'];
+
+            //判断是否支付完成
+            if($_GET['trade_status'] == 'TRADE_SUCCESS') {
+                try{
+                    $pay_order = PayOrder::where('uid', $out_trade_no)->first();
+                    //判断是否业务已处理
+                    if($pay_order->status === 0){
+                        $pay_order->pay_type = 1; //支付宝
+                        $pay_order->pay_no = $trade_no;
+                        $pay_order->status = 1; //支付成功
+                        $pay_order= $pay_order->save();
+
+                        event(new PayOrderEvent($pay_order));
+                    }
+                }
+                catch (\Exception $e){
+                    Log::error('支付订单操作失败');
+                    return;
+                }
+            }
+            //三个月后不可退款状态通知
+            elseif ($_GET['trade_status'] == 'TRADE_FINISHED'){
+
+            }
+
+            //处理成功转跳
+            echo '成功';
+        }
+        //支付失败转跳
+        else{
+            echo '失败';
+        }
+
+    }
+
+
 
 }
 
