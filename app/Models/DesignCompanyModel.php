@@ -74,6 +74,15 @@ class DesignCompanyModel extends Model
         return $this->hasMany('App\Models\ItemRecommend', 'design_company_id');
     }
 
+
+    /**
+     * 一对多关联推荐关联表
+     */
+    public function contract()
+    {
+        return $this->hasMany('App\Models\Contract', 'design_company_id');
+    }
+
     /**
      * 更改设计公司审核状态
      */

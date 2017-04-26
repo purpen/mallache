@@ -55,6 +55,12 @@ class Item extends Model
         return $this->hasMany('App\Models\ItemRecommend', 'item_id');
     }
 
+    //一对一关联 合同表
+    public function contract()
+    {
+        return $this->hasOne('App\Models\Contract', 'item_demand_id');
+    }
+
     /**
      * 判断item对应的详细信息
      *
