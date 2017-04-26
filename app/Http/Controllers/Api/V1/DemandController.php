@@ -584,12 +584,24 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
+     * @apiParam {integer} type 0:全部；1.进行中
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      *
      * @apiSuccessExample 成功响应:
      *   {
      *      "meta": {
      *          "message": "Success",
-     *          "status_code": 200
+     *          "status_code": 200,
+                "pagination": {
+                    "total": 3,
+                    "count": 1,
+                    "per_page": 1,
+                    "current_page": 1,
+                    "total_pages": 3,
+                    "links": {
+                    "next": "http://saas.me/demand/itemList?page=2"
+                }
      *      }
      *      "data": [
                 {
@@ -633,15 +645,45 @@ class DemandController extends BaseController
      *      ],
      *  }
      */
-    public function itemList()
+    public function itemList(Request $request)
     {
-        $items = $this->auth_user->item;
+        $rules = [
+            'type' => 'required|integer',
+            'per_page' => 'integer',
+        ];
 
+        $all = $request->only(['type', 'per_page']);
+
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        switch ($request->type){
+            case 0:
+                $where_in = [];
+                break;
+            case 1:
+                $where_in = [1,2,3,4,5,6,7,8];
+                break;
+            default:
+                $where_in = [];
+        }
+
+        $per_page = $request->input('per_page', $this->per_page);
+
+        $items = Item::where('user_id', $this->auth_user_id);
+
+        if(!empty($where_in)){
+            $items = $items->whereIn('status', $where_in);
+        }
+
+        $items = $items->paginate($per_page);
         if($items->isEmpty()){
             return $this->response->array($this->apiSuccess());
         }
 
-        return $this->response->collection($items, new ItemListTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($items, new ItemListTransformer)->setMeta($this->apiMeta());
     }
 
     /**

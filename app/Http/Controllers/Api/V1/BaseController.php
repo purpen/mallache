@@ -25,6 +25,15 @@ class BaseController extends Controller
     //当前登陆用户ID
     protected  $auth_user_id;
 
+    /**
+     * 默认页数
+     */
+    public $page = 1;
+
+    /**
+     * 默认每页数量
+     */
+    public $per_page = 10;
 
     public function __construct(Request $request)
     {
