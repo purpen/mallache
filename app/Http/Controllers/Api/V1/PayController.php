@@ -103,7 +103,7 @@ class PayController extends BaseController
                         $pay_order->pay_type = 1; //支付宝
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
-                        $pay_order= $pay_order->save();
+                        $pay_order->save();
 
                         event(new PayOrderEvent($pay_order));
                     }
