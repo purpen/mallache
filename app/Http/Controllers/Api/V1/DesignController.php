@@ -6,7 +6,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignGetItemListTransformer;
+use App\Models\Item;
 use App\Models\ItemRecommend;
+use Illuminate\Support\Facades\Log;
 
 class DesignController extends BaseController
 {
@@ -73,8 +75,45 @@ class DesignController extends BaseController
         return $this->response->collection($item_recommends, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
     }
 
-    //拒绝设计项目
-//    public function
+    /**
+     * @api {get} /design/refuseItem/{item_id} 拒绝设计项目
+     * @apiVersion 1.0.0
+     * @apiName design refuseItem
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+            "meta": {
+            "message": "Success",
+            "status_code": 200
+            }
+        }
+     */
+    public function refuseItem($item_id)
+    {
+        $item_id = (int)$item_id;
+        $design_company = $this->auth_user->designCompany;
+        if(!$design_company){
+            return $this->response->array($this->apiError());
+        }
 
+        try{
+            $item_recommend = ItemRecommend
+                ::where(['item_id' => $item_id, 'design_company_id' => $design_company->id])
+                ->first();
+            if(!$item_recommend){
+                return $this->response->array($this->apiError());
+            }
+            $item_recommend->design_company_status = -1;
+            $item_recommend->save();
+
+            return $this->response->array($this->apiSuccess());
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError());
+        }
+    }
 
 }

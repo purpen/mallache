@@ -648,7 +648,7 @@ class DemandController extends BaseController
     public function itemList(Request $request)
     {
         $rules = [
-            'type' => 'required|integer',
+            'type' => 'integer',
             'per_page' => 'integer',
         ];
 

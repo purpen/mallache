@@ -29,8 +29,8 @@ price_frozen	decimal(10,2)	否	0	冻结金额*/
             'phone' => $user->phone,
             'status' => $user->status,
             'item_sum' => $user->item_sum,
-            'price_total' => $user-> price_total,
-            'price_frozen' => $user->price_frozen,
+            'price_total' => floatValue($user->price_total),
+            'price_frozen' => floatValue($user->price_frozen),
             'img' => $user->image,
         ];
     }
