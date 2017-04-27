@@ -96,6 +96,7 @@ class ContractController extends BaseController
      *      "exterior_modeling_design_percentage": 0,
      *      "exterior_modeling_design_money": "",
      *      "design_work_content": "",
+     *      "unique_id": "ht59018f4e78ebe"
      *      "status": 0
      *      },
      *      "meta": {
@@ -144,6 +145,7 @@ class ContractController extends BaseController
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money') ?? '';
         $all['design_work_content'] = $request->input('design_work_content') ?? '';
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money') ?? '';
+        $all['unique_id'] = uniqid('ht');
         $rules = [
             'item_demand_id'  => 'required|integer',
         ];
@@ -172,16 +174,54 @@ class ContractController extends BaseController
 
 
     /**
-     * @api {get} /contract/{id} 合同id查看信息
+     * @api {get} /contract/{unique_id} 合同id查看信息
      * @apiVersion 1.0.0
      * @apiName contract show
      * @apiGroup contract
      *
      * @apiParam {string} token
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "data": {
+     *      "id": 1,
+     *      "item_demand_id": 1,
+     *      "design_company_id": 47,
+     *      "demand_company_name": "",
+     *      "demand_company_address": "",
+     *      "demand_company_phone": "",
+     *      "demand_company_legal_person": "",
+     *      "design_company_name": "",
+     *      "design_company_address": "",
+     *      "design_company_phone": "",
+     *      "design_company_legal_person": "",
+     *      "design_type": "",
+     *      "design_type_paragraph": "",
+     *      "design_type_contain": "",
+     *      "total": "",
+     *      "project_start_date": 0,
+     *      "determine_design_date": 0,
+     *      "structure_layout_date": 0,
+     *      "design_sketch_date": 0,
+     *      "end_date": 0,
+     *      "one_third_total": "",
+     *      "exterior_design_percentage": 0,
+     *      "exterior_design_money": "",
+     *      "exterior_design_phase": "",
+     *      "exterior_modeling_design_percentage": 0,
+     *      "exterior_modeling_design_money": "",
+     *      "design_work_content": "",
+     *      "unique_id": "ht59018f4e78ebe"
+     *      "status": 0
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
+     *  }
      */
-    public function show($id)
+    public function show($unique_id)
     {
-        $contract = Contract::where('id' , $id)->first();
+        $contract = Contract::where('unique_id' , $unique_id)->first();
         if(!$contract){
             return $this->response->array($this->apiSuccess('没有找到该合同' , 200));
         }
@@ -233,6 +273,45 @@ class ContractController extends BaseController
      * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
      *
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "data": {
+     *      "id": 1,
+     *      "item_demand_id": 1,
+     *      "design_company_id": 47,
+     *      "demand_company_name": "",
+     *      "demand_company_address": "",
+     *      "demand_company_phone": "",
+     *      "demand_company_legal_person": "",
+     *      "design_company_name": "",
+     *      "design_company_address": "",
+     *      "design_company_phone": "",
+     *      "design_company_legal_person": "",
+     *      "design_type": "",
+     *      "design_type_paragraph": "",
+     *      "design_type_contain": "",
+     *      "total": "",
+     *      "project_start_date": 0,
+     *      "determine_design_date": 0,
+     *      "structure_layout_date": 0,
+     *      "design_sketch_date": 0,
+     *      "end_date": 0,
+     *      "one_third_total": "",
+     *      "exterior_design_percentage": 0,
+     *      "exterior_design_money": "",
+     *      "exterior_design_phase": "",
+     *      "exterior_modeling_design_percentage": 0,
+     *      "exterior_modeling_design_money": "",
+     *      "design_work_content": "",
+     *      "unique_id": "ht59018f4e78ebe"
+     *      "status": 0
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
+     *  }
      */
     public function update(Request $request , $id)
     {

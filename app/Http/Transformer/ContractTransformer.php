@@ -35,6 +35,7 @@ class ContractTransformer extends TransformerAbstract
             exterior_modeling_design_money	    string(20)	是	空	外观建模设计金额
             design_work_content	                string(50)	是	空	设计工作内容
             status	                            tinyint(10)	否	0	合同状态.0可以修改.1不可以
+            unique_id	                        string(30)	否	0	唯一id
 
     */
 
@@ -69,6 +70,7 @@ class ContractTransformer extends TransformerAbstract
             'exterior_modeling_design_money' => strval($contract->exterior_modeling_design_money),
             'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
+            'unique_id' => strval($contract->unique_id),
         ];
     }
 }
