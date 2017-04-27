@@ -44,7 +44,7 @@ class Item extends Model
      */
     public function quotation()
     {
-        return $this->hasMany('App\Models\QuotationModel', 'item_demand_id');
+        return $this->belongsTo('App\Models\QuotationModel', 'quotation_id');
     }
 
     /**

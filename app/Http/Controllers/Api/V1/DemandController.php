@@ -190,7 +190,7 @@ class DemandController extends BaseController
 
 
     /**
-     * @api {get} /demand/{id} 需求公司获取项目基础信息
+     * @api {get} /demand/{id} 需求公司获取项目信息
      * @apiVersion 1.0.0
      * @apiName demand show
      * @apiGroup demandType
@@ -198,46 +198,49 @@ class DemandController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     * {
-        "data": {
-            "id": 13,
-            "type": 1,
-            "type_value": "产品设计类型",
-            "design_type": 2,
-            "design_type_value": "产品设计",
-            "status": 5,
-            "field": 1,
-            "field_value": "智能硬件",
-            "industry": 2,
-            "industry_value": "消费零售",
-            "name": "api UI",
-            "product_features": "亮点",
-            "competing_product": "竞品",
-            "cycle": 1,
-            "cycle_value": "1个月内",
-            "design_cost": 2,
-            "design_cost_value": "1-5万之间",
-            "province": 2,
-            "city": 2,
-            "image": [],
-            "price": 200000,
-            "company_name": null,  //公司名称
-            "company_abbreviation": null, //简称
-            "company_size": null, //公司规模；1...
-            "company_web": null,  //公司网址
-            "company_province": null, //省份
-            "company_city": null,  //城市
-            "company_area": null,   //区县
-            "address": null,    //详细地址
-            "contact_name": null,   //联系人
-            "phone": null,
-            "email": null
-        },
-        "meta": {
-            "message": "Success",
-            "status_code": 200
+     *   {
+            "data": {
+                "item": {
+                    "id": 13,
+                    "type": 1,
+                    "type_value": "产品设计类型",
+                    "design_type": 2,
+                    "design_type_value": "产品设计",
+                    "status": 5,
+                    "field": 2,
+                    "field_value": "消费电子",
+                    "industry": 2,
+                    "industry_value": "消费零售",
+                    "name": "api UI",
+                    "product_features": "亮点",
+                    "competing_product": "竞品",
+                    "cycle": 1,
+                    "cycle_value": "1个月内",
+                    "design_cost": 2,
+                    "design_cost_value": "1-5万之间",
+                    "city": 2,
+                    "image": [],
+                    "price": 200000,
+                    "company_name": null,  //公司名称
+                    "company_abbreviation": null, //简称
+                    "company_size": null, //公司规模；1...
+                    "company_web": null,  //公司网址
+                    "company_province": null, //省份
+                    "company_city": null,  //城市
+                    "company_area": null,   //区县
+                    "address": null,    //详细地址
+                    "contact_name": null,   //联系人
+                    "phone": "172734923",
+                    "email": "qq@qq.com"
+                },
+                "quotation": null, //报价单信息
+                "contract": null   //合同
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
         }
-    }
      */
     /**
      * Display the specified resource.
@@ -297,34 +300,48 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-     *      "data": {
-                "id": 13,
-                "type": 1,
-                "type_value": "产品设计类型",
-                "design_type": 2,
-                "design_type_value": "产品设计",
-                "status": 5,
-                "field": 1,
-                "field_value": "智能硬件",
-                "industry": 2,
-                "industry_value": "消费零售",
-                "name": "api UI",
-                "product_features": "亮点",
-                "competing_product": "竞品",
-                "cycle": 1,
-                "cycle_value": "1个月内",
-                "design_cost": 2,
-                "design_cost_value": "1-5万之间",
-                "province": 2,
-                "city": 2,
-                "image": [],
-                "price": 200000
+            "data": {
+                "item": {
+                    "id": 13,
+                    "type": 1,
+                    "type_value": "产品设计类型",
+                    "design_type": 2,
+                    "design_type_value": "产品设计",
+                    "status": 5,
+                    "field": 2,
+                    "field_value": "消费电子",
+                    "industry": 2,
+                    "industry_value": "消费零售",
+                    "name": "api UI",
+                    "product_features": "亮点",
+                    "competing_product": "竞品",
+                    "cycle": 1,
+                    "cycle_value": "1个月内",
+                    "design_cost": 2,
+                    "design_cost_value": "1-5万之间",
+                    "city": 2,
+                    "image": [],
+                    "price": 200000,
+                    "company_name": null,  //公司名称
+                    "company_abbreviation": null, //简称
+                    "company_size": null, //公司规模；1...
+                    "company_web": null,  //公司网址
+                    "company_province": null, //省份
+                    "company_city": null,  //城市
+                    "company_area": null,   //区县
+                    "address": null,    //详细地址
+                    "contact_name": null,   //联系人
+                    "phone": "172734923",
+                    "email": "qq@qq.com"
+                },
+                "quotation": null, //报价单信息
+                "contract": null   //合同
             },
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *  }
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     /**
      * Update the specified resource in storage.
