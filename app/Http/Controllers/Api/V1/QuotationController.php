@@ -99,9 +99,10 @@ class QuotationController extends BaseController
                 return $this->response->array($this->apiSuccess('项目不合法' , 200));
             }
             //查看报价单id是否为null,为null创建报价单并更新项目报价单id信息
-            if($item_recommend->quotation_id == null){
+            if($item_recommend->quotation_id === 0){
                 $quotation = QuotationModel::create($all);
                 $item_recommend->quotation_id = $quotation->id;
+                $item_recommend->design_company_status = 2;
                 $item_recommend->save();
             }
         }
