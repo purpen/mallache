@@ -174,7 +174,6 @@ class ContractController extends BaseController
     public function show($id)
     {
         $contract = Contract::where('id' , $id)->first();
-        Log::info($contract->itemDemand);
         if(!$contract){
             return $this->response->array($this->apiSuccess('没有找到该合同' , 200));
         }
@@ -239,16 +238,11 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('合同已确认，不能修改', 200));
         }
         $design = DesignCompanyModel::where('user_id' , $user_id)->first();
-        if(!$design){
-            return $this->response->array($this->apiError('设计公司不存在', 404));
-        }
+
         if($contract->design_company_id !== $design->id){
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
-
-
         $all['item_demand_id'] = $request->input('item_demand_id');
-        $all['design_company_id'] = $design->id;
         $all['demand_company_name'] = $request->input('demand_company_name') ?? '';
         $all['demand_company_address'] = $request->input('demand_company_address') ?? '';
         $all['demand_company_phone'] = $request->input('demand_company_phone') ?? '';

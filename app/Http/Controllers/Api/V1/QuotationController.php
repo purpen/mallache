@@ -196,27 +196,17 @@ class QuotationController extends BaseController
             'summary.max' => '最多500字符',
         ];
         $validator = Validator::make($all , $rules, $messages);
-
-
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
         $quotation = QuotationModel::find($id);
-
         if(!$quotation){
             return $this->response->array($this->apiError('not found!', 404));
         }
         if($quotation->user_id != $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
-        if(!$design){
-            return $this->response->array($this->apiError('设计公司不存在'));
-        }
         $all = $request->except(['token']);
-        $all['design_company_id'] = $design->id;
-        $quotation = QuotationModel::where('id', $id)->first();
         //如果已经确认了，就不能更新报价单信息了
         if($quotation->status == 1){
             return $this->response->array($this->apiSuccess('该项目已确认,不能修改' , 200));
