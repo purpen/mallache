@@ -46,6 +46,7 @@ class Contract extends Model
         'exterior_modeling_design_money',
         'design_work_content',
         'status',
+        'unique_id'
     ];
 
     //相对关联 项目表
