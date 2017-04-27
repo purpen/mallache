@@ -27,7 +27,7 @@ class PayController extends BaseController
      *          "status_code": 200
      *      }
      *      "data": {
-     *          'html_test': ""
+     *          'html_text': ""
      *      }
      *  }
      */

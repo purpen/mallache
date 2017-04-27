@@ -12,6 +12,7 @@ use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
+use App\Models\Contract;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ProductDesign;
@@ -62,6 +63,18 @@ class DemandController extends BaseController
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
+     *
+     * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
+     * @apiParam {integer} company_size 公司规模
+     * @apiParam {string} company_web 公司网站
+     * @apiParam {integer} company_province 省份
+     * @apiParam {integer} company_city 城市
+     * @apiParam {integer} company_area 区域
+     * @apiParam {string} address 详细地址
+     * @apiParam {string} contact_name 联系人
+     * @apiParam {integer} phone 手机
+     * @apiParam {string} email 邮箱
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -177,7 +190,7 @@ class DemandController extends BaseController
 
 
     /**
-     * @api {get} /demand/{id} 获取项目基础信息
+     * @api {get} /demand/{id} 需求公司获取项目基础信息
      * @apiVersion 1.0.0
      * @apiName demand show
      * @apiGroup demandType
@@ -207,7 +220,18 @@ class DemandController extends BaseController
             "province": 2,
             "city": 2,
             "image": [],
-            "price": 200000
+            "price": 200000,
+            "company_name": null,  //公司名称
+            "company_abbreviation": null, //简称
+            "company_size": null, //公司规模；1...
+            "company_web": null,  //公司网址
+            "company_province": null, //省份
+            "company_city": null,  //城市
+            "company_area": null,   //区县
+            "address": null,    //详细地址
+            "contact_name": null,   //联系人
+            "phone": null,
+            "email": null
         },
         "meta": {
             "message": "Success",
@@ -259,6 +283,17 @@ class DemandController extends BaseController
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
      * @apiParam {integer} industry 行业
+     * @apiParam {string} company_name 公司名称
+     * @apiParam {string} company_abbreviation 公司简称
+     * @apiParam {integer} company_size 公司规模
+     * @apiParam {string} company_web 公司网站
+     * @apiParam {integer} company_province 省份
+     * @apiParam {integer} company_city 城市
+     * @apiParam {integer} company_area 区域
+     * @apiParam {string} address 详细地址
+     * @apiParam {string} contact_name 联系人
+     * @apiParam {integer} phone 手机
+     * @apiParam {string} email 邮箱
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -310,9 +345,20 @@ class DemandController extends BaseController
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
                 'industry' => 'required|integer',
+
+                'company_name' => 'min:1|max:50',
+                'company_abbreviation' => 'min:1|max:50',
+                'company_size' => 'integer',
+                'company_web' => 'min:1|max:50',
+                'company_province' => 'integer',
+                'company_city' => 'integer',
+                'company_area' => 'integer',
+                'address' => 'min:1|max:50',
+                'contact_name' => 'min:1|max:20',
+                'email' => 'email',
             ];
 
-            $all = $request->only(['type', 'design_type', 'field', 'industry']);
+            $all = $request->only(['type', 'design_type', 'field', 'industry', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -337,6 +383,7 @@ class DemandController extends BaseController
                 $product_design->save();
             }
             catch (\Exception $e){
+                Log::error($e->getMessage());
                 return $this->response->array($this->apiError('Error', 500));
             }
 
@@ -350,9 +397,18 @@ class DemandController extends BaseController
                 'design_type' => ['required', 'integer'],
 //                'system' => 'required|integer',
 //                'design_content' => 'required|integer',
+                'company_name' => 'min:1|max:50',
+                'company_abbreviation' => 'min:1|max:50',
+                'company_size' => 'integer',
+                'company_web' => 'min:1|max:50',
+                'company_province' => 'integer',
+                'company_city' => 'integer',
+                'company_area' => 'integer',
+                'address' => 'min:1|max:50',
+                'contact_name' => 'min:1|max:20',
+                'email' => 'email',
             ];
-
-            $all = $request->only(['type', 'design_type']);
+            $all = $request->only(['type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -376,6 +432,7 @@ class DemandController extends BaseController
                 $product_design->save();
             }
             catch (\Exception $e){
+                Log::error($e->getMessage());
                 return $this->response->array($this->apiError('Error', 500));
             }
 
@@ -609,7 +666,7 @@ class DemandController extends BaseController
                         "id": 1,
                         "type": 2, //1.产品设计；2.UI UX 设计；
                         "design_type": 1, //UXUI设计（1.app设计；2.网页设计；）
-                        "status": 2, //状态：-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推荐；4.已推送设计公司；5.已选定设计公司；6.已提交合同；7.已确定合同；4.已打款；5.项目已开始；6.项目已完成；7.已项目验收。8.已付款
+                        "status": 2, //状态：-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推荐；4.已推送设计公司；5.已选定设计公司；6.已提交合同；7.已确定合同；8.需求方已打款；9.项目已开始；10.项目已完成；11.已项目验收。12.已付款
                         "system": 1, 系统：1.ios；2.安卓；
                         "design_content": 0, //设计内容：1.视觉设计；2.交互设计；
                         "name": "", //项目名称
@@ -703,7 +760,7 @@ class DemandController extends BaseController
      *      }
      *      "data": [
                 {
-     *              "status": 5,
+     *              "status": 5, //1.已选择其他设计公司;2.设计公司已拒绝;3.未操作；4.设计公司有意接单；5.选定该设计公司；
                     "status_value": "选定设计公司",
                     "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
                     "item_status_value": "选定设计公司",
@@ -836,6 +893,7 @@ class DemandController extends BaseController
 
             $item->design_company_id = $all['design_company_id'];
             $item->price = $quotation->price;
+            $item->quotation_id = $quotation->id;
             $item->status = 5;
             $item->save();
 
@@ -880,7 +938,9 @@ class DemandController extends BaseController
             $item->save();
 
             //修改合同状态为已确认
-            //
+            $contract = $item->contract;
+            $contract->status = 1;
+            $contract->save();
 
             DB::commit();
         }catch(\Exception $e){

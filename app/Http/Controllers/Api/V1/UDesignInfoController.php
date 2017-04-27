@@ -94,7 +94,6 @@ class UDesignInfoController extends BaseController
      * @apiParam {integer} complete_content 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
      * @apiParam {string} other_content 其他设计内容
      * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-     * @apiParam {integer}province  省份
      * @apiParam {integer} city 城市
      * @apiParam {string} token
      *
@@ -122,7 +121,6 @@ class UDesignInfoController extends BaseController
             'complete_content' => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
             'other_content' => 'filled|max:20',
             'design_cost' => ['required', 'integer'],
-            'province' => 'required|integer',
             'city' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);

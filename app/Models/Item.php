@@ -12,7 +12,7 @@ class Item extends Model
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['user_id', 'type', 'design_type', 'status'];
+    protected $fillable = ['user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email'];
 
     /**
      * 添加返回字段
@@ -90,10 +90,21 @@ class Item extends Model
                     'cycle_value' => $info->cycle_value,
                     'design_cost' => $info->design_cost,
                     'design_cost_value' => $info->design_cost_value,
-                    'province' => $info->province,
                     'city' => $info->city,
                     'image' => $info->image,
                     'price' => floatval($item->price),
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'address' => $item->address,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
                 ];
                 break;
             case 2:
