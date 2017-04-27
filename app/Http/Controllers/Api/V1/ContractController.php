@@ -114,6 +114,9 @@ class ContractController extends BaseController
         if(!$design){
             return $this->response->array($this->apiError('设计公司不存在'));
         }
+        if($item->design_company_id !== $design->id){
+            return $this->response->array($this->apiError('没有权限添加合同' , 403));
+        }
         $all['item_demand_id'] = $item->id;
         $all['design_company_id'] = $design->id;
         $all['demand_company_name'] = $request->input('demand_company_name') ?? '';
@@ -153,7 +156,12 @@ class ContractController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            $contract = Contract::create($all);
+            if($item->contract_id === 0){
+                $contract = Contract::create($all);
+                $item->contract_id = $contract->id;
+                $item->status = 6;
+                $item->save();
+            }
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
@@ -238,6 +246,9 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('合同已确认，不能修改', 200));
         }
         $design = DesignCompanyModel::where('user_id' , $user_id)->first();
+        if(!$design){
+            return $this->response->array($this->apiSuccess('没有找到设计公司', 404));
+        }
 
         if($contract->design_company_id !== $design->id){
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
