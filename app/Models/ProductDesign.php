@@ -26,7 +26,7 @@ class ProductDesign extends Model
 //        'percentage_completion',
 //        'special_technical_require',
         'design_cost',
-//        'province',
+        'province',
         'city',
 //        'divided_into_cooperation',
 //        'stock_cooperation',

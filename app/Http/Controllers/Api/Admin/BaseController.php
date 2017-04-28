@@ -1,13 +1,9 @@
 <?php
-
-/**
- * api 基类
- */
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 
 class BaseController extends Controller
 {
-
+    //
 }

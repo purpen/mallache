@@ -22,7 +22,7 @@ class UDesign extends Model
 //        'start_time',
 //        'cycle',
         'design_cost',
-//        'province',
+        'province',
         'city',
 //        'summary',
 //        'artificial',
