@@ -159,7 +159,15 @@ class PayController extends BaseController
      *          "status_code": 200
      *      }
      *      "data": {
-     *          ""
+     *          "id": 1,
+                "uid": "zf59006e63b3445",  //支付单号
+                "user_id": 2,              //用户ID
+                "type": 1,                 //支付类型：1.预付押金；2.项目款；
+                "item_id": 0,               //项目ID
+                "status": 1,                //状态：0.未支付；1.支付成功；
+                "summary": "发布需求保证金",  //备注
+                "pay_type": 1,              //支付方式；1.支付宝；2.微信；3.京东；
+                "pay_no": "2017042621001004550211582926"  //平台交易号
      *      }
      *  }
      */
