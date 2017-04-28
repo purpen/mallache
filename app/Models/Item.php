@@ -112,6 +112,7 @@ class Item extends Model
                     'cycle_value' => $info->cycle_value,
                     'design_cost' => $info->design_cost,
                     'design_cost_value' => $info->design_cost_value,
+                    'province' => $info->province,
                     'city' => $info->city,
                     'image' => $info->image,
                     'price' => floatval($item->price),
