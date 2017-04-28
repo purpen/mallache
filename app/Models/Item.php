@@ -107,7 +107,7 @@ class Item extends Model
                     'industry_value' => $info->industry_value,
                     'name' => $info->name,
                     'product_features' => $info->product_features,
-                    'competing_product' => $info->competing_product,
+                    'competing_product' => explode('&', $info->competing_product),
                     'cycle' => $info->cycle,
                     'cycle_value' => $info->cycle_value,
                     'design_cost' => $info->design_cost,

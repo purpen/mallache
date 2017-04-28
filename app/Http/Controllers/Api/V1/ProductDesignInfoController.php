@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ItemTransformer;
 use App\Models\Item;
 use App\Models\ProductDesign;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -94,7 +95,7 @@ class ProductDesignInfoController extends BaseController
      * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} name 项目名称
      * @apiParam {string} product_features 产品功能或两点
-     * @apiParam {string} competing_product 竞品
+     * @apiParam {array} competing_product 竞品
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
      * @apiParam {integer} city 城市
@@ -110,12 +111,13 @@ class ProductDesignInfoController extends BaseController
      */
     public function update(Request $request, $item_id)
     {
+//        dd($request->input('competing_product'));
         $all = $request->all();
         $rules = [
-            'stage_status' => 'required|integer',
+            'stage_status' => 'integer',
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
-            'competing_product' => 'required|max:50',
+            'competing_product' => 'required|array',
             'cycle' => 'required|integer',
             'design_cost' => 'required|integer',
             'city' => 'required|integer',
@@ -138,8 +140,10 @@ class ProductDesignInfoController extends BaseController
             $item->save();
 
             $design = ProductDesign::where(['item_id' => intval($item_id)])->first();
+            $all['competing_product'] = implode('&', $request->input('competing_product'));
             $design->update($all);
         }catch(\Exception $e){
+            dd($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 

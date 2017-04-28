@@ -361,7 +361,7 @@ class DemandController extends BaseController
         if($type === 1){
 
             $rules = [
-                'stage_status' => 'required|integer',
+                'stage_status' => 'integer',
                 'type' => 'required|integer',
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
@@ -424,7 +424,7 @@ class DemandController extends BaseController
         //UX UI设计
         elseif ($type === 2){
             $rules = [
-                'stage_status' => 'required|integer',
+                'stage_status' => 'integer',
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
                 'company_name' => 'nullable|min:1|max:50',
@@ -533,7 +533,7 @@ class DemandController extends BaseController
     }
 
     /**
-     * @api {get} /demand/recommendList/{item_id} 项目ID获取推荐的设计公司
+     * @api {get} /demand/recommendList/{item_id} 需求公司当前项目获取推荐的设计公司
      * @apiVersion 1.0.0
      * @apiName demand recommendList
      * @apiGroup demandType
