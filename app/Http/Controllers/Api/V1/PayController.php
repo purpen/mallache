@@ -145,7 +145,7 @@ class PayController extends BaseController
 //    }
 
     /**
-     * @api {get} /pay/getPayStatus/{uid} 查看支付状态
+     * @api {get} /pay/getPayStatus/{out_trade_no} 查看支付状态
      * @apiVersion 1.0.0
      * @apiName pay getPayStatus
      * @apiGroup pay
