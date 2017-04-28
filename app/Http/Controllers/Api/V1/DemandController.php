@@ -190,7 +190,7 @@ class DemandController extends BaseController
 
 
     /**
-     * @api {get} /demand/{id} 需求公司获取项目信息
+     * @api {get} /demand/{id} 需求公司获取项目详细信息
      * @apiVersion 1.0.0
      * @apiName demand show
      * @apiGroup demandType

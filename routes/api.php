@@ -159,6 +159,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/itemList', ['as' => 'design.itemList', 'uses' => 'DesignController@itemList']);
         //拒绝设计项目
         $api->get('/design/refuseItem/{item_id}', ['as' => 'design.refuseItem', 'uses' => 'DesignController@refuseItem']);
+        //设计公司获取项目信息
+        $api->get('/design/item/{item_id}', 'DesignController@item');
 
     });
 });
