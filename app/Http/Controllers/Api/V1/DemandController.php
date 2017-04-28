@@ -470,9 +470,6 @@ class DemandController extends BaseController
                 $item->update($all);
 
                 $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
-                $product_design->system = $request->input('system');
-                $product_design->design_content = $request->input('design_content');
-                $product_design->save();
             }
             catch (\Exception $e){
                 Log::error($e->getMessage());
