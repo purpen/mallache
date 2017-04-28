@@ -137,7 +137,7 @@ class UDesignInfoController extends BaseController
             }
 
             //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id || $item->type !== 2){
+            if($item->user_id !== $this->auth_user_id || $item->type != 2 || 1 != $item->status){
                 return $this->response->array($this->apiError('not found!', 404));
             }
 

@@ -213,10 +213,10 @@ class Item extends Model
     //创建需求表
     public function createItem($user_id)
     {
-        if(self::create(['user_id' => $user_id, 'type' => 0, 'design_type' => 0])){
+        if(self::create(['user_id' => $user_id,'status' => 1, 'type' => 0, 'design_type' => 0])){
             return true;
         }else{
-            Log::error('创建需求表时报');
+            Log::error('创建需求表报错');
             return false;
         };
     }

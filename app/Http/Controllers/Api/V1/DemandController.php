@@ -392,7 +392,7 @@ class DemandController extends BaseController
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 //验证是否是当前用户对应的项目
-                if($item->user_id !== $this->auth_user_id){
+                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 $all['company_name'] = $request->input('company_name') ?? '';
@@ -427,8 +427,6 @@ class DemandController extends BaseController
                 'stage_status' => 'required|integer',
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
-//                'system' => 'required|integer',
-//                'design_content' => 'required|integer',
                 'company_name' => 'nullable|min:1|max:50',
                 'company_abbreviation' => 'nullable|min:1|max:50',
                 'company_size' => 'nullable|integer',
@@ -452,7 +450,7 @@ class DemandController extends BaseController
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 //验证是否是当前用户对应的项目
-                if($item->user_id !== $this->auth_user_id){
+                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
                     return $this->response->array($this->apiError('not found!', 404));
                 }
 
