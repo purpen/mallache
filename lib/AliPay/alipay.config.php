@@ -27,7 +27,7 @@ $alipay_config['key']			= 'cpphcldqto1uid08npxjy0acturelt6p';
 $alipay_config['notify_url'] = "http://sa.taihuoniao.com/pay/aliPayNotify";
 
 // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-$alipay_config['return_url'] = "http://sa.taihuoniao.com/pay/aliPaySynNotify";
+$alipay_config['return_url'] = "http://mc.taihuoniao.com/alipay/callback";
 
 //签名方式
 $alipay_config['sign_type']    = strtoupper('MD5');

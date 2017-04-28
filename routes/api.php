@@ -44,7 +44,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     //支付宝异步回调接口
     $api->post('/pay/aliPayNotify', 'PayController@aliPayNotify');
     //支付宝同步回调接口
-    $api->get('/pay/aliPaySynNotify', 'PayController@aliPaySynNotify');
+//    $api->get('/pay/aliPaySynNotify', 'PayController@aliPaySynNotify');
 
 
     /**
@@ -95,6 +95,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         //发布需求保证金支付---支付宝
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+        //查询支付状态
+        $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 
         //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);

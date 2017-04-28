@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\PayOrderEvent;
+use App\Http\Transformer\PayOrderTransformer;
 use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -137,11 +138,38 @@ class PayController extends BaseController
      * @apiSuccessExample 成功响应:
      *   转跳
      */
-    public function aliPaySynNotify()
-    {
-        header("Location: https://www.taihuoniao.com");
-        exit();
-    }
+//    public function aliPaySynNotify()
+//    {
+//        header("Location: http://mc.taihuoniao.com/alipay/callback");
+//        exit();
+//    }
 
+    /**
+     * @api {get} /pay/getPayStatus/{uid} 查看支付状态
+     * @apiVersion 1.0.0
+     * @apiName pay getPayStatus
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          ""
+     *      }
+     *  }
+     */
+    public function getPayStatus($uid){
+        $pay_order = PayOrder::where('uid', $uid)->first();
+        if(!$pay_order){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+    }
 }
 

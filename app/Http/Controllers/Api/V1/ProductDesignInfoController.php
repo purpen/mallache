@@ -91,6 +91,7 @@ class ProductDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandProductDesign
      *
+     * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} name 项目名称
      * @apiParam {string} product_features 产品功能或两点
      * @apiParam {string} competing_product 竞品
@@ -111,6 +112,7 @@ class ProductDesignInfoController extends BaseController
     {
         $all = $request->all();
         $rules = [
+            'stage_status' => 'required|integer',
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
             'competing_product' => 'required|max:50',
@@ -131,6 +133,9 @@ class ProductDesignInfoController extends BaseController
             else if ((int)$item->type !== 1 || $item->user_id != $this->auth_user_id){
                 return $this->response->array($this->apiError());
             }
+
+            $item->stage_status = $request->input('stage_status') ?? 2;
+            $item->save();
 
             $design = ProductDesign::where(['item_id' => intval($item_id)])->first();
             $design->update($all);

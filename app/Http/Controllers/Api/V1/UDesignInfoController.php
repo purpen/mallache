@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ItemTransformer;
 use App\Models\Item;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
@@ -89,6 +90,7 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
+     * @apiParam {integer} stage_status //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} name 项目名称
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {integer} complete_content 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
@@ -116,6 +118,7 @@ class UDesignInfoController extends BaseController
     {
         $all = $request->all();
         $rules = [
+            'stage_status' => 'required|integer',
             'name' => 'required|max:50',
             'stage' => ['required', 'integer', Rule::in([1, 2])],
             'complete_content' => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
@@ -137,6 +140,9 @@ class UDesignInfoController extends BaseController
             if($item->user_id !== $this->auth_user_id || $item->type !== 2){
                 return $this->response->array($this->apiError('not found!', 404));
             }
+
+            $item->stage_status = $request->input('stage_status') ?? 2;
+            $item->save();
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
             $design->update($all);

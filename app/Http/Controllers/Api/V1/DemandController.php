@@ -231,7 +231,8 @@ class DemandController extends BaseController
                     "address": null,    //详细地址
                     "contact_name": null,   //联系人
                     "phone": "172734923",
-                    "email": "qq@qq.com"
+                    "email": "qq@qq.com",
+ *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
                 },
                 "quotation": null, //报价单信息
                 "contract": null   //合同
@@ -282,6 +283,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
+     * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
@@ -333,6 +335,7 @@ class DemandController extends BaseController
                     "contact_name": null,   //联系人
                     "phone": "172734923",
                     "email": "qq@qq.com"
+ *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
                 },
                 "quotation": null, //报价单信息
                 "contract": null   //合同
@@ -358,24 +361,25 @@ class DemandController extends BaseController
         if($type === 1){
 
             $rules = [
+                'stage_status' => 'required|integer',
                 'type' => 'required|integer',
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
                 'industry' => 'required|integer',
 
-                'company_name' => 'min:1|max:50',
-                'company_abbreviation' => 'min:1|max:50',
-                'company_size' => 'integer',
-                'company_web' => 'min:1|max:50',
-                'company_province' => 'integer',
-                'company_city' => 'integer',
-                'company_area' => 'integer',
-                'address' => 'min:1|max:50',
-                'contact_name' => 'min:1|max:20',
-                'email' => 'email',
+                'company_name' => 'nullable|min:1|max:50',
+                'company_abbreviation' => 'nullable|min:1|max:50',
+                'company_size' => 'nullable|integer',
+                'company_web' => 'nullable|min:1|max:50',
+                'company_province' => 'nullable|integer',
+                'company_city' => 'nullable|integer',
+                'company_area' => 'nullable|integer',
+                'address' => 'nullable|min:1|max:50',
+                'contact_name' => 'nullable|min:1|max:20',
+                'email' => 'nullable|email',
             ];
 
-            $all = $request->only(['type', 'design_type', 'field', 'industry', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status','type', 'design_type', 'field', 'industry', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -391,7 +395,17 @@ class DemandController extends BaseController
                 if($item->user_id !== $this->auth_user_id){
                     return $this->response->array($this->apiError('not found!', 404));
                 }
-
+                $all['company_name'] = $request->input('company_name') ?? '';
+                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
+                $all['company_size'] = $request->input('company_size') ?? 0;
+                $all['company_web'] = $request->input('company_web') ?? '';
+                $all['company_province'] = $request->input('company_province') ?? 0;
+                $all['company_city'] = $request->input('company_city') ?? 0;
+                $all['company_area'] = $request->input('company_area') ?? 0;
+                $all['address'] = $request->input('address') ?? '';
+                $all['contact_name'] = $request->input('contact_name') ?? '';
+                $all['phone'] = $request->input('phone') ?? 0;
+                $all['email'] = $request->input('email') ?? '';
                 $item->update($all);
 
                 $product_design = ProductDesign::firstOrCreate(['item_id' => intval($item->id)]);
@@ -410,22 +424,23 @@ class DemandController extends BaseController
         //UX UI设计
         elseif ($type === 2){
             $rules = [
+                'stage_status' => 'required|integer',
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
 //                'system' => 'required|integer',
 //                'design_content' => 'required|integer',
-                'company_name' => 'min:1|max:50',
-                'company_abbreviation' => 'min:1|max:50',
-                'company_size' => 'integer',
-                'company_web' => 'min:1|max:50',
-                'company_province' => 'integer',
-                'company_city' => 'integer',
-                'company_area' => 'integer',
-                'address' => 'min:1|max:50',
-                'contact_name' => 'min:1|max:20',
-                'email' => 'email',
+                'company_name' => 'nullable|min:1|max:50',
+                'company_abbreviation' => 'nullable|min:1|max:50',
+                'company_size' => 'nullable|integer',
+                'company_web' => 'nullable|min:1|max:50',
+                'company_province' => 'nullable|integer',
+                'company_city' => 'nullable|integer',
+                'company_area' => 'nullable|integer',
+                'address' => 'nullable|min:1|max:50',
+                'contact_name' => 'nullable|min:1|max:20',
+                'email' => 'nullable|email',
             ];
-            $all = $request->only(['type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -441,6 +456,17 @@ class DemandController extends BaseController
                     return $this->response->array($this->apiError('not found!', 404));
                 }
 
+                $all['company_name'] = $request->input('company_name') ?? '';
+                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
+                $all['company_size'] = $request->input('company_size') ?? 0;
+                $all['company_web'] = $request->input('company_web') ?? '';
+                $all['company_province'] = $request->input('company_province') ?? 0;
+                $all['company_city'] = $request->input('company_city') ?? 0;
+                $all['company_area'] = $request->input('company_area') ?? 0;
+                $all['address'] = $request->input('address') ?? '';
+                $all['contact_name'] = $request->input('contact_name') ?? '';
+                $all['phone'] = $request->input('phone') ?? 0;
+                $all['email'] = $request->input('email') ?? '';
                 $item->update($all);
 
                 $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
