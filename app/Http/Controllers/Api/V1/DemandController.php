@@ -365,20 +365,9 @@ class DemandController extends BaseController
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
                 'industry' => 'required|integer',
-
-                'company_name' => 'nullable|min:1|max:50',
-                'company_abbreviation' => 'nullable|min:1|max:50',
-                'company_size' => 'nullable|integer',
-                'company_web' => 'nullable|min:1|max:50',
-                'company_province' => 'nullable|integer',
-                'company_city' => 'nullable|integer',
-                'company_area' => 'nullable|integer',
-                'address' => 'nullable|min:1|max:50',
-                'contact_name' => 'nullable|min:1|max:20',
-                'email' => 'nullable|email',
             ];
 
-            $all = $request->only(['stage_status','type', 'design_type', 'field', 'industry', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status','type', 'design_type', 'field', 'industry']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -394,17 +383,6 @@ class DemandController extends BaseController
                 if($item->user_id !== $this->auth_user_id || 1 != $item->status){
                     return $this->response->array($this->apiError('not found!', 404));
                 }
-                $all['company_name'] = $request->input('company_name') ?? '';
-                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
-                $all['company_size'] = $request->input('company_size') ?? 0;
-                $all['company_web'] = $request->input('company_web') ?? '';
-                $all['company_province'] = $request->input('company_province') ?? 0;
-                $all['company_city'] = $request->input('company_city') ?? 0;
-                $all['company_area'] = $request->input('company_area') ?? 0;
-                $all['address'] = $request->input('address') ?? '';
-                $all['contact_name'] = $request->input('contact_name') ?? '';
-                $all['phone'] = $request->input('phone') ?? 0;
-                $all['email'] = $request->input('email') ?? '';
 
                 if(empty($all['stage_status'])){
                     unset($all['stage_status']);
@@ -429,18 +407,8 @@ class DemandController extends BaseController
             $rules = [
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
-                'company_name' => 'nullable|min:1|max:50',
-                'company_abbreviation' => 'nullable|min:1|max:50',
-                'company_size' => 'nullable|integer',
-                'company_web' => 'nullable|min:1|max:50',
-                'company_province' => 'nullable|integer',
-                'company_city' => 'nullable|integer',
-                'company_area' => 'nullable|integer',
-                'address' => 'nullable|min:1|max:50',
-                'contact_name' => 'nullable|min:1|max:20',
-                'email' => 'nullable|email',
             ];
-            $all = $request->only(['stage_status', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status', 'type', 'design_type']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -455,18 +423,6 @@ class DemandController extends BaseController
                 if($item->user_id !== $this->auth_user_id || 1 != $item->status){
                     return $this->response->array($this->apiError('无编辑权限或当前状态禁止编辑!', 404));
                 }
-
-                $all['company_name'] = $request->input('company_name') ?? '';
-                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
-                $all['company_size'] = $request->input('company_size') ?? 0;
-                $all['company_web'] = $request->input('company_web') ?? '';
-                $all['company_province'] = $request->input('company_province') ?? 0;
-                $all['company_city'] = $request->input('company_city') ?? 0;
-                $all['company_area'] = $request->input('company_area') ?? 0;
-                $all['address'] = $request->input('address') ?? '';
-                $all['contact_name'] = $request->input('contact_name') ?? '';
-                $all['phone'] = $request->input('phone') ?? 0;
-                $all['email'] = $request->input('email') ?? '';
 
                 if(empty($all['stage_status'])){
                     unset($all['stage_status']);
@@ -483,7 +439,59 @@ class DemandController extends BaseController
 
             return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }else{
-            return $this->response->array($this->apiError('not found', 404));
+            $rules = [
+                'company_name' => 'nullable|min:1|max:50',
+                'company_abbreviation' => 'nullable|min:1|max:50',
+                'company_size' => 'nullable|integer',
+                'company_web' => 'nullable|min:1|max:50',
+                'company_province' => 'nullable|integer',
+                'company_city' => 'nullable|integer',
+                'company_area' => 'nullable|integer',
+                'address' => 'nullable|min:1|max:50',
+                'contact_name' => 'nullable|min:1|max:20',
+                'email' => 'nullable|email',
+            ];
+
+            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+
+            $validator = Validator::make($all, $rules);
+            if($validator->fails()){
+                throw new StoreResourceFailedException('Error', $validator->errors());
+            }
+
+            try{
+
+                if(!$item = Item::find(intval($id))){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+                //验证是否是当前用户对应的项目
+                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
+                    return $this->response->array($this->apiError('not found!', 404));
+                }
+                $all['company_name'] = $request->input('company_name') ?? '';
+                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
+                $all['company_size'] = $request->input('company_size') ?? 0;
+                $all['company_web'] = $request->input('company_web') ?? '';
+                $all['company_province'] = $request->input('company_province') ?? 0;
+                $all['company_city'] = $request->input('company_city') ?? 0;
+                $all['company_area'] = $request->input('company_area') ?? 0;
+                $all['address'] = $request->input('address') ?? '';
+                $all['contact_name'] = $request->input('contact_name') ?? '';
+                $all['phone'] = $request->input('phone') ?? '';
+                $all['email'] = $request->input('email') ?? '';
+
+                if(empty($all['stage_status'])){
+                    unset($all['stage_status']);
+                }
+                $item->update($all);
+
+            }
+            catch (\Exception $e){
+                Log::error($e->getMessage());
+                return $this->response->array($this->apiError('Error', 500));
+            }
+
+            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }
 
     }
