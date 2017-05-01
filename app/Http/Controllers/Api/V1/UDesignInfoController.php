@@ -119,7 +119,6 @@ class UDesignInfoController extends BaseController
     {
         $all = $request->all();
         $rules = [
-            'stage_status' => 'required|integer',
             'name' => 'required|max:50',
             'stage' => ['required', 'integer', Rule::in([1, 2])],
             'complete_content' => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],

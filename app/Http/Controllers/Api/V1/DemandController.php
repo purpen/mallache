@@ -361,7 +361,6 @@ class DemandController extends BaseController
         if($type === 1){
 
             $rules = [
-                'stage_status' => 'integer',
                 'type' => 'required|integer',
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
@@ -424,7 +423,6 @@ class DemandController extends BaseController
         //UX UI设计
         elseif ($type === 2){
             $rules = [
-                'stage_status' => 'integer',
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
                 'company_name' => 'nullable|min:1|max:50',

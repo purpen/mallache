@@ -115,7 +115,6 @@ class ProductDesignInfoController extends BaseController
 //        dd($request->input('competing_product'));
         $all = $request->all();
         $rules = [
-            'stage_status' => 'integer',
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
             'competing_product' => 'required|array',
