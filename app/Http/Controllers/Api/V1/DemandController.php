@@ -451,7 +451,7 @@ class DemandController extends BaseController
                 }
                 //验证是否是当前用户对应的项目
                 if($item->user_id !== $this->auth_user_id || 1 != $item->status){
-                    return $this->response->array($this->apiError('not found!', 404));
+                    return $this->response->array($this->apiError('无编辑权限或当前状态禁止编辑!', 404));
                 }
 
                 $all['company_name'] = $request->input('company_name') ?? '';
