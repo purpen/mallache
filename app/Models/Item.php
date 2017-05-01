@@ -155,6 +155,18 @@ class Item extends Model
                     'image' => $info->image,
                     'price' => floatval($item->price),
                     'stage_status' => (int)$item->stage_status,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'address' => $item->address,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
                 ];
                 break;
         }
