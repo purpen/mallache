@@ -405,6 +405,10 @@ class DemandController extends BaseController
                 $all['contact_name'] = $request->input('contact_name') ?? '';
                 $all['phone'] = $request->input('phone') ?? 0;
                 $all['email'] = $request->input('email') ?? '';
+
+                if(empty($all['stage_status'])){
+                    unset($all['stage_status']);
+                }
                 $item->update($all);
 
                 $product_design = ProductDesign::firstOrCreate(['item_id' => intval($item->id)]);
@@ -463,6 +467,11 @@ class DemandController extends BaseController
                 $all['contact_name'] = $request->input('contact_name') ?? '';
                 $all['phone'] = $request->input('phone') ?? 0;
                 $all['email'] = $request->input('email') ?? '';
+
+                if(empty($all['stage_status'])){
+                    unset($all['stage_status']);
+                }
+
                 $item->update($all);
 
                 $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
