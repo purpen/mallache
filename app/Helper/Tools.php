@@ -17,4 +17,26 @@ class Tools
     {
         return mt_rand(100000,999999);
     }
+
+    /**
+     * 获取城市名称
+     * @param $code
+     */
+    static public function cityName($code)
+    {
+        $code = (int)$code;
+        $data = config('city.data');
+        $data_arr = [];
+        foreach(json_decode($data, true) as $v){
+            $data_arr = $data_arr + $v;
+        }
+        if(array_key_exists($code, $data_arr)){
+            $name = $data_arr[$code];
+        }else{
+            $name = '';
+        }
+
+        return $name;
+    }
+
 }

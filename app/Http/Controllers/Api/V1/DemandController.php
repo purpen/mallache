@@ -66,7 +66,7 @@ class DemandController extends BaseController
      *
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} company_abbreviation 公司简称
-     * @apiParam {integer} company_size 公司规模
+     * @apiParam {integer} company_size 公司规模：1.10以下；2.10-50；3.50-100；4.100以上;5.初创公司；
      * @apiParam {string} company_web 公司网站
      * @apiParam {integer} company_province 省份
      * @apiParam {integer} company_city 城市
@@ -789,7 +789,7 @@ class DemandController extends BaseController
             $items = $items->whereIn('status', $where_in);
         }
 
-        $items = $items->paginate($per_page);
+        $items = $items->orderBy('id', 'desc')->paginate($per_page);
         if($items->isEmpty()){
             return $this->response->array($this->apiSuccess());
         }

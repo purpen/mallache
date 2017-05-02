@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Helper\Tools;
 use App\Models\DemandCompany;
 use League\Fractal\TransformerAbstract;
 
@@ -28,10 +29,14 @@ class DemandCompanyTransformer extends TransformerAbstract
             'company_name' => strval($demand->company_name),
             'company_abbreviation' => strval($demand->company_abbreviation),
             'company_size' => intval($demand->company_size),
+            'company_size_value' => $demand->company_size_value,
             'company_web' => strval($demand->company_web),
             'province' => intval($demand->province),
             'city' => intval($demand->city),
             'area' => intval($demand->area),
+            'province_value' => Tools::cityName(intval($demand->province)),
+            'city_value' => Tools::cityName(intval($demand->city)),
+            'area_value' => Tools::cityName(intval($demand->area)),
             'address' => strval($demand->address),
             'contact_name' => strval($demand->contact_name),
             'phone' => intval($demand->phone),
