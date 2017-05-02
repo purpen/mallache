@@ -13,7 +13,7 @@ import router from './router'
 import Qs from 'qs'
 
 const axiosInstance = axios.create({
-  // baseURL: 'http://sa.taihuoniao.com',
+  baseURL: process.env.API_ROOT,
   timeout: 10000,
   withCredentials: true,
   headers: {
