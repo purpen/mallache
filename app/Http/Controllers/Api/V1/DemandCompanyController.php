@@ -64,7 +64,18 @@ class DemandCompanyController extends BaseController
      *     }
      *   }
      *   "data": {
-     *
+     *          "id": 1,
+     *          "company_name": null,  //公司名称
+                "company_abbreviation": null, //简称
+                "company_size": null, //公司规模；1...
+                "company_web": null,  //公司网址
+                "company_province": null, //省份
+                "company_city": null,  //城市
+                "company_area": null,   //区县
+                "address": null,    //详细地址
+                "contact_name": null,   //联系人
+                "phone": null,
+                "email": null
      *    }
      *  }
      */
@@ -122,7 +133,7 @@ class DemandCompanyController extends BaseController
      *          "address": "beijing",
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
-     *          "email": "qq@qq.com"
+     *          "email": "qq@qq.com",
      *      },
      *      "meta": {
      *          "message": "Success",

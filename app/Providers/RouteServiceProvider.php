@@ -70,4 +70,11 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
+
+    //后台路由文件
+    protected function mapAdminRoutes()
+    {
+        Route::namespace($this->namespace)
+            ->group(base_path('routes/admin.php'));
+    }
 }

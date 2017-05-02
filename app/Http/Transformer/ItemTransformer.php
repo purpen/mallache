@@ -10,7 +10,11 @@ class ItemTransformer extends TransformerAbstract
     public function transform(Item $item)
     {
         $data = $item->itemInfo();
-        return $data;
+        return [
+            'item' => $data,
+            'quotation' => $item->quotation,
+            'contract' => $item->contract,
+        ];
     }
 
 }

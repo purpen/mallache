@@ -48,6 +48,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'industry_val' => $designCase->industry_val,
             'type' => intval($designCase->type),
             'type_val' => $designCase->type_val,
+            'mass_production' => intval($designCase->mass_production),
             'design_type' => intval($designCase->design_type),
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),

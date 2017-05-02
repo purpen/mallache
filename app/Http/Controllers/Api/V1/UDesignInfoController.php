@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ItemTransformer;
 use App\Models\Item;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
@@ -89,12 +90,13 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
+     * @apiParam {integer} stage_status //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} name 项目名称
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {integer} complete_content 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
      * @apiParam {string} other_content 其他设计内容
      * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-     * @apiParam {integer}province  省份
+     * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {string} token
      *
@@ -136,9 +138,12 @@ class UDesignInfoController extends BaseController
             }
 
             //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id || $item->type !== 2){
+            if($item->user_id !== $this->auth_user_id || $item->type != 2 || 1 != $item->status){
                 return $this->response->array($this->apiError('not found!', 404));
             }
+
+            $item->stage_status = $request->input('stage_status') ?? 2;
+            $item->save();
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
             $design->update($all);

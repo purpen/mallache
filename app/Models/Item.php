@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Item extends Model
 {
@@ -11,7 +12,7 @@ class Item extends Model
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['user_id', 'type', 'design_type', 'status'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status'];
 
     /**
      * 添加返回字段
@@ -43,7 +44,7 @@ class Item extends Model
      */
     public function quotation()
     {
-        return $this->hasMany('App\Models\QuotationModel', 'item_demand_id');
+        return $this->belongsTo('App\Models\QuotationModel', 'quotation_id');
     }
 
     /**
@@ -52,6 +53,12 @@ class Item extends Model
     public function itemRecommend()
     {
         return $this->hasMany('App\Models\ItemRecommend', 'item_id');
+    }
+
+    //一对一关联 合同表
+    public function contract()
+    {
+        return $this->hasOne('App\Models\Contract', 'item_demand_id');
     }
 
     /**
@@ -63,12 +70,34 @@ class Item extends Model
     {
         $item = $this;
         switch ((int)$item->type){
+            case 0:
+                return [
+                    'id' => $item->id,
+                    'type' => (int)$item->type,
+                    'type_value' => $item->type_value,
+                    'design_type' => (int)$item->design_type,
+                    'design_type_value' => $item->design_type_value,
+                    'status' => $item->status,
+                    'price' => floatval($item->price),
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'address' => $item->address,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'stage_status' => (int)$item->stage_status,
+                ];
             case 1:
                 $info = $item->productDesign;
                 return [
                     'id' => $item->id,
-                    'type' => $item->type,
-                    'type_value' => $item->type_value,
+                    'type' => (int)$item->type,
+                    'type_value' => (int)$item->type_value,
                     'design_type' => $item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
@@ -78,7 +107,7 @@ class Item extends Model
                     'industry_value' => $info->industry_value,
                     'name' => $info->name,
                     'product_features' => $info->product_features,
-                    'competing_product' => $info->competing_product,
+                    'competing_product' => explode('&', $info->competing_product),
                     'cycle' => $info->cycle,
                     'cycle_value' => $info->cycle_value,
                     'design_cost' => $info->design_cost,
@@ -87,6 +116,19 @@ class Item extends Model
                     'city' => $info->city,
                     'image' => $info->image,
                     'price' => floatval($item->price),
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'address' => $item->address,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'stage_status' => (int)$item->stage_status,
                 ];
                 break;
             case 2:
@@ -95,15 +137,11 @@ class Item extends Model
                 }
                 return [
                     'id' => $item->id,
-                    'type' => $item->type,
+                    'type' => (int)$item->type,
                     'type_value' => $item->type_value,
-                    'design_type' => $item->design_type,
+                    'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
-//                    'system' => $info->system,
-//                    'system_value' => $info->system_value,
-//                    'design_content' => $info->design_content,
-//                    'design_content_value' => $info->design_content_value,
                     'name' => $info->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
@@ -116,6 +154,19 @@ class Item extends Model
                     'city' => $info->city,
                     'image' => $info->image,
                     'price' => floatval($item->price),
+                    'stage_status' => (int)$item->stage_status,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'address' => $item->address,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
                 ];
                 break;
         }
@@ -172,4 +223,14 @@ class Item extends Model
         return $design_type_value;
     }
 
+    //创建需求表
+    public function createItem($user_id)
+    {
+        if(self::create(['user_id' => $user_id,'status' => 1, 'type' => 0, 'design_type' => 0])){
+            return true;
+        }else{
+            Log::error('创建需求表报错');
+            return false;
+        };
+    }
 }

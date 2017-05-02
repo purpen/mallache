@@ -41,6 +41,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         'as' => 'upload.callback', 'uses' => 'UploadController@callback'
     ]);
 
+    //支付宝异步回调接口
+    $api->post('/pay/aliPayNotify', 'PayController@aliPayNotify');
+    //支付宝同步回调接口
+//    $api->get('/pay/aliPaySynNotify', 'PayController@aliPaySynNotify');
+
 
     /**
      * 需验证用户token
@@ -88,6 +93,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 项目需求相关路由
          */
+        //发布需求保证金支付---支付宝
+        $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+        //查询支付状态
+        $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
+
         //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
         //项目ID获取推荐的设计公司
@@ -108,7 +118,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
-
+        //合同
+        $api->resource('/contract', 'ContractController');
 
         //设计公司信息
 //        $api->resource('/designCompany', 'DesignCompanyController');
@@ -143,8 +154,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
 
 
-        //设计公司相关操作
-        $api->get('/design/itemList', ['as' => 'itemList', 'uses' => 'DesignController@itemList']);
+        /**
+         * 设计公司相关操作
+         */
+        //获取系统推荐的设计项目
+        $api->get('/design/itemList', ['as' => 'design.itemList', 'uses' => 'DesignController@itemList']);
+        //拒绝设计项目
+        $api->get('/design/refuseItem/{item_id}', ['as' => 'design.refuseItem', 'uses' => 'DesignController@refuseItem']);
+        //设计公司获取项目信息
+        $api->get('/design/item/{item_id}', 'DesignController@item');
 
     });
 });

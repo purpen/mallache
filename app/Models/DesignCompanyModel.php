@@ -44,7 +44,8 @@ class DesignCompanyModel extends Model
         'status',
         'company_abbreviation',
         'is_recommend',
-        'verify_status'
+        'verify_status',
+        'unique_id'
     ];
 
     /**
@@ -53,7 +54,7 @@ class DesignCompanyModel extends Model
     protected $appends = [
         'company_type_val',
         'company_size_val',
-        'item_quantity_val',
+//        'item_quantity_val',
 
     ];
 
@@ -71,6 +72,15 @@ class DesignCompanyModel extends Model
     public function itemRecommend()
     {
         return $this->hasMany('App\Models\ItemRecommend', 'design_company_id');
+    }
+
+
+    /**
+     * 一对多关联推荐关联表
+     */
+    public function contract()
+    {
+        return $this->hasMany('App\Models\Contract', 'design_company_id');
     }
 
     /**

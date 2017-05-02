@@ -114,7 +114,7 @@ class ItemRecommend extends Model
             $status_value = '设计公司有意接单';
         }elseif ($item_status == 1){
             $status = 5;
-            $status_value = '选定设计公司';
+            $status_value = '选定该设计公司';
         }
 
         return compact('status', 'status_value');

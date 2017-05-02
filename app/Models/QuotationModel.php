@@ -36,4 +36,12 @@ class QuotationModel extends Model
         return $this->hasOne('App\Models\ItemRecommend', 'quotation_id');
     }
 
+    /**
+     * 一对一关联 项目表
+     */
+    public function item()
+    {
+        return $this->hasOne('App\Models\Item', 'quotation_id');
+    }
+
 }
