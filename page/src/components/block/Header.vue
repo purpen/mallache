@@ -21,7 +21,7 @@
               <img class="avatar" src="../../assets/images/avatar_default.jpg" />
               <span class="b-nickname">{{ eventUser.account }}</span>
             </template>
-            <el-menu-item index="/vcenter/computer">个人中心</el-menu-item>
+            <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
             <el-menu-item index=" ">帮助中心</el-menu-item>
             <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
           </el-submenu>
@@ -94,7 +94,7 @@ export default {
   }
   .el-menu--horizontal>.el-menu-item.logo{
     font-size: 2rem;
-    color: #7a7a7a;
+    color: #FF5A5F;
     font-weight: bold;
     transition:none;
     padding: 0 10px;
@@ -120,8 +120,8 @@ export default {
     border-bottom: 3px solid transparent;
   }
   .el-menu--horizontal>.el-menu-item:hover, .el-menu--horizontal>.el-submenu.is-active .el-submenu__title, .el-menu--horizontal>.el-submenu:hover .el-submenu__title,.el-menu--horizontal>.el-menu-item.is-active{
-    border-bottom: 3px solid #222;
-    color: #222;
+    border-bottom: 3px solid #FF5A5F;
+    color: #FF5A5F;
     background: none;
   }
   .el-menu-item, .el-submenu__title{

@@ -50,71 +50,78 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   line-height: 10px;
 }
 
+.blank10 {
+  margin: 10px;
+}
+.blank20 {
+  margin: 20px;
+}
+
 
 /**
  *  新添按钮颜色值
  */
-.button.is-custom {
+button.is-custom.el-button {
   background-color: #FF5A5F;
   border-color: transparent;
   color: #fff;
 }
 
-.button.is-custom:hover, .button.is-custom.is-hovered {
+button.is-custom:hover, .button.is-custom.is-hovered {
   background-color: #FF4500;
   border-color: transparent;
   color: #fff;
 }
 
-.button.is-custom:focus, .button.is-custom.is-focused {
+button.is-custom:focus, .button.is-custom.is-focused {
   border-color: transparent;
   box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);
   color: #fff;
 }
 
-.button.is-custom:active, .button.is-custom.is-active {
+button.is-custom:active, .button.is-custom.is-active {
   background-color: #FF4500;
   border-color: transparent;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);
   color: #fff;
 }
 
-.button.is-custom.is-inverted {
+button.is-custom.is-inverted {
   background-color: #fff;
   color: #FF5A5F;
 }
 
-.button.is-custom.is-inverted:hover {
+button.is-custom.is-inverted:hover {
   background-color: #f2f2f2;
 }
 
-.button.is-custom.is-loading:after {
+button.is-custom.is-loading:after {
   border-color: transparent transparent #fff #fff !important;
 }
 
-.button.is-custom.is-outlined {
+button.is-custom.is-outlined {
   background-color: transparent;
   border-color: #FF5A5F;
   color: #FF5A5F;
 }
 
-.button.is-custom.is-outlined:hover, .button.is-custom.is-outlined:focus {
+button.is-custom.is-outlined:hover, .button.is-custom.is-outlined:focus {
   background-color: #FF5A5F;
   border-color: #FF5A5F;
   color: #fff;
 }
 
-.button.is-custom.is-outlined.is-loading:after {
+button.is-custom.is-outlined.is-loading:after {
   border-color: transparent transparent #FF5A5F #FF5A5F !important;
 }
 
-.button.is-custom.is-inverted.is-outlined {
+button.is-custom.is-inverted.is-outlined {
   background-color: transparent;
   border-color: #fff;
   color: #fff;
 }
 
-.button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is-outlined:focus {
+button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is-outlined:focus {
   background-color: #fff;
   color: #FF5A5F;
 }

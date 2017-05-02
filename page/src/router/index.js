@@ -58,6 +58,96 @@ const routes = [
     name: 'register',
     component: require('@/components/pages/auth/Register')
   },
+
+  // 发布需求(第一步) 支付
+  {
+    path: '/item/submit_one',
+    name: 'itemSubmitOne',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitOne')
+  },
+
+  // 发布需求(第二步) 选择领域
+  {
+    path: '/item/submit_type/:id',
+    name: 'itemSubmitTwo',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitTwo')
+  },
+
+  // 发布需求(第三步) 添写基本信息(产品设计)
+  {
+    path: '/item/submit_base/:id',
+    name: 'itemSubmitThree',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitThree')
+  },
+
+  // 发布需求(第三步) 添写基本信息(UI设计)
+  {
+    path: '/item/submit_ui_base/:id',
+    name: 'itemSubmitUIThree',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitUIThree')
+  },
+
+  // 发布需求(第四步) 添写公司信息
+  {
+    path: '/item/submit_company/:id',
+    name: 'itemSubmitFour',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitFour')
+  },
+
+  // 发布需求(第五步) 检查并发布
+  {
+    path: '/item/submit_check/:id',
+    name: 'itemSubmitFive',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/SubmitFive')
+  },
+
+  // 发布需求(第五步) 检查并发布
+  {
+    path: '/item/publish',
+    name: 'itemPublish',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/Publish')
+  },
+
+  // 支付
+  {
+    path: '/item/payment',
+    name: 'itemPayment',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/Payment')
+  },
+  // 自定义输出页面
+  {
+    path: '/blank',
+    name: 'blank',
+    meta: {
+      requireAuth: false
+    },
+    component: require('@/components/block/Blank')
+  },
+
   // 个人/公司主页
   {
     path: '/user/:id',
@@ -97,12 +187,12 @@ const routes = [
   },
   // 项目动态
   {
-    path: '/vcenter/item/list',
-    name: 'vcenterItemList',
+    path: '/vcenter/remind/list',
+    name: 'vcenterRemindList',
     meta: {
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/item/List')
   },
   // 订单列表
   {
@@ -157,6 +247,24 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/computer/Profile')
+  },
+  // 我的项目列表(需求方)
+  {
+    path: '/vcenter/item/list',
+    name: 'vcenterItemList',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/item/List')
+  },
+  // 我的项目列表(设计公司)
+  {
+    path: '/vcenter/citem/list',
+    name: 'vcenterCItemList',
+    meta: {
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/c_item/List')
   },
   // 基本设置
   {

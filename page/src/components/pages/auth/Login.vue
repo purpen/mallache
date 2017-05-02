@@ -12,7 +12,7 @@
             <el-input v-model="form.account" name="account" ref="account" auto-complete="on" placeholder="手机号"></el-input>
           </el-form-item>
           <el-form-item label="" prop="password">
-            <el-input v-model="form.password" name="password" ref="password" placeholder="密码"></el-input>
+            <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
           <el-button type="success" @click="submit('ruleForm')" class="login-btn">登录</el-button>
         </el-form>

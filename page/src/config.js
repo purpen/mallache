@@ -259,8 +259,93 @@ const DESIGN_CASE_SALE_OPTIONS = [
 
 ]
 
+// 项目周期
+const CYCLE_OPTIONS = [
+  {
+    id: 1,
+    name: '1个月内'
+  },
+  {
+    id: 2,
+    name: '1-2个月'
+  },
+  {
+    id: 3,
+    name: '2-3个月'
+  },
+  {
+    id: 4,
+    name: '3-4个月'
+  },
+  {
+    id: 5,
+    name: '4个月以上'
+  }
+
+]
+
+// 设计费用预算
+const DESIGN_COST_OPTIONS = [
+  {
+    id: 1,
+    name: '5万以内'
+  },
+  {
+    id: 2,
+    name: '5-10万'
+  },
+  {
+    id: 3,
+    name: '10-15万'
+  },
+  {
+    id: 4,
+    name: '15-20万'
+  },
+  {
+    id: 5,
+    name: '20-30万'
+  },
+  {
+    id: 6,
+    name: '30-50万'
+  },
+  {
+    id: 7,
+    name: '50万以上'
+  }
+
+]
+
+// 公司规模
+const COMPANY_SIZE = [
+  {
+    id: 1,
+    name: '20人以下'
+  },
+  {
+    id: 2,
+    name: '20-50人'
+  },
+  {
+    id: 3,
+    name: '50-100人'
+  },
+  {
+    id: 4,
+    name: '100-300人'
+  },
+  {
+    id: 5,
+    name: '300人以上'
+  }
+]
+
 module.exports = {
   COMPANY_TYPE,
   DESIGN_CASE_PRICE_OPTIONS,
-  DESIGN_CASE_SALE_OPTIONS
+  DESIGN_CASE_SALE_OPTIONS,
+  CYCLE_OPTIONS,
+  DESIGN_COST_OPTIONS,
+  COMPANY_SIZE
 }

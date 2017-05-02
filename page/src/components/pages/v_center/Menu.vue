@@ -2,12 +2,15 @@
 
   <el-col :span="4" class="left-menu">
 
-    <div class="menu-list">
+    <div class="menu-list" v-if="isComputer()">
       <router-link :to="{name: 'vcenterItemList'}" class="item">
         项目动态
       </router-link>
       <router-link :to="{name: 'vcenterOrderList'}" class="item">
         项目订单
+      </router-link>
+      <router-link :to="{name: 'vcenterItemList'}" class="item">
+        我的项目
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例
@@ -21,10 +24,27 @@
       <router-link :to="{name: 'vcenterProfile'}" class="item">
         账号设置
       </router-link>
-
     </div>
 
-    <div class="computer-btn">
+    <div class="menu-list" v-else>
+      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+        项目订单
+      </router-link>
+      <router-link :to="{name: 'vcenterItemList'}" class="item">
+        我的项目
+      </router-link>
+      <router-link :to="{name: 'vcenterWalletList'}" class="item">
+        我的钱包
+      </router-link>
+      <router-link :to="{name: 'vcenterComputerAccreditation'}" class="item">
+        公司信息
+      </router-link>
+      <router-link :to="{name: 'vcenterProfile'}" class="item">
+        账号设置
+      </router-link>
+    </div>
+
+    <div class="computer-btn" v-if="isComputer()">
       <el-button><router-link :to="{path: '/user/1'}">查看公司主页</router-link></el-button>
     </div>
   </el-col>
@@ -36,6 +56,17 @@ export default {
   data () {
     return {
       msg: 'This is menu'
+    }
+  },
+  // 判断是客户还是设计公司
+  methods: {
+    isComputer() {
+      var uType = this.$store.state.event.user.type
+      if (uType === 2) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

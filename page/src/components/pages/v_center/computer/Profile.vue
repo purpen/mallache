@@ -18,11 +18,12 @@
                   :action="uploadUrl"
                   :show-file-list="false"
                   :data="uploadParam"
+                  :on-progress="avatarProgress"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload">
                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                      <div slot="tip" class="el-upload__tip">只能上传jpg/gif/png文件，且不超过2M</div>
+                      <div slot="tip" class="el-upload__tip">{{ avatarStr }}</div>
                 </el-upload>
               </el-form-item>
 
@@ -87,7 +88,7 @@
                       off-text="">
                     </el-switch>
                   </el-col>
-                  <el-col :span="2">
+                  <el-col :span="2" v-show="is_branch">
                       <el-input v-model.number="form.branch_office" :disabled="!is_branch" placeholder=""><template slot="append">家</template></el-input>
                   </el-col>
                 </el-form-item>
@@ -187,6 +188,7 @@
   // 城市联动
   import RegionPicker from '@/components/block/RegionPicker'
   import '@/assets/js/format'
+  import typeData from '@/config'
 
   export default {
     name: 'vcenter_computer_profile',
@@ -197,6 +199,7 @@
     },
     data () {
       return {
+        avatarStr: '只能上传jpg/gif/png文件，且不超过2M',
         userId: this.$store.state.event.user.id,
         is_branch: false,
         companyId: '',
@@ -232,23 +235,6 @@
         professional_advantage: '',
         company_profile: '',
         awards: '',
-        sizeOptions: [{
-          value: 1,
-          label: '20人以下'
-        }, {
-          value: 2,
-          label: '20-50人'
-        }, {
-          value: 3,
-          label: '50-100人'
-        }, {
-          value: 4,
-          label: '100-300人'
-        }, {
-          value: 5,
-          label: '300人以上'
-        }],
-
         ruleForm: {
           company_name: [
             { required: true, message: '请添写公司全称', trigger: 'blur' }
@@ -294,9 +280,13 @@
       }
     },
     methods: {
+      avatarProgress() {
+        this.avatarStr = '上传中...'
+      },
       isBranch(val) {
         if (val === true) {
           this.is_branch = true
+          this.form.branch_office = 1
         } else {
           this.is_branch = false
           this.form.branch_office = 0
@@ -394,9 +384,6 @@
         if (file === null) {
           return false
         }
-        console.log('aaaa')
-        console.log(file)
-
         var assetId = file.response.asset_id
         const that = this
         that.$http.delete(api.asset.format(assetId), {})
@@ -442,8 +429,8 @@
 
         console.log(file)
         if (arr.indexOf(file.type) === -1) {
-          // this.$message.error('上传文件格式不正确!')
-          // return false
+          this.$message.error('上传文件格式不正确!')
+          return false
         }
         if (!isLt5M) {
           this.$message.error('上传文件大小不能超过 5MB!')
@@ -452,6 +439,7 @@
       },
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw)
+        this.avatarStr = '只能上传jpg/gif/png文件，且不超过2M'
       },
       beforeAvatarUpload(file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png', 'image/png']
@@ -469,6 +457,17 @@
       }
     },
     computed: {
+      sizeOptions() {
+        var items = []
+        for (var i = 0; i < typeData.COMPANY_SIZE.length; i++) {
+          var item = {
+            value: typeData.COMPANY_SIZE[i]['id'],
+            label: typeData.COMPANY_SIZE[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      }
     },
     watch: {
     },
@@ -526,7 +525,6 @@
 
       that.$http.get(api.upToken, {})
       .then (function(response) {
-        that.isFirst = true
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
             that.uploadParam['token'] = response.data.data.upToken

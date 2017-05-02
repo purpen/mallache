@@ -5,11 +5,11 @@
         <h2>注册太火鸟SaaS账户</h2>
       </div>
       <div class="register-tab">
-        <div class="register-tab-user">
+        <div class="register-tab-user" @click="selectUser" :style="{background: uActive}">
           <p><h3>我是客户</h3></p>
           <p class="des">发布项目，找到精准设计公司</p>
         </div>
-        <div class="register-tab-computer">
+        <div class="register-tab-computer" @click="selectComputer" :style="{background: cActive}">
           <p><h3>我是设计公司</h3></p>
           <p class="des">用专业设计服务，助力客户成长</p>
         </div>
@@ -26,10 +26,10 @@
             </el-input>
           </el-form-item>
           <el-form-item label="" prop="password">
-            <el-input v-model="form.password" name="password" ref="password" placeholder="密码"></el-input>
+            <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
           <el-form-item label="" prop="checkPassword">
-            <el-input v-model="form.checkPassword" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
+            <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
           </el-form-item>
           <el-button type="success" @click="submit('ruleForm')" class="register-btn">注册</el-button>
         </el-form>
@@ -63,9 +63,12 @@ export default {
       }
     }
     return {
+      uActive: '',
+      cActive: '',
       time: 0,
       labelPosition: 'top',
       form: {
+        type: '',
         account: '',
         smsCode: '',
         password: '',
@@ -93,6 +96,16 @@ export default {
     }
   },
   methods: {
+    selectUser() {
+      this.form.type = 1
+      this.uActive = '#FAFAFA'
+      this.cActive = ''
+    },
+    selectComputer() {
+      this.form.type = 2
+      this.cActive = '#FAFAFA'
+      this.uActive = ''
+    },
     submit(formName) {
       const that = this
       that.$refs[formName].validate((valid) => {
@@ -100,9 +113,14 @@ export default {
           var account = this.$refs.account.value
           var password = this.$refs.password.value
           var smsCode = this.$refs.smsCode.value
+          var type = this.form.type
+          if (!type) {
+            that.$message.error('请选择客户或设计公司')
+            return false
+          }
 
           // 验证通过，注册
-          that.$http.post(api.register, {account: account, password: password, sms_code: smsCode})
+          that.$http.post(api.register, {account: account, password: password, type: type, sms_code: smsCode})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               var token = response.data.data.token
@@ -112,7 +130,7 @@ export default {
               that.$http.get(api.user, {})
               .then (function(response) {
                 if (response.data.meta.status_code === 200) {
-                  auth.write_token(response.data.data)
+                  auth.write_user(response.data.data)
 
                   that.$message({
                     showClose: true,
@@ -273,25 +291,25 @@ export default {
     font-size: 1.8rem;
     width: 100%;
     height: 100px;
-    border: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
     position:relative;
 
 
   }
 
   .register-tab-user{
+    padding-top: 20px;
     width: 50%;
-    height: 60px;
+    height: 80px;
     position:absolute;
-    top: 20%;
   }
   .register-tab-computer{
+    padding-top: 20px;
     width: 50%;
-    height: 60px;
+    height: 80px;
     position:absolute;
     left: 50%;
-    top: 20%;
-    border-left: 1px solid #aaa;
   }
 
   .register-tab p{

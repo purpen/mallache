@@ -1,6 +1,6 @@
 <template>
 
-    <el-form-item label="选择城市" prop="chinaCity">
+    <el-form-item :label="titleProp" prop="chinaCity">
         <el-select v-model="province" event="province" placeholder="请选择省份">
           <el-option
             v-for="item in provinces"
@@ -19,7 +19,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="district" event="district" placeholder="请选择区县">
+        <el-select v-model="district" event="district" v-if="!twoSelect" placeholder="请选择区县">
           <el-option
             v-for="item in districts"
             :label="item[1]"
@@ -45,6 +45,9 @@
       provinceProp: {},
       cityProp: {},
       districtProp: {},
+      titleProp: {
+        default: '选择城市'
+      },
       twoSelect: Boolean,
       auto: Boolean,
       completed: Boolean,
