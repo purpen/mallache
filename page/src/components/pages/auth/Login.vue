@@ -14,7 +14,7 @@
           <el-form-item label="" prop="password">
             <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
-          <el-button type="success" @click="submit('ruleForm')" class="login-btn">登录</el-button>
+          <el-button type="success" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
 
       </div>   

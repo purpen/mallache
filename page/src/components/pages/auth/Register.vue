@@ -31,7 +31,7 @@
           <el-form-item label="" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
           </el-form-item>
-          <el-button type="success" @click="submit('ruleForm')" class="register-btn">注册</el-button>
+          <el-button type="success" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
         </el-form>
       
       </div>   
