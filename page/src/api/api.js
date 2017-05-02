@@ -41,7 +41,7 @@ export default {
   ProductDesignId: '/ProductDesign/{0}', // 更改产品设计基本资料
   UDesignId: '/UDesign/{0}', // 更改UI设计基本资料
 
-  release: '/demand/release', // 发布项目 
+  release: '/demand/release', // 发布项目
 
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken'  // 获取上传token
