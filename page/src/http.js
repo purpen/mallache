@@ -11,7 +11,6 @@ import router from './router'
 // npm install axios的时候默认会安装qs
 // qs相关的问题请搜索"nodejs qs"或者看这里https://www.npmjs.com/package/qs
 import Qs from 'qs'
-
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
   timeout: 10000,
