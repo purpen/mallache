@@ -18,7 +18,13 @@ class Item extends Model
     /**
      * 添加返回字段
      */
-    protected $appends = ['type_value', 'design_type_value'];
+    protected $appends = [
+        'type_value',
+        'design_type_value',
+        'company_province_value',
+        'company_city_value',
+        'company_area_value',
+    ];
 
     //一对一关联UX UI设计表
     public function uDesign()
@@ -120,8 +126,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province_value),
-                    'city_value' => Tools::cityName($item->city_value),
+                    'province_value' => Tools::cityName($item->province),
+                    'city_value' => Tools::cityName($item->city),
                     'image' => $info->image,
                     'price' => floatval($item->price),
 
@@ -165,8 +171,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province_value),
-                    'city_value' => Tools::cityName($item->city_value),
+                    'province_value' => Tools::cityName($item->province),
+                    'city_value' => Tools::cityName($item->city),
                     'image' => $info->image,
                     'price' => floatval($item->price),
                     'stage_status' => (int)$item->stage_status,
@@ -307,6 +313,33 @@ class Item extends Model
                 $company_size_val = '';
         }
         return $company_size_val;
+    }
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyProvinceValueAttribute()
+    {
+        return Tools::cityName($this->company_province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyCityValueAttribute()
+    {
+        return Tools::cityName($this->company_city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyAreaValueAttribute()
+    {
+        return Tools::cityName($this->company_area);
     }
 
     //创建需求表

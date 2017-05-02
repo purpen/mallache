@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductDesign extends Model
 {
     protected $table = 'product_design';
 
-    protected $appends = ['field_value', 'industry_value'];
+    protected $appends = [
+        'field_value',
+        'industry_value',
+        'cycle_value',
+        'design_cost_value',
+        'province_value',
+        'city_value',
+    ];
 
     protected $fillable = [
         'item_id',
@@ -128,6 +136,18 @@ class ProductDesign extends Model
                 $design_cost_value = '';
         }
         return $design_cost_value;
+    }
+
+    //省份访问修改器
+    public function getProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province) ?? "";
+    }
+
+    //城市访问修改器
+    public function getCityValueAttribute()
+    {
+        return Tools::cityName($this->city) ?? "";
     }
 
 }

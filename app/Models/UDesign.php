@@ -2,11 +2,23 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class UDesign extends Model
 {
     protected $table = 'u_design';
+
+    protected $appends = [
+        'image',
+        'system_value',
+        'design_content_value',
+        'stage_value',
+        'complete_content_value',
+        'design_cost_value',
+        'province_value',
+        'city_value',
+    ];
 
     //允许批量赋值的属性
     protected $fillable = [
@@ -148,4 +160,15 @@ class UDesign extends Model
         return $design_cost_value;
     }
 
+    //省份访问修改器
+    public function getProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province) ?? "";
+    }
+
+    //城市访问修改器
+    public function getCityValueAttribute()
+    {
+        return Tools::cityName($this->city) ?? "";
+    }
 }
