@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -82,22 +83,27 @@ class Item extends Model
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
                     'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
                     'company_web' => $item->company_web,
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
+                    'company_province_value' => Tools::cityName($item->company_province),
+                    'company_city_value' => Tools::cityName($item->company_city),
+                    'company_area_value' => Tools::cityName($item->company_area),
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
+                    'created_at' => $item->toArray()['created_at'],
                 ];
             case 1:
                 $info = $item->productDesign;
                 return [
                     'id' => $item->id,
                     'type' => (int)$item->type,
-                    'type_value' => (int)$item->type_value,
+                    'type_value' => $item->type_value,
                     'design_type' => $item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
@@ -114,21 +120,28 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
+                    'province_value' => Tools::cityName($item->province_value),
+                    'city_value' => Tools::cityName($item->city_value),
                     'image' => $info->image,
                     'price' => floatval($item->price),
 
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
                     'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
                     'company_web' => $item->company_web,
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
+                    'company_province_value' => Tools::cityName($item->company_province),
+                    'company_city_value' => Tools::cityName($item->company_city),
+                    'company_area_value' => Tools::cityName($item->company_area),
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
+                    'created_at' => $item->toArray()['created_at'],
                 ];
                 break;
             case 2:
@@ -152,6 +165,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
+                    'province_value' => Tools::cityName($item->province_value),
+                    'city_value' => Tools::cityName($item->city_value),
                     'image' => $info->image,
                     'price' => floatval($item->price),
                     'stage_status' => (int)$item->stage_status,
@@ -159,14 +174,19 @@ class Item extends Model
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
                     'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
                     'company_web' => $item->company_web,
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
+                    'company_province_value' => Tools::cityName($item->company_province),
+                    'company_city_value' => Tools::cityName($item->company_city),
+                    'company_area_value' => Tools::cityName($item->company_area),
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
+                    'created_at' => $item->toArray()['created_at'],
                 ];
                 break;
         }
@@ -181,7 +201,7 @@ class Item extends Model
                 $type_value = '产品设计类型';
                 break;
             case 2:
-                $type_value = 'UI UX 设计类型';
+                $type_value = 'UI UX设计类型';
                 break;
             default:
                 $type_value = '';
@@ -193,7 +213,7 @@ class Item extends Model
     //设计类别
     public function getDesignTypeValueAttribute()
     {
-        if($this->type === 1){
+        if($this->type == 1){
             switch ($this->design_type){
                 case 1:
                     $design_type_value = '产品策略';
@@ -223,6 +243,72 @@ class Item extends Model
         return $design_type_value;
     }
 
+    //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
+    public function getStageValueAttribute()
+    {
+        switch ($this->stage){
+            case 1:
+                $stage_value = '已有app／网站，需重新设计';
+                break;
+            case 2:
+                $stage_value = '没有app／网站，需要全新设计';
+                break;
+            default:
+                $stage_value = '';
+        }
+
+        return $stage_value;
+    }
+
+    //已有项目设计内容格式化输出 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；
+    public function getCompleteContentValueAttribute()
+    {
+        switch ($this->complete_content){
+            case 1:
+                $complete_content_value = '流程图';
+                break;
+            case 2:
+                $complete_content_value = '线框图';
+                break;
+            case 3:
+                $complete_content_value = '页面内容';
+                break;
+            case 4:
+                $complete_content_value = '产品功能需求点';
+                break;
+            case 5:
+                $complete_content_value = $this->other_content;
+                break;
+            default:
+                $complete_content_value = ' ';
+        }
+    }
+
+    //公司规模
+    public function getCompanySizeValueAttribute()
+    {
+        switch ($this->company_size){
+            case 1:
+                $company_size_val = '10人以下';
+                break;
+            case 2:
+                $company_size_val = '10-50人之间';
+                break;
+            case 3:
+                $company_size_val = '50-100人之间';
+                break;
+            case 4:
+                $company_size_val = '100人以上';
+                break;
+            case 5:
+                $company_size_val = '初创公司';
+                break;
+            default:
+                $company_size_val = '';
+        }
+        return $company_size_val;
+    }
+
     //创建需求表
     public function createItem($user_id)
     {
@@ -231,6 +317,7 @@ class Item extends Model
         }else{
             Log::error('创建需求表报错');
             return false;
-        };
+        }
     }
+
 }

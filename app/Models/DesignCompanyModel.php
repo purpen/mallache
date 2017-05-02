@@ -114,16 +114,16 @@ class DesignCompanyModel extends Model
     {
         switch ($this->attributes['company_size']){
             case 1:
-                $company_size_val = '10以下';
+                $company_size_val = '10人以下';
                 break;
             case 2:
-                $company_size_val = '10-50';
+                $company_size_val = '10-50人之间';
                 break;
             case 3:
-                $company_size_val = '50-100';
+                $company_size_val = '50-100人之间';
                 break;
             case 4:
-                $company_size_val = '100以上';
+                $company_size_val = '100人以上';
                 break;
             default:
                 $company_size_val = '';
