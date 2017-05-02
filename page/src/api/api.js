@@ -36,7 +36,7 @@ export default {
   itemList: '/demand/itemList',  // 客户项目列表
 
   demand: '/demand',  // 添加项目领域
-  demandId: '/api/demand/{0}',  // 更改项目领域
+  demandId: '/demand/{0}',  // 更改项目领域
 
   ProductDesignId: '/ProductDesign/{0}', // 更改产品设计基本资料
   UDesignId: '/UDesign/{0}', // 更改UI设计基本资料
