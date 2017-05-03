@@ -87,4 +87,21 @@ class AssetModel extends Model
         return true;
     }
 
+    /**
+     * 获取附件ID
+     *
+     * @param int $type 附件类型
+     * @param string $random 随机数
+     * @return int 附件ID
+     */
+    public function getAssetId(int $type, string $random)
+    {
+        $asset = AssetModel::where(['type' => $type, 'random' => $random])->first();
+        if($asset){
+            return $asset->id;
+        }else{
+            return 0;
+        }
+    }
+
 }

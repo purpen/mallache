@@ -8,6 +8,7 @@ namespace App\Helper;
 
 use App\Models\Message;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Mockery\Exception;
 
 class Tools
@@ -51,19 +52,43 @@ class Tools
      * @param int $type 消息类型：1.系统通知；
      * @return bool 返回值
      */
-    static public function message(int $user_id, string $message, int $type = 1)
+    public function message(int $user_id, string $message, int $type = 1)
     {
-            $message = Message::create([
-                'user_id' => $user_id,
-                'message' => $message,
-                'type' => $type,
-            ]);
+        $message = Message::create([
+            'user_id' => $user_id,
+            'message' => $message,
+            'type' => $type,
+        ]);
 
         if($message){
+            //新消息数量加1
+            $this->addMessageQuantity($user_id, $type);
             return true;
         }else{
             return false;
         }
+    }
+
+    /**
+     * 添加新消息数量
+     * @param int $user_id
+     * @param int $type
+     */
+    public function addMessageQuantity(int $user_id, int $type = 1)
+    {
+        //有序列表key
+        $key = 'mallache:user:message:' . $type;
+        //member
+        $member = 'user:' . $user_id;
+        Redis::zincrby($key, 1, $member);
+    }
+
+    /**
+     * 读取用户新消息数量
+     */
+    public function getMessageQuantity(int $user_id, int $type = 1)
+    {
+
     }
 
 }

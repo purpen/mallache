@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DemandCompanyTransformer;
+use App\Models\AssetModel;
 use App\Models\DemandCompany;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -54,6 +55,7 @@ class DemandCompanyController extends BaseController
      * @apiParam {string} contact_name 联系人
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
+     * @apiParam {string} random 图片上传随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -101,6 +103,10 @@ class DemandCompanyController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+
+        $asset = new AssetModel();
+        $logo_id = $asset->getAssetId(7, $request->input('random'));
+        $all['logo'] = $logo_id;
 
         try{
             $demand = DemandCompany::create($all);

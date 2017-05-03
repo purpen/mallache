@@ -30,7 +30,8 @@ class DemandCompany extends Model
         'address',
         'contact_name',
         'phone',
-        'email'
+        'email',
+        'logo'
     ];
 
     //公司规模
