@@ -183,7 +183,12 @@ class DesignCompanyController extends BaseController
             if($design > 0){
                 return $this->response->array($this->apiError('已存在该设计公司'));
             }else{
+                //设计公司logo
+                $asset = new AssetModel();
+                $logo_id = $asset->getAssetId(6, $request->input('random'));
+                $all['logo'] = $logo_id;
                 $design = DesignCompanyModel::create($all);
+                //附件
                 $random = $request->input('random');
                 AssetModel::setRandom($design->id , $random);
             }
