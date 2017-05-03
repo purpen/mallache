@@ -2,7 +2,7 @@
   <div id="header-layout">
     <div class="nav-header">
       <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-          <!--<img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo">-->
+          <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
           <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
         <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
         <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
@@ -93,16 +93,27 @@ export default {
     margin-bottom: 30px;
   }
   .el-menu--horizontal>.el-menu-item.logo{
-    font-size: 2rem;
-    color: #FF5A5F;
-    font-weight: bold;
+    width: 54px;
+    height: 50px;
     transition:none;
     padding: 0 10px;
+    margin-right: 30px;
+
+    background-image: url(../../assets/images/logo.png);
+    background-repeat: no-repeat;
+    background-position: 0 4px;
+    background-size: 54px 42px;
+    text-indent: -9999px;
   }
   .el-menu--horizontal>.el-menu-item.logo:hover,.el-menu--horizontal>.el-menu-item.logo.is-active{
     background: none;
     border: none;
     transition:none;
+    background-image: url(../../assets/images/logo.png);
+    background-repeat: no-repeat;
+    background-position: 0 4px;
+    background-size: 54px 42px;
+    text-indent: -9999px;
   }
   .el-menu-header{
     background: #fff;

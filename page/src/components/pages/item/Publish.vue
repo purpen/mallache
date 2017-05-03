@@ -6,7 +6,7 @@
       <p class="success-str">发布成功</p>
       <p class="success-des">项目已发布成功，24小时内我们会为智能匹配合适的设计公司。</p>
       <p>
-        <router-link :to="{name: 'home'}" exact class="item">返回首页</router-link>
+        <router-link :to="{name: 'home'}" class="item">返回首页</router-link>
         <router-link :to="{name: 'vcenterItemList'}" class="item">项目管理</router-link>
       </p>
     </div>
@@ -38,7 +38,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .publish-box{
-    border: 1px solid #aaa;
     width: 100%;
     height: 500px;
     text-align:center;

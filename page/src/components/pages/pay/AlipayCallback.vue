@@ -1,9 +1,23 @@
 <template>
   <div class="container">
     <div class="pay-result" v-if="payResult">
-      {{ message }}
+      <div class="publish-box" v-if="paySuccess">
+        <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
+        <p class="success-str">支付成功</p>
+        <p class="success-des">请稍后，系统自动跳转发布需要页面...</p>
+      </div>
+
+      <div class="publish-box" v-else>
+        <p class="success-img"><img src="../../../assets/images/icon/fail.png" /></p>
+        <p class="success-str fail">支付失败</p>
+        <p class="success-des red">{{ errorMessage }}</p>
+        <p>
+          <router-link :to="{name: 'home'}" class="item">返回首页</router-link>
+          <router-link :to="{name: 'vcenterItemList'}" class="item">项目管理</router-link>
+        </p>
+      </div>
     </div>
-    <div class="wait" v-else><p class="normal">等待请求结果...</p></div>
+    <div class="wait" v-else><p class="normal">等待支付结果...</p></div>
   </div>
 </template>
 
@@ -14,8 +28,9 @@ export default {
   data () {
     return {
       payResult: false,
+      paySuccess: false,
       redClass: false,
-      message: '',
+      errorMessage: '支付出现异常，请稍后去个人中心->我的订单查看支付状态!',
       msg: ''
     }
   },
@@ -27,8 +42,8 @@ export default {
     // var subject = self.$route.query.subject
 
     if (!outTradeNo) {
-      self.message = '*缺少请求回调参数!'
-      self.payResult = true
+      self.$message.error('缺少请求回调参数!')
+      self.$router.push({name: 'home'})
       return false
     }
 
@@ -36,8 +51,6 @@ export default {
     var limitTimes = 0
     var limitObj = setInterval(function() {
       if (limitTimes >= 3) {
-        self.redClass = true
-        self.message = '*支付出现异常，请稍后去个人中心->我的订单查看支付结果!'
         self.payResult = true
         return
       } else {
@@ -46,22 +59,24 @@ export default {
           if (response.data.meta.status_code === 200) {
             if (response.data.data.status === 1) {
               self.payResult = true
-              self.message = '支付成功! 请稍候...'
+              self.paySuccess = true
               var itemId = response.data.data.item_id
-              self.$message.success('支付成功!')
-              self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
+              setTimeout(function() {
+                self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
+              }, 3000)
               clearInterval(limitObj)
             }
           } else {
-            self.$message.error(response.data.meta.message)
             console.log(response.data.meta.message)
+            self.payResult = true
+            self.errorMessage = response.data.meta.message
             clearInterval(limitObj)
             return false
           }
         })
         .catch (function(error) {
           clearInterval(limitObj)
-          self.$message.error(error.message)
+          self.errorMessage = error.message
           console.log(error.message)
           return false
         })
@@ -84,6 +99,34 @@ export default {
   }
   .red {
     color: red;
+  }
+
+  .publish-box{
+    width: 100%;
+    height: 500px;
+    text-align:center;
+    margin: 30px auto 30px auto;
+    padding: 100px 0 0 0;
+  }
+
+  .success-img {
+    margin-bottom: 15px;
+  }
+  .success-img img {
+    
+  }
+  .success-str {
+    font-size: 2rem;
+    color: #00AC84;
+    margin-bottom: 20px;
+  }
+  .fail {
+    color: #FE3824;
+  }
+  .success-des {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 25px;
   }
 
 </style>
