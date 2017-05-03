@@ -165,7 +165,6 @@ class Item extends Model
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
                     'complete_content' => $info->complete_content,
-                    'complete_content_value' => $info->complete_content_value,
                     'other_content' => $info->other_content,
                     'design_cost' => $info->design_cost,
                     'design_cost_value' => $info->design_cost_value,

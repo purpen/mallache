@@ -93,8 +93,7 @@ class UDesignInfoController extends BaseController
      * @apiParam {integer} stage_status //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} name 项目名称
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
-     * @apiParam {integer} complete_content 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
-     * @apiParam {string} other_content 其他设计内容
+     * @apiParam {array} complete_content 已完成设计内容：
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
      * @apiParam {integer} province 省份
@@ -122,8 +121,7 @@ class UDesignInfoController extends BaseController
         $rules = [
             'name' => 'required|max:50',
             'stage' => ['required', 'integer', Rule::in([1, 2])],
-            'complete_content' => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
-            'other_content' => 'filled|max:20',
+            'complete_content' => 'array',
             'design_cost' => ['required', 'integer'],
             'province' => 'required|integer',
             'city' => 'required|integer',
@@ -148,6 +146,7 @@ class UDesignInfoController extends BaseController
             $item->save();
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
+            $all['complete_content'] = implode('&', $all['complete_content']);
             $design->update($all);
         }catch(\Exception $e){
             return $this->response->array($this->apiError('Error', 500));

@@ -14,7 +14,6 @@ class UDesign extends Model
         'system_value',
         'design_content_value',
         'stage_value',
-        'complete_content_value',
         'design_cost_value',
         'province_value',
         'city_value',
@@ -104,29 +103,9 @@ class UDesign extends Model
     }
 
     //以完成设计流程 访问修改器
-    public function getCompleteContentValueAttribute()
+    public function getCompleteContentAttribute($key)
     {
-        //已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
-        switch ($this->complete_content){
-            case 1:
-                $complete_content_value = '流程图';
-                break;
-            case 2:
-                $complete_content_value = '线框图';
-                break;
-            case 3:
-                $complete_content_value = '页面内容';
-                break;
-            case 4:
-                $complete_content_value = '产品功能需求点';
-                break;
-            case 5:
-                $complete_content_value = $this->other_content;
-                break;
-            default:
-                $complete_content_value = '';
-        }
-        return $complete_content_value;
+        return explode('&', $key);
     }
 
     public function getDesignCostValueAttribute()
@@ -195,4 +174,5 @@ class UDesign extends Model
     {
         return Tools::cityName($this->city) ?? "";
     }
+
 }
