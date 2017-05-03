@@ -330,4 +330,88 @@ class AuthenticateController extends BaseController
     {
         return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
     }
+
+
+    /**
+     * @api {post} /auth/forgetPassword 忘记找回密码
+     * @apiVersion 1.0.0
+     * @apiName user forgetPassword
+     * @apiGroup User
+     *
+     * @apiParam {string} phone
+     * @apiParam {integer} sms_code 短信验证码
+     * @apiParam {string} password
+     */
+    public function forgetPassword(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'password' => ['required', 'min:6'],
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+        ];
+
+        $payload = $request->only('phone', 'password' , 'sms_code');
+        $validator = Validator::make($payload, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('找回密码失败！', $validator->errors());
+        }
+
+        //验证手机验证码
+        $key = 'sms_code:' . strval($payload['phone']);
+        $sms_code_value = Cache::get($key);
+        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+            return $this->response->array($this->apiError('验证码错误', 412));
+        }else{
+            Cache::forget($key);
+        }
+        $user = User::where('phone', intval($request->input('phone')))->first();
+        if(!$user){
+            return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+        }
+
+        $newPassword = $request->input('password');
+        $user->password = bcrypt($newPassword);
+        if($user->save()){
+            return $this->response->array($this->apiSuccess('修改成功', 200));
+        }else{
+            return $this->response->array($this->apiError('修改失败', 500));
+        }
+    }
+
+    /**
+     *
+     * @api {post} /auth/updateUser/{id} 修改用户资料
+     * @apiVersion 1.0.0
+     * @apiName user updateUser
+     * @apiGroup User
+     *
+     *
+     * @apiParam {string} account 用户账号
+     * @apiParam {string} token
+     */
+    public function updateUser(Request $request , $id)
+    {
+        $user_id = $this->auth_user_id;
+        // 验证规则
+        $rules = [
+            'account' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+        ];
+        $payload = $request->only('account');
+        $validator = Validator::make($payload, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('用户修改失败！', $validator->errors());
+        }
+        if($id != $user_id){
+            return $this->response->array($this->apiSuccess('没有权限修改', 403));
+        }
+        $all = $request->except(['token']);
+        $user = User::where('id' , $id)->first();
+        if(!$user){
+            return $this->response->array($this->apiSuccess('没有该用户', 404));
+        }
+        $user->update($all);
+        return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
+
+    }
 }

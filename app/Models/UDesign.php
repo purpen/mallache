@@ -2,11 +2,22 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class UDesign extends Model
 {
     protected $table = 'u_design';
+
+    protected $appends = [
+        'image',
+        'system_value',
+        'design_content_value',
+        'stage_value',
+        'design_cost_value',
+        'province_value',
+        'city_value',
+    ];
 
     //允许批量赋值的属性
     protected $fillable = [
@@ -20,7 +31,7 @@ class UDesign extends Model
         'other_content',
 //        'style',
 //        'start_time',
-//        'cycle',
+        'cycle',
         'design_cost',
         'province',
         'city',
@@ -92,29 +103,9 @@ class UDesign extends Model
     }
 
     //以完成设计流程 访问修改器
-    public function getCompleteContentValueAttribute()
+    public function getCompleteContentAttribute($key)
     {
-        //已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
-        switch ($this->complete_content){
-            case 1:
-                $complete_content_value = '流程图';
-                break;
-            case 2:
-                $complete_content_value = '线框图';
-                break;
-            case 3:
-                $complete_content_value = '页面内容';
-                break;
-            case 4:
-                $complete_content_value = '产品功能需求点';
-                break;
-            case 5:
-                $complete_content_value = $this->other_content;
-                break;
-            default:
-                $complete_content_value = '';
-        }
-        return $complete_content_value;
+        return explode('&', $key);
     }
 
     public function getDesignCostValueAttribute()
@@ -146,6 +137,42 @@ class UDesign extends Model
                 $design_cost_value = '';
         }
         return $design_cost_value;
+    }
+
+    public function getCycleValueAttribute()
+    {
+        switch ($this->cycle){
+            case 1:
+                $cycle_value = '1个月内';
+                break;
+            case 2:
+                $cycle_value = '1-2个月';
+                break;
+            case 3:
+                $cycle_value = '2个月';
+                break;
+            case 4:
+                $cycle_value = '2-4个月';
+                break;
+            case 5:
+                $cycle_value = '其他';
+                break;
+            default:
+                $cycle_value = '';
+        }
+        return $cycle_value;
+    }
+
+    //省份访问修改器
+    public function getProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province) ?? "";
+    }
+
+    //城市访问修改器
+    public function getCityValueAttribute()
+    {
+        return Tools::cityName($this->city) ?? "";
     }
 
 }

@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 2, 1, 1);
+        return AssetModel::getOneImage($this->logo);
     }
 
     /*

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\QiniuApi;
 use App\Models\AssetModel;
+use App\Models\DemandCompany;
+use App\Models\DesignCompanyModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
@@ -21,7 +24,7 @@ class UploadController extends BaseController
      * @apiParam {string} x:random 随机数
      * @apiParam {integer} x:user_id
      * @apiParam {integer} x:target_id 目标ID
-     * @apiParam {type} x:type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.公司logo；
+     * @apiParam {type} x:type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.设计公司logo；7.需求公司logo；
      */
 
     /**
@@ -96,6 +99,12 @@ class UploadController extends BaseController
             $asset->fill($upload);
             if($asset->save()) {
                 $id = $asset->id;
+
+                //修改 用户头像、需求公司logo、设计公司logo
+                if(!empty($upload['target_id'])){
+                    $this->changeLogo($upload['target_id'], $upload['type'], $id);
+                }
+
                 $callBackDate = [
                     'key' => $asset->path,
                     'payload' => [
@@ -163,4 +172,34 @@ class UploadController extends BaseController
         }
     }
 
+    //修改 用户头像、需求公司logo、设计公司logo
+
+    /**
+     * @param int $target_id 目标ID
+     * @param int $type 附件类型
+     * @param int $id 附件ID
+     */
+    public function changeLogo(int $target_id, int $type, int $id)
+    {
+        switch ($type){
+            case 2:
+                if($user = User::find($target_id)){
+                    $user->logo = $id;
+                    $user->save();
+                }
+                break;
+            case 6:
+                if($design = DesignCompanyModel::find($target_id)){
+                    $design->logo = $id;
+                    $design->save();
+                }
+                break;
+            case 7:
+                if($demand = DemandCompany::find($target_id)){
+                    $demand->logo = $id;
+                    $demand->save();
+                }
+                break;
+        }
+    }
 }

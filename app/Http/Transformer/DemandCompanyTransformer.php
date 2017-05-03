@@ -41,6 +41,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'contact_name' => strval($demand->contact_name),
             'phone' => intval($demand->phone),
             'email' => strval($demand->email),
+            'image' => $demand->image,
         ];
     }
 }

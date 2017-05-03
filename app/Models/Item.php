@@ -18,7 +18,13 @@ class Item extends Model
     /**
      * 添加返回字段
      */
-    protected $appends = ['type_value', 'design_type_value'];
+    protected $appends = [
+        'type_value',
+        'design_type_value',
+        'company_province_value',
+        'company_city_value',
+        'company_area_value',
+    ];
 
     //一对一关联UX UI设计表
     public function uDesign()
@@ -88,15 +94,15 @@ class Item extends Model
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
-                    'company_province_value' => Tools::cityName($item->company_province),
-                    'company_city_value' => Tools::cityName($item->company_city),
-                    'company_area_value' => Tools::cityName($item->company_area),
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
             case 1:
                 $info = $item->productDesign;
@@ -120,8 +126,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province_value),
-                    'city_value' => Tools::cityName($item->city_value),
+                    'province_value' => $info->province_value,
+                    'city_value' => $info->city_value,
                     'image' => $info->image,
                     'price' => floatval($item->price),
 
@@ -133,15 +139,15 @@ class Item extends Model
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
-                    'company_province_value' => Tools::cityName($item->company_province),
-                    'company_city_value' => Tools::cityName($item->company_city),
-                    'company_area_value' => Tools::cityName($item->company_area),
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
                 break;
             case 2:
@@ -159,17 +165,18 @@ class Item extends Model
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
                     'complete_content' => $info->complete_content,
-                    'complete_content_value' => $info->complete_content_value,
                     'other_content' => $info->other_content,
                     'design_cost' => $info->design_cost,
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province_value),
-                    'city_value' => Tools::cityName($item->city_value),
+                    'province_value' => $info->province_value,
+                    'city_value' => $info->city_value,
                     'image' => $info->image,
                     'price' => floatval($item->price),
                     'stage_status' => (int)$item->stage_status,
+                    'cycle' => $info->cycle,
+                    'cycle_value' => $info->cycle_value,
 
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -179,14 +186,14 @@ class Item extends Model
                     'company_province' => $item->company_province,
                     'company_city' => $item->company_city,
                     'company_area' => $item->company_area,
-                    'company_province_value' => Tools::cityName($item->company_province),
-                    'company_city_value' => Tools::cityName($item->company_city),
-                    'company_area_value' => Tools::cityName($item->company_area),
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
                 break;
         }
@@ -309,15 +316,31 @@ class Item extends Model
         return $company_size_val;
     }
 
-    //创建需求表
-    public function createItem($user_id)
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyProvinceValueAttribute()
     {
-        if(self::create(['user_id' => $user_id,'status' => 1, 'type' => 0, 'design_type' => 0])){
-            return true;
-        }else{
-            Log::error('创建需求表报错');
-            return false;
-        }
+        return Tools::cityName($this->company_province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyCityValueAttribute()
+    {
+        return Tools::cityName($this->company_city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyAreaValueAttribute()
+    {
+        return Tools::cityName($this->company_area);
     }
 
 }

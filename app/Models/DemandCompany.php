@@ -30,7 +30,8 @@ class DemandCompany extends Model
         'address',
         'contact_name',
         'phone',
-        'email'
+        'email',
+        'logo'
     ];
 
     //公司规模
@@ -58,4 +59,13 @@ class DemandCompany extends Model
         return $company_size_val;
     }
 
+    /**
+     * 获取图片url
+     *
+     * @return array
+     */
+    public function getImageAttribute()
+    {
+        return AssetModel::getOneImage($this->logo);
+    }
 }
