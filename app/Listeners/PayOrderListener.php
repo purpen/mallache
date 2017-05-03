@@ -6,6 +6,7 @@ use App\Events\PayOrderEvent;
 use App\Models\Item;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 支付单 监听器
@@ -41,8 +42,10 @@ class PayOrderListener
             //项目押金
             case 1:
                 //创建需求项目
-                $item = new Item;
-                $item->createItem($pay_order->user_id);
+                if($item = $this->createItem($pay_order->user_id)){
+                   $pay_order->item_id = $item->id;
+                   $pay_order->save();
+                }
                 break;
             //项目尾款
             case 2:
@@ -52,5 +55,22 @@ class PayOrderListener
 
         }
 
+    }
+
+    //创建需求表
+    public function createItem($user_id)
+    {
+        $item = Item::create([
+            'user_id' => $user_id,
+            'status' => 1,
+            'type' => 0,
+            'design_type' => 0
+        ]);
+        if($item){
+            return $item;
+        }else{
+            Log::error('创建需求表报错');
+            return false;
+        }
     }
 }

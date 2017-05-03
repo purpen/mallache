@@ -102,7 +102,7 @@ class Item extends Model
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
             case 1:
                 $info = $item->productDesign;
@@ -126,8 +126,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province),
-                    'city_value' => Tools::cityName($item->city),
+                    'province_value' => $info->province_value,
+                    'city_value' => $info->city_value,
                     'image' => $info->image,
                     'price' => floatval($item->price),
 
@@ -147,7 +147,7 @@ class Item extends Model
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
                 break;
             case 2:
@@ -171,8 +171,8 @@ class Item extends Model
                     'design_cost_value' => $info->design_cost_value,
                     'province' => $info->province,
                     'city' => $info->city,
-                    'province_value' => Tools::cityName($item->province),
-                    'city_value' => Tools::cityName($item->city),
+                    'province_value' => $info->province_value,
+                    'city_value' => $info->city_value,
                     'image' => $info->image,
                     'price' => floatval($item->price),
                     'stage_status' => (int)$item->stage_status,
@@ -192,7 +192,7 @@ class Item extends Model
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
-                    'created_at' => $item->toArray()['created_at'],
+                    'created_at' => $item->created_at->format("Y-m-d"),
                 ];
                 break;
         }
@@ -340,17 +340,6 @@ class Item extends Model
     public function getCompanyAreaValueAttribute()
     {
         return Tools::cityName($this->company_area);
-    }
-
-    //创建需求表
-    public function createItem($user_id)
-    {
-        if(self::create(['user_id' => $user_id,'status' => 1, 'type' => 0, 'design_type' => 0])){
-            return true;
-        }else{
-            Log::error('创建需求表报错');
-            return false;
-        }
     }
 
 }

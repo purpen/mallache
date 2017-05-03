@@ -6,6 +6,10 @@
  */
 namespace App\Helper;
 
+use App\Models\Message;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
+
 class Tools
 {
     /**
@@ -37,6 +41,29 @@ class Tools
         }
 
         return $name;
+    }
+
+    /**
+     * 添加系统通知
+     *
+     * @param int $user_id 用户ID
+     * @param string $message 消息内容
+     * @param int $type 消息类型：1.系统通知；
+     * @return bool 返回值
+     */
+    static public function message(int $user_id, string $message, int $type = 1)
+    {
+            $message = Message::create([
+                'user_id' => $user_id,
+                'message' => $message,
+                'type' => $type,
+            ]);
+
+        if($message){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
