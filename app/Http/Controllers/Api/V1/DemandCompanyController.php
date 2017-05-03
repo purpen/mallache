@@ -140,6 +140,7 @@ class DemandCompanyController extends BaseController
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
      *          "email": "qq@qq.com",
+     *          "image": [],
      *      },
      *      "meta": {
      *          "message": "Success",

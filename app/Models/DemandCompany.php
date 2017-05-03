@@ -59,4 +59,13 @@ class DemandCompany extends Model
         return $company_size_val;
     }
 
+    /**
+     * 获取图片url
+     *
+     * @return array
+     */
+    public function getImageAttribute()
+    {
+        return AssetModel::getOneImage($this->logo);
+    }
 }

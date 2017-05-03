@@ -64,6 +64,23 @@ class AssetModel extends Model
         return $images;
     }
 
+    //根据ID查询附件信息
+    public static function getOneImage($id)
+    {
+        if(!$asset = self::find($id)){
+            return [];
+        }
+
+        return [
+            'id' => $asset->id,
+            'name' => $asset->name,
+            'file' => config('filesystems.disks.qiniu.url') . $asset->path,
+            'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
+            'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
+            'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
+        ];
+    }
+
     /**
      * @param integer $id 目标ID
      * @param string $random 随机数值
