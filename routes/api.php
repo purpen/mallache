@@ -46,6 +46,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     //支付宝同步回调接口
 //    $api->get('/pay/aliPaySynNotify', 'PayController@aliPaySynNotify');
 
+    //忘记密码修改密码
+    $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
 
     /**
      * 需验证用户token
@@ -66,6 +68,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //获取用户信息
         $api->get('/auth/user', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
+        //修改用户资料
+        $api->post('/auth/updateUser/{id}' , [
+            'as' => 'auth.updateUser' , 'uses' => 'AuthenticateController@updateUser'
+        ]);
 
         /**
          * 公共接口
