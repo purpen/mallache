@@ -8,6 +8,7 @@
         <div class="content">
 
           <el-table
+             v-loading.body="isLoading"
             :data="tableData"
             border
             style="width: 100%">
@@ -69,6 +70,8 @@
     },
     data () {
       return {
+        isLoadingBtn: false,
+        isLoading: true,
         tableData: [{
           name: '',
           key: '',
@@ -80,17 +83,20 @@
     methods: {
       publish() {
         const that = this
+        that.isLoadingBtn = true
         that.$http({method: 'POST', url: api.release, data: {id: that.itemId}})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.$router.push({name: 'itemPublish'})
             return false
           } else {
+            that.isLoadingBtn = false
             that.$message.error(response.data.meta.message)
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
+          that.isLoadingBtn = false
           console.log(error.message)
           return false
         })
@@ -109,6 +115,7 @@
         that.$http.get(api.demandId.format(id), {})
         .then (function(response) {
           that.isFirst = true
+          that.isLoading = false
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
             that.form = row

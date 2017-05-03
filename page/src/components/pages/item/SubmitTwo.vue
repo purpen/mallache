@@ -56,7 +56,7 @@
               </div>
 
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -96,6 +96,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         typeSwitch1: false,
         typeSwitch2: false,
         labelPosition: 'top',
@@ -128,6 +129,7 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
+            that.isLoadingBtn = true
             var row = {
               type: that.form.type,
               design_type: that.form.design_type,
@@ -158,17 +160,20 @@
                 }
                 return false
               } else {
+                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
+            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }

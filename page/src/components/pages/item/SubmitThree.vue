@@ -86,7 +86,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -129,6 +129,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         isFirst: false,
         typeSwitch1: false,
         typeSwitch2: false,
@@ -189,6 +190,7 @@
               that.$message.error('至少添加一项竞品')
               return false
             }
+            that.isLoadingBtn = true
             var row = {
               name: that.form.name,
               product_features: that.form.product_features,
@@ -231,12 +233,14 @@
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
+            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }

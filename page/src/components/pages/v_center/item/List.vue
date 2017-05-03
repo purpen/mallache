@@ -13,57 +13,59 @@
               </router-link>
             </div>
 
-            <div class="item" v-for="d in itemList">
-              <div v-if="d.item.status === 1">
-                <div class="banner">
-                    <p>
-                      <span>进行中</span>
-                    </p>
-                </div>
-                <div class="content">
-                  <div class="pre">
-                    <p class="c-title-pro">{{ d.item.name }}</p>
-                    <p class="progress-line"><el-progress :text-inside="true" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
-                    <p class="prefect">项目信息完善进度</p>
-                    <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="small" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
+            <div v-loading.body="isLoading">
+              <div class="item" v-for="d in itemList">
+                <div v-if="d.item.status === 1">
+                  <div class="banner">
+                      <p>
+                        <span>进行中</span>
+                      </p>
+                  </div>
+                  <div class="content">
+                    <div class="pre">
+                      <p class="c-title-pro">{{ d.item.name }}</p>
+                      <p class="progress-line"><el-progress :text-inside="true" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
+                      <p class="prefect">项目信息完善进度</p>
+                      <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="small" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
+                    </div>
                   </div>
                 </div>
+
+                <div v-else>
+
+                  <div class="banner">
+                      <p>
+                        <span>{{ d.item.created_at }}</span>
+                      </p>
+                  </div>
+                  <div class="content">
+                    <div class="l-item">
+                      <p class="c-title">{{ d.item.name }}</p>
+                      <p>项目预算: {{ d.item.design_cost_value }}</p>
+                      <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
+                      <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                      <p>项目周期: {{ d.item.cycle_value }}</p>
+                    </div>
+                    <div class="r-item">
+                      <p><a href="#">{{ d.item.status_label }}</a></p>
+                    </div>
+                  </div>
+                  <div class="opt" v-show="d.item.status !== 2">
+                    <div class="l-item">
+                      <p>
+                        <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>
+                      </p>
+                    </div>
+                    <div class="r-item">
+                      <p class="btn">
+                        <a href="#" class="b-blue">查看报价，选择设计公司 ></a>&nbsp;&nbsp;
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+
               </div>
-
-              <div v-else>
-
-                <div class="banner">
-                    <p>
-                      <span>{{ d.item.created_at }}</span>
-                    </p>
-                </div>
-                <div class="content">
-                  <div class="l-item">
-                    <p class="c-title">{{ d.item.name }}</p>
-                    <p>项目预算: {{ d.item.design_cost_value }}</p>
-                    <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
-                    <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
-                    <p>项目周期: {{ d.item.cycle_value }}</p>
-                  </div>
-                  <div class="r-item">
-                    <p><a href="#">{{ d.item.status_label }}</a></p>
-                  </div>
-                </div>
-                <div class="opt">
-                  <div class="l-item">
-                    <p>
-                      <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>
-                    </p>
-                  </div>
-                  <div class="r-item">
-                    <p class="btn">
-                      <a href="#" class="b-blue">查看报价，选择设计公司 ></a>&nbsp;&nbsp;
-                    </p>
-                  </div>
-                </div>
-
-              </div>
-
             </div>
 
           </div>
@@ -89,6 +91,7 @@
     },
     data () {
       return {
+        isLoading: true,
         itemList: [],
         userId: this.$store.state.event.user.id
       }
@@ -96,6 +99,7 @@
     methods: {
       loadList(type) {
         const that = this
+        that.isLoading = true
         that.itemList = []
         that.$http.get(api.itemList, {type: type})
         .then (function(response) {
@@ -125,7 +129,7 @@
                   data[i]['item']['status_label'] = '完善信息'
                   break
                 case 2:
-                  data[i]['item']['status_label'] = '等待审核'
+                  data[i]['item']['status_label'] = '等待系统自动匹配'
                   break
                 case 3:
                   data[i]['item']['status_label'] = '等待设计公司接单…'
@@ -135,6 +139,7 @@
               }
             }
             that.itemList = data
+            that.isLoading = false
             console.log(data)
           }
         })

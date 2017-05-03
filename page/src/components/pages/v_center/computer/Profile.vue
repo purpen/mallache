@@ -7,7 +7,7 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
-            <div class="form-title">
+            <div class="form-title" v-loading.body="isLoading">
               <span>基本信息</span>
             </div>
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
@@ -199,6 +199,7 @@
     },
     data () {
       return {
+        isLoading: true,
         avatarStr: '只能上传jpg/gif/png文件，且不超过2M',
         userId: this.$store.state.event.user.id,
         is_branch: false,
@@ -476,6 +477,7 @@
       that.$http.get(api.designCompany, {})
       .then (function(response) {
         that.isFirst = true
+        that.isLoading = false
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
             // 重新渲染

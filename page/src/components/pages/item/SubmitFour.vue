@@ -67,7 +67,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -111,6 +111,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         typeSwitch1: false,
         typeSwitch2: false,
         labelPosition: 'top',
@@ -137,7 +138,7 @@
             { required: true, message: '请添写公司全称', trigger: 'blur' }
           ],
           company_size: [
-            { type: 'number', message: '请选择公司规模', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择公司规模', trigger: 'change' }
           ],
           company_web: [
             { required: true, message: '请添写公司网址', trigger: 'blur' }
@@ -173,7 +174,7 @@
               that.$message.error('请选择所在城市')
               return false
             }
-
+            that.isLoadingBtn = true
             var row = {
               company_name: that.form.company_name,
               company_size: that.form.company_size,
@@ -206,17 +207,20 @@
                 that.$router.push({name: 'itemSubmitFive', params: {id: response.data.data.item.id}})
                 return false
               } else {
+                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
+            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }
