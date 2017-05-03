@@ -132,6 +132,10 @@
                 }
               ]
             } else if (row.type === 2) {
+              if (row.other_content) {
+                row.complete_content.push(row.other_content)
+              }
+
               tab = [
                 {
                   name: '',
@@ -146,7 +150,7 @@
                 {
                   name: '',
                   key: '已有项目设计内容',
-                  value: row.complete_content_value
+                  value: row.complete_content.join(',')
                 }
               ]
             }

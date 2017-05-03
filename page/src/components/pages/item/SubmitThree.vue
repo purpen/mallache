@@ -17,20 +17,24 @@
               </el-form-item> 
 
 
-              <el-form-item label="竞品">
-                <div
-                  class="competing"
-                  v-for="(d, index) in form.cProducts"
-                  :key="d.key"
-                  :prop="'cProducts.' + index + '.value'"
-                >
-                <el-input v-model="d.value">
-                <el-button slot="append" @click.prevent="removeProduct(d)">删除</el-button>
-                </el-input>
-                </div>
+              <el-row :gutter="18">
+                <el-col :span="8">
+                  <el-form-item label="竞品">
+                    <div
+                      class="competing"
+                      v-for="(d, index) in form.cProducts"
+                      :key="d.key"
+                      :prop="'cProducts.' + index + '.value'"
+                    >
+                    <el-input v-model="d.value">
+                      <el-button slot="append" @click.prevent="removeProduct(d)">删除</el-button>
+                    </el-input>
+                    </div>
 
-                <el-button @click="addProduct">新增竞品</el-button>
-              </el-form-item>
+                    <el-button @click="addProduct">新增竞品</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
 
                 <el-form-item label="项目周期" prop="cycle">
                   <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
@@ -158,10 +162,10 @@
             { required: true, message: '请添写产品功能或卖点', trigger: 'blur' }
           ],
           cycle: [
-            { type: 'number', message: '请选择项目周期', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择项目周期', trigger: 'change' }
           ],
           design_cost: [
-            { type: 'number', message: '请选择设计费用预算', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择设计费用预算', trigger: 'change' }
           ]
         },
         msg: ''

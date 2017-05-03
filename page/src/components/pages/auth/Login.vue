@@ -70,14 +70,16 @@ export default {
               that.$http.get(api.user, {})
               .then (function(response) {
                 if (response.data.meta.status_code === 200) {
-                  that.$message({
-                    showClose: true,
-                    message: '登录成功!',
-                    type: 'success'
-                  })
-
+                  that.$message.success('登录成功')
                   auth.write_user(response.data.data)
-                  that.$router.push('/home')
+                  var prevUrlName = that.$store.state.event.prevUrlName
+                  if (prevUrlName) {
+                    // 清空上一url
+                    auth.clear_prev_url_name()
+                    that.$router.push({name: prevUrlName})
+                  } else {
+                    that.$router.push({name: 'home'})
+                  }
                 } else {
                   auth.logout()
                   that.$message({
@@ -122,7 +124,12 @@ export default {
     }
   },
   computed: {
-
+  },
+  created: function() {
+    var prevUrlName = this.$store.state.event.prevUrlName
+    if (prevUrlName) {
+      this.$message.error('请先登录！')
+    }
   }
 
 }

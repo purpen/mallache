@@ -116,6 +116,8 @@ export default {
         this.currentIndex = 0
       }
     }
+  },
+  created: function() {
   }
 
 }
