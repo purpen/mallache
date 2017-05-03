@@ -1,0 +1,299 @@
+<template>
+  <div class="container">
+
+    <v-progress :checkStep="true"></v-progress>
+    <el-row :gutter="24">
+
+      <el-col :span="18">
+        <div class="content">
+
+          <el-table
+            :data="tableData"
+            border
+            style="width: 100%">
+            <el-table-column
+              prop="name"
+              label="项目"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="key"
+              label="需要添写信息"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="value"
+              label="客户添写信息">
+            </el-table-column>
+          </el-table>
+
+          <div class="sept"></div>
+          <div class="return-btn">
+              <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
+          </div>
+          <div class="form-btn">
+              <el-button type="success" class="is-custom" @click="publish">发布</el-button>
+          </div>
+          <div class="clear"></div>
+        
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="slider">
+          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
+          <p class="slide-str">100家推荐</p>
+          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
+        </div>
+
+        <div class="slider info">
+          <p>项目需求填写</p>
+          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
+          <div class="blank20"></div>
+          <p>项目预算设置</p>
+          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
+        </div>
+      </el-col>
+    </el-row>
+
+  </div>
+</template>
+
+<script>
+  import vProgress from '@/components/pages/item/Progress'
+  // import typeData from '@/config'
+  import api from '@/api/api'
+  export default {
+    name: 'item_submit_five',
+    components: {
+      vProgress
+    },
+    data () {
+      return {
+        tableData: [{
+          name: '',
+          key: '',
+          value: ''
+        }],
+        msg: ''
+      }
+    },
+    methods: {
+      publish() {
+        const that = this
+        that.$http({method: 'POST', url: api.release, data: {id: that.itemId}})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            that.$router.push({name: 'itemPublish'})
+            return false
+          } else {
+            that.$message.error(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          that.$message.error(error.message)
+          console.log(error.message)
+          return false
+        })
+      },
+      returnBtn() {
+        this.$router.push({name: 'itemSubmitFour', params: {id: this.itemId}})
+      }
+    },
+    computed: {
+    },
+    created: function() {
+      const that = this
+      var id = this.$route.params.id
+      if (id) {
+        that.itemId = id
+        that.$http.get(api.demandId.format(id), {})
+        .then (function(response) {
+          that.isFirst = true
+          if (response.data.meta.status_code === 200) {
+            var row = response.data.data.item
+            that.form = row
+            var tab = []
+            if (row.type === 1) {
+              tab = [
+                {
+                  name: '',
+                  key: '项目类别',
+                  value: row.type_value + '-' + row.design_type_value + '-' + row.field_value + '-' + row.industry_value
+                },
+                {
+                  name: '',
+                  key: '项目功能或卖点',
+                  value: row.product_features
+                },
+                {
+                  name: '',
+                  key: '项目竞品',
+                  value: row.competing_product.join(',')
+                }
+              ]
+            } else if (row.type === 2) {
+              tab = [
+                {
+                  name: '',
+                  key: '项目类别',
+                  value: row.type_value + '-' + row.design_type_value
+                },
+                {
+                  name: '',
+                  key: '项目进展阶段',
+                  value: row.stage_value
+                },
+                {
+                  name: '',
+                  key: '已有项目设计内容',
+                  value: row.complete_content_value
+                }
+              ]
+            }
+
+            var itemTab = [
+              {
+                name: '产品信息',
+                key: '项目名称',
+                value: row.name
+              },
+              {
+                name: '',
+                key: '费用预算',
+                value: row.design_cost_value
+              },
+              {
+                name: '',
+                key: '项目周期',
+                value: row.cycle_value
+              },
+              {
+                name: '',
+                key: '项目工作地点',
+                value: row.province_value + ', ' + row.city_value
+              }
+            ]
+
+            var baseTab = [
+              {
+                name: '公司基本信息',
+                key: '公司名称',
+                value: row.company_name
+              },
+              {
+                name: '',
+                key: '公司规模',
+                value: row.company_size_value
+              },
+              {
+                name: '',
+                key: '公司网址',
+                value: row.company_web
+              },
+              {
+                name: '',
+                key: '所在地区',
+                value: row.company_province_value + ', ' + row.company_city_value + ', ' + row.company_area_value
+              },
+              {
+                name: '',
+                key: '详细地址',
+                value: row.address
+              },
+              {
+                name: '',
+                key: '联系人',
+                value: row.contact_name
+              },
+              {
+                name: '',
+                key: '电话',
+                value: row.phone
+              },
+              {
+                name: '',
+                key: '邮箱',
+                value: row.email
+              }
+            ]
+
+            that.tableData = itemTab.concat(tab.concat(baseTab))
+            console.log(response.data.data.item)
+          } else {
+            that.$message.error(response.data.meta.message)
+            console.log(response.data.meta.message)
+            return false
+          }
+        })
+        .catch (function(error) {
+          that.$message.error(error.message)
+          console.log(error.message)
+          return false
+        })
+      }
+    },
+    watch: {
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+  .content {
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+
+  .slider {
+    border: 1px solid #ccc;
+    height: 250px;
+    text-align:center;
+  }
+  .slider.info {
+    height: 350px;
+    text-align: left;
+  }
+  .slider p {
+    margin: 25px;
+  }
+  .slider.info p {
+    margin: 10px 20px;
+  }
+  .form-btn {
+    float: right;
+  }
+
+  .slide-img {
+    padding-top: 20px;
+  }
+  .slide-img img {
+    
+  }
+  .slide-str {
+    font-size: 2rem;
+  }
+  .slide-des {
+    color: #666;
+    line-height: 1.5;
+    font-size: 1rem;
+  }
+
+  .competing {
+    margin:10px 0;
+  }
+  .return-btn {
+    float: left;
+  }
+  .return-btn a img {
+    vertical-align: -8px;
+  }
+  .sept {
+    width: 100%;
+    margin: 20px 0 20px 0;
+    padding: 0;
+    border-top: 1px solid #ccc;
+  }
+
+
+</style>

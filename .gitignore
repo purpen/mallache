@@ -8,5 +8,9 @@ Homestead.json
 Homestead.yaml
 .env
 .DS_Store
+page/node_modules
+*.swp
+*.swo
+*.swn
 /public/apidoc
 /apidoc.json
