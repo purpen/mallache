@@ -34,7 +34,7 @@
 
                 <div class="banner">
                     <p>
-                      <span>2013-12-12</span>
+                      <span>{{ d.item.created_at }}</span>
                     </p>
                 </div>
                 <div class="content">
@@ -79,6 +79,7 @@
   import vMenuSub from '@/components/pages/v_center/item/MenuSub'
   import api from '@/api/api'
   import '@/assets/js/format'
+  import '@/assets/js/date_format'
 
   export default {
     name: 'vcenter_item_list',
@@ -95,10 +96,14 @@
     methods: {
       loadList(type) {
         const that = this
+        that.itemList = []
         that.$http.get(api.itemList, {type: type})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             var data = response.data.data
+            if (!data) {
+              return false
+            }
             for (var i = 0; i < data.length; i++) {
               var progress = data[i].item.stage_status
               var status = data[i].item.status

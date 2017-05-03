@@ -141,12 +141,12 @@
                 {
                   name: '',
                   key: '项目进展阶段',
-                  value: row.stage
+                  value: row.stage_value
                 },
                 {
                   name: '',
                   key: '已有项目设计内容',
-                  value: row.complete_content
+                  value: row.complete_content_value
                 }
               ]
             }
@@ -170,7 +170,7 @@
               {
                 name: '',
                 key: '项目工作地点',
-                value: row.province + ', ' + row.city
+                value: row.province_value + ', ' + row.city_value
               }
             ]
 
@@ -183,7 +183,7 @@
               {
                 name: '',
                 key: '公司规模',
-                value: row.company_size
+                value: row.company_size_value
               },
               {
                 name: '',
@@ -193,7 +193,7 @@
               {
                 name: '',
                 key: '所在地区',
-                value: row.company_province + ', ' + row.company_city + ', ' + row.company_area
+                value: row.company_province_value + ', ' + row.company_city_value + ', ' + row.company_area_value
               },
               {
                 name: '',

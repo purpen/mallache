@@ -138,6 +138,15 @@ const routes = [
     },
     component: require('@/components/pages/item/Payment')
   },
+  // 支付宝回调
+  {
+    path: '/alipay/callback',
+    name: 'alipayCallback',
+    meta: {
+      requireAuth: false
+    },
+    component: require('@/components/pages/pay/AlipayCallback')
+  },
   // 自定义输出页面
   {
     path: '/blank',

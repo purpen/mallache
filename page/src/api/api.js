@@ -26,6 +26,9 @@ export default {
 
   demandAlipay: '/pay/demandAliPay',  // 支付保证金
 
+  // 订单
+  orderId: '/pay/getPayStatus/{0}',  // 查看订单详情
+
   saveDesignItem: '/designItem', // 接单信息保存
   designItems: '/designItem', // 查看接单列表
   designItem: '/designItem/{0}', // 查看/编辑/删除接单信息

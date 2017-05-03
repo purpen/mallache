@@ -261,14 +261,19 @@
           } else {
             that.$message.error(response.data.meta.message)
             console.log(response.data.meta.message)
+            that.$router.push({name: 'home'})
             return false
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
           console.log(error.message)
+          that.$router.push({name: 'home'})
           return false
         })
+      } else {
+        that.$message.error('缺少请求参数！')
+        that.$router.push({name: 'home'})
       }
     },
     watch: {
