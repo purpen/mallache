@@ -106,6 +106,7 @@
           if (response.data.meta.status_code === 200) {
             var data = response.data.data
             if (!data) {
+              that.isLoading = false
               return false
             }
             for (var i = 0; i < data.length; i++) {
