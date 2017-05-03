@@ -170,5 +170,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //设计公司获取项目信息
         $api->get('/design/item/{item_id}', 'DesignController@item');
 
+
+        /**
+         * 通知消息相关路由
+         */
+        //获取系统新通知数量
+        $api->get('/message/getMessageQuantity', 'MessageController@getMessageQuantity');
     });
 });

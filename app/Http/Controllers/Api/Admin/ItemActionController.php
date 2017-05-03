@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Helper\Tools;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
@@ -209,6 +210,10 @@ class ItemActionController extends Controller
 
         $item->status = 3;
         $item->save();
+
+        //添加系统通知
+        $tools = new Tools();
+        $tools->message($item->user_id, '项目已推荐设计公司');
 
         return $this->response->array($this->apiSuccess());
     }

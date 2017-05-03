@@ -56,7 +56,7 @@ class Tools
     {
         $message = Message::create([
             'user_id' => $user_id,
-            'message' => $message,
+            'content' => $message,
             'type' => $type,
         ]);
 
@@ -85,10 +85,38 @@ class Tools
 
     /**
      * 读取用户新消息数量
+     *
+     * @param int $user_id 用户Id
+     * @param int $type 消息类型：1.系统消息
+     * @return int 消息数量
      */
     public function getMessageQuantity(int $user_id, int $type = 1)
     {
+        //有序列表key
+        $key = 'mallache:user:message:' . $type;
+        //member
+        $member = 'user:' . $user_id;
 
+        //ZSCORE key member
+        $quantity = Redis::zscore($key, $member);
+        if($quantity == 'nil'){
+            return 0;
+        }
+
+        return (int)$quantity;
+    }
+
+    /**
+     * 清空新消息数量
+     */
+    public function emptyMessageQuantity(int $user_id, int $type = 1)
+    {
+        //有序列表key
+        $key = 'mallache:user:message:' . $type;
+        //member
+        $member = 'user:' . $user_id;
+        //ZADD key score member
+        Redis::zadd($key, 0, $member);
     }
 
 }
