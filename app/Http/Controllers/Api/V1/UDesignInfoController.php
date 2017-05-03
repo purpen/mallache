@@ -146,7 +146,10 @@ class UDesignInfoController extends BaseController
             $item->save();
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
+
             $all['complete_content'] = implode('&', $all['complete_content']);
+            $all['other_content'] = $request->input('other_content') ?? '';
+
             $design->update($all);
         }catch(\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
