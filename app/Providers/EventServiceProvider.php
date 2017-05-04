@@ -16,8 +16,14 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SomeEvent' => [
             'App\Listeners\EventListener',
         ],
+        //支付事件
         'App\Events\PayOrderEvent' => [
             'App\Listeners\PayOrderListener',
+        ],
+        //项目状态变化事件
+        'App\Events\ItemStatusEvent' => [
+            //添加系统通知
+            'App\Listeners\ItemMessageListener',
         ],
     ];
 

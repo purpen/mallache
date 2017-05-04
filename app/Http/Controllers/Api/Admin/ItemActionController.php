@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
@@ -211,10 +212,8 @@ class ItemActionController extends Controller
         $item->status = 3;
         $item->save();
 
-        $item_info = $item->itemInfo();
-        //添加系统通知
-        $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info->name . '】' . '已推荐设计公司');
+        //触发事件
+        event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());
     }

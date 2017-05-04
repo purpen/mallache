@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
@@ -673,11 +674,23 @@ class DemandController extends BaseController
 
 
         try{
+
+            $item = Item::find($all['item_id']);
+            if($item->user_id != $this->auth_user_id || $item->status != 3){
+                return $this->response->array($this->apiError('无操作权限或当前状态不可操作', 403));
+            }
+            //修改项目状态为：等待设计公司接单(报价)
+            $item->status = 4;
+            $item->save();
+            //触发事件
+            event(new ItemStatusEvent($item, $all['design_company_id']));
+
             //遍历插入推荐表
             foreach($all['design_company_id'] as $design_company_id)
             {
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
+
         }
         catch (\Exception $e){
             Log::error($e->getMessage());
@@ -776,9 +789,9 @@ class DemandController extends BaseController
             case 0:
                 $where_in = [];
                 break;
-            case 1:
-                $where_in = [1,2,3,4,5,6,7,8];
-                break;
+//            case 1:
+//                $where_in = [1,2,3,4,5,6,7,8];
+//                break;
             default:
                 $where_in = [];
         }
@@ -949,6 +962,8 @@ class DemandController extends BaseController
             $item->quotation_id = $quotation->id;
             $item->status = 5;
             $item->save();
+
+            event(new ItemStatusEvent($item));
 
             DB::commit();
             return $this->response->array($this->apiSuccess());

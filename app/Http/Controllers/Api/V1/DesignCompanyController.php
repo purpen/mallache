@@ -194,6 +194,7 @@ class DesignCompanyController extends BaseController
             }
         }
         catch (\Exception $e){
+            Log::error($e);
             return $this->response->array($this->apiError());
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
