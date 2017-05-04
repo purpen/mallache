@@ -963,7 +963,8 @@ class DemandController extends BaseController
             $item->status = 5;
             $item->save();
 
-            event(new ItemStatusEvent($item));
+            $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
+            event(new ItemStatusEvent($item,['yes' => $all['design_company_id'], 'no' => $design_company_id]));
 
             DB::commit();
             return $this->response->array($this->apiSuccess());

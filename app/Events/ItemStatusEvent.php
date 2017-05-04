@@ -18,7 +18,7 @@ class ItemStatusEvent
     //项目实例
     public $item;
 
-    //接收消息的用户ID
+    //接收消息的设计公司ID
     public $design_company_id;
 
     /**
