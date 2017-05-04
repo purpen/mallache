@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function() {
@@ -21,12 +21,22 @@ var userInfo = function() {
   }
 }
 
+var prevUrlName = function() {
+  var urlName = localStorage.getItem('prev_url_name')
+  if (urlName) {
+    return urlName
+  } else {
+    return null
+  }
+}
+
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
   loading: false,  // 是否显示loading
   apiUrl: 'http://sa.taihuoniao.com', // 接口base url
   imgUrl: 'http://sa.taihuoniao.com', // 图片base url
+  prevUrlName: prevUrlName(),
   indexConf: {
     isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
@@ -51,6 +61,14 @@ const mutations = {
     localStorage.setItem('user', {})
     localStorage.setItem('user', JSON.stringify(user))
     state.user = user
+  },
+  [PREV_URL_NAME](state, urlName) {
+    localStorage.setItem('prev_url_name', urlName)
+    state.prevUrlName = urlName
+  },
+  [CLEAR_PREV_URL_NAME](state) {
+    localStorage.removeItem('prev_url_name')
+    state.prevUrlName = null
   }
 }
 

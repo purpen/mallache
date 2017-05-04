@@ -10,8 +10,8 @@
               <el-form-item label="设计类型" prop="type">
                 <el-radio-group v-model.number="form.type" @change="typeChange">
                   <el-radio-button
-                    v-for="item in typeOptions"
-                    :key="item.index"
+                    v-for="(item, index) in typeOptions"
+                    :key="index"
                     :label="item.value">{{ item.label }}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
@@ -20,24 +20,24 @@
                 <el-form-item label="设计类别" prop="design_type">
                   <el-radio-group v-model.number="form.design_type" size="small">
                     <el-radio-button
-                      v-for="item in typeDesignOptions"
-                      :key="item.index"
+                      v-for="(item, index) in typeDesignOptions"
+                      :key="index"
                       :label="item.value">{{ item.label }}</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="产品领域" prop="field">
                   <el-radio-group v-model.number="form.field" size="small">
                     <el-radio-button
-                      v-for="item in fieldOptions"
-                      :key="item.index"
+                      v-for="(item, index) in fieldOptions"
+                      :key="index"
                       :label="item.value">{{ item.label }}</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="所属行业" prop="industry">
                   <el-radio-group v-model.number="form.industry" size="small">
                     <el-radio-button
-                      v-for="item in industryOptions"
-                      :key="item.index"
+                      v-for="(item, index) in industryOptions"
+                      :key="index"
                       :label="item.value">{{ item.label }}</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
@@ -47,8 +47,8 @@
                 <el-form-item label="设计类别" prop="design_type">
                   <el-radio-group v-model.number="form.design_type" size="small">
                     <el-radio-button
-                      v-for="item in typeDesignOptions"
-                      :key="item.index"
+                      v-for="(item, index) in typeDesignOptions"
+                      :key="index"
                       :label="item.value">{{ item.label }}</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
@@ -56,7 +56,7 @@
               </div>
 
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -96,6 +96,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         typeSwitch1: false,
         typeSwitch2: false,
         labelPosition: 'top',
@@ -128,6 +129,7 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
+            that.isLoadingBtn = true
             var row = {
               type: that.form.type,
               design_type: that.form.design_type,
@@ -158,17 +160,20 @@
                 }
                 return false
               } else {
+                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
+            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }
@@ -256,7 +261,11 @@
         that.$http.get(api.demandId.format(id), {})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
-            that.form = response.data.data.item
+            var row = response.data.data.item
+            that.form.type = row.type
+            that.form.design_type = row.design_type
+            that.form.field = row.field
+            that.form.industry = row.industry
             console.log(response.data.data)
           } else {
             that.$message.error(response.data.meta.message)

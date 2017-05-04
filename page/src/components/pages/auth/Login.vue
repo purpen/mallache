@@ -14,7 +14,7 @@
           <el-form-item label="" prop="password">
             <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
-          <el-button type="success" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
+          <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
 
       </div>   
@@ -32,6 +32,7 @@ export default {
 
   data() {
     return {
+      isLoadingBtn: false,
       labelPosition: 'top',
       form: {
         account: '',
@@ -58,7 +59,7 @@ export default {
         if (valid) {
           var account = this.$refs.account.value
           var password = this.$refs.password.value
-
+          that.isLoadingBtn = true
           // 验证通过，登录
           that.$http.post(api.login, {account: account, password: password})
           .then (function(response) {
@@ -70,14 +71,16 @@ export default {
               that.$http.get(api.user, {})
               .then (function(response) {
                 if (response.data.meta.status_code === 200) {
-                  that.$message({
-                    showClose: true,
-                    message: '登录成功!',
-                    type: 'success'
-                  })
-
+                  that.$message.success('登录成功')
                   auth.write_user(response.data.data)
-                  that.$router.push('/home')
+                  var prevUrlName = that.$store.state.event.prevUrlName
+                  if (prevUrlName) {
+                    // 清空上一url
+                    auth.clear_prev_url_name()
+                    that.$router.push({name: prevUrlName})
+                  } else {
+                    that.$router.push({name: 'home'})
+                  }
                 } else {
                   auth.logout()
                   that.$message({
@@ -85,6 +88,7 @@ export default {
                     message: response.data.meta.message,
                     type: 'error'
                   })
+                  that.isLoadingBtn = false
                 }
               })
               .catch (function(error) {
@@ -94,6 +98,7 @@ export default {
                   message: error.message,
                   type: 'error'
                 })
+                that.isLoadingBtn = false
               })
             } else {
               that.$message({
@@ -101,6 +106,7 @@ export default {
                 message: response.data.meta.message,
                 type: 'error'
               })
+              that.isLoadingBtn = false
             }
           })
           .catch (function(error) {
@@ -122,7 +128,12 @@ export default {
     }
   },
   computed: {
-
+  },
+  created: function() {
+    var prevUrlName = this.$store.state.event.prevUrlName
+    if (prevUrlName) {
+      this.$message.error('请先登录！')
+    }
   }
 
 }

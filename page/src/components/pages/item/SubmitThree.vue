@@ -17,20 +17,24 @@
               </el-form-item> 
 
 
-              <el-form-item label="竞品">
-                <div
-                  class="competing"
-                  v-for="(d, index) in form.cProducts"
-                  :key="d.key"
-                  :prop="'cProducts.' + index + '.value'"
-                >
-                <el-input v-model="d.value">
-                <el-button slot="append" @click.prevent="removeProduct(d)">删除</el-button>
-                </el-input>
-                </div>
+              <el-row :gutter="18">
+                <el-col :span="8">
+                  <el-form-item label="竞品">
+                    <div
+                      class="competing"
+                      v-for="(d, index) in form.cProducts"
+                      :key="d.key"
+                      :prop="'cProducts.' + index + '.value'"
+                    >
+                    <el-input v-model="d.value">
+                      <el-button slot="append" @click.prevent="removeProduct(d)">删除</el-button>
+                    </el-input>
+                    </div>
 
-                <el-button @click="addProduct">新增竞品</el-button>
-              </el-form-item>
+                    <el-button @click="addProduct">新增竞品</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
 
                 <el-form-item label="项目周期" prop="cycle">
                   <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
@@ -82,7 +86,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -125,6 +129,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         isFirst: false,
         typeSwitch1: false,
         typeSwitch2: false,
@@ -158,10 +163,10 @@
             { required: true, message: '请添写产品功能或卖点', trigger: 'blur' }
           ],
           cycle: [
-            { type: 'number', message: '请选择项目周期', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择项目周期', trigger: 'change' }
           ],
           design_cost: [
-            { type: 'number', message: '请选择设计费用预算', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择设计费用预算', trigger: 'change' }
           ]
         },
         msg: ''
@@ -185,6 +190,7 @@
               that.$message.error('至少添加一项竞品')
               return false
             }
+            that.isLoadingBtn = true
             var row = {
               name: that.form.name,
               product_features: that.form.product_features,
@@ -227,12 +233,14 @@
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
+            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }

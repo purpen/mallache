@@ -1,7 +1,7 @@
 import store from '@/store/index'
 // import axios from '../http'
 // import api from '@/api/api'
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO } from '@/store/mutation-types'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, CLEAR_PREV_URL_NAME } from '@/store/mutation-types'
 
 var mallache = {}
 mallache.write_token = function (token) {
@@ -25,6 +25,10 @@ mallache.write_user = function (user) {
 
 mallache.logout = function () {
   store.commit(USER_SIGNOUT)
+}
+
+mallache.clear_prev_url_name = function () {
+  store.commit(CLEAR_PREV_URL_NAME)
 }
 
 export default mallache

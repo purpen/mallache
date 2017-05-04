@@ -20,19 +20,21 @@
               </el-form-item>
 
               <el-form-item label="已有项目设计内容" prop="complete_content">
-                <el-radio-group v-model.number="form.complete_content">
-                  <el-radio class="radio" :label="1">流程图</el-radio>
-                  <el-radio class="radio" :label="2">线框图、原型图</el-radio>
-                  <el-radio class="radio" :label="3">页面内容</el-radio>
-                  <el-radio class="radio" :label="4">产品功能需求点</el-radio>
-                  <el-radio class="radio" :label="5">其它</el-radio>
-                </el-radio-group>
+                <el-checkbox-group v-model="form.complete_content">
+                  <el-checkbox label="流程图" name="complete_content"></el-checkbox>
+                  <el-checkbox label="线框图、原型图" name="complete_content"></el-checkbox>
+                  <el-checkbox label="页面内容" name="complete_content"></el-checkbox>
+                  <el-checkbox label="产品功能需求点" name="complete_content"></el-checkbox>
+                  <el-checkbox label="其它" @change="otherContent" name="complete_content">其它
+                    <el-input v-show="showOtherContent" v-model="form.other_content" size="small" placeholder="自定义添加"></el-input>
+                  </el-checkbox>
+                </el-checkbox-group>
               </el-form-item>
 
-                <el-form-item label="设计费用预算" prop="design_cost">
-                  <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算">
+                <el-form-item label="项目周期" prop="cycle">
+                  <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
                     <el-option
-                      v-for="item in costOptions"
+                      v-for="item in cycleOptions"
                       :label="item.label"
                       :key="item.index"
                       :value="item.value">
@@ -40,7 +42,18 @@
                   </el-select>
                 </el-form-item>
 
-                <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
+              <el-form-item label="设计费用预算" prop="design_cost">
+                <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算">
+                  <el-option
+                    v-for="item in costOptions"
+                    :label="item.label"
+                    :key="item.index"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+
+              <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
 
               <el-row :gutter="24">
                 <el-col :span="12">
@@ -122,6 +135,7 @@
         fileList: [],
         upToken: null,
         uploadUrl: '',
+        showOtherContent: false,
         uploadParam: {
           'token': '',
           'x:random': '',
@@ -132,7 +146,8 @@
         form: {
           name: '',
           stage: '',
-          complete_content: '',
+          cycle: '',
+          complete_content: [],
           other_content: '',
           design_cost: ''
         },
@@ -141,13 +156,16 @@
             { required: true, message: '请添写项目名称', trigger: 'blur' }
           ],
           complete_content: [
-            { type: 'number', message: '请选择已有项目设计内容', trigger: 'change' }
+            { type: 'array', required: true, message: '请至少选择一项已有项目设计内容', trigger: 'change' }
+          ],
+          cycle: [
+            { type: 'number', required: true, message: '请选择项目周期', trigger: 'change' }
           ],
           stage: [
-            { type: 'number', message: '请选择项目进展阶段', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择项目进展阶段', trigger: 'change' }
           ],
           design_cost: [
-            { type: 'number', message: '请选择设计费用预算', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择设计费用预算', trigger: 'change' }
           ]
         },
         msg: ''
@@ -167,11 +185,23 @@
               that.$message.error('请选择所在城市')
               return false
             }
+            var cIndex = that.form.complete_content.indexOf('其它')
+            if (cIndex !== -1) {
+              if (!that.form.other_content) {
+                that.$message.error('请添写自定义设计内容!')
+                return false
+              }
+              that.form.complete_content.splice(cIndex, 1)
+            } else {
+              that.form.other_content = ''
+            }
             var row = {
               name: that.form.name,
               stage: that.form.stage,
+              cycle: that.form.cycle,
               design_cost: that.form.design_cost,
               complete_content: that.form.complete_content,
+              other_content: that.form.other_content,
               province: that.province,
               city: that.city,
               area: that.district
@@ -252,6 +282,13 @@
           return false
         })
       },
+      otherContent(val) {
+        if (val.currentTarget.checked) {
+          this.showOtherContent = true
+        } else {
+          this.showOtherContent = false
+        }
+      },
       beforeUpload(file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png', 'image/pdf']
         const isLt5M = file.size / 1024 / 1024 < 5
@@ -310,10 +347,16 @@
             that.form.name = row.name
             that.form.stage = row.stage
             that.form.complete_content = row.complete_content
+            that.form.other_content = row.other_content
+            that.form.cycle = row.cycle === 0 ? '' : row.cycle
             that.form.design_cost = row.design_cost === 0 ? '' : row.design_cost
             that.form.stage_status = row.stage_status
             that.province = row.province === 0 ? '' : row.province
             that.city = row.city === 0 ? '' : row.city
+            if (row.other_content) {
+              that.form.complete_content.push('其它')
+              that.showOtherContent = true
+            }
 
             that.uploadParam['x:target_id'] = row.id
 

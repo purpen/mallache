@@ -31,7 +31,7 @@
           <el-form-item label="" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
           </el-form-item>
-          <el-button type="success" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
+          <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
         </el-form>
       
       </div>   
@@ -63,6 +63,7 @@ export default {
       }
     }
     return {
+      isLoadingBtn: false,
       uActive: '',
       cActive: '',
       time: 0,
@@ -98,12 +99,12 @@ export default {
   methods: {
     selectUser() {
       this.form.type = 1
-      this.uActive = '#FAFAFA'
+      this.uActive = '#ccc'
       this.cActive = ''
     },
     selectComputer() {
       this.form.type = 2
-      this.cActive = '#FAFAFA'
+      this.cActive = '#ccc'
       this.uActive = ''
     },
     submit(formName) {
@@ -119,6 +120,7 @@ export default {
             return false
           }
 
+          that.isLoadingBtn = true
           // 验证通过，注册
           that.$http.post(api.register, {account: account, password: password, type: type, sms_code: smsCode})
           .then (function(response) {
@@ -146,6 +148,7 @@ export default {
                     message: response.data.meta.message,
                     type: 'error'
                   })
+                  that.isLoadingBtn = false
                 }
               })
               .catch (function(error) {
@@ -155,6 +158,7 @@ export default {
                   message: error.message,
                   type: 'error'
                 })
+                that.isLoadingBtn = false
               })
             } else {
               that.$message({
@@ -162,6 +166,7 @@ export default {
                 message: response.data.meta.message,
                 type: 'error'
               })
+              that.isLoadingBtn = false
             }
           })
           .catch (function(error) {
@@ -170,6 +175,7 @@ export default {
               message: error.message,
               type: 'error'
             })
+            that.isLoadingBtn = false
             console.log(error.message)
             return false
           })
