@@ -211,9 +211,10 @@ class ItemActionController extends Controller
         $item->status = 3;
         $item->save();
 
+        $item_info = $item->itemInfo();
         //添加系统通知
         $tools = new Tools();
-        $tools->message($item->user_id, '项目已推荐设计公司');
+        $tools->message($item->user_id, '【' . $item_info->name . '】' . '已推荐设计公司');
 
         return $this->response->array($this->apiSuccess());
     }

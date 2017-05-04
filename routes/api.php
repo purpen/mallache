@@ -176,5 +176,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         //获取系统新通知数量
         $api->get('/message/getMessageQuantity', 'MessageController@getMessageQuantity');
+        //获取系统通知列表
+        $api->get('/message/getMessageList', 'MessageController@getMessageList');
     });
 });
