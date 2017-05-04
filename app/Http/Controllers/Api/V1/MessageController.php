@@ -65,4 +65,28 @@ class MessageController extends BaseController
         return $this->response->paginator($lists, new MessageTransformer)->setMeta($this->apiSuccess());
     }
 
+    /**
+     * @api {get} /message/trueRead 新消息确认阅读
+     * @apiVersion 1.0.0
+     * @apiName message trueRead
+     * @apiGroup Message
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function trueRead()
+    {
+        $tools = new Tools();
+        $tools->emptyMessageQuantity($this->auth_user_id);
+
+        return $this->response->array($this->apiSuccess());
+    }
+
 }
