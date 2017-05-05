@@ -8,12 +8,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\Tools;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\Contract;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ProductDesign;
@@ -976,10 +978,59 @@ class DemandController extends BaseController
         }
     }
 
-    //拒绝设计公司报价
-    public function falseDesign()
+    /**
+     * @api {post} /demand/falseDesign 拒绝设计公司报价
+     * @apiVersion 1.0.0
+     * @apiName demand 拒绝设计公司报价
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     * @apiParam {integer} design_company_id 设计公司ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function falseDesign(Request $request)
     {
+        $rules = [
+            'item_id' => 'required|integer',
+            'design_company_id' => 'required|integer',
+        ];
+        $all = $request->only(['item_id', 'design_company_id']);
 
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if(!$item = Item::find($all['item_id'])){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        if($item->user_id !== $this->auth_user_id || $item->status !== 4){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $item_recommend = ItemRecommend::where(['item_id' => $all['item_id'], 'design_company_id' => $all['design_company_id']])->first();
+        if(!$item_recommend){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        //修改推荐关联表中需求方的状态
+        $item_recommend->item_status = -1;
+        $item_recommend->save();
+
+        //消息通知
+        $design = DesignCompanyModel::find($all['design_company_id']);
+        $tools = new Tools();
+        $tools->message($design->user_id, '【' . $item['name'] . '】' . '已选择其他设计公司');
+
+       return $this->response->array($this->apiSuccess());
     }
 
     //确认合同
