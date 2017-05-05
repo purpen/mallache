@@ -205,7 +205,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany  设计公司展示
+     * @api {get} /designCompany/{id}  设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
      * @apiGroup designCompany
@@ -251,11 +251,10 @@ class DesignCompanyController extends BaseController
      *       }
      *   }
      */
-    public function show(Request $request)
+    public function show(Request $request , $id)
     {
-        $user_id = intval($this->auth_user_id);
 
-        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        $design = DesignCompanyModel::where('id', $id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
