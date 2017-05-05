@@ -394,16 +394,16 @@ class DesignCaseController extends BaseController
     }
 
     /**
-     * @api {get} /designCase/designCompany/{id}  根据设计公司id查看案例
+     * @api {get} /designCase/designCompany/{design_company_id}  根据设计公司id查看案例
      * @apiVersion 1.0.0
      * @apiName designCase lists
      * @apiGroup designCase
      *
      * @apiParam {string} token
      */
-    public function lists($id)
+    public function lists($design_company_id)
     {
-        $design = DesignCompanyModel::find($id);
+        $design = DesignCompanyModel::find($design_company_id);
         if(!$design){
             return $this->response->array($this->apiError('not found!', 404));
         }
