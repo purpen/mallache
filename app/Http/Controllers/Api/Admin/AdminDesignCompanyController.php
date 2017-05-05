@@ -186,6 +186,7 @@ class AdminDesignCompanyController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
+     * @apiParam {integer} type 0.全部；-1.禁用的;默认0；
      * @apiParam {string} token
      */
     public function lists(Request $request)
@@ -202,6 +203,13 @@ class AdminDesignCompanyController extends BaseController
         }
 
         $query = DesignCompanyModel::query();
+        switch ($request->input('type')){
+            case -1:
+                $query = $query->where('status', -1);
+                break;
+            default:
+        }
+
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($lists , new DesignCompanyTransformer())->setMeta($this->apiMeta());
 
