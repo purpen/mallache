@@ -593,25 +593,7 @@ class DemandController extends BaseController
                 "company_abbreviation": "", //简称
                 "is_recommend": 0, //推荐
                 "verify_status": 1 //审核状态
-            },
-            "design_case": [
-                {
-                    "id": 1,
-                    "user_id": 1,
-                    "title": "牛逼项目",
-                    "prize": 1, //奖项:1...2...
-                    "prize_time": "2010-10-10", //获奖时间
-                    "mass_production": 1, //是否量产:1.否；2.是；
-                    "sales_volume": "2000.00", //销售金额
-                    "customer": "联想", //服务客户
-                    "field": 1, //所属领域
-                    "profile": "就是很牛逼", //项目描述
-                    "status": 1,
-                    "created_at": "2017-04-17 17:26:11",
-                    "updated_at": "2017-04-17 17:26:11",
-                    "deleted_at": null
-                }
-            ]
+            }
     },
         "meta": {
             "message": "Success",
@@ -637,9 +619,9 @@ class DemandController extends BaseController
             return $this->response->array($this->apiSuccess('Success', 200, []));
         }
 
-        $users = User::select('id')->whereIn('id', $recommend_arr)->get();
+        $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($users, new RecommendListTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer())->setMeta($this->apiMeta());
     }
 
     /**
