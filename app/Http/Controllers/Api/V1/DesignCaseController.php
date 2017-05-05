@@ -392,4 +392,23 @@ class DesignCaseController extends BaseController
         }
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {get} /designCase/designCompany/{id}  根据设计公司id查看案例
+     * @apiVersion 1.0.0
+     * @apiName designCase lists
+     * @apiGroup designCase
+     *
+     * @apiParam {string} token
+     */
+    public function lists($id)
+    {
+        $design = DesignCompanyModel::find($id);
+        if(!$design){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $designCase = $design->designCase;
+        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+
+    }
 }

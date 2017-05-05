@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class DesignCompanyModel extends Model
@@ -165,7 +166,7 @@ class DesignCompanyModel extends Model
      */
     public function getLogoImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 6, 1);
+        return AssetModel::getOneImage($this->logo);
     }
 
 
@@ -185,6 +186,34 @@ class DesignCompanyModel extends Model
     public function designCase()
     {
         return $this->hasMany('App\Models\DesignCaseModel', 'design_company_id');
+    }
+
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyCityValueAttribute()
+    {
+        return Tools::cityName($this->city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyAreaValueAttribute()
+    {
+        return Tools::cityName($this->area);
     }
 
 }
