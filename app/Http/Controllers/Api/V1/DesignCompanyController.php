@@ -8,6 +8,7 @@ use App\Http\Transformer\DesignCompanyTransformer;
 use App\Http\Transformer\DesignItemTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignItemModel;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -191,7 +192,12 @@ class DesignCompanyController extends BaseController
                 $asset = new AssetModel();
                 $logo_id = $asset->getAssetId(6, $request->input('random'));
                 $all['logo'] = $logo_id;
+                $user = User::where('id' , $this->auth_user_id)->first();
                 $design = DesignCompanyModel::create($all);
+                $user->design_company_id = $design->id;
+                if($design){
+                    $user->save();
+                }
                 //附件
                 $random = $request->input('random');
                 AssetModel::setRandom($design->id , $random);
