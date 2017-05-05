@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class DemandCompany extends Model
@@ -67,5 +68,32 @@ class DemandCompany extends Model
     public function getImageAttribute()
     {
         return AssetModel::getOneImage($this->logo);
+    }
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getCityValueAttribute()
+    {
+        return Tools::cityName($this->city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getAreaValueAttribute()
+    {
+        return Tools::cityName($this->area);
     }
 }
