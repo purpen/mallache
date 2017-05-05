@@ -33,6 +33,7 @@ class DesignCaseModel extends Model
         'design_type',
         'industry',
         'other_prize',
+        'design_company_id'
     ];
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Transformer\DesignCompanyTransformer;
 use App\Http\Transformer\DesignItemTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignItemModel;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -191,7 +192,12 @@ class DesignCompanyController extends BaseController
                 $asset = new AssetModel();
                 $logo_id = $asset->getAssetId(6, $request->input('random'));
                 $all['logo'] = $logo_id;
+                $user = User::where('id' , $this->auth_user_id)->first();
                 $design = DesignCompanyModel::create($all);
+                $user->design_company_id = $design->id;
+                if($design){
+                    $user->save();
+                }
                 //附件
                 $random = $request->input('random');
                 AssetModel::setRandom($design->id , $random);
@@ -205,7 +211,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/{id}  设计公司展示
+     * @api {get} /designCompany  设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
      * @apiGroup designCompany
@@ -251,10 +257,11 @@ class DesignCompanyController extends BaseController
      *       }
      *   }
      */
-    public function show(Request $request , $id)
+    public function show(Request $request)
     {
+        $user_id = intval($this->auth_user_id);
 
-        $design = DesignCompanyModel::where('id', $id)->first();
+        $design = DesignCompanyModel::where('user_id', $user_id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
@@ -265,16 +272,16 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/otherIndex/{unique_id} 其它公司查看根据设计公司id查看信息
+     * @api {get} /designCompany/otherIndex/{id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
      * @apiName designCompanyItem index
      * @apiGroup designCompanyItem
      *
      * @apiParam {string} token
      */
-    public function otherIndex($unique_id)
+    public function otherIndex($id)
     {
-        $design = DesignCompanyModel::where('unique_id', $unique_id)->first();
+        $design = DesignCompanyModel::where('id', $id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
