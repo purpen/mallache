@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\DesignCaseTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignCaseModel;
+use App\Models\DesignCompanyModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -127,6 +128,7 @@ class DesignCaseController extends BaseController
      */
     public function store(Request $request)
     {
+        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
         // 验证规则
         $rules = [
             'title'  => 'required|max:50',
@@ -171,6 +173,7 @@ class DesignCaseController extends BaseController
         $all['design_type'] = $request->input('design_type' , 0);
         $all['industry'] = $request->input('industry') ?? 0;
         $all['status'] = 0;
+        $all['design_company_id'] = $design->id;
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
