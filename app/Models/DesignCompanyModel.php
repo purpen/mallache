@@ -179,4 +179,12 @@ class DesignCompanyModel extends Model
         return AssetModel::getImageUrl($this->id, 3, 1 , 5);
     }
 
+    /**
+     * 一对多关联案例表
+     */
+    public function designCase()
+    {
+        return $this->hasMany('App\Models\DesignCaseModel', 'design_company_id');
+    }
+
 }
