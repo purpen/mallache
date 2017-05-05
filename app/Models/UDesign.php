@@ -17,6 +17,7 @@ class UDesign extends Model
         'design_cost_value',
         'province_value',
         'city_value',
+        'cycle_value'
     ];
 
     //允许批量赋值的属性

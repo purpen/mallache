@@ -963,6 +963,7 @@ class DemandController extends BaseController
             $item->status = 5;
             $item->save();
 
+            //触发项目状态事件
             $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
             event(new ItemStatusEvent($item,['yes' => $all['design_company_id'], 'no' => $design_company_id]));
 
@@ -973,6 +974,12 @@ class DemandController extends BaseController
             DB::rollBack();
             return $this->response->array($this->apiError('Error', 500));
         }
+    }
+
+    //拒绝设计公司报价
+    public function falseDesign()
+    {
+
     }
 
     //确认合同
