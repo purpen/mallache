@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 
+use App\Http\Transformer\DesignCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use Illuminate\Support\Facades\Log;
@@ -132,11 +133,8 @@ class AdminDesignCompanyController extends BaseController
      */
     public function okStatus(Request $request)
     {
-        Log::info(111);
         $id = $request->input('id');
         $design_company = DesignCompanyModel::where('id' , $id)->first();
-        Log::info($design_company);
-        Log::info(222);
 
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
@@ -177,5 +175,35 @@ class AdminDesignCompanyController extends BaseController
             return $this->response->array($this->apiSuccess());
         }
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /admin/designCompany/lists 设计公司列表
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignCompany lists
+     * @apiGroup AdminDesignCompany
+     *
+     * @apiParam {integer} per_page 分页数量  默认15
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} sort 0.升序；1.降序（默认）
+     * @apiParam {string} token
+     */
+    public function lists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
+        if(empty($request->input('sort')))
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+
+        $query = DesignCompanyModel::query();
+        $lists = $query->orderBy('id', $sort)->paginate($per_page);
+        return $this->response->paginator($lists , new DesignCompanyTransformer())->setMeta($this->apiMeta());
+
     }
 }

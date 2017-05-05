@@ -31,6 +31,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/designCompany/unStatus', [
             'as' => 'AdminDesignCompany.unStatus', 'uses' => 'AdminDesignCompanyController@unStatus'
         ]);
+        $api->get('/admin/designCompany/lists', [
+            'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
+        ]);
     });
 
 });
