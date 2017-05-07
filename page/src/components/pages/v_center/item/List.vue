@@ -40,7 +40,9 @@
                   </div>
                   <div class="content">
                     <div class="l-item">
-                      <p class="c-title">{{ d.item.name }}</p>
+                      <p class="c-title">
+                        <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link>
+                      </p>
                       <p>项目预算: {{ d.item.design_cost_value }}</p>
                       <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
                       <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>

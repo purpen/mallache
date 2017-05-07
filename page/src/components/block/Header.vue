@@ -21,8 +21,8 @@
               <img class="avatar" src="../../assets/images/avatar_default.jpg" />
               <span class="b-nickname">{{ eventUser.account }}</span>
             </template>
-            <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
-            <el-menu-item index=" ">帮助中心</el-menu-item>
+            <el-menu-item index="/vcenter/item/list?type=1">个人中心</el-menu-item>
+            <el-menu-item index="/admin">后台管理</el-menu-item>
             <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
           </el-submenu>
         </el-menu>

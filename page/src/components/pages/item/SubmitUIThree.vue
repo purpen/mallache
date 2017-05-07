@@ -81,7 +81,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -124,6 +124,7 @@
     data () {
       return {
         itemId: '',
+        isLoadingBtn: false,
         isFirst: false,
         typeSwitch1: false,
         typeSwitch2: false,
@@ -209,7 +210,7 @@
             if (that.form.stage_status < 2) {
               row.stage_status = 2
             }
-
+            that.isLoadingBtn = true
             console.log(row)
             var apiUrl = null
             var method = null
@@ -228,11 +229,13 @@
                 that.$router.push({name: 'itemSubmitFour', params: {id: response.data.data.item.id}})
                 return false
               } else {
+                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })

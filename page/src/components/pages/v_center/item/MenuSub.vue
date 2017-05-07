@@ -1,8 +1,6 @@
 <template>
   <div class="vcenter-menu-sub">
-    <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterItemList'}" active-class="false" :class="{'is-active': menuType == 0}" class="item">全部</router-link>
-    </div>
+
     <div class="vcenter-menu-sub-list">
       <router-link :to="{name: 'vcenterItemList', query: {type: 1}}" active-class="false" class="item" :class="{'is-active': menuType == 1}">正在进行的项目</router-link>
     </div>

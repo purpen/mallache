@@ -185,6 +185,7 @@
   import vMenu from '@/components/pages/v_center/Menu'
   import vMenuSub from '@/components/pages/v_center/computer/MenuSub'
   import api from '@/api/api'
+  import auth from '@/helper/auth'
   // 城市联动
   import RegionPicker from '@/components/block/RegionPicker'
   import '@/assets/js/format'
@@ -350,26 +351,25 @@
             that.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
               if (response.data.meta.status_code === 200) {
-                that.$message({
-                  showClose: true,
-                  message: '提交成功,等待审核',
-                  type: 'success'
-                })
+                that.$message.success('提交成功,等待审核')
+
+                // 更新 local storage
+                if (!that.companyId) {
+                  // ajax拉取用户信息
+                  that.$http.get(api.user, {})
+                  .then (function(response) {
+                    if (response.data.meta.status_code === 200) {
+                      auth.write_user(response.data.data)
+                    }
+                  })
+                }
                 return false
               } else {
-                that.$message({
-                  showClose: true,
-                  message: response.data.meta.message,
-                  type: 'error'
-                })
+                that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
-              that.$message({
-                showClose: true,
-                message: error.message,
-                type: 'error'
-              })
+              that.$message.error(error.message)
               console.log(error.message)
               return false
             })

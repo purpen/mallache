@@ -3,49 +3,46 @@
   <el-col :span="4" class="left-menu">
 
     <div class="menu-list" v-if="isComputer()">
+      <!--
       <router-link :to="{name: 'vcenterItemList'}" class="item">
         项目动态
       </router-link>
       <router-link :to="{name: 'vcenterOrderList'}" class="item">
         项目订单
       </router-link>
-      <router-link :to="{name: 'vcenterItemList'}" class="item">
+      -->
+      <router-link :to="{name: 'vcenterCItemList', query: {type: 1}}" class="item">
         我的项目
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例
       </router-link>
-      <router-link :to="{name: 'vcenterWalletList'}" class="item">
-        我的钱包
-      </router-link>
       <router-link :to="{name: 'vcenterComputerAccreditation'}" class="item">
         公司信息
       </router-link>
+      <!--
       <router-link :to="{name: 'vcenterProfile'}" class="item">
         账号设置
       </router-link>
+      -->
     </div>
 
     <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
-        项目订单
-      </router-link>
-      <router-link :to="{name: 'vcenterItemList'}" class="item">
+      <router-link :to="{name: 'vcenterItemList', query: {type: 1}}" class="item">
         我的项目
       </router-link>
-      <router-link :to="{name: 'vcenterWalletList'}" class="item">
-        我的钱包
-      </router-link>
+      <!--
       <router-link :to="{name: 'vcenterComputerAccreditation'}" class="item">
         公司信息
       </router-link>
       <router-link :to="{name: 'vcenterProfile'}" class="item">
         账号设置
       </router-link>
+      -->
     </div>
 
     <div class="computer-btn" v-if="isComputer()">
-      <el-button><router-link :to="{path: '/user/1'}">查看公司主页</router-link></el-button>
+      <el-button @click="redirectCompany">查看公司主页</el-button>
     </div>
   </el-col>
 </template>
@@ -66,6 +63,14 @@ export default {
         return true
       } else {
         return false
+      }
+    },
+    redirectCompany() {
+      var companyId = this.$store.state.event.user.design_company_id
+      if (!companyId || companyId === 0) {
+        this.$message.error('请先申请公司认证!')
+      } else {
+        this.$router.push({name: 'companyShow', params: {id: companyId}})
       }
     }
   }

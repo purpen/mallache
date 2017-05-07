@@ -125,7 +125,7 @@
                 {
                   name: '',
                   key: '项目类别',
-                  value: row.type_value + '-' + row.design_type_value + '-' + row.field_value + '-' + row.industry_value
+                  value: row.type_value + '/' + row.design_type_value + '/' + row.field_value + '/' + row.industry_value
                 },
                 {
                   name: '',
@@ -147,7 +147,7 @@
                 {
                   name: '',
                   key: '项目类别',
-                  value: row.type_value + '-' + row.design_type_value
+                  value: row.type_value + '/' + row.design_type_value
                 },
                 {
                   name: '',
@@ -170,7 +170,7 @@
               },
               {
                 name: '',
-                key: '费用预算',
+                key: '项目预算',
                 value: row.design_cost_value
               },
               {

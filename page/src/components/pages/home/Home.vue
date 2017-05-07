@@ -1,125 +1,125 @@
 <template>
   <div class="content-box">
 
-        <!-- swiper -->
-        <swiper :options="swiperOption" class="swiper-container" :style="screenWidth">
-          <swiper-slide class="swiper-slide" style="background-image: url('https://p4.taihuoniao.com/asset/170228/58b53fb420de8d36438bb0c6-1');"></swiper-slide>
-          <swiper-slide class="swiper-slide" style="background-image: url('https://p4.taihuoniao.com/asset/170303/58b8e88b20de8d006f8be4cc-1');"></swiper-slide>
-          <swiper-slide class="swiper-slide" style="background-image: url('https://p4.taihuoniao.com/asset/170113/58782624fc8b1236368b6c58-1');"></swiper-slide>
-
-          <div class="swiper-pagination" slot="pagination"></div>
-          <div class="swiper-button-prev" slot="button-prev"></div>
-          <div class="swiper-button-next" slot="button-next"></div>
-        </swiper>
+    <el-carousel :interval="5000" height="350">
+      <el-carousel-item v-for="item in slideList" :key="item">
+        <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')' }">
+        </div>
+      </el-carousel-item>
+    </el-carousel>
 
     <div class="container">
+      <div class="item_1">
+        <h3>满足你的创意需求</h3>
+        <el-row :gutter="24">
+          <el-col :span="12">
+            <div class="item_1_l">
+              <img src="../../../assets/images/home/index_01.png" />
+              <p class="item_1_title">产品设计</p>
+              <p class="item_1_desc">产品创新设计／产品创新咨询</p>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="item_1_r">
+              <img src="../../../assets/images/home/index_02.png" />
+              <p class="item_1_title">UI/UE设计</p>
+              <p class="item_1_desc">App设计／网页设计</p>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+
+      <div class="pub">
+        <router-link :to="{name: 'itemSubmitOne'}">
+          <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
+        </router-link>
+      </div>
+
+      <div class="item_2">
+        <h3>太火鸟SaaS</h3>
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <div class="">
+              <img src="../../../assets/images/home/index_03.png" />
+              <p class="item_1_title">智能</p>
+              <p class="item_1_desc">So strongly and metaphysically did I conceive of my situation then, that while earnestly </p>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="">
+              <img src="../../../assets/images/home/index_04.png" />
+              <p class="item_1_title">安全</p>
+              <p class="item_1_desc">received a mortal wound; and that another's mistake or misfortune might plunge innocent me into unmerited disaster and death. Therefore, </p>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="">
+              <img src="../../../assets/images/home/index_05.png" />
+              <p class="item_1_title">高效</p>
+              <p class="item_1_desc">received a mortal wound; and that another's mistake or misfortune might plunge innocent me into unmerited disaster and death. Therefore, </p>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+
+      <div class="item_3">
+        <h3>优秀设计公司展示</h3>
+        <el-row :gutter="24">
+          <el-col :span="12">
+            <div class="item_3_back" style="background-image: url(../../assets/images/home/index_06.png)">
+              <p class="item_1_title">产品设计</p>
+              <p class="item_1_desc">产品创新设计／产品创新咨询</p>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="item_3_back" style="background-image: url(../../../assets/images/home/index_07.png)">
+              <p class="item_1_title">UI/UE设计</p>
+              <p class="item_1_desc">App设计／网页设计</p>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+
     </div>
 
   </div>
 </template>
 
 <script>
-// or require
-// var Vue = require('vue')
-
-// mount with component(can't work in Nuxt.js/SSR)
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
-  name: 'test',
+  name: 'index',
   data () {
     return {
-      screenWidth: document.body.clientWidth,   // 这里是给到了一个默认值 （这个很重要）
       slideList: [
         {
           'clickUrl': '#',
           'desc': 'nhwc',
-          'image': 'http://dummyimage.com/1745x492/f1d65b'
+          'image': 'https://p4.taihuoniao.com/asset/170228/58b53fb420de8d36438bb0c6-1'
         },
         {
           'clickUrl': '#',
           'desc': 'hxrj',
-          'image': 'http://dummyimage.com/1745x492/40b7ea'
+          'image': 'https://p4.taihuoniao.com/asset/170303/58b8e88b20de8d006f8be4cc-1'
+        },
+        {
+          'clickUrl': '#',
+          'desc': 'hxrj',
+          'image': 'https://p4.taihuoniao.com/asset/170113/58782624fc8b1236368b6c58-1'
         }
-
       ],
-      currentIndex: 0,
-      timer: '',
-
-      swiperOption: {
-        pagination: '.swiper-pagination',
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
-        paginationClickable: true,
-        spaceBetween: 30,
-        centeredSlides: true,
-        autoplay: 2500,
-        autoplayDisableOnInteraction: false
-      }
-
-    }
-  },
-
-  // you can find current swiper instance object like this, while the notNextTick property value must be true
-  // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.swiper
+      msg: ''
     }
   },
   mounted () {
-    const that = this
-    window.onresize = () => {
-      return (() => {
-        window.screenWidth = document.body.clientWidth
-        that.screenWidth = window.screenWidth
-      })()
-    }
-    // you can use current swiper instance object to do something(swiper methods)
-    // 然后你就可以使用当前上下文内的swiper对象去做你想做的事了
-    // console.log('this is current swiper instance object', this.swiper)
-    // this.swiper.slideTo(3, 1000, false)
   },
 
   watch: {
-
   },
-
-  components: {
-    swiper,
-    swiperSlide
-  },
-
   methods: {
-    created () {
-      this.$nextTick(() => {
-        this.timer = setInterval(() => {
-          this.autoPlay()
-        }, 4000)
-      })
-    },
-    go () {
-      this.timer = setInterval(() => {
-        this.autoPlay()
-      }, 4000)
-    },
-    stop () {
-      clearInterval(this.timer)
-      this.timer = null
-    },
-    change (index) {
-      this.currentIndex = index
-    },
-    autoPlay () {
-      this.currentIndex++
-      if (this.currentIndex > this.slideList.length - 1) {
-        this.currentIndex = 0
-      }
-    }
   },
   created: function() {
   }
-
 }
 
 </script>
@@ -128,39 +128,66 @@ export default {
 <style scoped>
   .container{
   }
-  h1{
-    font-size: 60px;
+
+  .slide {
+    color: #475669;
+    font-size: 18px;
+    opacity: 0.95;
+    line-height: 500px;
+    height: 500px;
+    margin: 0;
+  }
+
+  .item_1, .item_2, .item_3 {
     text-align: center;
+    padding: 40px 0 40px 0;
+  }
+  .item_1 h3, .item_2 h3, .item_3 h3 {
+    color: #666;
+    font-size: 2rem;
+    padding-bottom: 40px;
   }
 
-  .swiper-container {
-      width: 100%;
-      height: 420px;
+  .item_1_l {
+    margin-left: 50px;
   }
-  .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
+  .item_1_r {
+    margin-right: 50px;
+  }
+  .item_1_title {
+    color: #333;
+    font-size: 1.5rem;
+    margin-top: 30px;
+    line-height: 2;
+  }
+  .item_1_desc {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
 
-      /* Center slide text vertically */
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: center;
-      -ms-flex-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      -webkit-align-items: center;
-      align-items: center;
+  .pub {
+    background: #FAFAFA;
+    height: 200px;
+    margin: 20px 0 10px 0;
+    position: relative;
+  }
+  .pub .pub-btn {
+    position: absolute;
+    padding: 10px 30px 10px 30px;
+    top: 40%;
+    left: 45%;
+  }
 
-      background-size: 100% 100%;
-      -webkit-background-size: cover;   
-      -moz-background-size: cover;
-      -o-background-size: cover;
-
+  .item_3 {
+    background-color: #FAFAFA;
+  }
+  .item_3 h3 {
+    color: #4B4B4B;
+  }
+  .item_3_back {
+    width: 300px;
+    height: 200px;
   }
 
 </style>

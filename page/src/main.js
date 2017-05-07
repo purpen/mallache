@@ -13,6 +13,7 @@ import './assets/css/reset.css'
 import './assets/css/font-awesome.min.css'
 import 'vuex-toast/dist/vuex-toast.css'
 import './assets/css/base.css'
+import './assets/css/admin.css'
 
 Vue.use(ElementUI)
 
