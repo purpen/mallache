@@ -9,13 +9,13 @@
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminCompanyList'}" active-class="true" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">待审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" active-class="true" :class="{'item': true, 'is-active': menuType === 1}">待审核</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 8}">通过审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: 8}}" active-class="true" :class="{'item': true, 'is-active': menuType === 8}">通过审核</router-link>
           </div>
         </div>
 
