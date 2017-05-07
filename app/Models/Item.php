@@ -24,6 +24,7 @@ class Item extends Model
         'company_province_value',
         'company_city_value',
         'company_area_value',
+        'status_value',
     ];
 
     //一对一关联UX UI设计表
@@ -85,6 +86,7 @@ class Item extends Model
                     'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
+                    'status_value' => $item->status_value,
                     'price' => floatval($item->price),
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -113,6 +115,7 @@ class Item extends Model
                     'design_type' => $item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
+                    'status_value' => $item->status_value,
                     'field' => $info->field,
                     'field_value' => $info->field_value,
                     'industry' => $info->industry,
@@ -161,6 +164,7 @@ class Item extends Model
                     'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
+                    'status_value' => $item->status_value,
                     'name' => $info->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
@@ -341,6 +345,19 @@ class Item extends Model
     public function getCompanyAreaValueAttribute()
     {
         return Tools::cityName($this->company_area);
+    }
+
+    /**
+     * 项目状态说明
+     */
+    public function getStatusValueAttribute()
+    {
+        $demand_item_status = config('constant.demand_item_status');
+
+        if(!array_key_exists($this->status, $demand_item_status)){
+            return '';
+        }
+        return $demand_item_status[$this->status];
     }
 
 }

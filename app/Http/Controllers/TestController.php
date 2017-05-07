@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helper\QiniuApi;
+use App\Models\DesignCompanyModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TestController extends Controller

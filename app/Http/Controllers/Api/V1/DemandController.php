@@ -7,12 +7,15 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
+use App\Helper\Tools;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\Contract;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ProductDesign;
@@ -206,7 +209,7 @@ class DemandController extends BaseController
                     "type_value": "产品设计类型",
                     "design_type": 2,
                     "design_type_value": "产品设计",
-                    "status": 5,
+                    "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
                     "field": 2,
                     "field_value": "消费电子",
                     "industry": 2,
@@ -590,25 +593,7 @@ class DemandController extends BaseController
                 "company_abbreviation": "", //简称
                 "is_recommend": 0, //推荐
                 "verify_status": 1 //审核状态
-            },
-            "design_case": [
-                {
-                    "id": 1,
-                    "user_id": 1,
-                    "title": "牛逼项目",
-                    "prize": 1, //奖项:1...2...
-                    "prize_time": "2010-10-10", //获奖时间
-                    "mass_production": 1, //是否量产:1.否；2.是；
-                    "sales_volume": "2000.00", //销售金额
-                    "customer": "联想", //服务客户
-                    "field": 1, //所属领域
-                    "profile": "就是很牛逼", //项目描述
-                    "status": 1,
-                    "created_at": "2017-04-17 17:26:11",
-                    "updated_at": "2017-04-17 17:26:11",
-                    "deleted_at": null
-                }
-            ]
+            }
     },
         "meta": {
             "message": "Success",
@@ -634,9 +619,9 @@ class DemandController extends BaseController
             return $this->response->array($this->apiSuccess('Success', 200, []));
         }
 
-        $users = User::select('id')->whereIn('id', $recommend_arr)->get();
+        $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($users, new RecommendListTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -673,11 +658,23 @@ class DemandController extends BaseController
 
 
         try{
+
+            $item = Item::find($all['item_id']);
+            if($item->user_id != $this->auth_user_id || $item->status != 3){
+                return $this->response->array($this->apiError('无操作权限或当前状态不可操作', 403));
+            }
+            //修改项目状态为：等待设计公司接单(报价)
+            $item->status = 4;
+            $item->save();
+            //触发事件
+            event(new ItemStatusEvent($item, $all['design_company_id']));
+
             //遍历插入推荐表
             foreach($all['design_company_id'] as $design_company_id)
             {
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
+
         }
         catch (\Exception $e){
             Log::error($e->getMessage());
@@ -719,7 +716,7 @@ class DemandController extends BaseController
                         "id": 1,
                         "type": 2, //1.产品设计；2.UI UX 设计；
                         "design_type": 1, //UXUI设计（1.app设计；2.网页设计；）
-                        "status": 2, //状态：-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推荐；4.已推送设计公司；5.已选定设计公司；6.已提交合同；7.已确定合同；8.需求方已打款；9.项目已开始；10.项目已完成；11.已项目验收。12.已付款
+                        "status": 2, //状态：-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
                         "system": 1, 系统：1.ios；2.安卓；
                         "design_content": 0, //设计内容：1.视觉设计；2.交互设计；
                         "name": "", //项目名称
@@ -776,9 +773,9 @@ class DemandController extends BaseController
             case 0:
                 $where_in = [];
                 break;
-            case 1:
-                $where_in = [1,2,3,4,5,6,7,8];
-                break;
+//            case 1:
+//                $where_in = [1,2,3,4,5,6,7,8];
+//                break;
             default:
                 $where_in = [];
         }
@@ -950,6 +947,10 @@ class DemandController extends BaseController
             $item->status = 5;
             $item->save();
 
+            //触发项目状态事件
+            $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
+            event(new ItemStatusEvent($item,['yes' => $all['design_company_id'], 'no' => $design_company_id]));
+
             DB::commit();
             return $this->response->array($this->apiSuccess());
 
@@ -957,6 +958,61 @@ class DemandController extends BaseController
             DB::rollBack();
             return $this->response->array($this->apiError('Error', 500));
         }
+    }
+
+    /**
+     * @api {post} /demand/falseDesign 拒绝设计公司报价
+     * @apiVersion 1.0.0
+     * @apiName demand 拒绝设计公司报价
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     * @apiParam {integer} design_company_id 设计公司ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function falseDesign(Request $request)
+    {
+        $rules = [
+            'item_id' => 'required|integer',
+            'design_company_id' => 'required|integer',
+        ];
+        $all = $request->only(['item_id', 'design_company_id']);
+
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if(!$item = Item::find($all['item_id'])){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        if($item->user_id !== $this->auth_user_id || $item->status !== 4){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $item_recommend = ItemRecommend::where(['item_id' => $all['item_id'], 'design_company_id' => $all['design_company_id']])->first();
+        if(!$item_recommend){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        //修改推荐关联表中需求方的状态
+        $item_recommend->item_status = -1;
+        $item_recommend->save();
+
+        //消息通知
+        $design = DesignCompanyModel::find($all['design_company_id']);
+        $tools = new Tools();
+        $tools->message($design->user_id, '【' . $item['name'] . '】' . '已选择其他设计公司');
+
+       return $this->response->array($this->apiSuccess());
     }
 
     //确认合同

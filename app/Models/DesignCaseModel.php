@@ -33,6 +33,7 @@ class DesignCaseModel extends Model
         'design_type',
         'industry',
         'other_prize',
+        'design_company_id'
     ];
 
     /**
@@ -173,5 +174,13 @@ class DesignCaseModel extends Model
 
         }
         return '';
+    }
+
+    /**
+     * 相对关联设计公司表
+     */
+    public function DesignCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
     }
 }

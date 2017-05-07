@@ -8,6 +8,7 @@ use App\Http\Transformer\DesignCompanyTransformer;
 use App\Http\Transformer\DesignItemTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignItemModel;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -121,7 +122,8 @@ class DesignCompanyController extends BaseController
             'establishment_time'  => 'nullable|date',
             'good_field'  => 'max:50',
             'professional_advantage'  => 'max:500',
-            'awards'  => 'max:500'
+            'awards'  => 'max:500',
+            'registration_number'  => 'nullable|max:15'
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
@@ -145,7 +147,10 @@ class DesignCompanyController extends BaseController
             'establishment_time.date' => '公司成立时间格式不正确',
             'good_field.max' => '擅长领域不能超过50个字',
             'professional_advantage.max' => '专业优势不能超过500个字',
-            'awards.max' => '荣誉奖项不能超过500个字'
+            'awards.max' => '荣誉奖项不能超过500个字',
+            'company_profile.max' => '公司简介不能超过500个字',
+            'registration_number.max' => '注册号不能超过15字符',
+
         ];
         $all = $request->all();
         $city = $request->input('city');
@@ -187,13 +192,19 @@ class DesignCompanyController extends BaseController
                 $asset = new AssetModel();
                 $logo_id = $asset->getAssetId(6, $request->input('random'));
                 $all['logo'] = $logo_id;
+                $user = User::where('id' , $this->auth_user_id)->first();
                 $design = DesignCompanyModel::create($all);
+                $user->design_company_id = $design->id;
+                if($design){
+                    $user->save();
+                }
                 //附件
                 $random = $request->input('random');
                 AssetModel::setRandom($design->id , $random);
             }
         }
         catch (\Exception $e){
+            Log::error($e);
             return $this->response->array($this->apiError());
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
@@ -261,16 +272,16 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {get} /designCompany/otherIndex/{unique_id} 其它公司查看根据设计公司id查看信息
+     * @api {get} /designCompany/otherIndex/{id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
      * @apiName designCompanyItem index
      * @apiGroup designCompanyItem
      *
      * @apiParam {string} token
      */
-    public function otherIndex($unique_id)
+    public function otherIndex($id)
     {
-        $design = DesignCompanyModel::where('unique_id', $unique_id)->first();
+        $design = DesignCompanyModel::where('id', $id)->first();
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
@@ -441,129 +452,4 @@ class DesignCompanyController extends BaseController
         //
     }
 
-
-    /**
-     * @api {put} /designCompany/verifyStatus 设计公司通过审核
-     * @apiVersion 1.0.0
-     * @apiName designCompany verifyStatus
-     * @apiGroup designCompany
-     *
-     * @apiParam {integer} id
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
-     * }
-     */
-    public function verifyStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
-        }
-        $design = DesignCompanyModel::verifyStatus($id , 1);
-        if(!$design){
-            return $this->response->array($this->apiSuccess());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
-
-    /**
-     * @api {put} /designCompany/unVerifyStatus 设计公司审核中
-     * @apiVersion 1.0.0
-     * @apiName designCompany unVerifyStatus
-     * @apiGroup designCompany
-     *
-     * @apiParam {integer} id
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
-     * }
-     */
-    public function unVerifyStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
-        }
-        $design = DesignCompanyModel::verifyStatus($id , 0);
-        if(!$design){
-            return $this->response->array($this->apiSuccess());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
-
-
-    /**
-     * @api {put} /designCompany/status 设计公司正常
-     * @apiVersion 1.0.0
-     * @apiName designCompany status
-     * @apiGroup designCompany
-     *
-     * @apiParam {integer} id
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
-     * }
-     */
-    public function okStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
-        }
-        $design = DesignCompanyModel::unStatus($id , 0);
-        if(!$design){
-            return $this->response->array($this->apiSuccess());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
-
-    /**
-     * @api {put} /designCompany/unStatus 设计公司禁用
-     * @apiVersion 1.0.0
-     * @apiName designCompany unStatus
-     * @apiGroup designCompany
-     *
-     * @apiParam {integer} id
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
-     * }
-     */
-    public function unStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
-        }
-        $design = DesignCompanyModel::unStatus($id , -1);
-        if(!$design){
-            return $this->response->array($this->apiSuccess());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
 }

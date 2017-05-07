@@ -56,6 +56,6 @@ class SendOneSms implements ShouldQueue
 
     public function failed(\Exception $exception)
     {
-        Log::error('短信发送失败' . 'code:' . $exception->getCode() . '; message:' . $exception->getMessage());
+        //
     }
 }

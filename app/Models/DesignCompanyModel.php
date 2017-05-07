@@ -179,4 +179,40 @@ class DesignCompanyModel extends Model
         return AssetModel::getImageUrl($this->id, 3, 1 , 5);
     }
 
+    /**
+     * 一对多关联案例表
+     */
+    public function designCase()
+    {
+        return $this->hasMany('App\Models\DesignCaseModel', 'design_company_id');
+    }
+
+    /**
+     * 验证有无设计公司访问权限
+     *
+     * @param int $user_id  访问用户user_iD
+     * @param int $design_company_id 公司ID
+     * @return bool
+     */
+    public function isRead($user_id, $design_company_id)
+    {
+        $design = DesignCompanyModel::find($design_company_id);
+        $item_s = Item::where('user_id', $user_id)->get();
+
+        //检查是否推荐了该公司
+        $is_recommend = false;
+        foreach($item_s as $item){
+            if(in_array($design_company_id, explode(',', $item->recommend))){
+                $is_recommend = true;
+                break;
+            }
+        }
+
+        //公司是否开放、是否自己访问自己、是否推荐了该公司
+        if($design->open != 1 && $design->user != $user_id && $is_recommend != true){
+            return false;
+        }
+
+        return true;
+    }
 }

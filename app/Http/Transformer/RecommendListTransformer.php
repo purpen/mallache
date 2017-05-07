@@ -4,16 +4,15 @@
  */
 namespace App\Http\Transformer;
 
-use App\Models\User;
+use App\Models\DesignCompanyModel;
 use League\Fractal\TransformerAbstract;
 
 class RecommendListTransformer extends TransformerAbstract
 {
-    public function transform(User $user)
+    public function transform(DesignCompanyModel $design_company)
     {
         return [
-            'design_company' => $user->designCompany ?? '',
-            'design_case' =>$user->designCase ?? '',
+            'design_company' => $design_company,
         ];
     }
 }

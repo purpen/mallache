@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Events\ItemStatusEvent;
+use App\Helper\Tools;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
@@ -209,6 +211,9 @@ class ItemActionController extends Controller
 
         $item->status = 3;
         $item->save();
+
+        //触发事件
+        event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());
     }
