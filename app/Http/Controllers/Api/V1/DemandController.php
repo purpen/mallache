@@ -563,7 +563,7 @@ class DemandController extends BaseController
     {
     "data": [
         {
-            "design_company": {
+            {
                 "id": 1,
                 "user_id": 1, //用户表ID (唯一索引)
                 "company_type": 1, //企业类型：1.普通；2.多证合一；
@@ -594,6 +594,9 @@ class DemandController extends BaseController
                 "company_abbreviation": "", //简称
                 "is_recommend": 0, //推荐
                 "verify_status": 1 //审核状态
+ *              "logo": [],
+                "license_image": [],
+                "unique_id": ""
             }
     },
         "meta": {
