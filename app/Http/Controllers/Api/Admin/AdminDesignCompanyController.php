@@ -187,7 +187,7 @@ class AdminDesignCompanyController extends Controller
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
-     * @apiParam {integer} type 0.全部；0.禁用的;默认1；
+     * @apiParam {integer} type -1.禁用的;0.所有的;1.审核过；
      * @apiParam {string} token
      */
     public function lists(Request $request)
@@ -205,8 +205,13 @@ class AdminDesignCompanyController extends Controller
 
         $query = DesignCompanyModel::query();
         switch ($request->input('type')){
-            case 0:
+            case -1:
                 $query = $query->where('status', 0);
+                break;
+            case 0:
+                break;
+            case 1:
+                $query = $query->where('status', 1)->where('verify_status' , 1);
                 break;
             default:
         }
