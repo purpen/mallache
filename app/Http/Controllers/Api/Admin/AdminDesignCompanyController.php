@@ -7,9 +7,10 @@ use App\Http\Transformer\DesignCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 
-class AdminDesignCompanyController extends BaseController
+class AdminDesignCompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -73,7 +74,7 @@ class AdminDesignCompanyController extends BaseController
         $id = $request->input('id');
         $design_company = DesignCompanyModel::where('id' , $id)->first();
         if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
+            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
         }
         $design = DesignCompanyModel::verifyStatus($id , 1);
         if(!$design){
@@ -104,7 +105,7 @@ class AdminDesignCompanyController extends BaseController
         $id = $request->input('id');
         $design_company = DesignCompanyModel::where('id' , $id)->first();
         if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
+            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
         }
         $design = DesignCompanyModel::verifyStatus($id , 0);
         if(!$design){
@@ -137,7 +138,7 @@ class AdminDesignCompanyController extends BaseController
         $design_company = DesignCompanyModel::where('id' , $id)->first();
 
         if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
+            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
         }
         $design = DesignCompanyModel::unStatus($id , 1);
         if(!$design){
@@ -168,7 +169,7 @@ class AdminDesignCompanyController extends BaseController
         $id = $request->input('id');
         $design_company = DesignCompanyModel::where('id' , $id)->first();
         if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
+            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
         }
         $design = DesignCompanyModel::unStatus($id , 0);
         if(!$design){
@@ -193,7 +194,7 @@ class AdminDesignCompanyController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
 
-        if(empty($request->input('sort')))
+        if($request->input('sort') === 0)
         {
             $sort = 'asc';
         }

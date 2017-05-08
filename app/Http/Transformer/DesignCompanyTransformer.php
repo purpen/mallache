@@ -77,6 +77,8 @@ class DesignCompanyTransformer extends TransformerAbstract
             'logo' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
+            'created_at' => $DesignCompany->created_at->format("Y-m-d"),
+            'users' => $DesignCompany->user,
         ];
     }
 }

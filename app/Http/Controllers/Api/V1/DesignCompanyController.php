@@ -266,7 +266,7 @@ class DesignCompanyController extends BaseController
             $design->good_field = explode(',' , $design['good_field']);
         }
         if(!$design){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('没有找到' , 404));
         }
         return $this->response->item($design , new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
@@ -282,14 +282,15 @@ class DesignCompanyController extends BaseController
     public function otherIndex($id)
     {
         $design = DesignCompanyModel::where('id', $id)->first();
+        if(!$design){
+            return $this->response->array($this->apiError('没有找到' , 404));
+        }
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
         $items = DesignItemModel::where('user_id', $design->user_id)->get();
 
-        if(!$design){
-            return $this->response->array($this->apiSuccess());
-        }
+
         foreach ($items as $item)
         {
             $design_type_val[] = $item->design_type_val;
