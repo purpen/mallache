@@ -80,6 +80,7 @@ class DesignCompanyShowTransformer extends TransformerAbstract
             'logo' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
+            'city_arr' => $DesignCompany->city_arr,
         ];
     }
 }

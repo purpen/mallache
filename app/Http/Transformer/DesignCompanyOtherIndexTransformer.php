@@ -80,6 +80,7 @@ class DesignCompanyOtherIndexTransformer extends TransformerAbstract
             'license_image' => $DesignCompany->license_image,
             'design_type_val' => $DesignCompany->design_type_val,
             'unique_id' => strval($DesignCompany->unique_id),
+            'city_arr' => $DesignCompany->city_arr,
 
         ];
     }

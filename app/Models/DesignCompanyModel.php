@@ -56,6 +56,7 @@ class DesignCompanyModel extends Model
         'company_type_val',
         'company_size_val',
 //        'item_quantity_val',
+        'city_arr',
 
     ];
 
@@ -245,6 +246,22 @@ class DesignCompanyModel extends Model
         }
 
         return true;
+    }
+
+    public function getCityArrAttribute()
+    {
+        $array = [110000, 120000, 310000, 500000];
+        if(in_array($this->province, $array)){
+            return [
+                $this->company_province_value,
+                $this->company_area_value,
+            ];
+        }else{
+            return [
+                $this->company_province_value,
+                $this->company_city_value,
+            ];
+        }
     }
 
 }

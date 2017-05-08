@@ -82,6 +82,7 @@ class DesignCompanyTransformer extends TransformerAbstract
             'unique_id' => strval($DesignCompany->unique_id),
             'created_at' => $DesignCompany->created_at->format("Y-m-d"),
             'users' => $DesignCompany->user,
+            'city_arr' => $DesignCompany->city_arr,
         ];
     }
 }
