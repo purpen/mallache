@@ -99,7 +99,7 @@ class Recommend implements ShouldQueue
 //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 0, 'verify_status' => 1])
+            ->where(['status' => 1, 'verify_status' => 1])
             ->whereIn('user_id',$design_id_arr)
             ->whereRaw('find_in_set(' . $field . ', good_field)')
             ->orderBy('score', 'desc')
@@ -129,7 +129,7 @@ class Recommend implements ShouldQueue
 //Log::info($design_id_arr);
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 0, 'verify_status' => 1])
+            ->where(['status' => 1, 'verify_status' => 1])
             ->whereIn('user_id',$design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
