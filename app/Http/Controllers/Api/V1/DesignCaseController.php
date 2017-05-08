@@ -392,4 +392,27 @@ class DesignCaseController extends BaseController
         }
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {get} /designCase/designCompany/{design_company_id}  根据设计公司id查看案例
+     * @apiVersion 1.0.0
+     * @apiName designCase lists
+     * @apiGroup designCase
+     *
+     * @apiParam {string} token
+     */
+    public function lists($design_company_id)
+    {
+        $design = DesignCompanyModel::find($design_company_id);
+        if(!$design->isRead($this->auth_user_id , $design_company_id)){
+            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+
+        }
+        if(!$design){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $designCase = $design->designCase;
+        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+
+    }
 }

@@ -77,7 +77,7 @@ class AdminDesignCompanyController extends BaseController
         }
         $design = DesignCompanyModel::verifyStatus($id , 1);
         if(!$design){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('修改失败' , 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -108,7 +108,7 @@ class AdminDesignCompanyController extends BaseController
         }
         $design = DesignCompanyModel::verifyStatus($id , 0);
         if(!$design){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('修改失败' , 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -139,9 +139,9 @@ class AdminDesignCompanyController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::unStatus($id , 0);
+        $design = DesignCompanyModel::unStatus($id , 1);
         if(!$design){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('修改失败' , 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -170,9 +170,9 @@ class AdminDesignCompanyController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::unStatus($id , -1);
+        $design = DesignCompanyModel::unStatus($id , 0);
         if(!$design){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('修改失败' , 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -186,7 +186,7 @@ class AdminDesignCompanyController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
-     * @apiParam {integer} type 0.全部；-1.禁用的;默认0；
+     * @apiParam {integer} type 0.全部；0.禁用的;默认1；
      * @apiParam {string} token
      */
     public function lists(Request $request)
@@ -204,8 +204,8 @@ class AdminDesignCompanyController extends BaseController
 
         $query = DesignCompanyModel::query();
         switch ($request->input('type')){
-            case -1:
-                $query = $query->where('status', -1);
+            case 0:
+                $query = $query->where('status', 0);
                 break;
             default:
         }

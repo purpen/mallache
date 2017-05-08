@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Helper\Tools;
 use App\Models\DesignCompanyModel;
 use League\Fractal\TransformerAbstract;
 
@@ -52,6 +53,9 @@ class DesignCompanyShowTransformer extends TransformerAbstract
             'province' => intval($DesignCompany->province),
             'city' => intval($DesignCompany->city),
             'area' => intval($DesignCompany->area),
+            'province_value' => $DesignCompany->company_province_value,
+            'city_value' => $DesignCompany->company_city_value,
+            'area_value' => $DesignCompany->company_area_value,
             'address' => strval($DesignCompany->address),
             'contact_name' => strval($DesignCompany->contact_name),
             'position' => strval($DesignCompany->position),
@@ -73,7 +77,7 @@ class DesignCompanyShowTransformer extends TransformerAbstract
             'status' => intval($DesignCompany->status),
             'is_recommend' => intval($DesignCompany->status),
             'verify_status' => intval($DesignCompany->status),
-            'logo_image' => $DesignCompany->logo_image,
+            'logo' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
         ];
