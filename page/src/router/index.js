@@ -189,15 +189,26 @@ const routes = [
     component: require('@/components/block/Blank')
   },
 
-  // 个人/公司主页
+  // 个人主页
   {
     path: '/user/:id',
     name: 'userShow',
     meta: {
-      title: '公司主页',
-      requireAuth: false
+      title: '个人主页',
+      requireAuth: true
     },
-    component: require('@/components/pages/home/Apply')
+    component: require('@/components/pages/user/Show')
+  },
+
+  // 公司主页
+  {
+    path: '/company/:id',
+    name: 'companyShow',
+    meta: {
+      title: '公司主页',
+      requireAuth: true
+    },
+    component: require('@/components/pages/company/Show')
   },
 
   // 公司基本设置
@@ -248,7 +259,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/order/List')
   },
   // 作品列表
   {
@@ -310,6 +321,17 @@ const routes = [
     },
     component: require('@/components/pages/v_center/item/List')
   },
+  // 项目详情
+  {
+    path: '/vcenter/item/show/:id',
+    name: 'vcenterItemShow',
+    meta: {
+      title: '详情',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/item/Show')
+  },
+
   // 我的项目列表(设计公司)
   {
     path: '/vcenter/citem/list',
@@ -338,6 +360,58 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/home/Apply')
+  },
+
+  // 后台管理
+  // 控制台
+  {
+    path: '/admin',
+    name: 'adminDashBoard',
+    meta: {
+      title: '控制台',
+      requireAuth: true
+    },
+    component: require('@/components/admin/DashBoard')
+  },
+  // 项目列表
+  {
+    path: '/admin/item/list',
+    name: 'adminItemList',
+    meta: {
+      title: '项目列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/item/List')
+  },
+  // 项目匹配公司
+  {
+    path: '/admin/item/match/:id',
+    name: 'adminItemMatch',
+    meta: {
+      title: '项目匹配',
+      requireAuth: true
+    },
+    component: require('@/components/admin/item/Match')
+  },
+  // 公司列表
+  {
+    path: '/admin/company/list',
+    name: 'adminCompanyList',
+    meta: {
+      title: '公司列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/company/List')
+  },
+  // 用户列表
+  {
+    path: '/admin/user/list',
+    name: 'adminUserList',
+    meta: {
+      title: '用户列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/user/List')
   }
 ]
 

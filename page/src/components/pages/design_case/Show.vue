@@ -4,7 +4,7 @@
     <el-row :gutter="24">
 
       <el-col :span="18">
-        <div class="design-case-content">
+        <div class="design-case-content edit-content">
           <div class="title">
             <h1>{{ item.title }}</h1>
           </div>
@@ -142,6 +142,12 @@
   }
   .design-case-slide .prize {
     margin-top: 20px;
+  }
+  .edit-content {
+    padding: 20px;
+    overflow: hidden;
+  }
+  .edit-content img {
   }
 
 </style>

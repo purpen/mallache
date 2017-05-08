@@ -22,31 +22,49 @@ export default {
   fetch_msm_code: '/auth/sms', // 获取手机验证码
   user: '/auth/user',  // 获取用户信息
 
-  designCompany: '/designCompany', // 设计公司基本资料
-
+  // 项目需求
   demandAlipay: '/pay/demandAliPay',  // 支付保证金
+  itemList: '/demand/itemList',  // 客户项目列表
+  demand: '/demand',  // 添加项目领域
+  demandId: '/demand/{0}',  // 更改项目领域
+  ProductDesignId: '/ProductDesign/{0}', // 更改产品设计基本资料
+  UDesignId: '/UDesign/{0}', // 更改UI设计基本资料
+  release: '/demand/release', // 发布项目
+
+  // 设计公司获取项目订单
+  designItemList: '/design/itemList',  // 设计公司获取项目订单
 
   // 订单
   orderId: '/pay/getPayStatus/{0}',  // 查看订单详情
 
+  // 公司接单设置
   saveDesignItem: '/designItem', // 接单信息保存
   designItems: '/designItem', // 查看接单列表
   designItem: '/designItem/{0}', // 查看/编辑/删除接单信息
 
+  // 案例
   designCase: '/designCase',  // 公司案例
   designCaseId: '/designCase/{0}',  // 公司案例
 
-  itemList: '/demand/itemList',  // 客户项目列表
+  // 公司
+  designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情
+  designCompany: '/designCompany', // 设计公司基本资料
 
-  demand: '/demand',  // 添加项目领域
-  demandId: '/demand/{0}',  // 更改项目领域
-
-  ProductDesignId: '/ProductDesign/{0}', // 更改产品设计基本资料
-  UDesignId: '/UDesign/{0}', // 更改UI设计基本资料
-
-  release: '/demand/release', // 发布项目
-
+  // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
-  upToken: '/upload/upToken'  // 获取上传token
+  upToken: '/upload/upToken',  // 获取上传token
 
+  // 后台管理
+  adminItemList: '/admin/item/lists', // 项目列表
+  adminCompanyList: '/admin/designCompany/lists', // 项目列表
+  addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
+  ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
+
+  // 公司审核
+  adminCompanyStatusOk: '/admin/designCompany/okStatus', // 启用
+  adminCompanyStatusDisable: '/admin/designCompany/unStatus', // 禁用
+  adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // 通过审核
+  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // 取消审核
+
+  test: '/'  // End
 }

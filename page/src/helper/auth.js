@@ -17,6 +17,7 @@ mallache.write_user = function (user) {
     phone: user.phone,
     avatar_url: user.img,
     type: user.type,
+    design_company_id: user.design_company_id,
     status: user.status
   }
   // 写入localStorage

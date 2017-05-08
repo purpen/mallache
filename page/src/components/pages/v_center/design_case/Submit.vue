@@ -144,7 +144,7 @@
 
               <div class="form-btn">
                   <el-button>取消</el-button>
-                  <el-button type="success" @click="submit('ruleForm')">提交</el-button>
+                  <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')">提交</el-button>
               </div>
               <div class="clear"></div>
             </el-form>
@@ -175,6 +175,7 @@
       return {
         userId: this.$store.state.event.user.id,
         itemId: null,
+        isLoadingBtn: false,
         labelPosition: 'top',
         fileList: [],
         uploadUrl: '',
@@ -262,6 +263,7 @@
                 row['random'] = that.uploadParam['x:random']
               }
             }
+            that.isLoadingBtn = true
             that.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
               if (response.data.meta.status_code === 200) {
@@ -270,14 +272,15 @@
                 return false
               } else {
                 that.$message.error(response.data.meta.message)
+                that.isLoadingBtn = false
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
+              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
-
             return false
           } else {
             console.log('error submit!!')

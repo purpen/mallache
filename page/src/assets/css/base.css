@@ -14,6 +14,9 @@ p{
   font-size:1.4rem;
 }
 
+.false{
+}
+
 a {
   color: rgba(112,123,135,.92);
   text-decoration: none;
@@ -128,6 +131,41 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
 
 /**
  * Common Part --- End
+ */
+
+/**
+ * Footer Start
+ */
+.footer{
+  text-align:center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.footer .line {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-top: 1px solid #ccc;
+}
+.footer .item {
+  float: left;
+  text-align:center;
+}
+.footer p {
+  margin: 10px;
+}
+.footer p.title {
+  font-size: 1.5rem;
+  margin: 20px;
+}
+.footer .share-box {
+  width: 150px;
+  margin: 0 auto;
+}
+.footer p.share {
+  float: left;
+}
+/**
+ * Footer End
  */
 
 /**

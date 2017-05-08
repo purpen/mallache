@@ -66,7 +66,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
-  import vMenuSub from '@/components/pages/v_center/item/MenuSub'
+  import vMenuSub from '@/components/pages/v_center/c_item/MenuSub'
   import api from '@/api/api'
   import '@/assets/js/format'
 
@@ -78,7 +78,7 @@
     },
     data () {
       return {
-        designCases: [],
+        designItems: [],
         userId: this.$store.state.event.user.id
       }
     },
@@ -117,15 +117,17 @@
     },
     computed: {
     },
-    watch: {
-    },
     created: function() {
       const that = this
-      that.$http.get(api.designCase, {})
+      that.$http.get(api.designItemList, {})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          that.designCases = response.data.data
+          that.designItems = response.data.data
+        } else {
+          that.$message.error(response.meta.message)
         }
+
+        console.log(response.data)
       })
       .catch (function(error) {
         that.$message.error(error.message)

@@ -12,6 +12,15 @@
           <li>
             <label>
               <div class="item">
+                <el-radio v-model="payType" label="jdpay">&nbsp;</el-radio>
+                <img src="../../../assets/images/icon/jd_icon.png" />
+                <span>京东支付</span>
+              </div>
+            </label>
+          </li>
+          <li>
+            <label>
+              <div class="item">
                 <el-radio v-model="payType" label="alipay">&nbsp;</el-radio>
                 <img src="../../../assets/images/icon/zfb_icon.png" />
                 <span class="tt">支付宝</span>
@@ -27,15 +36,7 @@
               </div>
             </label>
           </li>
-          <li>
-            <label>
-              <div class="item">
-                <el-radio v-model="payType" label="jdpay">&nbsp;</el-radio>
-                <img src="../../../assets/images/icon/jd_icon.png" />
-                <span>京东支付</span>
-              </div>
-            </label>
-          </li>
+
         </ul>
         <div class="clear"></div>
       </div>

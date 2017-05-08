@@ -1,0 +1,40 @@
+/**
+ * Admin CSS
+ */
+
+.admin-table, .admin-table p {
+  font-size: 1rem;
+}
+.pagination {
+  margin: 20px 0 20px 0;
+}
+
+
+
+/**
+ * Admin Menu Sub --- Start
+ */
+.admin-menu-sub {
+  height: 20px;
+  line-height: 10px;
+  border-bottom: 1px solid #ccc;
+  margin: 0 0 20px 0;
+}
+
+.admin-menu-sub-list {
+
+}
+.admin-menu-sub-list .item {
+  font-size: 1.2rem;
+  display: block;
+  margin: 0 16px 0 0;
+  float: left;
+}
+.admin-menu-sub-list .item.is-active {
+  color: #222;
+  border-bottom: 1px solid #222;
+  padding-bottom: 10px;
+}
+/**
+ * Admin Menu Sub --- End
+ */
