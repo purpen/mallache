@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Tymon\JWTAuth\Http\Middleware\RefreshToken;
 
 class Kernel extends HttpKernel
 {
@@ -62,5 +63,8 @@ class Kernel extends HttpKernel
         //jwt
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
+
+        //角色验证
+        'role' => \App\Http\Middleware\CheckRole::class
     ];
 }
