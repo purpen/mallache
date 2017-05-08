@@ -1,7 +1,7 @@
 <template>
   <div class="content-box">
 
-    <el-carousel :interval="5000" height="350">
+    <el-carousel :interval="5000" height="420px">
       <el-carousel-item v-for="item in slideList" :key="item">
         <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')' }">
         </div>
@@ -66,15 +66,13 @@
         <h3>优秀设计公司展示</h3>
         <el-row :gutter="24">
           <el-col :span="12">
-            <div class="item_3_back" style="background-image: url(../../assets/images/home/index_06.png)">
-              <p class="item_1_title">产品设计</p>
-              <p class="item_1_desc">产品创新设计／产品创新咨询</p>
+            <div class="item_3_back">
+              <img src="../../../assets/images/home/index_06.png" />
             </div>
           </el-col>
           <el-col :span="12">
             <div class="item_3_back" style="background-image: url(../../../assets/images/home/index_07.png)">
-              <p class="item_1_title">UI/UE设计</p>
-              <p class="item_1_desc">App设计／网页设计</p>
+              <img src="../../../assets/images/home/index_07.png" />
             </div>
           </el-col>
         </el-row>
@@ -95,17 +93,12 @@ export default {
         {
           'clickUrl': '#',
           'desc': 'nhwc',
-          'image': 'https://p4.taihuoniao.com/asset/170228/58b53fb420de8d36438bb0c6-1'
+          'image': 'https://p4.taihuoniao.com/asset/170508/590fe1783ffca2ec688b4902-1'
         },
         {
           'clickUrl': '#',
           'desc': 'hxrj',
-          'image': 'https://p4.taihuoniao.com/asset/170303/58b8e88b20de8d006f8be4cc-1'
-        },
-        {
-          'clickUrl': '#',
-          'desc': 'hxrj',
-          'image': 'https://p4.taihuoniao.com/asset/170113/58782624fc8b1236368b6c58-1'
+          'image': 'https://p4.taihuoniao.com/asset/170508/590fe1783ffca2ec688b4902-2'
         }
       ],
       msg: ''
@@ -132,9 +125,8 @@ export default {
   .slide {
     color: #475669;
     font-size: 18px;
-    opacity: 0.95;
-    line-height: 500px;
-    height: 500px;
+    line-height: 420px;
+    height: 420px;
     margin: 0;
   }
 
@@ -186,8 +178,7 @@ export default {
     color: #4B4B4B;
   }
   .item_3_back {
-    width: 300px;
-    height: 200px;
+
   }
 
 </style>
