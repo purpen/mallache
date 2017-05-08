@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class DesignCompanyModel extends Model
@@ -96,7 +97,7 @@ class DesignCompanyModel extends Model
     /**
      * 更改设计公司状态
      */
-    static public function unStatus($id, $status=-1)
+    static public function unStatus($id, $status=1)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;
@@ -165,7 +166,7 @@ class DesignCompanyModel extends Model
      */
     public function getLogoImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 6, 1);
+        return AssetModel::getOneImage($this->logo);
     }
 
 
@@ -186,6 +187,36 @@ class DesignCompanyModel extends Model
     {
         return $this->hasMany('App\Models\DesignCaseModel', 'design_company_id');
     }
+
+
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyCityValueAttribute()
+    {
+        return Tools::cityName($this->city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getCompanyAreaValueAttribute()
+    {
+        return Tools::cityName($this->area);
+    }
+
 
     /**
      * 验证有无设计公司访问权限
@@ -215,4 +246,5 @@ class DesignCompanyModel extends Model
 
         return true;
     }
+
 }

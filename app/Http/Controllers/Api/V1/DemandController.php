@@ -660,6 +660,9 @@ class DemandController extends BaseController
         try{
 
             $item = Item::find($all['item_id']);
+            if(empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))){
+                return $this->response->array($this->apiError('选择设计公司不符合要求', 403));
+            };
             if($item->user_id != $this->auth_user_id || $item->status != 3){
                 return $this->response->array($this->apiError('无操作权限或当前状态不可操作', 403));
             }

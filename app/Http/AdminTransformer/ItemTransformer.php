@@ -28,6 +28,8 @@ class ItemTransformer extends TransformerAbstract
             $info = '';
         }
 
+        $user = $item->user;
+
         return [
             'item' => $item,
             'info' => $info,

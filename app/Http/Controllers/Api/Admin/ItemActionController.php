@@ -5,6 +5,7 @@ use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -110,7 +111,7 @@ class ItemActionController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
 
-        if(empty($request->input('sort')))
+        if($request->input('sort') === 0)
         {
             $sort = 'asc';
         }
@@ -167,6 +168,13 @@ class ItemActionController extends Controller
         }
 
         try{
+            $isDesign = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
+                ->whereIn('id', $all['recommend'])
+                ->count();
+            if($isDesign < count($all['recommend'])){
+                return $this->response->array($this->apiError('推荐设计公司不符合条件', 403));
+            }
+
             $item = Item::find($all['item_id']);
             $item->recommend = implode(',', $all['recommend']);
             $item->save();
@@ -207,6 +215,10 @@ class ItemActionController extends Controller
 
         if($item->status != 2){
             return $this->response->array($this->apiError('当前状态不可操作', 403));
+        }
+
+        if(empty($item->recommend)){
+            return $this->response->array($this->apiError('当前项目没有推荐设计公司', 403));
         }
 
         $item->status = 3;

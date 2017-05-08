@@ -322,7 +322,7 @@ class AuthenticateController extends BaseController
      *          "item_sum": 0, //项目数量
      *          "price_total": "0.00", //总金额
      *          "price_frozen": "0.00", //冻结金额
-     *           "img": ""
+     *           "image": ""
             }
      *   }
      */
