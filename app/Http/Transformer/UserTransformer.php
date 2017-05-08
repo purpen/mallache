@@ -31,7 +31,7 @@ price_frozen	decimal(10,2)	否	0	冻结金额*/
             'item_sum' => $user->item_sum,
             'price_total' => floatValue($user->price_total),
             'price_frozen' => floatValue($user->price_frozen),
-            'img' => $user->image,
+            'image' => $user->image,
             'design_company_id' =>$user->design_company_id,
         ];
     }
