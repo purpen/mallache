@@ -404,6 +404,10 @@ class DesignCaseController extends BaseController
     public function lists($design_company_id)
     {
         $design = DesignCompanyModel::find($design_company_id);
+        if(!$design->isRead($this->auth_user_id , $design_company_id)){
+            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+
+        }
         if(!$design){
             return $this->response->array($this->apiError('not found!', 404));
         }
