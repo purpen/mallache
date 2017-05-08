@@ -28,7 +28,23 @@ class ItemTransformer extends TransformerAbstract
             $info = '';
         }
 
+        $user = $item->user;
+
         return [
+            'user' => [
+                'id' => (int)$user->id,
+                'type' => (int)$user->type,
+                'account' => $user->account,
+                'username' => $user->username,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'status' => $user->status,
+                'item_sum' => $user->item_sum,
+                'price_total' => floatValue($user->price_total),
+                'price_frozen' => floatValue($user->price_frozen),
+                'img' => $user->image,
+                'design_company_id' =>$user->design_company_id,
+            ],
             'item' => $item,
             'info' => $info,
         ];
