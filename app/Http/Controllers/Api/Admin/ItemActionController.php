@@ -217,6 +217,10 @@ class ItemActionController extends Controller
             return $this->response->array($this->apiError('当前状态不可操作', 403));
         }
 
+        if(empty($item->recommend)){
+            return $this->response->array($this->apiError('当前项目没有推荐设计公司', 403));
+        }
+
         $item->status = 3;
         $item->save();
 
