@@ -169,13 +169,13 @@ export default {
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
+          .then (function(response1) {
+            if (response1.data.meta.status_code === 200) {
               self.$message.success('添加成功!')
               self.matchCompanyDialog = false
               return
             } else {
-              self.$message.error('response.meta.message')
+              self.$message.error(response1.data.meta.message)
               return
             }
           })
@@ -184,7 +184,7 @@ export default {
             console.log(error.message)
           })
         } else {
-          self.$message.error('response.meta.message')
+          self.$message.error(response.data.meta.message)
           return
         }
       })

@@ -6,9 +6,9 @@
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <img src="../../../assets/images/avatar_default.jpg" width="100" />
+            <img :src="item.logo.logo" width="100" />
             <h3>{{ item.company_name }}</h3>
-            <p><span>{{ item.province }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city }}</span></p>
+            <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
           <div class="rate">
             <el-rate

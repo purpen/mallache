@@ -72,9 +72,9 @@
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
             that.companyId = response.data.data.id
-            if (response.data.data.status === 1) {
+            if (response.data.data.verify_status === 1) {
               that.statusLabel = '公司认证已审核通过'
-            } else if (response.data.data.status === 0) {
+            } else if (response.data.data.verify_status === 0) {
               that.statusLabel = '公司认证审核中'
             }
             that.isApply = true

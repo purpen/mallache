@@ -65,9 +65,9 @@
             <el-table-column
               label="地点">
                 <template scope="scope">
-                  <p>省份: {{ scope.row.province }}</p>
-                  <p>城市: {{ scope.row.city }}</p>
-                  <p>地址: {{ scope.row.address }}</p>
+                  <p>省份: {{ scope.row.province_value }}</p>
+                  <p>城市: {{ scope.row.city_value }}</p>
+                  <p>地址: {{ scope.row.address_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -213,8 +213,8 @@ export default {
         for (var i = 0; i < self.itemList.length; i++) {
           var item = self.itemList[i]
           item.logo_url = ''
-          if (item.logo_image && item.logo_image.length !== 0) {
-            item.logo_url = item.logo_image[0]['logo']
+          if (item.logo) {
+            item.logo_url = item.logo['logo']
           }
           self.tableData.push(item)
         } // endfor

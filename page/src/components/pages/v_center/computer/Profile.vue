@@ -492,8 +492,8 @@
               if (response.data.data.branch_office !== 0) {
                 that.is_branch = true
               }
-              if (response.data.data.logo_image.length !== 0) {
-                that.imageUrl = response.data.data.logo_image[0]['small']
+              if (response.data.data.logo) {
+                that.imageUrl = response.data.data.logo.small
               }
               if (response.data.data.license_image) {
                 var files = []

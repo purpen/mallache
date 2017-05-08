@@ -259,7 +259,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/order/List')
   },
   // 作品列表
   {
