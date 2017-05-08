@@ -97,7 +97,7 @@ class DesignCompanyModel extends Model
     /**
      * 更改设计公司状态
      */
-    static public function unStatus($id, $status=-1)
+    static public function unStatus($id, $status=1)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;

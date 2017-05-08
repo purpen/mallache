@@ -139,7 +139,7 @@ class AdminDesignCompanyController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::unStatus($id , 0);
+        $design = DesignCompanyModel::unStatus($id , 1);
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
@@ -170,7 +170,7 @@ class AdminDesignCompanyController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 200));
         }
-        $design = DesignCompanyModel::unStatus($id , -1);
+        $design = DesignCompanyModel::unStatus($id , 0);
         if(!$design){
             return $this->response->array($this->apiSuccess());
         }
