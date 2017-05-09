@@ -45,7 +45,7 @@ class ItemRecommend extends Model
                 $item_status_value = '项目需求方拒绝';
                 break;
             case 0:
-                $item_status_value = '待操作';
+                $item_status_value = '等待设计公司接单';
                 break;
             case 1:
                 $item_status_value = '选定设计公司';
@@ -63,7 +63,7 @@ class ItemRecommend extends Model
                 $design_company_status_value = '设计公司拒绝';
                 break;
             case 0:
-                $design_company_status_value = '待操作';
+                $design_company_status_value = '等待设计公司接单';
                 break;
             case 1:
                 $design_company_status_value = '设计公司一键成交';
