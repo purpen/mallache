@@ -87,8 +87,8 @@ class DesignController extends BaseController
      * @apiSuccessExample 成功响应:
      *  {
             "meta": {
-            "message": "Success",
-            "status_code": 200
+                "message": "Success",
+                "status_code": 200
             }
         }
      */

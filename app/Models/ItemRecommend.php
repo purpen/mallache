@@ -108,13 +108,13 @@ class ItemRecommend extends Model
             $status_value = '设计公司已拒绝';
         }elseif($item_status == 0 && $design_company_status == 0){
             $status = 3;
-            $status_value = '待操作';
+            $status_value = '等待设计公司接单';
         }elseif($item_status == 0 && $design_company_status == 2){
             $status = 4;
-            $status_value = '设计公司有意接单';
+            $status_value = '设计公司已报价';
         }elseif ($item_status == 1){
             $status = 5;
-            $status_value = '选定该设计公司';
+            $status_value = '确认合作';
         }
 
         return compact('status', 'status_value');
