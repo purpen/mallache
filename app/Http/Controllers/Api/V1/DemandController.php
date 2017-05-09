@@ -855,7 +855,7 @@ class DemandController extends BaseController
                         "is_recommend": 0, //推荐
                         "verify_status": 1 //审核状态
                     },
-                    "quotation": null
+                    "quotation": null  //设计公司报价单
                 },
             ],
      *  }

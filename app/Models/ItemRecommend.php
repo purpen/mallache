@@ -85,7 +85,9 @@ class ItemRecommend extends Model
      */
     public static function purposeCount($item_id)
     {
-        return  (int)self::where(['item_id' => $item_id, 'design_company_status' => 2])->count();
+        return  (int)self::where(['item_id' => $item_id, 'design_company_status' => 2])
+            ->where('item_status', '!=', -1)
+            ->count();
     }
 
     //项目推荐报价信息列表
