@@ -120,7 +120,7 @@ class ItemActionController extends Controller
             $sort = 'desc';
         }
 
-        $query = Item::with(['user']);
+        $query = Item::with(['user', 'productDesign', 'uDesign']);
         switch ($request->input('type')){
             case 1:
                 $query = $query->where('status', 1);
