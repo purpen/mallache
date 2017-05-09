@@ -104,13 +104,17 @@ class QuotationController extends BaseController
                 $item_recommend->quotation_id = $quotation->id;
                 $item_recommend->design_company_status = 2;
                 $item_recommend->save();
+
+            }else{
+                return $this->response->array($this->apiError('该项目已经报价' , 403));
+
             }
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
         }
-
         return $this->response->item($quotation, new QuotationTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**
