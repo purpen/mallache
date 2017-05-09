@@ -111,7 +111,7 @@ class ItemRecommend extends Model
         }elseif($item_status == 0 && $design_company_status == 0){
             $status = 3;
             $status_value = '等待设计公司接单';
-            $design_status_value = '等待设计公司接单';
+            $design_status_value = '等待接单';
         }elseif($item_status == 0 && $design_company_status == 2){
             $status = 4;
             $status_value = '设计公司已报价';
