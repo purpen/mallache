@@ -201,7 +201,7 @@ class DesignController extends BaseController
      * @apiParam {integer} type 0:全部（默认）；1.
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
-     * @apiParam {int} 0:升序；1.降序(默认)
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      *
      * @apiSuccessExample 成功响应:
      * {
