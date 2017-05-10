@@ -1065,6 +1065,9 @@ class DemandController extends BaseController
             $contract->status = 1;
             $contract->save();
 
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($item));
+
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();

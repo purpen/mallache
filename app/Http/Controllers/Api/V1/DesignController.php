@@ -114,6 +114,10 @@ class DesignController extends BaseController
             $item_recommend->design_company_status = -1;
             $item_recommend->save();
 
+            //项目是否匹配失败
+            $item = new Item();
+            $item->itemIsFail($item_id);
+
             return $this->response->array($this->apiSuccess());
         }catch (\Exception $e){
             Log::error($e->getMessage());
