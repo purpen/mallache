@@ -378,7 +378,7 @@ class Item extends Model
     /**
      * 判断项目是否匹配失败
      */
-    public function ()
+    public function itemIsFail()
     {
         //
     }
