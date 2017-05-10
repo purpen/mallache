@@ -933,6 +933,7 @@ class DemandController extends BaseController
             //拒绝其他设计公司
             $item_recommend_qt = ItemRecommend::where('item_id', '=', $all['item_id'])
                 ->where('design_company_id', '!=' , $all['design_company_id'])
+                ->where('design_company_status', '!=', -1)
                 ->get();
             if(!$item_recommend_qt->isEmpty()){
                 foreach($item_recommend_qt as $qt){
@@ -1014,17 +1015,21 @@ class DemandController extends BaseController
 
         //修改推荐关联表中需求方的状态
         $item_recommend->item_status = -1;
-        $item_recommend->save();
+        if(!$item_recommend->save()){
+            return $this->response->array($this->apiError('状态修改失败', 500));
+        }
 
         //消息通知
         $design = DesignCompanyModel::find($all['design_company_id']);
         $tools = new Tools();
-        $tools->message($design->user_id, '【' . $item['name'] . '】' . '已选择其他设计公司');
+        $tools->message($design->user_id, '【' . ($item->itemInfo())['name'] . '】' . '已选择其他设计公司');
+
+        //项目是否匹配失败
+        $item->itemIsFail($all['item_id']);
 
        return $this->response->array($this->apiSuccess());
     }
 
-    //确认合同
     /**
      * @api {post} /demand/trueContract 确定合作合同
      * @apiVersion 1.0.0

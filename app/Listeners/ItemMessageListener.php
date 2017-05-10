@@ -32,6 +32,10 @@ class ItemMessageListener
         $item = $event->item;
 
         switch ($item->status){
+            //项目匹配失败
+            case -2:
+                $this->itemFail($event);
+                break;
             //已推荐设计公司
             case 3:
                 $this->recommendDesign($item);
@@ -109,4 +113,13 @@ class ItemMessageListener
         }
     }
 
+    //项目匹配失败-通知用户
+    public function itemFail(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        $tools = new Tools();
+        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '未达成合作，匹配失败');
+    }
 }

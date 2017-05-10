@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -378,9 +379,23 @@ class Item extends Model
     /**
      * 判断项目是否匹配失败
      */
-    public function itemIsFail()
+    public function itemIsFail(int $item_id)
     {
-        //
+        //尚在匹配项目数量
+        $item_count = ItemRecommend::where('item_id', $item_id)
+            ->where('item_status', '!=' -1)
+            ->where('design_company_status', '!=', -1)
+            ->count();
+
+        //匹配失败项目状态修改为匹配失败（2）
+        if($item_count < 1){
+            $item = Item::find($item_id);
+            $item->status = -2;
+            $item->save();
+
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($item));
+        }
     }
 
 }
