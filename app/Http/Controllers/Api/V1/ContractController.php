@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
 use App\Http\Transformer\ContractTransformer;
 use App\Models\Contract;
 use App\Models\DesignCompanyModel;
@@ -163,10 +164,14 @@ class ContractController extends BaseController
                 $item->contract_id = $contract->id;
                 $item->status = 6;
                 $item->save();
+
+                event(new ItemStatusEvent($item));
+            }else{
+                return $this->response->array($this->apiError());
             }
         }
         catch (\Exception $e){
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiError('项目合同已创建' , 403));
         }
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
 
