@@ -1004,8 +1004,8 @@ class DemandController extends BaseController
         if(!$item = Item::find($all['item_id'])){
             return $this->response->array($this->apiError('not found', 404));
         }
-        if($item->user_id !== $this->auth_user_id || $item->status !== 4){
-            return $this->response->array($this->apiError('not found', 404));
+        if($item->user_id != $this->auth_user_id || $item->status != 4){
+            return $this->response->array($this->apiError('无权限', 403));
         }
 
         $item_recommend = ItemRecommend::where(['item_id' => $all['item_id'], 'design_company_id' => $all['design_company_id']])->first();
