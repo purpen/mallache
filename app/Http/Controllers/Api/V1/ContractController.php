@@ -51,11 +51,11 @@ class ContractController extends BaseController
      * @apiParam {string} design_type_paragraph 设计类型款项
      * @apiParam {string} design_type_contain 设计类型包含
      * @apiParam {string} total 总额
-     * @apiParam {integer} project_start_date 项目启动日期
-     * @apiParam {integer} determine_design_date 设计确定日期
-     * @apiParam {integer} structure_layout_date 结构布局验证日期
-     * @apiParam {integer} design_sketch_date 效果图日期
-     * @apiParam {integer} end_date 最后确认日期
+     * @apiParam {string} project_start_date 项目启动日期
+     * @apiParam {string} determine_design_date 设计确定日期
+     * @apiParam {string} structure_layout_date 结构布局验证日期
+     * @apiParam {string} design_sketch_date 效果图日期
+     * @apiParam {string} end_date 最后确认日期
      * @apiParam {string} one_third_total 30%总额
      * @apiParam {integer} exterior_design_percentage 外观设计百分比
      * @apiParam {string} exterior_design_money 外观设计金额
@@ -316,11 +316,11 @@ class ContractController extends BaseController
      * @apiParam {string} design_type_paragraph 设计类型款项
      * @apiParam {string} design_type_contain 设计类型包含
      * @apiParam {string} total 总额
-     * @apiParam {integer} project_start_date 项目启动日期
-     * @apiParam {integer} determine_design_date 设计确定日期
-     * @apiParam {integer} structure_layout_date 结构布局验证日期
-     * @apiParam {integer} design_sketch_date 效果图日期
-     * @apiParam {integer} end_date 最后确认日期
+     * @apiParam {string} project_start_date 项目启动日期
+     * @apiParam {string} determine_design_date 设计确定日期
+     * @apiParam {string} structure_layout_date 结构布局验证日期
+     * @apiParam {string} design_sketch_date 效果图日期
+     * @apiParam {string} end_date 最后确认日期
      * @apiParam {string} one_third_total 30%总额
      * @apiParam {integer} exterior_design_percentage 外观设计百分比
      * @apiParam {string} exterior_design_money 外观设计金额
