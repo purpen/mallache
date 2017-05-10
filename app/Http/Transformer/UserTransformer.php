@@ -5,7 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
-class UserTransformer extends TransformerAbstract
+class usertransformer extends TransformerAbstract
 {
     /*id	int(10)	否		用户ID
 account	varchar(20)	否		用户名
@@ -31,7 +31,7 @@ price_frozen	decimal(10,2)	否	0	冻结金额*/
             'item_sum' => $user->item_sum,
             'price_total' => floatValue($user->price_total),
             'price_frozen' => floatValue($user->price_frozen),
-            'image' => $user->image,
+            'logo_image' => $user->logo_image,
             'design_company_id' =>$user->design_company_id,
             'role_id' => $user->role_id,
         ];

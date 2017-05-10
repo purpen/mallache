@@ -375,4 +375,12 @@ class Item extends Model
         return $demand_item_status[$this->status];
     }
 
+    /**
+     * 判断项目是否匹配失败
+     */
+    public function ()
+    {
+        //
+    }
+
 }

@@ -26,10 +26,10 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','logo', 'price_total','price_frozen',
+        'password', 'remember_token', 'price_total','price_frozen',
     ];
 
-    protected $appends = ['image'];
+    protected $appends = ['logo_image'];
 
 
     public function getJWTIdentifier()
@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getImageAttribute()
+    public function getLogoImageAttribute()
     {
         return AssetModel::getOneImage($this->logo);
     }
