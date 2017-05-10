@@ -126,4 +126,5 @@ class ItemRecommend extends Model
 
         return compact('status', 'status_value', 'design_status_value');
     }
+
 }

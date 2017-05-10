@@ -87,6 +87,7 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
                     'price' => floatval($item->price),
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -165,6 +166,7 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
                     'name' => $info->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
@@ -348,11 +350,24 @@ class Item extends Model
     }
 
     /**
-     * 项目状态说明
+     * 项目状态说明(需求公司)
      */
     public function getStatusValueAttribute()
     {
         $demand_item_status = config('constant.demand_item_status');
+
+        if(!array_key_exists($this->status, $demand_item_status)){
+            return '';
+        }
+        return $demand_item_status[$this->status];
+    }
+
+    /**
+     * 项目状态说明（设计公司））
+     */
+    public function getDesignStatusValueAttribute()
+    {
+        $demand_item_status = config('constant.design_item_status');
 
         if(!array_key_exists($this->status, $demand_item_status)){
             return '';

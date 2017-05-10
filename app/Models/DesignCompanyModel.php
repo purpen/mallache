@@ -57,6 +57,7 @@ class DesignCompanyModel extends Model
         'company_size_val',
 //        'item_quantity_val',
         'city_arr',
+        'logo_image'
 
     ];
 
