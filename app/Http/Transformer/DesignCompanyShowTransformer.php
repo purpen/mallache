@@ -78,7 +78,7 @@ class DesignCompanyShowTransformer extends TransformerAbstract
             'is_recommend' => intval($DesignCompany->is_recommend),
             'verify_status' => intval($DesignCompany->verify_status),
             'logo' => $DesignCompany->logo,
-            'logo_image' =>$DesignCompany->logo_image,
+            'logo_image' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
             'city_arr' => $DesignCompany->city_arr,
