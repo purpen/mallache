@@ -70,6 +70,12 @@ class Item extends Model
         return $this->hasOne('App\Models\Contract', 'item_demand_id');
     }
 
+    //一对多 相对关联设计公司
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
+
     /**
      * 判断item对应的详细信息
      *

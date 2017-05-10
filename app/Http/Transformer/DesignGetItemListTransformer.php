@@ -5,6 +5,12 @@ namespace App\Http\Transformer;
 use App\Models\ItemRecommend;
 use League\Fractal\TransformerAbstract;
 
+/**
+ * 系统推荐给设计公司的项目列表
+ *
+ * Class DesignGetItemListTransformer
+ * @package App\Http\Transformer
+ */
 class DesignGetItemListTransformer extends TransformerAbstract
 {
     public function transform(ItemRecommend $itemRecommend)

@@ -159,7 +159,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/refuseItem/{item_id}', ['as' => 'design.refuseItem', 'uses' => 'DesignController@refuseItem']);
         //设计公司获取项目信息
         $api->get('/design/item/{item_id}', 'DesignController@item');
-
+        //已确定合作项目列表
+        $api->get('/design/cooperationLists', 'DesignController@cooperationLists');
 
         /**
          * 通知消息相关路由
