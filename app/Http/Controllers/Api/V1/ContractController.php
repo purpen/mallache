@@ -51,11 +51,11 @@ class ContractController extends BaseController
      * @apiParam {string} design_type_paragraph 设计类型款项
      * @apiParam {string} design_type_contain 设计类型包含
      * @apiParam {string} total 总额
-     * @apiParam {integer} project_start_date 项目启动日期
-     * @apiParam {integer} determine_design_date 设计确定日期
-     * @apiParam {integer} structure_layout_date 结构布局验证日期
-     * @apiParam {integer} design_sketch_date 效果图日期
-     * @apiParam {integer} end_date 最后确认日期
+     * @apiParam {string} project_start_date 项目启动日期
+     * @apiParam {string} determine_design_date 设计确定日期
+     * @apiParam {string} structure_layout_date 结构布局验证日期
+     * @apiParam {string} design_sketch_date 效果图日期
+     * @apiParam {string} end_date 最后确认日期
      * @apiParam {string} one_third_total 30%总额
      * @apiParam {integer} exterior_design_percentage 外观设计百分比
      * @apiParam {string} exterior_design_money 外观设计金额
@@ -152,7 +152,6 @@ class ContractController extends BaseController
         $all['unique_id'] = uniqid('ht');
         $rules = [
             'item_demand_id'  => 'required|integer',
-            'design_company_id'  => 'required|integer',
             'demand_company_name'  => 'required',
             'demand_company_address'  => 'required',
             'demand_company_phone'  => 'required',
@@ -181,7 +180,6 @@ class ContractController extends BaseController
 
         $messages = [
             'item_demand_id.required' => '项目需求id不能为空',
-            'design_company_id.required' => '设计公司id不能为空',
             'demand_company_name.required' => '需求公司名称不能为空',
             'demand_company_address.required' => '需求公司地址不能为空',
             'demand_company_phone.required' => '需求公司电话不能为空',
@@ -316,11 +314,11 @@ class ContractController extends BaseController
      * @apiParam {string} design_type_paragraph 设计类型款项
      * @apiParam {string} design_type_contain 设计类型包含
      * @apiParam {string} total 总额
-     * @apiParam {integer} project_start_date 项目启动日期
-     * @apiParam {integer} determine_design_date 设计确定日期
-     * @apiParam {integer} structure_layout_date 结构布局验证日期
-     * @apiParam {integer} design_sketch_date 效果图日期
-     * @apiParam {integer} end_date 最后确认日期
+     * @apiParam {string} project_start_date 项目启动日期
+     * @apiParam {string} determine_design_date 设计确定日期
+     * @apiParam {string} structure_layout_date 结构布局验证日期
+     * @apiParam {string} design_sketch_date 效果图日期
+     * @apiParam {string} end_date 最后确认日期
      * @apiParam {string} one_third_total 30%总额
      * @apiParam {integer} exterior_design_percentage 外观设计百分比
      * @apiParam {string} exterior_design_money 外观设计金额
@@ -418,7 +416,6 @@ class ContractController extends BaseController
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
         $rules = [
             'item_demand_id'  => 'required|integer',
-            'design_company_id'  => 'required|integer',
             'demand_company_name'  => 'required',
             'demand_company_address'  => 'required',
             'demand_company_phone'  => 'required',
@@ -447,7 +444,6 @@ class ContractController extends BaseController
 
         $messages = [
             'item_demand_id.required' => '项目需求id不能为空',
-            'design_company_id.required' => '设计公司id不能为空',
             'demand_company_name.required' => '需求公司名称不能为空',
             'demand_company_address.required' => '需求公司地址不能为空',
             'demand_company_phone.required' => '需求公司电话不能为空',
