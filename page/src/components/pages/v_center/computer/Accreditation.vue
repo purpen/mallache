@@ -81,6 +81,8 @@
           } else {
             that.isReady = true
           }
+        } else {
+          that.isReady = true
         }
       })
       .catch (function(error) {

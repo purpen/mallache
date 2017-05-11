@@ -119,11 +119,10 @@
         .then (function(response) {
           that.isLoading = false
           if (response.data.meta.status_code === 200) {
-            var data = response.data.data
-            if (!data) {
-              that.isLoading = false
+            if (!response.data.data) {
               return false
             }
+            var data = response.data.data
             for (var i = 0; i < data.length; i++) {
               var d = data[i]
               var progress = d.item.stage_status

@@ -266,6 +266,7 @@
             that.form.design_type = row.design_type
             that.form.field = row.field
             that.form.industry = row.industry
+            that.form.industry = row.stage_status
             console.log(response.data.data)
           } else {
             that.$message.error(response.data.meta.message)

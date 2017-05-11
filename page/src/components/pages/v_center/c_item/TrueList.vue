@@ -90,6 +90,9 @@
       .then (function(response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
+          if (!response.data.data) {
+            return false
+          }
           var designItems = response.data.data
           for (var i = 0; i < designItems.length; i++) {
             var item = designItems[i]

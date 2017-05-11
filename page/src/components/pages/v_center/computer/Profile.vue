@@ -168,7 +168,7 @@
 
               <div class="form-btn">
                   <el-button>取消</el-button>
-                  <el-button type="success" @click="submit('ruleForm')">提交审核</el-button>
+                  <el-button :loading="isLoadingBtn" type="success" @click="submit('ruleForm')">提交审核</el-button>
               </div>
               <div class="clear"></div>
             </el-form>
@@ -201,6 +201,7 @@
     data () {
       return {
         isLoading: true,
+        isLoadingBtn: false,
         avatarStr: '只能上传jpg/gif/png文件，且不超过2M',
         userId: this.$store.state.event.user.id,
         is_branch: false,
@@ -345,11 +346,13 @@
             } else {
               method = 'post'
               if (that.uploadParam['x:random']) {
-                row['random'] = that.uploadParam['x:random']
+                row.random = that.uploadParam['x:random']
               }
             }
+            that.isLoadingBtn = true
             that.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
+              that.isLoadingBtn = false
               if (response.data.meta.status_code === 200) {
                 that.$message.success('提交成功,等待审核')
 
