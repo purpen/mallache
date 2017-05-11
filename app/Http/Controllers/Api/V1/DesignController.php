@@ -294,8 +294,11 @@ class DesignController extends BaseController
             $sort = 'desc';
         }
 
-        $user = $this->auth_user;
-        $design_company_id = $user->designCompany->id;
+        $design_company = $this->auth_user->designCompany;
+        if(!$design_company){
+            return $this->response->array('not found design company');
+        }
+        $design_company_id = $design_company->id;
 
         $query = Item::where('design_company_id', $design_company_id);
 
