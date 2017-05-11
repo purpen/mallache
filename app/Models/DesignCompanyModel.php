@@ -46,7 +46,8 @@ class DesignCompanyModel extends Model
         'company_abbreviation',
         'is_recommend',
         'verify_status',
-        'unique_id'
+        'unique_id',
+        'logo'
     ];
 
     /**
