@@ -296,7 +296,7 @@ class DesignController extends BaseController
 
         $design_company = $this->auth_user->designCompany;
         if(!$design_company){
-            return $this->response->array('not found design company');
+            return $this->response->array($this->apiError('not found design company', 404));
         }
         $design_company_id = $design_company->id;
 
