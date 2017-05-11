@@ -6,9 +6,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignGetItemListTransformer;
+use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class DesignController extends BaseController
@@ -71,6 +74,7 @@ class DesignController extends BaseController
         $item_recommends = ItemRecommend
                         ::where(['design_company_id' => $design_company->id])
                         ->where( 'item_status', '!=' ,1)
+                        ->where('design_company_status', '!=', -1)
                         ->get();
 
         return $this->response->collection($item_recommends, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
@@ -87,8 +91,8 @@ class DesignController extends BaseController
      * @apiSuccessExample 成功响应:
      *  {
             "meta": {
-            "message": "Success",
-            "status_code": 200
+                "message": "Success",
+                "status_code": 200
             }
         }
      */
@@ -109,6 +113,10 @@ class DesignController extends BaseController
             }
             $item_recommend->design_company_status = -1;
             $item_recommend->save();
+
+            //项目是否匹配失败
+            $item = new Item();
+            $item->itemIsFail($item_id);
 
             return $this->response->array($this->apiSuccess());
         }catch (\Exception $e){
@@ -185,6 +193,119 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError());
         }
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /design/cooperationLists 已确定合作项目列表
+     * @apiVersion 1.0.0
+     * @apiName design cooperationLists
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} type 0:全部（默认）；1.
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     * {
+     * "item": {
+     * "id": 13,
+     * "type": 2,
+     * "type_value": "UI UX设计类型",
+     * "design_type": 2,
+     * "design_type_value": "网页设计",
+     * "status": 4,
+     * "status_value": "等待设计公司接单",
+     * "design_status_value": "提交报价单",
+     * "name": "esisd",
+     * "stage": 1,
+     * "stage_value": "已有app／网站，需重新设计",
+     * "complete_content": [
+     * "哈哈",
+     * "嘿嘿"
+     * ],
+     * "other_content": "w",
+     * "design_cost": 1,
+     * "design_cost_value": "1万以下",
+     * "province": 1,
+     * "city": 2,
+     * "province_value": "",
+     * "city_value": "",
+     * "image": [],
+     * "price": 200000,
+     * "stage_status": 2,
+     * "cycle": 1,
+     * "cycle_value": "1个月内",
+     * "company_name": "nicai",
+     * "company_abbreviation": "ni",
+     * "company_size": 1,
+     * "company_size_value": "10人以下",
+     * "company_web": "www.baidu.com",
+     * "company_province": 1,
+     * "company_city": 2,
+     * "company_area": 2,
+     * "company_province_value": "",
+     * "company_city_value": "",
+     * "company_area_value": "",
+     * "address": "niisadiasd",
+     * "contact_name": "11",
+     * "phone": "1877678",
+     * "email": "www@qq.com",
+     * "created_at": "2017-04-13"
+     * }
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200,
+     * "pagination": {
+     * "total": 1,
+     * "count": 1,
+     * "per_page": 10,
+     * "current_page": 1,
+     * "total_pages": 1,
+     * "links": []
+     * }
+     * }
+     * }
+     */
+    public function cooperationLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->input('type') ?? 0;
+
+        switch ($type){
+//            case 1:
+//                $where_in = [1,2,3,4,5,6,7,8];
+//                break;
+            default:
+                $where_in = [];
+        }
+
+        if($request->input('sort') === 0)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+
+        $user = $this->auth_user;
+        $design_company_id = $user->designCompany->id;
+
+        $query = Item::where('design_company_id', $design_company_id);
+
+        if(!empty($where_in)){
+            $query = $query->whereIn('status', $where_in);
+        }
+
+        $lists = $query->orderBy('id', $sort)->paginate($per_page);
+
+        return $this->response->paginator($lists, new DesignItemListTransformer)->setMeta($this->apiMeta());
     }
 
 }

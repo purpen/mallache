@@ -14,7 +14,7 @@ class AddOpenToDesignCompanyTable extends Migration
     public function up()
     {
         Schema::table('design_company', function (Blueprint $table) {
-            $table->tinyInteger('open')->defualt(0);
+            $table->tinyInteger('open')->default(0);
         });
     }
 

@@ -76,10 +76,12 @@ class DesignCompanyOtherIndexTransformer extends TransformerAbstract
             'status' => intval($DesignCompany->status),
             'is_recommend' => intval($DesignCompany->is_recommend),
             'verify_status' => intval($DesignCompany->verify_status),
-            'logo' => $DesignCompany->logo_image,
+            'logo' => $DesignCompany->logo,
+            'logo_image' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'design_type_val' => $DesignCompany->design_type_val,
             'unique_id' => strval($DesignCompany->unique_id),
+            'city_arr' => $DesignCompany->city_arr,
 
         ];
     }

@@ -239,7 +239,7 @@ class DesignCompanyController extends BaseController
      *          "good_field": "",
      *          "web": "",
      *          "company_profile": "",
-     *          "design_type": "2",  1.产品策略；2.产品设计；3.结构设计；ux设计：4.app设计；5.网页设计；
+     *          "design_type": "2",  1.产品策略；2.产品外观设计；3.结构设计；ux设计：1.app设计；2.网页设计；
      *          "establishment_time": "",
      *          "professional_advantage": "",
      *          "awards": "",

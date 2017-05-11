@@ -116,7 +116,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/demand/itemDesignList/{item_id}', ['as' => 'demand.itemDesignList', 'uses' => 'DemandController@itemDesignList']);
         //确定合作的设计公司
         $api->post('/demand/trueDesign', ['as' => 'demand.trueDesign', 'uses' => 'DemandController@trueDesign']);
-        //
+        //拒绝设计公司报价
+        $api->post('demand/falseDesign', ['as' => 'demand.falseDesign', 'uses' => 'DemandController@falseDesign']);
+        //确认合同
         $api->post('/demand/trueContract', ['as' => 'demand.trueContract', 'uses' => 'DemandController@trueContract']);
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
@@ -157,7 +159,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/refuseItem/{item_id}', ['as' => 'design.refuseItem', 'uses' => 'DesignController@refuseItem']);
         //设计公司获取项目信息
         $api->get('/design/item/{item_id}', 'DesignController@item');
-
+        //已确定合作项目列表
+        $api->get('/design/cooperationLists', 'DesignController@cooperationLists');
 
         /**
          * 通知消息相关路由

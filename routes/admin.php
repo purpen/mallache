@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function ($api) {
-    $api->group(['middleware' => ['jwt.auth']], function ($api){
+    $api->group(['middleware' => ['jwt.auth', 'role:1']], function ($api){
+
         //项目列表
         $api->get('/admin/item/lists', 'ItemActionController@itemList');
         //为项目添加推荐公司
@@ -34,6 +35,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/designCompany/lists', [
             'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
         ]);
+
+
+        /**
+         * 用户相关路由
+         */
+        //用户列表
+        $api->get('/admin/user/lists', 'UserActionController@lists');
+        //修改用户角色
+        $api->post('/admin/user/changeRole', 'UserActionController@changeRole');
+        //修改用户状态
+        $api->post('/admin/user/changeStatus', 'UserActionController@changeStatus');
     });
 
 });

@@ -71,7 +71,7 @@ class DesignItemController extends BaseController
      * @apiGroup designItem
      *
      * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计
-     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} project_cycle 服务项目周期 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} token
@@ -138,7 +138,7 @@ class DesignItemController extends BaseController
     }
 
     /**
-     * @api {get} /designItem/{id}  服务项目类型ID查看详情
+     * @api {get} /designItem 服务项目类型ID查看详情
      * @apiVersion 1.0.0
      * @apiName designItem show
      * @apiGroup designItem
@@ -189,7 +189,7 @@ class DesignItemController extends BaseController
      * @apiGroup designItem
      *
      * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计
-     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} project_cycle 服务项目周期 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
      * @apiParam {string} min_price 最低价格
      * @apiParam {string} token

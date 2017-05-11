@@ -32,6 +32,10 @@ class ItemMessageListener
         $item = $event->item;
 
         switch ($item->status){
+            //项目匹配失败
+            case -2:
+                $this->itemFail($event);
+                break;
             //已推荐设计公司
             case 3:
                 $this->recommendDesign($item);
@@ -43,6 +47,14 @@ class ItemMessageListener
             //选定设计公司
             case 5:
                 $this->trueDesign($event);
+                break;
+            //设计公司提交合同
+            case 6:
+                $this->designSubmitContract($event);
+                break;
+            //发布需求公司已确认合同，
+            case 7:
+                $this->demandTrueContract($event);
                 break;
         }
     }
@@ -109,4 +121,36 @@ class ItemMessageListener
         }
     }
 
+    //项目匹配失败-通知用户
+    public function itemFail(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        $tools = new Tools();
+        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '未达成合作，匹配失败');
+    }
+
+    //设计公司提交合同，通知需求公司
+    public function designSubmitContract(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        $tools = new Tools();
+        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '设计公司已提交合同，请查阅');
+    }
+
+    //需求公司确认合同，通知设计公司
+    public function demandTrueContract(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        //获取设计公司user_id
+        $user_id = $item->designCompany->user_id;
+
+        $tools = new Tools();
+        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已确认合同');
+    }
 }

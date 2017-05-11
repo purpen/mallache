@@ -16,12 +16,10 @@ class ItemTransformer extends TransformerAbstract
         else if($type == 1)
         {
             $info = $item->productDesign ?? '';
-            unset($item->productDesign);
         }
         else if($type == 2)
         {
             $info = $item->uDesign ?? '';
-            unset($item->uDesign);
         }
         else
         {
@@ -29,7 +27,7 @@ class ItemTransformer extends TransformerAbstract
         }
 
         $user = $item->user;
-
+        unset($item->productDesign, $item->uDesign);
         return [
             'item' => $item,
             'info' => $info,

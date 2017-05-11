@@ -77,11 +77,13 @@ class DesignCompanyTransformer extends TransformerAbstract
             'status' => intval($DesignCompany->status),
             'is_recommend' => intval($DesignCompany->is_recommend),
             'verify_status' => intval($DesignCompany->verify_status),
-            'logo' => $DesignCompany->logo_image,
+            'logo' => $DesignCompany->logo,
+            'logo_image' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
             'created_at' => $DesignCompany->created_at->format("Y-m-d"),
             'users' => $DesignCompany->user,
+            'city_arr' => $DesignCompany->city_arr,
         ];
     }
 }

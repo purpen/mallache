@@ -111,7 +111,7 @@ class DesignCaseModel extends Model
                     $design_type_val = '产品策略';
                     break;
                 case 2:
-                    $design_type_val = '产品设计';
+                    $design_type_val = '产品外观设计';
                     break;
                 case 3:
                     $design_type_val = '结构设计';

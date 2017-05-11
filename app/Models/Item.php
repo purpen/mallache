@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -69,6 +70,12 @@ class Item extends Model
         return $this->hasOne('App\Models\Contract', 'item_demand_id');
     }
 
+    //一对多 相对关联设计公司
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
+
     /**
      * 判断item对应的详细信息
      *
@@ -87,6 +94,7 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
                     'price' => floatval($item->price),
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -165,6 +173,7 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
                     'name' => $info->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
@@ -348,7 +357,7 @@ class Item extends Model
     }
 
     /**
-     * 项目状态说明
+     * 项目状态说明(需求公司)
      */
     public function getStatusValueAttribute()
     {
@@ -358,6 +367,41 @@ class Item extends Model
             return '';
         }
         return $demand_item_status[$this->status];
+    }
+
+    /**
+     * 项目状态说明（设计公司））
+     */
+    public function getDesignStatusValueAttribute()
+    {
+        $demand_item_status = config('constant.design_item_status');
+
+        if(!array_key_exists($this->status, $demand_item_status)){
+            return '';
+        }
+        return $demand_item_status[$this->status];
+    }
+
+    /**
+     * 判断项目是否匹配失败
+     */
+    public function itemIsFail(int $item_id)
+    {
+        //尚在匹配项目数量
+        $item_count = ItemRecommend::where('item_id', $item_id)
+            ->where('item_status', '!=' -1)
+            ->where('design_company_status', '!=', -1)
+            ->count();
+
+        //匹配失败项目状态修改为匹配失败（2）
+        if($item_count < 1){
+            $item = Item::find($item_id);
+            $item->status = -2;
+            $item->save();
+
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($item));
+        }
     }
 
 }

@@ -45,7 +45,7 @@ class ItemRecommend extends Model
                 $item_status_value = '项目需求方拒绝';
                 break;
             case 0:
-                $item_status_value = '待操作';
+                $item_status_value = '等待设计公司接单';
                 break;
             case 1:
                 $item_status_value = '选定设计公司';
@@ -63,7 +63,7 @@ class ItemRecommend extends Model
                 $design_company_status_value = '设计公司拒绝';
                 break;
             case 0:
-                $design_company_status_value = '待操作';
+                $design_company_status_value = '等待设计公司接单';
                 break;
             case 1:
                 $design_company_status_value = '设计公司一键成交';
@@ -85,7 +85,9 @@ class ItemRecommend extends Model
      */
     public static function purposeCount($item_id)
     {
-        return  (int)self::where(['item_id' => $item_id, 'design_company_status' => 2])->count();
+        return  (int)self::where(['item_id' => $item_id, 'design_company_status' => 2])
+            ->where('item_status', '!=', -1)
+            ->count();
     }
 
     //项目推荐报价信息列表
@@ -102,21 +104,27 @@ class ItemRecommend extends Model
 
         if($item_status == -1){
             $status = 1;
-            $status_value = '已选择其他设计公司';
+            $status_value = '已拒绝设计公司报价';
+            $design_status_value = '已选择其他设计公司';
         }elseif ($item_status == 0 && $design_company_status == -1){
             $status = 2;
             $status_value = '设计公司已拒绝';
+            $design_status_value = '已拒绝该项目';
         }elseif($item_status == 0 && $design_company_status == 0){
             $status = 3;
-            $status_value = '待操作';
+            $status_value = '等待设计公司接单';
+            $design_status_value = '等待接单';
         }elseif($item_status == 0 && $design_company_status == 2){
             $status = 4;
-            $status_value = '设计公司有意接单';
+            $status_value = '设计公司已报价';
+            $design_status_value = '已提交报价';
         }elseif ($item_status == 1){
             $status = 5;
-            $status_value = '选定该设计公司';
+            $status_value = '确认合作';
+            $design_status_value = '确认合作';
         }
 
-        return compact('status', 'status_value');
+        return compact('status', 'status_value', 'design_status_value');
     }
+
 }
