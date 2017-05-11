@@ -181,11 +181,16 @@ class DesignController extends BaseController
     public function item($item_id)
     {
         if(!$item = Item::find(intval($item_id))){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        $design_company = $this->auth_user->designCompany;
+        if(!$design_company){
+            return $this->response->array($this->apiError('not found design company', 404));
         }
         //验证设计公司查看项目权限
         $design_arr = explode(',',$item->recommend ?? '');
-        if(!in_array($this->auth_user_id, $design_arr)){
+        if(!in_array($design_company->id, $design_arr)){
             return $this->response->array($this->apiError('not found!', 404));
         }
 
@@ -285,7 +290,7 @@ class DesignController extends BaseController
                 $where_in = [];
         }
 
-        if($request->input('sort') === 0)
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';
         }
@@ -294,8 +299,11 @@ class DesignController extends BaseController
             $sort = 'desc';
         }
 
-        $user = $this->auth_user;
-        $design_company_id = $user->designCompany->id;
+        $design_company = $this->auth_user->designCompany;
+        if(!$design_company){
+            return $this->response->array($this->apiError('not found design company', 404));
+        }
+        $design_company_id = $design_company->id;
 
         $query = Item::where('design_company_id', $design_company_id);
 
