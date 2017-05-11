@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Transformer\ContractTransformer;
 use App\Models\Contract;
 use App\Models\DesignCompanyModel;
@@ -210,16 +211,9 @@ class ContractController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         try{
-            if($item->contract_id === 0){
                 $contract = Contract::create($all);
-                $item->contract_id = $contract->id;
-                $item->status = 6;
-                $item->save();
 
-                event(new ItemStatusEvent($item));
-            }else{
-                return $this->response->array($this->apiError());
-            }
+
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('项目合同已创建' , 403));
@@ -228,6 +222,45 @@ class ContractController extends BaseController
 
     }
 
+    /**
+     * @api {post} /contract/ok 合同发送按钮
+     * @apiVersion 1.0.0
+     * @apiName contract okContract
+     * @apiGroup contract
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_demand_id 项目需求id
+     *
+     */
+    public function okContract(Request $request)
+    {
+        $item = Item::where('id' , $request->input('item_demand_id'))->first();
+        if(!$item){
+            return $this->response->array($this->apiError('没有找到该项目' , 404));
+        }
+        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        if(!$design){
+            return $this->response->array($this->apiError('设计公司不存在'));
+        }
+        if($item->design_company_id !== $design->id){
+            return $this->response->array($this->apiError('没有权限添加合同' , 403));
+        }
+        $contract = Contract::where('item_demand_id' , $request->input('item_demand_id'))->first();
+        if(!$contract){
+            return $this->response->array($this->apiError('没有找到该合同' , 404));
+        }
+        if($item->contract_id === 0) {
+            $item->contract_id = $contract->id;
+            $item->status = 6;
+            $item->save();
+            event(new ItemStatusEvent($item));
+        }else{
+            return $this->response->array($this->apiSuccess());
+        }
+        return $this->response->item($item, new ItemTransformer())->setMeta($this->apiMeta());
+
+
+    }
 
     /**
      * @api {get} /contract/{unique_id} 合同id查看信息
