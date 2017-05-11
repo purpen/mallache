@@ -8,50 +8,39 @@
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
 
-            <div class="item">
+            <div class="loading" v-loading.body="isLoading"></div>
+            <div class="item" v-for="(d, index) in designItems">
               <div class="banner">
                   <p>
-                    <span>2013-12-12</span>
-                    <span>太火鸟科技</span>
+                    <span>{{ d.item.created_at }}</span>
+                    <span>{{ d.item.company_name }}</span>
                     <span>和我联系</span>
                   </p>
               </div>
               <div class="content">
                 <div class="l-item">
-                  <p class="c-title">旅行钱包设计</p>
-                  <p>项目预算: ¥ 5000元</p>
-                  <p>设计类别: 产品设计/日常用品</p>
-                  <p>项目周期: 3周</p>
+                  <p class="c-title">{{ d.item.name }}</p>
+                  <p>项目预算: {{ d.item.design_cost_value }}</p>
+                  <p>设计类别: {{ d.item.type_label }}</p>
+                  <p>项目周期: {{ d.item.cycle_value }}</p>
                 </div>
                 <div class="r-item">
-                  <p><a href="#">提交项目报价 ></a></p>
+                  <p>{{ d.status_value }}</p>
                 </div>
               </div>
               <div class="opt">
                 <div class="l-item">
                   <p>
-                    <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>
+                    <!--<span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>-->
                   </p>
                 </div>
                 <div class="r-item">
-                  <p class="btn">
-                    <a href="#">拒绝此单</a>&nbsp;&nbsp;
-                    <a href="#" class="b-blue">有意向接单</a>&nbsp;&nbsp;
-                    <a href="#" class="b-red">一键抢单</a>
+                  <p class="btn" v-show="d.design_company_status === 0">
+                    <a href="javascript:void(0);" @click="companyRefuseBtn" :index="index" :item_id="d.item.id">拒绝此单</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" @click="takingBtn" :item_id="d.item.id" :index="index" class="b-blue">有意向接单</a>&nbsp;&nbsp;
+                    <!--<a href="javascript:void(0);" :item_id="d.item.id" class="b-red">一键抢单</a>-->
                   </p>
                 </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div class="banner">
-                  aaa
-              </div>
-              <div class="content">
-                bbb
-              </div>
-              <div class="opt">
-                ccc
               </div>
             </div>
 
@@ -61,6 +50,35 @@
 
       </el-col>
     </el-row>
+
+    <el-dialog title="提交项目报价" v-model="takingPriceDialog">
+      <el-form label-position="top" :model="takingPriceForm" :rules="takingPriceRuleForm" ref="takingPriceRuleForm">
+        <input type="hidden" v-model="takingPriceForm.itemId" value="" />
+        <el-form-item label="项目报价" label-width="200px">
+          <el-input v-model.number="takingPriceForm.price" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="报价说明" label-width="80px">
+          <el-input v-model="takingPriceForm.summary" placeholder="" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="takingPriceDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="isTakingLoadingBtn" class="is-custom" @click="takingPriceSubmit('takingPriceRuleForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      title="提示"
+      v-model="sureRefuseItemDialog"
+      size="tiny">
+      <span>确认执行此操作?</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="refuseItemId" />
+        <el-button @click="sureRefuseItemDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="refuseItemLoadingBtn" @click="sureRefuseItemSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -79,59 +97,143 @@
     data () {
       return {
         designItems: [],
+        isLoading: true,
+        takingPriceDialog: false,
+        isTakingLoadingBtn: false,
+        sureRefuseItemDialog: false,
+        refuseItemLoadingBtn: false,
+        takingPriceForm: {
+          itemId: '',
+          price: '',
+          summary: ''
+        },
+        takingPriceRuleForm: {
+          price: [
+            { required: true, message: '请添写报价金额', trigger: 'blur' }
+          ],
+          summary: [
+            { required: true, message: '请添写报价说明', trigger: 'blur' }
+          ]
+        },
         userId: this.$store.state.event.user.id
       }
     },
     methods: {
-      hasImg(d) {
-        if (d.length === 0) {
-          return false
-        } else {
-          return true
-        }
+      // 项目报价弹出层
+      takingBtn(event) {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.currentIndex = parseInt(event.currentTarget.getAttribute('index'))
+        this.takingPriceForm.itemId = itemId
+        this.takingPriceDialog = true
       },
-      delItem(event) {
-        var id = event.target.parentNode.getAttribute('item_id')
-        var index = event.target.parentNode.getAttribute('index')
-        this.$confirm('是否执行此操作?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          const that = this
-          that.$http.delete(api.designCaseId.format(id), {})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              that.designCases.splice(index, 1)
-              that.$message.success('删除成功!')
+      // 提交项目报价
+      takingPriceSubmit(formName) {
+        var self = this
+        self.$refs[formName].validate((valid) => {
+          // 验证通过，提交
+          if (valid) {
+            self.isTakingLoadingBtn = true
+            var row = {
+              item_demand_id: self.takingPriceForm.itemId,
+              price: self.takingPriceForm.price,
+              summary: self.takingPriceForm.summary
             }
-          })
-          .catch (function(error) {
-            that.$message.error(error.message)
-            console.log(error.message)
-            return false
-          })
-        }).catch(() => {
+
+            console.log(row)
+            var apiUrl = api.addQuotation
+            var method = 'post'
+
+            self.$http({method: method, url: apiUrl, data: row})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                self.$message.success('提交成功！')
+                self.designItems[self.currentIndex].design_company_status = 2
+                self.designItems[self.currentIndex].status_value = '已提交报价'
+                self.isTakingLoadingBtn = false
+                self.takingPriceDialog = false
+              } else {
+                self.$message.error(response.data.meta.message)
+                self.isTakingLoadingBtn = false
+              }
+            })
+            .catch (function(error) {
+              self.$message.error(error.message)
+              self.isTakingLoadingBtn = false
+              return false
+            })
+          } else {
+          }
+        })
+      },
+      // 拒绝项目确认框
+      companyRefuseBtn(event) {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.currentIndex = parseInt(event.currentTarget.getAttribute('index'))
+        this.$refs.refuseItemId.value = itemId
+        this.sureRefuseItemDialog = true
+      },
+      // 确认拒绝项目
+      sureRefuseItemSubmit() {
+        var itemId = this.$refs.refuseItemId.value
+        var self = this
+        this.refuseItemLoadingBtn = true
+        self.$http({method: 'get', url: api.companyRefuseItemId.format(itemId), data: {}})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.$message.success('提交成功！')
+            self.refuseItemLoadingBtn = false
+            self.sureRefuseItemDialog = false
+            self.sureRefuseItemDialog = false
+            self.designItems.splice(self.currentIndex, 1)
+          } else {
+            self.$message.error(response.data.meta.message)
+            self.refuseItemLoadingBtn = false
+            self.sureRefuseItemDialog = false
+          }
+        })
+        .catch (function(error) {
+          self.$message.error(error.message)
+          self.refuseItemLoadingBtn = false
+          self.sureRefuseItemDialog = false
+          return false
         })
       }
     },
     computed: {
     },
     created: function() {
-      const that = this
-      that.$http.get(api.designItemList, {})
+      var self = this
+      // 如果是用户，跳到设计用户列表
+      var uType = this.$store.state.event.user.type
+      if (uType !== 2) {
+        this.isLoading = false
+        this.$router.replace({name: 'vcenterItemList'})
+        return
+      }
+      self.$http.get(api.designItemList, {})
       .then (function(response) {
+        self.isLoading = false
         if (response.data.meta.status_code === 200) {
-          that.designItems = response.data.data
+          var designItems = response.data.data
+          for (var i = 0; i < designItems.length; i++) {
+            var item = designItems[i]
+            var typeLabel = ''
+            if (item.item.type === 1) {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+            } else if (item.item.type === 2) {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value
+            }
+            designItems[i].item.type_label = typeLabel
+          } // endfor
+          self.designItems = designItems
         } else {
-          that.$message.error(response.meta.message)
+          self.$message.error(response.data.meta.message)
         }
 
         console.log(response.data)
       })
       .catch (function(error) {
-        that.$message.error(error.message)
-        console.log(error.message)
+        self.$message.error(error.message)
         return false
       })
     }

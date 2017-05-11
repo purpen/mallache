@@ -6,7 +6,8 @@
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <img :src="item.logo.logo" width="100" />
+            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />                     
+            <img class="avatar" v-else src="../../../assets/images/avatar_default.jpg" width="100" />
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
@@ -116,6 +117,11 @@
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
+          if (self.item.logo_image && self.item.logo_image.length !== 0) {
+            self.item.logo_url = self.item.logo_image.logo
+          } else {
+            self.item.logo_url = false
+          }
           console.log(self.item)
 
           self.$http.get(api.designCase, {})
@@ -177,12 +183,6 @@
   .design-case-slide .info {
     margin: 10px;
     text-align: center;
-  }
-  .design-case-slide .info img {
-    border-radius: 50%;
-    overflow: hidden;
-    vertical-align: middle;
-    border: 1px solid;
   }
   .design-case-slide h3 {
     margin: 10px;

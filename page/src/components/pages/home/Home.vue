@@ -71,7 +71,7 @@
             </div>
           </el-col>
           <el-col :span="12">
-            <div class="item_3_back" style="background-image: url(../../../assets/images/home/index_07.png)">
+            <div class="item_3_back">
               <img src="../../../assets/images/home/index_07.png" />
             </div>
           </el-col>

@@ -481,7 +481,6 @@
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
             // 重新渲染
-            console.log(response.data.data)
             that.$nextTick(function() {
               that.form = response.data.data
               that.companyId = response.data.data.id
@@ -492,8 +491,8 @@
               if (response.data.data.branch_office !== 0) {
                 that.is_branch = true
               }
-              if (response.data.data.logo) {
-                that.imageUrl = response.data.data.logo.small
+              if (response.data.data.logo_image) {
+                that.imageUrl = response.data.data.logo_image.small
               }
               if (response.data.data.license_image) {
                 var files = []

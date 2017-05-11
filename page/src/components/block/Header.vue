@@ -22,7 +22,7 @@
               <span class="b-nickname">{{ eventUser.account }}</span>
             </template>
             <el-menu-item index="/vcenter/item/list?type=1">个人中心</el-menu-item>
-            <el-menu-item index="/admin">后台管理</el-menu-item>
+            <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
             <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
           </el-submenu>
         </el-menu>
@@ -77,6 +77,9 @@ export default {
     },
     eventUser() {
       return this.$store.state.event.user
+    },
+    isAdmin() {
+      return this.$store.state.event.user.role_id
     }
   }
 }

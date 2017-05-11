@@ -12,8 +12,8 @@
                 <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
               </router-link>
             </div>
-
-            <div v-loading.body="isLoading">
+            <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
+            <div>
               <div class="item" v-for="d in itemList">
                 <div v-if="d.item.status === 1">
                   <div class="banner">
@@ -34,8 +34,11 @@
                 <div v-else>
 
                   <div class="banner">
-                      <p>
+                      <p class="fl">
                         <span>{{ d.item.created_at }}</span>
+                      </p>
+                      <p class="fr">
+                        <span>{{ d.item.status_value }}</span>
                       </p>
                   </div>
                   <div class="content">
@@ -48,19 +51,24 @@
                       <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
                       <p>项目周期: {{ d.item.cycle_value }}</p>
                     </div>
+                    <!--
                     <div class="r-item">
-                      <p><a href="#">{{ d.item.status_label }}</a></p>
+                      <p><a href="#">{{ d.item.status_value }}</a></p>
                     </div>
+                    -->
                   </div>
                   <div class="opt" v-show="d.item.status !== 2">
                     <div class="l-item">
-                      <p>
-                        <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>
+                      <p v-show="d.item.price !== 0">
+                        <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>{{ d.item.price }}</b></span>
                       </p>
                     </div>
                     <div class="r-item">
-                      <p class="btn">
-                        <a href="#" class="b-blue">查看报价，选择设计公司 ></a>&nbsp;&nbsp;
+                      <p class="btn" v-show="d.item.show_offer">
+                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">查看报价，选择设计公司 ></a>&nbsp;&nbsp;
+                      </p>
+                      <p class="btn" v-show="d.item.status === 3">
+                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">选择设计公司 ></a>&nbsp;&nbsp;
                       </p>
                     </div>
                   </div>
@@ -99,12 +107,17 @@
       }
     },
     methods: {
+      viewShow(event) {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.$router.push({name: 'vcenterItemShow', params: {id: itemId}})
+      },
       loadList(type) {
         const that = this
         that.isLoading = true
         that.itemList = []
         that.$http.get(api.itemList, {type: type})
         .then (function(response) {
+          that.isLoading = false
           if (response.data.meta.status_code === 200) {
             var data = response.data.data
             if (!data) {
@@ -112,8 +125,8 @@
               return false
             }
             for (var i = 0; i < data.length; i++) {
-              var progress = data[i].item.stage_status
-              var status = data[i].item.status
+              var d = data[i]
+              var progress = d.item.stage_status
               switch (progress) {
                 case 1:
                   data[i]['item']['progress'] = 20
@@ -127,22 +140,13 @@
                 default:
                   data[i]['item']['progress'] = 0
               }
-              switch (status) {
-                case 1:
-                  data[i]['item']['status_label'] = '完善信息'
-                  break
-                case 2:
-                  data[i]['item']['status_label'] = '等待系统自动匹配'
-                  break
-                case 3:
-                  data[i]['item']['status_label'] = '等待设计公司接单…'
-                  break
-                default:
-                  data[i]['item']['status_label'] = '待补充'
+              var showOffer = false
+              if (d.item.status === 4 && d.purpose_count > 0) {
+                showOffer = true
               }
-            }
+              data[i]['item']['show_offer'] = showOffer
+            } // endfor
             that.itemList = data
-            that.isLoading = false
             console.log(data)
           }
         })
@@ -181,6 +185,13 @@
     computed: {
     },
     created: function() {
+      var uType = this.$store.state.event.user.type
+      // 如果是设计公司，跳到设计公司列表
+      if (uType === 2) {
+        this.isLoading = false
+        this.$router.replace({name: 'vcenterCItemList'})
+        return
+      }
       var type = this.$route.query.type
       if (type) {
         type = parseInt(type)
@@ -209,7 +220,7 @@
 <style scoped>
 
   .content-item-box {
-  
+    min-height: 400px;
   }
   .pub {
     background: #FAFAFA;
@@ -228,6 +239,8 @@
     margin: 20px 0px 20px 0;
   }
   .banner {
+    height: 40px;
+    line-height: 20px;
     border-bottom: 1px solid #ccc;
     background: #FAFAFA;
   }

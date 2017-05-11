@@ -63,11 +63,11 @@
               label="规模">
             </el-table-column>
             <el-table-column
+              width="100"
               label="地点">
                 <template scope="scope">
-                  <p>省份: {{ scope.row.province_value }}</p>
-                  <p>城市: {{ scope.row.city_value }}</p>
-                  <p>地址: {{ scope.row.address_value }}</p>
+                  <p>{{ scope.row.province_value }}</p>
+                  <p>{{ scope.row.city_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -213,18 +213,21 @@ export default {
         for (var i = 0; i < self.itemList.length; i++) {
           var item = self.itemList[i]
           item.logo_url = ''
-          if (item.logo) {
-            item.logo_url = item.logo['logo']
+          if (item.logo_image) {
+            item.logo_url = item.logo_image.logo
           }
           self.tableData.push(item)
         } // endfor
 
         console.log(self.itemList)
+      } else {
+        self.$message.error(response.data.meta.message)
+        // self.$router.push({name: 'home'})
       }
     })
     .catch (function(error) {
       self.$message.error(error.message)
-      console.log(error.message)
+      // self.$router.push({name: 'home'})
     })
   },
   watch: {

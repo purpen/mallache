@@ -30,9 +30,23 @@ export default {
   ProductDesignId: '/ProductDesign/{0}', // 更改产品设计基本资料
   UDesignId: '/UDesign/{0}', // 更改UI设计基本资料
   release: '/demand/release', // 发布项目
+  recommendListId: '/demand/recommendList/{0}',  // 项目获取推荐的设计公司
+  demandPush: '/demand/push', // 选定系统推荐的设计公司
+  demandItemDesignListItemId: '/demand/itemDesignList/{0}', // 选择已报价的设计公司
+  refuseDesignPrice: '/demand/falseDesign', // 拒绝设计公司报价
+  agreeDesignCompany: '/demand/trueDesign', // 同意合作的设计公司
 
+  // 公司项目接口
   // 设计公司获取项目订单
   designItemList: '/design/itemList',  // 设计公司获取项目订单
+  addQuotation: '/quotation', // 添写报价单
+  companyRefuseItemId: '/design/refuseItem/{0}', // get 拒绝推送的项目报价
+  designCooperationLists: '/design/cooperationLists', // 已确定合作的项目列表
+  designItemId: '/design/item/{0}', // get 获取项目详细信息
+
+  // 合同
+  contract: '/contract', // post 保存合同
+  contractId: '/contract/{0}', // put/get 更新/查看合同
 
   // 订单
   orderId: '/pay/getPayStatus/{0}',  // 查看订单详情

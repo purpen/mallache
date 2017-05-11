@@ -332,7 +332,7 @@ const routes = [
     component: require('@/components/pages/v_center/item/Show')
   },
 
-  // 我的项目列表(设计公司)
+  // 我的项目列表(设计公司) -- 待合作
   {
     path: '/vcenter/citem/list',
     name: 'vcenterCItemList',
@@ -341,6 +341,36 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/c_item/List')
+  },
+  // 我的项目列表(设计公司) -- 已合作
+  {
+    path: '/vcenter/citem/true_list',
+    name: 'vcenterTrueCItemList',
+    meta: {
+      title: '项目列表',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/c_item/TrueList')
+  },
+  // 在线合同预览
+  {
+    path: '/vcenter/contract/show/:unique_id',
+    name: 'vcenterContractView',
+    meta: {
+      title: '在线合同编辑',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/contract/View')
+  },
+  // 在线合同编辑
+  {
+    path: '/vcenter/contract/submit/:item_id',
+    name: 'vcenterContractSubmit',
+    meta: {
+      title: '在线合同编辑',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/contract/Submit')
   },
   // 基本设置
   {

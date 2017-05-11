@@ -203,7 +203,7 @@ export default {
   created: function() {
     const self = this
     var page = this.$route.query.page || 1
-    var perPage = 5
+    var perPage = 100
     self.$http.get(api.adminItemList, {page: page, per_page: perPage})
     .then (function(response) {
       if (response.data.meta.status_code === 200) {
@@ -230,11 +230,14 @@ export default {
         } // endfor
 
         console.log(self.itemList)
+      } else {
+        self.$message.error(response.data.meta.message)
+        // self.$router.push({name: 'home'})
       }
     })
     .catch (function(error) {
       self.$message.error(error.message)
-      console.log(error.message)
+      // self.$router.push({name: 'home'})
     })
   },
   watch: {

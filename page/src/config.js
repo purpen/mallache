@@ -12,7 +12,7 @@ const COMPANY_TYPE = [
       {
         id: 2,
         key: 'item_1_2',
-        name: '产品设计'
+        name: '产品外观设计'
       },
       {
         id: 3,

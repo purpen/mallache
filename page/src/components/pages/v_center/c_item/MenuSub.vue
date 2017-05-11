@@ -2,10 +2,10 @@
   <div class="vcenter-menu-sub">
 
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterCItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">正在进行的项目</router-link>
+      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true}">待合作项目</router-link>
     </div>
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterCItemList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 8}">已完成</router-link>
+      <router-link :to="{name: 'vcenterTrueCItemList'}" :class="{'item': true}">已合作项目</router-link>
     </div>
   </div>
 </template>
@@ -15,26 +15,12 @@
     name: 'vcenter_c_item_menu',
     data () {
       return {
-        menuType: 0,
         msg: ''
       }
     },
     created: function() {
-      var type = this.$route.query.type
-      this.menuType = 0
-      if (type) {
-        this.menuType = parseInt(type)
-      }
     },
     watch: {
-      '$route' (to, from) {
-        // 对路由变化作出响应...
-        var type = this.$route.query.type
-        this.menuType = 0
-        if (type) {
-          this.menuType = parseInt(type)
-        }
-      }
     }
   }
 

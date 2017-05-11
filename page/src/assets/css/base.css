@@ -45,6 +45,12 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 0.875rem;
 }
 
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
 .clear {
   clear: both;
 }
@@ -58,6 +64,12 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 .blank20 {
   margin: 20px;
+}
+
+.loading {
+  position:fixed;
+  top: 30%;
+  left: 50%;
 }
 
 
@@ -92,6 +104,11 @@ button.is-custom:active, .button.is-custom.is-active {
 button.is-custom.is-inverted {
   background-color: #fff;
   color: #FF5A5F;
+}
+
+button.is-custom.is-disabled {
+  background-color: #eef1f6;
+  color: #d1dbe5;
 }
 
 button.is-custom.is-inverted:hover {
@@ -183,7 +200,6 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
   top: 52px;
   border: 1px solid #ccc;
   width: 150px;
-  height: 132px;
   min-width: 150px;
   padding: 0;
 }
@@ -270,3 +286,15 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+img.avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+  border: 1px solid;
+}
+
+.font-weight {
+  font-weight: bold;
+}
+
