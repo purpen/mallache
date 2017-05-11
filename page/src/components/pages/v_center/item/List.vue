@@ -115,7 +115,7 @@
         const that = this
         that.isLoading = true
         that.itemList = []
-        that.$http.get(api.itemList, {type: type})
+        that.$http.get(api.itemList, {params: {type: type}})
         .then (function(response) {
           that.isLoading = false
           if (response.data.meta.status_code === 200) {

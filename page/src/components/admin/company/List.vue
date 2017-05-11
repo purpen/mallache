@@ -204,8 +204,10 @@ export default {
   created: function() {
     const self = this
     var page = this.$route.query.page || 1
+    var sort = this.$route.query.sort || 1
+    var type = this.$route.query.type || 0
     var perPage = 5
-    self.$http.get(api.adminCompanyList, {page: page, per_page: perPage})
+    self.$http.get(api.adminCompanyList, {params: {page: page, per_page: perPage, sort: sort, type: type}})
     .then (function(response) {
       if (response.data.meta.status_code === 200) {
         self.itemList = response.data.data

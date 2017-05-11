@@ -7,6 +7,7 @@ Vue.use(VueRouter)
 
 // 页面刷新时，重新赋值token
 if (window.localStorage.getItem('token')) {
+  // console.log(window.localStorage.getItem('token'))
   store.commit(types.USER_SIGNIN, JSON.parse(window.localStorage.getItem('token')))
 }
 
