@@ -111,7 +111,7 @@ class ItemActionController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
 
-        if($request->input('sort') === 0)
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';
         }
