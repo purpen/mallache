@@ -322,15 +322,25 @@ const routes = [
     },
     component: require('@/components/pages/v_center/item/List')
   },
-  // 项目详情
+  // 项目详情--需求方
   {
     path: '/vcenter/item/show/:id',
     name: 'vcenterItemShow',
     meta: {
-      title: '详情',
+      title: '项目详情',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/item/Show')
+  },
+  // 项目详情--公司方
+  {
+    path: '/vcenter/citem/show/:id',
+    name: 'vcenterCItemShow',
+    meta: {
+      title: '项目详情',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/c_item/Show')
   },
 
   // 我的项目列表(设计公司) -- 待合作

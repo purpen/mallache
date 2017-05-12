@@ -47,42 +47,27 @@ export default {
       return false
     }
 
-    // 定时提示,每次3秒,最多5次
-    var limitTimes = 0
-    var limitObj = setInterval(function() {
-      if (limitTimes >= 3) {
-        self.payResult = true
-        return
+    self.$http.get(api.orderId.format(outTradeNo), {})
+    .then (function(response) {
+      if (response.data.meta.status_code === 200) {
+        if (response.data.data.status === 1) {
+          self.payResult = true
+          self.paySuccess = true
+          var itemId = response.data.data.item_id
+          self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
+        }
       } else {
-        self.$http.get(api.orderId.format(outTradeNo), {})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-            if (response.data.data.status === 1) {
-              self.payResult = true
-              self.paySuccess = true
-              var itemId = response.data.data.item_id
-              setTimeout(function() {
-                self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
-              }, 3000)
-              clearInterval(limitObj)
-            }
-          } else {
-            console.log(response.data.meta.message)
-            self.payResult = true
-            self.errorMessage = response.data.meta.message
-            clearInterval(limitObj)
-            return false
-          }
-        })
-        .catch (function(error) {
-          clearInterval(limitObj)
-          self.errorMessage = error.message
-          console.log(error.message)
-          return false
-        })
+        console.log(response.data.meta.message)
+        self.payResult = true
+        self.errorMessage = response.data.meta.message
+        return false
       }
-      limitTimes += 1
-    }, 1000 * 3)
+    })
+    .catch (function(error) {
+      self.errorMessage = error.message
+      console.log(error.message)
+      return false
+    })
   }
 }
 </script>

@@ -276,7 +276,7 @@ export default {
       return
     }
     const self = this
-    self.$http.get(api.demandId.format(id), {})
+    self.$http.get(api.designItemId.format(id), {})
     .then (function(response) {
       if (response.data.meta.status_code === 200) {
         console.log(response.data.data)

@@ -35,12 +35,12 @@
                 <el-col :span="8">
                   <el-form-item label="公司网站" prop="company_web">
                     <el-input v-model="form.company_web" placeholder="http://"></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-              <region-picker :provinceProp="province" :cityProp="city" :districtProp="district" :isFirstProp="isFirst" @onchange="change"></region-picker>
-              <el-form-item label="详细地址" prop="address">
+              <region-picker :provinceProp="province" :cityProp="city" :districtProp="district" :isFirstProp="isFirst" titleProp="详细地址" @onchange="change"></region-picker>
+              <el-form-item label="" prop="address">
                 <el-input v-model="form.address" name="address" ref="address" placeholder="请输入公司的详细地址"></el-input>
               </el-form-item>
 
@@ -139,9 +139,6 @@
           ],
           company_size: [
             { type: 'number', required: true, message: '请选择公司规模', trigger: 'change' }
-          ],
-          company_web: [
-            { required: true, message: '请添写公司网址', trigger: 'blur' }
           ],
           address: [
             { required: true, message: '请添写公司详细地址', trigger: 'blur' }

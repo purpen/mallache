@@ -19,7 +19,7 @@
               </div>
               <div class="content">
                 <div class="l-item">
-                  <p class="c-title">{{ d.item.name }}</p>
+                  <p class="c-title"><router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link></p>
                   <p>项目预算: {{ d.item.design_cost_value }}</p>
                   <p>设计类别: {{ d.item.type_label }}</p>
                   <p>项目周期: {{ d.item.cycle_value }}</p>

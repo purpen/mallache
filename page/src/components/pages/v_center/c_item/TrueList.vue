@@ -14,13 +14,20 @@
                   <p class="fl">
                     <span>{{ d.item.created_at }}</span>
                     <span>{{ d.item.company_name }}</span>
-                    <span>和我联系</span>
+                    <span>&nbsp;&nbsp;</span>
+                    <el-popover class="contact-popover" trigger="hover" placement="top">
+                      <p class="contact">联系人: {{ d.item.contact_name }}</p>
+                      <p class="contact">电话: {{ d.item.phone }}</p>
+                      <p class="contact">邮箱: {{ d.item.email }}</p>
+                        <el-tag slot="reference" class="name-wrapper">联系客户</el-tag>
+                    </el-popover>
+
                   </p>
                   <p class="fr">{{ d.item.status_value }}</p>
               </div>
               <div class="content clear">
                 <div class="l-item">
-                  <p class="c-title">{{ d.item.name }}</p>
+                  <p class="c-title"><router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link></p>
                   <p>项目预算: {{ d.item.design_cost_value }}</p>
                   <p>设计类别: {{ d.item.type_label }}</p>
                   <p>项目周期: {{ d.item.cycle_value }}</p>
@@ -188,5 +195,12 @@
   .btn a.b-red {
     color: #FF5A5F;
   }
+
+  p.contact {
+    line-height: 1.5;
+    font-size: 1.3rem;
+    color: #666;
+  }
+
 
 </style>
