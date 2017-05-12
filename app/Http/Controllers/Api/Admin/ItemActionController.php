@@ -168,15 +168,21 @@ class ItemActionController extends Controller
         }
 
         try{
-            $isDesign = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
+            $design = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
                 ->whereIn('id', $all['recommend'])
                 ->get()->pluck('id')->all();
-            if(empty($isDesign)){
+            if(empty($design)){
                 return $this->response->array($this->apiError('推荐设计公司都不符合条件', 403));
             }
 
             $item = Item::find($all['item_id']);
-            $item->recommend = implode(',', $isDesign);
+            $ord_recommend = $item->ord_recommend;
+            if(!empty($ord_recommend)){
+                $ord_recommend_arr = explode(',', $ord_recommend);
+                $design = array_diff($design, $ord_recommend_arr);
+            }
+
+            $item->recommend = implode(',', $design);
             $item->save();
         }
         catch (\Exception $e){

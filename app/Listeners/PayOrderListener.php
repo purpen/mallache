@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
 /**
- * 支付单 监听器
+ * 支付单支付成功 监听器
  * Class PayOrderListener
  * @package App\Listeners
  */

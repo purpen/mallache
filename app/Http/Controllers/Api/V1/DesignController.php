@@ -73,7 +73,7 @@ class DesignController extends BaseController
 
         $item_recommends = ItemRecommend
                         ::where(['design_company_id' => $design_company->id])
-                        ->where( 'item_status', '!=' ,1)
+                        ->where( 'item_status', '=' , 0)
                         ->where('design_company_status', '!=', -1)
                         ->get();
 
