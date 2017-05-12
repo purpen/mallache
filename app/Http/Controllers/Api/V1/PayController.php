@@ -52,9 +52,9 @@ class PayController extends BaseController
      * @param string $summary 备注
      * @return mixed
      */
-    protected function createPayOrder($summary = '', $type = 1)
+    protected function createPayOrder($summary = '', $type = 1, $item_id = 0)
     {
-        $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0])
+        $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
             ->first();
         if($pay_order){
             return $pay_order;
@@ -66,7 +66,8 @@ class PayController extends BaseController
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
             'type' => $type,
-            'summary' => $summary
+            'summary' => $summary,
+            'item_id' => $item_id,
         ]);
         return $pay_order;
     }

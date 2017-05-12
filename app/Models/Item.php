@@ -389,12 +389,11 @@ class Item extends Model
     {
         //尚在匹配项目数量
         $item_count = ItemRecommend::where('item_id', $item_id)
-            ->where('item_status', '!=' -1)
+            ->where('item_status', '!=', -1)
             ->where('design_company_status', '!=', -1)
             ->count();
-
         //匹配失败项目状态修改为匹配失败（2）
-        if($item_count < 1){
+        if(empty($item_count)){
             $item = Item::find($item_id);
             $item->status = -2;
             $item->save();
