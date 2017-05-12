@@ -128,6 +128,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
         //合同
         $api->resource('/contract', 'ContractController');
+        $api->post('/contract/ok', 'ContractController@okContract');
 
         //设计公司信息
 //        $api->resource('/designCompany', 'DesignCompanyController');
