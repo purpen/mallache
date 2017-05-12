@@ -412,7 +412,7 @@ class DesignCaseController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $designCase = $design->designCase;
-        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
 
     }
 }

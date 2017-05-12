@@ -27,7 +27,7 @@ class AssetModel extends Model
      * 获取图片列表
      *
      * @param integer $target_id  目标ID
-     * @param integer $type 图片类型 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；6.设计公司logo
+     * @param integer $type 图片类型 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片；6.设计公司logo;7.需求公司logo；8.项目阶段附件
      * @param int $sort  排序（可选，默认倒序）：1.倒序；2.正序；
      * @param null $limit 数量（可选）：获取数量
      * @return array
