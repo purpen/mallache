@@ -176,6 +176,7 @@ class ItemActionController extends Controller
             }
 
             $item = Item::find($all['item_id']);
+            //验证
             $ord_recommend = $item->ord_recommend;
             if(!empty($ord_recommend)){
                 $ord_recommend_arr = explode(',', $ord_recommend);
