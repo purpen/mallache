@@ -124,6 +124,7 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
                     'field' => $info->field,
                     'field_value' => $info->field_value,
                     'industry' => $info->industry,
