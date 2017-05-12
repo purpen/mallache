@@ -62,6 +62,13 @@ class Recommend implements ShouldQueue
 
 //Log::info($design);
         if($count = count($design) > 0){
+            //剔除已推荐的
+            $ord_recommend = $this->item->ord_recommend;
+            if(!empty($ord_recommend)){
+                $ord_recommend_arr = explode(',', $ord_recommend);
+                $design = array_diff($design, $ord_recommend_arr);
+            }
+
             $design = array_slice($design, 0, 5);
             $recommend = implode(',',$design);
 

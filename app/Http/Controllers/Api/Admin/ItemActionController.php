@@ -170,13 +170,13 @@ class ItemActionController extends Controller
         try{
             $isDesign = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
                 ->whereIn('id', $all['recommend'])
-                ->count();
-            if($isDesign < count($all['recommend'])){
-                return $this->response->array($this->apiError('推荐设计公司不符合条件', 403));
+                ->get()->pluck('id')->all();
+            if(empty($isDesign)){
+                return $this->response->array($this->apiError('推荐设计公司都不符合条件', 403));
             }
 
             $item = Item::find($all['item_id']);
-            $item->recommend = implode(',', $all['recommend']);
+            $item->recommend = implode(',', $isDesign);
             $item->save();
         }
         catch (\Exception $e){

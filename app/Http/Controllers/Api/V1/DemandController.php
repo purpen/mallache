@@ -1078,4 +1078,92 @@ class DemandController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+    /**
+     * @api {post} /demand/closeItem 用户关闭需求项目
+     * @apiVersion 1.0.0
+     * @apiName demand closeItem
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function closeItem(Request $request)
+    {
+        $item_id = (int)$request->input('item_id');
+
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != -2){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        //修改为用户已关闭
+        $item->status = -1;
+        if(!$item->save()){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        //退还保证金
+        //
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /demand/itemRestart 修改项目重新匹配
+     * @apiVersion 1.0.0
+     * @apiName demand itemRestart
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function itemRestart(Request $request)
+    {
+        $item_id = (int)$request->input('item_id');
+
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != -2){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        //清除推荐公司Id，追加至曾推荐公司ID字段
+        $item->ord_recommend = $item->ord_recommend ? ($item->ord_recommend . ',' . $item->recommend) : $item->recommend;
+        $item->recommend = '';
+        $item->status = 1; //填写资料阶段
+        if(!$item->save()){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
 }

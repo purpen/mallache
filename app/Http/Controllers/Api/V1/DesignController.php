@@ -260,7 +260,8 @@ class DesignController extends BaseController
      * "phone": "1877678",
      * "email": "www@qq.com",
      * "created_at": "2017-04-13"
-     * }
+     * },
+     * "is_contract": 0  //0：未添加合同；1.已添加合同
      * }
      * ],
      * "meta": {
