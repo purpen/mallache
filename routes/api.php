@@ -151,6 +151,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/column', 'ColumnController');
         //分类
         $api->resource('/category', 'CategoryController');
+        //项目阶段
+        $api->resource('/itemStage', 'ItemStageController');
 
 
         /**
