@@ -1047,8 +1047,9 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function trueContract($item_id)
+    public function trueContract(Request $request)
     {
+        $item_id = (int)$request->input('item_id');
         if(!$item = Item::find($item_id)){
             return $this->response->array($this->apiError());
         }
