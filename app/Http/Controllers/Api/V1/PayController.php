@@ -35,9 +35,9 @@ class PayController extends BaseController
     public function demandAliPay()
     {
         //总金额
-        $total_fee = 0.01;
+        $total_fee = config('constant.item_price');
 
-        $pay_order = $this->createPayOrder('发布需求保证金');
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
         $alipay = new Alipay();
         $html_text = $alipay->alipayApi($pay_order->uid, '发布需求保证金', $total_fee);
 
@@ -46,13 +46,14 @@ class PayController extends BaseController
 
     /**
      * 创建需求 支付单
-     * @param int $type 支付类型：1.预付押金;
+     * @param int $type 支付类型：1.预付押金;2.项目款
+     * @param float $amount 支付金额
      * @param int $item_id 目标ID
      * @param int $user_id 用户ID
      * @param string $summary 备注
      * @return mixed
      */
-    protected function createPayOrder($summary = '', $type = 1, $item_id = 0)
+    protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0)
     {
         $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
             ->first();
@@ -68,6 +69,7 @@ class PayController extends BaseController
             'type' => $type,
             'summary' => $summary,
             'item_id' => $item_id,
+            'amount' => $amount,
         ]);
         return $pay_order;
     }
@@ -102,7 +104,7 @@ class PayController extends BaseController
 
                     //判断是否业务已处理
                     if($pay_order->status === 0){
-                        $pay_order->pay_type = 1; //支付宝
+                        $pay_order->pay_type = 2; //支付宝
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
                         $pay_order->save();
@@ -129,21 +131,6 @@ class PayController extends BaseController
         }
 
     }
-
-    /**
-     * @api {get} /pay/aliPaySynNotify  支付宝同步回调接口
-     * @apiVersion 1.0.0
-     * @apiName pay aliSynPayNotify
-     * @apiGroup pay
-     *
-     * @apiSuccessExample 成功响应:
-     *   转跳
-     */
-//    public function aliPaySynNotify()
-//    {
-//        header("Location: http://mc.taihuoniao.com/alipay/callback");
-//        exit();
-//    }
 
     /**
      * @api {get} /pay/getPayStatus/{out_trade_no} 查看支付状态

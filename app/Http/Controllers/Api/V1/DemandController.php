@@ -19,6 +19,7 @@ use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\PayOrder;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
 use App\Models\User;
@@ -1118,8 +1119,21 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
 
-        //退还保证金
-        //
+        //解冻保证金
+        $pay_order = PayOrder::where([
+            'user_id' => $this->auth_user_id,
+            'item_id' => $item_id,
+            'type' => 1,
+            'status' => 1,
+            ])->first();
+        if($pay_order){
+            $user = $this->auth_user;
+            $user->price_frozen -= $pay_order->amount;
+            if($user->price_frozen < 0){
+                $user->price_frozen = 0;
+            }
+            $user->save();
+        }
 
         return $this->response->array($this->apiSuccess());
     }

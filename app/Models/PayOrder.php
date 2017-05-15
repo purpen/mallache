@@ -8,7 +8,7 @@ class PayOrder extends Model
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary'];
+    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount'];
 
 
 
