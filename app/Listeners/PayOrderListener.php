@@ -64,7 +64,7 @@ class PayOrderListener
 
                 $item_info = $item->itemInfo();
                 //资金流水记录
-                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'【' . $item_info->name . '】项目款托管');
+                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'【' . $item_info['name'] . '】项目款托管');
                 break;
             default:
         }
