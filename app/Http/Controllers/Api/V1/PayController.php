@@ -192,7 +192,7 @@ class PayController extends BaseController
         if(!$item = Item::find($item_id)){
             return $this->response->array("not found item", 404);
         }
-        if($item->user_id !== $this->auth_user_id){
+        if($item->user_id != $this->auth_user_id || $item->status != 7){
             return $this->response->array("无操作权限", 403);
         }
 
@@ -204,7 +204,7 @@ class PayController extends BaseController
         ])->first();
 
         //计算应付金额
-        $price = $item->price -$pay_order->amount;
+        $price = $item->price - $pay_order->amount;
 
         //支付说明
         $summary = '项目尾款';
