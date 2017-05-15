@@ -56,6 +56,9 @@ class ItemMessageListener
             case 7:
                 $this->demandTrueContract($event);
                 break;
+            case 8:
+                $this->demandTrustFunds($event);
+                break;
         }
     }
 
@@ -153,4 +156,18 @@ class ItemMessageListener
         $tools = new Tools();
         $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已确认合同');
     }
+
+    //需求公司已托管项目资金
+    public function demandTrustFunds(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        //获取设计公司user_id
+        $user_id = $item->designCompany->user_id;
+
+        $tools = new Tools();
+        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已托管项目资金');
+    }
+
 }

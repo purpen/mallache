@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Events\PayOrderEvent;
 use App\Http\Transformer\PayOrderTransformer;
+use App\Models\Item;
 use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -12,9 +13,8 @@ use Qiniu\Http\Request;
 
 class PayController extends BaseController
 {
-    //发布需求保证金支付-支付宝
     /**
-     * @api {get} /pay/demandAliPay 发布需求保证金支付
+     * @api {get} /pay/demandAliPay 发布需求保证金支付-支付宝
      * @apiVersion 1.0.0
      * @apiName pay demandAliPay
      * @apiGroup pay
@@ -166,6 +166,54 @@ class PayController extends BaseController
         }
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /pay/itemAliPay/{item_id} 支付宝支付项目尾款-支付宝
+     * @apiVersion 1.0.0
+     * @apiName pay itemAliPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          'html_text': ""
+     *      }
+     *  }
+     */
+    public function itemAliPay($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array("not found item", 404);
+        }
+        if($item->user_id !== $this->auth_user_id){
+            return $this->response->array("无操作权限", 403);
+        }
+
+        $pay_order = PayOrder::where([
+            'user_id' => $this->auth_user_id,
+            'item_id' => $item_id,
+            'type' => 1,
+            'status' => 1,
+        ])->first();
+
+        //计算应付金额
+        $price = $item->price -$pay_order->amount;
+
+        //支付说明
+        $summary = '项目尾款';
+
+        $pay_order = $this->createPayOrder($summary, $price,2, $item_id);
+        $alipay = new Alipay();
+        $html_text = $alipay->alipayApi($pay_order->uid, $summary, $price);
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
     }
 }
 

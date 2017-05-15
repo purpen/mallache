@@ -8,7 +8,7 @@ class FundLog extends Model
 {
     public $table = 'fund_log';
 
-    protected $fillable = ['user_id', 'amount', 'transaction_type', 'target_id', 'type'];
+    protected $fillable = ['user_id', 'amount', 'transaction_type', 'target_id', 'type', 'summary'];
 
     /**
      * 交易入账流水记录
@@ -18,7 +18,7 @@ class FundLog extends Model
      * @param int $transaction_type 交易平台 1.平台用户；2.支付宝；3.微信；4：京东；5.银行转账；
      * @param string $target_id 交易对象 (用户id或交易单号）
      */
-    public function inFund(int $user_id, float $amount, int $transaction_type, string $target_id)
+    public function inFund(int $user_id, float $amount, int $transaction_type, string $target_id, string $summary='')
     {
         self::create([
             'user_id' => $user_id,
@@ -26,6 +26,7 @@ class FundLog extends Model
             'transaction_type' => $transaction_type,
             'target_id' => $target_id,
             'type' => 1,
+            'summary' => $summary,
         ]);
     }
 
@@ -37,7 +38,7 @@ class FundLog extends Model
      * @param int $transaction_type 交易平台 1.平台用户；2.支付宝；3.微信；4：京东；5.银行转账；
      * @param string $target_id 交易对象 (用户id或交易单号）
      */
-    public function outFund(int $user_id, float $amount, int $transaction_type, string $target_id)
+    public function outFund(int $user_id, float $amount, int $transaction_type, string $target_id, string $summary='')
     {
         self::create([
             'user_id' => $user_id,
@@ -45,6 +46,7 @@ class FundLog extends Model
             'transaction_type' => $transaction_type,
             'target_id' => $target_id,
             'type' => -1,
+            'summary' => $summary,
         ]);
     }
 

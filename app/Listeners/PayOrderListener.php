@@ -40,9 +40,7 @@ class PayOrderListener
         //用户账号总金额、冻结金额增加
         $this->amountIncrease($pay_order->user_id, $pay_order->amount);
 
-        //资金流水记录
         $fund_log = new FundLog();
-        $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no);
 
         /**
          * 判断付款类型,修改对应项目付款状态
@@ -50,19 +48,25 @@ class PayOrderListener
         switch ($pay_order->type){
             //项目押金
             case 1:
+                //资金流水记录
+                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'创建项目押金');
                 //创建需求项目
                 if($item = $this->createItem($pay_order->user_id)){
                    $pay_order->item_id = $item->id;
                    $pay_order->save();
                 }
-
                 break;
             //项目尾款
             case 2:
+                $item =Item::find($pay_order->item_id);
+                //修改项目状态为项目款已托管
+                $item->itemStatusChange();
 
+                $item_info = $item->itemInfo();
+                //资金流水记录
+                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'【' . $item_info->name . '】项目款托管');
                 break;
             default:
-
         }
 
     }
@@ -100,5 +104,5 @@ class PayOrderListener
             Log::error('user_id:' . $user_id . '账户金额增加失败');
         }
     }
-    
+
 }
