@@ -113,7 +113,7 @@ class PayController extends BaseController
                     }
                 }
                 catch (\Exception $e){
-                    Log::error('支付订单操作失败');
+                    Log::error($e);
                     return;
                 }
             }
