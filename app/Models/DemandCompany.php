@@ -32,7 +32,8 @@ class DemandCompany extends Model
         'contact_name',
         'phone',
         'email',
-        'logo'
+        'logo',
+        'verify_status'
     ];
 
     //公司规模
@@ -95,5 +96,33 @@ class DemandCompany extends Model
     public function getAreaValueAttribute()
     {
         return Tools::cityName($this->area);
+    }
+
+    /**
+     * 更改需求公司审核状态
+     */
+    static public function verifyStatus($id, $verify_status=1)
+    {
+        $demand_company = self::findOrFail($id);
+        $demand_company->verify_status = $verify_status;
+        return $demand_company->save();
+    }
+
+    /**
+     * 获取图片附件
+     *
+     * @return array
+     */
+    public function getAnnexImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 9, 1 , 5);
+    }
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
     }
 }

@@ -73,7 +73,25 @@ class ItemActionController extends Controller
                 "design_type_value": "app设计",
                 "company_province_value": "",
                 "company_city_value": "",
-                "company_area_value": ""
+                "company_area_value": "",
+                "status_value": "项目进行中",
+                "user": {
+                    "id": 2,
+                    "account": "18132382134",
+                    "phone": "18132382134",
+                    "username": "",
+                    "email": null,
+                    "design_company_id": 48,
+                    "status": 0,
+                    "item_sum": 0,
+                    "created_at": "2017-04-14 10:35:13",
+                    "updated_at": "2017-05-05 17:27:52",
+                    "type": 0,
+                    "logo": 0,
+                    "role_id": 0,
+                    "demand_company_id": 0,
+                    "logo_image": []
+                }
             },
             "info": {
                 "id": 2,

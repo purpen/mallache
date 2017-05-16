@@ -101,6 +101,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 一对一关联需求公司
+     */
+    public function demandCompany()
+    {
+        return $this->hasOne('App\Models\DemandCompany' , 'user_id');
+    }
+
+    /**
      * 增加用户账户金额（总金额、冻结金额）
      *
      * @param int $user_id

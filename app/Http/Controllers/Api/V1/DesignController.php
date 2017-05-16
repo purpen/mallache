@@ -23,6 +23,9 @@ class DesignController extends BaseController
      * @apiGroup design
      *
      * @apiParam {string} token
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -59,25 +62,40 @@ class DesignController extends BaseController
                     }
                 }
             ],
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
+        "meta": {
+              "message": "Success",
+              "status_code": 200,
+              "pagination": {
+                  "total": 1,
+                  "count": 1,
+                  "per_page": 10,
+                  "current_page": 1,
+                  "total_pages": 1,
+                  "links": []
+              }
         }
      */
-    public function itemList()
+    public function itemList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         if(!$design_company = $this->auth_user->designCompany){
             return $this->response->array($this->apiSuccess());
         }
-
-        $item_recommends = ItemRecommend
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+        $query = ItemRecommend
                         ::where(['design_company_id' => $design_company->id])
                         ->where( 'item_status', '=' , 0)
-                        ->where('design_company_status', '!=', -1)
-                        ->get();
+                        ->where('design_company_status', '!=', -1);
+        $lists = $query->orderBy('id', $sort)->paginate($per_page);
 
-        return $this->response->collection($item_recommends, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
