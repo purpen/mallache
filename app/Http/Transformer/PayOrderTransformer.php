@@ -28,6 +28,9 @@ class PayOrderTransformer extends TransformerAbstract
             'summary' => $pay_order->summary,
             'pay_type' => $pay_order->pay_type,
             'pay_no' => $pay_order->pay_no,
+            'amount' => $pay_order->amount,
+            'total_price' => $pay_order->total_price ?? null,
+            'first_pay' => $pay_order->first_pay ?? null,
         ];
     }
 }

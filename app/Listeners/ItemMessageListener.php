@@ -9,6 +9,12 @@ use App\Models\Item;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+/**
+ * 项目状态事件监听器--对项目状态变更进行相关操作
+ *
+ * Class ItemMessageListener
+ * @package App\Listeners
+ */
 class ItemMessageListener
 {
     /**
@@ -56,7 +62,9 @@ class ItemMessageListener
             case 7:
                 $this->demandTrueContract($event);
                 break;
+            //项目款已托管
             case 8:
+                //向设计公司通知
                 $this->demandTrustFunds($event);
                 break;
         }
@@ -166,8 +174,15 @@ class ItemMessageListener
         //获取设计公司user_id
         $user_id = $item->designCompany->user_id;
 
+        //通知设计公司
         $tools = new Tools();
         $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已托管项目资金');
+    }
+
+    //需求公司托管资金后，首次向设计支付一定比例项目款
+    public function payPriceToDesign(ItemStatusEvent $event)
+    {
+        $item = $event->item;
     }
 
 }

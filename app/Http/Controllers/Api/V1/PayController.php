@@ -154,7 +154,7 @@ class PayController extends BaseController
                 "item_id": 0,               //项目ID
                 "status": 1,                //状态：0.未支付；1.支付成功；
                 "summary": "发布需求保证金",  //备注
-                "pay_type": 1,              //支付方式；1.支付宝；2.微信；3.京东；
+                "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
                 "pay_no": "2017042621001004550211582926"  //平台交易号
      *      }
      *  }
@@ -169,7 +169,68 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/itemAliPay/{item_id} 支付宝支付项目尾款-支付宝
+     * @api {get} /pay/endPayOrder/{item_id} 创建尾款支付订单
+     * @apiVersion 1.0.0
+     * @apiName pay endPayOrder
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     * @apiParam {int} item_id  项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          "id": 1,
+                "uid": "zf59006e63b3445",  //支付单号
+                "user_id": 2,              //用户ID
+                "type": 1,                 //支付类型：1.预付押金；2.项目款；
+                "item_id": 0,               //项目ID
+                "status": 1,                //状态：0.未支付；1.支付成功；
+                "summary": "发布需求保证金",  //备注
+                "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+                "pay_no": "2017042621001004550211582926",  //平台交易号
+     *          "amount"：123， //应支付金额
+     *          "total": 22, //总金额
+     *          "first_pay": 11, //已支付金额
+     *      }
+     *  }
+     */
+    public function endPayOrder($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array("not found item", 404);
+        }
+        if($item->user_id != $this->auth_user_id || $item->status != 7){
+            return $this->response->array("无操作权限", 403);
+        }
+
+        //查询项目押金的金额
+        $first_pay_order = PayOrder::where([
+            'user_id' => $this->auth_user_id,
+            'item_id' => $item_id,
+            'type' => 1,
+            'status' => 1,
+        ])->first();
+
+        //计算应付金额
+        $price = $item->price - $first_pay_order->amount;
+
+        //支付说明
+        $summary = '项目尾款';
+
+        $pay_order = $this->createPayOrder($summary, $price,2, $item_id);
+        $pay_order->total_price = $item->price;
+        $pay_order->first_pay = $pay_order->amount;
+
+        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /pay/itemAliPay/{pay_order_id} 支付宝支付项目尾款-支付宝
      * @apiVersion 1.0.0
      * @apiName pay itemAliPay
      * @apiGroup pay
@@ -187,31 +248,15 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function itemAliPay($item_id)
+    public function itemAliPay($pay_order_id)
     {
-        if(!$item = Item::find($item_id)){
-            return $this->response->array("not found item", 404);
-        }
-        if($item->user_id != $this->auth_user_id || $item->status != 7){
-            return $this->response->array("无操作权限", 403);
+        $pay_order = PayOrder::find((int)$pay_order_id);
+        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 403));
         }
 
-        $pay_order = PayOrder::where([
-            'user_id' => $this->auth_user_id,
-            'item_id' => $item_id,
-            'type' => 1,
-            'status' => 1,
-        ])->first();
-
-        //计算应付金额
-        $price = $item->price - $pay_order->amount;
-
-        //支付说明
-        $summary = '项目尾款';
-
-        $pay_order = $this->createPayOrder($summary, $price,2, $item_id);
         $alipay = new Alipay();
-        $html_text = $alipay->alipayApi($pay_order->uid, $summary, $price);
+        $html_text = $alipay->alipayApi($pay_order->uid, $pay_order->summary, $pay_order->amount);
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
     }

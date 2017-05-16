@@ -103,6 +103,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
         // 支付宝支付项目尾款-支付宝
         $api->get('/pay/itemAliPay/{item_id}', ['as' => 'pay.itemAliPay', 'uses' => 'PayController@itemAliPay']);
+        //创建尾款支付订单
+        $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
         //查询支付状态
         $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 
