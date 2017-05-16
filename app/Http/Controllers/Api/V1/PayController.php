@@ -205,7 +205,7 @@ class PayController extends BaseController
 
         $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->first();
         if($pay_order){
-            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiSuccess());
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
         if(!$item = Item::find($item_id)){
@@ -242,7 +242,7 @@ class PayController extends BaseController
 
 
 
-        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiSuccess());
+        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
 
     /**
