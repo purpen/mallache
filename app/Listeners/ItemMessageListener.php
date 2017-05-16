@@ -219,10 +219,15 @@ class ItemMessageListener
 
             $fund_log = new FundLog();
             //需求公司流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, $item_info['name'] . '支付部分项目款');
+            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
             //设计公司流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, $item_info['name'] . '收到部分项目款');
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
 
+            $tools = new Tools();
+            //通知需求公司
+            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
+            //通知设计公司
+            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
         }catch (\Exception $e){
             DB::rollBack();
             Log::error($e);

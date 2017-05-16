@@ -335,4 +335,10 @@ class DesignController extends BaseController
         return $this->response->paginator($lists, new DesignItemListTransformer)->setMeta($this->apiMeta());
     }
 
+    //项目开始
+    public function itemStart()
+    {
+        //
+    }
+
 }
