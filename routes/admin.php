@@ -36,6 +36,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
             'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
         ]);
 
+        //更新需求公司审核状态
+        $api->put('/admin/demandCompany/verifyStatus', [
+            'as' => 'AdminDemandCompany.verifyStatus', 'uses' => 'AdminDemandCompanyController@verifyStatus'
+        ]);
+        $api->put('/admin/demandCompany/unVerifyStatus', [
+            'as' => 'AdminDemandCompany.unVerifyStatus', 'uses' => 'AdminDemandCompanyController@unVerifyStatus'
+        ]);
 
         /**
          * 用户相关路由

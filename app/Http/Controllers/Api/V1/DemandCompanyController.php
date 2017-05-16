@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\DemandCompanyTransformer;
 use App\Models\AssetModel;
 use App\Models\DemandCompany;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -109,7 +110,12 @@ class DemandCompanyController extends BaseController
         $all['logo'] = $logo_id;
 
         try{
+            $user = User::where('id' , $this->auth_user_id)->first();
             $demand = DemandCompany::create($all);
+            $user->demand_company_id = $demand->id;
+            if($demand){
+                $user->save();
+            }
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));

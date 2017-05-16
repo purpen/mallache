@@ -20,6 +20,7 @@ class DemandCompanyTransformer extends TransformerAbstract
     contact_name	varchar(20)	否		联系人姓名
     phone	varcahr(20)	否		手机
     email	varchar(50)	否		邮箱
+    verify_status	tinyint(4)	否	0	审核状态：0.审核中；1.审核通过；
     */
 
     public function transform(DemandCompany $demand)
@@ -42,6 +43,8 @@ class DemandCompanyTransformer extends TransformerAbstract
             'phone' => intval($demand->phone),
             'email' => strval($demand->email),
             'image' => $demand->image,
+            'verify_status' => $demand->verify_status,
+            'annex_image' => $demand->annex_image,
         ];
     }
 }
