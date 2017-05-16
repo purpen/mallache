@@ -202,11 +202,17 @@ class PayController extends BaseController
      */
     public function endPayOrder($item_id)
     {
+
+        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->first();
+        if($pay_order){
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiSuccess());
+        }
+
         if(!$item = Item::find($item_id)){
             return $this->response->array("not found item", 404);
         }
         if($item->user_id != $this->auth_user_id || $item->status != 7){
-            return $this->response->array("无操作权限", 403);
+            return $this->response->array($this->apiError("无操作权限", 403));
         }
 
         //查询项目押金的金额

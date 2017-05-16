@@ -170,6 +170,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/item/{item_id}', 'DesignController@item');
         //已确定合作项目列表
         $api->get('/design/cooperationLists', 'DesignController@cooperationLists');
+        //项目开始
+        $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
 
         /**
          * 通知消息相关路由

@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
 use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
@@ -335,10 +336,38 @@ class DesignController extends BaseController
         return $this->response->paginator($lists, new DesignItemListTransformer)->setMeta($this->apiMeta());
     }
 
-    //项目开始
-    public function itemStart()
+    /**
+     * @api {post} /design/itemStart/{item_id} 项目开始
+     * @apiVersion 1.0.0
+     * @apiName design itemStart
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function itemStart($item_id)
     {
-        //
+        if(!$item = Item::find(intval($item_id))){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->design_company_id !== $this->auth_user->design_company_id){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+
+        $item->status = 11;  //项目开始
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
     }
 
 }
