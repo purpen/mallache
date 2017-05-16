@@ -14,7 +14,7 @@ class AddRestFundToItem extends Migration
     public function up()
     {
         Schema::table('item', function (Blueprint $table) {
-            $table->decimal('rest_fund',10, 2);
+            $table->decimal('rest_fund',10, 2)->default(0);
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Models\Item;
@@ -223,8 +224,17 @@ class PayController extends BaseController
         $summary = '项目尾款';
 
         $pay_order = $this->createPayOrder($summary, $price,2, $item_id);
+
+        //修改项目状态为8，等待托管项目金额
+        $item->status = 8;
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
         $pay_order->total_price = $item->price;
         $pay_order->first_pay = $pay_order->amount;
+
+
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiSuccess());
     }

@@ -407,11 +407,11 @@ class Item extends Model
     }
 
     //项目状态变更为项目款已托管
-    public function itemStatusChange($status = 8)
-    {
-        $this->status = $status;
-        $this->save();
-
-        event(new ItemStatusEvent($this));
-    }
+//    public function itemStatusChange($status = 8)
+//    {
+//        $this->status = $status;
+//        $this->save();
+//
+//        event(new ItemStatusEvent($this));
+//    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -92,4 +93,77 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Models\Item', 'user_id');
     }
+
+    //一对一关联支付单
+    public function payOrder()
+    {
+        return $this->hasOne('App\Models\PayOrder', 'user_id');
+    }
+
+    /**
+     * 增加用户账户金额（总金额、冻结金额）
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function totalAndFrozenIncrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_total += $amount;
+        $user->price_frozen += $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户金额增加失败');
+        }
+    }
+
+    /**
+     * 减少用户账户金额（总金额、冻结金额）
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function totalAndFrozenDecrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_total -= $amount;
+        $user->price_frozen -= $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户金额减少失败');
+        }
+    }
+
+    /**
+     * 增加用户账户总金额
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function totalIncrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_total += $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户总金额增加失败');
+        }
+    }
+
+    /**
+     * 减少用户账户总金额
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function totalDecrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_total -= $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户总金额减少失败');
+        }
+    }
+
 }

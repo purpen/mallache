@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Models\FundLog;
 use App\Models\Item;
@@ -38,7 +39,8 @@ class PayOrderListener
         $pay_order = $event->pay_order;
 
         //用户账号总金额、冻结金额增加
-        $this->amountIncrease($pay_order->user_id, $pay_order->amount);
+        $user = new User();
+        $user->totalAndFrozenIncrease($pay_order->user_id, $pay_order->amount);
 
         $fund_log = new FundLog();
 
@@ -59,8 +61,12 @@ class PayOrderListener
             //项目尾款
             case 2:
                 $item =Item::find($pay_order->item_id);
+
                 //修改项目状态为项目款已托管
-                $item->itemStatusChange();
+                $item->status = 9;
+                $item->rest_fund = $item->price;
+                $item->save();
+                event(new ItemStatusEvent($item));
 
                 $item_info = $item->itemInfo();
                 //资金流水记录
@@ -85,23 +91,6 @@ class PayOrderListener
         }else{
             Log::error('创建需求表出错user_id:' . $user_id);
             return false;
-        }
-    }
-
-    /**
-     * 增加用户账户金额（总金额、冻结金额）
-     *
-     * @param int $user_id
-     * @param float $amount
-     */
-    protected function amountIncrease(int $user_id, float $amount)
-    {
-        $user = User::find($user_id);
-
-        $user->price_total += $amount;
-        $user->price_frozen += $amount;
-        if(!$user->save()){
-            Log::error('user_id:' . $user_id . '账户金额增加失败');
         }
     }
 

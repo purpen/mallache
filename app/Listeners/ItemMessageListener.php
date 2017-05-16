@@ -5,9 +5,13 @@ namespace App\Listeners;
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use App\Models\DesignCompanyModel;
+use App\Models\FundLog;
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 项目状态事件监听器--对项目状态变更进行相关操作
@@ -62,10 +66,15 @@ class ItemMessageListener
             case 7:
                 $this->demandTrueContract($event);
                 break;
-            //项目款已托管
+            //等待项目款托管
             case 8:
+                break;
+            //项目款已托管
+            case 9:
                 //向设计公司通知
                 $this->demandTrustFunds($event);
+                //项目向设计公司支付部分费用
+                $this->payPriceToDesign($event);
                 break;
         }
     }
@@ -183,6 +192,42 @@ class ItemMessageListener
     public function payPriceToDesign(ItemStatusEvent $event)
     {
         $item = $event->item;
+
+        //项目总金额
+        $item_price = $item->price;
+        //需要转账金额
+        $amount = number_format($item_price * config('constant.first_pay'), 2, '.', '');
+
+        DB::beginTransaction();
+        $user_model = new User();
+
+        try{
+            $demand_user_id = $item->user_id;
+            $item_info = $item->itemInfo();
+
+            //修改项目剩余项目款
+            $item->rest_fund -= $amount;
+            $item->save();
+
+            //减少需求公司账户金额（总金额、冻结金额）
+            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+
+            //设计公司用户ID
+            $design_user_id = $item->designCompany->user_id;
+            //增加设计公司账户总金额
+            $user_model->totalIncrease($design_user_id, $amount);
+
+            $fund_log = new FundLog();
+            //需求公司流水记录
+            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, $item_info['name'] . '支付部分项目款');
+            //设计公司流水记录
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, $item_info['name'] . '收到部分项目款');
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+        DB::commit();
     }
 
 }
