@@ -359,7 +359,7 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->design_company_id !== $this->auth_user->design_company_id || $item->stauts !== 9){
+        if($item->design_company_id != $this->auth_user->design_company_id || $item->stauts != 9){
             return $this->response->array($this->apiError('无权操作', 403));
         }
 
