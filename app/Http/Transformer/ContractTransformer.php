@@ -71,6 +71,7 @@ class ContractTransformer extends TransformerAbstract
             'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
             'unique_id' => strval($contract->unique_id),
+            'item_name' => $contract->item_name,
         ];
     }
 }
