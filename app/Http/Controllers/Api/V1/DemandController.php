@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
+use App\Http\Transformer\DemandCompanyTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
@@ -16,6 +17,7 @@ use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\Contract;
+use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
@@ -541,7 +543,14 @@ class DemandController extends BaseController
         if($item->user_id !== $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-
+        $auth_user = $this->auth_user;
+        if(!$auth_user){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
+        if(!$demand_company){
+            return $this->response->array($this->apiError('not found demandCompany!', 404));
+        }
         try{
             $item->status = 2;
             $item->save();
@@ -549,8 +558,10 @@ class DemandController extends BaseController
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
         }
+
         dispatch(new Recommend($item));
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($demand_company, new DemandCompanyTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**

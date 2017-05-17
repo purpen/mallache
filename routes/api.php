@@ -197,5 +197,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/message/getMessageList', 'MessageController@getMessageList');
         //新消息数量确认阅读
         $api->get('/message/trueRead', 'MessageController@trueRead');
+
+        /**
+         * 资金流水记录列表
+         */
+        $api->resource('/fundLogList' , 'FundLogController');
     });
 });
