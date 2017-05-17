@@ -314,6 +314,15 @@ class ContractController extends BaseController
         if(!$contract){
             return $this->response->array($this->apiSuccess('没有找到该合同' , 200));
         }
+        $item = Item::where('id' , $contract->item_demand_id)->first();
+        if(!$item){
+            return $this->response->array($this->apiSuccess('没有找到该项目' , 200));
+        }
+        if($item->type == 1){
+            $contract->item_name = $item->productDesign->name ?? '';
+        }elseif($item->type == 2){
+            $contract->item_name = $item->uDesign->name ?? '';
+        }
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
     }
 
