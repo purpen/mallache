@@ -53,6 +53,7 @@ class DemandCompanyController extends BaseController
      * @apiParam {integer} city 城市
      * @apiParam {integer} area 区域
      * @apiParam {string} address 详细地址
+     * @apiParam {string} position 职位
      * @apiParam {string} contact_name 联系人
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
@@ -76,6 +77,7 @@ class DemandCompanyController extends BaseController
                 "company_city": null,  //城市
                 "company_area": null,   //区县
                 "address": null,    //详细地址
+ *              "position"：''  //职位
                 "contact_name": null,   //联系人
                 "phone": null,
                 "email": null
@@ -97,6 +99,7 @@ class DemandCompanyController extends BaseController
             'contact_name' => 'required|max:20',
             'phone' => 'required',
             'email' => 'required|email',
+            'position' => 'required|max:20',
         ];
         $all = $request->all();
         $all['user_id'] = $this->auth_user_id;
@@ -189,6 +192,7 @@ class DemandCompanyController extends BaseController
      * @apiParam {integer} city 城市
      * @apiParam {integer} area 区域
      * @apiParam {string} address 详细地址
+     * @apiParam {string} position 职位
      * @apiParam {string} contact_name 联系人
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
@@ -216,6 +220,7 @@ class DemandCompanyController extends BaseController
             'address' => 'max:50',
             'contact_name' => 'max:20',
             'email' => 'email',
+            'position' => 'max:20'
         ];
         $all = $request->except(['token']);
 

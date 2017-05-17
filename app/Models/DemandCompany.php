@@ -33,7 +33,8 @@ class DemandCompany extends Model
         'phone',
         'email',
         'logo',
-        'verify_status'
+        'verify_status',
+        'position',
     ];
 
     //公司规模

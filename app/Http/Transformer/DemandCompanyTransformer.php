@@ -45,6 +45,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'image' => $demand->image,
             'verify_status' => $demand->verify_status,
             'annex_image' => $demand->annex_image,
+            'position' =>$demand->position,
         ];
     }
 }

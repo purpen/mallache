@@ -445,19 +445,20 @@ class DemandController extends BaseController
             return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }else{
             $rules = [
-                'company_name' => 'nullable|min:1|max:50',
-                'company_abbreviation' => 'nullable|min:1|max:50',
-                'company_size' => 'nullable|integer',
-                'company_web' => 'nullable|min:1|max:50',
-                'company_province' => 'nullable|integer',
-                'company_city' => 'nullable|integer',
-                'company_area' => 'nullable|integer',
-                'address' => 'nullable|min:1|max:50',
-                'contact_name' => 'nullable|min:1|max:20',
-                'email' => 'nullable|email',
+                'company_name' => 'required|min:1|max:50',
+                'company_abbreviation' => 'required|min:1|max:50',
+                'company_size' => 'required|integer',
+                'company_web' => 'required|min:1|max:50',
+                'company_province' => 'required|integer',
+                'company_city' => 'required|integer',
+                'company_area' => 'required|integer',
+                'address' => 'required|min:1|max:50',
+                'contact_name' => 'required|min:1|max:20',
+                'email' => 'required|email',
+                'position' => 'required|max:20',
             ];
 
-            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email','position']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -699,7 +700,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 0:全部；1.进行中
+     * @apiParam {integer} type 0:全部；1.进行中;2.已完成
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      *
@@ -783,9 +784,12 @@ class DemandController extends BaseController
             case 0:
                 $where_in = [];
                 break;
-//            case 1:
-//                $where_in = [1,2,3,4,5,6,7,8];
-//                break;
+            case 1:
+                $where_in = [1,2,3,4,5,6,7,8,9,11,15];
+                break;
+            case 2:
+                $where_in = [18,22];
+                break;
             default:
                 $where_in = [];
         }

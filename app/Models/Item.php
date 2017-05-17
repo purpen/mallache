@@ -14,7 +14,7 @@ class Item extends Model
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id','position'];
 
     /**
      * 添加返回字段
@@ -156,6 +156,7 @@ class Item extends Model
                     'company_city_value' => $item->company_city_value,
                     'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
+                    'position' => $item->position,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
@@ -206,6 +207,7 @@ class Item extends Model
                     'company_city_value' => $item->company_city_value,
                     'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
+                    'position' => $item->position,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,

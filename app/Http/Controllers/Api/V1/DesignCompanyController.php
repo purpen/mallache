@@ -116,6 +116,7 @@ class DesignCompanyController extends BaseController
             'email'  => 'required|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
+            'position' => 'required',
 //            'item_quantity'  => 'nullable|integer',
             'web'  => 'nullable|max:50',
             'company_profile'  => 'max:500',
