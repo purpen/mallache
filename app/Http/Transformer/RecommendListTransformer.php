@@ -55,6 +55,6 @@ class RecommendListTransformer extends TransformerAbstract
 
     protected function designCase($design_company)
     {
-        return $design_case = $design_company->designCase->orderBy('id', 'desc')->limit(3)->get();
+        return $design_case = $design_company->designCase()->orderBy('id', 'desc')->limit(3)->get();
     }
 }
