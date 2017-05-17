@@ -450,7 +450,7 @@ class DemandController extends BaseController
                 'company_name' => 'required|min:1|max:50',
                 'company_abbreviation' => 'nullable|min:1|max:50',
                 'company_size' => 'required|integer',
-                'company_web' => 'required|min:1|max:50',
+                'company_web' => 'nullable|min:1|max:50',
                 'company_province' => 'required|integer',
                 'company_city' => 'required|integer',
                 'company_area' => 'nullable|integer',
