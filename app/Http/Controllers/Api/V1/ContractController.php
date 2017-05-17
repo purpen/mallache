@@ -319,9 +319,9 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('没有找到该项目' , 200));
         }
         if($item->type == 1){
-            $contract->item_name = $item->productDesign->name;
-        }else{
-            $contract->item_name = $item->uDesign->name;
+            $contract->item_name = $item->productDesign->name ?? '';
+        }elseif($item->type == 2){
+            $contract->item_name = $item->uDesign->name ?? '';
         }
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
     }
