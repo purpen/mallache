@@ -542,14 +542,6 @@ class DemandController extends BaseController
         if($item->user_id !== $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-
-        try{
-            $item->status = 2;
-            $item->save();
-        }
-        catch (\Exception $e){
-            return $this->response->array($this->apiError('Error', 500));
-        }
         $auth_user = $this->auth_user;
         if(!$auth_user){
             return $this->response->array($this->apiError('not found!', 404));
@@ -558,6 +550,14 @@ class DemandController extends BaseController
         if(!$demand_company){
             return $this->response->array($this->apiError('not found demandCompany!', 404));
         }
+        try{
+            $item->status = 2;
+            $item->save();
+        }
+        catch (\Exception $e){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
         dispatch(new Recommend($item));
         return $this->response->item($demand_company, new DemandCompanyTransformer())->setMeta($this->apiMeta());
 
