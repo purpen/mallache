@@ -183,7 +183,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/cooperationLists', 'DesignController@cooperationLists');
         //项目开始
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
-
+        // 确认项目已完成
+        $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
         /**
          * 通知消息相关路由
          */

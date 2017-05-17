@@ -12,6 +12,7 @@ use App\Http\Transformer\ItemTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\ItemStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -337,7 +338,7 @@ class DesignController extends BaseController
     }
 
     /**
-     * @api {post} /design/itemStart/{item_id} 项目开始
+     * @api {post} /design/itemStart/{item_id} 确认项目开始设计
      * @apiVersion 1.0.0
      * @apiName design itemStart
      * @apiGroup design
@@ -358,11 +359,51 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->design_company_id !== $this->auth_user->design_company_id){
+        if($item->design_company_id !== $this->auth_user->design_company_id || $item->stauts !== 9){
             return $this->response->array($this->apiError('无权操作', 403));
         }
 
         $item->status = 11;  //项目开始
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /design/itemDone/{item_id} 确认项目已完成
+     * @apiVersion 1.0.0
+     * @apiName design itemDone
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+        "meta": {
+        "message": "Success",
+        "status_code": 200
+        }
+        }
+     */
+    public function itemDone($item_id)
+    {
+        if(!$item = Item::find(intval($item_id))){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->design_company_id !== $this->auth_user->design_company_id || $item->stauts !== 11){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+
+        //验证是否上传项目阶段信息
+        $item_stage_count = ItemStage::where('item_id', $item_id)->count();
+        if($item_stage_count < 1){
+            return $this->response->array($this->apiError('项目目前没有阶段信息，不能确认完成', 403));
+        }
+
+        $item->status = 15;  //项目已完成
         $item->save();
 
         event(new ItemStatusEvent($item));

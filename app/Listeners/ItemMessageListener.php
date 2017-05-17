@@ -76,6 +76,16 @@ class ItemMessageListener
                 //项目向设计公司支付部分费用
                 $this->payPriceToDesign($event);
                 break;
+            //项目进行中
+            case 11:
+                //通知需求公司
+                $this->itemOngoing($event);
+                break;
+            // 项目已完成
+            case 15:
+                //通知需求公司
+                $this->itemDone($event);
+                break;
         }
     }
 
@@ -233,6 +243,28 @@ class ItemMessageListener
             Log::error($e);
         }
         DB::commit();
+    }
+
+    //项目进行中 通知需求公司
+    public function itemOngoing(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        //系统消息通知需求公司
+        $tools = new Tools();
+        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目进行中');
+    }
+
+    //项目已完成
+    public function itemDone(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        //系统消息通知需求公司
+        $tools = new Tools();
+        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目已完成，请前往确认');
     }
 
 }
