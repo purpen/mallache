@@ -14,6 +14,7 @@ use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\RecommendDesignCompanyTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\Contract;
@@ -638,7 +639,7 @@ class DemandController extends BaseController
 
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($design_company, new DesignCompanyShowTransformer)->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
