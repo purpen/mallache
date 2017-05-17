@@ -96,13 +96,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
         $api->put('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
         $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
+
         /**
          * 项目需求相关路由
          */
+        /**
+         * 发布需求保证金支付
+         */
         //发布需求保证金支付---支付宝
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+
+        /**
+         * 支付项目尾款
+         */
         // 支付宝支付项目尾款-支付宝
-        $api->get('/pay/itemAliPay/{item_id}', ['as' => 'pay.itemAliPay', 'uses' => 'PayController@itemAliPay']);
+        $api->get('/pay/itemAliPay/{pay_order_id}', ['as' => 'pay.itemAliPay', 'uses' => 'PayController@itemAliPay']);
+        //银行转账支付项目尾款
+        $api->get('/pay/itemBankPay/{pay_order_id}', 'PayController@itemBankPay');
+
         //创建尾款支付订单
         $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
         //查询支付状态

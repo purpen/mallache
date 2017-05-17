@@ -64,6 +64,13 @@ class PayController extends BaseController
 
         $uid = uniqid('zf');
 
+        $item_name = '';  //项目名称
+        $company_name = '';  //公司名称
+        if($item = Item::find($item_id)){
+            $item_name = $item->itemInfo()['name'];
+            $company_name = $item->company_name;
+        }
+
         $pay_order = PayOrder::create([
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
@@ -71,6 +78,8 @@ class PayController extends BaseController
             'summary' => $summary,
             'item_id' => $item_id,
             'amount' => $amount,
+            'item_name' => $item_name,
+            'company_name' => $company_name,
         ]);
         return $pay_order;
     }
@@ -246,7 +255,7 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/itemAliPay/{pay_order_id} 支付宝支付项目尾款-支付宝
+     * @api {get} /pay/itemAliPay/{pay_order_id} 支付项目尾款-支付宝
      * @apiVersion 1.0.0
      * @apiName pay itemAliPay
      * @apiGroup pay
@@ -276,5 +285,35 @@ class PayController extends BaseController
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
     }
+
+    /**
+     * @api {get} /pay/itemBankPay/{pay_order_id} 支付项目尾款--公对公银行转账
+     * @apiVersion 1.0.0
+     * @apiName pay itemBankPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function itemBankPay($pay_order_id)
+    {
+        $pay_order = PayOrder::find((int)$pay_order_id);
+        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+
+        $pay_order->pay_type = 5;
+        $pay_order->save();
+
+        return $this->response->array($this->apiSuccess());
+    }
+
 }
 
