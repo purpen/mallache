@@ -49,11 +49,12 @@ class RecommendListTransformer extends TransformerAbstract
             'license_image' => $design_company->license_image,
             'unique_id' => strval($design_company->unique_id),
             'city_arr' => $design_company->city_arr,
+            'design_case' => $this->designCase($design_company),
         ];
     }
 
-    protected function designCase()
+    protected function designCase($design_company)
     {
-
+        return $design_case = $design_company->designCase->orderBy('id', 'desc')->limit(3)->get();
     }
 }
