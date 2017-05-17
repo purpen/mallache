@@ -86,6 +86,13 @@ class ItemMessageListener
                 //通知需求公司
                 $this->itemDone($event);
                 break;
+            //需求方 验收完成
+            case 18:
+                // 确认项目完成,通知设计公司
+                $this->trueItemDone($event);
+                //将剩余款项转给设计公司
+                $this->payRestFunds($event);
+                break;
         }
     }
 
@@ -265,6 +272,63 @@ class ItemMessageListener
         //系统消息通知需求公司
         $tools = new Tools();
         $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目已完成，请前往确认');
+    }
+
+    //确认项目完成
+    public function trueItemDone(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+        $item_info = $item->itemInfo();
+
+        $design_company_id = User::where('design_company_id', $item->design_company_id)->first()->id;
+
+        //系统消息通知需求公司
+        $tools = new Tools();
+        $tools->message($design_company_id, '【' . $item_info['name'] . '】' . '项目已确认验收');
+    }
+
+    //向设计公司支付剩余款项
+    public function payRestFunds(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+
+        DB::beginTransaction();
+        $user_model = new User();
+
+        try{
+            $demand_user_id = $item->user_id;
+            $item_info = $item->itemInfo();
+            //支付金额
+            $amount = $item->rest_fund;
+
+            //修改项目剩余项目款为0
+            $item->rest_fund = 0;
+            $item->save();
+
+            //减少需求公司账户金额（总金额、冻结金额）
+            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+
+            //设计公司用户ID
+            $design_user_id = $item->designCompany->user_id;
+            //增加设计公司账户总金额
+            $user_model->totalIncrease($design_user_id, $amount);
+
+            $fund_log = new FundLog();
+            //需求公司流水记录
+            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+            //设计公司流水记录
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+
+            $tools = new Tools();
+            //通知需求公司
+            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+            //通知设计公司
+            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+        DB::commit();
     }
 
 }

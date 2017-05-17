@@ -137,6 +137,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/trueContract', ['as' => 'demand.trueContract', 'uses' => 'DemandController@trueContract']);
         //修改项目重新匹配
         $api->post('/demand/itemRestart', ['as' => 'demand.itemRestart', 'uses' => 'DemandController@itemRestart']);
+        // 需求公司验收项目已完成
+        $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
+
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情

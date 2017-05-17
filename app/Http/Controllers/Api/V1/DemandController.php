@@ -1181,4 +1181,42 @@ class DemandController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {post} /demand/trueItemDone/{item_id} 需求公司验收项目已完成
+     * @apiVersion 1.0.0
+     * @apiName demand trueItemDone
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function trueItemDone($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != 15){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        $item->status = 18;
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
+    }
 }
