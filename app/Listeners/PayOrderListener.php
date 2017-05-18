@@ -87,6 +87,7 @@ class PayOrderListener
             'design_type' => 0
         ]);
         if($item){
+            event(new ItemStatusEvent($item));
             return $item;
         }else{
             Log::error('创建需求表出错user_id:' . $user_id);

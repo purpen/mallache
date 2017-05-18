@@ -116,86 +116,86 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function store(Request $request)
-    {
-        $type = (int)$request->input('type');
-
-        //产品设计
-        if($type === 1){
-
-            $rules = [
-                'type' => 'required|integer',
-                'design_type' => 'required|integer',
-                'field' => 'required|integer',
-                'industry' => 'required|integer',
-            ];
-
-            $all = $request->only(['type','design_type','field', 'industry']);
-
-            $validator = Validator::make($all, $rules);
-            if($validator->fails()){
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            $all['user_id'] = $this->auth_user_id;
-            $all['status'] = 1;
-
-
-
-            try{
-                $item = Item::create($all);
-
-                $product_design = ProductDesign::create([
-                    'item_id' => intval($item->id),
-                    'field' => $request->input('field'),
-                    'industry' => $request->input('industry')
-                ]);
-            }
-            catch (\Exception $e){
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-
-        }
-        //UX UI设计
-        elseif ($type === 2){
-            $rules = [
-                'type' => 'require|integer',
-                'design_type' => 'required|integer',
-//                'system' => 'required|integer',
-//                'design_content' => 'required|integer',
-            ];
-
-            $all = $request->only(['type', 'design_type']);
-
-            $validator = Validator::make($all, $rules);
-            if($validator->fails()){
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            $all['user_id'] = $this->auth_user_id;
-            $all['status'] = 1;
-
-            try{
-                $item = Item::create($all);
-
-                $u_design = UDesign::create([
-                    'item_id' => intval($item->id),
-//                    'system' => $request->input('system'),
-//                    'design_content' => $request->input('design_content')
-                ]);
-            }
-            catch (\Exception $e){
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-        }else{
-            return $this->response->array($this->apiError('not found', 404));
-        }
-
-    }
+//    public function store(Request $request)
+//    {
+//        $type = (int)$request->input('type');
+//
+//        //产品设计
+//        if($type === 1){
+//
+//            $rules = [
+//                'type' => 'required|integer',
+//                'design_type' => 'required|integer',
+//                'field' => 'required|integer',
+//                'industry' => 'required|integer',
+//            ];
+//
+//            $all = $request->only(['type','design_type','field', 'industry']);
+//
+//            $validator = Validator::make($all, $rules);
+//            if($validator->fails()){
+//                throw new StoreResourceFailedException('Error', $validator->errors());
+//            }
+//
+//            $all['user_id'] = $this->auth_user_id;
+//            $all['status'] = 1;
+//
+//
+//
+//            try{
+//                $item = Item::create($all);
+//
+//                $product_design = ProductDesign::create([
+//                    'item_id' => intval($item->id),
+//                    'field' => $request->input('field'),
+//                    'industry' => $request->input('industry')
+//                ]);
+//            }
+//            catch (\Exception $e){
+//                return $this->response->array($this->apiError('Error', 500));
+//            }
+//
+//            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+//
+//        }
+//        //UX UI设计
+//        elseif ($type === 2){
+//            $rules = [
+//                'type' => 'require|integer',
+//                'design_type' => 'required|integer',
+////                'system' => 'required|integer',
+////                'design_content' => 'required|integer',
+//            ];
+//
+//            $all = $request->only(['type', 'design_type']);
+//
+//            $validator = Validator::make($all, $rules);
+//            if($validator->fails()){
+//                throw new StoreResourceFailedException('Error', $validator->errors());
+//            }
+//
+//            $all['user_id'] = $this->auth_user_id;
+//            $all['status'] = 1;
+//
+//            try{
+//                $item = Item::create($all);
+//
+//                $u_design = UDesign::create([
+//                    'item_id' => intval($item->id),
+////                    'system' => $request->input('system'),
+////                    'design_content' => $request->input('design_content')
+//                ]);
+//            }
+//            catch (\Exception $e){
+//                return $this->response->array($this->apiError('Error', 500));
+//            }
+//
+//            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+//        }else{
+//            return $this->response->array($this->apiError('not found', 404));
+//        }
+//
+//    }
 
 
     /**
@@ -557,6 +557,9 @@ class DemandController extends BaseController
         try{
             $item->status = 2;
             $item->save();
+
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($item));
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
@@ -1140,6 +1143,8 @@ class DemandController extends BaseController
         if(!$item->save()){
             return $this->response->array($this->apiError('Error', 500));
         }
+
+        event(new ItemStatusEvent($item));
 
         //解冻保证金
         $pay_order = PayOrder::where([
