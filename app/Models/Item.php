@@ -410,6 +410,12 @@ class Item extends Model
         }
     }
 
+
+    public function getStatusTimeAttribute($key)
+    {
+        return json_decode($key,true);
+    }
+
     /**
      * 项目状态变化记录方法
      *
@@ -437,11 +443,11 @@ class Item extends Model
 
         $status_time = $this->status_time;
         if(!empty($status_time)){
-            $status_time_arr = json_decode($status_time, true);
+            $status_time_arr = $status_time;
         }
 
         $status_time_arr[$status] = date("Y-m-d h:i:s");
-        $this->status_time = json_encode($status_time_arr);
+        $this->status_time = (string)json_encode($status_time_arr);
         $this->save();
     }
 
