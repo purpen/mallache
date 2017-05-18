@@ -721,7 +721,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 0:全部；1.进行中;2.已完成
+     * @apiParam {integer} type 0:全部；1.填写资料中；2.进行中;3.已完成
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      *
@@ -806,9 +806,12 @@ class DemandController extends BaseController
                 $where_in = [];
                 break;
             case 1:
-                $where_in = [1,2,3,4,5,6,7,8,9,11,15];
+                $where_in = [1];
                 break;
             case 2:
+                $where_in = [-2,-1,2,3,4,5,6,7,8,9,11,15];
+                break;
+            case 3:
                 $where_in = [18,22];
                 break;
             default:
