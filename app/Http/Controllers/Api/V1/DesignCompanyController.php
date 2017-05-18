@@ -62,6 +62,9 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
      * @apiParam {string} random 随机数
+     * @apiParam {string} legal_person 法人
+     * @apiParam {string} document_number 证件号码
+     * @apiParam {integer} document_type 证件类型
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -124,7 +127,10 @@ class DesignCompanyController extends BaseController
             'good_field'  => 'max:50',
             'professional_advantage'  => 'max:500',
             'awards'  => 'max:500',
-            'registration_number'  => 'nullable|max:15'
+            'registration_number'  => 'nullable|max:15',
+            'legal_person'  => 'required|max:20',
+            'document_type'  => 'required|integer',
+            'document_number'  => 'required|max:20',
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
@@ -151,6 +157,12 @@ class DesignCompanyController extends BaseController
             'awards.max' => '荣誉奖项不能超过500个字',
             'company_profile.max' => '公司简介不能超过500个字',
             'registration_number.max' => '注册号不能超过15字符',
+            'legal_person.required' => '法人不能为空',
+            'legal_person.max' => '法人不能超过20个字符',
+            'document_type.required' => '证件类型不能为空',
+            'document_type.integer' => '证件类型必须是整形',
+            'document_number.required' => '证件号码不能为空',
+            'document_number.max' => '证件号码不能超过20个字符',
 
         ];
         $all = $request->all();
@@ -337,6 +349,9 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} company_profile 公司简介
      * @apiParam {string} professional_advantage 专业优势
      * @apiParam {string} awards 荣誉奖项
+     * @apiParam {string} legal_person 法人
+     * @apiParam {string} document_number 证件号码
+     * @apiParam {integer} document_type 证件类型
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
@@ -397,7 +412,10 @@ class DesignCompanyController extends BaseController
             'establishment_time'  => 'nullable|date',
             'good_field'  => 'max:50',
             'professional_advantage'  => 'max:500',
-            'awards'  => 'max:500'
+            'awards'  => 'max:500',
+            'legal_person'  => 'required|max:20',
+            'document_type'  => 'required|integer',
+            'document_number'  => 'required|max:20',
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
@@ -420,7 +438,13 @@ class DesignCompanyController extends BaseController
             'establishment_time.date' => '公司成立时间格式不正确',
             'good_field.max' => '擅长领域不能超过50个字',
             'professional_advantage.max' => '专业优势不能超过500个字',
-            'awards.max' => '荣誉奖项不能超过500个字'
+            'awards.max' => '荣誉奖项不能超过500个字',
+            'legal_person.required' => '法人不能为空',
+            'legal_person.max' => '法人不能超过20个字符',
+            'document_type.required' => '证件类型不能为空',
+            'document_type.integer' => '证件类型必须是整形',
+            'document_number.required' => '证件号码不能为空',
+            'document_number.max' => '证件号码不能超过20个字符',
         ];
         $all = $request->except(['token']);
         $validator = Validator::make($all , $rules, $messages);

@@ -37,6 +37,9 @@ class DesignCompanyTransformer extends TransformerAbstract
         is_recommend	tinyint(4)	否	0	是否推荐：0.否；1.是;
         verify_status	tinyint(4)	否	0	审核状态：0.审核中；1.审核通过；
         unique_id	    varchar(30)	否		唯一ID
+        legal_person	varchar(20)	否		法人姓名
+        document_type	tinyint(1)	否		证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+        document_number	varchar(20)	否		证件号码
 
     */
 
@@ -84,6 +87,11 @@ class DesignCompanyTransformer extends TransformerAbstract
             'created_at' => $DesignCompany->created_at->format("Y-m-d"),
             'users' => $DesignCompany->user,
             'city_arr' => $DesignCompany->city_arr,
+            'legal_person' => strval($DesignCompany->legal_person),
+            'document_type' => intval($DesignCompany->document_type),
+            'document_type_val' => $DesignCompany->document_type_val,
+            'document_number' => strval($DesignCompany->document_number),
+            'document_image' => $DesignCompany->document_image,
         ];
     }
 }
