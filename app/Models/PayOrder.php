@@ -16,4 +16,11 @@ class PayOrder extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    //支付状态值
+//    public function getStatusValueAttribute()
+//    {
+//
+//    }
+
+
 }

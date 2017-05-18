@@ -162,10 +162,12 @@ class PayController extends BaseController
                 "user_id": 2,              //用户ID
                 "type": 1,                 //支付类型：1.预付押金；2.项目款；
                 "item_id": 0,               //项目ID
-                "status": 1,                //状态：0.未支付；1.支付成功；
+                "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款
                 "summary": "发布需求保证金",  //备注
                 "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
                 "pay_no": "2017042621001004550211582926",  //平台交易号
+     *          "item_name": ""  //项目名称
+     *          "company_name": "公司名称"  //公司名称
      *          "created_at": {
                     "date": "2017-04-26 16:24:21.000000",
                     "timezone_type": 3,
@@ -204,12 +206,14 @@ class PayController extends BaseController
                 "user_id": 2,              //用户ID
                 "type": 1,                 //支付类型：1.预付押金；2.项目款；
                 "item_id": 0,               //项目ID
-                "status": 1,                //状态：0.未支付；1.支付成功；
+                "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
                 "summary": "发布需求保证金",  //备注
                 "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
                 "pay_no": "2017042621001004550211582926",  //平台交易号
      *          "amount"：123， //应支付金额
      *          "total": 22, //总金额
+     *          "item_name": ""  //项目名称
+     *          "company_name": "公司名称"  //公司名称
      *          "first_pay": 11, //已支付金额
      *      }
      *  }

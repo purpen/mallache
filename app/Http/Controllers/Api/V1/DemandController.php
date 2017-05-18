@@ -1142,6 +1142,11 @@ class DemandController extends BaseController
             'type' => 1,
             'status' => 1,
             ])->first();
+
+        //支付单改为退款
+        $pay_order->status = 2;  //退款
+        $pay_order->save();
+
         if($pay_order){
             $user = $this->auth_user;
             $user->price_frozen -= $pay_order->amount;

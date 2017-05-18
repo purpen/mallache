@@ -117,7 +117,7 @@ class ProductDesignInfoController extends BaseController
         $rules = [
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
-            'competing_product' => 'array',
+//            'competing_product' => 'array',
             'cycle' => 'required|integer',
             'design_cost' => 'required|integer',
             'province' => 'required|integer',
@@ -141,7 +141,7 @@ class ProductDesignInfoController extends BaseController
             $item->save();
 
             $design = ProductDesign::where(['item_id' => intval($item_id)])->first();
-            $all['competing_product'] = implode('&', $request->input('competing_product'));
+//            $all['competing_product'] = implode('&', $request->input('competing_product'));
             $design->update($all);
         }catch(\Exception $e){
             dd($e);

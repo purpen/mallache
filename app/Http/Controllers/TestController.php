@@ -15,13 +15,13 @@ class TestController extends Controller
      */
     public function index()
     {
-        $case = DesignCaseModel::where('design_company_id', 0)->get();
-        foreach($case as $v){
-            $user = User::find($v->user_id);
-            $v->design_company_id = $user->design_company_id;
-            $v->save();
-        }
-        echo 222;
+//        $case = DesignCaseModel::where('design_company_id', 0)->get();
+//        foreach($case as $v){
+//            $user = User::find($v->user_id);
+//            $v->design_company_id = $user->design_company_id;
+//            $v->save();
+//        }
+//        echo 222;
 //        //随机字符串(回调查询)
 //        $random = [];
 //        for ($i = 0; $i<2; $i++){
