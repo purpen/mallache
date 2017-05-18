@@ -147,26 +147,11 @@ class UDesign extends Model
 
     public function getCycleValueAttribute()
     {
-        switch ($this->cycle){
-            case 1:
-                $cycle_value = '1个月内';
-                break;
-            case 2:
-                $cycle_value = '1-2个月';
-                break;
-            case 3:
-                $cycle_value = '2个月';
-                break;
-            case 4:
-                $cycle_value = '2-4个月';
-                break;
-            case 5:
-                $cycle_value = '其他';
-                break;
-            default:
-                $cycle_value = '';
+        $item_cycle = config('item_cycle');
+        if(!array_key_exists($this->cycle, $item_cycle)){
+            return '';
         }
-        return $cycle_value;
+        return $item_cycle[$this->cycle];
     }
 
     //省份访问修改器
