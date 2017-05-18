@@ -159,7 +159,7 @@ const routes = [
     component: require('@/components/pages/item/Publish')
   },
 
-  // 支付
+  // 支付99预付款
   {
     path: '/item/payment',
     name: 'itemPayment',
@@ -178,6 +178,16 @@ const routes = [
       requireAuth: false
     },
     component: require('@/components/pages/pay/AlipayCallback')
+  },
+  // 支付项目资金
+  {
+    path: '/item/pay_fund/:item_id',
+    name: 'itemPayFund',
+    meta: {
+      title: '支付项目资金',
+      requireAuth: true
+    },
+    component: require('@/components/pages/item/PayFund')
   },
   // 自定义输出页面
   {
@@ -261,6 +271,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/order/List')
+  },
+  // 订单详情
+  {
+    path: '/vcenter/order/show/:id',
+    name: 'vcenterOrderShow',
+    meta: {
+      title: '订单详情',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/order/Show')
   },
   // 作品列表
   {
@@ -371,7 +391,8 @@ const routes = [
       title: '在线合同编辑',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/contract/View')
+    // 按需加载
+    component: (resolve) => { require(['@/components/pages/v_center/contract/View'], resolve) }
   },
   // 在线合同编辑
   {

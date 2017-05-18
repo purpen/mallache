@@ -6,61 +6,71 @@
 
       <el-col :span="18">
         <div class="content">
-            <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
-              <el-form-item label="设计类型" prop="type">
-                <el-radio-group v-model.number="form.type" @change="typeChange">
-                  <el-radio-button
-                    v-for="(item, index) in typeOptions"
-                    :key="index"
-                    :label="item.value">{{ item.label }}</el-radio-button>
-                </el-radio-group>
-              </el-form-item>
 
-              <div v-if="typeSwitch1">
-                <el-form-item label="设计类别" prop="design_type">
-                  <el-radio-group v-model.number="form.design_type" size="small">
-                    <el-radio-button
-                      v-for="(item, index) in typeDesignOptions"
-                      :key="index"
-                      :label="item.value">{{ item.label }}</el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="产品领域" prop="field">
-                  <el-radio-group v-model.number="form.field" size="small">
-                    <el-radio-button
-                      v-for="(item, index) in fieldOptions"
-                      :key="index"
-                      :label="item.value">{{ item.label }}</el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="所属行业" prop="industry">
-                  <el-radio-group v-model.number="form.industry" size="small">
-                    <el-radio-button
-                      v-for="(item, index) in industryOptions"
-                      :key="index"
-                      :label="item.value">{{ item.label }}</el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
+          <div class="item">
+            <div class="banner" @click="openTypeBtn(1)">
+              <p class="fl"><img src="../../../assets/images/icon/product.png" /></p>
+              <div class="fl banner-title">
+                <p class="title">产品设计</p>
+                <p class="des">产品策略/产品设计/结构设计</p>             
+              </div>
+              <p class="fr">
+                <i class="fa fa-angle-up fa-3x" aria-hidden="true" v-if="form.type === 1"></i>
+                <i class="fa fa-angle-down fa-3x" aria-hidden="true" v-else></i>
+              </p>
+            </div>
+            <transition name="slide-fade">
+            <div class="type-content" v-show="form.type === 1">
+
+              <p>设计类别</p>
+              <div class="category-box">
+                <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index" @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions">{{ d.name }}</el-button>
               </div>
 
-              <div v-if="typeSwitch2">
-                <el-form-item label="设计类别" prop="design_type">
-                  <el-radio-group v-model.number="form.design_type" size="small">
-                    <el-radio-button
-                      v-for="(item, index) in typeDesignOptions"
-                      :key="index"
-                      :label="item.value">{{ item.label }}</el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-
+              <p>产品类别</p>
+              <div class="category-box">
+                <el-button :class="{ 'tag': true, active: d.id === form.field ? true : false }" :key="index" @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions">{{ d.name }}</el-button>               
               </div>
 
-              <div class="form-btn">
-                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
+              <p>所属行业</p>
+              <div class="category-box">
+                <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
               </div>
-              <div class="clear"></div>
-              
-            </el-form>
+            
+            </div>
+
+          </transition>
+          </div>
+
+          <div class="item">
+            <div class="banner" @click="openTypeBtn(2)">
+              <p class="fl"><img src="../../../assets/images/icon/ui.png" /></p>
+              <div class="fl banner-title">
+                <p class="title">UI／UX设计</p>
+                <p class="des">app 设计／网页设计</p>             
+              </div>
+              <p class="fr">
+                <i class="fa fa-angle-up fa-3x" aria-hidden="true" v-if="form.type === 2"></i>
+                <i class="fa fa-angle-down fa-3x" aria-hidden="true" v-else></i>
+              </p>
+            </div>
+            <transition name="slide-fade">
+            <div class="type-content" v-show="form.type === 2">
+
+              <p>设计类别</p>
+              <div class="category-box">
+                <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index" @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions">{{ d.name }}</el-button>
+              </div>
+            
+            </div>
+
+          </transition>
+          </div>
+
+          <div class="clear"></div>
+          <div class="submit-btn">
+            <el-button type="success" class="is-custom" size="large" :loading="isLoadingBtn" @click="submit">保存并继续</el-button>
+          </div>
 
         
         </div>
@@ -97,86 +107,80 @@
       return {
         itemId: '',
         isLoadingBtn: false,
-        typeSwitch1: false,
-        typeSwitch2: false,
-        labelPosition: 'top',
+        transitionName: 'expand',
         form: {
           type: '',
           design_type: '',
           field: '',
           industry: ''
         },
-        ruleForm: {
-          type: [
-            { type: 'number', message: '请选择设计类型', trigger: 'change' }
-          ],
-          design_type: [
-            { type: 'number', message: '请选择设计类别', trigger: 'change' }
-          ],
-          field: [
-            { type: 'number', message: '请选择设计领域', trigger: 'change' }
-          ],
-          industry: [
-            { type: 'number', message: '请选择所属行业', trigger: 'change' }
-          ]
-        },
         msg: ''
       }
     },
     methods: {
-      submit(formName) {
+      submit() {
         const that = this
-        that.$refs[formName].validate((valid) => {
-          // 验证通过，提交
-          if (valid) {
-            that.isLoadingBtn = true
-            var row = {
-              type: that.form.type,
-              design_type: that.form.design_type,
-              field: that.form.field,
-              industry: that.form.industry
-            }
-            if (that.form.stage_status < 1) {
-              row.stage_status = 1
-            }
-            var apiUrl = null
-            var method = null
+        var row = {}
+        if (that.form.type === 1) {
+          if (!that.form.design_type || !that.form.field || !that.form.industry) {
+            that.$message.error('添写信息不完整!')
+            return false
+          }
+          row = {
+            type: that.form.type,
+            design_type: that.form.design_type,
+            field: that.form.field,
+            industry: that.form.industry
+          }
+        } else if (that.form.type === 2) {
+          if (!that.form.design_type) {
+            that.$message.error('添写信息不完整!')
+            return false
+          }
+          row = {
+            type: that.form.type,
+            design_type: that.form.design_type
+          }
+        } else {
+          that.$message.error('请选择设计类型!')
+          return false
+        }
 
-            if (that.itemId) {
-              method = 'put'
-              apiUrl = api.demandId.format(that.itemId)
-            } else {
-              method = 'post'
-              apiUrl = api.demand
-            }
-            that.$http({method: method, url: apiUrl, data: row})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                that.$message.success('提交成功！')
-                if (response.data.data.item.type === 1) {
-                  that.$router.push({name: 'itemSubmitThree', params: {id: response.data.data.item.id}})
-                } else if (response.data.data.item.type === 2) {
-                  that.$router.push({name: 'itemSubmitUIThree', params: {id: response.data.data.item.id}})
-                }
-                return false
-              } else {
-                that.isLoadingBtn = false
-                that.$message.error(response.data.meta.message)
-              }
-            })
-            .catch (function(error) {
-              that.$message.error(error.message)
-              that.isLoadingBtn = false
-              console.log(error.message)
-              return false
-            })
+        if (that.form.stage_status < 1) {
+          row.stage_status = 1
+        }
+        var apiUrl = null
+        var method = null
 
+        if (that.itemId) {
+          method = 'put'
+          apiUrl = api.demandId.format(that.itemId)
+        } else {
+          method = 'post'
+          apiUrl = api.demand
+        }
+
+        that.isLoadingBtn = true
+        that.$http({method: method, url: apiUrl, data: row})
+        .then (function(response) {
+          that.isLoadingBtn = false
+          if (response.data.meta.status_code === 200) {
+            that.$message.success('提交成功！')
+            if (response.data.data.item.type === 1) {
+              that.$router.push({name: 'itemSubmitThree', params: {id: response.data.data.item.id}})
+            } else if (response.data.data.item.type === 2) {
+              that.$router.push({name: 'itemSubmitUIThree', params: {id: response.data.data.item.id}})
+            }
             return false
           } else {
             that.isLoadingBtn = false
-            console.log('error submit!!')
-            return false
+            that.$message.error(response.data.meta.message)
           }
+        })
+        .catch (function(error) {
+          that.$message.error(error.message)
+          that.isLoadingBtn = false
+          console.log(error.message)
         })
       },
       typeChange(d) {
@@ -187,70 +191,68 @@
           this.typeSwitch2 = true
           this.typeSwitch1 = false
         }
+      },
+      // 点击分类按钮
+      openTypeBtn(typeId) {
+        if (typeId === this.form.type) {
+          this.form.type = ''
+        } else {
+          this.form.type = typeId
+          // 清空已选子类
+          // this.form.design_type = ''
+          // this.form.field = ''
+          // this.form.industry = ''
+        }
+      },
+      designTypeBtn(typeId) {
+        this.form.design_type = typeId
+      },
+      fieldBtn(typeId) {
+        this.form.field = typeId
+      },
+      industryBtn(typeId) {
+        this.form.industry = typeId
       }
     },
     computed: {
       typeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_TYPE.length; i++) {
-          var item = {
-            value: typeData.COMPANY_TYPE[i]['id'],
-            label: typeData.COMPANY_TYPE[i]['name']
-          }
-          items.push(item)
-        }
-        return items
+        return typeData.COMPANY_TYPE
       },
       typeDesignOptions() {
-        var items = []
-        var index
+        var index = 0
         if (this.form.type === 1) {
           index = 0
         } else if (this.form.type === 2) {
           index = 1
+        } else {
+          return []
         }
-        for (var i = 0; i < typeData.COMPANY_TYPE[index].designType.length; i++) {
-          var item = {
-            value: typeData.COMPANY_TYPE[index].designType[i]['id'],
-            label: typeData.COMPANY_TYPE[index].designType[i]['name']
-          }
-          items.push(item)
-        }
-        return items
+
+        return typeData.COMPANY_TYPE[index].designType
       },
       fieldOptions() {
-        var items = []
         var index
         if (this.form.type === 1) {
           index = 0
         } else if (this.form.type === 2) {
           index = 1
+        } else {
+          return []
         }
-        for (var i = 0; i < typeData.COMPANY_TYPE[index].field.length; i++) {
-          var item = {
-            value: typeData.COMPANY_TYPE[index].field[i]['id'],
-            label: typeData.COMPANY_TYPE[index].field[i]['name']
-          }
-          items.push(item)
-        }
-        return items
+
+        return typeData.COMPANY_TYPE[index].field
       },
       industryOptions() {
-        var items = []
         var index
         if (this.form.type === 1) {
           index = 0
         } else if (this.form.type === 2) {
           index = 1
+        } else {
+          return []
         }
-        for (var i = 0; i < typeData.COMPANY_TYPE[index].industry.length; i++) {
-          var item = {
-            value: typeData.COMPANY_TYPE[index].industry[i]['id'],
-            label: typeData.COMPANY_TYPE[index].industry[i]['name']
-          }
-          items.push(item)
-        }
-        return items
+
+        return typeData.COMPANY_TYPE[index].industry
       }
     },
     created: function() {
@@ -266,7 +268,7 @@
             that.form.design_type = row.design_type
             that.form.field = row.field
             that.form.industry = row.industry
-            that.form.industry = row.stage_status
+            that.form.stage_status = row.stage_status
             console.log(response.data.data)
           } else {
             that.$message.error(response.data.meta.message)
@@ -295,9 +297,60 @@
 <style scoped>
 
   .content {
-    padding: 20px;
     border: 1px solid #ccc;
   }
+
+  .item {
+    height: 100%;
+  }
+  .banner {
+    height: 50px;
+    background-color: #FAFAFA;
+    padding: 12px;
+    border-bottom: 1px solid #D2D2D2;
+    cursor: pointer;
+  }
+  .banner-title{
+    margin: 0 0 0 20px;
+    padding-top: 5px;
+    line-height: 25px;
+  }
+  .banner-title p img {
+    vertical-align: middle;
+  }
+  .banner-title p.title{
+    font-size: 2.3rem;
+    font-weight: 450;
+    color: #333;
+  }
+  .banner-title .des{
+    font-size: 1rem;
+    color: #666; 
+  }
+
+  .type-content{
+    padding: 20px 20px 50px 20px;
+  
+  }
+  .type-content p {
+    color: #222;
+    font-size: 1.8rem;
+    margin: 20px 0 10px 0;
+  }
+
+  .tag {
+    margin: 5px 3px 5px 3px;
+  }
+  .tag:hover {
+    border: 1px solid #FF5A5F;
+    color: #FF5A5F; 
+  }
+  .tag.active {
+    border: 1px solid #FF5A5F;
+    color: #FF5A5F;
+  }
+
+
 
   .slider {
     border: 1px solid #ccc;
@@ -314,8 +367,15 @@
   .slider.info p {
     margin: 10px 20px;
   }
-  .form-btn {
-    float: right;
+
+  .submit-btn {
+    height: 30px;
+    border-top: 1px solid #ccc;
+    margin: 30px 20px 20px 20px;
+    padding: 20px 0 10px 0;
+    text-align: right;
+  }
+  .submit-btn button {
   }
 
   .slide-img {
@@ -332,6 +392,15 @@
     line-height: 1.5;
     font-size: 1rem;
   }
+
+  .collapse-banner {
+    line-height: 30px;
+  }
+
+.slide-fade-enter, .slide-fade-leave-active {
+  opacity: 0;
+  transform: translateX(-300px);
+}
 
 
 </style>

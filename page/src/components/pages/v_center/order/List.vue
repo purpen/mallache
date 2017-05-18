@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row :gutter="24">
-      <v-menu></v-menu>
+      <v-menu currentName="order"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">

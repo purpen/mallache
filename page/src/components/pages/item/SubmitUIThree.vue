@@ -360,7 +360,6 @@
               that.form.complete_content.push('其它')
               that.showOtherContent = true
             }
-
             that.uploadParam['x:target_id'] = row.id
 
             that.form.cProducts = []

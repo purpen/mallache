@@ -11,13 +11,20 @@
             <div class="loading" v-loading.body="isLoading"></div>
             <div class="item" v-for="(d, index) in designItems">
               <div class="banner">
-                  <p>
+                  <p class="fl">
                     <span>{{ d.item.created_at }}</span>
                     <span>{{ d.item.company_name }}</span>
-                    <span>和我联系</span>
+                    <span>&nbsp;&nbsp;</span>
+                    <el-popover class="contact-popover" trigger="hover" placement="top">
+                      <p class="contact">联系人: {{ d.item.contact_name }}</p>
+                      <p class="contact">电话: {{ d.item.phone }}</p>
+                      <p class="contact">邮箱: {{ d.item.email }}</p>
+                        <el-tag slot="reference" class="name-wrapper">联系客户</el-tag>
+                    </el-popover>
                   </p>
+                  <p class="fr">{{ d.status_value }}</p>
               </div>
-              <div class="content">
+              <div class="content clear">
                 <div class="l-item">
                   <p class="c-title"><router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link></p>
                   <p>项目预算: {{ d.item.design_cost_value }}</p>
@@ -25,7 +32,7 @@
                   <p>项目周期: {{ d.item.cycle_value }}</p>
                 </div>
                 <div class="r-item">
-                  <p>{{ d.status_value }}</p>
+                  <p></p>
                 </div>
               </div>
               <div class="opt">
@@ -37,7 +44,7 @@
                 <div class="r-item">
                   <p class="btn" v-show="d.design_company_status === 0">
                     <a href="javascript:void(0);" @click="companyRefuseBtn" :index="index" :item_id="d.item.id">拒绝此单</a>&nbsp;&nbsp;
-                    <a href="javascript:void(0);" @click="takingBtn" :item_id="d.item.id" :index="index" class="b-blue">有意向接单</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" @click="takingBtn" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" class="b-blue">有意向接单</a>&nbsp;&nbsp;
                     <!--<a href="javascript:void(0);" :item_id="d.item.id" class="b-red">一键抢单</a>-->
                   </p>
                 </div>
@@ -54,17 +61,18 @@
     <el-dialog title="提交项目报价" v-model="takingPriceDialog">
       <el-form label-position="top" :model="takingPriceForm" :rules="takingPriceRuleForm" ref="takingPriceRuleForm">
         <input type="hidden" v-model="takingPriceForm.itemId" value="" />
-        <el-form-item label="项目报价" label-width="200px">
-          <el-input v-model.number="takingPriceForm.price" auto-complete="off" ></el-input>
+        <el-form-item label="项目报价" prop="price" label-width="200px">
+          <el-input type="text" v-model.number="takingPriceForm.price" :placeholder="currentCost" auto-complete="off" ></el-input>
         </el-form-item>
-        <el-form-item label="报价说明" label-width="80px">
-          <el-input v-model="takingPriceForm.summary" placeholder="" auto-complete="off"></el-input>
+        <el-form-item label="报价说明" prop="summary" label-width="80px">
+          <el-input type="textarea" v-model="takingPriceForm.summary" :autosize="{ minRows: 2, maxRows: 8}" auto-complete="off"></el-input>
         </el-form-item>
+        <div class="taking-price-btn">
+          <el-button @click="takingPriceDialog = false">取 消</el-button>
+          <el-button type="primary" :loading="isTakingLoadingBtn" class="is-custom" @click="takingPriceSubmit('takingPriceRuleForm')">确 定</el-button>
+        </div>
+
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="takingPriceDialog = false">取 消</el-button>
-        <el-button type="primary" :loading="isTakingLoadingBtn" class="is-custom" @click="takingPriceSubmit('takingPriceRuleForm')">确 定</el-button>
-      </div>
     </el-dialog>
 
     <el-dialog
@@ -102,6 +110,8 @@
         isTakingLoadingBtn: false,
         sureRefuseItemDialog: false,
         refuseItemLoadingBtn: false,
+        currentIndex: '',
+        currentCost: '',
         takingPriceForm: {
           itemId: '',
           price: '',
@@ -109,7 +119,7 @@
         },
         takingPriceRuleForm: {
           price: [
-            { required: true, message: '请添写报价金额', trigger: 'blur' }
+            { required: true, type: 'number', message: '请添写报价金额,必须为整数', trigger: 'blur' }
           ],
           summary: [
             { required: true, message: '请添写报价说明', trigger: 'blur' }
@@ -123,6 +133,7 @@
       takingBtn(event) {
         var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.currentIndex = parseInt(event.currentTarget.getAttribute('index'))
+        this.currentCost = event.currentTarget.getAttribute('cost')
         this.takingPriceForm.itemId = itemId
         this.takingPriceDialog = true
       },
@@ -255,6 +266,8 @@
     margin: 20px 0px 20px 0;
   }
   .banner {
+    height: 40px;
+    line-height: 20px;
     border-bottom: 1px solid #ccc;
     background: #FAFAFA;
   }
@@ -306,6 +319,15 @@
   }
   .btn a.b-red {
     color: #FF5A5F;
+  }
+  p.contact {
+    line-height: 1.5;
+    font-size: 1.3rem;
+    color: #666;
+  }
+  .taking-price-btn {
+    float: right;
+    margin-bottom: 20px;
   }
 
 </style>

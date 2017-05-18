@@ -1,24 +1,21 @@
 <template>
   <div class="vcenter-menu-sub">
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterItemList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
+      <router-link :to="{name: 'vcenterOrderList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
     </div>
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">待付款</router-link>
-    </div>
-    <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterItemList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">待评价</router-link>
+      <router-link :to="{name: 'vcenterOrderList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">待付款</router-link>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'vcenter_item_menu',
+    name: 'vcenter_order_menu',
     data () {
       return {
         menuType: 0,
-        msg: 'This is Home'
+        msg: ''
       }
     },
     methods: {},

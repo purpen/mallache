@@ -27,7 +27,7 @@
             </el-table>
           </div>
 
-          <div class="select-company-box" v-if="item.status === 3">
+          <div class="select-item-box" v-if="item.status === 3">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择系统推荐的设计公司" name="1">
 
@@ -59,13 +59,55 @@
             </el-collapse>         
           </div>
 
-          <div class="select-company-box" v-if="item.status === 4">
+          <div class="select-item-box" v-if="item.status === 4">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择参与报价的设计公司" name="1">
-                <div class="offer-company-item" v-for="(d, index) in offerCompany" v-if="d.design_company_status === 2">
+                <div v-if="hasOfferCompany">
+                  <div class="offer-company-item" v-for="(d, index) in offerCompany" v-if="d.design_company_status === 2">
+                    <el-row :gutter="24">
+                      <el-col :span="3" class="item-logo">
+                        <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="50" />
+                        <img class="avatar" v-else src="../../../../assets/images/avatar_default.jpg" width="50" />
+                        <p>项目报价: </p>
+                        <p>报价说明: </p>
+                      </el-col>
+
+                      <el-col :span="21" class="item-title">
+                        <p class="p-title">
+                          <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                        </p>
+                        <p class="p-price">{{ d.quotation.price }} 元</p>
+                        <p>{{ d.quotation.summary }}</p>
+                      </el-col>
+                    </el-row>
+                    <div class="line"></div>
+                    <div class="btn" v-if="d.item_status === 0">
+                      <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
+                      <el-button @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button> 
+                    </div>
+                    <div class="btn" v-if="d.item_status === -1">
+                      <p>已拒绝该公司报价</p>
+                    </div>
+                    <div class="btn" v-if="d.item_status === 1">
+                      <p>确认合作</p>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="no-offer-company" v-else>
+                  <p>还没有设计公司提交报价，请耐心等待</p>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
+          <div class="select-item-box" v-if="item.status === 5">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="合作的设计公司" name="1">
+                <div class="offer-company-item" v-if="company">
                   <el-row :gutter="24">
                     <el-col :span="3" class="item-logo">
-                      <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="50" />
+                      <img class="avatar" v-if="company.logo_url" :src="company.logo_url" width="50" />
                       <img class="avatar" v-else src="../../../../assets/images/avatar_default.jpg" width="50" />
                       <p>项目报价: </p>
                       <p>报价说明: </p>
@@ -73,36 +115,47 @@
 
                     <el-col :span="21" class="item-title">
                       <p class="p-title">
-                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                        <router-link :to="{name: 'companyShow', params: {id: company.id}}" target="_blank" :class="">{{ company.company_name }}</router-link>
                       </p>
-                      <p class="p-price">{{ d.quotation.price }} 元</p>
-                      <p>{{ d.quotation.summary }}</p>
+                      <p class="p-price">{{ quotation.price }} 元</p>
+                      <p>{{ quotation.summary }}</p>
                     </el-col>
                   </el-row>
-                  <div class="line"></div>
-                  <div class="btn" v-if="d.item_status === 0">
-                    <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
-                    <el-button @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button> 
-                  </div>
-                  <div class="btn" v-if="d.item_status === -1">
-                    <p>已拒绝该公司报价</p>
-                  </div>
-                  <div class="btn" v-if="d.item_status === 1">
-                    <p>确认合作</p>
-                  </div>
 
+                  <!--
+                  <div class="line"></div>
+                  <div class="btn">
+                    <p></p>
+                  </div>
+                  -->
                 </div>
+
               </el-collapse-item>
             </el-collapse>
           </div>
 
-          <div class="select-company-box" v-if="item.status === 6">
+          <div class="select-item-box" v-if="item.status > 5">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="1">
                 <div class="contract-item">
                   <router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank">
                     <el-button class="contract-btn is-custom" type="primary"><i class="fa fa-eye" aria-hidden="true"></i> 查看在线合同</el-button>
                   </router-link>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
+          <div class="select-item-box" v-if="item.status > 6">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="托管项目资金" name="1">
+                <div class="capital-item">
+                  <p>项目资金</p>
+                  <p class="capital-money">¥5000.00</p>
+                  <p class="pay-btn">
+                      <el-button class="capital-btn is-custom" :loading="secondPayLoadingBtn" @click="secondPay" type="primary"><i class="fa fa-money" aria-hidden="true"></i> 立即支付</el-button>
+                  </p>
+                  <p class="capital-des">＊客户需要将项目资金预先托管至太火鸟SaaS，完成后项目将自动启动并进入项目管理阶段。</p>
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -146,6 +199,7 @@ export default {
       comfirmDialog: false,
       comfirmMessage: '确认执行此操作?',
       stickCompanyIds: [],
+      secondPayLoadingBtn: false,
       item: {},
       info: {},
       contract: {},
@@ -154,6 +208,8 @@ export default {
       tableData: [],
       stickCompany: [],
       offerCompany: [],
+      company: null,
+      hasOfferCompany: false,
       progressButt: 0,
       progressContract: -1,
       progressItem: -1,
@@ -256,6 +312,10 @@ export default {
         self.$message.error(error.message)
         self.comfirmLoadingBtn = false
       })
+    },
+    // 支付项目资金
+    secondPay() {
+      this.$router.push({name: 'itemPayFund', params: {item_id: this.item.id}})
     }
   },
   computed: {
@@ -281,8 +341,9 @@ export default {
       if (response.data.meta.status_code === 200) {
         console.log(response.data.data)
         self.item = response.data.data.item
-        self.info = response.data.data.info
+        // self.info = response.data.data.info
         self.contract = response.data.data.contract
+        self.quotation = response.data.data.quotation
         switch (self.item.status) {
           case 1:
             self.progressButt = 0
@@ -326,6 +387,10 @@ export default {
                 var offerCompany = response.data.data
                 for (var i = 0; i < offerCompany.length; i++) {
                   var item = offerCompany[i]
+                  // 是否存在已提交报价的公司
+                  if (item.design_company_status === 2) {
+                    self.hasOfferCompany = true
+                  }
                   if (item.design_company.logo_image && item.design_company.logo_image.length !== 0) {
                     offerCompany[i].design_company.logo_url = item.design_company.logo_image.logo
                   } else {
@@ -344,6 +409,21 @@ export default {
             self.progressButt = 3
             self.progressContract = 0
             self.progressItem = -1
+            self.$http.get(api.designCompanyId.format(self.item.design_company_id), {})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                self.company = response.data.data
+                var logoUrl = null
+                if (self.company.logo_image) {
+                  logoUrl = self.company.logo_image.logo
+                }
+                self.company.logo_url = logoUrl
+                console.log(self.company)
+              }
+            })
+            .catch (function(error) {
+              self.$message.error(error.message)
+            })
             break
           case 6:
             self.progressButt = 3
@@ -437,7 +517,7 @@ export default {
     font-size: 3rem;
   }
 
-  .select-company-box {
+  .select-item-box {
     margin: 20px 0 20px 0;
   }
 
@@ -548,6 +628,36 @@ export default {
     padding: 10px 30px 10px 30px;
     top: 20%;
     left: 40%;
+  }
+  .no-offer-company {
+    text-align: center;
+  }
+  .no-offer-company p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  .capital-item {
+    margin: 20px 0 10px 0;
+  }
+
+  .capital-item p {
+    text-align: center;
+    line-height: 1.3;
+  }
+  .capital-money {
+    color: #FF5A5F;
+    font-size: 2.5rem;
+  }
+  .capital-des {
+    color: #666;
+    font-size: 1rem;
+  }
+  .capital-item .pay-btn {
+    margin: 10px 0 20px 0;
+  }
+  .capital-item .capital-btn {
+    padding: 10px 30px 10px 30px;
   }
 
 

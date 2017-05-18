@@ -76,16 +76,28 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 /**
  *  新添按钮颜色值
  */
-button.is-custom.el-button {
+button.is-custom.el-button.el-button--primary {
   background-color: #FF5A5F;
   border-color: transparent;
   color: #fff;
 }
 
-button.is-custom:hover, .button.is-custom.is-hovered {
+button.is-custom.el-button--primary:hover {
   background-color: #FF4500;
   border-color: transparent;
   color: #fff;
+}
+
+button.is-custom.el-button.el-button--default {
+  background-color: #fff;
+  border-color: #FF4500;
+  color: #FF4500;
+}
+
+button.is-custom.el-button.el-button--default:hover {
+  background-color: #fff;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
 }
 
 button.is-custom:focus, .button.is-custom.is-focused {
@@ -135,16 +147,6 @@ button.is-custom.is-outlined.is-loading:after {
   border-color: transparent transparent #FF5A5F #FF5A5F !important;
 }
 
-button.is-custom.is-inverted.is-outlined {
-  background-color: transparent;
-  border-color: #fff;
-  color: #fff;
-}
-
-button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is-outlined:focus {
-  background-color: #fff;
-  color: #FF5A5F;
-}
 
 /**
  * Common Part --- End

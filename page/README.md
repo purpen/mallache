@@ -27,6 +27,7 @@ npm run build --report
 > Toast: https://github.com/ktsn/vuex-toast
 > 图片沦播: https://github.com/surmon-china/vue-awesome-swiper
 > 城市联动: https://github.com/QingWei-Li/vue-region-picker
+> pdf生成: https://github.com/bpampuch/pdfmake
 
 
 ## UI、素材

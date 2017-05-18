@@ -13,52 +13,32 @@
               </el-form-item> 
 
               <el-form-item label="产品功能或卖点" prop="product_features">
-                <el-input v-model="form.product_features" placeholder="详细描述下产品的主要功能，以便于设计服务商了解项目的产品需求。"></el-input>
+                <el-input type="textarea" :rows="5" v-model="form.product_features" placeholder="详细描述下产品的主要功能，以便于设计服务商了解项目的产品需求。"></el-input>
               </el-form-item> 
 
+              <el-form-item label="项目周期" prop="cycle">
+                <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
+                  <el-option
+                    v-for="item in cycleOptions"
+                    :label="item.label"
+                    :key="item.index"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-              <el-row :gutter="18">
-                <el-col :span="8">
-                  <el-form-item label="竞品">
-                    <div
-                      class="competing"
-                      v-for="(d, index) in form.cProducts"
-                      :key="d.key"
-                      :prop="'cProducts.' + index + '.value'"
-                    >
-                    <el-input v-model="d.value">
-                      <el-button slot="append" @click.prevent="removeProduct(d)">删除</el-button>
-                    </el-input>
-                    </div>
+              <el-form-item label="设计费用预算" prop="design_cost">
+                <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算">
+                  <el-option
+                    v-for="item in costOptions"
+                    :label="item.label"
+                    :key="item.index"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-                    <el-button @click="addProduct">新增竞品</el-button>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-                <el-form-item label="项目周期" prop="cycle">
-                  <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
-                    <el-option
-                      v-for="item in cycleOptions"
-                      :label="item.label"
-                      :key="item.index"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-
-                <el-form-item label="设计费用预算" prop="design_cost">
-                  <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算">
-                    <el-option
-                      v-for="item in costOptions"
-                      :label="item.label"
-                      :key="item.index"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-
-                <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
+              <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
 
               <el-row :gutter="24">
                 <el-col :span="12">
@@ -187,8 +167,8 @@
               return false
             }
             if (that.form.cProducts.length === 0) {
-              that.$message.error('至少添加一项竞品')
-              return false
+              // that.$message.error('至少添加一项竞品')
+              // return false
             }
             that.isLoadingBtn = true
             var row = {
@@ -207,10 +187,9 @@
 
             if (that.form.cProducts) {
               for (var i = 0; i < that.form.cProducts.length; i++) {
-                row.competing_product[i] = that.form.cProducts[i]['value']
+                // row.competing_product[i] = that.form.cProducts[i]['value']
               }
             }
-            console.log(row)
             var apiUrl = null
             var method = null
 
@@ -244,18 +223,6 @@
             console.log('error submit!!')
             return false
           }
-        })
-      },
-      removeProduct(item) {
-        var index = this.form.cProducts.indexOf(item)
-        if (index !== -1) {
-          this.form.cProducts.splice(index, 1)
-        }
-      },
-      addProduct() {
-        this.form.cProducts.push({
-          value: '',
-          key: Date.now()
         })
       },
       change: function(obj) {

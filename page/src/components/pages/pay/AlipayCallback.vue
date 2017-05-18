@@ -53,8 +53,11 @@ export default {
         if (response.data.data.status === 1) {
           self.payResult = true
           self.paySuccess = true
-          var itemId = response.data.data.item_id
-          self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
+          setTimeout(function () {
+            var itemId = response.data.data.item_id
+            self.$router.replace({name: 'itemSubmitTwo', params: {id: itemId}})
+          }, 3000)
+          return
         }
       } else {
         console.log(response.data.meta.message)

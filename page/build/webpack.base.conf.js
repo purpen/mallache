@@ -2,7 +2,9 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
-
+// var webpack = require('webpack')
+// var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
+// var ignoreFiles = new webpack.IgnorePlugin(/pdfmake.min$/, /vfs_fonts$/)
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -27,7 +29,6 @@ module.exports = {
   },
   // 增加一个plugins
   plugins: [
-
   ],
   module: {
     rules: [

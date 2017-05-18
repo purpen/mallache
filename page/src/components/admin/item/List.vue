@@ -216,7 +216,7 @@ export default {
 
           var typeLabel = ''
           if (item.item.type === 1) {
-            typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+            typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.info.field_value + '/' + item.info.industry_value
           } else {
             typeLabel = item.item.type_value + '/' + item.item.design_type_value
           }

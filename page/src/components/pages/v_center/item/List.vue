@@ -64,12 +64,17 @@
                       </p>
                     </div>
                     <div class="r-item">
+                      <p class="btn" v-show="d.item.status === -2">
+                        <a href="javascript:void(0);" @click="restartBtn" :item_id="d.item.id" class="b-blue">重新编辑</a>
+                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-red">关闭项目</a>
+                      </p>
                       <p class="btn" v-show="d.item.show_offer">
-                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">查看报价，选择设计公司 ></a>&nbsp;&nbsp;
+                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，点击查看</a>&nbsp;&nbsp;
                       </p>
                       <p class="btn" v-show="d.item.status === 3">
-                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">选择设计公司 ></a>&nbsp;&nbsp;
+                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">选择设计公司</a>&nbsp;&nbsp;
                       </p>
+
                     </div>
                   </div>
 
@@ -103,6 +108,7 @@
       return {
         isLoading: true,
         itemList: [],
+        pagination: {},
         userId: this.$store.state.event.user.id
       }
     },
@@ -115,7 +121,7 @@
         const that = this
         that.isLoading = true
         that.itemList = []
-        that.$http.get(api.itemList, {params: {type: type}})
+        that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
         .then (function(response) {
           that.isLoading = false
           if (response.data.meta.status_code === 200) {
@@ -146,7 +152,8 @@
               data[i]['item']['show_offer'] = showOffer
             } // endfor
             that.itemList = data
-            console.log(data)
+            that.pagination = response.data.meta.pagination
+            console.log(response.data)
           }
         })
         .catch (function(error) {
@@ -179,6 +186,21 @@
             break
         }
         this.$router.push({name: name, params: {id: itemId}})
+      },
+      restartBtn(event) {
+        var itemId = event.currentTarget.getAttribute('item_id')
+        var self = this
+        self.$http.post(api.demandItemRestart, {item_id: itemId})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          self.$message.error(error.message)
+        })
       }
     },
     computed: {

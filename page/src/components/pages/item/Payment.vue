@@ -88,7 +88,6 @@ export default {
       var that = this
       that.$http.get(url, {})
       .then (function(response) {
-        that.isFirst = true
         if (response.data.meta.status_code === 200) {
           that.$nextTick(function() {
             that.toHtml = response.data.data.html_text

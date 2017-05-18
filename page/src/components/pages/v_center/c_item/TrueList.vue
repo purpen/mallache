@@ -23,7 +23,7 @@
                     </el-popover>
 
                   </p>
-                  <p class="fr">{{ d.item.status_value }}</p>
+                  <p class="fr">{{ d.item.design_status_value }}</p>
               </div>
               <div class="content clear">
                 <div class="l-item">
@@ -33,7 +33,7 @@
                   <p>项目周期: {{ d.item.cycle_value }}</p>
                 </div>
                 <div class="r-item">
-                  <p>{{ d.status_value }}</p>
+                  <!--<p></p>-->
                 </div>
               </div>
               <div class="opt">
@@ -44,7 +44,13 @@
                 </div>
                 <div class="r-item">
                   <p class="btn" v-show="d.item.status === 5">
-                    <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">提交在线合同</a>
+                    <span v-if="d.is_contract === 0">
+                      <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">提交在线合同</a>
+                    </span>
+                    <span v-else>
+                      <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">修改合同</a>
+                      <a href="javascript:void(0);" @click="contractSendBtn" :index="index" :item_id="d.item.id">发送合同</a>
+                    </span>
                   </p>
                   <p class="btn" v-show="d.item.status === 6">
                     <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">修改合同</a>
@@ -60,6 +66,20 @@
 
       </el-col>
     </el-row>
+
+    <el-dialog
+      title="提示"
+      v-model="sureDialog"
+      size="tiny">
+      <span>{{ sureDialogMessage }}</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="currentItemId" />
+        <input type="hidden" ref="currentIndex" />
+        <input type="hidden" ref="currentType" />
+        <el-button @click="sureDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="sureDialogLoadingBtn" @click="sureDialogSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -78,15 +98,52 @@
     },
     data () {
       return {
+        sureDialog: false,
+        sureDialogMessage: '确认执行此操作？',
+        sureDialogLoadingBtn: false,
         isLoading: true,
         designItems: [],
         userId: this.$store.state.event.user.id
       }
     },
     methods: {
+      // 新增／编辑合同
       contractBtn(event) {
         var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterContractSubmit', params: {item_id: itemId}})
+      },
+      // 发送合同
+      contractSendBtn(event) {
+        this.$refs.currentItemId.value = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.$refs.currentIndex.value = parseInt(event.currentTarget.getAttribute('index'))
+        this.$refs.currentType.value = 1
+        this.sureDialog = true
+      },
+      // 确认执行对话框
+      sureDialogSubmit() {
+        var itemId = parseInt(this.$refs.currentItemId.value)
+        var index = parseInt(this.$refs.currentIndex.value)
+        var type = parseInt(this.$refs.currentType.value)
+
+        var self = this
+        this.sureDialogLoadingBtn = true
+        if (type === 1) {
+          self.$http({method: 'post', url: api.sendContract, data: {item_demand_id: itemId}})
+          .then (function(response) {
+            self.sureDialogLoadingBtn = false
+            self.sureDialog = false
+            if (response.data.meta.status_code === 200) {
+              self.designItems[index].item.status = 6
+              self.designItems[index].item.design_status_value = '等待客户确认合同'
+              self.$message.success('提交成功！')
+            } else {
+              self.$message.error(response.data.meta.message)
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
+        }
       }
     },
     computed: {

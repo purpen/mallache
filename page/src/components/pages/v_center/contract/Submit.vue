@@ -210,6 +210,33 @@
               that.$nextTick(function() {
                 that.form = item.contract
               })
+            } else {  // 合同首次创建，从项目表调用基础信息
+              // 获取当前公司基本信息
+              that.$http.get(api.designCompany, {})
+              .then (function(response) {
+                if (response.data.meta.status_code === 200) {
+                  var company = response.data.data
+                  if (company) {
+                    // 重新渲染
+                    that.$nextTick(function() {
+                      that.form.demand_company_name = item.item.company_name
+                      that.form.demand_company_address = item.item.address
+                      that.form.demand_company_legal_person = item.item.contact_name
+                      that.form.demand_company_phone = item.item.phone
+                      that.form.total = item.item.price
+
+                      that.form.design_company_name = company.company_name
+                      that.form.design_company_address = company.address
+                      that.form.design_company_legal_person = company.contact_name
+                      that.form.design_company_phone = company.phone
+                    })
+                  }
+                }
+              })
+              .catch (function(error) {
+                that.$message.error(error.message)
+                return false
+              })
             }
             console.log(response.data.data)
           }

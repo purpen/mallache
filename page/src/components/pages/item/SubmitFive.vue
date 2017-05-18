@@ -124,8 +124,23 @@
               tab = [
                 {
                   name: '',
-                  key: '项目类别',
-                  value: row.type_value + '/' + row.design_type_value + '/' + row.field_value + '/' + row.industry_value
+                  key: '项目类型',
+                  value: row.type_value
+                },
+                {
+                  name: '',
+                  key: '设计类别',
+                  value: row.design_type_value
+                },
+                {
+                  name: '',
+                  key: '产品领域',
+                  value: row.field_value
+                },
+                {
+                  name: '',
+                  key: '所属行业',
+                  value: row.industry_value
                 },
                 {
                   name: '',
@@ -146,8 +161,13 @@
               tab = [
                 {
                   name: '',
-                  key: '项目类别',
-                  value: row.type_value + '/' + row.design_type_value
+                  key: '项目类型',
+                  value: row.type_value
+                },
+                {
+                  name: '',
+                  key: '设计类别',
+                  value: row.design_type_value
                 },
                 {
                   name: '',

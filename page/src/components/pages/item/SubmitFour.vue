@@ -34,14 +34,16 @@
               <el-row :gutter="24">
                 <el-col :span="8">
                   <el-form-item label="公司网站" prop="company_web">
-                    <el-input v-model="form.company_web" placeholder="http://"></el-input>
+                    <el-input v-model="form.company_web" placeholder="">
+                      <template slot="prepend">http://</template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
 
               <region-picker :provinceProp="province" :cityProp="city" :districtProp="district" :isFirstProp="isFirst" titleProp="详细地址" @onchange="change"></region-picker>
               <el-form-item label="" prop="address">
-                <el-input v-model="form.address" name="address" ref="address" placeholder="请输入公司的详细地址"></el-input>
+                <el-input v-model="form.address" name="address" ref="address" placeholder="街道地址"></el-input>
               </el-form-item>
 
               <el-row :gutter="24">
@@ -58,6 +60,11 @@
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
+                  </el-form-item>             
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="职位" prop="position">
+                    <el-input v-model="form.position" placeholder=""></el-input>
                   </el-form-item>             
                 </el-col>
               </el-row>
@@ -131,6 +138,7 @@
           contact_name: '',
           phone: '',
           email: '',
+          position: '',
           stage_status: ''
         },
         ruleForm: {
@@ -152,6 +160,9 @@
           email: [
             { required: true, message: '请添写联系人邮箱', trigger: 'blur' },
             { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+          ],
+          position: [
+            { required: true, message: '请添写联系人职位', trigger: 'blur' }
           ]
         },
         msg: ''
@@ -171,15 +182,22 @@
               that.$message.error('请选择所在城市')
               return false
             }
-            that.isLoadingBtn = true
+            var web = that.form.company_web
+            if (that.form.company_web) {
+              var urlRegex = /http:\/\/|https:\/\//
+              if (!urlRegex.test(that.form.company_web)) {
+                web = 'http://' + that.form.company_web
+              }
+            }
             var row = {
               company_name: that.form.company_name,
               company_size: that.form.company_size,
-              company_web: that.form.company_web,
+              company_web: web,
               address: that.form.address,
               contact_name: that.form.contact_name,
               phone: that.form.phone,
               email: that.form.email,
+              position: that.form.position,
               company_province: that.province,
               company_city: that.city,
               company_area: that.district
@@ -197,27 +215,27 @@
               method = 'post'
               apiUrl = api.demand
             }
+
+            that.isLoadingBtn = true
             that.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
+              that.isLoadingBtn = false
               if (response.data.meta.status_code === 200) {
                 that.$message.success('提交成功！')
                 that.$router.push({name: 'itemSubmitFive', params: {id: response.data.data.item.id}})
                 return false
               } else {
-                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
-              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
-            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }
@@ -255,13 +273,21 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
+            var web = row.company_web
+            if (web) {
+              var urlRegex = /http:\/\/|https:\/\//
+              if (urlRegex.test(web)) {
+                web = web.replace(urlRegex, '')
+              }
+            }
             that.form.company_name = row.company_name
             that.form.company_size = row.company_size
-            that.form.company_web = row.company_web
+            that.form.company_web = web
             that.form.address = row.address
             that.form.contact_name = row.contact_name
             that.form.phone = row.phone
             that.form.email = row.email
+            that.form.position = row.position
             that.form.stage_status = row.stage_status
             if (row.company_size === 0) {
               that.form.company_size = ''

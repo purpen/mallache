@@ -22,8 +22,13 @@ export default {
   fetch_msm_code: '/auth/sms', // 获取手机验证码
   user: '/auth/user',  // 获取用户信息
 
+  // 支付
+  demandAlipay: '/pay/demandAliPay',  // 支付保证金-支付宝
+  endPayOrderItemId: '/pay/endPayOrder/{0}', // GET 创建尾款支付订单
+  secondAlipayId: '/pay/itemAliPay/{0}',  // GET 支付尾款-支付宝
+  payItemBankPayId: '/pay/itemBankPay/{0}',  // GET 支付项目尾款--公对公银行转账
+
   // 项目需求
-  demandAlipay: '/pay/demandAliPay',  // 支付保证金
   itemList: '/demand/itemList',  // 客户项目列表
   demand: '/demand',  // 添加项目领域
   demandId: '/demand/{0}',  // 更改项目领域
@@ -35,21 +40,26 @@ export default {
   demandItemDesignListItemId: '/demand/itemDesignList/{0}', // 选择已报价的设计公司
   refuseDesignPrice: '/demand/falseDesign', // 拒绝设计公司报价
   agreeDesignCompany: '/demand/trueDesign', // 同意合作的设计公司
+  demandItemRestart: '/demand/itemRestart', // post 修改项目，重新匹配
+  demandCloseItem: '/demand/closeItem', // post 用户关闭项目
 
   // 公司项目接口
   // 设计公司获取项目订单
-  designItemList: '/design/itemList',  // 设计公司获取项目订单
+  designItemList: '/design/itemList',  // 设计公司获取项目列表
   addQuotation: '/quotation', // 添写报价单
   companyRefuseItemId: '/design/refuseItem/{0}', // get 拒绝推送的项目报价
   designCooperationLists: '/design/cooperationLists', // 已确定合作的项目列表
   designItemId: '/design/item/{0}', // get 获取项目详细信息
+  sendContract: '/contract/ok', // POST 发送合同
 
   // 合同
   contract: '/contract', // post 保存合同
   contractId: '/contract/{0}', // put/get 更新/查看合同
+  demandTrueContract: '/demand/trueContract',  // POST 需求方确认项目合同
 
   // 订单
-  orderId: '/pay/getPayStatus/{0}',  // 查看订单详情
+  orderId: '/pay/getPayStatus/{0}',  // GET 查看订单详情
+  orderList: '',  // GET 查看订单列表
 
   // 公司接单设置
   saveDesignItem: '/designItem', // 接单信息保存

@@ -24,10 +24,10 @@
     </div>
 
     <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterItemList', query: {type: 1}}" class="item">
+      <router-link :to="{name: 'vcenterItemList'}" class="item">
         我的项目
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+      <router-link :to="{name: 'vcenterOrderList'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
         项目订单
       </router-link>
       <router-link :to="{name: 'vcenterProfile'}" class="item">
@@ -44,6 +44,11 @@
 <script>
 export default {
   name: 'vcenter_menu',
+  props: {
+    currentName: {
+      default: ''
+    }
+  },
   data () {
     return {
       msg: 'This is menu'
