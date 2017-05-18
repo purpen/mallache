@@ -113,6 +113,8 @@ class Item extends Model
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
                     'created_at' => $item->created_at->format("Y-m-d"),
+                    'design_cost' => null,
+                    'cycle' => null,
                 ];
             case 1:
                 $info = $item->productDesign;

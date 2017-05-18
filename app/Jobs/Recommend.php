@@ -120,7 +120,7 @@ class Recommend implements ShouldQueue
     //UI UX 设计 推荐设计公司ID数组
     protected function uDesign($type, $design_type)
     {
-        //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = $this->cost($this->item->uDesign->design_cost);
 
         //所属领域
@@ -155,28 +155,25 @@ class Recommend implements ShouldQueue
      */
     protected function cost($design_cost)
     {
-        //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = 10000;
         switch ($design_cost){
             case 1:
-                $max = 10000;
-                break;
-            case 2:
                 $max = 50000;
                 break;
-            case 3:
+            case 2:
                 $max = 100000;
                 break;
-            case 4:
+            case 3:
                 $max = 200000;
                 break;
-            case 5:
+            case 4:
                 $max = 300000;
                 break;
-            case 6:
+            case 5:
                 $max = 500000;
                 break;
-            case 7:
+            case 6:
                 $max = 500000;
                 break;
         }

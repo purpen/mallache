@@ -95,7 +95,7 @@ class UDesignInfoController extends BaseController
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {array} complete_content 已完成设计内容：
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
-     * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {string} token

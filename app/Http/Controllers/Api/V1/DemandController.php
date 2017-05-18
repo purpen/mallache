@@ -20,6 +20,7 @@ use App\Jobs\Recommend;
 use App\Models\Contract;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
+use App\Models\DesignItemModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\PayOrder;
@@ -1246,6 +1247,96 @@ class DemandController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
-    //获取当前信息匹配到的公司数量
+    /**
+     * @api {post} /demand/matchingCount/{item_id} 获取当前信息匹配到的公司数量
+     * @apiVersion 1.0.0
+     * @apiName demand matchingCount
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
+     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }，
+     *      "date": {
+     *          "count": 2,
+     *      }
+     *  }
+     */
+    public function matchingCount(Request $request, $item_id)
+    {
+        $item = Item::find($item_id);
+        if($item->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+        $item_info = $item->itemInfo();
+
+        $type = $request->input('type');
+        $design_type = $request->input('design_type');
+        $design_cost = $request->input('design_cost');
+        $cycle = $request->input('cycle');
+
+        $query = DesignItemModel::query();
+        if($type || ($type = $item_info['type'])){
+            $query->where('type', $type);
+        }
+
+        if($design_type || ($design_type = $item_info['design_type'])){
+            $query->where('design_type', $design_type);
+        }
+
+        if($design_cost || ($design_cost = $item_info['design_cost'])){
+            $max = $this->cost($design_cost);
+            $query->where('min_price', '<', $max);
+        }
+
+        if($cycle || ($cycle = $item_info['cycle'])){
+            $query->where('project_cycle', $cycle);
+        }
+
+        $count = $query->count();
+        return $this->response->array($this->apiSuccess('Success', 200, compact('count')));
+    }
+
+    /**
+     * 设计费用转换
+     *
+     * @param $design_cost
+     * @return int
+     */
+    protected function cost($design_cost)
+    {
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+        $max = 10000;
+        switch ($design_cost){
+            case 1:
+                $max = 50000;
+                break;
+            case 2:
+                $max = 100000;
+                break;
+            case 3:
+                $max = 200000;
+                break;
+            case 4:
+                $max = 300000;
+                break;
+            case 5:
+                $max = 500000;
+                break;
+            case 6:
+                $max = 500000;
+                break;
+        }
+
+        return $max;
+    }
 
 }

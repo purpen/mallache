@@ -140,6 +140,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 需求公司验收项目已完成
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
 
+        // 获取当前信息匹配到的公司数量
+        $api->post('/demand/matchingCount/{item_id}', 'DemandController@matchingCount');
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情

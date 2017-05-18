@@ -3,6 +3,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\PayOrder;
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class PayOrderTransformer extends TransformerAbstract
@@ -35,7 +36,7 @@ class PayOrderTransformer extends TransformerAbstract
             'first_pay' => $pay_order->first_pay ?? null,
             'item_name' => $pay_order->item_name,
             'company_name' => $pay_order->company_name,
-            'created_at' => $pay_order->created_at,
+            'created_at' => $pay_order->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }
