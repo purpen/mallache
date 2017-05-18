@@ -47,7 +47,10 @@ class DesignCompanyModel extends Model
         'is_recommend',
         'verify_status',
         'unique_id',
-        'logo'
+        'logo',
+        'legal_person',
+        'document_type',
+        'document_number'
     ];
 
     /**
@@ -272,6 +275,30 @@ class DesignCompanyModel extends Model
                 $this->company_city_value,
             ];
         }
+    }
+
+
+    /**
+     * 获取图片document
+     *
+     * @return array
+     */
+    public function getDocumentImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 10, 1 , 5);
+    }
+
+
+    //证件类型
+    public function getDocumentTypeValAttribute()
+    {
+        $key = $this->attributes['document_type'];
+        if(array_key_exists($key,config('constant.document_type'))){
+            $document_type_val = config('constant.document_type')[$key];
+            return $document_type_val;
+
+        }
+        return '';
     }
 
 }
