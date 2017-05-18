@@ -5,12 +5,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\ItemStatusEvent;
 use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\ItemStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,6 +25,9 @@ class DesignController extends BaseController
      * @apiGroup design
      *
      * @apiParam {string} token
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -59,25 +64,40 @@ class DesignController extends BaseController
                     }
                 }
             ],
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
+        "meta": {
+              "message": "Success",
+              "status_code": 200,
+              "pagination": {
+                  "total": 1,
+                  "count": 1,
+                  "per_page": 10,
+                  "current_page": 1,
+                  "total_pages": 1,
+                  "links": []
+              }
         }
      */
-    public function itemList()
+    public function itemList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         if(!$design_company = $this->auth_user->designCompany){
             return $this->response->array($this->apiSuccess());
         }
-
-        $item_recommends = ItemRecommend
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+        $query = ItemRecommend
                         ::where(['design_company_id' => $design_company->id])
-                        ->where( 'item_status', '!=' ,1)
-                        ->where('design_company_status', '!=', -1)
-                        ->get();
+                        ->where( 'item_status', '=' , 0)
+                        ->where('design_company_status', '!=', -1);
+        $lists = $query->orderBy('id', $sort)->paginate($per_page);
 
-        return $this->response->collection($item_recommends, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new DesignGetItemListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -260,7 +280,8 @@ class DesignController extends BaseController
      * "phone": "1877678",
      * "email": "www@qq.com",
      * "created_at": "2017-04-13"
-     * }
+     * },
+     * "is_contract": 0  //0：未添加合同；1.已添加合同
      * }
      * ],
      * "meta": {
@@ -314,6 +335,80 @@ class DesignController extends BaseController
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($lists, new DesignItemListTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {post} /design/itemStart/{item_id} 确认项目开始设计
+     * @apiVersion 1.0.0
+     * @apiName design itemStart
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function itemStart($item_id)
+    {
+        if(!$item = Item::find(intval($item_id))){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->design_company_id != $this->auth_user->design_company_id || $item->status != 9){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+
+        $item->status = 11;  //项目开始
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /design/itemDone/{item_id} 确认项目已完成
+     * @apiVersion 1.0.0
+     * @apiName design itemDone
+     * @apiGroup design
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+        "meta": {
+        "message": "Success",
+        "status_code": 200
+        }
+        }
+     */
+    public function itemDone($item_id)
+    {
+        if(!$item = Item::find(intval($item_id))){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->design_company_id !== $this->auth_user->design_company_id || $item->status !== 11){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+
+        //验证是否上传项目阶段信息
+        $item_stage_count = ItemStage::where('item_id', $item_id)->count();
+        if($item_stage_count < 1){
+            return $this->response->array($this->apiError('项目目前没有阶段信息，不能确认完成', 403));
+        }
+
+        $item->status = 15;  //项目已完成
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
     }
 
 }

@@ -73,7 +73,25 @@ class ItemActionController extends Controller
                 "design_type_value": "app设计",
                 "company_province_value": "",
                 "company_city_value": "",
-                "company_area_value": ""
+                "company_area_value": "",
+                "status_value": "项目进行中",
+                "user": {
+                    "id": 2,
+                    "account": "18132382134",
+                    "phone": "18132382134",
+                    "username": "",
+                    "email": null,
+                    "design_company_id": 48,
+                    "status": 0,
+                    "item_sum": 0,
+                    "created_at": "2017-04-14 10:35:13",
+                    "updated_at": "2017-05-05 17:27:52",
+                    "type": 0,
+                    "logo": 0,
+                    "role_id": 0,
+                    "demand_company_id": 0,
+                    "logo_image": []
+                }
             },
             "info": {
                 "id": 2,
@@ -168,15 +186,22 @@ class ItemActionController extends Controller
         }
 
         try{
-            $isDesign = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
+            $design = DesignCompanyModel::where(['status' => 1, 'verify_status' => 1])
                 ->whereIn('id', $all['recommend'])
-                ->count();
-            if($isDesign < count($all['recommend'])){
-                return $this->response->array($this->apiError('推荐设计公司不符合条件', 403));
+                ->get()->pluck('id')->all();
+            if(empty($design)){
+                return $this->response->array($this->apiError('推荐设计公司都不符合条件', 403));
             }
 
             $item = Item::find($all['item_id']);
-            $item->recommend = implode(',', $all['recommend']);
+            //验证
+            $ord_recommend = $item->ord_recommend;
+            if(!empty($ord_recommend)){
+                $ord_recommend_arr = explode(',', $ord_recommend);
+                $design = array_diff($design, $ord_recommend_arr);
+            }
+
+            $item->recommend = implode(',', $design);
             $item->save();
         }
         catch (\Exception $e){

@@ -36,6 +36,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
             'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
         ]);
 
+        //更新需求公司审核状态
+        $api->put('/admin/demandCompany/verifyStatus', [
+            'as' => 'AdminDemandCompany.verifyStatus', 'uses' => 'AdminDemandCompanyController@verifyStatus'
+        ]);
+        $api->put('/admin/demandCompany/unVerifyStatus', [
+            'as' => 'AdminDemandCompany.unVerifyStatus', 'uses' => 'AdminDemandCompanyController@unVerifyStatus'
+        ]);
 
         /**
          * 用户相关路由
@@ -46,6 +53,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/user/changeRole', 'UserActionController@changeRole');
         //修改用户状态
         $api->post('/admin/user/changeStatus', 'UserActionController@changeStatus');
+
+        /**
+         * 支付单相关路由
+         */
+        //支付单列表
+        $api->get('/admin/payOrder/lists', 'PayOrderActionController@lists');
+        //后台确认项目支付单付款
+        $api->post('/admin/payOrder/truePay', 'PayOrderActionController@truePay');
     });
 
 });

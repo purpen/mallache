@@ -251,7 +251,7 @@ class DesignCompanyModel extends Model
         }
 
         //公司是否开放、是否自己访问自己、是否推荐了该公司
-        if($design->open != 1 && $design->user != $user_id && $is_recommend != true){
+        if($design->open != 1 && $design->user_id != $user_id && $is_recommend != true){
             return false;
         }
 

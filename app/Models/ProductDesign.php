@@ -25,7 +25,7 @@ class ProductDesign extends Model
 //        'annual_sales',
 //        'service_life',
 //        'competitive_brand',
-        'competing_product',
+//        'competing_product',
         'cycle',
 //        'target_brand',
 //        'brand_positioning',

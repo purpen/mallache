@@ -117,7 +117,7 @@ class ProductDesignInfoController extends BaseController
         $rules = [
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
-            'competing_product' => 'required|array',
+            'competing_product' => 'array',
             'cycle' => 'required|integer',
             'design_cost' => 'required|integer',
             'province' => 'required|integer',

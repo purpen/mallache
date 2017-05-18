@@ -96,11 +96,26 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
         $api->put('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
         $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
+
         /**
          * 项目需求相关路由
          */
+        /**
+         * 发布需求保证金支付
+         */
         //发布需求保证金支付---支付宝
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+
+        /**
+         * 支付项目尾款
+         */
+        // 支付宝支付项目尾款-支付宝
+        $api->get('/pay/itemAliPay/{pay_order_id}', ['as' => 'pay.itemAliPay', 'uses' => 'PayController@itemAliPay']);
+        //银行转账支付项目尾款
+        $api->get('/pay/itemBankPay/{pay_order_id}', 'PayController@itemBankPay');
+
+        //创建尾款支付订单
+        $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
         //查询支付状态
         $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 
@@ -117,9 +132,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //确定合作的设计公司
         $api->post('/demand/trueDesign', ['as' => 'demand.trueDesign', 'uses' => 'DemandController@trueDesign']);
         //拒绝设计公司报价
-        $api->post('demand/falseDesign', ['as' => 'demand.falseDesign', 'uses' => 'DemandController@falseDesign']);
+        $api->post('/demand/falseDesign', ['as' => 'demand.falseDesign', 'uses' => 'DemandController@falseDesign']);
         //确认合同
         $api->post('/demand/trueContract', ['as' => 'demand.trueContract', 'uses' => 'DemandController@trueContract']);
+        //修改项目重新匹配
+        $api->post('/demand/itemRestart', ['as' => 'demand.itemRestart', 'uses' => 'DemandController@itemRestart']);
+        // 需求公司验收项目已完成
+        $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
+
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情
@@ -149,6 +169,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/column', 'ColumnController');
         //分类
         $api->resource('/category', 'CategoryController');
+        //项目阶段
+        $api->resource('/itemStage', 'ItemStageController');
 
 
         /**
@@ -162,7 +184,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/item/{item_id}', 'DesignController@item');
         //已确定合作项目列表
         $api->get('/design/cooperationLists', 'DesignController@cooperationLists');
-
+        //项目开始
+        $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
+        // 确认项目已完成
+        $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
         /**
          * 通知消息相关路由
          */
@@ -172,5 +197,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/message/getMessageList', 'MessageController@getMessageList');
         //新消息数量确认阅读
         $api->get('/message/trueRead', 'MessageController@trueRead');
+
+        /**
+         * 资金流水记录列表
+         */
+        $api->resource('/fundLogList' , 'FundLogController');
     });
 });

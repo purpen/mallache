@@ -14,7 +14,7 @@ class Item extends Model
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id','position'];
 
     /**
      * 添加返回字段
@@ -124,6 +124,8 @@ class Item extends Model
                     'design_type_value' => $item->design_type_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
                     'field' => $info->field,
                     'field_value' => $info->field_value,
                     'industry' => $info->industry,
@@ -154,6 +156,7 @@ class Item extends Model
                     'company_city_value' => $item->company_city_value,
                     'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
+                    'position' => $item->position,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
@@ -174,6 +177,7 @@ class Item extends Model
                     'status' => $item->status,
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
                     'name' => $info->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
@@ -203,6 +207,7 @@ class Item extends Model
                     'company_city_value' => $item->company_city_value,
                     'company_area_value' => $item->company_area_value,
                     'address' => $item->address,
+                    'position' => $item->position,
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
@@ -389,12 +394,11 @@ class Item extends Model
     {
         //尚在匹配项目数量
         $item_count = ItemRecommend::where('item_id', $item_id)
-            ->where('item_status', '!=' -1)
+            ->where('item_status', '!=', -1)
             ->where('design_company_status', '!=', -1)
             ->count();
-
         //匹配失败项目状态修改为匹配失败（2）
-        if($item_count < 1){
+        if(empty($item_count)){
             $item = Item::find($item_id);
             $item->status = -2;
             $item->save();
@@ -404,4 +408,12 @@ class Item extends Model
         }
     }
 
+    //项目状态变更为项目款已托管
+//    public function itemStatusChange($status = 8)
+//    {
+//        $this->status = $status;
+//        $this->save();
+//
+//        event(new ItemStatusEvent($this));
+//    }
 }

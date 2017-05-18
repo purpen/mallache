@@ -9,16 +9,20 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
+use App\Http\Transformer\DemandCompanyTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\RecommendDesignCompanyTransformer;
 use App\Http\Transformer\RecommendListTransformer;
 use App\Jobs\Recommend;
 use App\Models\Contract;
+use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\PayOrder;
 use App\Models\ProductDesign;
 use App\Models\UDesign;
 use App\Models\User;
@@ -444,19 +448,20 @@ class DemandController extends BaseController
             return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
         }else{
             $rules = [
-                'company_name' => 'nullable|min:1|max:50',
+                'company_name' => 'required|min:1|max:50',
                 'company_abbreviation' => 'nullable|min:1|max:50',
-                'company_size' => 'nullable|integer',
+                'company_size' => 'required|integer',
                 'company_web' => 'nullable|min:1|max:50',
-                'company_province' => 'nullable|integer',
-                'company_city' => 'nullable|integer',
+                'company_province' => 'required|integer',
+                'company_city' => 'required|integer',
                 'company_area' => 'nullable|integer',
-                'address' => 'nullable|min:1|max:50',
-                'contact_name' => 'nullable|min:1|max:20',
-                'email' => 'nullable|email',
+                'address' => 'required|min:1|max:50',
+                'contact_name' => 'required|min:1|max:20',
+                'email' => 'required|email',
+                'position' => 'required|max:20',
             ];
 
-            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email']);
+            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email','position']);
 
             $validator = Validator::make($all, $rules);
             if($validator->fails()){
@@ -539,7 +544,14 @@ class DemandController extends BaseController
         if($item->user_id !== $this->auth_user_id){
             return $this->response->array($this->apiError('not found!', 404));
         }
-
+        $auth_user = $this->auth_user;
+        if(!$auth_user){
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
+        if(!$demand_company){
+            return $this->response->array($this->apiError('not found demandCompany!', 404));
+        }
         try{
             $item->status = 2;
             $item->save();
@@ -547,8 +559,10 @@ class DemandController extends BaseController
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
         }
+
         dispatch(new Recommend($item));
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($demand_company, new DemandCompanyTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**
@@ -625,7 +639,7 @@ class DemandController extends BaseController
 
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($design_company, new DesignCompanyShowTransformer)->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -698,7 +712,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 0:全部；1.进行中
+     * @apiParam {integer} type 0:全部；1.进行中;2.已完成
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      *
@@ -782,9 +796,12 @@ class DemandController extends BaseController
             case 0:
                 $where_in = [];
                 break;
-//            case 1:
-//                $where_in = [1,2,3,4,5,6,7,8];
-//                break;
+            case 1:
+                $where_in = [1,2,3,4,5,6,7,8,9,11,15];
+                break;
+            case 2:
+                $where_in = [18,22];
+                break;
             default:
                 $where_in = [];
         }
@@ -1047,8 +1064,9 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function trueContract($item_id)
+    public function trueContract(Request $request)
     {
+        $item_id = (int)$request->input('item_id');
         if(!$item = Item::find($item_id)){
             return $this->response->array($this->apiError());
         }
@@ -1078,4 +1096,143 @@ class DemandController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+    /**
+     * @api {post} /demand/closeItem 用户关闭需求项目
+     * @apiVersion 1.0.0
+     * @apiName demand closeItem
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function closeItem(Request $request)
+    {
+        $item_id = (int)$request->input('item_id');
+
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != -2){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        //修改为用户已关闭
+        $item->status = -1;
+        if(!$item->save()){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        //解冻保证金
+        $pay_order = PayOrder::where([
+            'user_id' => $this->auth_user_id,
+            'item_id' => $item_id,
+            'type' => 1,
+            'status' => 1,
+            ])->first();
+        if($pay_order){
+            $user = $this->auth_user;
+            $user->price_frozen -= $pay_order->amount;
+            if($user->price_frozen < 0){
+                $user->price_frozen = 0;
+            }
+            $user->save();
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /demand/itemRestart 修改项目重新匹配
+     * @apiVersion 1.0.0
+     * @apiName demand itemRestart
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function itemRestart(Request $request)
+    {
+        $item_id = (int)$request->input('item_id');
+
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != -2){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        //清除推荐公司Id，追加至曾推荐公司ID字段
+        $item->ord_recommend = $item->ord_recommend ? ($item->ord_recommend . ',' . $item->recommend) : $item->recommend;
+        $item->recommend = '';
+        $item->status = 1; //填写资料阶段
+        if(!$item->save()){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /demand/trueItemDone/{item_id} 需求公司验收项目已完成
+     * @apiVersion 1.0.0
+     * @apiName demand trueItemDone
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function trueItemDone($item_id)
+    {
+        if(!$item = Item::find($item_id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        if($item->status != 15){
+            return $this->response->array($this->apiError('当前状态不能修改', 403));
+        }
+
+        $item->status = 18;
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        return $this->response->array($this->apiSuccess());
+    }
 }

@@ -106,7 +106,12 @@ class UDesign extends Model
     //以完成设计流程 访问修改器
     public function getCompleteContentAttribute($key)
     {
-        return explode('&', $key);
+        if(empty($key)){
+            return [];
+        }else{
+            return explode('&', $key);
+        }
+
     }
 
     public function getDesignCostValueAttribute()
