@@ -31,6 +31,8 @@ class PayOrderTransformer extends TransformerAbstract
             'amount' => $pay_order->amount,
             'total_price' => $pay_order->total_price ?? null,
             'first_pay' => $pay_order->first_pay ?? null,
+            'item_name' => $pay_order->item_name,
+            'company_name' => $pay_order->company_name,
             'created_at' => $pay_order->created_at,
         ];
     }

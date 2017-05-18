@@ -563,9 +563,9 @@ class DemandController extends BaseController
 
         dispatch(new Recommend($item));
         if(!$demand_company){
-            return $this->response->array($this->apiSuccess('Success', 200, 0));
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => 0]));
         }else{
-            return $this->response->array($this->apiSuccess('Success', 200, $demand_company->verify_status));
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => $demand_company->verify_status]));
 
         }
     }
@@ -1147,6 +1147,11 @@ class DemandController extends BaseController
             'type' => 1,
             'status' => 1,
             ])->first();
+
+        //支付单改为退款
+        $pay_order->status = 2;  //退款
+        $pay_order->save();
+
         if($pay_order){
             $user = $this->auth_user;
             $user->price_frozen -= $pay_order->amount;
