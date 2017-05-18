@@ -64,7 +64,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} random 随机数
      * @apiParam {string} legal_person 法人
      * @apiParam {string} document_number 证件号码
-     * @apiParam {integer} document_type 证件类型
+     * @apiParam {integer} document_type 证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -351,7 +351,7 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} awards 荣誉奖项
      * @apiParam {string} legal_person 法人
      * @apiParam {string} document_number 证件号码
-     * @apiParam {integer} document_type 证件类型
+     * @apiParam {integer} document_type 证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
