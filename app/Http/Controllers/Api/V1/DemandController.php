@@ -563,9 +563,9 @@ class DemandController extends BaseController
 
         dispatch(new Recommend($item));
         if(!$demand_company){
-            return $this->response->array($this->apiSuccess('Success', 200, 0));
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => 0]));
         }else{
-            return $this->response->array($this->apiSuccess('Success', 200, $demand_company->verify_status));
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => $demand_company->verify_status]));
 
         }
     }
