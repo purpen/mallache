@@ -75,7 +75,7 @@ class DesignItemModel extends Model
     //判断周期
     public function getProjectCycleValAttribute()
     {
-        $item_cycle = config('item_cycle');
+        $item_cycle = config('constant.item_cycle');
         if(!array_key_exists($this->project_cycle, $item_cycle)){
             return '';
         }

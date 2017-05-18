@@ -1245,4 +1245,7 @@ class DemandController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+    //获取当前信息匹配到的公司数量
+
 }

@@ -147,7 +147,7 @@ class UDesign extends Model
 
     public function getCycleValueAttribute()
     {
-        $item_cycle = config('item_cycle');
+        $item_cycle = config('constant.item_cycle');
         if(!array_key_exists($this->cycle, $item_cycle)){
             return '';
         }
