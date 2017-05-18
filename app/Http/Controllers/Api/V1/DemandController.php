@@ -531,6 +531,9 @@ class DemandController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      }
+     *       "data": [
+     *           0 //没有审核或者没有找到该需求公司
+     *       ]
      *  }
      */
     public function release(Request $request)
@@ -549,9 +552,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
-        if(!$demand_company){
-            return $this->response->array($this->apiError('not found demandCompany!', 404));
-        }
+
         try{
             $item->status = 2;
             $item->save();
@@ -561,8 +562,12 @@ class DemandController extends BaseController
         }
 
         dispatch(new Recommend($item));
-        return $this->response->item($demand_company, new DemandCompanyTransformer())->setMeta($this->apiMeta());
+        if(!$demand_company){
+            return $this->response->array($this->apiSuccess('Success', 200, 0));
+        }else{
+            return $this->response->array($this->apiSuccess('Success', 200, $demand_company->verify_status));
 
+        }
     }
 
     /**
