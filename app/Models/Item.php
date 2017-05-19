@@ -7,7 +7,7 @@ use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class Item extends Model
+class Item extends BaseModel
 {
     protected $table = 'item';
 

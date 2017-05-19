@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
-class UDesign extends Model
+class UDesign extends BaseModel
 {
     protected $table = 'u_design';
 

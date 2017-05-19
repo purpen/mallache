@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ItemStage extends Model
+class ItemStage extends BaseModel
 {
     protected $table = 'item_stage';
 

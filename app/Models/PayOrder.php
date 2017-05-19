@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PayOrder extends Model
+class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
