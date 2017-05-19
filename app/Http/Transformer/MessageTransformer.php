@@ -12,7 +12,7 @@ class MessageTransformer extends TransformerAbstract
             'id' => $message->id,
             'type' => (int)$message->type,
             'content' => $message->content,
-            'created_at' => $message->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $message->created_at,
         ];
     }
 }

@@ -112,7 +112,7 @@ class Item extends BaseModel
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
                     'design_cost' => null,
                     'cycle' => null,
                 ];
@@ -163,7 +163,7 @@ class Item extends BaseModel
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
                 ];
                 break;
             case 2:
@@ -213,7 +213,7 @@ class Item extends BaseModel
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
                 ];
                 break;
         }
