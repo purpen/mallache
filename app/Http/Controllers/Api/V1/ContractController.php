@@ -65,6 +65,7 @@ class ContractController extends BaseController
      * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
+     * @apiParam {string} title 合同名称
      *
      * @apiParam {string} token
      *
@@ -150,6 +151,7 @@ class ContractController extends BaseController
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
         $all['design_work_content'] = $request->input('design_work_content');
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
+        $all['title'] = $request->input('title');
         $all['unique_id'] = uniqid('ht');
         $rules = [
             'item_demand_id'  => 'required|integer',
@@ -177,6 +179,7 @@ class ContractController extends BaseController
             'exterior_modeling_design_percentage'  => 'required',
             'exterior_modeling_design_money'  => 'required',
             'design_work_content'  => 'required',
+            'title'  => 'required|max:20',
         ];
 
         $messages = [
@@ -205,6 +208,8 @@ class ContractController extends BaseController
             'exterior_modeling_design_percentage.required' => '外观建模设计百分比不能为空',
             'exterior_modeling_design_money.required' => '外观建模设计金额不能为空',
             'design_work_content.required' => '设计工作内容不能为空',
+            'title.required' => '合同名称不能为空',
+            'title.max' => '合同名称不能超过20个字符',
         ];
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){
@@ -369,6 +374,7 @@ class ContractController extends BaseController
      * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
+     * @apiParam {string} title 合同名称
      *
      * @apiParam {string} token
      *
@@ -456,6 +462,7 @@ class ContractController extends BaseController
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
         $all['design_work_content'] = $request->input('design_work_content');
         $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
+        $all['title'] = $request->input('title');
         $rules = [
             'item_demand_id'  => 'required|integer',
             'demand_company_name'  => 'required',
@@ -482,6 +489,8 @@ class ContractController extends BaseController
             'exterior_modeling_design_percentage'  => 'required',
             'exterior_modeling_design_money'  => 'required',
             'design_work_content'  => 'required',
+            'title'  => 'required|max:20',
+
         ];
 
         $messages = [
@@ -510,6 +519,8 @@ class ContractController extends BaseController
             'exterior_modeling_design_percentage.required' => '外观建模设计百分比不能为空',
             'exterior_modeling_design_money.required' => '外观建模设计金额不能为空',
             'design_work_content.required' => '设计工作内容不能为空',
+            'title.required' => '合同名称不能为空',
+            'title.max' => '合同名称不能超过20个字符',
         ];
         $validator = Validator::make($all , $rules, $messages);
         if($validator->fails()){

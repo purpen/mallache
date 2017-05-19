@@ -36,6 +36,7 @@ class ContractTransformer extends TransformerAbstract
             design_work_content	                string(50)	是	空	设计工作内容
             status	                            tinyint(10)	否	0	合同状态.0可以修改.1不可以
             unique_id	                        string(30)	否	0	唯一id
+            title	                            varchar(20)	否		合同名称
 
     */
 
@@ -72,6 +73,7 @@ class ContractTransformer extends TransformerAbstract
             'status' => intval($contract->status),
             'unique_id' => strval($contract->unique_id),
             'item_name' => $contract->item_name,
+            'title' => strval($contract->title),
         ];
     }
 }
