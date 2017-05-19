@@ -51,7 +51,7 @@ class PayOrderListener
             //项目押金
             case 1:
                 //资金流水记录
-                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'创建项目押金');
+                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->uid,'创建项目押金');
                 //创建需求项目
                 if($item = $this->createItem($pay_order->user_id)){
                    $pay_order->item_id = $item->id;
@@ -70,7 +70,7 @@ class PayOrderListener
 
                 $item_info = $item->itemInfo();
                 //资金流水记录
-                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->pay_no,'【' . $item_info['name'] . '】项目款托管');
+                $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->uid,'【' . $item_info['name'] . '】项目款托管');
                 break;
             default:
         }

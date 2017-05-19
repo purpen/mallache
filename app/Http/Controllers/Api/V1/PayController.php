@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
+use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Models\Item;
 use App\Models\PayOrder;
@@ -62,7 +63,7 @@ class PayController extends BaseController
             return $pay_order;
         }
 
-        $uid = uniqid('zf');
+        $uid = Tools::orderId($this->auth_user_id);
 
         $item_name = '';  //项目名称
         $company_name = '';  //公司名称

@@ -119,4 +119,15 @@ class Tools
         Redis::zadd($key, 0, $member);
     }
 
+    /**
+     * 生成支付单号
+     *
+     * @param $user_id
+     * @return string
+     */
+    public static function orderId($user_id)
+    {
+        return  date("YmdHis") . sprintf("%08d", $user_id) . Tools::randNumber();
+    }
+
 }
