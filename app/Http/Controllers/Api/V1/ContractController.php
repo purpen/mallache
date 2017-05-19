@@ -426,7 +426,7 @@ class ContractController extends BaseController
             return $this->response->array($this->apiError('没有找到合同!', 404));
         }
         if($contract->status == 1){
-            return $this->response->array($this->apiSuccess('合同已确认，不能修改', 200));
+            return $this->response->array($this->apiSuccess('合同已确认，不能修改', 403));
         }
         $design = DesignCompanyModel::where('user_id' , $user_id)->first();
         if(!$design){
