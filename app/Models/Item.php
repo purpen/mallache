@@ -112,7 +112,9 @@ class Item extends Model
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
+                    'design_cost' => null,
+                    'cycle' => null,
                 ];
             case 1:
                 $info = $item->productDesign;
@@ -161,7 +163,7 @@ class Item extends Model
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
                 ];
                 break;
             case 2:
@@ -211,7 +213,7 @@ class Item extends Model
                     'contact_name' => $item->contact_name,
                     'phone' => $item->phone,
                     'email' => $item->email,
-                    'created_at' => $item->created_at->format("Y-m-d"),
+                    'created_at' => $item->created_at,
                 ];
                 break;
         }
@@ -408,12 +410,45 @@ class Item extends Model
         }
     }
 
-    //项目状态变更为项目款已托管
-//    public function itemStatusChange($status = 8)
-//    {
-//        $this->status = $status;
-//        $this->save();
-//
-//        event(new ItemStatusEvent($this));
-//    }
+
+    public function getStatusTimeAttribute($key)
+    {
+        return json_decode($key,true);
+    }
+
+    /**
+     * 项目状态变化记录方法
+     *
+     * @param int $status 项目状态
+     */
+    public function statusTime(int $status)
+    {
+        $status_time_arr = [
+            -2 => '',
+            -1 => '',
+            1 => '',
+            2 => '',
+            3 => '',
+            4 => '',
+            5 => '',
+            6 => '',
+            7 => '',
+            8 => '',
+            9 => '',
+            11 => '',
+            15 => '',
+            18 => '',
+            22 => '',
+        ];
+
+        $status_time = $this->status_time;
+        if(!empty($status_time)){
+            $status_time_arr = $status_time;
+        }
+
+        $status_time_arr[$status] = date("Y-m-d h:i:s");
+        $this->status_time = (string)json_encode($status_time_arr);
+        $this->save();
+    }
+
 }

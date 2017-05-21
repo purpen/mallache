@@ -30,6 +30,7 @@ class ItemTransformer extends TransformerAbstract
         $designCompany = DesignCompanyModel::whereIn("id", $design_company_id)->get();
         $user = $item->user;
         unset($item->productDesign, $item->uDesign);
+
         return [
             'item' => $item,
             'info' => $info,

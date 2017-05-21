@@ -20,6 +20,7 @@ use App\Jobs\Recommend;
 use App\Models\Contract;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
+use App\Models\DesignItemModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\PayOrder;
@@ -115,86 +116,86 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function store(Request $request)
-    {
-        $type = (int)$request->input('type');
-
-        //产品设计
-        if($type === 1){
-
-            $rules = [
-                'type' => 'required|integer',
-                'design_type' => 'required|integer',
-                'field' => 'required|integer',
-                'industry' => 'required|integer',
-            ];
-
-            $all = $request->only(['type','design_type','field', 'industry']);
-
-            $validator = Validator::make($all, $rules);
-            if($validator->fails()){
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            $all['user_id'] = $this->auth_user_id;
-            $all['status'] = 1;
-
-
-
-            try{
-                $item = Item::create($all);
-
-                $product_design = ProductDesign::create([
-                    'item_id' => intval($item->id),
-                    'field' => $request->input('field'),
-                    'industry' => $request->input('industry')
-                ]);
-            }
-            catch (\Exception $e){
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-
-        }
-        //UX UI设计
-        elseif ($type === 2){
-            $rules = [
-                'type' => 'require|integer',
-                'design_type' => 'required|integer',
-//                'system' => 'required|integer',
-//                'design_content' => 'required|integer',
-            ];
-
-            $all = $request->only(['type', 'design_type']);
-
-            $validator = Validator::make($all, $rules);
-            if($validator->fails()){
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            $all['user_id'] = $this->auth_user_id;
-            $all['status'] = 1;
-
-            try{
-                $item = Item::create($all);
-
-                $u_design = UDesign::create([
-                    'item_id' => intval($item->id),
-//                    'system' => $request->input('system'),
-//                    'design_content' => $request->input('design_content')
-                ]);
-            }
-            catch (\Exception $e){
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-        }else{
-            return $this->response->array($this->apiError('not found', 404));
-        }
-
-    }
+//    public function store(Request $request)
+//    {
+//        $type = (int)$request->input('type');
+//
+//        //产品设计
+//        if($type === 1){
+//
+//            $rules = [
+//                'type' => 'required|integer',
+//                'design_type' => 'required|integer',
+//                'field' => 'required|integer',
+//                'industry' => 'required|integer',
+//            ];
+//
+//            $all = $request->only(['type','design_type','field', 'industry']);
+//
+//            $validator = Validator::make($all, $rules);
+//            if($validator->fails()){
+//                throw new StoreResourceFailedException('Error', $validator->errors());
+//            }
+//
+//            $all['user_id'] = $this->auth_user_id;
+//            $all['status'] = 1;
+//
+//
+//
+//            try{
+//                $item = Item::create($all);
+//
+//                $product_design = ProductDesign::create([
+//                    'item_id' => intval($item->id),
+//                    'field' => $request->input('field'),
+//                    'industry' => $request->input('industry')
+//                ]);
+//            }
+//            catch (\Exception $e){
+//                return $this->response->array($this->apiError('Error', 500));
+//            }
+//
+//            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+//
+//        }
+//        //UX UI设计
+//        elseif ($type === 2){
+//            $rules = [
+//                'type' => 'require|integer',
+//                'design_type' => 'required|integer',
+////                'system' => 'required|integer',
+////                'design_content' => 'required|integer',
+//            ];
+//
+//            $all = $request->only(['type', 'design_type']);
+//
+//            $validator = Validator::make($all, $rules);
+//            if($validator->fails()){
+//                throw new StoreResourceFailedException('Error', $validator->errors());
+//            }
+//
+//            $all['user_id'] = $this->auth_user_id;
+//            $all['status'] = 1;
+//
+//            try{
+//                $item = Item::create($all);
+//
+//                $u_design = UDesign::create([
+//                    'item_id' => intval($item->id),
+////                    'system' => $request->input('system'),
+////                    'design_content' => $request->input('design_content')
+//                ]);
+//            }
+//            catch (\Exception $e){
+//                return $this->response->array($this->apiError('Error', 500));
+//            }
+//
+//            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+//        }else{
+//            return $this->response->array($this->apiError('not found', 404));
+//        }
+//
+//    }
 
 
     /**
@@ -531,6 +532,9 @@ class DemandController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      }
+     *       "data": [
+     *           0 //没有审核或者没有找到该需求公司
+     *       ]
      *  }
      */
     public function release(Request $request)
@@ -549,20 +553,25 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
-        if(!$demand_company){
-            return $this->response->array($this->apiError('not found demandCompany!', 404));
-        }
+
         try{
             $item->status = 2;
             $item->save();
+
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($item));
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError('Error', 500));
         }
 
         dispatch(new Recommend($item));
-        return $this->response->item($demand_company, new DemandCompanyTransformer())->setMeta($this->apiMeta());
+        if(!$demand_company){
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => 0]));
+        }else{
+            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => $demand_company->verify_status]));
 
+        }
     }
 
     /**
@@ -712,7 +721,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 0:全部；1.进行中;2.已完成
+     * @apiParam {integer} type 0:全部；1.填写资料中；2.进行中;3.已完成
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      *
@@ -797,9 +806,12 @@ class DemandController extends BaseController
                 $where_in = [];
                 break;
             case 1:
-                $where_in = [1,2,3,4,5,6,7,8,9,11,15];
+                $where_in = [1];
                 break;
             case 2:
+                $where_in = [-2,-1,2,3,4,5,6,7,8,9,11,15,18,22];
+                break;
+            case 3:
                 $where_in = [18,22];
                 break;
             default:
@@ -1135,6 +1147,8 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
 
+        event(new ItemStatusEvent($item));
+
         //解冻保证金
         $pay_order = PayOrder::where([
             'user_id' => $this->auth_user_id,
@@ -1142,6 +1156,11 @@ class DemandController extends BaseController
             'type' => 1,
             'status' => 1,
             ])->first();
+
+        //支付单改为退款
+        $pay_order->status = 2;  //退款
+        $pay_order->save();
+
         if($pay_order){
             $user = $this->auth_user;
             $user->price_frozen -= $pay_order->amount;
@@ -1235,4 +1254,97 @@ class DemandController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {post} /demand/matchingCount/{item_id} 获取当前信息匹配到的公司数量
+     * @apiVersion 1.0.0
+     * @apiName demand matchingCount
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
+     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }，
+     *      "date": {
+     *          "count": 2,
+     *      }
+     *  }
+     */
+    public function matchingCount(Request $request, $item_id)
+    {
+        $item = Item::find($item_id);
+        if($item->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无权操作', 403));
+        }
+        $item_info = $item->itemInfo();
+
+        $type = $request->input('type');
+        $design_type = $request->input('design_type');
+        $design_cost = $request->input('design_cost');
+        $cycle = $request->input('cycle');
+
+        $query = DesignItemModel::query();
+        if($type || ($type = $item_info['type'])){
+            $query->where('type', $type);
+        }
+
+        if($design_type || ($design_type = $item_info['design_type'])){
+            $query->where('design_type', $design_type);
+        }
+
+        if($design_cost || ($design_cost = $item_info['design_cost'])){
+            $max = $this->cost($design_cost);
+            $query->where('min_price', '<', $max);
+        }
+
+        if($cycle || ($cycle = $item_info['cycle'])){
+            $query->where('project_cycle', $cycle);
+        }
+
+        $count = $query->count();
+        return $this->response->array($this->apiSuccess('Success', 200, compact('count')));
+    }
+
+    /**
+     * 设计费用转换
+     *
+     * @param $design_cost
+     * @return int
+     */
+    protected function cost($design_cost)
+    {
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+        $max = 10000;
+        switch ($design_cost){
+            case 1:
+                $max = 50000;
+                break;
+            case 2:
+                $max = 100000;
+                break;
+            case 3:
+                $max = 200000;
+                break;
+            case 4:
+                $max = 300000;
+                break;
+            case 5:
+                $max = 500000;
+                break;
+            case 6:
+                $max = 500000;
+                break;
+        }
+
+        return $max;
+    }
+
 }

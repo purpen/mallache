@@ -3,6 +3,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\PayOrder;
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class PayOrderTransformer extends TransformerAbstract
@@ -25,13 +26,17 @@ class PayOrderTransformer extends TransformerAbstract
             'type' => (int)$pay_order->type,
             'item_id' => (int)$pay_order->item_id,
             'status' => (int)$pay_order->status,
+            'status_value' => $pay_order->status_value,
             'summary' => $pay_order->summary,
             'pay_type' => $pay_order->pay_type,
+            'pay_type_value' => $pay_order->pay_type_value,
             'pay_no' => $pay_order->pay_no,
             'amount' => $pay_order->amount,
             'total_price' => $pay_order->total_price ?? null,
             'first_pay' => $pay_order->first_pay ?? null,
-            'created_at' => $pay_order->created_at,
+            'item_name' => $pay_order->item_name,
+            'company_name' => $pay_order->company_name,
+            'created_at' => $pay_order->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

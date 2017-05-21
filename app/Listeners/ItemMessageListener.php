@@ -41,10 +41,22 @@ class ItemMessageListener
     {
         $item = $event->item;
 
+        //记录项目状态变化时间
+        $item->statusTime($item->status);
+
         switch ($item->status){
             //项目匹配失败
             case -2:
                 $this->itemFail($event);
+                break;
+            //用户关闭项目
+            case -1:
+                break;
+            //创建项目
+            case 1:
+                break;
+            //发布项目
+            case 2:
                 break;
             //已推荐设计公司
             case 3:

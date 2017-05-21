@@ -75,26 +75,12 @@ class DesignItemModel extends Model
     //判断周期
     public function getProjectCycleValAttribute()
     {
-        switch ($this->attributes['project_cycle']){
-            case 1:
-                $project_cycle_val = '1个月内';
-                break;
-            case 2:
-                $project_cycle_val = '1-2个月';
-                break;
-            case 3:
-                $project_cycle_val = '2个月';
-                break;
-            case 4:
-                $project_cycle_val = '2-4个月';
-                break;
-            case 5:
-                $project_cycle_val = '其他';
-                break;
-            default:
-                $project_cycle_val  = '' ;
+        $item_cycle = config('constant.item_cycle');
+        if(!array_key_exists($this->project_cycle, $item_cycle)){
+            return '';
         }
-        return $project_cycle_val;
+
+        return $item_cycle[$this->project_cycle];
     }
 
 

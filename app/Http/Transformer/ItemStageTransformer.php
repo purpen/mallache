@@ -14,6 +14,7 @@ class ItemStageTransformer extends TransformerAbstract
         title	            varchar(50)	    否		阶段名称
         content	            varchar(500)	否		内容描述
         summary	            varcha(100)	    是	''	备注
+        status              tinyint(4)	    否	0	是否发布：0.否；1.是;
      */
     public function transform(ItemStage $itemStage)
     {
@@ -25,6 +26,8 @@ class ItemStageTransformer extends TransformerAbstract
             'content' => strval($itemStage->content),
             'summary' => strval($itemStage->summary),
             'item_stage_image' => $itemStage->item_stage_image,
+            'status' => intval($itemStage->status),
+            'created_at' => $itemStage->created_at,
         ];
     }
 

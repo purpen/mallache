@@ -97,7 +97,7 @@ class ProductDesignInfoController extends BaseController
      * @apiParam {string} product_features 产品功能或两点
      * @apiParam {array} competing_product 竞品
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
-     * @apiParam {integer} design_cost 设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {string} token
@@ -117,7 +117,7 @@ class ProductDesignInfoController extends BaseController
         $rules = [
             'name' => 'required|max:50',
             'product_features' => 'required|max:500',
-            'competing_product' => 'array',
+//            'competing_product' => 'array',
             'cycle' => 'required|integer',
             'design_cost' => 'required|integer',
             'province' => 'required|integer',
@@ -141,7 +141,7 @@ class ProductDesignInfoController extends BaseController
             $item->save();
 
             $design = ProductDesign::where(['item_id' => intval($item_id)])->first();
-            $all['competing_product'] = implode('&', $request->input('competing_product'));
+//            $all['competing_product'] = implode('&', $request->input('competing_product'));
             $design->update($all);
         }catch(\Exception $e){
             dd($e);
