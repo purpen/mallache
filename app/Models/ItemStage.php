@@ -11,7 +11,7 @@ class ItemStage extends Model
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['item_id', 'design_company_id' , 'title' , 'content' , 'summary'];
+    protected $fillable = ['item_id', 'design_company_id' , 'title' , 'content' , 'summary' , 'status'];
 
 
     /**
@@ -22,5 +22,15 @@ class ItemStage extends Model
     public function getItemStageImageAttribute()
     {
         return AssetModel::getImageUrl($this->id, 8, 1 , 5);
+    }
+
+    /**
+     * 更改发布状态
+     */
+    static public function status($id, $status=1)
+    {
+        $itemStage = self::findOrFail($id);
+        $itemStage->status = $status;
+        return $itemStage->save();
     }
 }

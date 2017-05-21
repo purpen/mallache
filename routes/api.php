@@ -173,7 +173,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
         //项目阶段
         $api->resource('/itemStage', 'ItemStageController');
-        $api->get('/itemStage/item/lists', 'ItemStageController@lists');
+        //设计公司项目展示
+        $api->get('/itemStage/designCompany/lists', 'ItemStageController@designLists');
+        //需求公司项目展示
+        $api->get('/itemStage/demand/lists', ['as' => 'itemStage.demandLists', 'uses' => 'ItemStageController@demandLists']);
+
+        //更新项目阶段发布状态
+        $api->put('/itemStage/ok/status', [
+            'as' => 'itemStage.okStatus', 'uses' => 'ItemStageController@okStatus'
+        ]);
+        $api->put('/itemStage/un/status', [
+            'as' => 'itemStage.unStatus', 'uses' => 'ItemStageController@unStatus'
+        ]);
 
 
         /**

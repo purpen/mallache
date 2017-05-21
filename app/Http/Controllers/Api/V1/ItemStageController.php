@@ -16,37 +16,74 @@ use Illuminate\Support\Facades\Validator;
 class ItemStageController extends BaseController
 {
     /**
-     * @api {get} /itemStage/item/lists 项目阶段展示
+     * @api {get} /itemStage/designCompany/lists 设计公司项目阶段展示
      * @apiVersion 1.0.0
-     * @apiName itemStage lists
+     * @apiName itemStage designLists
      * @apiGroup itemStage
      *
      * @apiParam {integer} item_id  项目id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-            {
-                "data": {
-                "id": 2,
-                "item_id": 2,
-                "design_company_id": 49,
-                "title": "哈哈",
-                "content": "就是哈哈哈哈",
-                "summary": "备注",
-                "item_stage_image": []
-                },
-                "meta": {
-                "message": "Success",
-                "status_code": 200
-                }
-            }
+     * {
+     * "data": {
+     * "id": 2,
+     * "item_id": 2,
+     * "design_company_id": 49,
+     * "title": "哈哈",
+     * "content": "就是哈哈哈哈",
+     * "summary": "备注",
+     * "item_stage_image": []
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
-    public function lists(Request $request)
+    public function designLists(Request $request)
     {
         $item_id = $request->input('item_id');
-        $itemStage = ItemStage::where('item_id' , $item_id)->get();
-        if(!$itemStage){
-            return $this->response->array($this->apiError('not found item_stage' , 404));
+        $itemStage = ItemStage::where('item_id', $item_id)->get();
+        if (!$itemStage) {
+            return $this->response->array($this->apiError('not found item_stage', 404));
+        }
+        return $this->response->collection($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
+
+    }
+
+    /**
+     * @api {get} /itemStage/demand/lists 需求公司项目阶段展示
+     * @apiVersion 1.0.0
+     * @apiName itemStage demandLists
+     * @apiGroup itemStage
+     *
+     * @apiParam {integer} item_id  项目id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": {
+     * "id": 2,
+     * "item_id": 2,
+     * "design_company_id": 49,
+     * "title": "哈哈",
+     * "content": "就是哈哈哈哈",
+     * "summary": "备注",
+     * "item_stage_image": []
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
+     */
+    public function demandLists(Request $request)
+    {
+        $item_id = $request->input('item_id');
+        $itemStage = ItemStage::where('item_id', $item_id)->where('status' , 1)->get();
+        if (!$itemStage) {
+            return $this->response->array($this->apiError('not found item_stage', 404));
         }
         return $this->response->collection($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
 
@@ -75,21 +112,21 @@ class ItemStageController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-        {
-            "data": {
-            "id": 2,
-            "item_id": 2,
-            "design_company_id": 49,
-            "title": "哈哈",
-            "content": "就是哈哈哈哈",
-            "summary": "备注",
-            "item_stage_image": []
-            },
-            "meta": {
-            "message": "Success",
-            "status_code": 200
-            }
-        }
+     * {
+     * "data": {
+     * "id": 2,
+     * "item_id": 2,
+     * "design_company_id": 49,
+     * "title": "哈哈",
+     * "content": "就是哈哈哈哈",
+     * "summary": "备注",
+     * "item_stage_image": []
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     public function store(Request $request)
     {
@@ -98,12 +135,12 @@ class ItemStageController extends BaseController
         $all['content'] = $request->input('content');
         $all['summary'] = $request->input('summary') ?? '';
 
-        $item = Item::where('id' , $request->input('item_id'))->first();
-        if(!$item){
-            return $this->response->array($this->apiError('not found item' , 404));
+        $item = Item::where('id', $request->input('item_id'))->first();
+        if (!$item) {
+            return $this->response->array($this->apiError('not found item', 404));
         }
-        if($item->design_company_id != $this->auth_user->design_company_id){
-            return $this->response->array($this->apiError('没有权限' , 403));
+        if ($item->design_company_id != $this->auth_user->design_company_id) {
+            return $this->response->array($this->apiError('没有权限', 403));
         }
         $all['design_company_id'] = $item->design_company_id;
         $rules = [
@@ -113,23 +150,23 @@ class ItemStageController extends BaseController
         ];
 
         $messages = [
-            'item_id.required' => '项目id不能为空' ,
-            'title.required' => '项目阶段名称不能为空' ,
-            'content.required' => '项目内容描述不能为空' ,
+            'item_id.required' => '项目id不能为空',
+            'title.required' => '项目阶段名称不能为空',
+            'content.required' => '项目内容描述不能为空',
         ];
-        $validator = Validator::make($all , $rules , $messages);
+        $validator = Validator::make($all, $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        try{
-            if($item->status == 11){
+        try {
+            if ($item->status == 11) {
                 $itemStage = ItemStage::create($all);
                 //附件
                 $random = $request->input('random');
-                AssetModel::setRandom($itemStage->id , $random);
-            }else{
+                AssetModel::setRandom($itemStage->id, $random);
+            } else {
                 return $this->response->array($this->apiError('项目还没有进行'));
             }
         } catch (\Exception $e) {
@@ -153,7 +190,7 @@ class ItemStageController extends BaseController
     {
         $itemStage_id = intval($itemStage_id);
         $itemStage = ItemStage::find($itemStage_id);
-        if(!$itemStage){
+        if (!$itemStage) {
             return $this->response->array($this->apiError('not found', 404));
         }
         return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
@@ -179,21 +216,21 @@ class ItemStageController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-        {
-        "data": {
-        "id": 2,
-        "item_id": 2,
-        "design_company_id": 49,
-        "title": "哈哈",
-        "content": "就是哈哈哈哈",
-        "summary": "备注",
-        "item_stage_image": []
-        },
-        "meta": {
-        "message": "Success",
-        "status_code": 200
-        }
-        }
+     * {
+     * "data": {
+     * "id": 2,
+     * "item_id": 2,
+     * "design_company_id": 49,
+     * "title": "哈哈",
+     * "content": "就是哈哈哈哈",
+     * "summary": "备注",
+     * "item_stage_image": []
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     public function update(Request $request, $id)
     {
@@ -202,16 +239,16 @@ class ItemStageController extends BaseController
         $all['content'] = $request->input('content');
         $all['summary'] = $request->input('summary') ?? '';
 
-        $itemStage = ItemStage::where('id' , $id)->first();
-        if(!$itemStage){
-            return $this->response->array($this->apiError('not found item' , 404));
+        $itemStage = ItemStage::where('id', $id)->first();
+        if (!$itemStage) {
+            return $this->response->array($this->apiError('not found item', 404));
         }
-        $item = Item::where('id' , $request->input('item_id'))->first();
-        if(!$item){
-            return $this->response->array($this->apiError('not found item' , 404));
+        $item = Item::where('id', $request->input('item_id'))->first();
+        if (!$item) {
+            return $this->response->array($this->apiError('not found item', 404));
         }
-        if($item->design_company_id != $this->auth_user->design_company_id){
-            return $this->response->array($this->apiError('没有权限' , 403));
+        if ($item->design_company_id != $this->auth_user->design_company_id) {
+            return $this->response->array($this->apiError('没有权限', 403));
         }
         $rules = [
             'item_id' => 'required|integer',
@@ -220,17 +257,17 @@ class ItemStageController extends BaseController
         ];
 
         $messages = [
-            'item_id.required' => '项目id不能为空' ,
-            'title.required' => '项目阶段名称不能为空' ,
-            'content.required' => '项目内容描述不能为空' ,
+            'item_id.required' => '项目id不能为空',
+            'title.required' => '项目阶段名称不能为空',
+            'content.required' => '项目内容描述不能为空',
         ];
-        $validator = Validator::make($all , $rules , $messages);
+        $validator = Validator::make($all, $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $itemStage->update($all);
-        if(!$itemStage){
+        if (!$itemStage) {
             return $this->response->array($this->apiError());
         }
 
@@ -240,11 +277,75 @@ class ItemStageController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ItemStage  $itemStage
+     * @param  \App\ItemStage $itemStage
      * @return \Illuminate\Http\Response
      */
     public function destroy(ItemStage $itemStage)
     {
         //
     }
+
+    /**
+     * @api {put} /itemStage/ok/status 项目发布
+     * @apiVersion 1.0.0
+     * @apiName itemStage okStatus
+     * @apiGroup itemStage
+     *
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function okStatus(Request $request)
+    {
+        Log::info(111);
+        $id = $request->input('id');
+        $itemStage = ItemStage::where('id', $id)->first();
+        if (!$itemStage) {
+            return $this->response->array($this->apiError('not found itemStage', 404));
+        }
+        $status = ItemStage::status($id, 1);
+        if (!$status) {
+            return $this->response->array($this->apiError('修改失败', 500));
+        }
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /itemStage/un/status 项目关闭发布
+     * @apiVersion 1.0.0
+     * @apiName itemStage unStatus
+     * @apiGroup itemStage
+     *
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function unStatus(Request $request)
+    {
+        $id = $request->input('id');
+        $itemStage = ItemStage::where('id', $id)->first();
+        if (!$itemStage) {
+            return $this->response->array($this->apiError('not found itemStage', 404));
+        }
+        $status = ItemStage::status($id, 0);
+        if (!$status) {
+            return $this->response->array($this->apiError('修改失败', 500));
+        }
+        return $this->response->array($this->apiSuccess());
+    }
+
 }
