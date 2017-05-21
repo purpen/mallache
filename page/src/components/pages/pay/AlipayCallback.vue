@@ -4,7 +4,7 @@
       <div class="publish-box" v-if="paySuccess">
         <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
         <p class="success-str">支付成功</p>
-        <p class="success-des">请稍后，系统自动跳转发布需要页面...</p>
+        <p class="success-des">请稍后...</p>
       </div>
 
       <div class="publish-box" v-else>
@@ -55,7 +55,12 @@ export default {
           self.paySuccess = true
           setTimeout(function () {
             var itemId = response.data.data.item_id
-            self.$router.replace({name: 'itemSubmitTwo', params: {id: itemId}})
+            var type = response.data.data.type
+            if (type === 1) {
+              self.$router.replace({name: 'itemSubmitTwo', params: {id: itemId}})
+            } else {
+              self.$router.replace({name: 'vcenterItemShow', params: {id: itemId}})
+            }
           }, 3000)
           return
         }

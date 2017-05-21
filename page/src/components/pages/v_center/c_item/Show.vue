@@ -93,7 +93,7 @@
                   </p>
                 </div>
                 <div class="manage-item add-stage" v-else>
-                  <p class="add-stage-btn"><router-link :to="{name: 'vcenterDesignStageAdd', params: {item_id: item.id}}"><i class="el-icon-plus"></i> 添加阶段</router-link></p>
+                  <p class="add-stage-btn" v-if="item.status === 11"><router-link :to="{name: 'vcenterDesignStageAdd', params: {item_id: item.id}}"><i class="el-icon-plus"></i> 添加阶段</router-link></p>
                   <div v-for="(d, index) in stages">
                     <div class="contract-left">
                       <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
@@ -103,7 +103,7 @@
                       </div>
                     </div>
                     <div class="contract-right">
-                      <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-share" aria-hidden="true"></i> 发送</router-link></p>
+                      <p v-if="d.status === 0"><a href="javascript:void(0)" @click="stageSend(d.id, index)"><i class="fa fa-share" aria-hidden="true"></i> 发送</a></p>
                       <p><router-link :to="{name: 'vcenterDesignStageEdit', params: {id: d.id}}" target="_blank"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
                       <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
                     </div>
@@ -111,6 +111,7 @@
                   </div>
                   <p class="finish-item-btn" v-if="item.status === 11"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
                   <p class="finish-item-stat" v-if="item.status === 15">等待客户验收项目</p>
+                  <p class="finish-item-stat" v-if="item.status === 18">项目已验收</p>
                 </div>
 
               </el-collapse-item>
@@ -283,6 +284,22 @@ export default {
         self.beginItemLoadingBtn = false
       })
     },
+    // 项目阶段发送
+    stageSend(id, index) {
+      var self = this
+      self.$http.put(api.itemStageSend, {id: id})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.$message.success('发送成功!')
+          self.stages[index].status = 1
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+      })
+    },
     // 确认项目完成弹出层
     sureItemBtn() {
       this.$refs.comfirmType.value = 1
@@ -443,8 +460,8 @@ export default {
             break
           case 15:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 1
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -454,8 +471,8 @@ export default {
             break
           case 18:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 2
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -465,8 +482,8 @@ export default {
             break
           case 20:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 3
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -498,10 +515,16 @@ export default {
 
         // 项目阶段列表
         if (self.statusLabel.stage) {
-          self.$http.get(api.itemStage, {params: {item_id: self.item.id}})
+          self.$http.get(api.itemStageDesignCompanyLists, {params: {item_id: self.item.id}})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
-              self.stages = response.data.data
+              var items = response.data.data
+              for (var i = 0; i < items.length; i++) {
+                var item = items[i]
+                items[i].created_at = item.created_at.date.date_format().format('yyyy-MM-dd')
+              }
+              self.stages = items
+              console.log('aa')
               console.log(self.stages)
             }
           })
@@ -794,6 +817,7 @@ export default {
     padding: 10px 60px 10px 60px;
   }
   .finish-item-stat {
+    margin-top: 50px;
     font-size: 2rem;
     text-align: center;
   }

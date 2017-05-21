@@ -42,6 +42,7 @@ export default {
   agreeDesignCompany: '/demand/trueDesign', // 同意合作的设计公司
   demandItemRestart: '/demand/itemRestart', // post 修改项目，重新匹配
   demandCloseItem: '/demand/closeItem', // post 用户关闭项目
+  demandTrueItemDoneId: '/demand/trueItemDone/{0}', // POST 确认项目完成
 
   // 公司项目接口
   // 设计公司获取项目订单
@@ -53,11 +54,18 @@ export default {
   sendContract: '/contract/ok', // POST 发送合同
   designItemStartId: '/design/itemStart/{0}', // POST 确认项目开始设计
   designItemDoneId: '/design/itemDone/{0}', // POST 确认项目完成
+  itemStageSend: '/itemStage/ok/status', // PUT 项目阶段发送
 
   // 合同
   contract: '/contract', // post 保存合同
   contractId: '/contract/{0}', // put/get 更新/查看合同
   demandTrueContract: '/demand/trueContract',  // POST 需求方确认项目合同
+
+  // 阶段查看
+  itemStageDemandLists: '/itemStage/demand/lists', // GET 需求方阶段查看
+  itemStageDesignCompanyLists: '/itemStage/designCompany/lists', // GET 设计公司阶段查看
+  itemStageId: '/itemStage/{0}', // GET 阶段详情 PUT 编辑
+  itemStage: '/itemStage',  // POST 保存
 
   // 订单
   orderId: '/pay/getPayStatus/{0}',  // GET 查看订单详情
@@ -71,10 +79,6 @@ export default {
   // 案例
   designCase: '/designCase',  // 公司案例
   designCaseId: '/designCase/{0}',  // 公司案例
-
-  // 公司项目阶段
-  itemStage: '/itemStage',  // POST 保存 GET 展示 公司项目阶段
-  itemStageId: '/itemStage/{0}',  // PUT 更改项目阶段
 
   // 公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情

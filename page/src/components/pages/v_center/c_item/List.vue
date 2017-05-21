@@ -28,7 +28,7 @@
                   <p>项目周期: {{ d.item.cycle_value }}</p>
                 </div>
                 <div class="r-item">
-                  <p>{{ d.item.status_value }}</p>
+                  <p>{{ d.status_value }}</p>
                 </div>
               </div>
               <div class="opt">
@@ -234,6 +234,7 @@
               typeLabel = item.item.type_value + '/' + item.item.design_type_value
             }
             designItems[i].item.type_label = typeLabel
+            designItems[i]['item']['created_at'] = item.item.created_at.date.date_format().format('yyyy-MM-dd')
           } // endfor
           self.designItems = designItems
         } else {

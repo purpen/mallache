@@ -194,8 +194,7 @@
                 <div class="manage-item" v-if="item.status === 9">
                   <p class="wait-begin">等待设计公司开始项目</p>
                 </div>
-                <div class="manage-item add-stage" v-else-if="item.status === 11">
-                  <p class="add-stage-btn"><router-link :to="{name: 'vcenterDesignStageAdd', params: {item_id: item.id}}"><i class="el-icon-plus"></i> 添加阶段</router-link></p>
+                <div class="manage-item add-stage" v-else>
                   <div v-for="(d, index) in stages">
                     <div class="contract-left">
                       <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
@@ -205,10 +204,12 @@
                       </div>
                     </div>
                     <div class="contract-right">
-                      <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
+                      <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
                     </div>
                     <div class="clear"></div>
                   </div>
+                  <p class="finish-item-btn" v-if="item.status === 15"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
+                  <p class="finish-item-btn" v-if="item.status === 18"><el-button type="primary" class="is-custom">项目交易成功,给设计公司评价</el-button></p>
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -333,6 +334,8 @@ export default {
         this.refuseCompanySubmit()
       } else if (comfirmType === 2) {
         this.agreeCompanySubmit()
+      } else if (comfirmType === 3) {
+        this.sureItemSubmit()
       } else {
         this.comfirmLoadingBtn = false
       }
@@ -386,6 +389,32 @@ export default {
     // 支付项目资金
     secondPay() {
       this.$router.push({name: 'itemPayFund', params: {item_id: this.item.id}})
+    },
+    // 确认项目完成弹出层
+    sureItemBtn() {
+      this.$refs.comfirmType.value = 3
+      this.comfirmMessage = '确认项目已完成？'
+      this.comfirmDialog = true
+    },
+    // 确认项目完成
+    sureItemSubmit() {
+      var self = this
+      self.$http.post(api.demandTrueItemDoneId.format(self.item.id), {})
+      .then (function(response) {
+        self.comfirmDialog = false
+        if (response.data.meta.status_code === 200) {
+          self.comfirmLoadingBtn = false
+          self.item.status = 18
+          self.item.statue_value = '项目已完成'
+          self.$message.success('操作成功!')
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.comfirmLoadingBtn = false
+      })
     }
   },
   computed: {
@@ -540,8 +569,8 @@ export default {
             break
           case 15:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 1
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -551,8 +580,8 @@ export default {
             break
           case 18:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 2
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -562,8 +591,8 @@ export default {
             break
           case 20:
             self.progressButt = 3
-            self.progressContract = 1
-            self.progressItem = -1
+            self.progressContract = 3
+            self.progressItem = 3
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -591,13 +620,19 @@ export default {
           })
         }
 
+        // 项目阶段列表
         if (self.statusLabel.stage) {
-          self.$http.get(api.itemStage, {})
+          self.$http.get(api.itemStageDemandLists, {params: {item_id: self.item.id}})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
-              self.stages = response.data.data
-              console.log('aaa')
-              console.log(self.company)
+              var items = response.data.data
+              for (var i = 0; i < items.length; i++) {
+                var item = items[i]
+                items[i].created_at = item.created_at.date.date_format().format('yyyy-MM-dd')
+              }
+              self.stages = items
+              console.log('aa')
+              console.log(self.stages)
             }
           })
           .catch (function(error) {
@@ -810,10 +845,10 @@ export default {
     float: left;
     margin: 0 0 0 10px;
   }
-  .contract-item .contract-right {
+  .contract-right {
     float: right;
   }
-  .contract-item .contract-right p {
+  .contract-right p {
     float: right;
     margin: 10px;
   }
@@ -866,6 +901,21 @@ export default {
   .manage-item .wait-begin {
     margin: 30px 0 0 0;
     font-size: 1.8rem;
+  }
+  .manage-item.add-stage {
+    min-height: 80px;
+    text-align: left;
+  }
+  .add-stage p {
+  
+  }
+  .finish-item-btn {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .finish-item-btn button {
+    padding: 10px 60px 10px 60px;
   }
 
 

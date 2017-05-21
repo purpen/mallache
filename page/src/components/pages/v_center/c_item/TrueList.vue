@@ -188,6 +188,7 @@
             if (item.item.status >= 5) showPrice = true
             designItems[i].item.show_price = showPrice
             designItems[i].item.type_label = typeLabel
+            designItems[i]['item']['created_at'] = item.item.created_at.date.date_format().format('yyyy-MM-dd')
           } // endfor
           self.designItems = designItems
         } else {

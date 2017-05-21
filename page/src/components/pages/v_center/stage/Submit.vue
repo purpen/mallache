@@ -127,7 +127,6 @@
             var row = {
               title: that.form.title,
               item_id: that.form.item_id,
-              summary: 'test',
               content: that.form.content
             }
             var apiUrl = null
@@ -317,19 +316,14 @@
         that.itemStage = '编辑项目阶段'
         that.id = id
         that.uploadParam['x:target_id'] = id
-        that.$http.get(api.itemStage, {item_id: 0})
+        that.$http.get(api.itemStageId.format(id), {})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.form = response.data.data
-            if (response.data.data.sales_volume === 0) {
-              that.form.mass_production = 0
-            } else {
-              that.form.mass_production = 1
-            }
-            if (response.data.data.case_image) {
+            if (response.data.data.item_stage_image) {
               var files = []
-              for (var i = 0; i < response.data.data.case_image.length; i++) {
-                var obj = response.data.data.case_image[i]
+              for (var i = 0; i < response.data.data.item_stage_image.length; i++) {
+                var obj = response.data.data.item_stage_image[i]
                 var item = {}
                 item['response'] = {}
                 item['name'] = obj['name']

@@ -150,6 +150,7 @@
                 showOffer = true
               }
               data[i]['item']['show_offer'] = showOffer
+              data[i]['item']['created_at'] = d.item.created_at.date.date_format().format('yyyy-MM-dd')
             } // endfor
             that.itemList = data
             that.pagination = response.data.meta.pagination

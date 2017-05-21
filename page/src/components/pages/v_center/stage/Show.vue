@@ -9,10 +9,10 @@
             <h1>{{ item.title }}</h1>
           </div>
           <div class="summary">
-            <p>{{ item.profile }}</p>
+            <p>{{ item.content }}</p>
           </div>
           <div class="des">
-            <p v-for="d in item.case_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
+            <p v-for="d in item.item_stage_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
           </div>
         </div>
       </el-col>
@@ -69,7 +69,7 @@
     created: function() {
       var id = this.$route.params.id
       const that = this
-      that.$http.get(api.designCaseId.format(id), {})
+      that.$http.get(api.itemStageId.format(id), {})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           that.item = response.data.data
