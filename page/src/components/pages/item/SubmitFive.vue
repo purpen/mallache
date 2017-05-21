@@ -146,11 +146,6 @@
                   name: '',
                   key: '项目功能或卖点',
                   value: row.product_features
-                },
-                {
-                  name: '',
-                  key: '项目竞品',
-                  value: row.competing_product.join(',')
                 }
               ]
             } else if (row.type === 2) {

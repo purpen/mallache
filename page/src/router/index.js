@@ -423,6 +423,36 @@ const routes = [
     },
     component: require('@/components/pages/home/Apply')
   },
+  // 添加阶段
+  {
+    path: '/vcenter/stage/add/:item_id',
+    name: 'vcenterDesignStageAdd',
+    meta: {
+      title: '添加阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Submit')
+  },
+  // 编辑阶段
+  {
+    path: '/vcenter/stage/edit/:id',
+    name: 'vcenterDesignStageEdit',
+    meta: {
+      title: '编辑阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Submit')
+  },
+  // 预览阶段
+  {
+    path: '/vcenter/stage/show/:id',
+    name: 'vcenterDesignStageShow',
+    meta: {
+      title: '预览阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Show')
+  },
 
   // 后台管理
   // 控制台
@@ -455,6 +485,16 @@ const routes = [
     },
     component: require('@/components/admin/item/Match')
   },
+  // 订单列表
+  {
+    path: '/admin/order/list',
+    name: 'adminOrderList',
+    meta: {
+      title: '订单列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/order/List')
+  },
   // 公司列表
   {
     path: '/admin/company/list',
@@ -474,36 +514,6 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/user/List')
-  },
-  // 添加阶段
-  {
-    path: '/vcenter/stage/add/:item_id',
-    name: 'vcenterDesignStageAdd',
-    meta: {
-      title: '添加阶段',
-      requireAuth: true
-    },
-    component: require('@/components/pages/v_center/stage/Submit')
-  },
-  // 编辑阶段
-  {
-    path: '/vcenter/stage/edit/:id',
-    name: 'vcenterDesignStageEdit',
-    meta: {
-      title: '编辑阶段',
-      requireAuth: true
-    },
-    component: require('@/components/pages/v_center/stage/Submit')
-  },
-  // 预览阶段
-  {
-    path: '/vcenter/stage/show/:id',
-    name: 'vcenterDesignStageShow',
-    meta: {
-      title: '预览阶段',
-      requireAuth: true
-    },
-    component: require('@/components/pages/v_center/stage/Show')
   }
 ]
 

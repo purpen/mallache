@@ -100,5 +100,9 @@ export default {
   adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // 通过审核
   adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // 取消审核
 
+  // 订单管理
+  adminPayOrderLists: '/admin/payOrder/lists', // GET 订单列表
+  adminPayOrderTruePay: '/admin/payOrder/truePay', // POST 确认订单支付款（对公转账）
+
   test: '/'  // End
 }
