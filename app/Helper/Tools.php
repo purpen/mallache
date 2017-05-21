@@ -120,7 +120,7 @@ class Tools
     }
 
     /**
-     * 生成支付单号
+     * 生成支付单号  日期 + 8位用户ID + 6位随机数
      *
      * @param $user_id
      * @return string

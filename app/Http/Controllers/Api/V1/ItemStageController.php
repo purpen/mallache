@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Validator;
 class ItemStageController extends BaseController
 {
     /**
-     * @api {get} /itemStage 项目阶段展示
+     * @api {get} /itemStage/item/lists 项目阶段展示
      * @apiVersion 1.0.0
-     * @apiName itemStage index
+     * @apiName itemStage lists
      * @apiGroup itemStage
      *
      * @apiParam {integer} item_id  项目id
@@ -41,11 +41,10 @@ class ItemStageController extends BaseController
                 }
             }
      */
-    public function index(Request $request)
+    public function lists(Request $request)
     {
         $item_id = $request->input('item_id');
         $itemStage = ItemStage::where('item_id' , $item_id)->get();
-
         if(!$itemStage){
             return $this->response->array($this->apiError('not found item_stage' , 404));
         }
@@ -97,7 +96,7 @@ class ItemStageController extends BaseController
         $all['item_id'] = $request->input('item_id');
         $all['title'] = $request->input('title');
         $all['content'] = $request->input('content');
-        $all['summary'] = $request->input('summary');
+        $all['summary'] = $request->input('summary') ?? '';
 
         $item = Item::where('id' , $request->input('item_id'))->first();
         if(!$item){
@@ -143,10 +142,21 @@ class ItemStageController extends BaseController
     }
 
     /**
+     * @api {get} /itemStage/{itemStage_id} 根据项目阶段id查看详情
+     * @apiVersion 1.0.0
+     * @apiName itemStage show
+     * @apiGroup itemStage
+     *
+     * @apiParam {string} token
      */
-    public function show(ItemStage $itemStage)
+    public function show($itemStage_id)
     {
-        //
+        $itemStage_id = intval($itemStage_id);
+        $itemStage = ItemStage::find($itemStage_id);
+        if(!$itemStage){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -190,7 +200,7 @@ class ItemStageController extends BaseController
         $all['item_id'] = $request->input('item_id');
         $all['title'] = $request->input('title');
         $all['content'] = $request->input('content');
-        $all['summary'] = $request->input('summary');
+        $all['summary'] = $request->input('summary') ?? '';
 
         $itemStage = ItemStage::where('id' , $id)->first();
         if(!$itemStage){

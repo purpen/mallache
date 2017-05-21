@@ -173,6 +173,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
         //项目阶段
         $api->resource('/itemStage', 'ItemStageController');
+        $api->get('/itemStage/item/lists', 'ItemStageController@lists');
 
 
         /**
