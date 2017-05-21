@@ -4,8 +4,13 @@
     <div class="publish-box">
       <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
       <p class="success-str">发布成功</p>
-      <p class="success-des">项目已发布成功，24小时内我们会为智能匹配合适的设计公司。</p>
-      <p>
+
+      <p class="success-des red" v-if="verifyStatus === 0">项目已发布, 请先完成公司认证，系统才会为您匹配合适的设计公司</p>
+      <p class="success-des" v-else>项目已发布成功，24小时内我们会为智能匹配合适的设计公司。</p>
+      <p v-if="verifyStatus === 0">
+        <router-link :to="{name: 'vcenterItemList'}" class="item">公司认证</router-link>
+      </p>
+      <p v-else>
         <router-link :to="{name: 'home'}" class="item">返回首页</router-link>
         <router-link :to="{name: 'vcenterItemList'}" class="item">项目管理</router-link>
       </p>
@@ -21,6 +26,7 @@
     },
     data () {
       return {
+        verifyStatus: 0,
         msg: ''
       }
     },
@@ -29,6 +35,11 @@
     computed: {
     },
     created: function() {
+      var verifyStatus = this.$route.query.verify_status
+      if (!verifyStatus) {
+        verifyStatus = 0
+      }
+      this.verifyStatus = parseInt(verifyStatus)
     },
     watch: {
     }
@@ -60,6 +71,9 @@
     color: #666;
     font-size: 1rem;
     margin-bottom: 25px;
+  }
+  .red {
+    color: red;
   }
 
 </style>

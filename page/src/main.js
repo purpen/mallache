@@ -7,6 +7,7 @@ import store from './store/index'
 import axios from './http'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+
 // 样式表导入
 import './assets/css/reset.css'
 // import './assets/css/bulma.css'

@@ -7,9 +7,9 @@
       </div>
       <div class="order-item">
         <p class="banner">订单详情</p>
-        <p>订单内容:&nbsp;&nbsp; 支付项目资金</p>
-        <p>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额:&nbsp;&nbsp; ¥ 5000.00</p>
-        <p>订单编号:&nbsp;&nbsp; 20170606123456</p>
+        <p>订单内容:&nbsp;&nbsp; {{ item.item_name }}</p>
+        <p>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额:&nbsp;&nbsp; ¥ {{ item.amount }}</p>
+        <p>订单编号:&nbsp;&nbsp; {{ item.uid }}</p>
       </div>
       <div class="pay-item">
         <p class="banner">选择支付方式</p>
@@ -48,7 +48,7 @@
 
         <div class="pay-box">
           <p><el-button class="is-custom" @click="pay" type="primary">立即支付</el-button></p>
-          <p class="total-price">¥ 5000</p>
+          <p class="total-price">¥ {{ item.amount }}</p>
           <p class="total-txt">总计: </p>
         </div>
         <div class="clear"></div>

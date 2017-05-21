@@ -18,10 +18,10 @@
         <el-menu class="el-menu-info" mode="horizontal" router>
           <el-submenu index="2">
             <template slot="title">
-              <img class="avatar" src="../../assets/images/avatar_default.jpg" />
+              <img class="avatar" src="../../assets/images/avatar_100.png" />
               <span class="b-nickname">{{ eventUser.account }}</span>
             </template>
-            <el-menu-item index="/vcenter/item/list?type=1">个人中心</el-menu-item>
+            <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
             <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
             <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
           </el-submenu>
@@ -96,16 +96,16 @@ export default {
     margin-bottom: 30px;
   }
   .el-menu--horizontal>.el-menu-item.logo{
-    width: 54px;
-    height: 50px;
+    width: 110px;
+    height: 60px;
     transition:none;
     padding: 0 10px;
     margin-right: 30px;
 
     background-image: url(../../assets/images/logo.png);
     background-repeat: no-repeat;
-    background-position: 0 4px;
-    background-size: 54px 42px;
+    background-position: 0 15px;
+    background-size: 110px 30px;
     text-indent: -9999px;
   }
   .el-menu--horizontal>.el-menu-item.logo:hover,.el-menu--horizontal>.el-menu-item.logo.is-active{
@@ -114,16 +114,16 @@ export default {
     transition:none;
     background-image: url(../../assets/images/logo.png);
     background-repeat: no-repeat;
-    background-position: 0 4px;
-    background-size: 54px 42px;
+    background-position: 0 15px;
+    background-size: 110px 30px;
     text-indent: -9999px;
   }
   .el-menu-header{
     background: #fff;
   }
   .el-menu-header .el-menu-item,.el-menu-header .el-submenu{
-    height: 52px;
-    line-height: 52px;
+    height: 60px;
+    line-height: 60px;
     border-bottom: 3px solid transparent;
     color: #7a7a7a;
     font-size: 1.5rem;

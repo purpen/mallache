@@ -10,7 +10,7 @@
           <div class="content-box">
             <div class="main">
               <div class="status">
-                <p class="main-status">订单状态: <span>等待支付</span></p>
+                <p class="main-status">订单状态: <span>{{ item.status_value }}</span></p>
                 <p class="main-des">请于 {{ item.expire_at }} 前完成支付，逾期会关闭交易</p>
               </div>
               <div class="operation">
@@ -22,7 +22,7 @@
             <div class="clear detail">
               <p class="detail-banner">订单详情</p>
               <p>项目名称: 一个关于APP的移动端设计</p>
-              <p>支付方式: 对公转账</p>
+              <p>支付方式: {{ item.pay_type_value }}</p>
               <p>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额: ¥ {{ item.amount }}</p>
               <p>订单编号: {{ item.uid }}</p>
               <p>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注: {{ item.summary }}</p>
@@ -55,7 +55,6 @@
 import api from '@/api/api'
 import vMenu from '@/components/pages/v_center/Menu'
 import vMenuSub from '@/components/pages/v_center/order/MenuSub'
-import '@/assets/js/date_format'
 
 export default {
   name: 'vcenter_order_show',
@@ -88,7 +87,7 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
           var createdAt = self.item.created_at
-          var createdFormat = createdAt.date.date_format()
+          var createdFormat = createdAt.date_format()
           self.item.created_at = createdFormat.format('yyyy-MM-dd hh:mm')
           var expire = new Date((createdFormat / 1000 + 86400 * 3) * 1000)
           self.item.expire_at = expire.format('yyyy-MM-dd hh:mm')

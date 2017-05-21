@@ -6,6 +6,7 @@
       <el-col :span="20">
         <div class="right-content">
           <div class="content-box">
+            <h2>{{ itemName }}</h2>
             <p>&nbsp;</p>
             <p>甲方: <input class="no-border" type="text" disabled v-model="form.demand_company_name" style="width:250px;" /></p>
             <p>地址: <input class="no-border" type="text" disabled v-model="form.demand_company_address" style="width:500px;" /></p>
@@ -73,8 +74,8 @@
             <div class="sept"></div>
 
             <div class="form-btn">
-                <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="agreeBtn" v-show="form.status === 0">我同意</el-button>
-                <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="downBtn" v-show="form.status === 1"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</el-button>
+                <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="agreeBtn" v-show="form.status === 0">我同意</el-button>
+                <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="downBtn" v-show="form.status === 1"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</el-button>
             </div>
             <div class="clear"></div>
 
@@ -120,6 +121,7 @@
       return {
         itemId: '',
         item: {},
+        itemName: '',
         form: {},
         sureDialog: false,
         sureDialogMessage: '确认执行此操作？',
@@ -138,7 +140,7 @@
       downBtn() {
         var dd = {
           content: [
-            { text: '太火鸟SaaS合同', style: 'header' },
+            { text: this.itemName, style: 'header' },
             { text: '甲方: ' + this.form.demand_company_name, style: 'p' },
             { text: '地址: ' + this.form.demand_company_address, style: 'p' },
             { text: '电话: ' + this.form.demand_company_phone, style: 'p' },
@@ -333,7 +335,7 @@
           }
         }
 
-        window.pdfMake.createPdf(dd).download()
+        window.pdfMake.createPdf(dd).download(this.itemName)
       },
       // 提示框确认操作
       sureDialogSubmit() {
@@ -375,6 +377,7 @@
               that.itemId = item.id
               // 重新渲染
               that.$nextTick(function() {
+                that.itemName = item.item_name + '合作协议'
                 that.form = item
               })
             }
@@ -403,6 +406,11 @@
     line-height: 1.5;
     font-size: 1rem;
     color: #666;
+  }
+  .content-box h2{
+    text-align: center;
+    margin: 20px 0 10px 0;
+    font-size: 2.5rem;
   }
   .content-box p.title {
     margin-top: 20px;

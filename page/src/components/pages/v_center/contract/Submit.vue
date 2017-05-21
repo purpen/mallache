@@ -7,6 +7,7 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
+            <h2>{{ itemName }}</h2>
             <el-form :model="form" :rules="ruleForm" ref="ruleForm">
             <p>&nbsp;</p>
             <p>甲方: <input class="no-border" type="text" v-model="form.demand_company_name" style="width:250px;" /></p>
@@ -75,7 +76,7 @@
             <div class="sept"></div>
 
             <div class="form-btn">
-                <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存合同</el-button>
+                <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存合同</el-button>
             </div>
             <div class="clear"></div>
             </el-form>
@@ -106,6 +107,8 @@
     data () {
       return {
         itemId: '',
+        item: '',
+        itemName: '',
         companyId: '',
         isLoadingBtn: false,
         contractId: '',
@@ -156,6 +159,7 @@
           if (valid) {
             var row = that.form
             row.item_demand_id = that.itemId
+            row.title = that.itemName
 
             var apiUrl = null
             var method = null
@@ -202,7 +206,8 @@
         that.$http.get(api.designItemId.format(id), {})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
-            var item = response.data.data
+            var item = that.item = response.data.data
+            that.itemName = that.item.item.name + '合作协议'
             that.companyId = item.quotation.design_company_id
             if (item.contract) {
               that.contractId = item.contract.id
@@ -257,6 +262,11 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .content-box {
+  }
+  .content-box h2{
+    text-align: center;
+    margin: 20px 0 10px 0;
+    font-size: 2.5rem;
   }
   .content-box p {
     line-height: 1.5;

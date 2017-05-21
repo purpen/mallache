@@ -33,7 +33,7 @@
               <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
           </div>
           <div class="form-btn">
-              <el-button type="success" class="is-custom" @click="publish">发布</el-button>
+              <el-button type="primary" size="large" class="is-custom" @click="publish">发布</el-button>
           </div>
           <div class="clear"></div>
         
@@ -87,7 +87,7 @@
         that.$http({method: 'POST', url: api.release, data: {id: that.itemId}})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
-            that.$router.push({name: 'itemPublish'})
+            that.$router.push({name: 'itemPublish', query: {verify_status: response.data.data.verify_status}})
             return false
           } else {
             that.isLoadingBtn = false
@@ -238,6 +238,11 @@
               },
               {
                 name: '',
+                key: '职位',
+                value: row.position
+              },
+              {
+                name: '',
                 key: '电话',
                 value: row.phone
               },
@@ -252,14 +257,12 @@
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
-            console.log(response.data.meta.message)
-            return false
+            that.$router.push({name: 'home'})
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
-          return false
+          that.$router.push({name: 'home'})
         })
       }
     },

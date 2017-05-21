@@ -51,6 +51,8 @@ export default {
   designCooperationLists: '/design/cooperationLists', // 已确定合作的项目列表
   designItemId: '/design/item/{0}', // get 获取项目详细信息
   sendContract: '/contract/ok', // POST 发送合同
+  designItemStartId: '/design/itemStart/{0}', // POST 确认项目开始设计
+  designItemDoneId: '/design/itemDone/{0}', // POST 确认项目完成
 
   // 合同
   contract: '/contract', // post 保存合同
@@ -69,6 +71,10 @@ export default {
   // 案例
   designCase: '/designCase',  // 公司案例
   designCaseId: '/designCase/{0}',  // 公司案例
+
+  // 公司项目阶段
+  itemStage: '/itemStage',  // POST 保存 GET 展示 公司项目阶段
+  itemStageId: '/itemStage/{0}',  // PUT 更改项目阶段
 
   // 公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情

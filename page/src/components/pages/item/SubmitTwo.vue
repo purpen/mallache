@@ -69,7 +69,7 @@
 
           <div class="clear"></div>
           <div class="submit-btn">
-            <el-button type="success" class="is-custom" size="large" :loading="isLoadingBtn" @click="submit">保存并继续</el-button>
+            <el-button type="primary" class="is-custom" size="large" :loading="isLoadingBtn" @click="submit">保存并继续</el-button>
           </div>
 
         
@@ -279,9 +279,7 @@
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
           that.$router.push({name: 'home'})
-          return false
         })
       } else {
         that.$message.error('缺少请求参数！')

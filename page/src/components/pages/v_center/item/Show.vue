@@ -7,36 +7,47 @@
       <el-col :span="19">
         <div class="content">
           <div class="banner">
+            <img class="" src="../../../../assets/images/icon/item_status.png" width="80" />
             <h1>{{ item.name }}</h1>
             <p>{{ item.status_value }}</p>
           </div>
 
-          <div class="base_info">
-            <el-table
-              :data="tableData"
-              border
-              :show-header="false"
-              style="width: 100%">
-              <el-table-column
-                prop="name"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="title">
-              </el-table-column>
-            </el-table>
+          <div class="select-item-box">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="项目详情" name="1">
+
+                <div class="base_info">
+                  <el-table
+                    :data="tableData"
+                    border
+                    :show-header="false"
+                    style="width: 100%">
+                    <el-table-column
+                      prop="name"
+                      width="180">
+                    </el-table-column>
+                    <el-table-column
+                      prop="title">
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+              </el-collapse-item>
+            </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="item.status === 3">
+
+
+          <div class="select-item-box" v-if="statusLabel.selectCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="选择系统推荐的设计公司" name="1">
+              <el-collapse-item title="选择系统推荐的设计公司" name="3">
 
                 <div class="select-company-item" v-for="d in stickCompany">
                   <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
                     <div class="img">
                       <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50" />                     
-                      <img class="avatar" v-else src="../../../../assets/images/avatar_default.jpg" width="50" />
+                      <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
                     </div>
                     <div class="company-title">
                       <h3>{{ d.company_name }}</h3>
@@ -59,15 +70,15 @@
             </el-collapse>         
           </div>
 
-          <div class="select-item-box" v-if="item.status === 4">
+          <div class="select-item-box" v-if="statusLabel.trueCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="选择参与报价的设计公司" name="1">
+              <el-collapse-item title="选择参与报价的设计公司" name="4">
                 <div v-if="hasOfferCompany">
                   <div class="offer-company-item" v-for="(d, index) in offerCompany" v-if="d.design_company_status === 2">
                     <el-row :gutter="24">
                       <el-col :span="3" class="item-logo">
                         <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="50" />
-                        <img class="avatar" v-else src="../../../../assets/images/avatar_default.jpg" width="50" />
+                        <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
                         <p>项目报价: </p>
                         <p>报价说明: </p>
                       </el-col>
@@ -83,7 +94,7 @@
                     <div class="line"></div>
                     <div class="btn" v-if="d.item_status === 0">
                       <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
-                      <el-button @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button> 
+                      <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button> 
                     </div>
                     <div class="btn" v-if="d.item_status === -1">
                       <p>已拒绝该公司报价</p>
@@ -101,14 +112,14 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="item.status === 5">
+          <div class="select-item-box" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="合作的设计公司" name="1">
+              <el-collapse-item title="合作的设计公司" name="5">
                 <div class="offer-company-item" v-if="company">
                   <el-row :gutter="24">
                     <el-col :span="3" class="item-logo">
                       <img class="avatar" v-if="company.logo_url" :src="company.logo_url" width="50" />
-                      <img class="avatar" v-else src="../../../../assets/images/avatar_default.jpg" width="50" />
+                      <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
                       <p>项目报价: </p>
                       <p>报价说明: </p>
                     </el-col>
@@ -134,28 +145,70 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="item.status > 5">
+          <div class="select-item-box" v-if="statusLabel.contract">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="合同管理" name="1">
+              <el-collapse-item title="合同管理" name="6">
                 <div class="contract-item">
-                  <router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank">
-                    <el-button class="contract-btn is-custom" type="primary"><i class="fa fa-eye" aria-hidden="true"></i> 查看在线合同</el-button>
-                  </router-link>
+                  <div class="contract-left">
+                    <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
+                    <div class="contract-content">
+                      <p>{{ contract.title }}</p>
+                      <p class="contract-des">{{ contract.created_at }}</p>
+                    </div>
+                  </div>
+                  <div class="contract-right">
+                    <p v-show="contract.status === 1"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> 下载</a></p>
+                    <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
+                  </div>
+
                 </div>
               </el-collapse-item>
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="item.status > 6">
+          <div class="select-item-box" v-if="statusLabel.amount">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="托管项目资金" name="1">
-                <div class="capital-item">
+              <el-collapse-item title="托管项目资金" name="9">
+                <div class="capital-item" v-if="statusLabel.isPay">
                   <p>项目资金</p>
-                  <p class="capital-money">¥5000.00</p>
+                  <p class="capital-money">¥ {{ item.price }}</p>
+                  <p class="pay-btn">
+                      <span>项目资金已拖管 </span>
+                  </p>
+                </div>
+                <div class="capital-item" v-else>
+                  <p>项目资金</p>
+                  <p class="capital-money">¥ {{ item.price }}</p>
                   <p class="pay-btn">
                       <el-button class="capital-btn is-custom" :loading="secondPayLoadingBtn" @click="secondPay" type="primary"><i class="fa fa-money" aria-hidden="true"></i> 立即支付</el-button>
                   </p>
                   <p class="capital-des">＊客户需要将项目资金预先托管至太火鸟SaaS，完成后项目将自动启动并进入项目管理阶段。</p>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
+          <div class="select-item-box" v-if="statusLabel.manage">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="项目管理" name="11">
+                <div class="manage-item" v-if="item.status === 9">
+                  <p class="wait-begin">等待设计公司开始项目</p>
+                </div>
+                <div class="manage-item add-stage" v-else-if="item.status === 11">
+                  <p class="add-stage-btn"><router-link :to="{name: 'vcenterDesignStageAdd', params: {item_id: item.id}}"><i class="el-icon-plus"></i> 添加阶段</router-link></p>
+                  <div v-for="(d, index) in stages">
+                    <div class="contract-left">
+                      <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
+                      <div class="contract-content">
+                        <p>{{ d.title }}</p>
+                        <p class="contract-des">{{ d.created_at }}</p>
+                      </div>
+                    </div>
+                    <div class="contract-right">
+                      <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
+                    </div>
+                    <div class="clear"></div>
+                  </div>
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -199,12 +252,26 @@ export default {
       comfirmDialog: false,
       comfirmMessage: '确认执行此操作?',
       stickCompanyIds: [],
+      stages: [],
       secondPayLoadingBtn: false,
       item: {},
       info: {},
       contract: {},
       isLoadingBtn: false,
-      selectCompanyCollapse: ['1'],
+      selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '15'],
+      statusLabel: {
+        detail: true,
+        selectCompany: false,
+        trueCompany: false,
+        cooperateCompany: false,
+        contract: false,
+        amount: false,
+        isPay: false,
+        manage: false,
+        stage: false,
+
+        end: false
+      },
       tableData: [],
       stickCompany: [],
       offerCompany: [],
@@ -225,11 +292,14 @@ export default {
       self.isLoadingBtn = true
       self.$http.post(api.demandPush, {item_id: self.item.id, design_company_id: companyIds})
       .then (function(response) {
+        self.isLoadingBtn = false
         if (response.data.meta.status_code === 200) {
           self.$message.success('操作成功，等待设计公司接单!')
           self.item.status = 4
+          self.item.status_value = '等待设计公司接单'
+          self.statusLabel.selectCompany = false
+          self.statusLabel.trueCompany = true
         } else {
-          self.isLoadingBtn = false
           self.$message.error(response.data.meta.message)
         }
       })
@@ -333,8 +403,16 @@ export default {
     var id = this.$route.params.id
     if (!id) {
       this.$message.error('缺少请求参数!')
+      this.$router.push({name: 'home'})
       return
     }
+    var uType = this.$store.state.event.user.type
+    // 如果是设计公司，跳到设计公司项目详情
+    if (uType === 2) {
+      this.$router.replace({name: 'vcenterCItemShow'})
+      return
+    }
+
     const self = this
     self.$http.get(api.demandId.format(id), {})
     .then (function(response) {
@@ -343,6 +421,9 @@ export default {
         self.item = response.data.data.item
         // self.info = response.data.data.info
         self.contract = response.data.data.contract
+        if (self.contract) {
+          self.contract.created_at = self.contract.created_at.date_format().format('yy-MM-dd')
+        }
         self.quotation = response.data.data.quotation
         switch (self.item.status) {
           case 1:
@@ -359,6 +440,7 @@ export default {
             self.progressButt = 1
             self.progressContract = -1
             self.progressItem = -1
+            self.statusLabel.selectCompany = true
             self.$http.get(api.recommendListId.format(self.item.id), {})
             .then (function(stickCompanyResponse) {
               if (stickCompanyResponse.data.meta.status_code === 200) {
@@ -381,10 +463,12 @@ export default {
             self.progressButt = 2
             self.progressContract = -1
             self.progressItem = -1
+            self.statusLabel.trueCompany = true
             self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
             .then (function(response) {
               if (response.data.meta.status_code === 200) {
                 var offerCompany = response.data.data
+                console.log(offerCompany)
                 for (var i = 0; i < offerCompany.length; i++) {
                   var item = offerCompany[i]
                   // 是否存在已提交报价的公司
@@ -398,7 +482,6 @@ export default {
                   }
                 } // endfor
                 self.offerCompany = offerCompany
-                console.log(self.offerCompany)
               }
             })
             .catch (function(error) {
@@ -406,31 +489,120 @@ export default {
             })
             break
           case 5:
-            self.progressButt = 3
+            self.progressButt = 2
             self.progressContract = 0
             self.progressItem = -1
-            self.$http.get(api.designCompanyId.format(self.item.design_company_id), {})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                self.company = response.data.data
-                var logoUrl = null
-                if (self.company.logo_image) {
-                  logoUrl = self.company.logo_image.logo
-                }
-                self.company.logo_url = logoUrl
-                console.log(self.company)
-              }
-            })
-            .catch (function(error) {
-              self.$message.error(error.message)
-            })
+            self.statusLabel.cooperateCompany = true
             break
           case 6:
+            self.progressButt = 2
+            self.progressContract = 1
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            break
+          case 7:
+            self.progressButt = 2
+            self.progressContract = 2
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            break
+          case 8:
+            self.progressButt = 2
+            self.progressContract = 2
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            break
+          case 9:
+            self.progressButt = 2
+            self.progressContract = 3
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            break
+          case 11:
+            self.progressButt = 3
+            self.progressContract = 3
+            self.progressItem = 0
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            self.statusLabel.stage = true
+            break
+          case 15:
             self.progressButt = 3
             self.progressContract = 1
             self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            self.statusLabel.stage = true
+            break
+          case 18:
+            self.progressButt = 3
+            self.progressContract = 1
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            self.statusLabel.stage = true
+            break
+          case 20:
+            self.progressButt = 3
+            self.progressContract = 1
+            self.progressItem = -1
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            self.statusLabel.stage = true
             break
           default:
+        }
+        if (self.statusLabel.cooperateCompany) {
+          self.$http.get(api.designCompanyId.format(self.item.design_company_id), {})
+          .then (function(response) {
+            if (response.data.meta.status_code === 200) {
+              self.company = response.data.data
+              var logoUrl = null
+              if (self.company.logo_image) {
+                logoUrl = self.company.logo_image.logo
+              }
+              self.company.logo_url = logoUrl
+              console.log(self.company)
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
+        }
+
+        if (self.statusLabel.stage) {
+          self.$http.get(api.itemStage, {})
+          .then (function(response) {
+            if (response.data.meta.status_code === 200) {
+              self.stages = response.data.data
+              console.log('aaa')
+              console.log(self.company)
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
         }
 
         var tab = []
@@ -495,19 +667,22 @@ export default {
   .content {
   }
   .banner {
-    height: 120px;
+    height: 200px;
     text-align: center;
-    background-color: #F8F8F8;
     margin-bottom: 20px;
+    border: 1px solid #ccc;
+  }
+  .banner img {
+    margin-top: 20px;
   }
   .banner h1 {
-    padding-top: 30px;
-    font-size: 2rem;
+    padding-top: 10px;
+    font-size: 1.5rem;
     color: #222;
   }
   .banner p {
     font-size: 1rem;
-    color: #FF5A5F;
+    color: #666;
     margin: 10px;
   }
   .base_info {
@@ -598,7 +773,7 @@ export default {
   }
   .item-title .p-title {
     color: #333;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
     line-height: 50px;
     margin-bottom: 8px;
@@ -619,16 +794,39 @@ export default {
   }
 
   .contract-item {
-    height: 100px;
-    margin: 20px 0 10px 0;
-    position: relative;
+    height: 50px;
+    margin: 15px 0 5px 0;
+    padding: 10px 0 0 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
   }
-  .contract-item .contract-btn {
-    position: absolute;
-    padding: 10px 30px 10px 30px;
-    top: 20%;
-    left: 40%;
+  .contract-item .contract-left {
+    float: left;
   }
+  .contract-left img {
+    float: left;
+  }
+  .contract-content {
+    float: left;
+    margin: 0 0 0 10px;
+  }
+  .contract-item .contract-right {
+    float: right;
+  }
+  .contract-item .contract-right p {
+    float: right;
+    margin: 10px;
+  }
+
+  .contract-content p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  .contract-des {
+    font-size: 1rem;
+  }
+
   .no-offer-company {
     text-align: center;
   }
@@ -654,10 +852,20 @@ export default {
     font-size: 1rem;
   }
   .capital-item .pay-btn {
+    font-size: 1.8rem;
     margin: 10px 0 20px 0;
   }
   .capital-item .capital-btn {
     padding: 10px 30px 10px 30px;
+  }
+
+  .manage-item {
+    min-height: 80px;
+    text-align: center;
+  }
+  .manage-item .wait-begin {
+    margin: 30px 0 0 0;
+    font-size: 1.8rem;
   }
 
 

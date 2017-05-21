@@ -118,9 +118,9 @@ button.is-custom.is-inverted {
   color: #FF5A5F;
 }
 
-button.is-custom.is-disabled {
+button.el-button.is-custom.is-disabled {
   background-color: #eef1f6;
-  color: #d1dbe5;
+  color: #666;
 }
 
 button.is-custom.is-inverted:hover {
@@ -191,15 +191,15 @@ button.is-custom.is-outlined.is-loading:after {
  * header右侧
  */
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title{
-  height: 52px;
-  line-height: 52px;
+  height: 60px;
+  line-height: 60px;
   border: none;
   background: #fff;
   color: #7a7a7a;
   padding: 0 14px;
 }
 .el-menu-info.el-menu--horizontal .el-submenu>.el-menu{
-  top: 52px;
+  top: 60px;
   border: 1px solid #ccc;
   width: 150px;
   min-width: 150px;

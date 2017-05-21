@@ -66,7 +66,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="primary" size="large" :loading="isLoadingBtn" class="is-custom" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -354,14 +354,12 @@
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
-            console.log(response.data.meta.message)
-            return false
+            that.$router.push({name: 'home'})
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
-          return false
+          that.$router.push({name: 'home'})
         })
       }
 

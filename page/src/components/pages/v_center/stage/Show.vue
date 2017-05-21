@@ -21,7 +21,7 @@
         <div class="design-case-slide">
           <div class="info">
             <router-link :to="{name: 'vcenterDesignCaseList'}" target="_blank">
-              <img src="../../../assets/images/avatar_100.png" width="100" />
+              <img src="" width="100" />
             </router-link>
             <h3>太火鸟</h3>
             <p><span>北京</span>&nbsp;&nbsp;&nbsp;<span>朝阳</span></p>

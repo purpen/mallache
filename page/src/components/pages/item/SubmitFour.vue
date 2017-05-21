@@ -74,7 +74,7 @@
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="primary" size="large" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -297,13 +297,13 @@
             that.district = row.company_area === 0 ? '' : row.company_area
           } else {
             that.$message.error(response.data.meta.message)
-            console.log(response.data.meta.message)
+            that.$router.push({name: 'home'})
             return false
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
+          that.$router.push({name: 'home'})
           return false
         })
       }

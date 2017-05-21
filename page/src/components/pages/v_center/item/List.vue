@@ -24,9 +24,9 @@
                   <div class="content">
                     <div class="pre">
                       <p class="c-title-pro">{{ d.item.name }}</p>
-                      <p class="progress-line"><el-progress :text-inside="true" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
-                      <p class="prefect">项目信息完善进度</p>
-                      <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="small" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
+                      <p class="progress-line"><el-progress :text-inside="true" :show-text="false" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
+                      <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
+                      <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
                     </div>
                   </div>
                 </div>
@@ -241,7 +241,7 @@
 <style scoped>
 
   .content-item-box {
-    min-height: 400px;
+    min-height: 500px;
   }
   .pub {
     background: #FAFAFA;
@@ -251,7 +251,7 @@
   }
   .pub .pub-btn {
     position: absolute;
-    padding: 10px 30px 10px 30px;
+    padding: 10px 40px 10px 40px;
     top: 40%;
     left: 40%;
   }
@@ -267,7 +267,7 @@
   }
   .content {
     border-bottom: 1px solid #ccc;
-    height: 130px;
+    height: 150px;
   }
   .item p {
     padding: 10px;
@@ -298,7 +298,6 @@
     float: right;
   }
   .content .pre {
-    height: 500px;
   }
   .opt .l-item {
     float: left;
@@ -325,7 +324,7 @@
   .prefect {
     font-size: 1rem;
     color: #666;
-    margin-top: -12px;
+    margin-top: 0px;
     margin-bottom: -10px;
   }
 

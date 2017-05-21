@@ -40,8 +40,13 @@
               width="140">
             </el-table-column>
             <el-table-column
-              prop="item.user_id"
+              width="140"
               label="创建人">
+                <template scope="scope">
+                  <p>
+                    {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
+                  </p>
+                </template>
             </el-table-column>
             <el-table-column
               prop="item.type_label"
@@ -62,10 +67,12 @@
             </el-table-column>
             <el-table-column
               prop="item.status_label"
+              width="120"
               label="状态">
             </el-table-column>
             <el-table-column
               prop="item.created_at"
+              width="80"
               label="创建时间">
             </el-table-column>
             <el-table-column
@@ -73,11 +80,14 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
+                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
                   </p>
                   <p>
+                  <!--
                     <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.item.id)">编辑</a>
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">删除</a>                 
+                    -->
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">查看</a> 
                   </p>
                 </template>
             </el-table-column>
@@ -104,6 +114,10 @@
         <el-form-item label="项目名称" label-width="200px">
           <el-input v-model="matchCompanyForm.itemName" auto-complete="off" disabled></el-input>
         </el-form-item>
+        <div class="match-company-box">
+        <p>已匹配的公司：</p>
+        <p><el-tag class="match-company-tag" type="success" v-for="(d, index) in currentMatchCompany" :key="index">{{ d.company_name }}</el-tag></p>
+        </div>
         <el-form-item label="添加公司" label-width="80px">
           <el-input v-model="matchCompanyForm.companyIds" placeholder="多个公司ID用','分隔" auto-complete="off"></el-input>
         </el-form-item>
@@ -131,6 +145,7 @@ export default {
       matchCompanyDialog: false,
       itemList: [],
       tableData: [],
+      currentMatchCompany: [],
       page: 1,
       total: 1000,
       matchCompanyForm: {
@@ -151,9 +166,10 @@ export default {
     },
     handleMatch(index, item) {
       if (item.item.status !== 2) {
-        this.$message.error('项目状态不允许推荐公司')
-        return
+        // this.$message.error('项目状态不允许推荐公司')
+        // return
       }
+      this.currentMatchCompany = item.designCompany
       this.matchCompanyForm.itemId = item.item.id
       this.matchCompanyForm.itemName = item.info.name
       this.matchCompanyDialog = true
@@ -227,6 +243,7 @@ export default {
           if (item.info) {
             item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
           }
+          item['item']['created_at'] = item.item.created_at.date_format().format('yy-MM-dd')
 
           self.tableData.push(item)
         } // endfor
@@ -257,5 +274,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .match-company-box {
+    margin: 10px;
+  }
+  .match-company-box p {
+    line-height: 2;
+  }
+  .match-company-tag {
+    margin: 5px;
+  }
 
 </style>

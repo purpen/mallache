@@ -11,19 +11,14 @@
 
             <div class="item" v-for="(d, index) in designItems">
               <div class="banner">
-                  <p class="fl">
-                    <span>{{ d.item.created_at }}</span>
-                    <span>{{ d.item.company_name }}</span>
-                    <span>&nbsp;&nbsp;</span>
+                    <p>{{ d.item.created_at }}</p>
+                    <p>{{ d.item.company_name }}</p>
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">电话: {{ d.item.phone }}</p>
                       <p class="contact">邮箱: {{ d.item.email }}</p>
-                        <el-tag slot="reference" class="name-wrapper">联系客户</el-tag>
+                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系客户</p>
                     </el-popover>
-
-                  </p>
-                  <p class="fr">{{ d.item.design_status_value }}</p>
               </div>
               <div class="content clear">
                 <div class="l-item">
@@ -33,7 +28,7 @@
                   <p>项目周期: {{ d.item.cycle_value }}</p>
                 </div>
                 <div class="r-item">
-                  <!--<p></p>-->
+                  <p>{{ d.item.design_status_value }}</p>
                 </div>
               </div>
               <div class="opt">
@@ -54,6 +49,9 @@
                   </p>
                   <p class="btn" v-show="d.item.status === 6">
                     <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">修改合同</a>
+                  </p>
+                  <p class="btn" v-show="d.item.status === 9">
+                    <a href="javascript:void(0);" @click="sureBeginBtn" :index="index" :item_id="d.item.id">确认开始设计</a>
                   </p>
 
                 </div>
@@ -144,6 +142,26 @@
             self.$message.error(error.message)
           })
         }
+      },
+      // 确认开始项目
+      sureBeginBtn(event) {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        var index = parseInt(event.currentTarget.getAttribute('index'))
+
+        var self = this
+        self.$http({method: 'post', url: api.designItemStartId.format(itemId), data: {}})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.designItems[index].item.status = 11
+            self.designItems[index].item.design_status_value = '项目进行中'
+            self.$message.success('提交成功！')
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          self.$message.error(error.message)
+        })
       }
     },
     computed: {
@@ -199,9 +217,17 @@
   }
   .banner {
     height: 40px;
-    line-height: 20px;
     border-bottom: 1px solid #ccc;
     background: #FAFAFA;
+  }
+  .banner p {
+    float: left;
+    margin-right: 30px;
+    color: #666;
+    line-height: 25px;
+  }
+  .banner .contact-user {
+    color: #222;
   }
   .content {
     border-bottom: 1px solid #ccc;
@@ -229,6 +255,9 @@
   }
   .content .r-item {
     float: right;
+  }
+  .content .r-item p{
+    color: #666;
   }
   .opt .l-item {
     float: left;

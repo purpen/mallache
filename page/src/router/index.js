@@ -474,6 +474,36 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/user/List')
+  },
+  // 添加阶段
+  {
+    path: '/vcenter/stage/add/:item_id',
+    name: 'vcenterDesignStageAdd',
+    meta: {
+      title: '添加阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Submit')
+  },
+  // 编辑阶段
+  {
+    path: '/vcenter/stage/edit/:id',
+    name: 'vcenterDesignStageEdit',
+    meta: {
+      title: '编辑阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Submit')
+  },
+  // 预览阶段
+  {
+    path: '/vcenter/stage/show/:id',
+    name: 'vcenterDesignStageShow',
+    meta: {
+      title: '预览阶段',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/stage/Show')
   }
 ]
 
@@ -485,9 +515,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title + '-太火鸟 SaaS'
+    document.title = to.meta.title + '-毕方鸟 SaaS'
   } else {
-    document.title = '太火鸟 SaaS'
+    document.title = '毕方鸟 SaaS'
   }
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.event.token) {

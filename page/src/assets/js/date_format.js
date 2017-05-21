@@ -31,5 +31,4 @@ String.prototype.date_format = function()
    return new Date(this);
 }
 
-
 /* eslint-enable */

@@ -13,7 +13,7 @@
             </div>
 
             <div class="taking-info">
-              <p>* 我们将根据设计公司的业务优势以及接单价格区间，来精准匹配推送项目。</p>
+              <p class="des">* 我们将根据设计公司的业务优势以及接单价格区间，来精准匹配推送项目。</p>
               <p>设置设计类别的接单价格区间</p>
             </div>
 
@@ -29,13 +29,14 @@
                 <div class="item-list">
                   <div class="item-name" v-for="s in d.designType">
                     <div class="item-title">
-                      <span>{{ s.name }}</span>
+                      <span class="sub-type">{{ s.name }}</span>
                     </div>
                     <v-design-item :pid="d.id" :sid="s.id" :item="items[s.key]" :isLoaded="isLoaded" @submitItem="submitItem" @delItem="delItem"></v-design-item>
                   </div>
 
 
                 </div>
+                <div class="line"></div>
               </div>
 
             </div>
@@ -336,14 +337,14 @@
     margin: 0 0 20px 0;
   }
   .taking-info p {
-    margin: 0 0 10px 0;
+    line-height: 2.5;
   }
   .rz-title {
     float: left;
-    padding: 0 0 10px 0;
+    padding: 0 0 20px 0;
   }
   .rz-title span {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
   }
   .rz-stat {
@@ -361,6 +362,17 @@
   }
   .item-title {
     margin: 0 0 10px 0;
+  }
+  .item-title span {
+    font-size: 1.3rem;
+  }
+  .taking-info .des {
+    color: #666;
+    font-size: 1.2rem;
+  }
+  .line {
+    margin-top: 20px;
+    border-bottom: 1px solid #ccc;
   }
 
 </style>
