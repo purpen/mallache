@@ -134,6 +134,7 @@ class ItemStageController extends BaseController
         $all['title'] = $request->input('title');
         $all['content'] = $request->input('content');
         $all['summary'] = $request->input('summary') ?? '';
+        $all['status'] = $request->input('summary') ?? 0;
 
         $item = Item::where('id', $request->input('item_id'))->first();
         if (!$item) {
@@ -238,6 +239,8 @@ class ItemStageController extends BaseController
         $all['title'] = $request->input('title');
         $all['content'] = $request->input('content');
         $all['summary'] = $request->input('summary') ?? '';
+        $all['status'] = $request->input('summary') ?? 0;
+
 
         $itemStage = ItemStage::where('id', $id)->first();
         if (!$itemStage) {
