@@ -10,34 +10,27 @@ namespace app\Http\Controllers\Api\V1;
 
 
 use App\Helper\Tools;
+use App\Http\Transformer\WithdrawOrderTransformer;
+use App\Models\FundLog;
 use App\Models\WithdrawOrder;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
+use App\Models\Bank;
 
 class WithdrawOrderController extends BaseController
 {
-    /*uid	varchar(50)	否		单号
-        user_id	int(10)	否		用户ID
-        type	tinyint(4)	否		类型：1.银行转账；
-        amount	decimal(10,2)	否		提现金额
-        company_name	varchar(30)	否		公司名称
-        account_name	varchar(30)	否		开户名
-        account_number	varchar(50)	否		账号
-        bank_id	tinyint(4)	是	‘’	开户行
-        branch_name	varchar(30)	是	‘’	支行名称
-        status	tinyint(4)	否	0	状态：0.申请；1.同意；
-        summary	varchar(200)	是	‘‘	备注*/
-
-    //创建提现单
     /**
-     * @api {post} /auth/register 用户注册
+     * @api {post} /withdraw/create 用户提现
      * @apiVersion 1.0.0
-     * @apiName user register
-     * @apiGroup User
+     * @apiName withdraw create
+     * @apiGroup Withdraw
      *
-     * @apiParam {integer} type 用户类型：1.需求公司；2.设计公司；
-     * @apiParam {string} account 用户账号(手机号)
-     * @apiParam {string} password 设置密码
-     * @apiParam {integer} sms_code 短信验证码
+     * @apiParam {integer} bank_id 银行账户ID；
+     * @apiParam {float} amount 提现金额
+     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -46,13 +39,24 @@ class WithdrawOrderController extends BaseController
      *       "status_code": 200
      *     }
      *     "data": {
-     *          "token": ""
+     *
      *      }
      *   }
      */
     public function create(Request $request)
     {
-        $amount = (float)$request->input('amount');
+        $rules = [
+            'bank_id' => 'required|integer',
+            'amount' => 'required|numeric',
+        ];
+        $payload = $request->only('bank_id', 'amount');
+        $validator = Validator::make($payload, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }
+
+        $amount = $payload['amount'];
+        $bank_id = $payload['bank_id'];
 
         //可提现金额
         $cash = $this->auth_user->cash;
@@ -60,13 +64,42 @@ class WithdrawOrderController extends BaseController
             return $this->response->array($this->apiError('可提现金额不足', 403));
         }
 
-        WithdrawOrder::create([
-            'uid' => Tools::orderId($this->auth_user_id),
-            'type' => 1,
-            'amount' => $amount,
-            'company_name' =>'',
+        if(!$bank = Bank::find($bank_id)){
+            return $this->response->array($this->apiError('该银行卡不存在', 404));
+        }
 
-        ]);
+        if($this->auth_user_id === $bank->user_id){
+            return $this->response->array($this->apiError('银行卡错误', 403));
+        }
+
+        try{
+            DB::beginTransaction();
+
+            $withdraw = WithdrawOrder::create([
+                'uid' => Tools::orderId($this->auth_user_id),
+                'user_id' => $this->auth_user_id,
+                'type' => 1,
+                'amount' => $amount,
+                'account_name' => $bank->account_name,
+                'account_number' => $bank->account_number,
+                'account_bank_id' => $bank->account_bank_id,
+                'branch_name' => $bank->branch_name,
+                'status' => 0,
+            ]);
+
+            //账户冻结 提现金额
+            $this->auth_user->frozenIncrease($this->auth_user_id, $amount);
+
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+
+
+        if($withdraw){
+            return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiSuccess());
+        }
     }
 
 }

@@ -5,7 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
-class usertransformer extends TransformerAbstract
+class UserTransformer extends TransformerAbstract
 {
     /*id	int(10)	否		用户ID
 account	varchar(20)	否		用户名

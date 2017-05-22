@@ -119,6 +119,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //查询支付状态
         $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 
+        //用户提现
+        $api->post('/withdraw/create', 'WithdrawOrderController@create');
+
         //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
         //项目ID获取推荐的设计公司

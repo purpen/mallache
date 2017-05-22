@@ -33,10 +33,9 @@ class CreateWithdrawOrder extends Migration
             $table->integer('user_id');
             $table->tinyInteger('type');
             $table->decimal('amount', 10, 2);
-            $table->string('company_name', 30);
             $table->string('account_name', 30);
             $table->string('account_number', 50);
-            $table->tinyInteger('bank_id')->default(0);
+            $table->tinyInteger('account_bank_id')->default(0);
             $table->string('branch_name', 30)->default('');
             $table->tinyInteger('status')->default(0);
             $table->string('summary', 200)->default('');
