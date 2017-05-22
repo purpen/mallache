@@ -176,6 +176,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/category', 'CategoryController');
         //项目阶段
         $api->resource('/itemStage', 'ItemStageController');
+        //设计公司项目展示
+        $api->get('/itemStage/designCompany/lists', 'ItemStageController@designLists');
+        //需求公司项目展示
+        $api->get('/itemStage/demand/lists', ['as' => 'itemStage.demandLists', 'uses' => 'ItemStageController@demandLists']);
+
+        //更新项目阶段发布状态
+        $api->put('/itemStage/ok/status', [
+            'as' => 'itemStage.okStatus', 'uses' => 'ItemStageController@okStatus'
+        ]);
+        $api->put('/itemStage/un/status', [
+            'as' => 'itemStage.unStatus', 'uses' => 'ItemStageController@unStatus'
+        ]);
 
 
         /**
@@ -207,5 +219,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 资金流水记录列表
          */
         $api->resource('/fundLogList' , 'FundLogController');
+
+        /**
+         * 银行
+         */
+        $api->resource('/bank' , 'BankController');
+        //更新银行状态
+        $api->put('/bank/ok/status', [
+            'as' => 'bank.okStatus', 'uses' => 'BankController@okStatus'
+        ]);
+        $api->put('/bank/un/status', [
+            'as' => 'bank.unStatus', 'uses' => 'BankController@unStatus'
+        ]);
     });
 });
