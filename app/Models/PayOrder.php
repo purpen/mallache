@@ -8,7 +8,7 @@ class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'item_name', 'company_name'];
+    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'bank_id'];
 
     protected $appends = ['status_value', 'pay_type_value'];
 
@@ -16,6 +16,11 @@ class PayOrder extends BaseModel
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo('App\Models\Item', 'item_id');
     }
 
     //支付状态值

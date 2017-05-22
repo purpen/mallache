@@ -76,6 +76,12 @@ class Item extends BaseModel
         return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
     }
 
+    //一对多关联支付单
+    public function payOrder()
+    {
+        return $this->hasMany('App\Models\PayOrder', 'item_id');
+    }
+
     /**
      * 判断item对应的详细信息
      *

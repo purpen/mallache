@@ -121,6 +121,7 @@ class PayOrderActionController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} pay_order_id 支付单ID
      * @apiParam {string} pay_no  银行交易单号
+     * @apiParam {integer} bank_id 银行id
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -135,9 +136,10 @@ class PayOrderActionController extends BaseController
         $rules = [
             'pay_order_id' => 'required|exists:pay_order,id',
             'pay_no' => 'required',
+            'bank_id' => 'required|integer',
         ];
 
-        $all = $request->only(['pay_order_id', 'pay_no']);
+        $all = $request->only(['pay_order_id', 'pay_no', 'bank_id']);
 
         $validator = Validator::make($all, $rules);
         if($validator->fails()){
@@ -147,6 +149,7 @@ class PayOrderActionController extends BaseController
         $pay_order->pay_type = 5; //银行转账
         $pay_order->pay_no = $all['pay_no'];
         $pay_order->status = 1; //支付成功
+        $pay_order->bank_id = $all['bank_id'];
         $pay_order->save();
 
         event(new PayOrderEvent($pay_order));
