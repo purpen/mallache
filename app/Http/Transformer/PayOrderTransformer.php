@@ -21,7 +21,7 @@ class PayOrderTransformer extends TransformerAbstract
         pay_no	varchar(30)	是	’‘	对应平台支付交易号*/
 
         if($pay_order->item){
-            $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()->name : '';
+            $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()['name'] : '';
         }else{
             $name = '';
         }

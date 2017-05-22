@@ -9,7 +9,7 @@ class PayOrderTransformer extends TransformerAbstract
     public function transform(PayOrder $payOrder)
     {
         if($payOrder->item){
-            $name = array_key_exists('name', $payOrder->item->itemInfo()) ? $payOrder->item->itemInfo()->name : '';
+            $name = array_key_exists('name', $payOrder->item->itemInfo()) ? $payOrder->item->itemInfo()['name'] : '';
             $company_name = $payOrder->item->company_name;
         }else{
             $name = '';
