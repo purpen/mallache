@@ -6,7 +6,7 @@
  * Time: 15:33
  */
 
-namespace app\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Transformer\WithdrawOrderTransformer;
 use App\Models\FundLog;
