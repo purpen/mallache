@@ -216,5 +216,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 资金流水记录列表
          */
         $api->resource('/fundLogList' , 'FundLogController');
+
+        /**
+         * 银行
+         */
+        $api->resource('/bank' , 'BankController');
     });
 });

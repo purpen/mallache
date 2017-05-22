@@ -65,13 +65,6 @@ class PayController extends BaseController
 
         $uid = Tools::orderId($this->auth_user_id);
 
-        $item_name = '';  //项目名称
-        $company_name = '';  //公司名称
-        if($item = Item::find($item_id)){
-            $item_name = $item->itemInfo()['name'];
-            $company_name = $item->company_name;
-        }
-
         $pay_order = PayOrder::create([
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
@@ -79,8 +72,6 @@ class PayController extends BaseController
             'summary' => $summary,
             'item_id' => $item_id,
             'amount' => $amount,
-            'item_name' => $item_name,
-            'company_name' => $company_name,
         ]);
         return $pay_order;
     }

@@ -7,7 +7,7 @@ use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class Item extends Model
+class Item extends BaseModel
 {
     protected $table = 'item';
 
@@ -74,6 +74,12 @@ class Item extends Model
     public function designCompany()
     {
         return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
+
+    //一对多关联支付单
+    public function payOrder()
+    {
+        return $this->hasMany('App\Models\PayOrder', 'item_id');
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ItemRecommend extends Model
+class ItemRecommend extends BaseModel
 {
     protected $table = 'item_recommend';
 

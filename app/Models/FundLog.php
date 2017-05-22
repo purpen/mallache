@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FundLog extends Model
+class FundLog extends BaseModel
 {
     public $table = 'fund_log';
 

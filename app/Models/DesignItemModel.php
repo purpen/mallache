@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class DesignItemModel extends Model
+class DesignItemModel extends BaseModel
 {
     /**
      *与模型关联的数据表

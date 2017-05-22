@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Column extends Model
+class Column extends BaseModel
 {
     /**
      * 关联模型到数据表

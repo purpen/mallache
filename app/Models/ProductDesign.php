@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductDesign extends Model
+class ProductDesign extends BaseModel
 {
     protected $table = 'product_design';
 

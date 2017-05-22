@@ -19,6 +19,12 @@ class PayOrderTransformer extends TransformerAbstract
         summary	varcahr(100)	是	‘’	备注
         pay_type	tinyint(4)	是	0	支付方式；1.支付宝；2.微信；3.京东；
         pay_no	varchar(30)	是	’‘	对应平台支付交易号*/
+
+        if($pay_order->item){
+            $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()['name'] : '';
+        }else{
+            $name = '';
+        }
         return [
             'id' => intval($pay_order->id),
             'uid' => $pay_order->uid,
@@ -34,9 +40,9 @@ class PayOrderTransformer extends TransformerAbstract
             'amount' => $pay_order->amount,
             'total_price' => $pay_order->total_price ?? null,
             'first_pay' => $pay_order->first_pay ?? null,
-            'item_name' => $pay_order->item_name,
-            'company_name' => $pay_order->company_name,
-            'created_at' => $pay_order->created_at->format('Y-m-d H:i:s'),
+            'item_name' => $name,
+            'company_name' => $pay_order->item ? $pay_order->item->company_name : '',
+            'created_at' => $pay_order->created_at,
         ];
     }
 }

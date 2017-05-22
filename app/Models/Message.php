@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Message
  * @package App\Models
  */
-class Message extends Model
+class Message extends BaseModel
 {
     protected $table = 'message';
 
