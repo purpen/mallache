@@ -12,5 +12,6 @@ class BaseModel extends Model
      */
     protected $casts = [
         'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
     ];
 }

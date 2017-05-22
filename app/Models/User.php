@@ -12,6 +12,17 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     protected $table = 'users';
+
+    /**
+     * 应该被转换成原生类型的属性。
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
