@@ -43,11 +43,11 @@ class BankController extends BaseController
     public function index()
     {
         $user_id = intval($this->auth_user_id);
-        $bank = Bank::where('user_id' , $user_id)->get();
+        $bank = Bank::where('user_id' , $user_id)->where('status' , 0)->get();
         if(!$bank){
             return $this->response->array($this->apiError('not found bank', 404));
         }
-        return $this->response->item($bank, new BankTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($bank, new BankTransformer())->setMeta($this->apiMeta());
 
     }
 
@@ -247,37 +247,6 @@ class BankController extends BaseController
         //
     }
 
-
-    /**
-     * @api {put} /bank/ok/status 银行卡正常
-     * @apiVersion 1.0.0
-     * @apiName bank okStatus
-     * @apiGroup bank
-     *
-     * @apiParam {integer} id
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
-     * }
-     */
-    public function okStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $bank = Bank::where('id', $id)->first();
-        if (!$bank) {
-            return $this->response->array($this->apiError('not found bank', 404));
-        }
-        $status = Bank::status($id, 0);
-        if (!$status) {
-            return $this->response->array($this->apiError('修改失败', 500));
-        }
-        return $this->response->array($this->apiSuccess());
-    }
 
     /**
      * @api {put} /bank/un/status 银行卡关闭

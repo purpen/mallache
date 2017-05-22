@@ -225,9 +225,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         $api->resource('/bank' , 'BankController');
         //更新银行状态
-        $api->put('/bank/ok/status', [
-            'as' => 'bank.okStatus', 'uses' => 'BankController@okStatus'
-        ]);
         $api->put('/bank/un/status', [
             'as' => 'bank.unStatus', 'uses' => 'BankController@unStatus'
         ]);
