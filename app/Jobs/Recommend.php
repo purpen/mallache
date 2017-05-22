@@ -95,11 +95,15 @@ class Recommend implements ShouldQueue
 
         //所属领域
         $field =  $this->item->productDesign->field;
+        //周期
+        $cycle = $this->item->productDesign->cycle;
+
         //获取符合设计类型和设计费用的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('type', $type)
             ->where('design_type', $design_type)
             ->where('min_price', '<', $max)
+            ->where('project_cycle', $cycle)
             ->get()
             ->pluck('user_id')->all();
 
@@ -125,11 +129,15 @@ class Recommend implements ShouldQueue
 
         //所属领域
         $field =  $this->item->productDesign->field;
+        //周期
+        $cycle = $this->item->productDesign->cycle;
+
         //获取符合 设计类型 和 设计费用 的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('type', $type)
             ->where('design_type', $design_type)
             ->where('min_price', '<', $max)
+            ->where('project_cycle', $cycle)
             ->get()
             ->pluck('user_id')->all();
 
