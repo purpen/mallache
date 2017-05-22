@@ -12,9 +12,11 @@ use App\Http\Transformer\WithdrawOrderTransformer;
 use App\Models\FundLog;
 use App\Models\User;
 use App\Models\WithdrawOrder;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 class WithdrawOrderActionController extends BaseController
 {
@@ -30,6 +32,13 @@ class WithdrawOrderActionController extends BaseController
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认;
      *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
      */
     public function lists(Request $request)
     {
@@ -62,7 +71,6 @@ class WithdrawOrderActionController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {integer} withdraw_order_id 提现单ID
-     * @apiParam {string}
      * @apiParam {string} summary 备注
      *
      * @apiSuccessExample 成功响应:
@@ -75,6 +83,17 @@ class WithdrawOrderActionController extends BaseController
      */
     public function trueWithdraw(Request $request)
     {
+        $rules = [
+            'withdraw_order_id' => 'required|integer',
+        ];
+
+        $all = $request->only(['withdraw_order_id']);
+
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
         $withdraw_order_id = (int)$request->input('withdraw_order_id');
         $summary = $request->input('summary') ?? '';
 
