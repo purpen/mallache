@@ -64,7 +64,7 @@ class WithdrawOrderController extends BaseController
             return $this->response->array($this->apiError('可提现金额不足', 403));
         }
 
-        if(!$bank = Bank::find($bank_id)){
+        if(!$bank = Bank::where(['id' => $bank_id, 'status' => 0])->frist()){
             return $this->response->array($this->apiError('该银行卡不存在', 404));
         }
 
