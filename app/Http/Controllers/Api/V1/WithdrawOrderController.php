@@ -67,7 +67,7 @@ class WithdrawOrderController extends BaseController
             return $this->response->array($this->apiError('该银行卡不存在', 404));
         }
 
-        if($this->auth_user_id === $bank->user_id){
+        if($this->auth_user_id !== $bank->user_id){
             return $this->response->array($this->apiError('银行卡错误', 403));
         }
 
