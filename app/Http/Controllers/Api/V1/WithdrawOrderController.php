@@ -6,12 +6,11 @@
  * Time: 14:01
  */
 
-namespace app\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
 
 use App\Helper\Tools;
 use App\Http\Transformer\WithdrawOrderTransformer;
-use App\Models\FundLog;
 use App\Models\WithdrawOrder;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
