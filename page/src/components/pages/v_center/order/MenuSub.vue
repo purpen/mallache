@@ -3,9 +3,11 @@
     <div class="vcenter-menu-sub-list">
       <router-link :to="{name: 'vcenterOrderList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
     </div>
+    <!--
     <div class="vcenter-menu-sub-list">
       <router-link :to="{name: 'vcenterOrderList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">待付款</router-link>
     </div>
+    -->
   </div>
 </template>
 

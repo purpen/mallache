@@ -21,7 +21,7 @@
 
             <div class="clear detail">
               <p class="detail-banner">订单详情</p>
-              <p>项目名称: 一个关于APP的移动端设计</p>
+              <p>项目名称: {{ item.item_name }}</p>
               <p>支付方式: {{ item.pay_type_value }}</p>
               <p>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额: ¥ {{ item.amount }}</p>
               <p>订单编号: {{ item.uid }}</p>
