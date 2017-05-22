@@ -10,7 +10,7 @@ class CreateBankTable extends Migration
             id	            int(10)	        否
             user_id	        int(10)	        否		用户ID
             account_name	varchar(30)	    否		开户名
-            bank_id	        tinyint(4)	    否		开户行
+            account_bank_id	tinyint(4)	    否		开户行
             branch_name	    varchar(30)	    否		支行名称
             account_number	varchar(50)	    否		银行账号
             province	    int(10)	        否		省份
@@ -24,7 +24,7 @@ class CreateBankTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('account_name', 30);
-            $table->tinyInteger('bank_id');
+            $table->tinyInteger('account_bank_id');
             $table->string('branch_name', 30);
             $table->string('account_number', 50);
             $table->integer('province');

@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
     protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'bank_id'];
 
-    protected $appends = ['status_value', 'pay_type_value'];
+    protected $appends = ['status_value', 'pay_type_value','bank'];
 
     //一对一相对关联用户表
     public function user()
@@ -68,6 +66,17 @@ class PayOrder extends BaseModel
                 $val = '';
         }
         return $val;
+    }
+
+    public function getBankAttribute()
+    {
+        $bank_id = $this->bank_id;
+        if(array_key_exists($bank_id, config('constant.bank'))){
+            $bank = config('constant.bank')[$bank_id];
+        }else{
+            $bank = '';
+        }
+        return $bank;
     }
 
 }

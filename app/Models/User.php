@@ -185,4 +185,11 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     * 用户可提现金额
+     */
+    public function getCashAttribute()
+    {
+        return $this->price_total - $this->price_frozen;
+    }
 }

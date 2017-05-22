@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class Bank extends BaseModel
@@ -14,7 +15,7 @@ class Bank extends BaseModel
     protected $fillable = [
       'user_id',
       'account_name',
-      'bank_id',
+      'account_bank_id',
       'branch_name',
       'account_number',
       'province',
@@ -22,4 +23,53 @@ class Bank extends BaseModel
       'status',
       'summary',
     ];
+
+    /**
+     * 返回
+     */
+    protected $appends = [
+        'bank_val',
+        'bank_province_value',
+        'bank_city_value',
+    ];
+
+    //银行名称
+    public function getBankValAttribute()
+    {
+        $key = $this->attributes['account_bank_id'];
+        if(array_key_exists($key,config('constant.bank'))){
+            $bank_val = config('constant.bank')[$key];
+            return $bank_val;
+
+        }
+        return '';
+    }
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getBankProvinceValueAttribute()
+    {
+        return Tools::cityName($this->province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getBankCityValueAttribute()
+    {
+        return Tools::cityName($this->city);
+    }
+
+    /**
+     * 更改银行信息状态
+     */
+    static public function status($id, $status= -1)
+    {
+        $bank = self::findOrFail($id);
+        $bank->status = $status;
+        return $bank->save();
+    }
 }

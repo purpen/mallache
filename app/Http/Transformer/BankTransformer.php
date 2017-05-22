@@ -32,6 +32,9 @@ class BankTransformer extends TransformerAbstract
             'city' => intval($bank->city),
             'status' => intval($bank->status),
             'summary' => strval($bank->summary),
+            'bank_val' => $bank->bank_val,
+            'bank_province_value' => $bank->bank_province_value,
+            'bank_city_value' => $bank->bank_city_value,
         ];
     }
 
