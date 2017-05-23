@@ -311,7 +311,7 @@ class DesignCompanyModel extends BaseModel
         if(!$design_case->isEmpty()){
             foreach($design_case as $case){
                 try{
-                    $arr[] = $item_type[$case->type][$case->design_type];
+                    $arr[] = $item_type[$case->type][$case->design_type - 1];
                 }catch (\Exception $e){
                     continue;
                 }
