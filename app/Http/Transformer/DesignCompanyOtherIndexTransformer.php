@@ -87,6 +87,7 @@ class DesignCompanyOtherIndexTransformer extends TransformerAbstract
             'document_type_val' => $DesignCompany->document_type_val,
             'document_number' => strval($DesignCompany->document_number),
             'document_image' => $DesignCompany->document_image,
+            'item_type' => $DesignCompany->item_type,
 
         ];
     }
