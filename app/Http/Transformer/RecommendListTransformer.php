@@ -66,8 +66,9 @@ class RecommendListTransformer extends TransformerAbstract
     {
         return $design_case = $design_company
                             ->designCase()
-                            ->orderBy('id', 'desc')
-                            ->limit(3)
+//                            ->orderBy('id', 'desc')
+                            ->orderBy(DB::raw('case type when type=' . $this->item->type . ' then 1 else 0 end, type', 'desc'))
+                            ->take(3)
                             ->get();
     }
 }

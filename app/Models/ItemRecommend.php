@@ -63,13 +63,13 @@ class ItemRecommend extends BaseModel
                 $design_company_status_value = '设计公司拒绝';
                 break;
             case 0:
-                $design_company_status_value = '等待设计公司接单';
+                $design_company_status_value = '等待接单';
                 break;
             case 1:
                 $design_company_status_value = '设计公司一键成交';
                 break;
             case 2:
-                $design_company_status_value = '设计公司有意接单';
+                $design_company_status_value = '已接单';
                 break;
             default:
                 $design_company_status_value = '';
