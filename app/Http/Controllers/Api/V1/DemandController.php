@@ -648,7 +648,7 @@ class DemandController extends BaseController
 
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($design_company, new RecommendListTransformer)->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer($item))->setMeta($this->apiMeta());
     }
 
     /**

@@ -61,7 +61,8 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
 //        'item_quantity_val',
         'city_arr',
-        'logo_image'
+        'logo_image',
+        'item_type'
 
     ];
 
@@ -299,6 +300,25 @@ class DesignCompanyModel extends BaseModel
 
         }
         return '';
+    }
+
+    //设计公司接单类型
+    public function getItemTypeAttribute()
+    {
+        $item_type = config('constant.item_type');
+        $arr = [];
+        $design_case = $this->designCase;
+        if(!$design_case->isEmpty()){
+            foreach($design_case as $case){
+                try{
+                    $arr[] = $item_type[$case->type][$case->design_type];
+                }catch (\Exception $e){
+                    continue;
+                }
+            }
+        }
+
+        return $arr;
     }
 
 }

@@ -84,7 +84,7 @@ class DesignCompanyTransformer extends TransformerAbstract
             'logo_image' => $DesignCompany->logo_image,
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
-            'created_at' => $DesignCompany->created_at->format("Y-m-d"),
+            'created_at' => $DesignCompany->created_at,
             'users' => $DesignCompany->user,
             'city_arr' => $DesignCompany->city_arr,
             'legal_person' => strval($DesignCompany->legal_person),
