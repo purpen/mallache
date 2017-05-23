@@ -21,7 +21,7 @@ class WithdrawOrder extends BaseModel
         'amount',
         'account_name',
         'account_number',
-        'bank_id',
+        'account_bank_id',
         'branch_name',
         'status',
     ];
