@@ -107,64 +107,53 @@ class DesignCompanyController extends BaseController
      */
     public function store(Request $request)
     {
-//        // 验证规则
-//        $rules = [
-//            'design_type'  => 'nullable|max:50',
-//            'company_name'  => 'required|max:50',
-//            'company_abbreviation'  => 'required|max:50',
-//            'province'  => 'required|integer',
-//            'address'  => 'required|max:50',
-//            'contact_name'  => 'required|max:20',
-//            'phone'  => 'required',
-//            'email'  => 'required|email',
-//            'company_size'  => 'nullable|integer',
-//            'branch_office'  => 'nullable|integer',
-//            'position' => 'required',
-////            'item_quantity'  => 'nullable|integer',
-//            'web'  => 'nullable|max:50',
-//            'company_profile'  => 'max:500',
-//            'establishment_time'  => 'nullable|date',
-//            'good_field'  => 'max:50',
-//            'professional_advantage'  => 'max:500',
-//            'awards'  => 'max:500',
-//            'registration_number'  => 'nullable|max:15',
-//            'legal_person'  => 'required|max:20',
-//            'document_type'  => 'required|integer',
-//            'document_number'  => 'required|max:20',
-//        ];
-//        $messages = [
-//            'design_type.max' => '产品设计不能超过50个字',
-//            'company_name.required' => '公司名称不能为空',
-//            'company_abbreviation.required' => '公司简称不能为空',
-//            'company_abbreviation.max' => '公司简称不能超过50个字',
-//            'company_name.max' => '公司名称不能超过50个字',
-//            'province.required' => '省份不能为空',
-//            'province.integer' => '省份必须为整形',
-//            'address.required' => '详细地址不能为空',
-//            'address.max' => '详细地址不能超过50个字',
-//            'contact_name.required' => '联系人姓名不能为空',
-//            'contact_name.max' => '联系人姓名不能超过20个字',
-//            'phone.required' => '手机号不能为空',
-//            'email.required' => '邮箱不能为空',
-//            'email.email' => '邮箱格式不正确',
-//            'company_size.integer' => '公司规模必须是整形',
-//            'branch_office.integer' => '分公司必须是整形',
-////            'item_quantity.integer' => '服务项目必须是整形',
-//            'web.max' => '公司网站不能超过50个字',
-//            'establishment_time.date' => '公司成立时间格式不正确',
-//            'good_field.max' => '擅长领域不能超过50个字',
-//            'professional_advantage.max' => '专业优势不能超过500个字',
-//            'awards.max' => '荣誉奖项不能超过500个字',
-//            'company_profile.max' => '公司简介不能超过500个字',
-//            'registration_number.max' => '注册号不能超过15字符',
-//            'legal_person.required' => '法人不能为空',
-//            'legal_person.max' => '法人不能超过20个字符',
-//            'document_type.required' => '证件类型不能为空',
-//            'document_type.integer' => '证件类型必须是整形',
-//            'document_number.required' => '证件号码不能为空',
-//            'document_number.max' => '证件号码不能超过20个字符',
-//
-//        ];
+        // 验证规则
+        $rules = [
+            'design_type'  => 'nullable|max:50',
+            'company_name'  => 'nullable|max:50',
+            'company_abbreviation'  => 'nullable|max:50',
+            'province'  => 'nullable|integer',
+            'address'  => 'nullable|max:50',
+            'contact_name'  => 'nullable|max:20',
+            'phone'  => 'nullable',
+            'email'  => 'nullable|email',
+            'company_size'  => 'nullable|integer',
+            'branch_office'  => 'nullable|integer',
+            'position' => 'nullable',
+//            'item_quantity'  => 'nullable|integer',
+            'web'  => 'nullable|max:50',
+            'company_profile'  => 'nullable|max:500',
+            'establishment_time'  => 'nullable|date',
+            'good_field'  => 'nullable|max:50',
+            'professional_advantage'  => 'nullable|max:500',
+            'awards'  => 'nullable|max:500',
+            'registration_number'  => 'nullable|max:15',
+            'legal_person'  => 'nullable|max:20',
+            'document_type'  => 'nullable|integer',
+            'document_number'  => 'nullable|max:20',
+        ];
+        $messages = [
+            'design_type.max' => '产品设计不能超过50个字',
+            'company_abbreviation.max' => '公司简称不能超过50个字',
+            'company_name.max' => '公司名称不能超过50个字',
+            'province.integer' => '省份必须为整形',
+            'address.max' => '详细地址不能超过50个字',
+            'contact_name.max' => '联系人姓名不能超过20个字',
+            'email.email' => '邮箱格式不正确',
+            'company_size.integer' => '公司规模必须是整形',
+            'branch_office.integer' => '分公司必须是整形',
+//            'item_quantity.integer' => '服务项目必须是整形',
+            'web.max' => '公司网站不能超过50个字',
+            'good_field.max' => '擅长领域不能超过50个字',
+            'professional_advantage.max' => '专业优势不能超过500个字',
+            'awards.max' => '荣誉奖项不能超过500个字',
+            'company_profile.max' => '公司简介不能超过500个字',
+            'registration_number.max' => '注册号不能超过15字符',
+            'legal_person.max' => '法人不能超过20个字符',
+            'document_type.integer' => '证件类型必须是整形',
+            'document_number.max' => '证件号码不能超过20个字符',
+
+        ];
         $all = $request->all();
         $all['city'] = $request->input('city') ?? 0;
         $all['area'] = $request->input('area') ?? 0;
@@ -183,6 +172,11 @@ class DesignCompanyController extends BaseController
         $all['document_type'] = $request->input('document_type') ?? 0;
         $all['document_number'] = $request->input('document_number') ?? '';
         $all['open'] = $request->input('open') ?? 0;
+        $validator = Validator::make($all , $rules, $messages);
+
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
         try{
             //检查用户的唯一性
             $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
