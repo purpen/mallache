@@ -4,7 +4,7 @@
     <el-row :gutter="24" type="flex" justify="center">
       <v-item-progress :progressButt="progressButt" :progressContract="progressContract" :progressItem="progressItem"></v-item-progress>
 
-      <el-col :span="19">
+      <el-col :span="18">
         <div class="content">
           <div class="banner">
             <img class="" src="../../../../assets/images/icon/item_status.png" width="80" />

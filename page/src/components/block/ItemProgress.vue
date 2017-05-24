@@ -1,5 +1,5 @@
 <template>
-  <el-col :span="5">
+  <el-col :span="6">
     <div class="progress">
 
       <div class="process-item">
