@@ -187,13 +187,15 @@ class AdminDesignCompanyController extends Controller
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
-     * @apiParam {integer} type -1.禁用的;0.所有的;1.审核过；
+     * @apiParam {integer} type_status 0.禁用; 1.正常；
+     * @apiParam {integer} type_verify_status 0.审核中；1.审核通过
      * @apiParam {string} token
      */
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-
+        $type_verify_status = in_array($request->input('type_verify_status'), [0,1]) ? $request->input('type_verify_status') : 1;
+        $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : 1;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';
@@ -204,16 +206,11 @@ class AdminDesignCompanyController extends Controller
         }
 
         $query = DesignCompanyModel::query();
-        switch ($request->input('type')){
-            case -1:
-                $query = $query->where('status', 0);
-                break;
-            case 0:
-                break;
-            case 1:
-                $query = $query->where('status', 1)->where('verify_status' , 1);
-                break;
-            default:
+        if($type_status !== null){
+            $query->where('status', $type_status);
+        }
+        if($type_verify_status !== null){
+            $query->where('verify_status', $type_verify_status);
         }
 
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
