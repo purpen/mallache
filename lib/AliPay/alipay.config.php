@@ -15,7 +15,7 @@
  
 //↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 //合作身份者ID，签约账号，以2088开头由16位纯数字组成的字符串，查看地址：https://b.alipay.com/order/pidAndKey.htm
-$alipay_config['partner']		= '2088511301099072';
+$alipay_config['partner']		= config('alipay.partner');
 
 //收款支付宝账号，以2088开头由16位纯数字组成的字符串，一般情况下收款账号就是签约账号
 $alipay_config['seller_id']	= $alipay_config['partner'];
@@ -24,10 +24,10 @@ $alipay_config['seller_id']	= $alipay_config['partner'];
 $alipay_config['key']			= 'cpphcldqto1uid08npxjy0acturelt6p';
 
 // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-$alipay_config['notify_url'] = "http://sa.taihuoniao.com/pay/aliPayNotify";
+$alipay_config['notify_url'] = config('alipay.notify_url');
 
 // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-$alipay_config['return_url'] = "http://mc.taihuoniao.com/alipay/callback";
+$alipay_config['return_url'] = config('alipay.return_url');
 
 //签名方式
 $alipay_config['sign_type']    = strtoupper('MD5');
@@ -40,7 +40,7 @@ $alipay_config['input_charset']= strtolower('utf-8');
 $alipay_config['cacert']    = getcwd().'\\cacert.pem';
 
 //访问模式,根据自己的服务器是否支持ssl访问，若支持请选择https；若不支持请选择http
-$alipay_config['transport']    = 'http';
+$alipay_config['transport']    = config('alipay.transport');
 
 // 支付类型 ，无需修改
 $alipay_config['payment_type'] = "1";
