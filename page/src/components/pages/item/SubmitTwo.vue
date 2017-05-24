@@ -2,9 +2,9 @@
   <div class="container">
 
     <v-progress></v-progress>
-    <el-row :gutter="24">
+    <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="18">
+      <el-col :span="19">
         <div class="content">
 
           <div class="item">
@@ -12,11 +12,11 @@
               <p class="fl"><img src="../../../assets/images/icon/product.png" /></p>
               <div class="fl banner-title">
                 <p class="title">产品设计</p>
-                <p class="des">产品策略/产品设计/结构设计</p>             
+                <p class="des">产品策略／产品设计／结构设计</p>             
               </div>
               <p class="fr">
-                <i class="fa fa-angle-up fa-3x" aria-hidden="true" v-if="form.type === 1"></i>
-                <i class="fa fa-angle-down fa-3x" aria-hidden="true" v-else></i>
+                <i class="fa fa-angle-up fa-2x" aria-hidden="true" v-if="form.type === 1"></i>
+                <i class="fa fa-angle-down fa-2x" aria-hidden="true" v-else></i>
               </p>
             </div>
             <transition name="slide-fade">
@@ -50,8 +50,8 @@
                 <p class="des">app 设计／网页设计</p>             
               </div>
               <p class="fr">
-                <i class="fa fa-angle-up fa-3x" aria-hidden="true" v-if="form.type === 2"></i>
-                <i class="fa fa-angle-down fa-3x" aria-hidden="true" v-else></i>
+                <i class="fa fa-angle-up fa-2x" aria-hidden="true" v-if="form.type === 2"></i>
+                <i class="fa fa-angle-down fa-2x" aria-hidden="true" v-else></i>
               </p>
             </div>
             <transition name="slide-fade">
@@ -75,7 +75,7 @@
         
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
           <p class="slide-str">100家推荐</p>
@@ -317,7 +317,7 @@
     vertical-align: middle;
   }
   .banner-title p.title{
-    font-size: 2.3rem;
+    font-size: 1.8rem;
     font-weight: 450;
     color: #333;
   }

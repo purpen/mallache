@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <el-row :gutter="24">
+    <el-row :gutter="24" type="flex" justify="center">
       <v-item-progress :progressButt="progressButt" :progressContract="progressContract" :progressItem="progressItem"></v-item-progress>
 
       <el-col :span="19">
@@ -50,20 +50,20 @@
                       <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
                     </div>
                     <div class="company-title">
-                      <h3>{{ d.company_name }}</h3>
+                      <h3><router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name }}</router-link></h3>
                       <p><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
-                      <p class="des"><span>策略: </span>产品设计／结构设计／app设计／网页设计</p>
-                      <p class="des"><span>领域: </span>消费电子／大家电／智能硬件</p>
+                      <p class="des"><span>类型: </span>{{ d.item_type_label }}</p>
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">
-                      <a href=""><img width="200" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
-                      <a href=""><img width="200" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
+                      <a href=""><img width="150" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
+                      <a href=""><img width="150" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
+
                     </div>
                   </div>
                 </div>
                 <div class="clear"></div>
-                <div class="pub-btn">
+                <div class="pub-btn" v-if="item.status === 3">
                   <el-button class="is-custom" @click="stickCompanySubmit" :loading="isLoadingBtn" :disabled="showStickCompanyBtn" type="primary">已选中<span>{{ selectedStickCompanyCount }}</span>家，推送给设计公司</el-button>
                 </div>
               </el-collapse-item>
@@ -157,7 +157,7 @@
                     </div>
                   </div>
                   <div class="contract-right">
-                    <p v-show="contract.status === 1"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> 下载</a></p>
+                    <p v-show="contract.status === 1"><router-link :to="{name: 'vcenterContractDown', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</router-link></p>
                     <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
                   </div>
 
@@ -415,6 +415,10 @@ export default {
         self.$message.error(error.message)
         self.comfirmLoadingBtn = false
       })
+    },
+    // 下载合同
+    downContractPdf() {
+      this.$router.push({name: 'vcenterContractDown', params: {unique_id: this.contract.unique_id}})
     }
   },
   computed: {
@@ -470,28 +474,12 @@ export default {
             self.progressContract = -1
             self.progressItem = -1
             self.statusLabel.selectCompany = true
-            self.$http.get(api.recommendListId.format(self.item.id), {})
-            .then (function(stickCompanyResponse) {
-              if (stickCompanyResponse.data.meta.status_code === 200) {
-                self.stickCompany = stickCompanyResponse.data.data
-                for (var i = 0; i < self.stickCompany.length; i++) {
-                  var item = self.stickCompany[i]
-                  if (item.logo_image && item.logo_image.length !== 0) {
-                    self.stickCompany[i].logo_url = item.logo_image.logo
-                  } else {
-                    self.stickCompany[i].logo_url = false
-                  }
-                } // endfor
-              }
-            })
-            .catch (function(error) {
-              self.$message.error(error.message)
-            })
             break
           case 4: // 查看已提交报价的设计公司
             self.progressButt = 2
             self.progressContract = -1
             self.progressItem = -1
+            self.statusLabel.selectCompany = true
             self.statusLabel.trueCompany = true
             self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
             .then (function(response) {
@@ -602,6 +590,34 @@ export default {
             break
           default:
         }
+
+        // 获取系统推荐的设计公司
+        if (self.statusLabel.selectCompany) {
+          self.$http.get(api.recommendListId.format(self.item.id), {})
+          .then (function(stickCompanyResponse) {
+            if (stickCompanyResponse.data.meta.status_code === 200) {
+              self.stickCompany = stickCompanyResponse.data.data
+              for (var i = 0; i < self.stickCompany.length; i++) {
+                var item = self.stickCompany[i]
+                if (item.logo_image && item.logo_image.length !== 0) {
+                  self.stickCompany[i].logo_url = item.logo_image.logo
+                } else {
+                  self.stickCompany[i].logo_url = false
+                }
+                if (item.item_type) {
+                  self.stickCompany[i].item_type_label = item.item_type.join('／')
+                }
+              } // endfor
+              console.log('stickCompany')
+              console.log(self.stickCompany)
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
+        }
+
+        // 已设置报价的设计公司
         if (self.statusLabel.cooperateCompany) {
           self.$http.get(api.designCompanyId.format(self.item.design_company_id), {})
           .then (function(response) {
@@ -628,7 +644,7 @@ export default {
               var items = response.data.data
               for (var i = 0; i < items.length; i++) {
                 var item = items[i]
-                items[i].created_at = item.created_at.date.date_format().format('yyyy-MM-dd')
+                items[i].created_at = item.created_at.date_format().format('yyyy-MM-dd')
               }
               self.stages = items
               console.log('aa')

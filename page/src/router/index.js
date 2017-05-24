@@ -404,6 +404,17 @@ const routes = [
     },
     component: require('@/components/pages/v_center/contract/Submit')
   },
+  // 合同下载
+  {
+    path: '/vcenter/contract/download/:unique_id',
+    name: 'vcenterContractDown',
+    meta: {
+      title: '合同下载',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/pages/v_center/contract/Down'], resolve) }
+  },
   // 基本设置
   {
     path: '/vcenter/profile',

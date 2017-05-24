@@ -1,10 +1,10 @@
 <template>
   <div class="item" v-show="isLoaded">
-    <span v-if="isShow()">
+    <p v-if="isShow()">
       <span>{{ cItem.project_cycle_val }}, 最低{{ cItem.min_price }}起</span>
       <span style="margin-left: 20px;"><a href="javascript:void(0);" @click="submitItem"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span> <span><a href="javascript:void(0);" @click="delItem"><i class="fa fa-trash" aria-hidden="true"></i></a></span>  
-    </span>
-    <span v-else><a href="javascript:void(0);" @click="submitItem"><i class="fa fa-plus" aria-hidden="true"></i> 添加设置</a></span>
+    </p>
+    <p v-else><span><a href="javascript:void(0);" @click="submitItem"><i class="fa fa-plus" aria-hidden="true"></i> 添加设置</a></span></p>
 
 
 
@@ -276,7 +276,12 @@
     border-bottom: 1px dotted #ccc;
   }
   .item span {
-    line-height: 1.5;
+    line-height: 2;
   }
+  .item p span {
+    color: #666;
+    font-size: 1.5rem;
+  }
+
 
 </style>

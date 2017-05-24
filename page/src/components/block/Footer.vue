@@ -1,7 +1,7 @@
 <template>
   <div class="container footer">
     <div class="line"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="24" type="flex" justify="center">
       <el-col class="item" :span="6">
         <p class="title">太火鸟 SaaS</p>
         <p><router-link :to="{}" class="">关于我们</router-link></p>
@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'test',
+  name: 'footer',
   data () {
     return {
       msg: ''

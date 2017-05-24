@@ -24,48 +24,46 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="item.id"
+              prop="id"
               label="ID"
               width="60">
             </el-table-column>
             <el-table-column
-              prop="info.name"
-              label="名称"
+              prop="item_name"
+              label="项目名称"
               width="140">
+            </el-table-column>
+            <el-table-column
+              prop="amount"
+              label="支付金额"
+              width="80">
             </el-table-column>
             <el-table-column
               width="140"
               label="创建人">
                 <template scope="scope">
                   <p>
-                    {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
+                    {{ scope.row.user.account }}[{{ scope.row.user_id }}]
                   </p>
                 </template>
             </el-table-column>
             <el-table-column
-              prop="item.type_label"
-              label="类型"
-              width="150">
+              prop="type_value"
+              label="支付类型"
+              width="100">
             </el-table-column>
             <el-table-column
-              prop="info.design_cost_value"
-              label="预算">
+              prop="pay_type_value"
+              label="支付方式"
+              width="100">
             </el-table-column>
             <el-table-column
-              prop="info.cycle_value"
-              label="周期">
-            </el-table-column>
-            <el-table-column
-              prop="info.locale"
-              label="工作地点">
-            </el-table-column>
-            <el-table-column
-              prop="item.status_label"
-              width="120"
+              prop="status_value"
+              width="80"
               label="状态">
             </el-table-column>
             <el-table-column
-              prop="item.created_at"
+              prop="created_at"
               width="80"
               label="创建时间">
             </el-table-column>
@@ -74,14 +72,15 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
+                    <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer" @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
                   </p>
                   <p>
                   <!--
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.item.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">删除</a>                 
+                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>                 
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">查看</a> 
+
                     -->
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">查看</a> 
                   </p>
                 </template>
             </el-table-column>
@@ -102,23 +101,34 @@
       </el-col>
     </el-row>
 
-    <el-dialog title="匹配公司" v-model="matchCompanyDialog">
+    <el-dialog title="确认线下打款" v-model="sureTransferDialog">
       <el-form label-position="top">
-        <input type="hidden" v-model="matchCompanyForm.itemId" value="" />
+        <input type="hidden" v-model="orderForm.orderId" value="" />
+        <input type="hidden" v-model.number="orderForm.index" value="" />
         <el-form-item label="项目名称" label-width="200px">
-          <el-input v-model="matchCompanyForm.itemName" auto-complete="off" disabled></el-input>
+          <el-input v-model="orderForm.itemName" auto-complete="off" disabled></el-input>
         </el-form-item>
-        <div class="match-company-box">
-        <p>已匹配的公司：</p>
-        <p><el-tag class="match-company-tag" type="success" v-for="(d, index) in currentMatchCompany" :key="index">{{ d.company_name }}</el-tag></p>
-        </div>
-        <el-form-item label="添加公司" label-width="80px">
-          <el-input v-model="matchCompanyForm.companyIds" placeholder="多个公司ID用','分隔" auto-complete="off"></el-input>
+        <el-form-item label="订单金额" label-width="200px">
+          <el-input v-model="orderForm.amount" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="所属银行" prop="bandId">
+          <el-select v-model.number="orderForm.bankId" placeholder="请选择银行">
+            <el-option
+              v-for="(item, index) in bankOptions"
+              :label="item.label"
+              :key="index"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="交易单号" label-width="80px">
+          <el-input v-model="orderForm.payNo" placeholder="交易单号" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="matchCompanyDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addMatchCompany">确 定</el-button>
+        <el-button @click="sureTransferDialog = false">取 消</el-button>
+        <el-button type="primary" :load="sureTransferLoading" @click="sureTransferSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -128,6 +138,7 @@
 <script>
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
+import typeData from '@/config'
 export default {
   name: 'admin_order_list',
   components: {
@@ -136,16 +147,19 @@ export default {
   data () {
     return {
       menuType: 0,
-      matchCompanyDialog: false,
+      sureTransferDialog: false,
+      sureTransferLoading: false,
       itemList: [],
       tableData: [],
-      currentMatchCompany: [],
       page: 1,
       total: 1000,
-      matchCompanyForm: {
-        itemId: '',
+      orderForm: {
+        index: '',
+        orderId: '',
         itemName: '',
-        companyIds: ''
+        amount: '',
+        bankId: '',
+        payNo: ''
       },
       msg: ''
     }
@@ -158,41 +172,31 @@ export default {
     },
     handleDelete() {
     },
-    handleMatch(index, item) {
-      if (item.item.status !== 2) {
-        // this.$message.error('项目状态不允许推荐公司')
-        // return
-      }
-      this.currentMatchCompany = item.designCompany
-      this.matchCompanyForm.itemId = item.item.id
-      this.matchCompanyForm.itemName = item.info.name
-      this.matchCompanyDialog = true
+    // 对公打款弹层
+    sureTransfer(index, item) {
+      this.orderForm.index = index
+      this.orderForm.orderId = item.id
+      this.orderForm.itemName = item.item_name
+      this.orderForm.amount = item.amount
+      this.sureTransferDialog = true
     },
-    addMatchCompany() {
-      if (!this.matchCompanyForm.itemId || !this.matchCompanyForm.itemName || !this.matchCompanyForm.companyIds) {
+    // 确认对公打款
+    sureTransferSubmit() {
+      if (!this.orderForm.orderId || !this.orderForm.itemName || !this.orderForm.bankId || !this.orderForm.payNo || !this.orderForm.index) {
         this.$message.error('缺少请求参数!')
         return
       }
-      var companyIds = this.matchCompanyForm.companyIds.split(',')
       var self = this
-      this.$http.post(api.addItemToCompany, {item_id: this.matchCompanyForm.itemId, recommend: companyIds})
+      self.sureTransferLoading = true
+      this.$http.post(api.adminPayOrderTruePay, {pay_order_id: this.orderForm.orderId, bank_id: this.orderForm.bankId, pay_no: this.orderForm.payNo})
       .then (function(response) {
+        self.sureTransferLoading = false
         if (response.data.meta.status_code === 200) {
-          self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
-          .then (function(response1) {
-            if (response1.data.meta.status_code === 200) {
-              self.$message.success('添加成功!')
-              self.matchCompanyDialog = false
-              return
-            } else {
-              self.$message.error(response1.data.meta.message)
-              return
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-            console.log(error.message)
-          })
+          self.$message.success('操作成功！')
+          self.sureTransferDialog = false
+          self.tableData[self.orderForm.index]['status'] = 1
+          self.tableData[self.orderForm.index]['status_value'] = '支付完成'
+          self.tableData[self.orderForm.index]['sure_outline_transfer'] = false
         } else {
           self.$message.error(response.data.meta.message)
           return
@@ -200,6 +204,7 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
+        self.sureTransferLoading = false
         console.log(error.message)
       })
     },
@@ -208,6 +213,19 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
+    }
+  },
+  computed: {
+    bankOptions() {
+      var items = []
+      for (var i = 0; i < typeData.BANK_OPTIONS.length; i++) {
+        var item = {
+          value: typeData.BANK_OPTIONS[i]['id'],
+          label: typeData.BANK_OPTIONS[i]['name']
+        }
+        items.push(item)
+      }
+      return items
     }
   },
   created: function() {
@@ -224,10 +242,19 @@ export default {
 
         for (var i = 0; i < self.itemList.length; i++) {
           var item = self.itemList[i]
-
-          // item['item']['status_label'] = '[{0}]{1}'.format(item.status, item.item.status_value)
-
-          item['item']['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+          var typeValue = ''
+          if (item.type === 1) {
+            typeValue = '预付押金'
+          } else if (item.type === 2) {
+            typeValue = '项目尾款'
+          }
+          item['type_value'] = typeValue
+          item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+          var sureOutlineTransfer = false
+          if (item.pay_type === 5 && item.status === 0 && item.type === 2) {
+            sureOutlineTransfer = true
+          }
+          item['sure_outline_transfer'] = sureOutlineTransfer
 
           self.tableData.push(item)
         } // endfor

@@ -79,6 +79,7 @@ export default {
   // 案例
   designCase: '/designCase',  // 公司案例
   designCaseId: '/designCase/{0}',  // 公司案例
+  designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
 
   // 公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情

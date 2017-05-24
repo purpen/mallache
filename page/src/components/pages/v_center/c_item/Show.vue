@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <el-row :gutter="24">
+    <el-row :gutter="24" type="flex" justify="center">
       <v-item-progress :progressButt="progressButt" :progressContract="progressContract" :progressItem="progressItem"></v-item-progress>
 
       <el-col :span="19">
@@ -49,7 +49,7 @@
                     </div>
                   </div>
                   <div class="contract-right">
-                    <p><a href="#"><i class="fa fa-download" aria-hidden="true"></i> 下载</a></p>
+                    <p><router-link :to="{name: 'vcenterContractDown', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</router-link></p>
                     <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
                     <p v-if="item.status < 7"><router-link :to="{name: 'vcenterContractSubmit', params: {item_id: item.id}}" target="_blank"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
                   </div>
@@ -521,7 +521,7 @@ export default {
               var items = response.data.data
               for (var i = 0; i < items.length; i++) {
                 var item = items[i]
-                items[i].created_at = item.created_at.date.date_format().format('yyyy-MM-dd')
+                items[i].created_at = item.created_at.date_format().format('yyyy-MM-dd')
               }
               self.stages = items
               console.log('aa')

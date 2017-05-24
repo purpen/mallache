@@ -2,9 +2,9 @@
   <div class="container">
 
     <v-progress :companyStep="true"></v-progress>
-    <el-row :gutter="24">
+    <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="18">
+      <el-col :span="19">
         <div class="content">
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
@@ -83,7 +83,7 @@
         
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
           <p class="slide-str">100家推荐</p>

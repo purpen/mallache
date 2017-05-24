@@ -67,7 +67,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
-  import vMenuSub from '@/components/pages/v_center/design_case/MenuSub'
+  import vMenuSub from '@/components/pages/v_center/stage/MenuSub'
   import api from '@/api/api'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
@@ -204,7 +204,7 @@
       uploadSuccess(response, file, fileList) {
       },
       beforeUpload(file) {
-        const arr = ['image/jpeg', 'image/gif', 'image/png', 'image/pdf']
+        const arr = ['image/jpeg', 'image/pdf']
         const isLt5M = file.size / 1024 / 1024 < 5
 
         if (arr.indexOf(file.type) === -1) {

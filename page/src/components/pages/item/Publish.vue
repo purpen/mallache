@@ -2,17 +2,23 @@
   <div class="container">
 
     <div class="publish-box">
-      <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
-      <p class="success-str">发布成功</p>
+      <div v-if="verifyStatus === 1">
+        <p class="success-img"><img src="../../../assets/images/icon/success_2x.png" width="80" /></p>
+        <p class="success-str">发布成功</p>    
+      </div>
+      <div v-else>
+        <p class="success-img"><img src="../../../assets/images/icon/warning_2x.png" width="80" /></p>
+        <p class="success-str">未认证</p>    
+      </div>
 
-      <p class="success-des red" v-if="verifyStatus === 0">项目已发布, 请先完成公司认证，系统才会为您匹配合适的设计公司</p>
-      <p class="success-des" v-else>项目已发布成功，24小时内我们会为智能匹配合适的设计公司。</p>
+      <!--<p class="success-des red" v-if="verifyStatus === 0">发布项目，需认证公司信息，请你尽快认证</p>-->
+      <p class="success-des" v-else>系统已经成功推送项目消息，等待设计公司接单，一旦有消息我们会及时通知您</p>
       <p v-if="verifyStatus === 0">
-        <router-link :to="{name: 'vcenterItemList'}" class="item">公司认证</router-link>
+        <router-link :to="{name: 'vcenterItemList'}" class="renzheng"><el-button class="is-custom" type="primary">去认证</el-button></router-link>
       </p>
       <p v-else>
-        <router-link :to="{name: 'home'}" class="item">返回首页</router-link>
-        <router-link :to="{name: 'vcenterItemList'}" class="item">项目管理</router-link>
+        <router-link :to="{name: 'home'}" class="item"><el-button class="is-custom">返回首页</el-button></router-link>
+        <router-link :to="{name: 'vcenterItemList'}" class="item"><el-button class="is-custom" type="primary">查看项目</el-button></router-link>
       </p>
     </div>
 
@@ -64,7 +70,6 @@
   }
   .success-str {
     font-size: 2rem;
-    color: #00AC84;
     margin-bottom: 20px;
   }
   .success-des {
@@ -74,6 +79,13 @@
   }
   .red {
     color: red;
+  }
+  a.item button {
+    padding: 5px 20px 5px 20px;
+    margin: 5px;
+  }
+  a.renzheng button {
+    padding: 10px 20px;
   }
 
 </style>

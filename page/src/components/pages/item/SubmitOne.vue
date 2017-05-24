@@ -1,50 +1,53 @@
 <template>
   <div class="container">
-    <div class="pub-title">发布项目需求</div>
-    <div class="pub-content">
-      <div class="shade">
-        <p>太火鸟SaaS平台提供智能、专业、高效的设计服务，在这里你可以发布产品设计、UI／UX设计的项目需求，为你智能匹配专业设计服务，并提供全方位的解决方案。</p>
-      </div>
-    </div>
-    <div class="pub-title process-title">发布流程</div>
-    <div class="process">
-      <div class="item">
-        <img src="../../../assets/images/item/item_dj.png" width="68" />
-        <p>1.预付99元定金</p>
-      </div>
-      <div class="item line"></div>
-      <div class="item">
-        <img src="../../../assets/images/item/item_fb.png" width="68" />
-        <p>2.选择设计类型</p>
-      </div>
-      <div class="item line"></div>
-      <div class="item">
-        <img src="../../../assets/images/item/item_xq.png" width="68" />
-        <p>3.填写项目需求</p>
-      </div>
-      <div class="item line"></div>
-      <div class="item">
-        <img src="../../../assets/images/item/item_lxx.png" width="68" />
-        <p>4.填写联系信息</p>
-      </div>
-      <div class="item line"></div>
-      <div class="item">
-        <img src="../../../assets/images/item/item_fb.png" width="68" />
-        <p>5.发布项目</p>
-      </div>
-      <div class="item line"></div>
-      <div class="item">
-        <img src="../../../assets/images/item/item_tj.png" width="68" />
-        <p>6.推荐设计公司</p>
-      </div>
-    </div>
-    <div class="clear"></div>
-    <div class="pub-title pub-btn">
-      <p>¥ <span class="money">99</span> / 次</p>
-      <p><router-link :to="{name: 'itemPayment'}"><el-button class="is-custom" type="primary" size="large">立即支付</el-button></router-link></p>
-      <p class="des"><span>*</span> 99元仅作为项目发布的预付金，项目对接失败将退换到账户，项目对接成功后将作为预付金，客户只需支付项目剩下金额即可</p>
-    </div>
-
+    <el-row :gutter="24" type="flex" justify="center">
+      <el-col :span="24">
+        <div class="pub-title">发布项目需求</div>
+        <div class="pub-content">
+          <div class="shade">
+            <p>太火鸟SaaS平台提供智能、专业、高效的设计服务，在这里你可以发布产品设计、UI／UX设计的项目需求，为你智能匹配专业设计服务，并提供全方位的解决方案。</p>
+          </div>
+        </div>
+        <div class="pub-title process-title">发布流程</div>
+        <div class="process">
+          <div class="item">
+            <img src="../../../assets/images/item/item_dj.png" width="68" />
+            <p>1.预付99元定金</p>
+          </div>
+          <div class="item line"></div>
+          <div class="item">
+            <img src="../../../assets/images/item/item_fb.png" width="68" />
+            <p>2.选择设计类型</p>
+          </div>
+          <div class="item line"></div>
+          <div class="item">
+            <img src="../../../assets/images/item/item_xq.png" width="68" />
+            <p>3.填写项目需求</p>
+          </div>
+          <div class="item line"></div>
+          <div class="item">
+            <img src="../../../assets/images/item/item_lxx.png" width="68" />
+            <p>4.填写联系信息</p>
+          </div>
+          <div class="item line"></div>
+          <div class="item">
+            <img src="../../../assets/images/item/item_fb.png" width="68" />
+            <p>5.发布项目</p>
+          </div>
+          <div class="item line"></div>
+          <div class="item">
+            <img src="../../../assets/images/item/item_tj.png" width="68" />
+            <p>6.推荐设计公司</p>
+          </div>
+        </div>
+        <div class="clear"></div>
+        <div class="pub-title pub-btn">
+          <p>¥ <span class="money">99</span> / 次</p>
+          <p><router-link :to="{name: 'itemPayment'}"><el-button class="is-custom" type="primary" size="large">立即支付</el-button></router-link></p>
+          <p class="des"><span>*</span> 99元仅作为项目发布的预付金，项目对接失败将退换到账户，项目对接成功后将作为预付金，客户只需支付项目剩下金额即可</p>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -90,7 +93,6 @@ export default {
     line-height: 2;
   }
   .process {
-  
   }
   .process .item {
     margin: 10px 1%;
@@ -98,7 +100,7 @@ export default {
     float: left;
   }
   .process .item img, .process .item p {
-    padding: 5px;
+    padding: 2px;
     color: #555;
   }
   .process .item.line {

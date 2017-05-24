@@ -31,4 +31,10 @@ String.prototype.date_format = function()
    return new Date(this);
 }
 
+// 时间戳转时间对象
+Number.prototype.date_format = function()   
+{ 
+   return new Date(this * 1000);
+}
+
 /* eslint-enable */

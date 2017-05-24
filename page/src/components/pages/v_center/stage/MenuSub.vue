@@ -1,7 +1,7 @@
 <template>
   <div class="vcenter-menu-sub">
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterDesignCaseList'}" exact class="item">全部</router-link>
+      <router-link :to="{name: 'vcenterTrueCItemList'}" class="item is-active">我的项目</router-link>
     </div>
     <div class="vcenter-menu-sub-list-right" style="float:right;">
 

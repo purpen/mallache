@@ -6,9 +6,38 @@ html{
   font-size:62.5%; /* 10÷16=62.5% */
 }
 body{
-  font-size:12px;
-  font-size:1.2rem ; /* 12÷10=1.2 */
+  overflow-x: hidden;
+  margin: 0 auto;
 }
+
+#app {
+  margin: 0 auto;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1201px) { 
+  .container {width: 1200px} 
+} 
+/* css 注释说明：设置了浏览器宽度不小于1201px时 abc 显示1200px宽度 */
+
+@media screen and (max-width: 1200px) { 
+  .container {width: 900px} 
+} 
+/* 设置了浏览器宽度不大于1200px时 abc 显示900px宽度 */ 
+
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  .container {
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 959px) {
+  .container {
+  }
+}
+
 p{
   font-size:14px;
   font-size:1.4rem;
@@ -55,8 +84,15 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   clear: both;
 }
 
+.el-form-item__label {
+  font-size: 1.6rem;
+}
+.el-form-item__label:before {
+  display: none;
+}
 .el-form-item__content {
   line-height: 10px;
+  margin-bottom: 10px;
 }
 
 .blank10 {
@@ -177,7 +213,7 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 20px;
 }
 .footer .share-box {
-  width: 150px;
+  width: 160px;
   margin: 0 auto;
 }
 .footer p.share {
@@ -267,9 +303,6 @@ button.is-custom.is-outlined.is-loading:after {
  * vCenter Menu Sub --- End
  */
 
-.container {
-  margin: 0 100px 0 100px;
-}
 
 /**
  * vCenter Content

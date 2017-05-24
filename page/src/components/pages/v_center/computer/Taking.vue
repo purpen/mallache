@@ -344,8 +344,8 @@
     padding: 0 0 20px 0;
   }
   .rz-title span {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 400;
   }
   .rz-stat {
     float: right;
@@ -364,11 +364,11 @@
     margin: 0 0 10px 0;
   }
   .item-title span {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
   }
   .taking-info .des {
     color: #666;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
   .line {
     margin-top: 20px;

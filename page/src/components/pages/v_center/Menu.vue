@@ -9,7 +9,7 @@
       <router-link :to="{name: 'vcenterOrderList'}" class="item">
         项目订单
       </router-link>
-      <router-link :to="{name: 'vcenterCItemList', query: {type: 1}}" class="item">
+      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
         我的项目
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterItemList'}" class="item">
+      <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
         我的项目
       </router-link>
       <router-link :to="{name: 'vcenterOrderList'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
@@ -98,6 +98,10 @@ export default {
     text-transform: none;
     font-weight: 400;
     padding: .85rem 1.5rem .85rem 1.5rem!important;
+  }
+
+  .menu-list .item {
+    font-size: 1.3rem;
   }
 
   .menu-list .item:hover {

@@ -51,8 +51,12 @@
                 </template>
             </el-table-column>
             <el-table-column
-              prop="user_id"
               label="创建人">
+                <template scope="scope">
+                  <p>
+                    {{ scope.row.users.account }}[{{ scope.row.user_id }}]
+                  </p>
+                </template>
             </el-table-column>
             <el-table-column
               prop="company_type_val"

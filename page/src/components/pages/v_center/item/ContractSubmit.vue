@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <el-row :gutter="24">
+    <el-row :gutter="0">
       <v-menu></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="24">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">

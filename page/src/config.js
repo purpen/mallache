@@ -296,22 +296,18 @@ const DESIGN_COST_OPTIONS = [
   },
   {
     id: 3,
-    name: '10-15万'
+    name: '10-20万'
   },
   {
     id: 4,
-    name: '15-20万'
-  },
-  {
-    id: 5,
     name: '20-30万'
   },
   {
-    id: 6,
+    id: 5,
     name: '30-50万'
   },
   {
-    id: 7,
+    id: 6,
     name: '50万以上'
   }
 
@@ -341,11 +337,106 @@ const COMPANY_SIZE = [
   }
 ]
 
+// 银行卡信息
+const BANK_OPTIONS = [
+  {
+    id: 1,
+    name: '中国建设银行',
+    mark: 'js'
+  },
+  {
+    id: 2,
+    name: '中国银行',
+    mark: 'zh'
+  },
+  {
+    id: 3,
+    name: '中国农业银行',
+    mark: 'ny'
+  },
+  {
+    id: 4,
+    name: '中国工商银行',
+    mark: 'gs'
+  },
+  {
+    id: 6,
+    name: '民生银行',
+    mark: 'ms'
+  },
+  {
+    id: 7,
+    name: '招商银行',
+    mark: 'zs'
+  },
+  {
+    id: 8,
+    name: '兴业银行',
+    mark: 'xy'
+  },
+  {
+    id: 9,
+    name: '国家开发银行',
+    mark: 'gjkf'
+  },
+  {
+    id: 10,
+    name: '汇丰银行',
+    mark: 'hf'
+  },
+  {
+    id: 11,
+    name: '中国人民银行',
+    mark: 'rm'
+  },
+  {
+    id: 12,
+    name: '中国光大银行',
+    mark: 'gd'
+  },
+  {
+    id: 13,
+    name: '中信银行',
+    mark: 'zx'
+  },
+  {
+    id: 14,
+    name: '交通银行',
+    mark: 'jt'
+  },
+  {
+    id: 15,
+    name: '华夏银行',
+    mark: 'hx'
+  },
+  {
+    id: 16,
+    name: '深圳发展银行',
+    mark: 'szfz'
+  },
+  {
+    id: 17,
+    name: '浦发银行',
+    mark: 'pf'
+  },
+  {
+    id: 18,
+    name: '中国邮政储蓄银行',
+    mark: 'yzcx'
+  }
+]
+
+// test
+const TEST = {}
+
 module.exports = {
   COMPANY_TYPE,
   DESIGN_CASE_PRICE_OPTIONS,
   DESIGN_CASE_SALE_OPTIONS,
   CYCLE_OPTIONS,
   DESIGN_COST_OPTIONS,
-  COMPANY_SIZE
+  COMPANY_SIZE,
+  BANK_OPTIONS,
+
+  TEST
 }

@@ -124,7 +124,7 @@
           }
           console.log(self.item)
 
-          self.$http.get(api.designCase, {})
+          self.$http.get(api.designCaseCompanyId.format(id), {})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               self.designCases = response.data.data

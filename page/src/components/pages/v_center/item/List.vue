@@ -1,87 +1,103 @@
 <template>
   <div class="container">
-    <el-row :gutter="24">
-      <v-menu></v-menu>
+    <el-row :gutter="24" type="flex" justify="center">
+      <v-menu currentName="item"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
+
+            <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
+              <div class="item ing" v-for="(d, index) in itemIngList">
+                <div class="banner">
+                    <p>
+                      <span>进行中</span>
+                    </p>
+                </div>
+                <div class="content">
+                  <div class="pre">
+                    <p class="c-title-pro">{{ d.item.name }}</p>
+                    <p class="progress-line"><el-progress :text-inside="true" :show-text="false" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
+                    <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
+                    <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
+                  </div>
+                </div>
+              </div>
+
+
             <div class="pub">
               <router-link :to="{name: 'itemSubmitOne'}">
                 <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
               </router-link>
             </div>
-            <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
-            <div>
-              <div class="item" v-for="d in itemList">
-                <div v-if="d.item.status === 1">
-                  <div class="banner">
-                      <p>
-                        <span>进行中</span>
-                      </p>
-                  </div>
-                  <div class="content">
-                    <div class="pre">
-                      <p class="c-title-pro">{{ d.item.name }}</p>
-                      <p class="progress-line"><el-progress :text-inside="true" :show-text="false" :stroke-width="18" :percentage="d.item.progress" status="exception"></el-progress></p>
-                      <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
-                      <p><el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id" :item_type="d.item.type" @click="editItem" size="" type="primary"><i class="el-icon-edit"> </i> 完善项目</el-button></p>
-                    </div>
-                  </div>
-                </div>
 
-                <div v-else>
 
-                  <div class="banner">
-                      <p class="fl">
-                        <span>{{ d.item.created_at }}</span>
-                      </p>
-                      <p class="fr">
-                        <span>{{ d.item.status_value }}</span>
-                      </p>
-                  </div>
-                  <div class="content">
-                    <div class="l-item">
-                      <p class="c-title">
-                        <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link>
-                      </p>
-                      <p>项目预算: {{ d.item.design_cost_value }}</p>
-                      <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
-                      <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
-                      <p>项目周期: {{ d.item.cycle_value }}</p>
-                    </div>
-                    <!--
-                    <div class="r-item">
-                      <p><a href="#">{{ d.item.status_value }}</a></p>
-                    </div>
-                    -->
-                  </div>
-                  <div class="opt" v-show="d.item.status !== 2">
-                    <div class="l-item">
-                      <p v-show="d.item.price !== 0">
-                        <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>{{ d.item.price }}</b></span>
-                      </p>
-                    </div>
-                    <div class="r-item">
-                      <p class="btn" v-show="d.item.status === -2">
-                        <a href="javascript:void(0);" @click="restartBtn" :item_id="d.item.id" class="b-blue">重新编辑</a>
-                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-red">关闭项目</a>
-                      </p>
-                      <p class="btn" v-show="d.item.show_offer">
-                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，点击查看</a>&nbsp;&nbsp;
-                      </p>
-                      <p class="btn" v-show="d.item.status === 3">
-                        <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">选择设计公司</a>&nbsp;&nbsp;
-                      </p>
+              <el-row :gutter="0" class="item-title-box" v-show="!isLoading">
+                <el-col :span="11">
+                  <p>项目名称</p>
+                </el-col>
+                <el-col :span="3">
+                  <p>交易金额</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>状态</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>操作</p>
+                </el-col>
+              </el-row>
 
-                    </div>
-                  </div>
+              <div class="item" v-for="(d, index) in itemList">
 
-                </div>
+                <el-row class="banner">
+                  <el-col :span="12">
+                    <p>{{ d.item.created_at }}</p>
+                  </el-col>
+                </el-row>
+
+                <el-row :gutter="0" class="item-content">
+                  <el-col :span="11" class="item-title">
+                    <p class="c-title">
+                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
+                    </p>
+                    <p>项目预算: {{ d.item.design_cost_value }}</p>
+                    <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
+                    <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                    <p>项目周期: {{ d.item.cycle_value }}</p>
+                  </el-col>
+                  <el-col :span="3">
+                    <p>
+                      <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
+                    </p>
+                  </el-col>
+                  <el-col :span="5">
+                    <p class="status-str">{{ d.item.status_value }}</p>
+                  </el-col>
+                  <el-col :span="5">
+                    <p class="btn" v-show="d.item.status === -2">
+                      <a href="javascript:void(0);" @click="restartBtn" :item_id="d.item.id" class="b-blue">重新编辑</a>
+                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-red">关闭项目</a>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 3">
+                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">去查看>></a>
+                    </p>
+                    <p class="btn" v-show="d.item.show_offer">
+                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，查看>></a>&nbsp;&nbsp;
+                    </p>
+                    <p class="btn" v-show="d.item.status === 6">
+                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">确认合同>></a>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 8">
+                      <a href="javascript:void(0);" @click="secondPay" :item_id="d.item.id" class="">支付项目款>></a>
+                    </p>
+                  </el-col>
+                </el-row>
+
 
               </div>
-            </div>
+
+
 
           </div>
         </div>
@@ -106,8 +122,9 @@
     },
     data () {
       return {
-        isLoading: true,
+        isLoading: false,
         itemList: [],
+        itemIngList: [],
         pagination: {},
         userId: this.$store.state.event.user.id
       }
@@ -120,7 +137,6 @@
       loadList(type) {
         const that = this
         that.isLoading = true
-        that.itemList = []
         that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
         .then (function(response) {
           that.isLoading = false
@@ -150,16 +166,18 @@
                 showOffer = true
               }
               data[i]['item']['show_offer'] = showOffer
-              data[i]['item']['created_at'] = d.item.created_at.date.date_format().format('yyyy-MM-dd')
+              data[i]['item']['created_at'] = d.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor
-            that.itemList = data
-            that.pagination = response.data.meta.pagination
-            console.log(response.data)
+            if (type === 1) {
+              that.itemIngList = data
+            } else if (type === 2) {
+              that.itemList = data
+            }
+            console.log(data)
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
           return false
         })
       },
@@ -202,6 +220,11 @@
         .catch (function(error) {
           self.$message.error(error.message)
         })
+      },
+      // 支付项目资金
+      secondPay(event) {
+        var itemId = event.currentTarget.getAttribute('item_id')
+        this.$router.push({name: 'itemPayFund', params: {item_id: itemId}})
       }
     },
     computed: {
@@ -210,17 +233,11 @@
       var uType = this.$store.state.event.user.type
       // 如果是设计公司，跳到设计公司列表
       if (uType === 2) {
-        this.isLoading = false
         this.$router.replace({name: 'vcenterCItemList'})
         return
       }
-      var type = this.$route.query.type
-      if (type) {
-        type = parseInt(type)
-      } else {
-        type = 0
-      }
-      this.loadList(type)
+      this.loadList(1)
+      this.loadList(2)
     },
     watch: {
       '$route' (to, from) {
@@ -243,6 +260,7 @@
 
   .content-item-box {
     min-height: 500px;
+    margin-top: 20px;
   }
   .pub {
     background: #FAFAFA;
@@ -258,7 +276,7 @@
   }
   .content-item-box .item {
     border: 1px solid #D2D2D2;
-    margin: 20px 0px 20px 0;
+    margin: 0 0px 20px 0;
   }
   .banner {
     height: 40px;
@@ -268,21 +286,11 @@
   }
   .content {
     border-bottom: 1px solid #ccc;
-    height: 150px;
   }
-  .item p {
+  .item.ing p {
     padding: 10px;
   }
-  .l-item p {
-    font-size: 1rem;
-    color: #666;
-    padding: 5px 10px 5px 10px;
-  }
-  p.c-title {
-    font-size: 1.5rem;
-    color: #333;
-    padding: 15px 10px 15px 10px;
-  }
+
   p.c-title-pro {
     font-size: 1.5rem;
     color: #333;
@@ -292,21 +300,6 @@
     height: 30px;
   }
 
-  .content .l-item {
-    float: left;
-  }
-  .content .r-item {
-    float: right;
-  }
-  .content .pre {
-  }
-  .opt .l-item {
-    float: left;
-    line-height: 1.2;
-  }
-  .opt .r-item {
-    float: right;
-  }
   .money-str {
     font-size: 1.5rem;
   }
@@ -327,6 +320,37 @@
     color: #666;
     margin-top: 0px;
     margin-bottom: -10px;
+  }
+
+
+  .item-title-box {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+  .el-col {
+    padding: 10px 20px 10px 20px;
+  }
+  .el-col p {
+  }
+
+  .status-str {
+    color: #FF5A5F;
+    font-size: 1.2rem;
+  }
+  .item-title p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  p.c-title {
+    font-size: 1.6rem;
+    color: #333;
+    padding: 0px 5px 10px 0;
+    line-height: 1;
+  }
+  .item-content {
+    padding: 10px 0 10px 0;
   }
 
 </style>

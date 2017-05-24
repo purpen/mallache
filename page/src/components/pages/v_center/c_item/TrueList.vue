@@ -1,63 +1,89 @@
 <template>
   <div class="container">
-    <el-row :gutter="24">
-      <v-menu></v-menu>
+    <el-row :gutter="24" type="flex" justify="center">
+      <v-menu currentName="c_item"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
-          <div class="content-item-box">
-            <div class="loading" v-loading.body="isLoading"></div>
+          <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
+
+          <div class="loading" v-loading.body="isLoading"></div>
+          <div class="content-item-box" v-show="!isLoading">
+
+              <el-row :gutter="0" class="item-title-box">
+                <el-col :span="10">
+                  <p>项目名称</p>
+                </el-col>
+                <el-col :span="4">
+                  <p>交易金额</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>状态</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>操作</p>
+                </el-col>
+              </el-row>
 
             <div class="item" v-for="(d, index) in designItems">
-              <div class="banner">
+
+
+                <el-row class="banner">
+                  <el-col :span="3">
                     <p>{{ d.item.created_at }}</p>
-                    <p>{{ d.item.company_name }}</p>
+                  </el-col>
+                  <el-col :span="5">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">电话: {{ d.item.phone }}</p>
                       <p class="contact">邮箱: {{ d.item.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系客户</p>
+                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> {{ d.item.company_name }}</p>
                     </el-popover>
-              </div>
-              <div class="content clear">
-                <div class="l-item">
-                  <p class="c-title"><router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link></p>
-                  <p>项目预算: {{ d.item.design_cost_value }}</p>
-                  <p>设计类别: {{ d.item.type_label }}</p>
-                  <p>项目周期: {{ d.item.cycle_value }}</p>
-                </div>
-                <div class="r-item">
-                  <p>{{ d.item.design_status_value }}</p>
-                </div>
-              </div>
-              <div class="opt">
-                <div class="l-item">
-                  <p v-show="d.item.show_price">
-                    <span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>{{ d.item.price }}</b></span>
-                  </p>
-                </div>
-                <div class="r-item">
-                  <p class="btn" v-show="d.item.status === 5">
-                    <span v-if="d.is_contract === 0">
-                      <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">提交在线合同</a>
-                    </span>
-                    <span v-else>
-                      <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">修改合同</a>
-                      <a href="javascript:void(0);" @click="contractSendBtn" :index="index" :item_id="d.item.id">发送合同</a>
-                    </span>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 6">
-                    <a href="javascript:void(0);" @click="contractBtn" :index="index" :item_id="d.item.id">修改合同</a>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 9">
-                    <a href="javascript:void(0);" @click="sureBeginBtn" :index="index" :item_id="d.item.id">确认开始设计</a>
-                  </p>
+                  </el-col>
+                </el-row>
 
-                </div>
-              </div>
+                <el-row class="item-content">
+                  <el-col :span="10" class="item-title">
+                    <p class="c-title">
+                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
+                    </p>
+                    <p>项目预算: {{ d.item.design_cost_value }}</p>
+                    <p>设计类别: {{ d.item.type_label }}</p>
+                    <p>项目周期: {{ d.item.cycle_value }}</p>
+                  </el-col>
+                  <el-col :span="4">
+                    <p>
+                      <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
+                    </p>
+                  </el-col>
+                  <el-col :span="5">
+                    <p class="status-str">{{ d.item.design_status_value }}</p>
+                  </el-col>
+                  <el-col :span="5">
+                    <div class="btn">
+                      <div v-if="d.is_contract === 0">
+                        <p><el-button class="is-custom" @click="contractBtn" :index="index" size="small" :item_id="d.item.id" type="primary">提交在线合同</el-button></p>
+                      </div>
+                      <div v-else>
+                        <div v-show="d.item.status === 5">
+                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
+                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>                       
+                        </div>
+                        <div v-show="d.item.status === 6">
+                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>                       
+                        </div>
+
+                      </div>
+                      <p class="btn" v-show="d.item.status === 9">
+                        <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始设计</el-button>
+                      </p>
+
+
+                    </div>
+                  </el-col>
+                </el-row>
+
             </div>
-
 
           </div>
         </div>
@@ -101,6 +127,8 @@
         sureDialogLoadingBtn: false,
         isLoading: true,
         designItems: [],
+        waitCount: 0,
+        ingCount: 0,
         userId: this.$store.state.event.user.id
       }
     },
@@ -175,6 +203,7 @@
           if (!response.data.data) {
             return false
           }
+          self.ingCount = response.data.meta.pagination.total
           var designItems = response.data.data
           for (var i = 0; i < designItems.length; i++) {
             var item = designItems[i]
@@ -188,7 +217,7 @@
             if (item.item.status >= 5) showPrice = true
             designItems[i].item.show_price = showPrice
             designItems[i].item.type_label = typeLabel
-            designItems[i]['item']['created_at'] = item.item.created_at.date.date_format().format('yyyy-MM-dd')
+            designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
           } // endfor
           self.designItems = designItems
         } else {
@@ -200,6 +229,23 @@
       .catch (function(error) {
         self.$message.error(error.message)
         return false
+      })
+
+      // 获取待合同项目数
+      self.$http.get(api.designItemList, {})
+      .then (function(response) {
+        self.isLoading = false
+        if (response.data.meta.status_code === 200) {
+          if (!response.data.data) {
+            return false
+          }
+          self.waitCount = response.data.meta.pagination.total
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
       })
     }
   }
@@ -214,19 +260,14 @@
   }
   .content-item-box .item {
     border: 1px solid #D2D2D2;
-    margin: 20px 0px 20px 0;
+    margin: 0 0px 20px 0;
   }
   .banner {
-    height: 40px;
+    line-height: 25px;
     border-bottom: 1px solid #ccc;
     background: #FAFAFA;
   }
-  .banner p {
-    float: left;
-    margin-right: 30px;
-    color: #666;
-    line-height: 25px;
-  }
+
   .banner .contact-user {
     color: #222;
   }
@@ -234,14 +275,7 @@
     border-bottom: 1px solid #ccc;
     height: 120px;
   }
-  .item p {
-    padding: 10px;
-  }
-  .l-item p {
-    font-size: 1rem;
-    color: #666;
-    padding: 5px 10px 5px 10px;
-  }
+
   p.c-title {
     font-size: 1.5rem;
     color: #333;
@@ -251,22 +285,6 @@
     height: 30px;
   }
 
-  .content .l-item {
-    float: left;
-  }
-  .content .r-item {
-    float: right;
-  }
-  .content .r-item p{
-    color: #666;
-  }
-  .opt .l-item {
-    float: left;
-    line-height: 1.2;
-  }
-  .opt .r-item {
-    float: right;
-  }
   .money-str {
     font-size: 1.5rem;
   }
@@ -283,10 +301,44 @@
     color: #FF5A5F;
   }
 
+  .btn p {
+    margin-bottom: 10px;
+  }
+
   p.contact {
     line-height: 1.5;
     font-size: 1.3rem;
     color: #666;
+  }
+
+  .item-title-box {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+  .el-col {
+    padding: 10px 20px 10px 20px;
+  }
+  .el-col p {
+  }
+
+  .status-str {
+    color: #FF5A5F;
+    font-size: 1.2rem;
+  }
+  .item-title p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  p.c-title {
+    font-size: 1.6rem;
+    color: #333;
+    padding: 0px 5px 10px 0;
+    line-height: 1;
+  }
+  .item-content {
+    padding: 10px 0 10px 0;
   }
 
 

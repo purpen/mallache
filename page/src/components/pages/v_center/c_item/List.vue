@@ -1,50 +1,72 @@
 <template>
   <div class="container">
-    <el-row :gutter="24">
-      <v-menu></v-menu>
+    <el-row :gutter="24" type="flex" justify="center">
+      <v-menu currentName="c_item"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
-          <div class="content-item-box">
+          <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
-            <div class="loading" v-loading.body="isLoading"></div>
+          <div class="loading" v-loading.body="isLoading"></div>
+          <div class="content-item-box" v-show="!isLoading">
+
+              <el-row :gutter="0" class="item-title-box">
+                <el-col :span="10">
+                  <p>项目名称</p>
+                </el-col>
+                <el-col :span="4">
+                  <p>交易金额</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>状态</p>
+                </el-col>
+                <el-col :span="5">
+                  <p>操作</p>
+                </el-col>
+              </el-row>
+
             <div class="item" v-for="(d, index) in designItems">
-              <div class="banner">
+
+                <el-row class="banner">
+                  <el-col :span="3">
                     <p>{{ d.item.created_at }}</p>
-                    <p>{{ d.item.company_name }}</p>
+                  </el-col>
+                  <el-col :span="5">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">电话: {{ d.item.phone }}</p>
                       <p class="contact">邮箱: {{ d.item.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系客户</p>
+                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> {{ d.item.company_name }}</p>
                     </el-popover>
-              </div>
-              <div class="content clear">
-                <div class="l-item">
-                  <p class="c-title"><router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}" target="_blank">{{ d.item.name }}</router-link></p>
-                  <p>项目预算: {{ d.item.design_cost_value }}</p>
-                  <p>设计类别: {{ d.item.type_label }}</p>
-                  <p>项目周期: {{ d.item.cycle_value }}</p>
-                </div>
-                <div class="r-item">
-                  <p>{{ d.status_value }}</p>
-                </div>
-              </div>
-              <div class="opt">
-                <div class="l-item">
-                  <p>
-                    <!--<span>项目金额:</span>&nbsp;&nbsp;<span class="money-str">¥ <b>5000.00</b></span>-->
-                  </p>
-                </div>
-                <div class="r-item">
-                  <p class="btn" v-show="d.design_company_status === 0">
-                    <a href="javascript:void(0);" @click="companyRefuseBtn" :index="index" :item_id="d.item.id">拒绝此单</a>&nbsp;&nbsp;
-                    <a href="javascript:void(0);" @click="takingBtn" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" class="b-blue">有意向接单</a>&nbsp;&nbsp;
-                    <!--<a href="javascript:void(0);" :item_id="d.item.id" class="b-red">一键抢单</a>-->
-                  </p>
-                </div>
-              </div>
+                  </el-col>
+                </el-row>
+
+                <el-row class="item-content">
+                  <el-col :span="10" class="item-title">
+                    <p class="c-title">
+                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
+                    </p>
+                    <p>项目预算: {{ d.item.design_cost_value }}</p>
+                    <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
+                    <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                    <p>项目周期: {{ d.item.cycle_value }}</p>
+                  </el-col>
+                  <el-col :span="4">
+                    <p>
+                      <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
+                    </p>
+                  </el-col>
+                  <el-col :span="5">
+                    <p class="status-str">{{ d.design_company_status_value }}</p>
+                  </el-col>
+                  <el-col :span="5">
+                    <div class="btn" v-show="d.design_company_status === 0">
+                      <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">拒绝此单</el-button></p>
+                      <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">有意向接单</el-button></p>
+                    </div>
+                  </el-col>
+                </el-row>
+
             </div>
 
 
@@ -108,6 +130,8 @@
         refuseItemLoadingBtn: false,
         currentIndex: '',
         currentCost: '',
+        waitCount: 0,
+        ingCount: 0,
         takingPriceForm: {
           itemId: '',
           price: '',
@@ -224,6 +248,7 @@
           if (!response.data.data) {
             return false
           }
+          self.waitCount = response.data.meta.pagination.total
           var designItems = response.data.data
           for (var i = 0; i < designItems.length; i++) {
             var item = designItems[i]
@@ -234,7 +259,7 @@
               typeLabel = item.item.type_value + '/' + item.item.design_type_value
             }
             designItems[i].item.type_label = typeLabel
-            designItems[i]['item']['created_at'] = item.item.created_at.date.date_format().format('yyyy-MM-dd')
+            designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
           } // endfor
           self.designItems = designItems
         } else {
@@ -246,6 +271,23 @@
       .catch (function(error) {
         self.$message.error(error.message)
         return false
+      })
+
+      // 获取已确认合作的项目数
+      self.$http.get(api.designCooperationLists, {})
+      .then (function(response) {
+        self.isLoading = false
+        if (response.data.meta.status_code === 200) {
+          if (!response.data.data) {
+            return false
+          }
+          self.ingCount = response.data.meta.pagination.total
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
       })
     }
   }
@@ -260,19 +302,14 @@
   }
   .content-item-box .item {
     border: 1px solid #D2D2D2;
-    margin: 20px 0px 20px 0;
+    margin: 0 0px 20px 0;
   }
   .banner {
-    height: 40px;
+    line-height: 25px;
     border-bottom: 1px solid #ccc;
     background: #FAFAFA;
   }
-  .banner p {
-    float: left;
-    margin-right: 30px;
-    color: #666;
-    line-height: 25px;
-  }
+
   .banner .contact-user {
     color: #222;
   }
@@ -280,14 +317,7 @@
     border-bottom: 1px solid #ccc;
     height: 120px;
   }
-  .item p {
-    padding: 10px;
-  }
-  .l-item p {
-    font-size: 1rem;
-    color: #666;
-    padding: 5px 10px 5px 10px;
-  }
+
   p.c-title {
     font-size: 1.5rem;
     color: #333;
@@ -297,32 +327,16 @@
     height: 30px;
   }
 
-  .content .l-item {
-    float: left;
-  }
-  .content .r-item {
-    float: right;
-  }
-  .content .r-item p{
-    color: #666;
-  }
-
-  .opt .l-item {
-    float: left;
-    line-height: 1.2;
-  }
-  .opt .r-item {
-    float: right;
-  }
   .money-str {
     font-size: 1.5rem;
   }
   .btn {
     font-size: 1rem;
   }
-  .btn a {
-    color: #666;
+  .btn p {
+    margin-bottom: 10px;
   }
+
   .btn a.b-blue {
     color: #00AC84;
   }
@@ -337,6 +351,36 @@
   .taking-price-btn {
     float: right;
     margin-bottom: 20px;
+  }
+
+  .item-title-box {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+  .el-col {
+    padding: 10px 20px 10px 20px;
+  }
+  .el-col p {
+  }
+
+  .status-str {
+    color: #FF5A5F;
+    font-size: 1.2rem;
+  }
+  .item-title p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  p.c-title {
+    font-size: 1.6rem;
+    color: #333;
+    padding: 0px 5px 10px 0;
+    line-height: 1;
+  }
+  .item-content {
+    padding: 10px 0 10px 0;
   }
 
 </style>
