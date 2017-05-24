@@ -11,6 +11,8 @@ use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
+use Lib\WxPay\PayNotifyCallBack;
+use Lib\WxPay\WxPay;
 use Qiniu\Http\Request;
 
 class PayController extends BaseController
@@ -315,6 +317,83 @@ class PayController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {get} /pay/demandWxPay 发布需求保证金支付-微信
+     * @apiVersion 1.0.0
+     * @apiName pay demandWxPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          'code_url': ""  //二维码链接
+     *      }
+     *  }
+     */
+    public function demandWxPay()
+    {
+        //总金额
+        $total_fee = config('constant.item_price');
+
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
+
+        $wx_pay = new WxPay();
+        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee, 1);
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url')));
+    }
+
+    /**
+     * @api {get} /pay/itemWxPay/{pay_order_id} 支付项目尾款-微信
+     * @apiVersion 1.0.0
+     * @apiName pay itemWxPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          'code_url': ""  //二维码链接
+     *      }
+     *  }
+     */
+    public function itemWxPay($pay_order_id)
+    {
+        $pay_order = PayOrder::find((int)$pay_order_id);
+        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+
+        $wx_pay = new WxPay();
+        $code_url = $wx_pay->wxPayApi($pay_order->summary, $pay_order->uid, $pay_order->amount, 1);
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url')));
+    }
+
+    /**
+     * @api {post} /pay/wxPayNotify  微信异步回调接口
+     * @apiVersion 1.0.0
+     * @apiName pay wxPayNotify
+     * @apiGroup pay
+     */
+    public function wxPayNotify()
+    {
+        $notify = new PayNotifyCallBack();
+        $notify->Handle(false);
+    }
+
 
 }
 
