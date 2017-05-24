@@ -50,7 +50,8 @@ class DesignCompanyModel extends BaseModel
         'logo',
         'legal_person',
         'document_type',
-        'document_number'
+        'document_number',
+        'open'
     ];
 
     /**
