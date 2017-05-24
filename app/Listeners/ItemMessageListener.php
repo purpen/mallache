@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
+use App\Jobs\SendOneSms;
 use App\Models\DesignCompanyModel;
 use App\Models\FundLog;
 use App\Models\Item;
@@ -119,6 +120,10 @@ class ItemMessageListener
         //添加系统通知
         $tools = new Tools();
         $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '已匹配了合适的设计公司');
+
+        //给项目联系人发送信息
+//        $text = '已匹配了合适的设计公司';
+//        dispatch(new SendOneSms($item->phone,$text));
     }
 
     /**
@@ -129,11 +134,14 @@ class ItemMessageListener
         $item = $event->item;
         $design_company_id = $event->design_company_id;
 
-        $user_id_arr = DesignCompanyModel::select('user_id')
+        $design_company_arr = DesignCompanyModel::select(['user_id','phone'])
             ->whereIn('id', $design_company_id)
-            ->get()
-            ->pluck('user_id')
-            ->all();
+            ->get();
+        //设计公司ID 数组
+       $user_id_arr =  $design_company_arr->pluck('user_id')->all();
+
+       //设计公司联系人手机
+        $phone_arr = $design_company_arr->pluck('phone')->all();
 
         //添加系统通知
         $tools = new Tools();
@@ -141,6 +149,13 @@ class ItemMessageListener
         for ($i = 0; $i < $n; ++$i){
             $tools->message($user_id_arr[$i], '系统向您推荐了项目' . '【' . $item->itemInfo()['name'] . '】');
         }
+
+        //短信通知设计公司有新项目推送
+//        $p = count($phone_arr);
+//        for ($i = 0; $i < $p; ++$i){
+//            $text = '';
+//            dispatch(new SendOneSms($phone_arr[$i], $text));
+//        }
     }
 
     /**

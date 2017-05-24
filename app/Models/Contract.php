@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Contract extends Model
+class Contract extends BaseModel
 {
     /**
      * 与模型关联的数据表

@@ -12,6 +12,17 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
 
     protected $table = 'users';
+
+    /**
+     * 应该被转换成原生类型的属性。
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -109,6 +120,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 一对多关联提款单
+     */
+    public function withdrawOrder()
+    {
+        return $this->hasMany('App\Models\WithdrawOrder', 'user_id');
+    }
+
+    /**
      * 增加用户账户金额（总金额、冻结金额）
      *
      * @param int $user_id
@@ -172,6 +191,47 @@ class User extends Authenticatable implements JWTSubject
         if(!$user->save()){
             Log::error('user_id:' . $user_id . '账户总金额减少失败');
         }
+    }
+
+    /**
+     * 增加账户冻结金额
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function frozenIncrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_frozen += $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户冻结金额增加失败');
+        }
+    }
+
+    /**
+     * 减少账户冻结金额
+     *
+     * @param int $user_id
+     * @param float $amount
+     */
+    public function frozenDecrease(int $user_id, float $amount)
+    {
+        $user = User::find($user_id);
+
+        $user->price_frozen -= $amount;
+        if(!$user->save()){
+            Log::error('user_id:' . $user_id . '账户冻结金额减少失败');
+        }
+    }
+
+
+    /**
+     * 用户可提现金额
+     */
+    public function getCashAttribute()
+    {
+        return $this->price_total - $this->price_frozen;
     }
 
 }

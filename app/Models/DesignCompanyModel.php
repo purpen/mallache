@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
-class DesignCompanyModel extends Model
+class DesignCompanyModel extends BaseModel
 {
     /**
      *与模型关联的数据表
@@ -50,7 +50,8 @@ class DesignCompanyModel extends Model
         'logo',
         'legal_person',
         'document_type',
-        'document_number'
+        'document_number',
+        'open'
     ];
 
     /**
@@ -61,7 +62,8 @@ class DesignCompanyModel extends Model
         'company_size_val',
 //        'item_quantity_val',
         'city_arr',
-        'logo_image'
+        'logo_image',
+        'item_type'
 
     ];
 
@@ -299,6 +301,25 @@ class DesignCompanyModel extends Model
 
         }
         return '';
+    }
+
+    //设计公司接单类型
+    public function getItemTypeAttribute()
+    {
+        $item_type = config('constant.item_type');
+        $arr = [];
+        $design_case = $this->designCase;
+        if(!$design_case->isEmpty()){
+            foreach($design_case as $case){
+                try{
+                    $arr[] = $item_type[$case->type][$case->design_type - 1];
+                }catch (\Exception $e){
+                    continue;
+                }
+            }
+        }
+
+        return $arr;
     }
 
 }

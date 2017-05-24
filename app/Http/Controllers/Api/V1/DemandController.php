@@ -636,7 +636,7 @@ class DemandController extends BaseController
 
         //验证是否是当前用户对应的项目
         if($item->user_id !== $this->auth_user_id || $item->status !== 3){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('拒绝操作', 403));
         }
 
         $recommend_arr = explode(',', $item->recommend);
@@ -648,7 +648,7 @@ class DemandController extends BaseController
 
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
-        return $this->response->collection($design_company, new RecommendListTransformer)->setMeta($this->apiMeta());
+        return $this->response->collection($design_company, new RecommendListTransformer($item))->setMeta($this->apiMeta());
     }
 
     /**

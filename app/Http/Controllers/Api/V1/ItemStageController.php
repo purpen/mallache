@@ -239,7 +239,7 @@ class ItemStageController extends BaseController
         $all['title'] = $request->input('title');
         $all['content'] = $request->input('content');
         $all['summary'] = $request->input('summary') ?? '';
-        $all['status'] = $request->input('summary') ?? 0;
+        $all['status'] = $request->input('status') ?? 0;
 
 
         $itemStage = ItemStage::where('id', $id)->first();
@@ -307,7 +307,6 @@ class ItemStageController extends BaseController
      */
     public function okStatus(Request $request)
     {
-        Log::info(111);
         $id = $request->input('id');
         $itemStage = ItemStage::where('id', $id)->first();
         if (!$itemStage) {

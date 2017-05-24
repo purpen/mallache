@@ -61,6 +61,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/payOrder/lists', 'PayOrderActionController@lists');
         //后台确认项目支付单付款
         $api->post('/admin/payOrder/truePay', 'PayOrderActionController@truePay');
+
+        /**
+         * 提现相关
+         */
+        // 提现项目列表
+        $api->get('/admin/withdrawOrder/lists', 'WithdrawOrderActionController@lists');
+        // 确认提现单已提现
+        $api->post('/admin/withdrawOrder/trueWithdraw', 'WithdrawOrderActionController@trueWithdraw');
     });
 
 });

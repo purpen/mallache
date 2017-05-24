@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
-class DemandCompany extends Model
+class DemandCompany extends BaseModel
 {
     /**
      *与模型关联的数据表

@@ -5,10 +5,18 @@
 namespace App\Http\Transformer;
 
 use App\Models\DesignCompanyModel;
+use App\Models\Item;
+use Illuminate\Support\Facades\DB;
 use League\Fractal\TransformerAbstract;
 
 class RecommendListTransformer extends TransformerAbstract
 {
+    protected $item;
+    public function __construct(Item $item)
+    {
+        $this->item = $item;
+    }
+
     public function transform(DesignCompanyModel $design_company)
     {
         return [
@@ -49,12 +57,17 @@ class RecommendListTransformer extends TransformerAbstract
             'license_image' => $design_company->license_image,
             'unique_id' => strval($design_company->unique_id),
             'city_arr' => $design_company->city_arr,
+            'item_type' => $design_company->item_type,
             'design_case' => $this->designCase($design_company),
         ];
     }
 
     protected function designCase($design_company)
     {
-        return $design_case = $design_company->designCase()->orderBy('id', 'desc')->limit(3)->get();
+        return $design_case = $design_company
+                            ->designCase()
+                            ->orderBy('id', 'desc')
+                            ->limit(3)
+                            ->get();
     }
 }
