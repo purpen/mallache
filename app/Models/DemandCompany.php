@@ -14,6 +14,11 @@ class DemandCompany extends BaseModel
      */
     protected $table = 'demand_company';
 
+    protected $appends = [
+        'document_type_value',
+        'company_property_value',
+        'company_type_value',
+    ];
 
     /**
      * 允许批量赋值字段
@@ -99,6 +104,47 @@ class DemandCompany extends BaseModel
         return Tools::cityName($this->area);
     }
 
+    //证件类型
+    public function getDocumentTypeValueAttribute()
+    {
+        $key = $this->attributes['document_type'];
+        if(array_key_exists($key,config('constant.document_type'))){
+            $document_type_val = config('constant.document_type')[$key];
+            return $document_type_val;
+
+        }
+        return '';
+    }
+
+    //企业性质
+    public function getCompanyPropertyValueAttribute()
+    {
+        if(array_key_exists($this->company_property,config('constant.company_property'))){
+            return config('constant.company_property')[$this->company_property];
+
+        }
+        return '';
+    }
+
+    //企业类型
+    public function getCompanyTypeValueAttribute()
+    {
+        switch ($this->attributes['company_type']){
+            case 1:
+                $company_type_val = '普通';
+                break;
+            case 2:
+                $company_type_val = '多证合一(不含信用代码)';
+                break;
+            case 3:
+                $company_type_val = '多证合一(含信用代码)';
+                break;
+            default:
+                $company_type_val = '';
+        }
+        return $company_type_val;
+    }
+
     /**
      * 更改需求公司审核状态
      */
@@ -149,6 +195,7 @@ class DemandCompany extends BaseModel
             'email' => '',
             'position' => '',
             'user_id' => $user_id,
+            'document_type' => 1,
         ];
 
         $user = User::where('id' , $user_id)->first();

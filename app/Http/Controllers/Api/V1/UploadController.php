@@ -192,12 +192,20 @@ class UploadController extends BaseController
                 if($design = DesignCompanyModel::find($target_id)){
                     $design->logo = $id;
                     $design->save();
+
+                    $user = User::find($design->user_id);
+                    $user->logo = $id;
+                    $user->save();
                 }
                 break;
             case 7:
                 if($demand = DemandCompany::find($target_id)){
                     $demand->logo = $id;
                     $demand->save();
+
+                    $user = User::find($demand->user_id);
+                    $user->logo = $id;
+                    $user->save();
                 }
                 break;
         }

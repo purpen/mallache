@@ -196,6 +196,12 @@ class DemandCompanyController extends BaseController
      * @apiParam {string} contact_name 联系人
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
+     * @apiParam {integer} company_type 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     * @apiParam {string} registration_number 注册号
+     * @apiParam {string}   legal_person 法人姓名
+     * @apiParam {integer}   document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * @apiParam {string}   document_number 证件号码
+     * @apiParam {integer}   company_property 企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -220,7 +226,13 @@ class DemandCompanyController extends BaseController
             'address' => 'max:50',
             'contact_name' => 'max:20',
             'email' => 'email',
-            'position' => 'max:20'
+            'position' => 'max:20',
+            'company_type' => 'integer',
+            'registration_number' => 'max:15',
+            'legal_person' => 'max:20',
+            'document_type' => 'integer',
+            'document_number' => 'max:20',
+            'company_property' => 'integer',
         ];
         $all = $request->except(['token']);
 
@@ -228,8 +240,12 @@ class DemandCompanyController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
-        $demand = DemandCompany::where('user_id', $this->auth_user_id)->update($all);
+        foreach($all as $k => $v){
+            if(empty($v))
+                unset($all[$k]);
+        }
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+        $demand->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());
         }
