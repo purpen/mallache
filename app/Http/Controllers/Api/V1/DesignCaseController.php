@@ -59,9 +59,7 @@ class DesignCaseController extends BaseController
     {
         $user_id = intval($this->auth_user_id);
         $designCase = DesignCaseModel::where('user_id', $user_id)->get();
-        if(!$designCase){
-            return $this->response->array($this->apiSuccess());
-        }
+
         return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
 
     }

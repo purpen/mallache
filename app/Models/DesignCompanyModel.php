@@ -124,7 +124,20 @@ class DesignCompanyModel extends BaseModel
     //企业类型
     public function getCompanyTypeValAttribute()
     {
-        return $this->attributes['company_type'] == 1 ? '普通' : '多证合一';
+        switch ($this->attributes['company_type']){
+            case 1:
+                $company_type_val = '普通';
+                break;
+            case 2:
+                $company_type_val = '多证合一(不含信用代码)';
+                break;
+            case 3:
+                $company_type_val = '多证合一(含信用代码)';
+                break;
+            default:
+                $company_type_val = '';
+        }
+        return $company_type_val;
     }
 
     //企业人数规模
