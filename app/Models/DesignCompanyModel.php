@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class DesignCompanyModel extends BaseModel
 {
@@ -103,7 +104,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 更改设计公司审核状态
      */
-    static public function verifyStatus($id, $verify_status=1)
+    static public function verifyStatus($id, $verify_status=0)
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;

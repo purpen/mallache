@@ -116,6 +116,38 @@ class AdminDesignCompanyController extends Controller
 
 
     /**
+     * @api {put} /admin/designCompany/noVerifyStatus 设计公司未通过审核
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignCompany noVerifyStatus
+     * @apiGroup AdminDesignCompany
+     *
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function noVerifyStatus(Request $request)
+    {
+        $id = $request->input('id');
+        $design_company = DesignCompanyModel::where('id' , $id)->first();
+        if(!$design_company){
+            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        }
+        $design = DesignCompanyModel::verifyStatus($id , 2);
+        if(!$design){
+            return $this->response->array($this->apiError('修改失败' , 500));
+        }
+        return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
      * @api {put} /admin/designCompany/okStatus 设计公司正常
      * @apiVersion 1.0.0
      * @apiName AdminDesignCompany okStatus
@@ -188,14 +220,14 @@ class AdminDesignCompanyController extends Controller
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
      * @apiParam {integer} type_status 0.禁用; 1.正常；
-     * @apiParam {integer} type_verify_status 0.审核中；1.审核通过
+     * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
      * @apiParam {string} token
      */
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type_verify_status = in_array($request->input('type_verify_status'), [0,1]) ? $request->input('type_verify_status') : 1;
-        $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : 1;
+        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2]) ? $request->input('type_verify_status') : null;
+        $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';

@@ -102,7 +102,7 @@ class DemandCompany extends BaseModel
     /**
      * 更改需求公司审核状态
      */
-    static public function verifyStatus($id, $verify_status=1)
+    static public function verifyStatus($id, $verify_status)
     {
         $demand_company = self::findOrFail($id);
         $demand_company->verify_status = $verify_status;
