@@ -82,11 +82,11 @@ class DesignCompanyOtherIndexTransformer extends TransformerAbstract
             'design_type_val' => $DesignCompany->design_type_val,
             'unique_id' => strval($DesignCompany->unique_id),
             'city_arr' => $DesignCompany->city_arr,
-            'legal_person' => strval($DesignCompany->legal_person),
-            'document_type' => intval($DesignCompany->document_type),
-            'document_type_val' => $DesignCompany->document_type_val,
-            'document_number' => strval($DesignCompany->document_number),
-            'document_image' => $DesignCompany->document_image,
+//            'legal_person' => strval($DesignCompany->legal_person),
+//            'document_type' => intval($DesignCompany->document_type),
+//            'document_type_val' => $DesignCompany->document_type_val,
+//            'document_number' => strval($DesignCompany->document_number),
+//            'document_image' => $DesignCompany->document_image,
             'item_type' => $DesignCompany->item_type,
 
         ];
