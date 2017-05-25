@@ -181,7 +181,14 @@ class DesignCompanyController extends BaseController
             //检查用户的唯一性
             $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
             if($design){
+                //判断值是不是空的，如果是空的用unset方法移除
+                foreach ($all as $key => $value){
+                    if($value == null){
+                        unset($all[$key]);
+                    }
+                }
                 $design->update($all);
+
             }else{
                 //设计公司logo
                 $asset = new AssetModel();
