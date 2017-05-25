@@ -40,7 +40,7 @@ class DemandCompanyController extends BaseController
 
 
     /**
-     * @api {post} /demandCompany 保存需求用户信息
+     * @api {post} /demandCompany 保存需求用户信息(停用)
      * @apiVersion 1.0.0
      * @apiName demandCompany store
      * @apiGroup demandCompany

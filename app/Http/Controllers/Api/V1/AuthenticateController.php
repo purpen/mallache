@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\Tools;
 use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
+use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -78,8 +79,8 @@ class AuthenticateController extends BaseController
             'password' => bcrypt($payload['password']),
         ]);
         if($user->type == 1){
-
-        }else{
+            DemandCompany::createCompany($user->id);
+        }else if($user->type == 2){
             DesignCompanyModel::createDesign($user->id);
         }
         if ($user) {
