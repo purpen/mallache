@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\Tools;
 use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
+use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -76,10 +77,13 @@ class AuthenticateController extends BaseController
             'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);
+        if($user->type == 1){
 
+        }else{
+            DesignCompanyModel::createDesign($user->id);
+        }
         if ($user) {
             $token = JWTAuth::fromUser($user);
-
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
