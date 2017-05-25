@@ -11,6 +11,7 @@ use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\DemandCompanyTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
+use App\Http\Transformer\EvaluateTransformer;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
@@ -21,6 +22,7 @@ use App\Models\Contract;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
+use App\Models\Evaluate;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\PayOrder;
@@ -1345,6 +1347,81 @@ class DemandController extends BaseController
         }
 
         return $max;
+    }
+
+    /**
+     * @api {post} /demand/evaluate 需求公司评价
+     * @apiVersion 1.0.0
+     * @apiName demand evaluate
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id
+     * @apiParam {string} content 内容
+     * @apiParam {integer} score 评分
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+ *
+     *       }
+     *  }
+     */
+    public function evaluate(Request $request)
+    {
+        /*
+        字段	类型	空	默认值	注释
+        id	int(10)	否
+        demand_company_id	int(10)	否		需求公司ID
+        design_company_id	int(10)	否		设计公司ID
+        item_id	int(10)	否		项目ID
+        content	varchar(500)	否		内容
+        score	tinyint(4)	否		评分:
+        status	tinyint(4)	否	0	状态*/
+
+        $rules = [
+            'item_id' => 'required|integer',
+            'content' => 'required|max:500',
+            'score' => 'required|int',
+        ];
+        $all = $request->only(['item_id', 'content', 'score']);
+
+        $validator = Validator::make($all, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if(!$item = Item::find($all['item_id'])){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if($item->user_id != $this->auth_user_id || $item->status != 18) {
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        $all['demand_company_id'] = $this->auth_user->demand_company_id;
+        $all['design_company_id'] = $item->design_company_id;
+
+        try{
+            DB::beginTransaction();
+            $evaluate = Evaluate::create($all);
+
+            $item->status = 22;
+            $item->save();
+
+            event(new ItemStatusEvent($item));
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return $this->response->array($this->apiError('database error', 500));
+        }
+
+        return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
     }
 
 }

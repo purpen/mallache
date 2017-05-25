@@ -146,6 +146,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/itemRestart', ['as' => 'demand.itemRestart', 'uses' => 'DemandController@itemRestart']);
         // 需求公司验收项目已完成
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
+        // 需求公司评价
+        $api->post('/demand/evaluate', 'DemandController@evaluate');
 
         // 获取当前信息匹配到的公司数量
         $api->post('/demand/matchingCount/{item_id}', 'DemandController@matchingCount');
