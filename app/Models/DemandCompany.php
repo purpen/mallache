@@ -126,4 +126,38 @@ class DemandCompany extends BaseModel
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+    /**
+     * 创建需求公司信息
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public static function createCompany(int $user_id)
+    {
+        $all = [
+            'company_name' => '',
+            'company_abbreviation' => '',
+            'company_size' => 0,
+            'company_web' => '',
+            'province' => 0,
+            'city' => 0,
+            'area' => 0,
+            'address' => '',
+            'contact_name' => '',
+            'phone' => 0,
+            'email' => '',
+            'position' => '',
+            'user_id' => $user_id,
+        ];
+
+        $user = User::where('id' , $user_id)->first();
+        $demand = DemandCompany::create($all);
+        $user->demand_company_id = $demand->id;
+        if($demand){
+            $user->save();
+        }
+
+        return true;
+    }
 }

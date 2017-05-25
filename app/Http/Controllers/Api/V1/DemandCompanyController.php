@@ -179,7 +179,7 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /demandCompany 更新需求用户信息
+     * @api {post} /demandCompany 更新需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany update
      * @apiGroup demandCompany
