@@ -287,6 +287,10 @@ class DesignCompanyController extends BaseController
         if(!$design){
             return $this->response->array($this->apiError('没有找到' , 404));
         }
+        if(!$design->isRead($this->auth_user_id , $id)){
+            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+
+        }
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);
         }
