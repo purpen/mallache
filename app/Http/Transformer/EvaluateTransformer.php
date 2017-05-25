@@ -8,6 +8,8 @@ class EvaluateTransformer extends TransformerAbstract
 {
     public function transform(Evaluate $evaluate)
     {
-        return $evaluate;
+        return [
+            $evaluate
+        ];
     }
 }
