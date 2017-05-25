@@ -390,6 +390,7 @@ class PayController extends BaseController
      */
     public function wxPayNotify()
     {
+        /*【小提示】微信sdk NotifyProcess()方法 中有回调时处理付款状态等业务的代码*/
         $notify = new PayNotifyCallBack();
         $notify->Handle(false);
     }
