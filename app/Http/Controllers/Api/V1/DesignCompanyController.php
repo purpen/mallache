@@ -189,20 +189,6 @@ class DesignCompanyController extends BaseController
                 }
                 $design->update($all);
 
-            }else{
-                //设计公司logo
-                $asset = new AssetModel();
-                $logo_id = $asset->getAssetId(6, $request->input('random'));
-                $all['logo'] = $logo_id;
-                $user = User::where('id' , $this->auth_user_id)->first();
-                $design = DesignCompanyModel::create($all);
-                $user->design_company_id = $design->id;
-                if($design){
-                    $user->save();
-                }
-                //附件
-                $random = $request->input('random');
-                AssetModel::setRandom($design->id , $random);
             }
         }
         catch (\Exception $e){

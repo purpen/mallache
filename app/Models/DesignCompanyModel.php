@@ -326,4 +326,23 @@ class DesignCompanyModel extends BaseModel
         return $arr;
     }
 
+    //创建设计公司
+    static public function createDesign($user_id)
+    {
+        $all['company_abbreviation'] = '';
+        $all['legal_person'] = '';
+        $all['document_type'] = 1;
+        $all['document_number'] = '';
+        $all['open'] = 0;
+        $all['user_id'] = $user_id;
+        $user = User::where('id' , $user_id)->first();
+        $design = DesignCompanyModel::create($all);
+        $user->design_company_id = $design->id;
+        if($design){
+            $user->save();
+        }
+
+        return true;
+    }
+
 }
