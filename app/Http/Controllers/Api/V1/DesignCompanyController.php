@@ -169,7 +169,7 @@ class DesignCompanyController extends BaseController
         $all['user_id'] = $this->auth_user_id;
         $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
         $all['legal_person'] = $request->input('legal_person') ?? '';
-        $all['document_type'] = $request->input('document_type') ?? 0;
+        $all['document_type'] = $request->input('document_type') ?? 1;
         $all['document_number'] = $request->input('document_number') ?? '';
         $all['open'] = $request->input('open') ?? 0;
         $validator = Validator::make($all , $rules, $messages);
