@@ -554,7 +554,6 @@ class DemandController extends BaseController
         if(!$auth_user){
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
 
         try{
             $item->status = 2;
@@ -568,12 +567,15 @@ class DemandController extends BaseController
         }
 
         dispatch(new Recommend($item));
-        if(!$demand_company){
-            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => 0]));
-        }else{
-            return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => $demand_company->verify_status]));
 
+        $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
+        if(!$demand_company || $demand_company->verify_status != 1){
+            $verify_status = 0;
+        }else{
+            $verify_status = 1;
         }
+
+        return $this->response->array($this->apiSuccess('Success', 200, ['verify_status' => $verify_status]));
     }
 
     /**
