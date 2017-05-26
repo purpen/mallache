@@ -40,6 +40,12 @@ class DemandCompany extends BaseModel
         'logo',
         'verify_status',
         'position',
+        'company_type',
+        'registration_number',
+        'legal_person',
+        'document_type',
+        'document_number',
+        'company_property',
     ];
 
     //公司规模
