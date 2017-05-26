@@ -24,7 +24,7 @@ class UploadController extends BaseController
      * @apiParam {string} x:random 随机数
      * @apiParam {integer} x:user_id
      * @apiParam {integer} x:target_id 目标ID
-     * @apiParam {type} x:type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.设计公司logo；7.需求公司logo；8.项目阶段附件;9.需求公司营业执照；10.设计公司法人图片;
+     * @apiParam {type} x:type 附件类型: 1.默认；2.用户头像；3.企业法人营业执照；4.需求项目设计附件；5.案例图片;6.设计公司logo；7.需求公司logo；8.项目阶段附件;9.需求公司营业执照；10.设计公司法人图片；11。需求公司法人证件;
      */
 
     /**
