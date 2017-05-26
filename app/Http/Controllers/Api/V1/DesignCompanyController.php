@@ -169,7 +169,7 @@ class DesignCompanyController extends BaseController
         $all['user_id'] = $this->auth_user_id;
         $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
         $all['legal_person'] = $request->input('legal_person') ?? '';
-        $all['document_type'] = $request->input('document_type') ?? 0;
+        $all['document_type'] = $request->input('document_type') ?? 1;
         $all['document_number'] = $request->input('document_number') ?? '';
         $all['open'] = $request->input('open') ?? 0;
         $validator = Validator::make($all , $rules, $messages);
@@ -181,21 +181,14 @@ class DesignCompanyController extends BaseController
             //检查用户的唯一性
             $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
             if($design){
-                $design->update($all);
-            }else{
-                //设计公司logo
-                $asset = new AssetModel();
-                $logo_id = $asset->getAssetId(6, $request->input('random'));
-                $all['logo'] = $logo_id;
-                $user = User::where('id' , $this->auth_user_id)->first();
-                $design = DesignCompanyModel::create($all);
-                $user->design_company_id = $design->id;
-                if($design){
-                    $user->save();
+                //判断值是不是空的，如果是空的用unset方法移除
+                foreach ($all as $key => $value){
+                    if($value == null){
+                        unset($all[$key]);
+                    }
                 }
-                //附件
-                $random = $request->input('random');
-                AssetModel::setRandom($design->id , $random);
+                $design->update($all);
+
             }
         }
         catch (\Exception $e){
@@ -279,6 +272,10 @@ class DesignCompanyController extends BaseController
         $design = DesignCompanyModel::where('id', $id)->first();
         if(!$design){
             return $this->response->array($this->apiError('没有找到' , 404));
+        }
+        if(!$design->isRead($this->auth_user_id , $id)){
+            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+
         }
         if(!empty($design)){
             $design->good_field = explode(',' , $design['good_field']);

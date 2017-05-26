@@ -51,42 +51,21 @@ class UserActionController extends BaseController
     public function lists(\Illuminate\Http\Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
+        $status = in_array($request->input('status'), [0,-1]) ? $request->input('status') : null;
+        $role_id = in_array($request->input('role_id'), [0,1]) ? $request->input('role_id') : null;
+        $type = in_array($request->input('type'), [1,2]) ? $request->input('type') : null;
 
         $user = User::query();
 
-        switch ($request->input('status')){
-            //禁用账户
-            case -1:
-                $user->where('status', -1);
-                break;
-            //正常账户
-            case 0:
-                $user->where('status', 0);
-                break;
+        if($status !== null){
+            $user->where('status', $status);
         }
-
-        switch ($request->input('type')){
-            //需求用户
-            case 1:
-                $user->where('type', 1);
-                break;
-            //设计公司
-            case 2:
-                $user->where('type', 2);
-                break;
+        if($role_id !== null){
+            $user->where('role_id', $role_id);
         }
-
-        switch ($request->input('role_id')){
-            //用户
-            case 0:
-                $user->where('role_id', 0);
-                break;
-            //管理员
-            case 1:
-                $user->where('role_id', 1);
-                break;
+        if($type !== null){
+            $user->where('type', $type);
         }
-
         if($request->input('sort') === 0){
             $sort = 'asc';
         }else{

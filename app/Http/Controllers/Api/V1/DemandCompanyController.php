@@ -40,7 +40,7 @@ class DemandCompanyController extends BaseController
 
 
     /**
-     * @api {post} /demandCompany 保存需求用户信息
+     * @api {post} /demandCompany 保存需求用户信息(停用)
      * @apiVersion 1.0.0
      * @apiName demandCompany store
      * @apiGroup demandCompany
@@ -149,7 +149,20 @@ class DemandCompanyController extends BaseController
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
      *          "email": "qq@qq.com",
-     *          "image": [],
+     *          "logo_image": [],
+     *          "verify_status": 0, //审核状态
+     *          "license_image": [],  //营业执照附件
+     *          "position": "",     //职位
+     *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     *          "company_type_value": "",
+     *          "registration_number": "",  //注册号
+     *          "legal_person": "",         //法人姓名
+     *          "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     *          "document_type_value": "",
+     *          "document_number": "",     //证件号码
+     *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
+     *          "company_property_value": ""
+     *          "document_image":[],  //法人证件
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -161,7 +174,7 @@ class DemandCompanyController extends BaseController
     {
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
         if(!$demand){
-            return $this->response->array([])->setMeta($this->apiMeta());
+            return $this->response->array($this->apiSuccess('Success', 200, []));
         }
 
         return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
@@ -179,7 +192,7 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {put} /demandCompany 更新需求用户信息
+     * @api {post} /demandCompany 更新需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany update
      * @apiGroup demandCompany
@@ -196,6 +209,12 @@ class DemandCompanyController extends BaseController
      * @apiParam {string} contact_name 联系人
      * @apiParam {integer} phone 手机
      * @apiParam {string} email 邮箱
+     * @apiParam {integer} company_type 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     * @apiParam {string} registration_number 注册号
+     * @apiParam {string}   legal_person 法人姓名
+     * @apiParam {integer}   document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * @apiParam {string}   document_number 证件号码
+     * @apiParam {integer}   company_property 企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -203,7 +222,34 @@ class DemandCompanyController extends BaseController
      *     "meta": {
      *       "message": "",
      *       "status_code": 200
-     *     }
+     *     },
+     *      "data": {
+     *          "id": 1,
+     *          "company_name": "nihao",
+     *          "company_size": 1,
+     *          "company_web": "http://www.baidu.com",
+     *          "province": 1,
+     *          "city": 4,
+     *          "area": 5,
+     *          "address": "beijing",
+     *          "contact_name": "lisna",
+     *          "phone": 18629493221,
+     *          "email": "qq@qq.com",
+     *          "logo_image": [],
+     *          "verify_status": 0, //审核状态
+     *          "license_image": [],  //营业执照附件
+     *          "position": "",     //职位
+     *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     *          "company_type_value": "",
+     *          "registration_number": "",  //注册号
+     *          "legal_person": "",         //法人姓名
+     *          "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     *          "document_type_value": "",
+     *          "document_number": "",     //证件号码
+     *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
+     *          "company_property_value": ""
+     *          "document_image":[],  //法人证件
+     *      },
      *   }
      *  }
      */
@@ -220,7 +266,13 @@ class DemandCompanyController extends BaseController
             'address' => 'max:50',
             'contact_name' => 'max:20',
             'email' => 'email',
-            'position' => 'max:20'
+            'position' => 'max:20',
+            'company_type' => 'integer',
+            'registration_number' => 'max:15',
+            'legal_person' => 'max:20',
+            'document_type' => 'integer',
+            'document_number' => 'max:20',
+            'company_property' => 'integer',
         ];
         $all = $request->except(['token']);
 
@@ -228,8 +280,12 @@ class DemandCompanyController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
-        $demand = DemandCompany::where('user_id', $this->auth_user_id)->update($all);
+        foreach($all as $k => $v){
+            if(empty($v))
+                unset($all[$k]);
+        }
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+        $demand->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());
         }

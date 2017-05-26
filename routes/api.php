@@ -43,8 +43,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
     //支付宝异步回调接口
     $api->post('/pay/aliPayNotify', 'PayController@aliPayNotify');
-    //支付宝同步回调接口
-//    $api->get('/pay/aliPaySynNotify', 'PayController@aliPaySynNotify');
+    // 微信异步回调接口
+    $api->post('/pay/wxPayNotify', 'PayController@wxPayNotify');
 
     //忘记密码修改密码
     $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
@@ -94,8 +94,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //需求公司信息
         $api->get('/demandCompany', ['as' => 'demandCompany.show', 'uses' => 'DemandCompanyController@show']);
-        $api->put('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
-        $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
+        $api->post('/demandCompany', ['as' => 'demandCompany.update', 'uses' => 'DemandCompanyController@update']);
+//        $api->post('/demandCompany', ['as' => 'demandCompany.store', 'uses' => 'DemandCompanyController@store']);
 
         /**
          * 项目需求相关路由
@@ -105,6 +105,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         //发布需求保证金支付---支付宝
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+        // 发布需求保证金支付-微信
+        $api->get('/pay/demandWxPay', 'PayController@demandWxPay');
 
         /**
          * 支付项目尾款
@@ -113,6 +115,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/itemAliPay/{pay_order_id}', ['as' => 'pay.itemAliPay', 'uses' => 'PayController@itemAliPay']);
         //银行转账支付项目尾款
         $api->get('/pay/itemBankPay/{pay_order_id}', 'PayController@itemBankPay');
+        // 支付项目尾款-微信
+        $api->get('/pay/itemWxPay/{pay_order_id}', 'PayController@itemWxPay');
 
         //创建尾款支付订单
         $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
@@ -142,6 +146,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/itemRestart', ['as' => 'demand.itemRestart', 'uses' => 'DemandController@itemRestart']);
         // 需求公司验收项目已完成
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
+        // 需求公司评价
+        $api->post('/demand/evaluate', 'DemandController@evaluate');
 
         // 获取当前信息匹配到的公司数量
         $api->post('/demand/matchingCount/{item_id}', 'DemandController@matchingCount');

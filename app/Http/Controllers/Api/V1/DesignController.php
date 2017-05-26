@@ -81,7 +81,7 @@ class DesignController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         if(!$design_company = $this->auth_user->designCompany){
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiSuccess('Success', 200, []));
         }
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {

@@ -25,6 +25,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/designCompany/unVerifyStatus', [
             'as' => 'AdminDesignCompany.unVerifyStatus', 'uses' => 'AdminDesignCompanyController@unVerifyStatus'
         ]);
+        $api->put('/admin/designCompany/noVerifyStatus', [
+            'as' => 'AdminDesignCompany.noVerifyStatus', 'uses' => 'AdminDesignCompanyController@noVerifyStatus'
+        ]);
         //更新设计公司状态
         $api->put('/admin/designCompany/okStatus', [
             'as' => 'AdminDesignCompany.okStatus', 'uses' => 'AdminDesignCompanyController@okStatus'
@@ -42,6 +45,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         ]);
         $api->put('/admin/demandCompany/unVerifyStatus', [
             'as' => 'AdminDemandCompany.unVerifyStatus', 'uses' => 'AdminDemandCompanyController@unVerifyStatus'
+        ]);
+        $api->put('/admin/demandCompany/noVerifyStatus', [
+            'as' => 'AdminDemandCompany.noVerifyStatus', 'uses' => 'AdminDemandCompanyController@noVerifyStatus'
+        ]);
+        $api->get('/admin/demandCompany/lists', [
+            'as' => 'AdminDemandCompany.lists', 'uses' => 'AdminDemandCompanyController@lists'
         ]);
 
         /**

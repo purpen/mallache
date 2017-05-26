@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class DesignCompanyModel extends BaseModel
 {
@@ -103,7 +104,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 更改设计公司审核状态
      */
-    static public function verifyStatus($id, $verify_status=1)
+    static public function verifyStatus($id, $verify_status=0)
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;
@@ -123,7 +124,20 @@ class DesignCompanyModel extends BaseModel
     //企业类型
     public function getCompanyTypeValAttribute()
     {
-        return $this->attributes['company_type'] == 1 ? '普通' : '多证合一';
+        switch ($this->attributes['company_type']){
+            case 1:
+                $company_type_val = '普通';
+                break;
+            case 2:
+                $company_type_val = '多证合一(不含信用代码)';
+                break;
+            case 3:
+                $company_type_val = '多证合一(含信用代码)';
+                break;
+            default:
+                $company_type_val = '';
+        }
+        return $company_type_val;
     }
 
     //企业人数规模
@@ -131,16 +145,19 @@ class DesignCompanyModel extends BaseModel
     {
         switch ($this->attributes['company_size']){
             case 1:
-                $company_size_val = '10人以下';
+                $company_size_val = '20人以下';
                 break;
             case 2:
-                $company_size_val = '10-50人之间';
+                $company_size_val = '20-50人之间';
                 break;
             case 3:
                 $company_size_val = '50-100人之间';
                 break;
             case 4:
-                $company_size_val = '100人以上';
+                $company_size_val = '100-300人之间';
+                break;
+            case 5:
+                $company_size_val = '300人以上';
                 break;
             default:
                 $company_size_val = '';
@@ -320,6 +337,25 @@ class DesignCompanyModel extends BaseModel
         }
 
         return $arr;
+    }
+
+    //创建设计公司
+    static public function createDesign($user_id)
+    {
+        $all['company_abbreviation'] = '';
+        $all['legal_person'] = '';
+        $all['document_type'] = 1;
+        $all['document_number'] = '';
+        $all['open'] = 0;
+        $all['user_id'] = $user_id;
+        $user = User::where('id' , $user_id)->first();
+        $design = DesignCompanyModel::create($all);
+        $user->design_company_id = $design->id;
+        if($design){
+            $user->save();
+        }
+
+        return true;
     }
 
 }
