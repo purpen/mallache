@@ -151,17 +151,17 @@ class DemandCompanyController extends BaseController
      *          "email": "qq@qq.com",
      *          "image": [],
      *          "verify_status": 0, //审核状态
-                "annex_image": [],  //附件
-                "position": "",     //职位
-                "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
-                "company_type_value": "",
-                "registration_number": "",  //注册号
-                "legal_person": "",         //法人姓名
-                "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
-                "document_type_value": "",
-                "document_number": "",     //证件号码
-                "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
-                "company_property_value": ""
+     *          "annex_image": [],  //附件
+     *          "position": "",     //职位
+     *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     *          "company_type_value": "",
+     *          "registration_number": "",  //注册号
+     *          "legal_person": "",         //法人姓名
+     *          "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     *          "document_type_value": "",
+     *          "document_number": "",     //证件号码
+     *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
+     *          "company_property_value": ""
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -236,17 +236,17 @@ class DemandCompanyController extends BaseController
      *          "email": "qq@qq.com",
      *          "image": [],
      *          "verify_status": 0, //审核状态
-                "annex_image": [],  //附件
-                "position": "",     //职位
-                "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
-                "company_type_value": "",
-                "registration_number": "",  //注册号
-                "legal_person": "",         //法人姓名
-                "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
-                "document_type_value": "",
-                "document_number": "",     //证件号码
-                "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
-                "company_property_value": ""
+     *          "annex_image": [],  //附件
+     *          "position": "",     //职位
+     *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
+     *          "company_type_value": "",
+     *          "registration_number": "",  //注册号
+     *          "legal_person": "",         //法人姓名
+     *          "document_type": 0,        //法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     *          "document_type_value": "",
+     *          "document_number": "",     //证件号码
+     *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
+     *          "company_property_value": ""
      *      },
      *   }
      *  }
