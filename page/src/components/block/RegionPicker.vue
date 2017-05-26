@@ -1,6 +1,6 @@
 <template>
 
-    <el-form-item :label="titleProp" prop="chinaCity">
+    <el-form-item :label="titleProp" prop="chinaCity" :style="propStyle">
         <el-select v-model="province" event="province" placeholder="省份/自治区/直辖市">
           <el-option
             v-for="item in provinces"
@@ -47,6 +47,9 @@
       districtProp: {},
       titleProp: {
         default: '选择城市'
+      },
+      propStyle: {
+        default: ''
       },
       twoSelect: Boolean,
       auto: Boolean,

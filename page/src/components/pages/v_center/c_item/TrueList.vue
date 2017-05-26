@@ -10,7 +10,7 @@
           <div class="loading" v-loading.body="isLoading"></div>
           <div class="content-item-box" v-show="!isLoading">
 
-              <el-row :gutter="0" class="item-title-box">
+              <el-row :gutter="0" class="item-title-box" v-show="designItems.length > 0">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -314,7 +314,6 @@
   .item-title-box {
     margin-top: 20px;
     border: 1px solid #ccc;
-    border-bottom: none;
   }
   .el-col {
     padding: 10px 20px 10px 20px;

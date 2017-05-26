@@ -16,6 +16,7 @@
           <el-table
             :data="tableData"
             border
+            v-loading.body="isLoading"
             class="admin-table"
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -90,11 +91,11 @@
             class="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="[100, 200, 300, 400, 500]"
-            :page-size="100"
+            :current-page="query.page"
+            :page-sizes="[10, 50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="query.totalCount">
           </el-pagination>
 
         </div>
@@ -151,8 +152,7 @@ export default {
       sureTransferLoading: false,
       itemList: [],
       tableData: [],
-      page: 1,
-      total: 1000,
+      isLoading: false,
       orderForm: {
         index: '',
         orderId: '',
@@ -160,6 +160,16 @@ export default {
         amount: '',
         bankId: '',
         payNo: ''
+      },
+      query: {
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        sort: 1,
+        type: 0,
+        payType: 0,
+
+        test: null
       },
       msg: ''
     }
@@ -209,10 +219,55 @@ export default {
       })
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.query.pageSize = val
+      this.loadList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.$router.push({name: this.$route.name, query: {page: val}})
+    },
+    loadList() {
+      const self = this
+      self.query.page = this.$route.query.page || 1
+      self.query.sort = this.$route.query.sort || 1
+      self.query.type = this.$route.query.type || 0
+      self.payType = this.$route.query.pay_type || 0
+      self.isLoading = true
+      self.$http.get(api.adminPayOrderLists, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, pay_type: self.query.payType}})
+      .then (function(response) {
+        self.isLoading = false
+        self.tableData = []
+        if (response.data.meta.status_code === 200) {
+          self.itemList = response.data.data
+          self.query.totalCount = response.data.meta.pagination.total
+          for (var i = 0; i < self.itemList.length; i++) {
+            var item = self.itemList[i]
+            var typeValue = ''
+            if (item.type === 1) {
+              typeValue = '预付押金'
+            } else if (item.type === 2) {
+              typeValue = '项目尾款'
+            }
+            item['type_value'] = typeValue
+            item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+            var sureOutlineTransfer = false
+            if (item.pay_type === 5 && item.status === 0 && item.type === 2) {
+              sureOutlineTransfer = true
+            }
+            item['sure_outline_transfer'] = sureOutlineTransfer
+
+            self.tableData.push(item)
+          } // endfor
+
+          console.log(self.itemList)
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.isLoading = false
+        self.$message.error(error.message)
+      })
     }
   },
   computed: {
@@ -229,46 +284,7 @@ export default {
     }
   },
   created: function() {
-    const self = this
-    var page = this.$route.query.page || 1
-    var sort = this.$route.query.sort || 1
-    var type = this.$route.query.type || 0
-    var payType = this.$route.query.pay_type || 0
-    var perPage = 100
-    self.$http.get(api.adminPayOrderLists, {params: {page: page, per_page: perPage, sort: sort, type: type, pay_type: payType}})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-
-        for (var i = 0; i < self.itemList.length; i++) {
-          var item = self.itemList[i]
-          var typeValue = ''
-          if (item.type === 1) {
-            typeValue = '预付押金'
-          } else if (item.type === 2) {
-            typeValue = '项目尾款'
-          }
-          item['type_value'] = typeValue
-          item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
-          var sureOutlineTransfer = false
-          if (item.pay_type === 5 && item.status === 0 && item.type === 2) {
-            sureOutlineTransfer = true
-          }
-          item['sure_outline_transfer'] = sureOutlineTransfer
-
-          self.tableData.push(item)
-        } // endfor
-
-        console.log(self.itemList)
-      } else {
-        self.$message.error(response.data.meta.message)
-        // self.$router.push({name: 'home'})
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-      // self.$router.push({name: 'home'})
-    })
+    this.loadList()
   },
   watch: {
     '$route' (to, from) {
@@ -278,6 +294,7 @@ export default {
       if (type) {
         this.menuType = parseInt(type)
       }
+      this.loadList()
     }
   }
 }

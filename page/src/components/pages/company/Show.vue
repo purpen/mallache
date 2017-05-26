@@ -23,7 +23,7 @@
 
           <div class="cate">
             <p class="c-title">设计类别</p>
-            <p class="tag"><el-tag type="gray">产品设计</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">日用消费</el-tag><el-tag type="gray">这是一个长标签</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val">{{ d }}</el-tag></p>
           </div>
           <div class="cate">
             <p class="c-title">擅长领域</p>

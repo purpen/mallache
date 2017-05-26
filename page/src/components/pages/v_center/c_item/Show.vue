@@ -26,8 +26,15 @@
                       prop="name"
                       width="180">
                     </el-table-column>
-                    <el-table-column
-                      prop="title">
+                    <el-table-column>
+                        <template scope="scope">
+                          <div v-if="scope.row.name === '相关附件'">
+                            <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+                          </div>
+                          <div v-else>
+                            <p>{{ scope.row.title }}</p>
+                          </div>
+                        </template>
                     </el-table-column>
                   </el-table>
                 </div>
@@ -574,6 +581,10 @@ export default {
         }, {
           name: '工作地点',
           title: self.item.province_value + ', ' + self.item.city_value
+        }, {
+          name: '相关附件',
+          title: 'file',
+          image: self.item.image
         }]
 
         self.tableData = tab.concat(itemTab)

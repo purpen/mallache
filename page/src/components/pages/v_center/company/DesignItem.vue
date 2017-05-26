@@ -49,7 +49,7 @@
   import TYPE_DATA from '@/config'
   import '@/assets/js/format'
   export default {
-    name: 'vcenter_computer_design_item',
+    name: 'vcenter_company_design_item',
     props: {
       pid: {},
       sid: {},
@@ -212,7 +212,7 @@
                   message: '提交成功,等待审核',
                   type: 'success'
                 })
-                that.cItem = that.item = response.data.data
+                that.cItem = response.data.data
                 that.itemId = that.cItem.id
                 that.itemModel = false
                 return false

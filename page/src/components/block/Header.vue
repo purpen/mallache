@@ -18,7 +18,8 @@
         <el-menu class="el-menu-info" mode="horizontal" router>
           <el-submenu index="2">
             <template slot="title">
-              <img class="avatar" src="../../assets/images/avatar_100.png" />
+              <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url" />
+              <img class="avatar" v-else src="../../assets/images/avatar_100.png" />
               <span class="b-nickname">{{ eventUser.account }}</span>
             </template>
             <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
@@ -76,7 +77,13 @@ export default {
       return this.$store.state.event.token
     },
     eventUser() {
-      return this.$store.state.event.user
+      var user = this.$store.state.event.user
+      if (user.avatar) {
+        user.logo_url = user.avatar.logo
+      } else {
+        user.logo_url = null
+      }
+      return user
     },
     isAdmin() {
       return this.$store.state.event.user.role_id

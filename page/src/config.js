@@ -284,6 +284,60 @@ const CYCLE_OPTIONS = [
 
 ]
 
+// 证件类型
+const DOCUMENT_TYPE = [
+  {
+    id: 1,
+    name: '身份证'
+  },
+  {
+    id: 2,
+    name: '港澳通行证'
+  },
+  {
+    id: 3,
+    name: '台胞证'
+  },
+  {
+    id: 4,
+    name: '护照'
+  }
+
+]
+
+// 需求方公司类型
+const COMPANY_PROPERTY_TYPE = [
+  {
+    id: 1,
+    name: '初创企业'
+  },
+  {
+    id: 2,
+    name: '私企'
+  },
+  {
+    id: 3,
+    name: '国有企业'
+  },
+  {
+    id: 4,
+    name: '事业单位'
+  },
+  {
+    id: 5,
+    name: '外资'
+  },
+  {
+    id: 6,
+    name: '合资'
+  },
+  {
+    id: 7,
+    name: '上市公司'
+  }
+
+]
+
 // 设计费用预算
 const DESIGN_COST_OPTIONS = [
   {
@@ -426,6 +480,22 @@ const BANK_OPTIONS = [
   }
 ]
 
+// 公司证件类型certificate
+const COMPANY_CERTIFICATE_TYPE = [
+  {
+    id: 1,
+    name: '普通营业执照（存在独立的组织机构代码证）'
+  },
+  {
+    id: 2,
+    name: '多证合一营业执照（不含统一社会信用代码）'
+  },
+  {
+    id: 3,
+    name: '多证合一营业执照（含统一社会信用代码）'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -437,6 +507,9 @@ module.exports = {
   DESIGN_COST_OPTIONS,
   COMPANY_SIZE,
   BANK_OPTIONS,
+  DOCUMENT_TYPE,
+  COMPANY_PROPERTY_TYPE,
+  COMPANY_CERTIFICATE_TYPE,
 
   TEST
 }

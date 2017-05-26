@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <el-row :gutter="24">
-      <v-menu></v-menu>
+      <v-menu currentName="profile"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box">
+          <div class="content-box" v-loading.body="isLoading">
 
             <div class="form-title">
               <span>接单设置</span>
@@ -86,14 +86,14 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
-  import vMenuSub from '@/components/pages/v_center/computer/MenuSub'
-  import vDesignItem from '@/components/pages/v_center/computer/DesignItem'
+  import vMenuSub from '@/components/pages/v_center/company/MenuSub'
+  import vDesignItem from '@/components/pages/v_center/company/DesignItem'
   import api from '@/api/api'
   import typeData from '@/config'
   import '@/assets/js/format'
 
   export default {
-    name: 'vcenter_computer_taking',
+    name: 'vcenter_company_taking',
     components: {
       vMenu,
       vMenuSub,
@@ -106,6 +106,7 @@
         itemModelTitle: '项目接单设置',
         itemModelPid: '',
         itemId: '',
+        isLoading: false,
         pid: '',
         sid: '',
         pName: '',
@@ -295,8 +296,10 @@
     },
     created: function() {
       const that = this
+      that.isLoading = true
       that.$http.get(api.designItems, {})
       .then (function(response) {
+        that.isLoading = false
         if (response.data.meta.status_code === 200) {
           var data = response.data.data
           if (Array.isArray(data) && data.length === 0) {
@@ -317,11 +320,8 @@
         that.isLoaded = true
       })
       .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
-        })
+        that.$message.error(error.message)
+        that.isLoading = false
         console.log(error.message)
         return false
       })

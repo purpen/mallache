@@ -44,6 +44,9 @@ export default {
   demandCloseItem: '/demand/closeItem', // post 用户关闭项目
   demandTrueItemDoneId: '/demand/trueItemDone/{0}', // POST 确认项目完成
 
+  // 需求方公司管理
+  demandCompany: '/demandCompany', // POST 保存需求方公司信息;  GET 获取信息
+
   // 公司项目接口
   // 设计公司获取项目订单
   designItemList: '/design/itemList',  // 设计公司获取项目列表
@@ -81,21 +84,28 @@ export default {
   designCaseId: '/designCase/{0}',  // 公司案例
   designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
 
-  // 公司
+  // 设计公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情
-  designCompany: '/designCompany', // 设计公司基本资料
+  designCompany: '/designCompany', // POST 保存/ GET 设计公司基本资料
 
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token
 
-  // 后台管理
+  /** 后台管理 */
+
+  // 用户管理
+  adminUserLists: '/admin/user/lists', // GET 用户列表
+  adminUserSetStatus: '/admin/user/changeStatus', // POST 修改用户状态
+  adminUserSetRole: '/admin/user/changeRole', // POST 修改用户角色
+
+  // 项目管理
   adminItemList: '/admin/item/lists', // 项目列表
   adminCompanyList: '/admin/designCompany/lists', // 项目列表
   addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
   ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
 
-  // 公司审核
+  // 公司管理
   adminCompanyStatusOk: '/admin/designCompany/okStatus', // 启用
   adminCompanyStatusDisable: '/admin/designCompany/unStatus', // 禁用
   adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // 通过审核

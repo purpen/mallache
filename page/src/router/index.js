@@ -222,35 +222,55 @@ const routes = [
     component: require('@/components/pages/company/Show')
   },
 
-  // 公司基本设置
+  // 公司基本设置(remove)
   {
-    path: '/vcenter/computer/profile',
+    path: '/vcenter/company/profile',
     name: 'vcenterComputerProfile',
     meta: {
       title: '完善公司信息',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/company/Profile')
+  },
+  // 公司基本设置
+  {
+    path: '/vcenter/company/base',
+    name: 'vcenterComputerBase',
+    meta: {
+      title: '公司基本设置',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/company/Base')
   },
   // 公司接单设置
   {
-    path: '/vcenter/computer/taking',
+    path: '/vcenter/company/taking',
     name: 'vcenterComputerTaking',
     meta: {
       title: '接单设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Taking')
+    component: require('@/components/pages/v_center/company/Taking')
   },
   // 公司认证
   {
-    path: '/vcenter/computer',
+    path: '/vcenter/company/accreditation',
     name: 'vcenterComputerAccreditation',
     meta: {
-      title: '认证',
+      title: '公司认证',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Accreditation')
+    component: require('@/components/pages/v_center/company/Accreditation')
+  },
+  // 公司认证-编辑
+  {
+    path: '/vcenter/company/identification',
+    name: 'vcenterComputerIdentification',
+    meta: {
+      title: '公司认证',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/company/Identification')
   },
   // 项目动态
   {
@@ -330,7 +350,7 @@ const routes = [
       title: '我的钱包',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/company/Profile')
   },
   // 我的项目列表(需求方)
   {
@@ -423,7 +443,7 @@ const routes = [
       title: '设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/computer/Profile')
+    component: require('@/components/pages/v_center/company/Profile')
   },
   {
     path: '/remind',
@@ -463,6 +483,38 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/stage/Show')
+  },
+
+  // 需求方公司设置
+  // 公司基本设置
+  {
+    path: '/vcenter/d_company/base',
+    name: 'vcenterDComputerBase',
+    meta: {
+      title: '公司基本设置',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/d_company/Base')
+  },
+  // 公司认证
+  {
+    path: '/vcenter/d_company/accreditation',
+    name: 'vcenterDCompanyAccreditation',
+    meta: {
+      title: '公司认证',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/d_company/Accreditation')
+  },
+  // 公司认证 -- 编辑
+  {
+    path: '/vcenter/d_company/identification',
+    name: 'vcenterDCompanyIdentification',
+    meta: {
+      title: '公司认证',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/d_company/Identification')
   },
 
   // 后台管理

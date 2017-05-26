@@ -12,16 +12,17 @@
             <router-link :to="{name: 'adminItemList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">正在进行的项目</router-link>
+            <router-link :to="{name: 'adminItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">完善资料</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminItemList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 8}">已完成</router-link>
+            <router-link :to="{name: 'adminItemList', query: {type: 2}}" active-class="false" :class="{'item': true, 'is-active': menuType === 2}">等待推荐</router-link>
           </div>
         </div>
 
           <el-table
             :data="tableData"
             border
+            v-loading.body="isLoading"
             class="admin-table"
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -97,11 +98,11 @@
             class="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="[100, 200, 300, 400, 500]"
-            :page-size="100"
+            :current-page="query.page"
+            :page-sizes="[10, 50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="query.totalCount">
           </el-pagination>
 
         </div>
@@ -146,12 +147,20 @@ export default {
       itemList: [],
       tableData: [],
       currentMatchCompany: [],
-      page: 1,
-      total: 1000,
+      isLoading: false,
       matchCompanyForm: {
         itemId: '',
         itemName: '',
         companyIds: ''
+      },
+      query: {
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        sort: 1,
+        type: 0,
+
+        test: null
       },
       msg: ''
     }
@@ -197,7 +206,6 @@ export default {
           })
           .catch (function(error) {
             self.$message.error(error.message)
-            console.log(error.message)
           })
         } else {
           self.$message.error(response.data.meta.message)
@@ -206,59 +214,60 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
       })
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.query.pageSize = val
+      this.loadList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.$router.push({name: this.$route.name, query: {page: val}})
+    },
+    loadList() {
+      const self = this
+      self.query.page = this.$route.query.page || 1
+      self.query.sort = this.$route.query.sort || 1
+      self.query.type = this.$route.query.type || 0
+      self.isLoading = true
+      self.$http.get(api.adminItemList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      .then (function(response) {
+        self.isLoading = false
+        self.tableData = []
+        if (response.data.meta.status_code === 200) {
+          self.itemList = response.data.data
+          self.query.totalCount = response.data.meta.pagination.total
+          for (var i = 0; i < self.itemList.length; i++) {
+            var item = self.itemList[i]
+
+            var typeLabel = ''
+            if (item.item.type === 1) {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.info.field_value + '/' + item.info.industry_value
+            } else {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value
+            }
+
+            item['item']['type_label'] = typeLabel
+            item['item']['status_label'] = '[{0}]{1}'.format(item.item.status, item.item.status_value)
+
+            if (item.info) {
+              item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
+            }
+            item['item']['created_at'] = item.item.created_at.date_format().format('yy-MM-dd')
+            self.tableData.push(item)
+          } // endfor
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.isLoading = false
+        self.$message.error(error.message)
+      })
     }
   },
   created: function() {
-    const self = this
-    var page = this.$route.query.page || 1
-    var sort = this.$route.query.sort || 1
-    var type = this.$route.query.type || 0
-    var perPage = 20
-    self.$http.get(api.adminItemList, {params: {page: page, per_page: perPage, sort: sort, type: type}})
-    .then (function(response) {
-      console.log(response)
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-
-        for (var i = 0; i < self.itemList.length; i++) {
-          var item = self.itemList[i]
-
-          var typeLabel = ''
-          if (item.item.type === 1) {
-            typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.info.field_value + '/' + item.info.industry_value
-          } else {
-            typeLabel = item.item.type_value + '/' + item.item.design_type_value
-          }
-
-          item['item']['type_label'] = typeLabel
-          item['item']['status_label'] = '[{0}]{1}'.format(item.item.status, item.item.status_value)
-
-          if (item.info) {
-            item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
-          }
-          item['item']['created_at'] = item.item.created_at.date_format().format('yy-MM-dd')
-
-          self.tableData.push(item)
-        } // endfor
-
-        console.log(self.itemList)
-      } else {
-        self.$message.error(response.data.meta.message)
-        // self.$router.push({name: 'home'})
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-      // self.$router.push({name: 'home'})
-    })
+    this.loadList()
   },
   watch: {
     '$route' (to, from) {
@@ -268,6 +277,7 @@ export default {
       if (type) {
         this.menuType = parseInt(type)
       }
+      this.loadList()
     }
   }
 }

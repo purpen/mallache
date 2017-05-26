@@ -57,6 +57,7 @@ a.is_active {
   color: #222;
 }
 
+/**
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   font-size: 1.2rem;
 }
@@ -69,6 +70,7 @@ input::-moz-placeholder, textarea::-moz-placeholder {
 input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 1.2rem;
 }
+**/
 
 .field .select {
   font-size: 0.875rem;
@@ -261,7 +263,7 @@ button.is-custom.is-outlined.is-loading:after {
   color: #222;
 }
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title img{
-  max-height: 1.75rem;
+  max-height: 3rem;
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
@@ -269,7 +271,7 @@ button.is-custom.is-outlined.is-loading:after {
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title .b-nickname{
   padding-left: 8px;
   padding-right: 3px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 .el-menu-info.el-menu--horizontal:hover>.el-submenu .el-submenu__title,.el-menu--horizontal:hover .el-submenu .el-submenu__icon-arrow {
   color: #222;
@@ -326,7 +328,7 @@ img.avatar {
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
-  border: 1px solid;
+  border: 1px solid #ccc;
 }
 
 .font-weight {

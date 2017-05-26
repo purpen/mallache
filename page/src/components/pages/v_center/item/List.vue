@@ -33,7 +33,7 @@
             </div>
 
 
-              <el-row :gutter="0" class="item-title-box" v-show="!isLoading">
+              <el-row :gutter="0" class="item-title-box" v-show="itemList.length > 0">
                 <el-col :span="11">
                   <p>项目名称</p>
                 </el-col>
@@ -326,7 +326,6 @@
   .item-title-box {
     margin-top: 20px;
     border: 1px solid #ccc;
-    border-bottom: none;
   }
   .el-col {
     padding: 10px 20px 10px 20px;

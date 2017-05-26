@@ -5,11 +5,11 @@
         <h2>注册太火鸟SaaS账户</h2>
       </div>
       <div class="register-tab">
-        <div class="register-tab-user" @click="selectUser" :style="{background: uActive}">
+        <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
           <p><h3>我是客户</h3></p>
           <p class="des">发布项目，找到精准设计公司</p>
         </div>
-        <div class="register-tab-computer" @click="selectComputer" :style="{background: cActive}">
+        <div :class="{'register-tab-computer': true, active: cActive}" @click="selectComputer">
           <p><h3>我是设计公司</h3></p>
           <p class="des">用专业设计服务，助力客户成长</p>
         </div>
@@ -31,7 +31,7 @@
           <el-form-item label="" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
           </el-form-item>
-          <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
+          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
         </el-form>
       
       </div>   
@@ -64,8 +64,8 @@ export default {
     }
     return {
       isLoadingBtn: false,
-      uActive: '',
-      cActive: '',
+      uActive: false,
+      cActive: false,
       time: 0,
       labelPosition: 'top',
       form: {
@@ -99,12 +99,12 @@ export default {
   methods: {
     selectUser() {
       this.form.type = 1
-      this.uActive = '#ccc'
-      this.cActive = ''
+      this.uActive = true
+      this.cActive = false
     },
     selectComputer() {
       this.form.type = 2
-      this.cActive = '#ccc'
+      this.cActive = true
       this.uActive = ''
     },
     submit(formName) {
@@ -309,6 +309,13 @@ export default {
     width: 50%;
     height: 80px;
     position:absolute;
+    cursor: pointer;
+  }
+  .register-tab-user.active{
+    border-bottom: 2px solid #FF5A5F;
+  }
+  .register-tab-user.active h3{
+    color: #FF5A5F;
   }
   .register-tab-computer{
     padding-top: 20px;
@@ -316,6 +323,13 @@ export default {
     height: 80px;
     position:absolute;
     left: 50%;
+    cursor: pointer;
+  }
+  .register-tab-computer.active{
+    border-bottom: 2px solid #FF5A5F;
+  }
+  .register-tab-computer.active h3{
+    color: #FF5A5F;
   }
 
   .register-tab p{

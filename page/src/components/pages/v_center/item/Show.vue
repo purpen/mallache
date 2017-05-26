@@ -26,8 +26,15 @@
                       prop="name"
                       width="180">
                     </el-table-column>
-                    <el-table-column
-                      prop="title">
+                    <el-table-column>
+                        <template scope="scope">
+                          <div v-if="scope.row.name === '相关附件'">
+                            <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+                          </div>
+                          <div v-else>
+                            <p>{{ scope.row.title }}</p>
+                          </div>
+                        </template>
                     </el-table-column>
                   </el-table>
                 </div>
@@ -195,19 +202,25 @@
                   <p class="wait-begin">等待设计公司开始项目</p>
                 </div>
                 <div class="manage-item add-stage" v-else>
-                  <div v-for="(d, index) in stages">
-                    <div class="contract-left">
-                      <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
-                      <div class="contract-content">
-                        <p>{{ d.title }}</p>
-                        <p class="contract-des">{{ d.created_at }}</p>
-                      </div>
-                    </div>
-                    <div class="contract-right">
-                      <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
-                    </div>
-                    <div class="clear"></div>
+                  <div class="manage-item" v-if="stages.length === 0">
+                    <p class="wait-begin">等待设计公司提交资料</p>                 
                   </div>
+                  <div v-else>
+                    <div v-for="(d, index) in stages">
+                      <div class="contract-left">
+                        <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
+                        <div class="contract-content">
+                          <p>{{ d.title }}</p>
+                          <p class="contract-des">{{ d.created_at }}</p>
+                        </div>
+                      </div>
+                      <div class="contract-right">
+                        <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
+                      </div>
+                      <div class="clear"></div>
+                    </div>                 
+                  </div>
+
                   <p class="finish-item-btn" v-if="item.status === 15"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
                   <p class="finish-item-btn" v-if="item.status === 18"><el-button type="primary" class="is-custom">项目交易成功,给设计公司评价</el-button></p>
                 </div>
@@ -697,6 +710,10 @@ export default {
         }, {
           name: '工作地点',
           title: self.item.province_value + ', ' + self.item.city_value
+        }, {
+          name: '相关附件',
+          title: 'file',
+          image: self.item.image
         }]
 
         self.tableData = tab.concat(itemTab)

@@ -183,7 +183,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
-  import vMenuSub from '@/components/pages/v_center/computer/MenuSub'
+  import vMenuSub from '@/components/pages/v_center/company/MenuSub'
   import api from '@/api/api'
   import auth from '@/helper/auth'
   // 城市联动
@@ -192,7 +192,7 @@
   import typeData from '@/config'
 
   export default {
-    name: 'vcenter_computer_profile',
+    name: 'vcenter_company_profile',
     components: {
       vMenu,
       vMenuSub,

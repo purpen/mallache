@@ -12,16 +12,17 @@
             <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">待审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 8}}" :class="{'item': true, 'is-active': menuType === 8}" active-class="false">通过审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
           </div>
         </div>
 
           <el-table
             :data="tableData"
             border
+            v-loading.body="isLoading"
             class="admin-table"
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -104,10 +105,12 @@
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
+                  <!--
                   <p>
                     <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
+                  -->
                 </template>
             </el-table-column>
           </el-table>
@@ -116,11 +119,11 @@
             class="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="[100, 200, 300, 400, 500]"
-            :page-size="100"
+            :current-page="query.page"
+            :page-sizes="[10, 50, 100, 500]"
+            :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="query.totalCount">
           </el-pagination>
 
         </div>
@@ -135,17 +138,25 @@
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 export default {
-  name: 'admin_item_list',
+  name: 'admin_company_list',
   components: {
     vMenu
   },
   data () {
     return {
       menuType: 0,
-      page: 1,
-      total: 1000,
       itemList: [],
       tableData: [],
+      isLoading: false,
+      query: {
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        sort: 1,
+        type: 0,
+
+        test: null
+      },
       msg: ''
     }
   },
@@ -154,10 +165,12 @@ export default {
       this.multipleSelection = val
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.query.pageSize = val
+      this.loadList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.$router.push({name: this.$route.name, query: {page: val}})
     },
     setVerify(index, item, evt) {
       var id = item.id
@@ -204,39 +217,44 @@ export default {
         self.$message.error(error.message)
         console.log(error.message)
       })
+    },
+    loadList() {
+      const self = this
+      self.query.page = this.$route.query.page || 1
+      self.query.sort = this.$route.query.sort || 1
+      self.query.type = this.$route.query.type || 0
+      self.isLoading = true
+      self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      .then (function(response) {
+        self.isLoading = false
+        self.tableData = []
+        if (response.data.meta.status_code === 200) {
+          self.itemList = response.data.data
+          self.query.totalCount = response.data.meta.pagination.total
+
+          for (var i = 0; i < self.itemList.length; i++) {
+            var item = self.itemList[i]
+            item.logo_url = ''
+            if (item.logo_image) {
+              item.logo_url = item.logo_image.logo
+            }
+            item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+            self.tableData.push(item)
+          } // endfor
+
+          console.log(self.itemList)
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.isLoading = false
+      })
     }
   },
   created: function() {
-    const self = this
-    var page = this.$route.query.page || 1
-    var sort = this.$route.query.sort || 1
-    var type = this.$route.query.type || 0
-    var perPage = 20
-    self.$http.get(api.adminCompanyList, {params: {page: page, per_page: perPage, sort: sort, type: type}})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-
-        for (var i = 0; i < self.itemList.length; i++) {
-          var item = self.itemList[i]
-          item.logo_url = ''
-          if (item.logo_image) {
-            item.logo_url = item.logo_image.logo
-          }
-          item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
-          self.tableData.push(item)
-        } // endfor
-
-        console.log(self.itemList)
-      } else {
-        self.$message.error(response.data.meta.message)
-        // self.$router.push({name: 'home'})
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-      // self.$router.push({name: 'home'})
-    })
+    this.loadList()
   },
   watch: {
     '$route' (to, from) {
@@ -246,6 +264,7 @@ export default {
       if (type) {
         this.menuType = parseInt(type)
       }
+      this.loadList()
     }
   }
 }
