@@ -166,9 +166,17 @@ class DemandCompany extends BaseModel
      *
      * @return array
      */
-    public function getAnnexImageAttribute()
+    public function getLicenseImageAttribute()
     {
         return AssetModel::getImageUrl($this->id, 9, 1 , 5);
+    }
+
+    /**
+     * 法人证件附件
+     */
+    public function getDocumentImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 11, 1);
     }
 
     /**

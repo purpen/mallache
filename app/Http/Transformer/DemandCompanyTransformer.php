@@ -44,7 +44,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'email' => strval($demand->email),
             'image' => $demand->image,
             'verify_status' => $demand->verify_status,
-            'annex_image' => $demand->annex_image,
+            'license_image' => $demand->license_image,
             'position' =>$demand->position,
             'company_type' => $demand->company_type,
             'company_type_value' => $demand->company_type_value,
@@ -55,6 +55,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'document_number' => $demand->document_number,
             'company_property' => $demand->company_property,
             'company_property_value' => $demand->company_property_value,
+            'document_image' => $demand->document_image,
 
         ];
     }

@@ -149,9 +149,9 @@ class DemandCompanyController extends BaseController
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
      *          "email": "qq@qq.com",
-     *          "image": [],
+     *          "logo_image": [],
      *          "verify_status": 0, //审核状态
-     *          "annex_image": [],  //附件
+     *          "license_image": [],  //营业执照附件
      *          "position": "",     //职位
      *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
      *          "company_type_value": "",
@@ -162,6 +162,7 @@ class DemandCompanyController extends BaseController
      *          "document_number": "",     //证件号码
      *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      *          "company_property_value": ""
+     *          "document_image":[],  //法人证件
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -234,9 +235,9 @@ class DemandCompanyController extends BaseController
      *          "contact_name": "lisna",
      *          "phone": 18629493221,
      *          "email": "qq@qq.com",
-     *          "image": [],
+     *          "logo_image": [],
      *          "verify_status": 0, //审核状态
-     *          "annex_image": [],  //附件
+     *          "license_image": [],  //营业执照附件
      *          "position": "",     //职位
      *          "company_type": 0,  // 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一（含社会统一信用代码）
      *          "company_type_value": "",
@@ -247,6 +248,7 @@ class DemandCompanyController extends BaseController
      *          "document_number": "",     //证件号码
      *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      *          "company_property_value": ""
+     *          "document_image":[],  //法人证件
      *      },
      *   }
      *  }
