@@ -16,18 +16,25 @@ class TestController extends Controller
      */
     public function index()
     {
-//        $des = DemandCompany::get();
-//        foreach($des as $v){
-//            $user = User::find($v->user_id);
-//            $user->demand_company_id = $v->id;
-//            $user->save();
-//        }
-//
-//        $users = User::where(['type' => 1, 'demand_company_id' => 0])->get();
-//        foreach($users as $v){
-//            DemandCompany::createCompany($v->id);
-//        }
-//        echo 'ok';
+        $users = User::where('type', 0)->get();
+        foreach($users as $v)
+        {
+            $v->type = 1;
+            $v->save();
+        }
+
+        $des = DemandCompany::get();
+        foreach($des as $v){
+            $user = User::find($v->user_id);
+            $user->demand_company_id = $v->id;
+            $user->save();
+        }
+
+        $users = User::where(['type' => 1, 'demand_company_id' => 0])->get();
+        foreach($users as $v){
+            DemandCompany::createCompany($v->id);
+        }
+        echo 'ok';
 
 //        $case = DesignCaseModel::where('design_company_id', 0)->get();
 //        foreach($case as $v){
