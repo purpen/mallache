@@ -191,7 +191,7 @@ class DemandCompany extends BaseModel
             'area' => 0,
             'address' => '',
             'contact_name' => '',
-            'phone' => 0,
+            'phone' => '',
             'email' => '',
             'position' => '',
             'user_id' => $user_id,
