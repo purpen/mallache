@@ -63,9 +63,8 @@
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">
-                      <a href=""><img width="150" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
-                      <a href=""><img width="150" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494248440981&di=f53c08dedb755a0d16b558b4feeaefdf&imgtype=0&src=http%3A%2F%2Fimg.mb.moko.cc%2F2016-03-28%2F7bc398f3-fa53-4ddb-b5a7-a250635acd32.jpg%3FimageView2%2F2%2Fw%2F915%2Fh%2F915" /></a>
-
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank" :title="m.title"  v-for="(m, index) in d.design_case" v-if="index < 2">
+                      <img width="150" :src="m.case_image[0].small" /></router-link >
                     </div>
                   </div>
                 </div>
@@ -807,8 +806,12 @@ export default {
     margin: 10px;
     float: left;
     padding-top: 45px;
+    height: 90px;
+    overflow: hidden;
   }
-  .select-company-item .case-box a {
+  .select-company-item .case-box a{
+  }
+  .select-company-item .case-box a img{
   }
   .pub-btn {
     text-align: center;
