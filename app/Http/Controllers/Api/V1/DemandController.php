@@ -1310,7 +1310,7 @@ class DemandController extends BaseController
 
         if($design_cost || ($design_cost = $item_info['design_cost'])){
             $max = $this->cost($design_cost);
-            $query->where('min_price', '<', $max);
+            $query->where('min_price', '<=', $max);
         }
 
         if($cycle || ($cycle = $item_info['cycle'])){

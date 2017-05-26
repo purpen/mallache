@@ -94,7 +94,7 @@ class Recommend implements ShouldQueue
         $max = $this->cost($this->item->productDesign->design_cost);
 
         //所属领域
-        $field =  $this->item->productDesign->field;
+//        $field =  $this->item->productDesign->field;
         //周期
         $cycle = $this->item->productDesign->cycle;
         //项目公司地点
@@ -104,7 +104,7 @@ class Recommend implements ShouldQueue
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('type', $type)
             ->where('design_type', $design_type)
-            ->where('min_price', '<', $max)
+            ->where('min_price', '<=', $max)
             ->where('project_cycle', $cycle)
             ->get()
             ->pluck('user_id')->all();
@@ -131,7 +131,7 @@ class Recommend implements ShouldQueue
         $max = $this->cost($this->item->uDesign->design_cost);
 
         //所属领域
-        $field =  $this->item->productDesign->field;
+//        $field =  $this->item->productDesign->field;
         //周期
         $cycle = $this->item->productDesign->cycle;
 
@@ -142,7 +142,7 @@ class Recommend implements ShouldQueue
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('type', $type)
             ->where('design_type', $design_type)
-            ->where('min_price', '<', $max)
+            ->where('min_price', '<=', $max)
             ->where('project_cycle', $cycle)
             ->get()
             ->pluck('user_id')->all();
