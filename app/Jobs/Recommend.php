@@ -97,6 +97,8 @@ class Recommend implements ShouldQueue
         $field =  $this->item->productDesign->field;
         //周期
         $cycle = $this->item->productDesign->cycle;
+        //项目公司地点
+        $city = $this->item->itemInfo()['city'];
 
         //获取符合设计类型和设计费用的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
@@ -111,8 +113,9 @@ class Recommend implements ShouldQueue
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1])
+            ->where('city', $city)
             ->whereIn('user_id',$design_id_arr)
-            ->whereRaw('find_in_set(' . $field . ', good_field)')
+//            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
@@ -132,6 +135,9 @@ class Recommend implements ShouldQueue
         //周期
         $cycle = $this->item->productDesign->cycle;
 
+        //项目公司地点
+        $city = $this->item->itemInfo()['city'];
+
         //获取符合 设计类型 和 设计费用 的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
             ->where('type', $type)
@@ -145,6 +151,7 @@ class Recommend implements ShouldQueue
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1])
+            ->where('city', $city)
             ->whereIn('user_id',$design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
