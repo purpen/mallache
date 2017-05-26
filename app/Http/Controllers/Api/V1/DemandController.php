@@ -556,7 +556,8 @@ class DemandController extends BaseController
         }
 
         try{
-            $item->status = 2;
+//            $item->status = 2;  //2.人工干预
+            $item->status = 3;   //已匹配设计公司
             $item->save();
 
             //触发项目状态变更事件
