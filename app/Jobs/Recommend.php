@@ -53,9 +53,9 @@ class Recommend implements ShouldQueue
         $design_type = (int)$this->item->design_type;
 
         //产品设计
-        if($type === 1){
+        if($type == 1){
             $design = $this->productDesign($type, $design_type);
-        }else{
+        }else if( $type == 2){
             $design = $this->uDesign($type, $design_type);
         }
 
@@ -133,7 +133,7 @@ class Recommend implements ShouldQueue
         //所属领域
 //        $field =  $this->item->productDesign->field;
         //周期
-        $cycle = $this->item->productDesign->cycle;
+        $cycle = $this->item->uDesign->cycle;
 
         //项目公司地点
         $city = $this->item->itemInfo()['city'];
