@@ -21,11 +21,11 @@
 
               <el-form-item label="已有项目设计内容" prop="complete_content">
                 <el-checkbox-group v-model="form.complete_content">
-                  <el-checkbox label="流程图" name="complete_content"></el-checkbox>
-                  <el-checkbox label="线框图、原型图" name="complete_content"></el-checkbox>
-                  <el-checkbox label="页面内容" name="complete_content"></el-checkbox>
-                  <el-checkbox label="产品功能需求点" name="complete_content"></el-checkbox>
-                  <el-checkbox label="其它" @change="otherContent" name="complete_content">其它
+                  <el-checkbox label="流程图"></el-checkbox>
+                  <el-checkbox label="线框图、原型图"></el-checkbox>
+                  <el-checkbox label="页面内容"></el-checkbox>
+                  <el-checkbox label="产品功能需求点"></el-checkbox>
+                  <el-checkbox label="其它" @change="otherContent">其它
                     <el-input v-show="showOtherContent" v-model="form.other_content" size="small" placeholder="自定义添加"></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
@@ -157,7 +157,7 @@
             { required: true, message: '请添写项目名称', trigger: 'blur' }
           ],
           complete_content: [
-            { type: 'array', required: true, message: '请至少选择一项已有项目设计内容', trigger: 'change' }
+            { type: 'array', required: true, message: '请至少选择一项已有项目设计内容', trigger: 'blur' }
           ],
           cycle: [
             { type: 'number', required: true, message: '请选择项目周期', trigger: 'change' }

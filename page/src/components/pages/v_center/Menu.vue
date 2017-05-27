@@ -12,7 +12,7 @@
       </router-link>
       -->
       <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
-        我的项目
+        项目订单
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例

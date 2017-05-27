@@ -41,15 +41,20 @@
                 </el-col>
               </el-row>
 
-              <region-picker :provinceProp="province" :cityProp="city" :districtProp="district" :isFirstProp="isFirst" titleProp="详细地址" @onchange="change"></region-picker>
+              <region-picker :provinceProp="province" :cityProp="city" propStyle="margin:0;" :districtProp="district" :isFirstProp="isFirst" titleProp="详细地址" @onchange="change"></region-picker>
               <el-form-item label="" prop="address">
-                <el-input v-model="form.address" name="address" ref="address" placeholder="街道地址"></el-input>
+                <el-input v-model="form.address" placeholder="街道地址"></el-input>
               </el-form-item>
 
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
+                  </el-form-item>             
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="职位" prop="position">
+                    <el-input v-model="form.position" placeholder=""></el-input>
                   </el-form-item>             
                 </el-col>
                 <el-col :span="6">
@@ -60,11 +65,6 @@
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
-                  </el-form-item>             
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item label="职位" prop="position">
-                    <el-input v-model="form.position" placeholder=""></el-input>
                   </el-form-item>             
                 </el-col>
               </el-row>

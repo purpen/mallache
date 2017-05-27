@@ -80,16 +80,20 @@
                       <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-red">关闭项目</a>
                     </p>
                     <p class="btn" v-show="d.item.status === 3">
-                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">去查看>></a>
+                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">去查看>></a>-->
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">去查看</el-button>
                     </p>
                     <p class="btn" v-show="d.item.show_offer">
-                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，查看>></a>&nbsp;&nbsp;
+                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，查看>></a>-->
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">已有{{ d.purpose_count }}家公司报价，查看</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 6">
-                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">确认合同>></a>
+                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">确认合同>></a>-->
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">确认合同</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 8">
-                      <a href="javascript:void(0);" @click="secondPay" :item_id="d.item.id" class="">支付项目款>></a>
+                      <!--<a href="javascript:void(0);" @click="secondPay" :item_id="d.item.id" class="">支付项目款>></a>-->
+                      <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>
                     </p>
                   </el-col>
                 </el-row>

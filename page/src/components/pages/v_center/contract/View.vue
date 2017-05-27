@@ -73,9 +73,12 @@
 
             <div class="sept"></div>
 
-            <div class="form-btn">
+            <div class="form-btn" v-if="userType !== 2">
                 <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="agreeBtn" v-show="form.status === 0">我同意</el-button>
-                <router-link :to="{name: 'vcenterContractDown', params: {unique_id: form.unique_id}}" target="_blank" v-show="form.status === 1"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</router-link>
+                <router-link :to="{name: 'vcenterContractDown', params: {unique_id: uniqueId}}" target="_blank" v-show="form.status === 1"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</router-link>
+            </div>
+            <div class="form-btn" v-else>
+                <router-link :to="{name: 'vcenterContractDown', params: {unique_id: uniqueId}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</router-link>
             </div>
             <div class="clear"></div>
 
@@ -118,9 +121,12 @@
     data () {
       return {
         itemId: '',
+        uniqueId: '',
         item: {},
         itemName: '',
-        form: {},
+        form: {
+        },
+        userType: this.$store.state.event.user.type,
         sureDialog: false,
         sureDialogMessage: '确认执行此操作？',
         sureDialogLoadingBtn: false,
@@ -166,6 +172,7 @@
       const that = this
       var uniqueId = this.$route.params.unique_id
       if (uniqueId) {
+        that.uniqueId = uniqueId
         that.$http.get(api.contractId.format(uniqueId), {})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {

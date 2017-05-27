@@ -75,7 +75,7 @@
             if (response.data.data.verify_status === 1) {
               that.statusLabel = '公司认证已审核通过'
             } else if (response.data.data.verify_status === 0) {
-              that.statusLabel = '待审核'
+              that.statusLabel = '等待认证'
             }
             that.isApply = true
           } else {

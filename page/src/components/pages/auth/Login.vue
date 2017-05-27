@@ -14,8 +14,13 @@
           <el-form-item label="" prop="password">
             <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
+          <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
           <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
+
+        <div class="reg">
+          <p>还没有毕方鸟账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
+        </div>
 
       </div>   
     </div>
@@ -173,6 +178,23 @@ export default {
 
   .login-btn {
     width: 100%;
+  }
+  .reg {
+    margin-top: 40px;
+  }
+  .reg p {
+    color: #666;
+  }
+  .reg p a {
+    color: #FF5A5F;
+  }
+  .forget {
+    text-align: right;
+    margin: -20px 0 20px 0;
+  }
+  .forget a{
+    font-size: 1.2rem; 
+    color: #666;
   }
 
 </style>

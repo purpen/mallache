@@ -13,7 +13,7 @@ import router from './router'
 import Qs from 'qs'
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
-  timeout: 20000,
+  timeout: 50000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',

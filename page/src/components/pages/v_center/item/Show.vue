@@ -29,7 +29,7 @@
                     <el-table-column>
                         <template scope="scope">
                           <div v-if="scope.row.name === '相关附件'">
-                            <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+                            <p v-for="(d, index) in scope.row.image" :key="index"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
                           </div>
                           <div v-else>
                             <p>{{ scope.row.title }}</p>
@@ -49,7 +49,7 @@
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择系统推荐的设计公司" name="3">
 
-                <div class="select-company-item" v-for="d in stickCompany">
+                <div class="select-company-item" v-for="(d, index) in stickCompany" :key="index">
                   <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
                     <div class="img">
@@ -63,7 +63,7 @@
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank" :title="m.title"  v-for="(m, index) in d.design_case" v-if="index < 2">
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank" :title="m.title"  v-for="(m, index) in d.design_case" :key="index" v-if="index < 2">
                       <img width="150" :src="m.case_image[0].small" /></router-link >
                     </div>
                   </div>
@@ -80,7 +80,7 @@
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择参与报价的设计公司" name="4">
                 <div v-if="hasOfferCompany">
-                  <div class="offer-company-item" v-for="(d, index) in offerCompany" v-if="d.design_company_status === 2">
+                  <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index" v-if="d.design_company_status === 2">
                     <el-row :gutter="24">
                       <el-col :span="3" class="item-logo">
                         <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="50" />
@@ -205,7 +205,7 @@
                     <p class="wait-begin">等待设计公司提交资料</p>                 
                   </div>
                   <div v-else>
-                    <div v-for="(d, index) in stages">
+                    <div v-for="(d, index) in stages" :key="index">
                       <div class="contract-left">
                         <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
                         <div class="contract-content">

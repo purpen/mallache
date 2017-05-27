@@ -57,22 +57,22 @@
                   <el-form-item label="姓名" style="margin: 0">
                     <el-input v-model="form.contact_name"></el-input>
                   </el-form-item>
+                  <el-form-item label="职位" style="margin: 0">
+                    <el-input v-model="form.position"></el-input>
+                  </el-form-item>
                   <el-form-item label="电话" style="margin: 0">
                     <el-input v-model="form.phone"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱" style="margin: 0">
                     <el-input v-model="form.email"></el-input>
                   </el-form-item>
-                  <el-form-item label="职位" style="margin: 0">
-                    <el-input v-model="form.position"></el-input>
-                  </el-form-item>
                 </el-form>
 
                 <div v-else>
-                  <p v-show="form.contact_name">姓名：{{ form.contact_name }}</p>
-                  <p v-show="form.phone">电话：{{ form.phone }}</p>
-                  <p v-show="form.email">邮箱：{{ form.email }}</p>
-                  <p v-show="form.position">职位：{{ form.position }}</p>
+                  <p v-show="form.contact_name">{{ form.contact_name }}</p>
+                  <p v-show="form.position">{{ form.position }}</p>
+                  <p v-show="form.phone">{{ form.phone }}</p>
+                  <p v-show="form.email">{{ form.email }}</p>
                 </div>
               </el-col>
               <el-col :span="editSpan" class="edit">
@@ -149,6 +149,7 @@
               </el-col>
             </el-row>
 
+            <!--
             <el-row :gutter="gutter" class="item">
               <el-col :span="titleSpan" class="title">
                 <p>实名认证</p>
@@ -160,7 +161,7 @@
                 <a href="javascript:void(0)" title="编辑" @click="goVerify">编辑</a>
               </el-col>
             </el-row>
-
+            -->
 
             <el-row :gutter="gutter" class="item">
               <el-col :span="titleSpan" class="title">
@@ -297,6 +298,10 @@
         for (var i = 0; i < nameArr.length; i++) {
           var name = nameArr[i]
           row[name] = this.form[name]
+          if (!row[name]) {
+            this.$message.error('请完善您的公司信息！')
+            return false
+          }
         }
         // 处理网址前缀
         if (mark === 'web' && row['company_web']) {
@@ -305,6 +310,7 @@
             row.company_web = 'http://' + row['company_web']
           }
         }
+
         that.$http({method: 'POST', url: api.demandCompany, data: row})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {

@@ -11,10 +11,10 @@
         <p class="success-str">未认证</p>    
       </div>
 
-      <!--<p class="success-des red" v-if="verifyStatus === 0">发布项目，需认证公司信息，请你尽快认证</p>-->
+      <p class="success-des" v-if="verifyStatus === 0">发布项目，需认证公司信息，请你尽快认证</p>
       <p class="success-des" v-else>系统已经成功推送项目消息，等待设计公司接单，一旦有消息我们会及时通知您</p>
       <p v-if="verifyStatus === 0">
-        <router-link :to="{name: 'vcenterItemList'}" class="renzheng"><el-button class="is-custom" type="primary">去认证</el-button></router-link>
+        <router-link :to="{name: 'vcenterDCompanyAccreditation'}" class="renzheng"><el-button class="is-custom" type="primary">去认证</el-button></router-link>
       </p>
       <p v-else>
         <router-link :to="{name: 'home'}" class="item"><el-button class="is-custom">返回首页</el-button></router-link>
@@ -55,11 +55,12 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .publish-box{
-    width: 100%;
-    height: 500px;
+    width: 80%;
+    height: 400px;
     text-align:center;
     margin: 30px auto 30px auto;
     padding: 100px 0 0 0;
+    border: 1px solid #ccc;
   }
 
   .success-img {
@@ -81,7 +82,7 @@
     color: red;
   }
   a.item button {
-    padding: 5px 20px 5px 20px;
+    padding: 10px 20px 10px 20px;
     margin: 5px;
   }
   a.renzheng button {

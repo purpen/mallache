@@ -2,7 +2,7 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册太火鸟SaaS账户</h2>
+        <h2>注册毕方鸟账户</h2>
       </div>
       <div class="register-tab">
         <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
@@ -33,6 +33,10 @@
           </el-form-item>
           <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
         </el-form>
+
+        <div class="reg">
+          <p>已有毕方鸟账户？<router-link :to="{name: 'login'}" >立即登录</router-link></p>
+        </div>
       
       </div>   
     </div>
@@ -64,7 +68,7 @@ export default {
     }
     return {
       isLoadingBtn: false,
-      uActive: false,
+      uActive: true,
       cActive: false,
       time: 0,
       labelPosition: 'top',
@@ -313,6 +317,7 @@ export default {
   }
   .register-tab-user.active{
     border-bottom: 2px solid #FF5A5F;
+    background-color: #eee;
   }
   .register-tab-user.active h3{
     color: #FF5A5F;
@@ -327,6 +332,7 @@ export default {
   }
   .register-tab-computer.active{
     border-bottom: 2px solid #FF5A5F;
+    background-color: #eee;
   }
   .register-tab-computer.active h3{
     color: #FF5A5F;
@@ -352,6 +358,15 @@ export default {
   }
   .code-btn {
     cursor: pointer;
+  }
+  .reg {
+    margin-top: 40px;
+  }
+  .reg p {
+    color: #666;
+  }
+  .reg p a {
+    color: #FF5A5F;
   }
 
 </style>

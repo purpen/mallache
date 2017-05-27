@@ -21,7 +21,7 @@
               </el-row>
 
               <el-form-item label="证件类型" prop="company_type">
-                <el-select v-model.number="form.company_type" placeholder="请选择证件类型">
+                <el-select v-model.number="form.company_type" style="width: 350px;" placeholder="请选择证件类型">
                   <el-option
                     v-for="(d, index) in certificateTypeOptions"
                     :label="d.label"

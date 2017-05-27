@@ -23,8 +23,15 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="value"
               label="客户添写信息">
+                <template scope="scope">
+                  <div v-if="scope.row.key === '相关附件'">
+                    <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+                  </div>
+                  <div v-else>
+                    <p>{{ scope.row.value }}</p>
+                  </div>
+                </template>
             </el-table-column>
           </el-table>
 
@@ -200,6 +207,15 @@
               }
             ]
 
+            var assetFile = [
+              {
+                name: '',
+                key: '相关附件',
+                value: '',
+                image: row.image
+              }
+            ]
+
             var baseTab = [
               {
                 name: '公司基本信息',
@@ -248,7 +264,7 @@
               }
             ]
 
-            that.tableData = itemTab.concat(tab.concat(baseTab))
+            that.tableData = itemTab.concat(tab.concat(assetFile.concat(baseTab)))
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
