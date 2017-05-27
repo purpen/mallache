@@ -567,9 +567,7 @@ class DemandController extends BaseController
             }else{
                 $item->status = 2;  //2.人工干预
             }
-
             $item->save();
-
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
         }

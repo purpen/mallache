@@ -71,17 +71,19 @@ class Recommend implements ShouldQueue
             }
 
             $design = array_slice($design, 0, 5);
+
             //判断是否匹配到设计公司
             if(empty($design)){
                 $this->item->status = -2;  //匹配失败
+                $this->item->save();
+                //触发项目状态变更事件
+                event(new ItemStatusEvent($this->item));
             }else{
                 $recommend = implode(',',$design);
                 $this->item->recommend = $recommend;
+                $this->item->save();
             }
-            $this->item->save();
 
-            //触发项目状态变更事件
-            event(new ItemStatusEvent($this->item));
         }
 
         //注销变量
