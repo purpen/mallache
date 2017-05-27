@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ItemStatusEvent;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
 use App\Models\Item;
@@ -70,10 +71,17 @@ class Recommend implements ShouldQueue
             }
 
             $design = array_slice($design, 0, 5);
-            $recommend = implode(',',$design);
-
-            $this->item->recommend = $recommend;
+            //判断是否匹配到设计公司
+            if(empty($design)){
+                $this->item->status = -2;  //匹配失败
+            }else{
+                $recommend = implode(',',$design);
+                $this->item->recommend = $recommend;
+            }
             $this->item->save();
+
+            //触发项目状态变更事件
+            event(new ItemStatusEvent($this->item));
         }
 
         //注销变量
