@@ -15,9 +15,17 @@ class DemandCompany extends BaseModel
     protected $table = 'demand_company';
 
     protected $appends = [
+        'company_size_value',
+        'province_value',
+        'city_value',
+        'area_value',
+        'license_image',
         'document_type_value',
         'company_property_value',
         'company_type_value',
+        'logo_image',
+        'document_image'
+
     ];
 
     /**
@@ -78,7 +86,7 @@ class DemandCompany extends BaseModel
      *
      * @return array
      */
-    public function getImageAttribute()
+    public function getLogoImageAttribute()
     {
         return AssetModel::getOneImage($this->logo);
     }
