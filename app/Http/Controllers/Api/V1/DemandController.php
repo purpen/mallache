@@ -555,11 +555,19 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
 
-        try{
-//            $item->status = 2;  //2.人工干预
-            $item->status = 3;   //已匹配设计公司
-            $item->save();
+        $demand_company = $this->auth_user->demandCompany;
+        if(!$demand_company){
+            return $this->response->array($this->apiError('not found demandCompany!', 404));
+        }
 
+        try{
+            //判断需求公司资料是否审核
+            if($demand_company->verify_status == 1){
+                $item->status = 3;   //已匹配设计公司
+            }else{
+                $item->status = 2;  //2.人工干预
+            }
+            $item->save();
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
         }
