@@ -2,20 +2,20 @@
   <div class="container">
 
     <el-row :gutter="24">
-      <v-menu selectedName="companyList"></v-menu>
+      <v-menu selectedName="demandCompanyList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminDemandCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
+            <router-link :to="{name: 'adminDemandCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过认证</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
+            <router-link :to="{name: 'adminDemandCompanyList', query: {type: 2}}" :class="{'item': true, 'is-active': menuType === 2}" active-class="false">拒绝认证</router-link>
           </div>
         </div>
 
@@ -48,14 +48,14 @@
                 <template scope="scope">
                   <p>全称: {{ scope.row.company_name }}</p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
-                  <p>网址: {{ scope.row.web }}</p>
+                  <p>网址: {{ scope.row.company_web }}</p>
                 </template>
             </el-table-column>
             <el-table-column
               label="创建人">
                 <template scope="scope">
-                  <p>
-                    {{ scope.row.users.account }}[{{ scope.row.user_id }}]
+                  <p v-if="scope.row.user">
+                    {{ scope.row.user.account }}[{{ scope.row.user_id }}]
                   </p>
                 </template>
             </el-table-column>
@@ -64,7 +64,7 @@
               label="类型">
             </el-table-column>
             <el-table-column
-              prop="company_size_val"
+              prop="company_property_value"
               label="规模">
             </el-table-column>
             <el-table-column
@@ -76,20 +76,14 @@
                 </template>
             </el-table-column>
             <el-table-column
-              prop="verify_status"
-              label="是否审核">
+              label="是否认证">
                 <template scope="scope">
-                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">是</el-tag></p>
-                  <p v-else><el-tag type="gray">否</el-tag></p>
+                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>
+                  <p v-else-if="scope.row.verify_status === 2"><el-tag type="gray">拒绝</el-tag></p>
+                  <p v-else><el-tag type="warning">待认证</el-tag></p>
                 </template>
             </el-table-column>
-            <el-table-column
-              label="状态">
-                <template scope="scope">
-                  <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
-                  <p v-else><el-tag type="gray">禁用</el-tag></p>
-                </template>
-            </el-table-column>
+
             <el-table-column
               prop="created_at"
               width="80"
@@ -99,11 +93,13 @@
               width="100"
               label="操作">
                 <template scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1" @click="setVerify(scope.$index, scope.row, 0)">取消审核</a>
-                    <a href="javascript:void(0);" v-else @click="setVerify(scope.$index, scope.row, 1)">通过审核</a>
-                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                  <p v-if="scope.row.verify_status === 0">
+                    <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 2)">拒绝</a>
+                    <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
+                  </p>
+                  <p v-else>
+                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1" @click="setVerify(scope.$index, scope.row, 2)">拒绝</a>
+                    <a href="javascript:void(0);" v-else @click="setVerify(scope.$index, scope.row, 1)">通过</a>
                   </p>
                   <!--
                   <p>
@@ -175,10 +171,10 @@ export default {
     setVerify(index, item, evt) {
       var id = item.id
       var url = ''
-      if (evt === 0) {
-        url = api.adminCompanyVerifyCancel
+      if (evt === 1) {
+        url = api.adminDemandCompanyVerifyOk
       } else {
-        url = api.adminCompanyVerifyOk
+        url = api.adminDemandCompanyVerifyNo
       }
       var self = this
       self.$http.put(url, {id: id})
@@ -224,14 +220,14 @@ export default {
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
       self.isLoading = true
-      self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      self.$http.get(api.adminDemandCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
           self.query.totalCount = response.data.meta.pagination.total
-
+          console.log(response.data)
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
             item.logo_url = ''

@@ -102,6 +102,15 @@ export default {
         return false
       })
     }
+  },
+  created: function() {
+    // 如果是公司，跳到首页
+    var uType = this.$store.state.event.user.type || 1
+    if (uType === 2) {
+      this.$message.error('当前账户类型不允许发布项目！')
+      this.$router.replace({name: 'home'})
+      return
+    }
   }
 }
 </script>

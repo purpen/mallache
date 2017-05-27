@@ -29,7 +29,7 @@
         </el-row>
       </div>
 
-      <div class="pub">
+      <div class="pub" v-if="uType !== 2">
         <router-link :to="{name: 'itemSubmitOne'}">
           <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
         </router-link>
@@ -89,6 +89,7 @@ export default {
   name: 'index',
   data () {
     return {
+      uType: this.$store.state.event.user.type || 1,
       slideList: [
         {
           'clickUrl': '#',

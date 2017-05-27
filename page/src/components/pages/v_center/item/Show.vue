@@ -78,8 +78,8 @@
 
           <div class="select-item-box" v-if="statusLabel.trueCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="选择参与报价的设计公司" name="4">
-                <div v-if="hasOfferCompany">
+              <el-collapse-item title="已选择的设计公司" name="4">
+                <div>
                   <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index" v-if="d.design_company_status === 2">
                     <el-row :gutter="24">
                       <el-col :span="3" class="item-logo">
@@ -111,9 +111,7 @@
 
                   </div>
                 </div>
-                <div class="no-offer-company" v-else>
-                  <p>还没有设计公司提交报价，请耐心等待</p>
-                </div>
+
               </el-collapse-item>
             </el-collapse>
           </div>
@@ -491,7 +489,6 @@ export default {
             self.progressButt = 2
             self.progressContract = -1
             self.progressItem = -1
-            self.statusLabel.selectCompany = true
             self.statusLabel.trueCompany = true
             self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
             .then (function(response) {

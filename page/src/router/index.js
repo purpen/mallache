@@ -558,15 +558,25 @@ const routes = [
     },
     component: require('@/components/admin/order/List')
   },
-  // 公司列表
+  // 设计公司列表
   {
     path: '/admin/company/list',
     name: 'adminCompanyList',
     meta: {
-      title: '公司列表',
+      title: '设计公司列表',
       requireAuth: true
     },
     component: require('@/components/admin/company/List')
+  },
+  // 需求公司列表
+  {
+    path: '/admin/demand_company/list',
+    name: 'adminDemandCompanyList',
+    meta: {
+      title: '需求公司列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/demand_company/List')
   },
   // 用户列表
   {

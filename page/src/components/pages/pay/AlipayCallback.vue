@@ -83,6 +83,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .pay-result {
+    text-align: center;
+    width: auto;
+    margin: 0 100px;
+    min-height: 450px;
+    border: 1px solid #ccc;
+  }
+
   .wait {
     
   }
@@ -96,7 +104,6 @@ export default {
 
   .publish-box{
     width: 100%;
-    height: 500px;
     text-align:center;
     margin: 30px auto 30px auto;
     padding: 100px 0 0 0;

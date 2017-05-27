@@ -101,15 +101,21 @@ export default {
 
   // 项目管理
   adminItemList: '/admin/item/lists', // 项目列表
-  adminCompanyList: '/admin/designCompany/lists', // 项目列表
   addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
   ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
 
-  // 公司管理
-  adminCompanyStatusOk: '/admin/designCompany/okStatus', // 启用
-  adminCompanyStatusDisable: '/admin/designCompany/unStatus', // 禁用
-  adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // 通过审核
-  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // 取消审核
+  // 需求公司管理
+  adminDemandCompanyList: '/admin/demandCompany/lists', // GET 需求公司列表
+  adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中
+  adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过
+  adminDemandCompanyVerifyOk: '/admin/demandCompany/verifyStatus', // PUT 通过审核
+
+  // 设计公司管理
+  adminCompanyList: '/admin/designCompany/lists', // GET 设计公司列表
+  adminCompanyStatusOk: '/admin/designCompany/okStatus', // PUT 启用
+  adminCompanyStatusDisable: '/admin/designCompany/unStatus', // PUT 禁用
+  adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // PUT 通过审核
+  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // PUT 取消审核
 
   // 订单管理
   adminPayOrderLists: '/admin/payOrder/lists', // GET 订单列表

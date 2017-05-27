@@ -126,6 +126,7 @@
         city: '',
         district: '',
         isFirst: false,
+        baseCompany: {},
         form: {
           company_name: '',
           // company_abbreviation: '',
@@ -295,10 +296,40 @@
             that.province = row.company_province === 0 ? '' : row.company_province
             that.city = row.company_city === 0 ? '' : row.company_city
             that.district = row.company_area === 0 ? '' : row.company_area
+
+            // 如果是第一次添写，获取公司基本信息
+            if (that.form.stage_status < 3) {
+              that.$http.get(api.demandCompany, {})
+              .then (function(response) {
+                if (response.data.meta.status_code === 200) {
+                  if (response.data.data) {
+                    var bRow = response.data.data
+                    var bWeb = bRow.company_web
+                    if (bWeb) {
+                      var urlRegex = /http:\/\/|https:\/\//
+                      if (urlRegex.test(bWeb)) {
+                        bWeb = bWeb.replace(urlRegex, '')
+                      }
+                    }
+                    that.form.company_name = bRow.company_name
+                    that.form.company_size = bRow.company_size === 0 ? '' : bRow.company_size
+                    that.form.company_web = bWeb
+                    that.form.address = bRow.address
+                    that.form.contact_name = bRow.contact_name
+                    that.form.phone = bRow.phone
+                    that.form.email = bRow.email
+                    that.form.position = bRow.position
+
+                    that.province = bRow.company_province === 0 ? '' : bRow.province
+                    that.city = bRow.company_city === 0 ? '' : bRow.city
+                    that.district = bRow.company_area === 0 ? '' : bRow.area
+                  }
+                }
+              })
+            }
           } else {
             that.$message.error(response.data.meta.message)
             that.$router.push({name: 'home'})
-            return false
           }
         })
         .catch (function(error) {
