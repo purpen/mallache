@@ -62,7 +62,7 @@ class Recommend implements ShouldQueue
 
 
 //Log::info($design);
-        if($count = count($design) > 0){
+        if(count($design) > 0){
             //剔除已推荐的
             $ord_recommend = $this->item->ord_recommend;
             if(!empty($ord_recommend)){
@@ -74,21 +74,28 @@ class Recommend implements ShouldQueue
 
             //判断是否匹配到设计公司
             if(empty($design)){
-                $this->item->status = -2;  //匹配失败
-                $this->item->save();
-                //触发项目状态变更事件
-                event(new ItemStatusEvent($this->item));
+                $this->itemFail();
             }else{
                 $recommend = implode(',',$design);
                 $this->item->recommend = $recommend;
                 $this->item->save();
             }
 
+        }else{
+            $this->itemFail();
         }
 
         //注销变量
         unset($design_type, $field, $design_id_arr, $design, $recommend);
 
+    }
+
+    //匹配失败
+    protected function itemFail(){
+        $this->item->status = -2;  //匹配失败
+        $this->item->save();
+        //触发项目状态变更事件
+        event(new ItemStatusEvent($this->item));
     }
 
 

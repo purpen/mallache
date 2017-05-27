@@ -14,8 +14,9 @@ class TestController extends Controller
     /**
      * @return string
      */
-    public function index()
+    public function index(Request $request)
     {
+//        dd($request->getPathInfo());
 //        $users = User::where('type', 0)->get();
 //        foreach($users as $v)
 //        {
