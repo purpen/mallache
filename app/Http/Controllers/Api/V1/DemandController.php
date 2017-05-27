@@ -556,7 +556,8 @@ class DemandController extends BaseController
         }
 
         try{
-            $item->status = 2;
+//            $item->status = 2;  //2.人工干预
+            $item->status = 3;   //已匹配设计公司
             $item->save();
 
             //触发项目状态变更事件
@@ -568,7 +569,7 @@ class DemandController extends BaseController
 
         dispatch(new Recommend($item));
 
-        $demand_company = DemandCompany::where('id' , $auth_user->demand_company_id)->first();
+        $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if(!$demand_company || $demand_company->verify_status != 1){
             $verify_status = 0;
         }else{
@@ -1270,6 +1271,8 @@ class DemandController extends BaseController
      * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     * @apiParam {integer} province 省份ID
+     * @apiParam {integer}  city 城市ID
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -1294,8 +1297,10 @@ class DemandController extends BaseController
         $design_type = $request->input('design_type');
         $design_cost = $request->input('design_cost');
         $cycle = $request->input('cycle');
+        $province = $request->input('province');
+        $city = $request->input('city');
 
-        $query = DesignItemModel::query();
+        $query = DesignItemModel::select('user_id');
         if($type || ($type = $item_info['type'])){
             $query->where('type', $type);
         }
@@ -1306,14 +1311,29 @@ class DemandController extends BaseController
 
         if($design_cost || ($design_cost = $item_info['design_cost'])){
             $max = $this->cost($design_cost);
-            $query->where('min_price', '<', $max);
+            $query->where('min_price', '<=', $max);
         }
 
         if($cycle || ($cycle = $item_info['cycle'])){
             $query->where('project_cycle', $cycle);
         }
 
-        $count = $query->count();
+        $design_id_arr = $query->get()->pluck('user_id')->all();
+
+        $design = DesignCompanyModel::select(['id', 'user_id'])
+            ->where(['status' => 1, 'verify_status' => 1]);
+
+        if($province || ($province = $item_info['province'])){
+            $design->where('province', $province);
+        }
+
+        if($city || ($city = $item_info['city'])){
+            $design->where('city', $city);
+        }
+
+        $count = $design->whereIn('user_id',$design_id_arr)->count();
+
+
         return $this->response->array($this->apiSuccess('Success', 200, compact('count')));
     }
 

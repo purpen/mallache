@@ -40,7 +40,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'area_value' => $demand->area_value,
             'address' => strval($demand->address),
             'contact_name' => strval($demand->contact_name),
-            'phone' => intval($demand->phone),
+            'phone' => $demand->phone,
             'email' => strval($demand->email),
             'image' => $demand->image,
             'verify_status' => $demand->verify_status,
