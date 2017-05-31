@@ -34,6 +34,7 @@
                   <el-col :span="5">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
+                      <p class="contact">职位: {{ d.item.position }}</p>
                       <p class="contact">电话: {{ d.item.phone }}</p>
                       <p class="contact">邮箱: {{ d.item.email }}</p>
                         <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> {{ d.item.company_name }}</p>

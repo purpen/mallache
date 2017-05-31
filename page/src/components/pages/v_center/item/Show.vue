@@ -79,37 +79,38 @@
           <div class="select-item-box" v-if="statusLabel.trueCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="已选择的设计公司" name="4">
-                <div>
-                  <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index" v-if="d.design_company_status === 2">
-                    <el-row :gutter="24">
-                      <el-col :span="3" class="item-logo">
-                        <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="50" />
-                        <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
-                        <p>项目报价: </p>
-                        <p>报价说明: </p>
-                      </el-col>
+                <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index">
 
-                      <el-col :span="21" class="item-title">
-                        <p class="p-title">
-                          <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
-                        </p>
-                        <p class="p-price">{{ d.quotation.price }} 元</p>
-                        <p>{{ d.quotation.summary }}</p>
-                      </el-col>
-                    </el-row>
-                    <div class="line"></div>
-                    <div class="btn" v-if="d.item_status === 0">
-                      <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
-                      <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button> 
+                  <div class="item-logo">
+                    <div class="fl">
+                      <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
+                      <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      <p class="p-title fl">
+                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                      </p>
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="d.design_company_status === 2">
+                        <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
+                        <p class="contact">职位: {{ d.design_company.position }}</p>
+                        <p class="contact">电话: {{ d.design_company.phone }}</p>
+                        <p class="contact">邮箱: {{ d.design_company.email }}</p>
+                          <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系我们</p>
+                      </el-popover>
                     </div>
-                    <div class="btn" v-if="d.item_status === -1">
-                      <p>已拒绝该公司报价</p>
+                    <div class="fr item-stick-des">
+                      <p>{{ d.status_value }}</p>
                     </div>
-                    <div class="btn" v-if="d.item_status === 1">
-                      <p>确认合作</p>
-                    </div>
-
                   </div>
+                  <div class="clear"></div>
+                  <div class="item-bj" v-if="d.quotation">
+                    <p>项目报价:  <span class="p-price">{{ d.quotation.price }} 元</span></p>
+                    <p>报价说明:  {{ d.quotation.summary }}</p>                   
+                  </div>
+ 
+                  <div class="btn" v-if="d.item_status === 0 && d.design_company_status === 2">
+                    <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
+                    <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button>                      
+                  </div>
+
                 </div>
 
               </el-collapse-item>
@@ -143,6 +144,39 @@
                     <p></p>
                   </div>
                   -->
+
+
+                  <div class="item-logo">
+                    <div class="fl">
+                      <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
+                      <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      <p class="p-title fl">
+                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                      </p>
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="d.design_company_status === 2">
+                        <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
+                        <p class="contact">职位: {{ d.design_company.position }}</p>
+                        <p class="contact">电话: {{ d.design_company.phone }}</p>
+                        <p class="contact">邮箱: {{ d.design_company.email }}</p>
+                          <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系我们</p>
+                      </el-popover>
+                    </div>
+                    <div class="fr item-stick-des">
+                      <p>{{ d.status_value }}</p>
+                    </div>
+                  </div>
+                  <div class="clear"></div>
+                  <div class="item-bj" v-if="d.quotation">
+                    <p>项目报价:  <span class="p-price">{{ d.quotation.price }} 元</span></p>
+                    <p>报价说明:  {{ d.quotation.summary }}</p>                   
+                  </div>
+ 
+                  <div class="btn" v-if="d.item_status === 0 && d.design_company_status === 2">
+                    <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
+                    <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button>                      
+                  </div>
+
+
                 </div>
 
               </el-collapse-item>
@@ -361,8 +395,8 @@ export default {
           self.comfirmLoadingBtn = false
           self.comfirmDialog = false
           self.$message.success('操作成功!')
-          // self.offerCompany.splice(currentIndex, 1)
           self.offerCompany[currentIndex].item_status = -1
+          self.offerCompany[currentIndex].status_value = '已拒绝设计公司报价'
         } else {
           self.comfirmLoadingBtn = false
           self.$message.error(response.data.meta.message)
@@ -384,8 +418,8 @@ export default {
           self.comfirmLoadingBtn = false
           self.comfirmDialog = false
           self.$message.success('操作成功!')
-          // self.offerCompany.splice(currentIndex, 1)
           self.offerCompany[currentIndex].item_status = 1
+          self.offerCompany[currentIndex].status_value = ''
         } else {
           self.comfirmLoadingBtn = false
           self.$message.error(response.data.meta.message)
@@ -815,14 +849,16 @@ export default {
   }
 
   .offer-company-item {
-    padding-top: 10px;
-    height: 200px;
+    padding: 10px 0 0 0;
     border: 1px solid #ccc;
     margin: 20px 0 20px 0;
   }
   .item-logo {
-    text-align: center;
-    margin: 0 0 0 0px;
+    margin: 0 10px 0 10px;
+  }
+  .item-logo .p-title {
+    margin-left: 10px;
+    line-height: 40px;
   }
   .item-logo p {
     line-height: 2;
@@ -846,7 +882,7 @@ export default {
     line-height: 50px;
     margin-bottom: 8px;
   }
-  .item-title .p-price {
+  .p-price {
     color: #FF5A5F;
     font-size: 1.8rem;
     font-weight: bold;
@@ -856,9 +892,9 @@ export default {
     border-top: 1px solid #ccc;
   }
   .btn {
-    padding-right: 10px;
     text-align: right;
-    line-height: 50px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
   }
 
   .contract-item {
@@ -949,6 +985,23 @@ export default {
   }
   .finish-item-btn button {
     padding: 10px 60px 10px 60px;
+  }
+  .item-bj {
+    padding: 15px 10px 15px 10px;
+    border-top: 1px solid #ccc;
+  }
+  .item-stick-des p{
+    line-height: 40px;
+  }
+  .contact-us p{
+    margin-left: 20px;
+    line-height: 40px;
+  }
+
+  p.contact {
+    line-height: 1.5;
+    font-size: 1.3rem;
+    color: #666;
   }
 
 

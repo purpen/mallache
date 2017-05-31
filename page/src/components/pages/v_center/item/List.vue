@@ -75,24 +75,23 @@
                     <p class="status-str">{{ d.item.status_value }}</p>
                   </el-col>
                   <el-col :span="5">
-                    <p class="btn" v-show="d.item.status === -2">
-                      <a href="javascript:void(0);" @click="restartBtn" :item_id="d.item.id" class="b-blue">重新编辑</a>
-                      <a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-red">关闭项目</a>
+                    <div class="btn" v-show="d.item.status === -2">
+                      <p><el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small" type="primary">重新编辑</el-button></p>
+                      <p><el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small" type="gray">关闭项目</el-button></p>
+                    </div>
+                    <p class="btn" v-show="d.item.status === -1">
+                      <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small" type="primary">删除项目</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 3">
-                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">去查看>></a>-->
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">去查看</el-button>
                     </p>
                     <p class="btn" v-show="d.item.show_offer">
-                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="b-blue">已有{{ d.purpose_count }}家公司报价，查看>></a>-->
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">已有{{ d.purpose_count }}家公司报价，查看</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 6">
-                      <!--<a href="javascript:void(0);" @click="viewShow" :item_id="d.item.id" class="">确认合同>></a>-->
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">确认合同</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 8">
-                      <!--<a href="javascript:void(0);" @click="secondPay" :item_id="d.item.id" class="">支付项目款>></a>-->
                       <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>
                     </p>
                   </el-col>
@@ -108,6 +107,21 @@
 
       </el-col>
     </el-row>
+
+    <el-dialog
+      title="提示"
+      v-model="sureDialog"
+      size="tiny">
+      <span>{{ sureDialogMessage }}</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="currentItemId" />
+        <input type="hidden" ref="currentIndex" />
+        <input type="hidden" ref="currentType" />
+        <el-button @click="sureDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="sureDialogLoadingBtn" @click="sureDialogSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -126,6 +140,9 @@
     },
     data () {
       return {
+        sureDialog: false,
+        sureDialogMessage: '确认执行此操作？',
+        sureDialogLoadingBtn: false,
         isLoading: false,
         itemList: [],
         itemIngList: [],
@@ -185,6 +202,33 @@
           return false
         })
       },
+      // 确认执行对话框
+      sureDialogSubmit() {
+        var itemId = parseInt(this.$refs.currentItemId.value)
+        var index = parseInt(this.$refs.currentIndex.value)
+        var type = parseInt(this.$refs.currentType.value)
+
+        var self = this
+        this.sureDialogLoadingBtn = true
+
+        if (type === 1) {
+          self.$http.post(api.demandCloseItem, {item_id: itemId})
+          .then (function(response) {
+            self.sureDialogLoadingBtn = false
+            if (response.data.meta.status_code === 200) {
+              self.designItems[index].item.status = -1
+              self.designItems[index].item.status_value = '项目关闭'
+              self.$message.success('提交成功！')
+            } else {
+              self.$message.error(response.data.meta.message)
+            }
+          })
+          .catch (function(error) {
+            self.sureDialogLoadingBtn = false
+            self.$message.error(error.message)
+          })
+        }
+      },
       editItem(event) {
         var progress = parseInt(event.currentTarget.getAttribute('progress'))
         var itemId = event.currentTarget.getAttribute('item_id')
@@ -210,6 +254,7 @@
         }
         this.$router.push({name: name, params: {id: itemId}})
       },
+      // 匹配失败后重新编辑项目
       restartBtn(event) {
         var itemId = event.currentTarget.getAttribute('item_id')
         var self = this
@@ -224,6 +269,16 @@
         .catch (function(error) {
           self.$message.error(error.message)
         })
+      },
+      // 匹配失败后关闭项目
+      closeItemBtn(event) {
+        this.$refs.currentItemId.value = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.$refs.currentIndex.value = parseInt(event.currentTarget.getAttribute('index'))
+        this.$refs.currentType.value = 1
+        this.sureDialog = true
+      },
+      // 关闭项目后删除项目
+      delItemBtn(event) {
       },
       // 支付项目资金
       secondPay(event) {
@@ -309,6 +364,9 @@
   }
   .btn {
     font-size: 1rem;
+  }
+  .btn p {
+    line-height: 35px;
   }
   .btn a {
     color: #666;

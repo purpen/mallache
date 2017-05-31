@@ -18,7 +18,7 @@
               </el-form-item> 
 
               <el-form-item label="项目周期" prop="cycle">
-                <el-select v-model.number="form.cycle" placeholder="请选择项目周期">
+                <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany">
                   <el-option
                     v-for="item in cycleOptions"
                     :label="item.label"
@@ -29,7 +29,7 @@
               </el-form-item>
 
               <el-form-item label="设计费用预算" prop="design_cost">
-                <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算">
+                <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
                   <el-option
                     v-for="item in costOptions"
                     :label="item.label"
@@ -79,7 +79,7 @@
       <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
+          <p class="slide-str">{{ matchCount }} 家推荐</p>
           <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
         </div>
 
@@ -122,6 +122,7 @@
         fileList: [],
         upToken: null,
         uploadUrl: '',
+        matchCount: '',
         uploadParam: {
           'token': '',
           'x:random': '',
@@ -226,10 +227,33 @@
           }
         })
       },
+      matchCompany() {
+        this.matchRequest()
+      },
+      // 获取已匹配公司数量
+      matchRequest() {
+        var mRow = {
+          type: this.form.type,
+          design_type: this.form.design_type,
+          cycle: this.form.cycle,
+          design_cost: this.form.design_cost,
+          province: this.province,
+          city: this.city
+        }
+        const that = this
+        that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            that.matchCount = response.data.data.count
+          }
+        })
+      },
       change: function(obj) {
         this.province = obj.province
         this.city = obj.city
         this.district = obj.district
+
+        this.matchRequest()
       },
       uploadError(err, file, fileList) {
         this.$message({
@@ -319,6 +343,8 @@
             if (row.type === 2) {
               that.$router.push({name: 'itemSubmitUIThree', params: {id: row.id}})
             }
+            that.form.type = row.type
+            that.form.design_type = row.design_type
             that.form.name = row.name
             that.form.product_features = row.product_features
             that.form.cycle = row.cycle === 0 ? '' : row.cycle
@@ -352,6 +378,9 @@
               }
               that.fileList = files
             }
+
+            // 获取已匹配公司数量
+            that.matchRequest()
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)

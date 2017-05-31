@@ -43,6 +43,7 @@ export default {
   demandItemRestart: '/demand/itemRestart', // post 修改项目，重新匹配
   demandCloseItem: '/demand/closeItem', // post 用户关闭项目
   demandTrueItemDoneId: '/demand/trueItemDone/{0}', // POST 确认项目完成
+  demandMatchingCount: '/demand/matchingCount/{0}', // POST 获取已匹配公司数量
 
   // 需求方公司管理
   demandCompany: '/demandCompany', // POST 保存需求方公司信息;  GET 获取信息

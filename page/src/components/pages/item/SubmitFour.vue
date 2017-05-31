@@ -86,7 +86,7 @@
       <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
+          <p class="slide-str">{{ matchCount }} 家推荐</p>
           <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
         </div>
 
@@ -127,6 +127,7 @@
         district: '',
         isFirst: false,
         baseCompany: {},
+        matchCount: '',
         form: {
           company_name: '',
           // company_abbreviation: '',
@@ -242,6 +243,9 @@
           }
         })
       },
+      // 获取已匹配公司数量
+      matchRequest() {
+      },
       change: function(obj) {
         this.province = obj.province
         this.city = obj.city
@@ -281,6 +285,8 @@
                 web = web.replace(urlRegex, '')
               }
             }
+            that.form.type = row.type
+            that.form.design_type = row.design_type
             that.form.company_name = row.company_name
             that.form.company_size = row.company_size
             that.form.company_web = web
@@ -296,6 +302,22 @@
             that.province = row.company_province === 0 ? '' : row.company_province
             that.city = row.company_city === 0 ? '' : row.company_city
             that.district = row.company_area === 0 ? '' : row.company_area
+
+            // 匹配公司数量
+            var mRow = {
+              type: row.type,
+              design_type: row.design_type,
+              cycle: row.cycle,
+              design_cost: row.design_cost,
+              province: row.province,
+              city: row.city
+            }
+            that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                that.matchCount = response.data.data.count
+              }
+            })
 
             // 如果是第一次添写，获取公司基本信息
             if (that.form.stage_status < 3) {

@@ -49,7 +49,7 @@
       <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
+          <p class="slide-str">{{ matchCount }} 家推荐</p>
           <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
         </div>
 
@@ -79,6 +79,7 @@
       return {
         isLoadingBtn: false,
         isLoading: true,
+        matchCount: '',
         tableData: [{
           name: '',
           key: '',
@@ -265,6 +266,22 @@
             ]
 
             that.tableData = itemTab.concat(tab.concat(assetFile.concat(baseTab)))
+
+            // 匹配公司数量
+            var mRow = {
+              type: row.type,
+              design_type: row.design_type,
+              cycle: row.cycle,
+              design_cost: row.design_cost,
+              province: row.province,
+              city: row.city
+            }
+            that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                that.matchCount = response.data.data.count
+              }
+            })
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)

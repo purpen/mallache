@@ -78,7 +78,7 @@
       <el-col :span="5">
         <div class="slider">
           <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
+          <p class="slide-str">{{ matchCount }} 家推荐</p>
           <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
         </div>
 
@@ -108,6 +108,7 @@
         itemId: '',
         isLoadingBtn: false,
         transitionName: 'expand',
+        matchCount: '',
         form: {
           type: '',
           design_type: '',
@@ -206,6 +207,18 @@
       },
       designTypeBtn(typeId) {
         this.form.design_type = typeId
+        // 查询已匹配公司数量
+        var that = this
+        var mRow = {
+          type: that.form.type,
+          design_type: that.form.design_type
+        }
+        that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            that.matchCount = response.data.data.count
+          }
+        })
       },
       fieldBtn(typeId) {
         this.form.field = typeId
@@ -270,6 +283,18 @@
             that.form.industry = row.industry
             that.form.stage_status = row.stage_status
             console.log(response.data.data)
+
+            // 获取已匹配公司数量
+            var mRow = {
+              type: that.form.type,
+              design_type: that.form.design_type
+            }
+            that.$http({url: api.demandMatchingCount.format(id), method: 'POST', data: mRow})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                that.matchCount = response.data.data.count
+              }
+            })
           } else {
             that.$message.error(response.data.meta.message)
             console.log(response.data.meta.message)
