@@ -16,14 +16,14 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::get();
-        foreach($user as $v){
-            if($v->role_id === 1){
-                $v->role_id = 20;
-                $v->save();
-            }
-        }
-        return "ok";
+//        $user = User::get();
+//        foreach($user as $v){
+//            if($v->role_id === 1){
+//                $v->role_id = 20;
+//                $v->save();
+//            }
+//        }
+//        return "ok";
 
 
 //        dd($request->getPathInfo());

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Admin;
 
 
 use App\Http\Transformer\AdminDesignCompanyTransformer;
-use App\Http\Transformer\DesignCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use Illuminate\Support\Facades\Log;
@@ -247,7 +246,7 @@ class AdminDesignCompanyController extends Controller
         }
 
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
-        return $this->response->paginator($lists , new AdminDesignCompanyTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($lists , new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
 
     }
 }
