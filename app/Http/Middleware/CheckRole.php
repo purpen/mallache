@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -21,15 +22,56 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role_id)
+    public function handle($request, Closure $next)
     {
         if (!$user = JWTAuth::parseToken()->authenticate()) {
             throw new JWTException('用户不存在');
         }
 
-        if($role_id != $user->role_id){
-            throw new HttpException(401, '无访问权限');
+        //0.用户; 10.管理员 admin； 15:管理员 admin_plus  20：超级管理员 root
+        switch ($user->role_id){
+            //普通用户
+            case 0:
+                throw new HttpException(401, '无访问权限');
+                break;
+            //管理员 admin
+            case 10:
+                if(!$this->check($request, 'admin')){
+                    throw new HttpException(401, '无访问权限');
+                }
+                break;
+            //管理员 admin_plus
+            case 15:
+                if(!$this->check($request, 'admin_plus')){
+                    throw new HttpException(401, '无访问权限');
+                }
+                break;
+            //超级管理员 root
+            case 20:
+                if(!$this->check($request, 'root')){
+                    throw new HttpException(401, '无访问权限');
+                }
+                break;
+            default:
+                throw new HttpException(401, '无访问权限');
         }
+
         return $next($request);
+    }
+
+    /**
+     * 验证有无访问路由的权限
+     *
+     * @param Request $request
+     * @param $role
+     * @return bool
+     */
+    protected function check(Request $request, $role)
+    {
+        $pathInfo = $request->getPathInfo();
+
+        $path_arr = config('role.' . $role);
+
+        return (bool)in_array($pathInfo, $path_arr);
     }
 }
