@@ -42,7 +42,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'contact_name' => strval($demand->contact_name),
             'phone' => $demand->phone,
             'email' => strval($demand->email),
-            'image' => $demand->image,
+            'logo_image' => $demand->logo_image,
             'verify_status' => $demand->verify_status,
             'license_image' => $demand->license_image,
             'position' =>$demand->position,
@@ -56,7 +56,6 @@ class DemandCompanyTransformer extends TransformerAbstract
             'company_property' => $demand->company_property,
             'company_property_value' => $demand->company_property_value,
             'document_image' => $demand->document_image,
-
         ];
     }
 }

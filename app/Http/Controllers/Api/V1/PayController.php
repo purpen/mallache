@@ -38,6 +38,10 @@ class PayController extends BaseController
      */
     public function demandAliPay()
     {
+        //验证是否是需求用户
+        if($this->auth_user->type != 1){
+            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        }
         //总金额
         $total_fee = config('constant.item_price');
 
@@ -339,6 +343,10 @@ class PayController extends BaseController
      */
     public function demandWxPay()
     {
+        //验证是否是需求用户
+        if($this->auth_user->type != 1){
+            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        }
         //总金额
         $total_fee = config('constant.item_price');
 

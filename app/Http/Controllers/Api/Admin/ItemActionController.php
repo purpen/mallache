@@ -7,6 +7,7 @@ use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -244,6 +245,12 @@ class ItemActionController extends Controller
 
         if(empty($item->recommend)){
             return $this->response->array($this->apiError('当前项目没有推荐设计公司', 403));
+        }
+
+
+        $demand_company = User::find($item->user_id)->demandCompany;
+        if(!$demand_company || $demand_company->verify_status != 1){
+            return $this->response->array($this->apiError('该需求公司资料未审核', 403));
         }
 
         $item->status = 3;

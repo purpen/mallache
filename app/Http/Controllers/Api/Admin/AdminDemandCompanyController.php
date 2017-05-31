@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-
-use App\Http\Transformer\DemandCompanyTransformer;
+use App\Http\AdminTransformer\DemandCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DemandCompany;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 
@@ -176,7 +174,7 @@ class AdminDemandCompanyController extends Controller
         }
 
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
-        return $this->response->paginator($lists , new DemandCompanyTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($lists , new DemandCompanyTransformer)->setMeta($this->apiMeta());
 
     }
 }
