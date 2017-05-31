@@ -11,11 +11,6 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function ($api) {
     $api->group(['middleware' => ['jwt.auth', 'role:1']], function ($api){
 
-        //超级管理员权限
-        $api->group(['middleware' => ['role:1']], function (){
-
-        });
-
         //项目列表
         $api->get('/admin/item/lists', 'ItemActionController@itemList');
         //为项目添加推荐公司
