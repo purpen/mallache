@@ -22,7 +22,7 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role_id)
+    public function handle($request, Closure $next)
     {
         if (!$user = JWTAuth::parseToken()->authenticate()) {
             throw new JWTException('用户不存在');
