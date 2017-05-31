@@ -100,6 +100,7 @@ class DemandCompanyController extends BaseController
             'phone' => 'required',
             'email' => 'required|email',
             'position' => 'required|max:20',
+            'registration_number' => 'min:15|max:18',
         ];
         $all = $request->all();
         $all['user_id'] = $this->auth_user_id;
@@ -268,7 +269,7 @@ class DemandCompanyController extends BaseController
             'email' => 'email',
             'position' => 'max:20',
             'company_type' => 'integer',
-            'registration_number' => 'max:15',
+            'registration_number' => 'min:15|max:18',
             'legal_person' => 'max:20',
             'document_type' => 'integer',
             'document_number' => 'max:20',
