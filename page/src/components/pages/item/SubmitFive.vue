@@ -1,10 +1,10 @@
 <template>
   <div class="container">
 
-    <v-progress :checkStep="true"></v-progress>
+    <v-progress :checkStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
     <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="19">
+      <el-col :span="24">
         <div class="content">
 
           <el-table
@@ -46,22 +46,20 @@
         
         </div>
       </el-col>
-      <el-col :span="5">
-        <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">{{ matchCount }} 家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
-        </div>
 
-        <div class="slider info">
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
-        </div>
-      </el-col>
     </el-row>
+
+    <el-dialog
+      title="提示"
+      v-model="comfirmDialog"
+      size="tiny">
+      <span>{{ comfirmMessage }}</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="comfirmType" value="1" />
+        <el-button @click="comfirmDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="comfirmLoadingBtn" @click="sureComfirmSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -80,6 +78,10 @@
         isLoadingBtn: false,
         isLoading: true,
         matchCount: '',
+        comfirmDialog: false,
+        comfirmMessage: '确认执行此操作？',
+        comfirmLoadingBtn: false,
+        form: {},
         tableData: [{
           name: '',
           key: '',
@@ -90,6 +92,17 @@
     },
     methods: {
       publish() {
+        if (this.matchCount === 0) {
+          this.comfirmMessage = '您添写的信息没有匹配到合适的设计公司，确认发布？'
+          this.comfirmDialog = true
+        } else {
+          this.publishSubmit()
+        }
+      },
+      sureComfirmSubmit() {
+        this.publishSubmit()
+      },
+      publishSubmit() {
         const that = this
         that.isLoadingBtn = true
         that.$http({method: 'POST', url: api.release, data: {id: that.itemId}})
@@ -267,21 +280,6 @@
 
             that.tableData = itemTab.concat(tab.concat(assetFile.concat(baseTab)))
 
-            // 匹配公司数量
-            var mRow = {
-              type: row.type,
-              design_type: row.design_type,
-              cycle: row.cycle,
-              design_cost: row.design_cost,
-              province: row.province,
-              city: row.city
-            }
-            that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                that.matchCount = response.data.data.count
-              }
-            })
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
@@ -305,6 +303,9 @@
   .content {
     padding: 20px;
     border: 1px solid #ccc;
+  }
+  .content .input {
+    padding: 0 150px;
   }
 
   .slider {
@@ -347,8 +348,11 @@
   .return-btn {
     float: left;
   }
+  .return-btn a {
+    font-size: 2rem;
+  }
   .return-btn a img {
-    vertical-align: -8px;
+    vertical-align: -5px;
   }
   .sept {
     width: 100%;

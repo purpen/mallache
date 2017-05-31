@@ -8,6 +8,12 @@
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
 
+            <div class="pub">
+              <router-link :to="{name: 'itemSubmitOne'}">
+                <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
+              </router-link>
+            </div>
+
             <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
               <div class="item ing" v-for="(d, index) in itemIngList">
                 <div class="banner">
@@ -24,13 +30,6 @@
                   </div>
                 </div>
               </div>
-
-
-            <div class="pub">
-              <router-link :to="{name: 'itemSubmitOne'}">
-                <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目</el-button>
-              </router-link>
-            </div>
 
 
               <el-row :gutter="0" class="item-title-box" v-show="itemList.length > 0">
@@ -387,6 +386,7 @@
 
   .item-title-box {
     margin-top: 20px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
   }
   .el-col {

@@ -110,6 +110,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   left: 50%;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 
 /**
  *  新添按钮颜色值

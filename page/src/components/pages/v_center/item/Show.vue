@@ -7,7 +7,7 @@
       <el-col :span="18">
         <div class="content">
           <div class="banner">
-            <img class="" src="../../../../assets/images/icon/item_status.png" width="80" />
+            <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="50" />
             <h1>{{ item.name }}</h1>
             <p>{{ item.status_value }}</p>
           </div>
@@ -63,8 +63,8 @@
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank" :title="m.title"  v-for="(m, index) in d.design_case" :key="index" v-if="index < 2">
-                      <img width="150" :src="m.case_image[0].small" /></router-link >
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank" :title="m.title"  v-for="(m, index) in d.cases" :key="index">
+                      <img width="150" :src="m.cover_url" /></router-link >
                     </div>
                   </div>
                 </div>
@@ -304,6 +304,7 @@ export default {
       contract: {},
       isLoadingBtn: false,
       selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '15'],
+      statusIconUrl: null,
       statusLabel: {
         detail: true,
         selectCompany: false,
@@ -503,26 +504,36 @@ export default {
         }
         self.quotation = response.data.data.quotation
         switch (self.item.status) {
+          case -1:  // 关闭项目
+            self.statusIconUrl = require('@/assets/images/item/item_colose.png')
+            break
+          case -2:  // 匹配失败
+            self.statusIconUrl = require('@/assets/images/item/match_fail.png')
+            break
           case 1:
             self.progressButt = 0
             self.progressContract = -1
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/write_icon.png')
             break
-          case 2:
+          case 2: // 等待系统匹配公司
             self.progressButt = 0
             self.progressContract = -1
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/match_company.png')
             break
-          case 3: // 获取系统推荐的设计公司
+          case 3: // 获取系统推荐的设计公司,选择设计公司
             self.progressButt = 1
             self.progressContract = -1
             self.progressItem = -1
             self.statusLabel.selectCompany = true
+            self.statusIconUrl = require('@/assets/images/item/chose_company.png')
             break
-          case 4: // 查看已提交报价的设计公司
+          case 4: // 查看已提交报价的设计公司, 提交报价单
             self.progressButt = 2
             self.progressContract = -1
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/wait_taking.png')
             self.statusLabel.trueCompany = true
             self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
             .then (function(response) {
@@ -548,49 +559,55 @@ export default {
               self.$message.error(error.message)
             })
             break
-          case 5:
+          case 5: // 等待提交合同
             self.progressButt = 2
             self.progressContract = 0
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/wait_submit_ht.png')
             self.statusLabel.cooperateCompany = true
             break
-          case 6:
+          case 6: // 等待确认合同
             self.progressButt = 2
             self.progressContract = 1
             self.progressItem = -1
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
+            self.statusIconUrl = require('@/assets/images/item/wait_sure_ht.png')
             break
-          case 7:
+          case 7: // 已确认合同
             self.progressButt = 2
             self.progressContract = 2
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/sure_ht.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
             break
-          case 8:
+          case 8: // 等待托管资金
             self.progressButt = 2
             self.progressContract = 2
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/wait_pay.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
             break
-          case 9:
+          case 9: // 项目资金已拖管
             self.progressButt = 2
             self.progressContract = 3
             self.progressItem = -1
+            self.statusIconUrl = require('@/assets/images/item/tuoguan.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             break
-          case 11:
+          case 11:  // 项目进行中
             self.progressButt = 3
             self.progressContract = 3
             self.progressItem = 0
+            self.statusIconUrl = require('@/assets/images/item/item_ing.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -598,10 +615,11 @@ export default {
             self.statusLabel.manage = true
             self.statusLabel.stage = true
             break
-          case 15:
+          case 15:  // 项目完成
             self.progressButt = 3
             self.progressContract = 3
             self.progressItem = 1
+            self.statusIconUrl = require('@/assets/images/item/item_finish.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -613,6 +631,7 @@ export default {
             self.progressButt = 3
             self.progressContract = 3
             self.progressItem = 2
+            self.statusIconUrl = require('@/assets/images/item/item_yanshou.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -624,6 +643,7 @@ export default {
             self.progressButt = 3
             self.progressContract = 3
             self.progressItem = 3
+            self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
             self.statusLabel.amount = true
@@ -650,8 +670,23 @@ export default {
                 if (item.item_type) {
                   self.stickCompany[i].item_type_label = item.item_type.join('／')
                 }
+                var cases = []
+                if (item.design_case && item.design_case.length > 0) {
+                  for (var j = 0; j < item.design_case.length; j++) {
+                    var c = item.design_case[j]
+                    if (j > 1) break
+                    var obj = {}
+                    obj.id = c.id
+                    obj.title = c.title
+                    obj.cover_url = ''
+                    if (c.case_image && c.case_image.length > 0) {
+                      obj.cover_url = c.case_image[0].small
+                    }
+                    cases.push(obj)
+                  } // endfor
+                }
+                self.stickCompany[i].cases = cases
               } // endfor
-              console.log('stickCompany')
               console.log(self.stickCompany)
             }
           })
@@ -834,15 +869,18 @@ export default {
     margin: 10px;
   }
   .select-company-item .case-box {
+    height: 100px;
     margin: 10px;
     float: left;
     padding-top: 45px;
-    height: 90px;
     overflow: hidden;
   }
   .select-company-item .case-box a{
+    margin: 5px;
+    overflow: hidden;
   }
   .select-company-item .case-box a img{
+    overflow: hidden;
   }
   .pub-btn {
     text-align: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <v-progress></v-progress>
+    <v-progress :typeStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
     <el-row :gutter="24" type="flex" justify="center">
 
       <el-col :span="19">
@@ -76,18 +76,11 @@
         </div>
       </el-col>
       <el-col :span="5">
-        <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">{{ matchCount }} 家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
-        </div>
 
         <div class="slider info">
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
+          <p>提示</p>
+          <p class="slide-des" style="margin-bottom: -10px;">关于设计类别：</p>
+          <p class="slide-des">根据您的项目需求，选择相应的设计服务类别，这里只能单选。</p>
         </div>
       </el-col>
     </el-row>
@@ -207,18 +200,6 @@
       },
       designTypeBtn(typeId) {
         this.form.design_type = typeId
-        // 查询已匹配公司数量
-        var that = this
-        var mRow = {
-          type: that.form.type,
-          design_type: that.form.design_type
-        }
-        that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-            that.matchCount = response.data.data.count
-          }
-        })
       },
       fieldBtn(typeId) {
         this.form.field = typeId
@@ -277,24 +258,13 @@
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
+            that.form.id = row.id
             that.form.type = row.type
             that.form.design_type = row.design_type
             that.form.field = row.field
             that.form.industry = row.industry
             that.form.stage_status = row.stage_status
             console.log(response.data.data)
-
-            // 获取已匹配公司数量
-            var mRow = {
-              type: that.form.type,
-              design_type: that.form.design_type
-            }
-            that.$http({url: api.demandMatchingCount.format(id), method: 'POST', data: mRow})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                that.matchCount = response.data.data.count
-              }
-            })
           } else {
             that.$message.error(response.data.meta.message)
             console.log(response.data.meta.message)
@@ -381,7 +351,7 @@
     text-align:center;
   }
   .slider.info {
-    height: 350px;
+    height: 300px;
     text-align: left;
   }
   .slider p {
@@ -409,6 +379,9 @@
   }
   .slide-str {
     font-size: 2rem;
+  }
+  .slide-str img {
+    vertical-align: middle; 
   }
   .slide-des {
     color: #666;

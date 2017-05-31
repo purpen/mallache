@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <v-progress :baseStep="true"></v-progress>
+    <v-progress :baseStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
 
     <el-row :gutter="24" type="flex" justify="center">
 
@@ -78,12 +78,27 @@
       </el-col>
       <el-col :span="5">
         <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">{{ matchCount }} 家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
+
+          <div v-if="matchCount === 0">
+            <p class="slide-str error"><img src="../../../assets/images/icon/item_stick_fail.png" width="25" /> 匹配失败</p>
+            <p class="slide-des error">可能出现的原因：</p>
+            <p class="slide-des error">当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
+            <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p> 
+            <p class="slide-des error">选择当前的城市没有对应的设计公司。</p> 
+          </div>
+          <div v-else-if="matchCount > 0">
+            <p class="slide-str success"><img src="../../../assets/images/icon/item_stick.png" width="25" /> {{ matchCount }} 家推荐</p>
+            <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
+          </div>
+          <div v-else>
+            <p class="slide-str"><img src="../../../assets/images/wait_blank.gif" width="20" /> 家推荐</p>
+            <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
+          </div>
+
         </div>
 
         <div class="slider info">
+          <p>提示</p>
           <p>项目需求填写</p>
           <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
           <div class="blank20"></div>
@@ -241,7 +256,8 @@
           city: this.city
         }
         const that = this
-        that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
+        that.matchCount = ''
+        that.$http({url: api.demandMatchingCount, method: 'POST', data: mRow})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.matchCount = response.data.data.count
@@ -343,6 +359,7 @@
             if (row.type === 2) {
               that.$router.push({name: 'itemSubmitUIThree', params: {id: row.id}})
             }
+            that.form.id = row.id
             that.form.type = row.type
             that.form.design_type = row.design_type
             that.form.name = row.name
@@ -425,36 +442,46 @@
 
   .slider {
     border: 1px solid #ccc;
-    height: 250px;
+    height: 270px;
     text-align:center;
+    margin-bottom: 20px;
   }
   .slider.info {
     height: 350px;
     text-align: left;
   }
   .slider p {
-    margin: 25px;
+    margin: 20px;
+  }
+  .slider img {
+    vertical-align: bottom;
   }
   .slider.info p {
     margin: 10px 20px;
   }
-  .form-btn {
-    float: right;
-  }
-
   .slide-img {
     padding-top: 20px;
   }
-  .slide-img img {
-    
-  }
+
   .slide-str {
     font-size: 2rem;
+  }
+  .slide-str.success {
+    color: #00AC84;
+  }
+  .slide-str.error {
+    color: #FE3824;
   }
   .slide-des {
     color: #666;
     line-height: 1.5;
     font-size: 1rem;
+    text-align: left;
+  }
+  .slide-des.error {
+    color: #FE3824;
+    margin-top: 0px;
+    margin-bottom: 5px;
   }
   .form-btn {
     float: right;
@@ -466,8 +493,11 @@
   .return-btn {
     float: left;
   }
+  .return-btn a {
+    font-size: 2rem;
+  }
   .return-btn a img {
-    vertical-align: -8px;
+    vertical-align: -5px;
   }
   .sept {
     width: 100%;

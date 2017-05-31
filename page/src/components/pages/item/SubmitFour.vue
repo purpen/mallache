@@ -1,13 +1,13 @@
 <template>
   <div class="container">
 
-    <v-progress :companyStep="true"></v-progress>
+    <v-progress :companyStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
     <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="19">
+      <el-col :span="24">
         <div class="content">
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
-
+              <div class="input">
               <el-row :gutter="24">
                 <el-col :span="10">
                   <el-form-item label="公司名称" prop="company_name">
@@ -68,7 +68,7 @@
                   </el-form-item>             
                 </el-col>
               </el-row>
-
+              </div>
               <div class="sept"></div>
               <div class="return-btn">
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
@@ -83,21 +83,7 @@
         
         </div>
       </el-col>
-      <el-col :span="5">
-        <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">{{ matchCount }} 家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
-        </div>
 
-        <div class="slider info">
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
-        </div>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -285,6 +271,7 @@
                 web = web.replace(urlRegex, '')
               }
             }
+            that.form.id = row.id
             that.form.type = row.type
             that.form.design_type = row.design_type
             that.form.company_name = row.company_name
@@ -302,22 +289,6 @@
             that.province = row.company_province === 0 ? '' : row.company_province
             that.city = row.company_city === 0 ? '' : row.company_city
             that.district = row.company_area === 0 ? '' : row.company_area
-
-            // 匹配公司数量
-            var mRow = {
-              type: row.type,
-              design_type: row.design_type,
-              cycle: row.cycle,
-              design_cost: row.design_cost,
-              province: row.province,
-              city: row.city
-            }
-            that.$http({url: api.demandMatchingCount.format(that.itemId), method: 'POST', data: mRow})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                that.matchCount = response.data.data.count
-              }
-            })
 
             // 如果是第一次添写，获取公司基本信息
             if (that.form.stage_status < 3) {
@@ -373,6 +344,9 @@
     padding: 20px;
     border: 1px solid #ccc;
   }
+  .content .input {
+    padding: 0 150px;
+  }
 
   .slider {
     border: 1px solid #ccc;
@@ -413,8 +387,11 @@
   .return-btn {
     float: left;
   }
+  .return-btn a {
+    font-size: 2rem;
+  }
   .return-btn a img {
-    vertical-align: -8px;
+    vertical-align: -5px;
   }
   .sept {
     width: 100%;

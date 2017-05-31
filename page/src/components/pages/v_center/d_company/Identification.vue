@@ -176,13 +176,15 @@
             { type: 'number', required: true, message: '请添写公司全称', trigger: 'change' }
           ],
           registration_number: [
-            { required: true, message: '请添写公司注册号', trigger: 'blur' }
+            { required: true, message: '请添写公司注册号', trigger: 'blur' },
+            { pattern: /[(^.{15})|(^.{18})]$/, message: '注册号格式不正确', trigger: 'blur' }
           ],
           legal_person: [
             { required: true, message: '请添写法人真实姓名', trigger: 'blur' }
           ],
           document_number: [
-            { required: true, message: '请添写法人证件号码', trigger: 'blur' }
+            { required: true, message: '请添写法人证件号码', trigger: 'blur' },
+            { max: 20, min: 4, message: '证件号码格式不正确', trigger: 'blur' }
           ],
           document_type: [
             { type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change' }
