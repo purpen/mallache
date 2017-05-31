@@ -127,7 +127,7 @@ class DesignCompanyController extends BaseController
             'good_field'  => 'nullable|max:50',
             'professional_advantage'  => 'nullable|max:500',
             'awards'  => 'nullable|max:500',
-            'registration_number'  => 'nullable|max:15',
+            'registration_number'  => 'nullable|min:15|max:18',
             'legal_person'  => 'nullable|max:20',
             'document_type'  => 'nullable|integer',
             'document_number'  => 'nullable|max:20',
@@ -148,7 +148,8 @@ class DesignCompanyController extends BaseController
             'professional_advantage.max' => '专业优势不能超过500个字',
             'awards.max' => '荣誉奖项不能超过500个字',
             'company_profile.max' => '公司简介不能超过500个字',
-            'registration_number.max' => '注册号不能超过15字符',
+            'registration_number.min' => '注册号不能低于15字符',
+            'registration_number.max' => '注册号不能超过18字符',
             'legal_person.max' => '法人不能超过20个字符',
             'document_type.integer' => '证件类型必须是整形',
             'document_number.max' => '证件号码不能超过20个字符',
@@ -395,6 +396,8 @@ class DesignCompanyController extends BaseController
             'legal_person'  => 'required|max:20',
             'document_type'  => 'required|integer',
             'document_number'  => 'required|max:20',
+            'registration_number'  => 'nullable|min:15|max:18',
+
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
@@ -424,6 +427,8 @@ class DesignCompanyController extends BaseController
             'document_type.integer' => '证件类型必须是整形',
             'document_number.required' => '证件号码不能为空',
             'document_number.max' => '证件号码不能超过20个字符',
+            'registration_number.min' => '注册号不能低于15字符',
+            'registration_number.max' => '注册号不能超过18字符',
         ];
         $all = $request->except(['token']);
         $validator = Validator::make($all , $rules, $messages);

@@ -23,7 +23,7 @@ class UserActionController extends BaseController
      * @apiParam {int} sort 排序：0.正序；1.倒序；（默认：倒序）；
      * @apiParam {int} status 状态：；-1：禁用；0.激活;
      * @apiParam {int} type 1.需求公司；2.设计公司;
-     * @apiParam {int} role_id 角色：0.用户；1.管理员；
+     * @apiParam {int} role_id  角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -43,7 +43,7 @@ class UserActionController extends BaseController
      *          "price_frozen": "0.00", //冻结金额
      *          "image": "",
      *          "design_company_id": 1,
-     *          "role_id": 1    // 角色：0.用户；1.管理员；
+     *          "role_id": 1    // role_id 角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
      *          "type": 1  //1.需求公司；2.设计公司
     }
      *   }
@@ -52,19 +52,19 @@ class UserActionController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = in_array($request->input('status'), [0,-1]) ? $request->input('status') : null;
-        $role_id = in_array($request->input('role_id'), [0,1]) ? $request->input('role_id') : null;
+        $role_id = $request->input('role_id') ? $request->input('role_id') : null;
         $type = in_array($request->input('type'), [1,2]) ? $request->input('type') : null;
 
         $user = User::query();
 
         if($status !== null){
-            $user->where('status', $status);
+            $user->where('status', (int)$status);
         }
         if($role_id !== null){
-            $user->where('role_id', $role_id);
+            $user->where('role_id', (int)$role_id);
         }
         if($type !== null){
-            $user->where('type', $type);
+            $user->where('type', (int)$type);
         }
         if($request->input('sort') === 0){
             $sort = 'asc';
@@ -84,7 +84,7 @@ class UserActionController extends BaseController
      * @apiGroup AdminUser
      *
      * @apiParam {integer} user_id 用户ID
-     * @apiParam {int} role_id 角色：0.用户；1.管理员；
+     * @apiParam {int} role_id 角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -99,7 +99,7 @@ class UserActionController extends BaseController
     {
         // 验证规则
         $rules = [
-            'role_id' => ['required', Rule::in([0, 1])],
+            'role_id' => ['required', 'integer'],
             'user_id' => ['required', 'integer'],
         ];
         $payload = $request->only('role_id', 'user_id');
