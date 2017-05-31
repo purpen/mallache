@@ -1269,7 +1269,7 @@ class DemandController extends BaseController
     }
 
     /**
-     * @api {post} /demand/matchingCount/{item_id} 获取当前信息匹配到的公司数量
+     * @api {post} /demand/matchingCount/ 获取当前信息匹配到的公司数量
      * @apiVersion 1.0.0
      * @apiName demand matchingCount
      * @apiGroup demandType
@@ -1293,36 +1293,30 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function matchingCount(Request $request, $item_id)
+    public function matchingCount(Request $request)
     {
-        $item = Item::find($item_id);
-        if($item->user_id !== $this->auth_user_id){
-            return $this->response->array($this->apiError('无权操作', 403));
-        }
-        $item_info = $item->itemInfo();
-
-        $type = $request->input('type');
-        $design_type = $request->input('design_type');
-        $design_cost = $request->input('design_cost');
-        $cycle = $request->input('cycle');
-        $province = $request->input('province');
-        $city = $request->input('city');
+        $type = $request->input('type') ?? null;
+        $design_type = $request->input('design_type') ?? null;
+        $design_cost = $request->input('design_cost') ?? null;
+        $cycle = $request->input('cycle') ?? null;
+        $province = $request->input('province') ?? null;
+        $city = $request->input('city') ?? null;
 
         $query = DesignItemModel::select('user_id');
-        if($type || ($type = $item_info['type'])){
+        if($type){
             $query->where('type', $type);
         }
 
-        if($design_type || ($design_type = $item_info['design_type'])){
+        if($design_type){
             $query->where('design_type', $design_type);
         }
 
-        if($design_cost || ($design_cost = $item_info['design_cost'])){
+        if($design_cost){
             $max = $this->cost($design_cost);
             $query->where('min_price', '<=', $max);
         }
 
-        if($cycle || ($cycle = $item_info['cycle'])){
+        if($cycle){
             $query->where('project_cycle', $cycle);
         }
 
@@ -1331,11 +1325,11 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province || ($province = $item_info['province'])){
+        if($province){
             $design->where('province', $province);
         }
 
-        if($city || ($city = $item_info['city'])){
+        if($city){
             $design->where('city', $city);
         }
 

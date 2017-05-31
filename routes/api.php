@@ -152,7 +152,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/evaluate', 'DemandController@evaluate');
 
         // 获取当前信息匹配到的公司数量
-        $api->post('/demand/matchingCount/{item_id}', 'DemandController@matchingCount');
+        $api->post('/demand/matchingCount/', 'DemandController@matchingCount');
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //UX UI 设计详情
