@@ -60,7 +60,7 @@
                   <el-form-item label="职位" style="margin: 0">
                     <el-input v-model="form.position"></el-input>
                   </el-form-item>
-                  <el-form-item label="电话" style="margin: 0">
+                  <el-form-item label="手机" style="margin: 0">
                     <el-input v-model="form.phone"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱" style="margin: 0">
@@ -173,7 +173,7 @@
                   <template slot="prepend">http://</template>
                 </el-input>
 
-                <p v-else>{{ form.company_web }}</p>
+                <p v-else><a :href="form.web" target="_blank">{{ form.web }}</a></p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.web" title="保存" href="javascript:void(0)" @click="saveBtn('web', ['company_web'])">保存</a>
@@ -325,6 +325,7 @@
             } else if (mark === 'company_property') {
               that.form.company_property_value = item.company_property_value
             } else if (mark === 'web') {
+              that.form.web = row.company_web
               var urlRegex = /http:\/\/|https:\/\//
               if (urlRegex.test(row.company_web)) {
                 that.form.company_web = row.company_web.replace(urlRegex, '')
@@ -409,6 +410,7 @@
               that.province = response.data.data.province === 0 ? '' : response.data.data.province
               that.city = response.data.data.city === 0 ? '' : response.data.data.city
               that.district = response.data.data.area === 0 ? '' : response.data.data.area
+              that.form.web = that.form.company_web
               // 处理网址前缀
               if (that.form.company_web) {
                 var urlRegex = /http:\/\/|https:\/\//
@@ -416,8 +418,8 @@
                   that.form.company_web = that.form.company_web.replace(urlRegex, '')
                 }
               }
-              if (response.data.data.image) {
-                that.imageUrl = response.data.data.image.small
+              if (response.data.data.logo_image) {
+                that.imageUrl = response.data.data.logo_image.logo
               }
               that.form.verify_status_label = ''
               if (that.form.verify_status === 0) {
@@ -427,8 +429,9 @@
               } else if (that.form.verify_status === 2) {
                 that.form.verify_status_label = '认证失败'
               }
+
+              console.log(that.form)
             })
-            console.log(that.form)
           }
         }
       })
@@ -492,13 +495,15 @@
   .avatar-uploader .el-upload:hover {
     border-color: #20a0ff;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
     text-align: center;
+    border: 1px dashed #ccc;
   }
   .avatar {
     width: 100px;

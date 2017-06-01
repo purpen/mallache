@@ -58,14 +58,14 @@
                   </el-form-item>             
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="电话" prop="phone">
+                  <el-form-item label="手机" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
                   </el-form-item>             
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
               </el-row>
               </div>

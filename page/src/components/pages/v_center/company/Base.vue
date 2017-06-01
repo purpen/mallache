@@ -60,7 +60,7 @@
                   <el-form-item label="职位" style="margin: 0">
                     <el-input v-model="form.position"></el-input>
                   </el-form-item>
-                  <el-form-item label="电话" style="margin: 0">
+                  <el-form-item label="手机" style="margin: 0">
                     <el-input v-model="form.phone"></el-input>
                   </el-form-item>
                   <el-form-item label="邮箱" style="margin: 0">
@@ -216,7 +216,7 @@
                   <template slot="prepend">http://</template>
                 </el-input>
 
-                <p v-else>{{ form.web }}</p>
+                <p v-else><a :href="form.web_p" target="_blank">{{ form.web_p }}</a></p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.web" title="保存" href="javascript:void(0)" @click="saveBtn('web', ['web'])">保存</a>
@@ -398,6 +398,7 @@
             } else if (mark === 'company_size') {
               that.form.company_size_val = item.company_size_val
             } else if (mark === 'web') {
+              that.form.web_p = row.web
               var urlRegex = /http:\/\/|https:\/\//
               if (urlRegex.test(row.web)) {
                 that.form.web = row.web.replace(urlRegex, '')
@@ -486,6 +487,7 @@
               that.province = response.data.data.province === 0 ? '' : response.data.data.province
               that.city = response.data.data.city === 0 ? '' : response.data.data.city
               that.district = response.data.data.area === 0 ? '' : response.data.data.area
+              that.form.web_p = that.form.web
               if (response.data.data.branch_office !== 0) {
                 that.is_branch = true
               }
@@ -501,7 +503,7 @@
                 that.form.branch = '有, ' + that.form.branch_office + '家'
               }
               if (response.data.data.logo_image) {
-                that.imageUrl = response.data.data.logo_image.small
+                that.imageUrl = response.data.data.logo_image.logo
               }
               that.form.verify_status_label = ''
               if (that.form.verify_status === 0) {
@@ -512,7 +514,6 @@
                 that.form.verify_status_label = '认证失败'
               }
             })
-            console.log(that.form)
           }
         }
       })
@@ -579,10 +580,11 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
     text-align: center;
+    border: 1px dashed #ccc;
   }
   .avatar {
     width: 100px;

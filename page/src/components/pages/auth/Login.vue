@@ -14,7 +14,10 @@
           <el-form-item label="" prop="password">
             <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
-          <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
+          <div class="opt">
+            <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
+            <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
+          </div>
           <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
 
@@ -188,12 +191,19 @@ export default {
   .reg p a {
     color: #FF5A5F;
   }
+  .opt {
+    margin-top: -25px;
+    line-height: 45px;
+  }
   .forget {
-    text-align: right;
-    margin: -20px 0 20px 0;
+    float: right;
+  }
+  .rember {
+    float: left;
+    font-size: 1.3rem; 
   }
   .forget a{
-    font-size: 1.2rem; 
+    font-size: 1.3rem; 
     color: #666;
   }
 
