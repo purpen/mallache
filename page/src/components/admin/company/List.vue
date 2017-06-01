@@ -120,8 +120,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
-            :page-size="query.pagesize"
+            :page-sizes="[50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
           </el-pagination>
@@ -150,7 +150,7 @@ export default {
       isLoading: false,
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: 0,
@@ -220,7 +220,7 @@ export default {
     },
     loadList() {
       const self = this
-      self.query.page = this.$route.query.page || 1
+      self.query.page = parseInt(this.$route.query.page || 1)
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
       self.isLoading = true
@@ -230,7 +230,7 @@ export default {
         self.tableData = []
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
-          self.query.totalCount = response.data.meta.pagination.total
+          self.query.totalCount = parseInt(response.data.meta.pagination.total)
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]

@@ -3,25 +3,21 @@
   <el-col :span="4" class="left-menu">
 
     <div class="menu-list" v-if="isCompany()">
-      <!--
-      <router-link :to="{name: 'vcenterItemList'}" class="item">
-        项目动态
+      <router-link :to="{name: 'home'}" class="item">
+        控制面板
       </router-link>
       <router-link :to="{name: 'vcenterOrderList'}" class="item">
-        项目订单
+        消息
       </router-link>
-      -->
       <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
         项目订单
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例
       </router-link>
-      <!--
-      <router-link :to="{name: 'vcenterComputerAccreditation'}" class="item">
-        公司信息
+      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+        我的钱包
       </router-link>
-      -->
       <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
       </router-link>
@@ -32,7 +28,7 @@
         我的项目
       </router-link>
       <router-link :to="{name: 'vcenterOrderList'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
-        项目订单
+        我的钱包
       </router-link>
       <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
