@@ -218,7 +218,7 @@ export default {
       const self = this
       self.query.page = this.$route.query.page || 1
       self.query.sort = this.$route.query.sort || 1
-      self.query.type = this.$route.query.type || 0
+      self.query.type = this.$route.query.type || ''
       self.isLoading = true
       self.$http.get(api.adminDemandCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type}})
       .then (function(response) {

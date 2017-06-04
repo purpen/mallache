@@ -53,8 +53,10 @@
                   <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
                     <div class="img">
-                      <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50" />                     
-                      <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
+                      <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">
+                        <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50" />                     
+                        <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
+                      </router-link>
                     </div>
                     <div class="company-title">
                       <h3><router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name }}</router-link></h3>
@@ -83,10 +85,12 @@
 
                   <div class="item-logo">
                     <div class="fl">
-                      <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
-                      <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">
+                        <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
+                        <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      </router-link>
                       <p class="p-title fl">
-                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">{{ d.design_company.company_name }}</router-link>
                       </p>
                       <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="d.design_company_status === 2">
                         <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
@@ -120,38 +124,16 @@
           <div class="select-item-box" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合作的设计公司" name="5">
-                <div class="offer-company-item" v-if="company">
-                  <el-row :gutter="24">
-                    <el-col :span="3" class="item-logo">
-                      <img class="avatar" v-if="company.logo_url" :src="company.logo_url" width="50" />
-                      <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
-                      <p>项目报价: </p>
-                      <p>报价说明: </p>
-                    </el-col>
-
-                    <el-col :span="21" class="item-title">
-                      <p class="p-title">
-                        <router-link :to="{name: 'companyShow', params: {id: company.id}}" target="_blank" :class="">{{ company.company_name }}</router-link>
-                      </p>
-                      <p class="p-price">{{ quotation.price }} 元</p>
-                      <p>{{ quotation.summary }}</p>
-                    </el-col>
-                  </el-row>
-
-                  <!--
-                  <div class="line"></div>
-                  <div class="btn">
-                    <p></p>
-                  </div>
-                  -->
-
+                <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index" v-if="d.status === 5">
 
                   <div class="item-logo">
                     <div class="fl">
-                      <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
-                      <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">
+                        <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
+                        <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
+                      </router-link>
                       <p class="p-title fl">
-                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank" :class="">{{ d.design_company.company_name }}</router-link>
+                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">{{ d.design_company.company_name }}</router-link>
                       </p>
                       <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="d.design_company_status === 2">
                         <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
@@ -162,7 +144,6 @@
                       </el-popover>
                     </div>
                     <div class="fr item-stick-des">
-                      <p>{{ d.status_value }}</p>
                     </div>
                   </div>
                   <div class="clear"></div>
@@ -345,6 +326,7 @@ export default {
           self.item.status_value = '等待设计公司接单'
           self.statusLabel.selectCompany = false
           self.statusLabel.trueCompany = true
+          self.checkSubmitCompany()
         } else {
           self.$message.error(response.data.meta.message)
         }
@@ -410,7 +392,6 @@ export default {
     },
     // 同意设计公司报价, 开始合作
     agreeCompanySubmit() {
-      var currentIndex = this.$refs.currentIndex.value
       var companyId = this.$refs.companyId.value
       var self = this
       self.$http.post(api.agreeDesignCompany, {item_id: self.item.id, design_company_id: companyId})
@@ -419,8 +400,9 @@ export default {
           self.comfirmLoadingBtn = false
           self.comfirmDialog = false
           self.$message.success('操作成功!')
-          self.offerCompany[currentIndex].item_status = 1
-          self.offerCompany[currentIndex].status_value = ''
+          self.item.status = 5
+          self.item.status_value = '已确认合作，等待设计公司提交合同'
+          self.cooperCompany()
         } else {
           self.comfirmLoadingBtn = false
           self.$message.error(response.data.meta.message)
@@ -464,6 +446,47 @@ export default {
     // 下载合同
     downContractPdf() {
       this.$router.push({name: 'vcenterContractDown', params: {unique_id: this.contract.unique_id}})
+    },
+    // 查看已选中的公司
+    checkSubmitCompany() {
+      const self = this
+      self.progressButt = 2
+      self.progressContract = -1
+      self.progressItem = -1
+      self.statusIconUrl = require('@/assets/images/item/wait_taking.png')
+      self.statusLabel.trueCompany = true
+      self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          var offerCompany = response.data.data
+          console.log(offerCompany)
+          for (var i = 0; i < offerCompany.length; i++) {
+            var item = offerCompany[i]
+            // 是否存在已提交报价的公司
+            if (item.design_company_status === 2) {
+              self.hasOfferCompany = true
+            }
+            if (item.design_company.logo_image && item.design_company.logo_image.length !== 0) {
+              offerCompany[i].design_company.logo_url = item.design_company.logo_image.logo
+            } else {
+              offerCompany[i].design_company.logo_url = false
+            }
+          } // endfor
+          self.offerCompany = offerCompany
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+      })
+    },
+    // 查看已合作的设计公司
+    cooperCompany() {
+      this.progressButt = 2
+      this.progressContract = 0
+      this.progressItem = -1
+      this.statusIconUrl = require('@/assets/images/item/wait_submit_ht.png')
+      this.statusLabel.cooperateCompany = true
+      this.statusLabel.trueCompany = false
     }
   },
   computed: {
@@ -475,6 +498,34 @@ export default {
         this.showStickCompanyBtn = true
       }
       return cnt
+    }
+  },
+  watch: {
+    statusLabel: {
+      deep: true,
+      handler: function(val, oldVal) {
+        const self = this
+        if (oldVal.cooperateCompany) {
+          self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
+          .then (function(response) {
+            if (response.data.meta.status_code === 200) {
+              var offerCompany = response.data.data
+              for (var i = 0; i < offerCompany.length; i++) {
+                var item = offerCompany[i]
+                if (item.design_company.logo_image && item.design_company.logo_image.length !== 0) {
+                  offerCompany[i].design_company.logo_url = item.design_company.logo_image.logo
+                } else {
+                  offerCompany[i].design_company.logo_url = false
+                }
+              } // endfor
+              self.offerCompany = offerCompany
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
+        }
+      }
     }
   },
   created: function() {
@@ -530,41 +581,10 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/chose_company.png')
             break
           case 4: // 查看已提交报价的设计公司, 提交报价单
-            self.progressButt = 2
-            self.progressContract = -1
-            self.progressItem = -1
-            self.statusIconUrl = require('@/assets/images/item/wait_taking.png')
-            self.statusLabel.trueCompany = true
-            self.$http.get(api.demandItemDesignListItemId.format(self.item.id), {})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                var offerCompany = response.data.data
-                console.log(offerCompany)
-                for (var i = 0; i < offerCompany.length; i++) {
-                  var item = offerCompany[i]
-                  // 是否存在已提交报价的公司
-                  if (item.design_company_status === 2) {
-                    self.hasOfferCompany = true
-                  }
-                  if (item.design_company.logo_image && item.design_company.logo_image.length !== 0) {
-                    offerCompany[i].design_company.logo_url = item.design_company.logo_image.logo
-                  } else {
-                    offerCompany[i].design_company.logo_url = false
-                  }
-                } // endfor
-                self.offerCompany = offerCompany
-              }
-            })
-            .catch (function(error) {
-              self.$message.error(error.message)
-            })
+            self.checkSubmitCompany()
             break
           case 5: // 等待提交合同
-            self.progressButt = 2
-            self.progressContract = 0
-            self.progressItem = -1
-            self.statusIconUrl = require('@/assets/images/item/wait_submit_ht.png')
-            self.statusLabel.cooperateCompany = true
+            self.cooperCompany()
             break
           case 6: // 等待确认合同
             self.progressButt = 2
@@ -688,25 +708,6 @@ export default {
                 self.stickCompany[i].cases = cases
               } // endfor
               console.log(self.stickCompany)
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-          })
-        }
-
-        // 已设置报价的设计公司
-        if (self.statusLabel.cooperateCompany) {
-          self.$http.get(api.designCompanyId.format(self.item.design_company_id), {})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              self.company = response.data.data
-              var logoUrl = null
-              if (self.company.logo_image) {
-                logoUrl = self.company.logo_image.logo
-              }
-              self.company.logo_url = logoUrl
-              console.log(self.company)
             }
           })
           .catch (function(error) {

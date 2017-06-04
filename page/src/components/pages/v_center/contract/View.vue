@@ -153,6 +153,9 @@
             if (response.data.meta.status_code === 200) {
               self.form.status = 1
               self.$message.success('提交成功！')
+              // 跳到支付页面
+              self.$router.push({name: 'itemPayFund', params: {item_id: self.form.item_demand_id}})
+              return false
             } else {
               self.$message.error(response.data.meta.message)
             }

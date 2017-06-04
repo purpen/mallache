@@ -81,14 +81,18 @@
                     <p class="btn" v-show="d.item.status === -1">
                       <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small" type="primary">删除项目</el-button>
                     </p>
+
                     <p class="btn" v-show="d.item.status === 3">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">去查看</el-button>
                     </p>
-                    <p class="btn" v-show="d.item.show_offer">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">已有{{ d.purpose_count }}家公司报价，查看</el-button>
+                    <p class="btn" v-show="d.item.status === 4">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-if="d.item.show_offer">已有{{ d.purpose_count }}家公司报价，查看</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-else>查看选择的设计公司</el-button>
+
                     </p>
+
                     <p class="btn" v-show="d.item.status === 6">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">确认合同</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">查看合同</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 8">
                       <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>

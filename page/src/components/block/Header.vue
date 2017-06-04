@@ -7,7 +7,7 @@
         <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
         <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
         <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
-        <el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>
+        <!--<el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>-->
       </el-menu>
       <div class="nav-right nav-menu" v-if="isLogin">
         <router-link :to="{name: 'remind'}" class="nav-item is-hidden-mobile">

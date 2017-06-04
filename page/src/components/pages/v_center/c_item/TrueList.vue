@@ -32,7 +32,7 @@
                   <el-col :span="3">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="8">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">职位: {{ d.item.position }}</p>
@@ -67,8 +67,8 @@
                       </div>
                       <div v-else>
                         <div v-show="d.item.status === 5">
+                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>  
                           <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
-                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>                       
                         </div>
                         <div v-show="d.item.status === 6">
                           <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>                       
@@ -76,7 +76,7 @@
 
                       </div>
                       <p class="btn" v-show="d.item.status === 9">
-                        <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始设计</el-button>
+                        <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始</el-button>
                       </p>
 
 

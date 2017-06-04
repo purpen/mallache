@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-
+    <div><p>{{ downStatus }}</p></div>
   </div>
 </template>
 
@@ -8,8 +8,8 @@
   import api from '@/api/api'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
-  import '../../../../../static/js/pdfmake.min.js'
-  import '../../../../../static/js/vfs_fonts.js'
+  // import '../../../../../static/js/pdfmake.min.js'
+  // import '../../../../../static/js/vfs_fonts.js'
 
   export default {
     name: 'vcenter_contract_submit',
@@ -21,6 +21,7 @@
         item: {},
         itemName: '',
         form: {},
+        downStatus: '正在生成合同，请等待...',
         userId: this.$store.state.event.user.id
       }
     },
@@ -225,6 +226,7 @@
         }
 
         window.pdfMake.createPdf(dd).download(this.itemName + '.pdf')
+        this.downStatus = '已成功下载合同文件，请关闭当前页面'
       }
     },
     computed: {
@@ -245,7 +247,12 @@
               that.$nextTick(function() {
                 that.itemName = item.item_name + '合作协议'
                 that.form = item
-                that.downBtn()
+                // 生成pdf插件太大，实现懒加载
+                require.ensure(['../../../../../static/js/pdfmake.min.js', '../../../../../static/js/vfs_fonts.js'], function (require) {
+                  require('../../../../../static/js/pdfmake.min.js')
+                  require('../../../../../static/js/vfs_fonts.js')
+                  that.downBtn()
+                })
               })
             }
             console.log(response.data.data)

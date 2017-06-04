@@ -92,7 +92,7 @@ export default {
     cursor: pointer;
     border: none;
     height: auto;
-    text-align: center;
+    text-align: left;
     line-height: 1em;
     color: rgba(112,123,135,.92);
     text-transform: none;
@@ -118,7 +118,7 @@ export default {
 
   .computer-btn {
     margin-top: 30px;
-    text-align: center;
+    text-align: left;
   }
   .computer-btn a {
     font-size: 1.2rem;

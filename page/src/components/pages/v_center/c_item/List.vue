@@ -31,7 +31,7 @@
                   <el-col :span="3">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="8">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">职位: {{ d.item.position }}</p>
@@ -45,7 +45,7 @@
                 <el-row class="item-content">
                   <el-col :span="10" class="item-title">
                     <p class="c-title">
-                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
+                      <router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
                     </p>
                     <p>项目预算: {{ d.item.design_cost_value }}</p>
                     <p v-if="d.item.type === 1">{{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value }}</p>
@@ -62,9 +62,11 @@
                   </el-col>
                   <el-col :span="5">
                     <div class="btn" v-show="d.design_company_status === 0">
-                      <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">拒绝此单</el-button></p>
                       <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">有意向接单</el-button></p>
+                      <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">拒绝此单</el-button></p>
+
                     </div>
+                    <p><el-button class="is-custom" v-if="d.design_company_status === 2" @click="showView" size="small" :index="index" :item_id="d.item.id">查看报价</el-button></p>
                   </el-col>
                 </el-row>
 
@@ -150,6 +152,11 @@
       }
     },
     methods: {
+      // 进入详情
+      showView() {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
+      },
       // 项目报价弹出层
       takingBtn(event) {
         var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
@@ -180,7 +187,7 @@
               if (response.data.meta.status_code === 200) {
                 self.$message.success('提交成功！')
                 self.designItems[self.currentIndex].design_company_status = 2
-                self.designItems[self.currentIndex].status_value = '已提交报价'
+                self.designItems[self.currentIndex].design_company_status_value = '已提交报价'
                 self.isTakingLoadingBtn = false
                 self.takingPriceDialog = false
               } else {

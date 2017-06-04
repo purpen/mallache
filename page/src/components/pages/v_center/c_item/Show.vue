@@ -43,7 +43,6 @@
             </el-collapse>
           </div>
 
-
           <div class="select-item-box" v-if="statusLabel.contract">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
@@ -389,6 +388,7 @@ export default {
             self.progressItem = -1
             self.statusIconUrl = require('@/assets/images/item/wait_submit_ht.png')
             self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
             break
           case 6: // 等待确认合同
             self.progressButt = 2
