@@ -26,6 +26,6 @@ class DesignShowItemTransformer extends TransformerAbstract
     //设计公司报价单
     protected function quotation($item_id)
     {
-        return Item::where(['item_demand_id' => $item_id, 'design_company_id' => $this->design_company_id])->first();
+        return Item::where(['id' => $item_id, 'design_company_id' => $this->design_company_id])->first();
     }
 }
