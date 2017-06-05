@@ -2,6 +2,7 @@
 
 namespace Lib\JdPay;
 
+use Illuminate\Support\Facades\Log;
 use Lib\JdPay\common\ConfigUtil;
 use Lib\JdPay\common\SignUtil;
 use Lib\JdPay\common\TDESUtil;
@@ -122,7 +123,7 @@ class JdPay
     public function asynNotify()
     {
         $xml = file_get_contents("php://input");
-
+        Log::info($xml);
         $falg = XMLUtil::decryptResXml($xml, $resdata);
 
         if($falg){
