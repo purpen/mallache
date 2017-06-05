@@ -54,18 +54,18 @@ class Recommend implements ShouldQueue
         $design_type = (int)$this->item->design_type;
 
         //产品设计
-        if($type == 1){
+        if ($type == 1) {
             $design = $this->productDesign($type, $design_type);
-        }else if( $type == 2){
+        } else if ($type == 2) {
             $design = $this->uDesign($type, $design_type);
         }
 
 
 //Log::info($design);
-        if(count($design) > 0){
+        if (count($design) > 0) {
             //剔除已推荐的
             $ord_recommend = $this->item->ord_recommend;
-            if(!empty($ord_recommend)){
+            if (!empty($ord_recommend)) {
                 $ord_recommend_arr = explode(',', $ord_recommend);
                 $design = array_diff($design, $ord_recommend_arr);
             }
@@ -73,15 +73,15 @@ class Recommend implements ShouldQueue
             $design = array_slice($design, 0, 5);
 
             //判断是否匹配到设计公司
-            if(empty($design)){
+            if (empty($design)) {
                 $this->itemFail();
-            }else{
-                $recommend = implode(',',$design);
+            } else {
+                $recommend = implode(',', $design);
                 $this->item->recommend = $recommend;
                 $this->item->save();
             }
 
-        }else{
+        } else {
             $this->itemFail();
         }
 
@@ -91,7 +91,8 @@ class Recommend implements ShouldQueue
     }
 
     //匹配失败
-    protected function itemFail(){
+    protected function itemFail()
+    {
         $this->item->status = -2;  //匹配失败
         $this->item->save();
         //触发项目状态变更事件
@@ -115,7 +116,9 @@ class Recommend implements ShouldQueue
         //周期
         $cycle = $this->item->productDesign->cycle;
         //项目公司地点
-        $city = $this->item->itemInfo()['city'];
+        $item_info = $this->item->itemInfo();
+        $province = $item_info['province'];
+        $city = $item_info['city'];
 
         //获取符合设计类型和设计费用的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
@@ -130,8 +133,9 @@ class Recommend implements ShouldQueue
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1])
+            ->where('province', $province)
             ->where('city', $city)
-            ->whereIn('user_id',$design_id_arr)
+            ->whereIn('user_id', $design_id_arr)
 //            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
@@ -153,7 +157,9 @@ class Recommend implements ShouldQueue
         $cycle = $this->item->uDesign->cycle;
 
         //项目公司地点
-        $city = $this->item->itemInfo()['city'];
+        $item_info = $this->item->itemInfo();
+        $province = $item_info['province'];
+        $city = $item_info['city'];
 
         //获取符合 设计类型 和 设计费用 的设计公司ID数组
         $design_id_arr = DesignItemModel::select('user_id')
@@ -168,8 +174,9 @@ class Recommend implements ShouldQueue
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1])
+            ->where('province', $province)
             ->where('city', $city)
-            ->whereIn('user_id',$design_id_arr)
+            ->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
@@ -189,7 +196,7 @@ class Recommend implements ShouldQueue
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = 10000;
-        switch ($design_cost){
+        switch ($design_cost) {
             case 1:
                 $max = 50000;
                 break;
