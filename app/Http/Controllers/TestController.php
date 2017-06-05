@@ -16,6 +16,7 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
+        phpinfo();
 //        $user = User::get();
 //        foreach($user as $v){
 //            if($v->role_id === 1){
