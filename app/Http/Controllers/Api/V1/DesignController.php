@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Events\ItemStatusEvent;
 use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
+use App\Http\Transformer\DesignShowItemTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
@@ -217,7 +218,7 @@ class DesignController extends BaseController
         if(!$item){
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($item, new DesignShowItemTransformer($design_company->id))->setMeta($this->apiMeta());
     }
 
     /**

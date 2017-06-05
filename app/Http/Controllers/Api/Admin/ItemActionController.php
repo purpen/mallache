@@ -195,6 +195,14 @@ class ItemActionController extends Controller
             }
 
             $item = Item::find($all['item_id']);
+            if(!$item){
+                return $this->response->array($this->apiError('not found', 404));
+            }
+
+            if(2 != $item->status && 3 != $item->status){
+                return $this->response->array($this->apiError('当前状态不可操作', 403));
+            }
+
             //验证
             $ord_recommend = $item->ord_recommend;
             if(!empty($ord_recommend)){
