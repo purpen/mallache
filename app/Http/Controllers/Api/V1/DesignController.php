@@ -190,7 +190,18 @@ class DesignController extends BaseController
                     "phone": "172734923",
                     "email": "qq@qq.com"
                 },
-            "quotation": null, //报价单信息
+     *      "quotation": {      //报价单信息
+                "id": 19,
+                "item_demand_id": 38,
+                "design_company_id": 14,
+                "price": "0.02",
+                "summary": "aaaaaa",
+                "status": 1,     // 状态： 0.未确认 1.已确认
+                "created_at": 1495511081,
+                "updated_at": 1495511109,
+                "deleted_at": null,
+                "user_id": 30
+            },
             "contract": null   //合同
             },
             "meta": {
