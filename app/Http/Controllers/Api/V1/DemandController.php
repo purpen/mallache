@@ -5,6 +5,7 @@
  * @User llh
  * @time 2017-4-6
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
@@ -60,7 +61,7 @@ class DemandController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     /**
@@ -90,28 +91,28 @@ class DemandController extends BaseController
      * @apiSuccessExample 成功响应:
      *   {
      *      "data": {
-                "id": 13,
-                "type": 1,
-                "type_value": "产品设计类型",
-                "design_type": 2,
-                "design_type_value": "产品设计",
-                "status": 5,
-                "field": 1,
-                "field_value": "智能硬件",
-                "industry": 2,
-                "industry_value": "消费零售",
-                "name": "api UI",
-                "product_features": "亮点",
-                "competing_product": "竞品",
-                "cycle": 1,
-                "cycle_value": "1个月内",
-                "design_cost": 2,
-                "design_cost_value": "1-5万之间",
-                "province": 2,
-                "city": 2,
-                "image": [],
-                "price": 200000
-            },
+     * "id": 13,
+     * "type": 1,
+     * "type_value": "产品设计类型",
+     * "design_type": 2,
+     * "design_type_value": "产品设计",
+     * "status": 5,
+     * "field": 1,
+     * "field_value": "智能硬件",
+     * "industry": 2,
+     * "industry_value": "消费零售",
+     * "name": "api UI",
+     * "product_features": "亮点",
+     * "competing_product": "竞品",
+     * "cycle": 1,
+     * "cycle_value": "1个月内",
+     * "design_cost": 2,
+     * "design_cost_value": "1-5万之间",
+     * "province": 2,
+     * "city": 2,
+     * "image": [],
+     * "price": 200000
+     * },
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
@@ -210,67 +211,67 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-            "data": {
-                "item": {
-                    "id": 13,
-                    "type": 1,
-                    "type_value": "产品设计类型",
-                    "design_type": 2,
-                    "design_type_value": "产品设计",
-                    "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
-                    "field": 2,
-                    "field_value": "消费电子",
-                    "industry": 2,
-                    "industry_value": "消费零售",
-                    "name": "api UI",
-                    "product_features": "亮点",
-                    "competing_product": "竞品",
-                    "cycle": 1,
-                    "cycle_value": "1个月内",
-                    "design_cost": 2,
-                    "design_cost_value": "1-5万之间",
-                    "city": 2,
-                    "image": [],
-                    "price": 200000,
-                    "company_name": null,  //公司名称
-                    "company_abbreviation": null, //简称
-                    "company_size": null, //公司规模；1...
-                    "company_web": null,  //公司网址
-                    "company_province": null, //省份
-                    "company_city": null,  //城市
-                    "company_area": null,   //区县
-                    "address": null,    //详细地址
-                    "contact_name": null,   //联系人
-                    "phone": "172734923",
-                    "email": "qq@qq.com",
- *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
-                },
-                "quotation": null, //报价单信息
-                "contract": null   //合同
-            },
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
-        }
+     * "data": {
+     * "item": {
+     * "id": 13,
+     * "type": 1,
+     * "type_value": "产品设计类型",
+     * "design_type": 2,
+     * "design_type_value": "产品设计",
+     * "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
+     * "field": 2,
+     * "field_value": "消费电子",
+     * "industry": 2,
+     * "industry_value": "消费零售",
+     * "name": "api UI",
+     * "product_features": "亮点",
+     * "competing_product": "竞品",
+     * "cycle": 1,
+     * "cycle_value": "1个月内",
+     * "design_cost": 2,
+     * "design_cost_value": "1-5万之间",
+     * "city": 2,
+     * "image": [],
+     * "price": 200000,
+     * "company_name": null,  //公司名称
+     * "company_abbreviation": null, //简称
+     * "company_size": null, //公司规模；1...
+     * "company_web": null,  //公司网址
+     * "company_province": null, //省份
+     * "company_city": null,  //城市
+     * "company_area": null,   //区县
+     * "address": null,    //详细地址
+     * "contact_name": null,   //联系人
+     * "phone": "172734923",
+     * "email": "qq@qq.com",
+     *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     * },
+     * "quotation": null, //报价单信息
+     * "contract": null   //合同
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if(!$item = Item::find(intval($id))){
+        if (!$item = Item::find(intval($id))) {
             return $this->response->array($this->apiSuccess());
         }
         //验证是否是当前用户对应的项目
-        if($item->user_id !== $this->auth_user_id){
+        if ($item->user_id !== $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
 
-        if(!$item){
+        if (!$item) {
             return $this->response->array($this->apiError());
         }
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
@@ -279,7 +280,7 @@ class DemandController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -313,55 +314,55 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-            "data": {
-                "item": {
-                    "id": 13,
-                    "type": 1,
-                    "type_value": "产品设计类型",
-                    "design_type": 2,
-                    "design_type_value": "产品设计",
-                    "status": 5,
-                    "field": 2,
-                    "field_value": "消费电子",
-                    "industry": 2,
-                    "industry_value": "消费零售",
-                    "name": "api UI",
-                    "product_features": "亮点",
-                    "competing_product": "竞品",
-                    "cycle": 1,
-                    "cycle_value": "1个月内",
-                    "design_cost": 2,
-                    "design_cost_value": "1-5万之间",
-                    "city": 2,
-                    "image": [],
-                    "price": 200000,
-                    "company_name": null,  //公司名称
-                    "company_abbreviation": null, //简称
-                    "company_size": null, //公司规模；1...
-                    "company_web": null,  //公司网址
-                    "company_province": null, //省份
-                    "company_city": null,  //城市
-                    "company_area": null,   //区县
-                    "address": null,    //详细地址
-                    "contact_name": null,   //联系人
-                    "phone": "172734923",
-                    "email": "qq@qq.com"
- *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
-                },
-                "quotation": null, //报价单信息
-                "contract": null   //合同
-            },
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
-        }
+     * "data": {
+     * "item": {
+     * "id": 13,
+     * "type": 1,
+     * "type_value": "产品设计类型",
+     * "design_type": 2,
+     * "design_type_value": "产品设计",
+     * "status": 5,
+     * "field": 2,
+     * "field_value": "消费电子",
+     * "industry": 2,
+     * "industry_value": "消费零售",
+     * "name": "api UI",
+     * "product_features": "亮点",
+     * "competing_product": "竞品",
+     * "cycle": 1,
+     * "cycle_value": "1个月内",
+     * "design_cost": 2,
+     * "design_cost_value": "1-5万之间",
+     * "city": 2,
+     * "image": [],
+     * "price": 200000,
+     * "company_name": null,  //公司名称
+     * "company_abbreviation": null, //简称
+     * "company_size": null, //公司规模；1...
+     * "company_web": null,  //公司网址
+     * "company_province": null, //省份
+     * "company_city": null,  //城市
+     * "company_area": null,   //区县
+     * "address": null,    //详细地址
+     * "contact_name": null,   //联系人
+     * "phone": "172734923",
+     * "email": "qq@qq.com"
+     *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     * },
+     * "quotation": null, //报价单信息
+     * "contract": null   //合同
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -369,7 +370,7 @@ class DemandController extends BaseController
         $type = (int)$request->input('type');
 
         //产品设计
-        if($type === 1){
+        if ($type === 1) {
 
             $rules = [
                 'type' => 'required|integer',
@@ -378,24 +379,24 @@ class DemandController extends BaseController
                 'industry' => 'required|integer',
             ];
 
-            $all = $request->only(['stage_status','type', 'design_type', 'field', 'industry']);
+            $all = $request->only(['stage_status', 'type', 'design_type', 'field', 'industry']);
 
             $validator = Validator::make($all, $rules);
-            if($validator->fails()){
+            if ($validator->fails()) {
                 throw new StoreResourceFailedException('Error', $validator->errors());
             }
 
-            try{
+            try {
 
-                if(!$item = Item::find(intval($id))){
+                if (!$item = Item::find(intval($id))) {
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 //验证是否是当前用户对应的项目
-                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
+                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
                     return $this->response->array($this->apiError('not found!', 404));
                 }
 
-                if(empty($all['stage_status'])){
+                if (empty($all['stage_status'])) {
                     unset($all['stage_status']);
                 }
                 $item->update($all);
@@ -404,17 +405,15 @@ class DemandController extends BaseController
                 $product_design->field = $request->input('field');
                 $product_design->industry = $request->input('industry');
                 $product_design->save();
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return $this->response->array($this->apiError('Error', 500));
             }
 
             return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
 
-        }
-        //UX UI设计
-        elseif ($type === 2){
+        } //UX UI设计
+        elseif ($type === 2) {
             $rules = [
                 'type' => 'required|integer',
                 'design_type' => ['required', 'integer'],
@@ -422,34 +421,33 @@ class DemandController extends BaseController
             $all = $request->only(['stage_status', 'type', 'design_type']);
 
             $validator = Validator::make($all, $rules);
-            if($validator->fails()){
+            if ($validator->fails()) {
                 throw new StoreResourceFailedException('Error', $validator->errors());
             }
 
-            try{
-                if(!$item = Item::find(intval($id))){
+            try {
+                if (!$item = Item::find(intval($id))) {
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 //验证是否是当前用户对应的项目
-                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
+                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
                     return $this->response->array($this->apiError('无编辑权限或当前状态禁止编辑!', 404));
                 }
 
-                if(empty($all['stage_status'])){
+                if (empty($all['stage_status'])) {
                     unset($all['stage_status']);
                 }
 
                 $item->update($all);
 
                 $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return $this->response->array($this->apiError('Error', 500));
             }
 
             return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-        }else{
+        } else {
             $rules = [
                 'company_name' => 'required|min:1|max:50',
                 'company_abbreviation' => 'nullable|min:1|max:50',
@@ -464,20 +462,20 @@ class DemandController extends BaseController
                 'position' => 'required|max:20',
             ];
 
-            $all = $request->only(['stage_status', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email','position']);
+            $all = $request->only(['stage_status', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'position']);
 
             $validator = Validator::make($all, $rules);
-            if($validator->fails()){
+            if ($validator->fails()) {
                 throw new StoreResourceFailedException('Error', $validator->errors());
             }
 
-            try{
+            try {
 
-                if(!$item = Item::find(intval($id))){
+                if (!$item = Item::find(intval($id))) {
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 //验证是否是当前用户对应的项目
-                if($item->user_id !== $this->auth_user_id || 1 != $item->status){
+                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
                     return $this->response->array($this->apiError('not found!', 404));
                 }
                 $all['company_name'] = $request->input('company_name') ?? '';
@@ -492,13 +490,12 @@ class DemandController extends BaseController
                 $all['phone'] = $request->input('phone') ?? '';
                 $all['email'] = $request->input('email') ?? '';
 
-                if(empty($all['stage_status'])){
+                if (empty($all['stage_status'])) {
                     unset($all['stage_status']);
                 }
                 $item->update($all);
 
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return $this->response->array($this->apiError('Error', 500));
             }
@@ -511,7 +508,7 @@ class DemandController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -542,45 +539,44 @@ class DemandController extends BaseController
     public function release(Request $request)
     {
         $id = (int)$request->input('id');
-        if(!$item = Item::find($id)){
+        if (!$item = Item::find($id)) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         //验证是否是当前用户对应的项目
-        if($item->user_id !== $this->auth_user_id){
+        if ($item->user_id !== $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
         $auth_user = $this->auth_user;
-        if(!$auth_user){
+        if (!$auth_user) {
             return $this->response->array($this->apiError('not found!', 404));
         }
 
         $demand_company = $this->auth_user->demandCompany;
-        if(!$demand_company){
+        if (!$demand_company) {
             return $this->response->array($this->apiError('not found demandCompany!', 404));
         }
 
-        try{
+        try {
             //判断需求公司资料是否审核
-            if($demand_company->verify_status == 1){
+            if ($demand_company->verify_status == 1) {
                 $item->status = 3;   //已匹配设计公司
-            }else{
+            } else {
                 $item->status = 2;  //2.人工干预
             }
             $item->save();
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->response->array($this->apiError('Error', 500));
         }
 
         dispatch(new Recommend($item));
 
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
-        if(!$demand_company || $demand_company->verify_status != 1){
+        if (!$demand_company || $demand_company->verify_status != 1) {
             $verify_status = 0;
-        }else{
+        } else {
             $verify_status = 1;
         }
 
@@ -596,66 +592,66 @@ class DemandController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-    {
-    "data": [
-        {
-            {
-                "id": 1,
-                "user_id": 1, //用户表ID (唯一索引)
-                "company_type": 1, //企业类型：1.普通；2.多证合一；
-                "company_name": "测试设计公司", //公司名称
-                "registration_number": "12344556", //注册号
-                "province": 1,
-                "city": 2,
-                "area": 3,
-                "address": "北京朝阳",
-                "contact_name": "小王", //联系人姓名
-                "position": "老总", //职位
-                "phone": "18629493220",
-                "email": "qq@qq.com",
-                "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
-                "branch_office": 1, //分公司：1.有；2.无；
-                "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
-                "company_profile": "一家有价值的公司",
-                "good_field": "1,2,3", //good_field
-                "web": "www.tai.com", //公司网站
-                "establishment_time": "2013-12-10",
-                "professional_advantage": "专业", //专业优势
-                "awards": "就是专业", //荣誉奖项
-                "created_at": "2017-04-11 14:54:24",
-                "updated_at": "2017-04-11 14:59:36",
-                "deleted_at": null,
-                "score": 70,
-                "status": 0, //设计公司状态：-1.禁用; 0.正常；
-                "company_abbreviation": "", //简称
-                "is_recommend": 0, //推荐
-                "verify_status": 1 //审核状态
- *              "logo": [],
-                "license_image": [],
-                "unique_id": ""
-            }
-    },
-        "meta": {
-            "message": "Success",
-            "status_code": 200
-        }
-    }
+     * {
+     * "data": [
+     * {
+     * {
+     * "id": 1,
+     * "user_id": 1, //用户表ID (唯一索引)
+     * "company_type": 1, //企业类型：1.普通；2.多证合一；
+     * "company_name": "测试设计公司", //公司名称
+     * "registration_number": "12344556", //注册号
+     * "province": 1,
+     * "city": 2,
+     * "area": 3,
+     * "address": "北京朝阳",
+     * "contact_name": "小王", //联系人姓名
+     * "position": "老总", //职位
+     * "phone": "18629493220",
+     * "email": "qq@qq.com",
+     * "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
+     * "branch_office": 1, //分公司：1.有；2.无；
+     * "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
+     * "company_profile": "一家有价值的公司",
+     * "good_field": "1,2,3", //good_field
+     * "web": "www.tai.com", //公司网站
+     * "establishment_time": "2013-12-10",
+     * "professional_advantage": "专业", //专业优势
+     * "awards": "就是专业", //荣誉奖项
+     * "created_at": "2017-04-11 14:54:24",
+     * "updated_at": "2017-04-11 14:59:36",
+     * "deleted_at": null,
+     * "score": 70,
+     * "status": 0, //设计公司状态：-1.禁用; 0.正常；
+     * "company_abbreviation": "", //简称
+     * "is_recommend": 0, //推荐
+     * "verify_status": 1 //审核状态
+     *              "logo": [],
+     * "license_image": [],
+     * "unique_id": ""
+     * }
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     public function recommendList($item_id)
     {
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         //验证是否是当前用户对应的项目
-        if($item->user_id !== $this->auth_user_id || $item->status !== 3){
+        if ($item->user_id !== $this->auth_user_id || $item->status !== 3) {
             return $this->response->array($this->apiError('拒绝操作', 403));
         }
 
         $recommend_arr = explode(',', $item->recommend);
 
         //如果推荐为空，则返回
-        if(empty($recommend_arr)){
+        if (empty($recommend_arr)) {
             return $this->response->array($this->apiSuccess('Success', 200, []));
         }
 
@@ -692,18 +688,18 @@ class DemandController extends BaseController
         $all = $request->only(['item_id', 'design_company_id']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
 
-        try{
+        try {
 
             $item = Item::find($all['item_id']);
-            if(!empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))){
+            if (!empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))) {
                 return $this->response->array($this->apiError('选择设计公司不符合要求', 403));
             };
-            if($item->user_id != $this->auth_user_id || $item->status != 3){
+            if ($item->user_id != $this->auth_user_id || $item->status != 3) {
                 return $this->response->array($this->apiError('无操作权限或当前状态不可操作', 403));
             }
             //修改项目状态为：等待设计公司接单(报价)
@@ -713,13 +709,11 @@ class DemandController extends BaseController
             event(new ItemStatusEvent($item, $all['design_company_id']));
 
             //遍历插入推荐表
-            foreach($all['design_company_id'] as $design_company_id)
-            {
+            foreach ($all['design_company_id'] as $design_company_id) {
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
 
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
             return $this->response->array($this->apiError('Error', 500));
         }
@@ -743,57 +737,57 @@ class DemandController extends BaseController
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200,
-                "pagination": {
-                    "total": 3,
-                    "count": 1,
-                    "per_page": 1,
-                    "current_page": 1,
-                    "total_pages": 3,
-                    "links": {
-                    "next": "http://saas.me/demand/itemList?page=2"
-                }
+     * "pagination": {
+     * "total": 3,
+     * "count": 1,
+     * "per_page": 1,
+     * "current_page": 1,
+     * "total_pages": 3,
+     * "links": {
+     * "next": "http://saas.me/demand/itemList?page=2"
+     * }
      *      }
      *      "data": [
-                {
-                    "item": {
-                        "id": 1,
-                        "type": 2, //1.产品设计；2.UI UX 设计；
-                        "design_type": 1, //UXUI设计（1.app设计；2.网页设计；）
-                        "status": 2, //状态：-2.匹配失败；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
+     * {
+     * "item": {
+     * "id": 1,
+     * "type": 2, //1.产品设计；2.UI UX 设计；
+     * "design_type": 1, //UXUI设计（1.app设计；2.网页设计；）
+     * "status": 2, //状态：-2.匹配失败；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
      *                  "status_value": "填写资料", //状态说明（需求公司）
      *                  "design_status_value": ""  //状态说明 （设计公司））
-                        "system": 1, 系统：1.ios；2.安卓；
-                        "design_content": 0, //设计内容：1.视觉设计；2.交互设计；
-                        "name": "", //项目名称
-                        "stage": 0, //阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
-                        "complete_content": 0, //已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
-                        "other_content": "",  //其他设计内容
-                        "design_cost": 0, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-                        "province": 0,
-                        "city": 0,
-                        "image": []
-                    },
-                    "purpose_count": 0 //意向接单数量
-                }
-                {
-                    "item": {
-                        "id": 13,
-                        "type": 1, //1.产品设计；2.UI UX 设计；
-                        "design_type": 2, //产品设计（1.产品策略；2.产品设计；3.结构设计；）
-                        "status": 2,
-                        "field": 1, //所属领域ID
-                        "industry": 2, //所属行业
-                        "name": "api UI",
-                        "product_features": "亮点", //产品功能或亮点
-                        "competing_product": "竞品", //竞品
-                        "cycle": 1, //设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
-                        "design_cost": 2, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-                        "province": 2,
-                        "city": 2,
-                        "image": []
-                    },
-                    "purpose_count": 0
-                    }
+     * "system": 1, 系统：1.ios；2.安卓；
+     * "design_content": 0, //设计内容：1.视觉设计；2.交互设计；
+     * "name": "", //项目名称
+     * "stage": 0, //阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
+     * "complete_content": 0, //已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；5.其他
+     * "other_content": "",  //其他设计内容
+     * "design_cost": 0, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+     * "province": 0,
+     * "city": 0,
+     * "image": []
+     * },
+     * "purpose_count": 0 //意向接单数量
+     * }
+     * {
+     * "item": {
+     * "id": 13,
+     * "type": 1, //1.产品设计；2.UI UX 设计；
+     * "design_type": 2, //产品设计（1.产品策略；2.产品设计；3.结构设计；）
+     * "status": 2,
+     * "field": 1, //所属领域ID
+     * "industry": 2, //所属行业
+     * "name": "api UI",
+     * "product_features": "亮点", //产品功能或亮点
+     * "competing_product": "竞品", //竞品
+     * "cycle": 1, //设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
+     * "design_cost": 2, //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
+     * "province": 2,
+     * "city": 2,
+     * "image": []
+     * },
+     * "purpose_count": 0
+     * }
      *      ],
      *  }
      */
@@ -807,14 +801,14 @@ class DemandController extends BaseController
         $all = $request->only(['type', 'per_page']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->input('type') ?? 0;
 
-        switch ($type){
+        switch ($type) {
             case 0:
                 $where_in = [];
                 break;
@@ -822,10 +816,10 @@ class DemandController extends BaseController
                 $where_in = [1];
                 break;
             case 2:
-                $where_in = [-2,-1,2,3,4,5,6,7,8,9,11,15,18,22];
+                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22];
                 break;
             case 3:
-                $where_in = [18,22];
+                $where_in = [18, 22];
                 break;
             default:
                 $where_in = [];
@@ -833,12 +827,12 @@ class DemandController extends BaseController
 
         $items = Item::where('user_id', $this->auth_user_id);
 
-        if(!empty($where_in)){
+        if (!empty($where_in)) {
             $items = $items->whereIn('status', $where_in);
         }
 
         $items = $items->orderBy('id', 'desc')->paginate($per_page);
-        if($items->isEmpty()){
+        if ($items->isEmpty()) {
             return $this->response->array($this->apiSuccess());
         }
 
@@ -860,62 +854,62 @@ class DemandController extends BaseController
      *          "status_code": 200
      *      }
      *      "data": [
-                {
+     * {
      *              "status": 5, //1.已选择其他设计公司;2.设计公司已拒绝;3.未操作；4.设计公司有意接单；5.选定该设计公司；
-                    "status_value": "选定设计公司",
-                    "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
-                    "item_status_value": "选定设计公司",
-                    "design_company_status": 0, //设计公司状态: -1.拒绝；0.待操作；1.一键成交；2.有意向报价;
-                    "design_company_status_value": "待操作",
-                    "design_company": {
-                        "id": 1,
-                        "user_id": 1, //用户表ID
-                        "company_type": 1, //企业类型：1.普通；2.多证合一；
-                        "company_name": "测试设计公司", //公司名称
-                        "registration_number": "12344556", //注册号
-                        "province": 1,
-                        "city": 2,
-                        "area": 3,
-                        "address": "北京朝阳",
-                        "contact_name": "小王", //联系人姓名
-                        "position": "老总", //职位
-                        "phone": "18629493220",
-                        "email": "qq@qq.com",
-                        "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
-                        "branch_office": 1, //分公司：1.有；2.无；
-                        "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
-                        "company_profile": "一家有价值的公司",
-                        "good_field": "1,2,3", //good_field
-                        "web": "www.tai.com", //公司网站
-                        "establishment_time": "2013-12-10",
-                        "professional_advantage": "专业", //专业优势
-                        "awards": "就是专业", //荣誉奖项
-                        "created_at": "2017-04-11 14:54:24",
-                        "updated_at": "2017-04-11 14:59:36",
-                        "deleted_at": null,
-                        "score": 70,
-                        "status": 0, //设计公司状态：-1.禁用; 0.正常；
-                        "company_abbreviation": "", //简称
-                        "is_recommend": 0, //推荐
-                        "verify_status": 1 //审核状态
-                    },
-                    "quotation": null  //设计公司报价单
-                },
-            ],
+     * "status_value": "选定设计公司",
+     * "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
+     * "item_status_value": "选定设计公司",
+     * "design_company_status": 0, //设计公司状态: -1.拒绝；0.待操作；1.一键成交；2.有意向报价;
+     * "design_company_status_value": "待操作",
+     * "design_company": {
+     * "id": 1,
+     * "user_id": 1, //用户表ID
+     * "company_type": 1, //企业类型：1.普通；2.多证合一；
+     * "company_name": "测试设计公司", //公司名称
+     * "registration_number": "12344556", //注册号
+     * "province": 1,
+     * "city": 2,
+     * "area": 3,
+     * "address": "北京朝阳",
+     * "contact_name": "小王", //联系人姓名
+     * "position": "老总", //职位
+     * "phone": "18629493220",
+     * "email": "qq@qq.com",
+     * "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
+     * "branch_office": 1, //分公司：1.有；2.无；
+     * "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
+     * "company_profile": "一家有价值的公司",
+     * "good_field": "1,2,3", //good_field
+     * "web": "www.tai.com", //公司网站
+     * "establishment_time": "2013-12-10",
+     * "professional_advantage": "专业", //专业优势
+     * "awards": "就是专业", //荣誉奖项
+     * "created_at": "2017-04-11 14:54:24",
+     * "updated_at": "2017-04-11 14:59:36",
+     * "deleted_at": null,
+     * "score": 70,
+     * "status": 0, //设计公司状态：-1.禁用; 0.正常；
+     * "company_abbreviation": "", //简称
+     * "is_recommend": 0, //推荐
+     * "verify_status": 1 //审核状态
+     * },
+     * "quotation": null  //设计公司报价单
+     * },
+     * ],
      *  }
      */
     public function itemDesignList($item_id)
     {
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiSuccess());
         }
 
-        if($item->user_id !== $this->auth_user_id){
+        if ($item->user_id !== $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
 
         $item_recommends = $item->itemRecommend;
-        if($item_recommends->isEmpty()){
+        if ($item_recommends->isEmpty()) {
             return $this->response->array($this->apiSuccess());
         }
 
@@ -949,21 +943,21 @@ class DemandController extends BaseController
         $all = $request->only(['item_id', 'design_company_id']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        if(!$item = Item::find($all['item_id'])){
+        if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if($item->user_id !== $this->auth_user_id || $item->status !== 4){
+        if ($item->user_id !== $this->auth_user_id || $item->status !== 4) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        try{
+        try {
             DB::beginTransaction();
             $item_recommend = ItemRecommend::where(['item_id' => $all['item_id'], 'design_company_id' => $all['design_company_id']])->first();
-            if(!$item_recommend){
+            if (!$item_recommend) {
                 DB::rollBack();
                 return $this->response->array($this->apiError('not found', 404));
             }
@@ -974,18 +968,18 @@ class DemandController extends BaseController
 
             //拒绝其他设计公司
             $item_recommend_qt = ItemRecommend::where('item_id', '=', $all['item_id'])
-                ->where('design_company_id', '!=' , $all['design_company_id'])
+                ->where('design_company_id', '!=', $all['design_company_id'])
                 ->where('design_company_status', '!=', -1)
                 ->get();
-            if(!$item_recommend_qt->isEmpty()){
-                foreach($item_recommend_qt as $qt){
+            if (!$item_recommend_qt->isEmpty()) {
+                foreach ($item_recommend_qt as $qt) {
                     $qt->item_status = -1;
                     $qt->save();
                 }
             }
 
             //将设计公司ID、项目金额写入需求item中，修改item状态为已选定设计公司；
-            if(!$quotation = $item_recommend->quotation){
+            if (!$quotation = $item_recommend->quotation) {
                 DB::rollBack();
                 return $this->response->array($this->apiError());
             }
@@ -1001,12 +995,12 @@ class DemandController extends BaseController
 
             //触发项目状态事件
             $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
-            event(new ItemStatusEvent($item,['yes' => $all['design_company_id'], 'no' => $design_company_id]));
+            event(new ItemStatusEvent($item, ['yes' => $all['design_company_id'], 'no' => $design_company_id]));
 
             DB::commit();
             return $this->response->array($this->apiSuccess());
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->response->array($this->apiError('Error', 500));
         }
@@ -1039,25 +1033,25 @@ class DemandController extends BaseController
         $all = $request->only(['item_id', 'design_company_id']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        if(!$item = Item::find($all['item_id'])){
+        if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if($item->user_id != $this->auth_user_id || $item->status != 4){
+        if ($item->user_id != $this->auth_user_id || $item->status != 4) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
         $item_recommend = ItemRecommend::where(['item_id' => $all['item_id'], 'design_company_id' => $all['design_company_id']])->first();
-        if(!$item_recommend){
+        if (!$item_recommend) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         //修改推荐关联表中需求方的状态
         $item_recommend->item_status = -1;
-        if(!$item_recommend->save()){
+        if (!$item_recommend->save()) {
             return $this->response->array($this->apiError('状态修改失败', 500));
         }
 
@@ -1069,7 +1063,7 @@ class DemandController extends BaseController
         //项目是否匹配失败
         $item->itemIsFail($all['item_id']);
 
-       return $this->response->array($this->apiSuccess());
+        return $this->response->array($this->apiSuccess());
     }
 
     /**
@@ -1092,13 +1086,13 @@ class DemandController extends BaseController
     public function trueContract(Request $request)
     {
         $item_id = (int)$request->input('item_id');
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError());
         }
-        if($item->user_id !== $this->auth_user_id || $item->status !== 6){
+        if ($item->user_id !== $this->auth_user_id || $item->status !== 6) {
             return $this->response->array($this->apiError());
         }
-        try{
+        try {
             DB::beginTransaction();
             $item->status = 7;
             $item->save();
@@ -1112,7 +1106,7 @@ class DemandController extends BaseController
             event(new ItemStatusEvent($item));
 
             DB::commit();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError('Error', 500));
@@ -1142,21 +1136,21 @@ class DemandController extends BaseController
     {
         $item_id = (int)$request->input('item_id');
 
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->user_id != $this->auth_user_id){
+        if ($item->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('Permission denied', 403));
         }
 
-        if($item->status != -2){
+        if ($item->status != -2) {
             return $this->response->array($this->apiError('当前状态不能修改', 403));
         }
 
         //修改为用户已关闭
         $item->status = -1;
-        if(!$item->save()){
+        if (!$item->save()) {
             return $this->response->array($this->apiError('Error', 500));
         }
 
@@ -1168,16 +1162,16 @@ class DemandController extends BaseController
             'item_id' => $item_id,
             'type' => 1,
             'status' => 1,
-            ])->first();
+        ])->first();
 
         //支付单改为退款
         $pay_order->status = 2;  //退款
         $pay_order->save();
 
-        if($pay_order){
+        if ($pay_order) {
             $user = $this->auth_user;
             $user->price_frozen -= $pay_order->amount;
-            if($user->price_frozen < 0){
+            if ($user->price_frozen < 0) {
                 $user->price_frozen = 0;
             }
             $user->save();
@@ -1207,15 +1201,15 @@ class DemandController extends BaseController
     {
         $item_id = (int)$request->input('item_id');
 
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->user_id != $this->auth_user_id){
+        if ($item->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('Permission denied', 403));
         }
 
-        if($item->status != -2){
+        if ($item->status != -2) {
             return $this->response->array($this->apiError('当前状态不能修改', 403));
         }
 
@@ -1223,7 +1217,7 @@ class DemandController extends BaseController
         $item->ord_recommend = $item->ord_recommend ? ($item->ord_recommend . ',' . $item->recommend) : $item->recommend;
         $item->recommend = '';
         $item->status = 1; //填写资料阶段
-        if(!$item->save()){
+        if (!$item->save()) {
             return $this->response->array($this->apiError('Error', 500));
         }
 
@@ -1248,15 +1242,15 @@ class DemandController extends BaseController
      */
     public function trueItemDone($item_id)
     {
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->user_id != $this->auth_user_id){
+        if ($item->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('Permission denied', 403));
         }
 
-        if($item->status != 15){
+        if ($item->status != 15) {
             return $this->response->array($this->apiError('当前状态不能修改', 403));
         }
 
@@ -1280,7 +1274,8 @@ class DemandController extends BaseController
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} province 省份ID
-     * @apiParam {integer}  city 城市ID
+     * @apiParam {integer} city 城市ID
+     * @apiParam {integer} item_id 项目ID
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -1301,39 +1296,52 @@ class DemandController extends BaseController
         $cycle = $request->input('cycle') ?? null;
         $province = $request->input('province') ?? null;
         $city = $request->input('city') ?? null;
+        $item_id = $request->input('item_id') ?? null;
 
         $query = DesignItemModel::select('user_id');
-        if($type){
+        if ($type) {
             $query->where('type', $type);
         }
 
-        if($design_type){
+        if ($design_type) {
             $query->where('design_type', $design_type);
         }
 
-        if($design_cost){
+        if ($design_cost) {
             $max = $this->cost($design_cost);
             $query->where('min_price', '<=', $max);
         }
 
-        if($cycle){
+        if ($cycle) {
             $query->where('project_cycle', $cycle);
         }
 
+        //设计公司用户ID
         $design_id_arr = $query->get()->pluck('user_id')->all();
 
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province){
+        if ($province) {
             $design->where('province', $province);
         }
 
-        if($city){
+        if ($city) {
             $design->where('city', $city);
         }
 
-        $count = $design->whereIn('user_id',$design_id_arr)->count();
+        if ($item_id) {
+            if ($item = Item::find($item_id)) {
+                if (!empty($item->ord_recommend)) {
+                    //已推荐的设计公司ID 数组
+                    $old_design_arr = explode(',', $item->ord_recommend);
+                    $design->whereNotIn('id', $old_design_arr);
+
+                }
+            }
+        }
+
+        $count = $design->whereIn('user_id', $design_id_arr)->count();
 
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('count')));
@@ -1349,7 +1357,7 @@ class DemandController extends BaseController
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = 10000;
-        switch ($design_cost){
+        switch ($design_cost) {
             case 1:
                 $max = 50000;
                 break;
@@ -1391,7 +1399,7 @@ class DemandController extends BaseController
      *          "status_code": 200
      *      }
      *      "data": {
- *
+     *
      *       }
      *  }
      */
@@ -1415,22 +1423,22 @@ class DemandController extends BaseController
         $all = $request->only(['item_id', 'content', 'score']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        if(!$item = Item::find($all['item_id'])){
+        if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->user_id != $this->auth_user_id || $item->status != 18) {
+        if ($item->user_id != $this->auth_user_id || $item->status != 18) {
             return $this->response->array($this->apiError('Permission denied', 403));
         }
 
         $all['demand_company_id'] = $this->auth_user->demand_company_id;
         $all['design_company_id'] = $item->design_company_id;
 
-        try{
+        try {
             DB::beginTransaction();
             $evaluate = Evaluate::create($all);
 
@@ -1439,7 +1447,7 @@ class DemandController extends BaseController
 
             event(new ItemStatusEvent($item));
             DB::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError('database error', 500));
