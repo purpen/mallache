@@ -78,6 +78,12 @@
                       <p class="btn" v-show="d.item.status === 9">
                         <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始</el-button>
                       </p>
+                      <p class="btn" v-show="d.item.status === 11">
+                        <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id" type="primary">提交项目阶段</el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.is_show_view">
+                        <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id" type="primary">查看详情</el-button>
+                      </p>
 
 
                     </div>
@@ -191,6 +197,11 @@
         .catch (function(error) {
           self.$message.error(error.message)
         })
+      },
+      // 进入详情
+      showView() {
+        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       }
     },
     computed: {
@@ -215,8 +226,14 @@
               typeLabel = item.item.type_value + '/' + item.item.design_type_value
             }
             var showPrice = false
+            var showView = false
+            var status = item.item.status
             if (item.item.status >= 5) showPrice = true
+            if (status === 7 || status === 8 || status === 15 || status === 18 || status === 20 || status === 22) {
+              showView = true
+            }
             designItems[i].item.show_price = showPrice
+            designItems[i].item.is_show_view = showView
             designItems[i].item.type_label = typeLabel
             designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
           } // endfor

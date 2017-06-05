@@ -83,19 +83,25 @@
                     </p>
 
                     <p class="btn" v-show="d.item.status === 3">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">去查看</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">选择设计服务供应商</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 4">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-if="d.item.show_offer">已有{{ d.purpose_count }}家公司报价，查看</el-button>
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-else>查看选择的设计公司</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-if="d.item.show_offer">收到{{ d.purpose_count }}家公司报价，查看</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-else>查看设计公司</el-button>
 
                     </p>
 
                     <p class="btn" v-show="d.item.status === 6">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">查看合同</el-button>
                     </p>
+                    <p class="btn" v-show="d.item.status === 7">
+                      <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>
+                    </p>
                     <p class="btn" v-show="d.item.status === 8">
                       <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.is_view_show">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">查看详情</el-button>
                     </p>
                   </el-col>
                 </el-row>
@@ -171,6 +177,7 @@
             var data = response.data.data
             for (var i = 0; i < data.length; i++) {
               var d = data[i]
+              var status = d.item.status
               var progress = d.item.stage_status
               switch (progress) {
                 case 1:
@@ -189,6 +196,11 @@
               if (d.item.status === 4 && d.purpose_count > 0) {
                 showOffer = true
               }
+              var showView = false
+              if (status === 2 || status === 5 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
+                showView = true
+              }
+              data[i]['item']['is_view_show'] = showView
               data[i]['item']['show_offer'] = showOffer
               data[i]['item']['created_at'] = d.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor

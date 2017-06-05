@@ -62,8 +62,8 @@
                   </el-col>
                   <el-col :span="5">
                     <div class="btn" v-show="d.design_company_status === 0">
-                      <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">有意向接单</el-button></p>
-                      <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">拒绝此单</el-button></p>
+                      <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">提交报价</el-button></p>
+                      <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">暂无兴趣</el-button></p>
 
                     </div>
                     <p><el-button class="is-custom" v-if="d.design_company_status === 2" @click="showView" size="small" :index="index" :item_id="d.item.id">查看报价</el-button></p>
