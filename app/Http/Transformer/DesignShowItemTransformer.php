@@ -2,6 +2,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\Item;
+use App\Models\QuotationModel;
 use League\Fractal\TransformerAbstract;
 
 class DesignShowItemTransformer extends TransformerAbstract
@@ -26,6 +27,6 @@ class DesignShowItemTransformer extends TransformerAbstract
     //设计公司报价单
     protected function quotation($item_id)
     {
-        return Item::where(['id' => $item_id, 'design_company_id' => $this->design_company_id])->first();
+        return QuotationModel::where(['item_demand_id' => $item_id, 'design_company_id' => $this->design_company_id])->first();
     }
 }
