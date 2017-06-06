@@ -452,6 +452,7 @@ class PayController extends BaseController
         $jdpay = new JdPay();
         $resData = $jdpay->asynNotify();
         if($resData && 000000 == $resData['result']['code']){
+            Log::info($resData);
             try{
                 // 支付单号
                 $uid = $resData["result"]['tradeNum'];
