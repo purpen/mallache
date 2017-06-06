@@ -445,6 +445,41 @@ class PayController extends BaseController
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
     }
 
+
+    /*array (
+  'version' => 'V2.0',
+  'merchant' => '22294531',
+  'result' =>
+  array (
+    'code' => '000000',
+    'desc' => 'success',
+  ),
+  'tradeNum' => '2017060516592500000002479561',
+  'tradeType' => '0',
+  'sign' => 'U5DwNh9atht6f8JfZu3iSUJQ4BWafc5v4Fg0JzVEtu4E07VO9+RDhwxB66vHkFPi0D7JTBTCiPhlddmu+YctZdH9Tc/LHJz74k1NA3zLUE8htCDs9iT4hhaAHMRM1+v3MkqQ42+CxxXJnq/W1/34hbSB/8WTs3nNVUGVbimE2fE=',
+  'amount' => '1',
+  'status' => '2',
+  'payList' =>
+  array (
+    'pay' =>
+    array (
+      'payType' => '0',
+      'amount' => '1',
+      'currency' => 'CNY',
+      'tradeTime' => '20170606104119',
+      'detail' =>
+      array (
+        'cardHolderName' => '*梁恒',
+        'cardHolderMobile' => '186****3221',
+        'cardHolderType' => '0',
+        'cardHolderId' => '****1733',
+        'cardNo' => '621483****3605',
+        'bankCode' => 'CMB',
+        'cardType' => '1',
+      ),
+    ),
+  ),
+)*/
     //京东支付异步回调接口
     public function jdPayNotify()
     {
@@ -455,9 +490,9 @@ class PayController extends BaseController
             Log::info($resData);
             try{
                 // 支付单号
-                $uid = $resData["result"]['tradeNum'];
+                $uid = $resData['tradeNum'];
                 // 交易类型 0-消费 1-退款
-                $trade_type =$resData['result']['tradeType'];
+                $trade_type =$resData['tradeType'];
 
                 if($trade_type == 0){
                     $pay_order = PayOrder::where('uid', $uid)->first();
