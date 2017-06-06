@@ -123,7 +123,7 @@ class JdPay
     public function asynNotify()
     {
         $xml = file_get_contents("php://input");
-        Log::info($xml);
+//        Log::info($xml);
         $falg = XMLUtil::decryptResXml($xml, $resdata);
 
         if($falg){

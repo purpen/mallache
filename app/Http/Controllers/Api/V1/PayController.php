@@ -483,11 +483,11 @@ class PayController extends BaseController
     //京东支付异步回调接口
     public function jdPayNotify()
     {
-        Log::info($_SERVER);
+//        Log::info($_SERVER);
         $jdpay = new JdPay();
         $resData = $jdpay->asynNotify();
         if($resData && 000000 == $resData['result']['code']){
-            Log::info($resData);
+//            Log::info($resData);
             try{
                 // 支付单号
                 $uid = $resData['tradeNum'];
