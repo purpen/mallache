@@ -3,6 +3,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\Contract;
+use App\Models\ItemStage;
 use League\Fractal\TransformerAbstract;
 
 class ContractTransformer extends TransformerAbstract
@@ -54,26 +55,19 @@ class ContractTransformer extends TransformerAbstract
             'design_company_address' => strval($contract->design_company_address),
             'design_company_phone' => strval($contract->design_company_phone),
             'design_company_legal_person' => strval($contract->design_company_legal_person),
-            'design_type' => strval($contract->design_type),
-            'design_type_paragraph' => strval($contract->design_type_paragraph),
-            'design_type_contain' => strval($contract->design_type_contain),
             'total' => strval($contract->total),
-            'project_start_date' => strval($contract->project_start_date),
-            'determine_design_date' => strval($contract->determine_design_date),
-            'structure_layout_date' => strval($contract->structure_layout_date),
-            'design_sketch_date' => strval($contract->design_sketch_date),
-            'end_date' => strval($contract->end_date),
-            'one_third_total' => strval($contract->one_third_total),
-            'exterior_design_percentage' => intval($contract->exterior_design_percentage),
-            'exterior_design_money' => strval($contract->exterior_design_money),
-            'exterior_design_phase' => strval($contract->exterior_design_phase),
-            'exterior_modeling_design_percentage' => intval($contract->exterior_modeling_design_percentage),
-            'exterior_modeling_design_money' => strval($contract->exterior_modeling_design_money),
+            'item_content' => $contract->item_content,
             'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
             'unique_id' => strval($contract->unique_id),
             'item_name' => $contract->item_name,
             'title' => strval($contract->title),
+            'item_stage' => $this->itemStage($contract->item_demand_id),
         ];
+    }
+
+    protected function itemStage($item_id)
+    {
+        return ItemStage::where('item_id', $item_id)->orderBy('sort','asc')->get() ?? null;
     }
 }
