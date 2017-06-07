@@ -104,20 +104,7 @@ class ContractController extends BaseController
         $all = $request->all();
         $all['item_demand_id'] = $item->id;
         $all['design_company_id'] = $design->id;
-//        $all['demand_company_name'] = $request->input('demand_company_name');
-//        $all['demand_company_address'] = $request->input('demand_company_address');
-//        $all['demand_company_phone'] = $request->input('demand_company_phone');
-//        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-//        $all['design_company_name'] = $request->input('design_company_name');
-//        $all['design_company_address'] = $request->input('design_company_address');
-//        $all['design_company_phone'] = $request->input('design_company_phone');
-//        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-//
-//        $all['item_content'] = $request->input('item_content');
-//        $all['design_work_content'] = $request->input('design_work_content');
-//        $all['title'] = $request->input('title');
         $all['unique_id'] = uniqid('ht');
-//        $all['item_stage'] = $request->input('item_stage');
 
         $all['total'] = $item->price;
         $rules = [
@@ -133,7 +120,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-//            'item_stage' => 'array',
+            'item_stage' => 'array',
         ];
 
         $messages = [
@@ -196,12 +183,12 @@ class ContractController extends BaseController
         $time_is_set = true;
 
         foreach ($item_stage as $stage){
-            $percentage += $stage['percentage'];
-            $amount += $stage['amount'];
+            $percentage += ($stage['percentage'] * 100);
+            $amount += ($stage['amount'] * 100);
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        if($percentage == 1 && $amount == $total && $title_is_set && $time_is_set){
+        if($percentage == (1 * 100) && $amount == ($total*100) && $title_is_set && $time_is_set){
             return true;
         }else{
             return false;
@@ -346,24 +333,12 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
-     *      "design_type": "",
-     *      "design_type_paragraph": "",
-     *      "design_type_contain": "",
      *      "total": "",
-     *      "project_start_date": 0,
-     *      "determine_design_date": 0,
-     *      "structure_layout_date": 0,
-     *      "design_sketch_date": 0,
-     *      "end_date": 0,
-     *      "one_third_total": "",
-     *      "exterior_design_percentage": 0,
-     *      "exterior_design_money": "",
-     *      "exterior_design_phase": "",
-     *      "exterior_modeling_design_percentage": 0,
-     *      "exterior_modeling_design_money": "",
+     *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
-     *      "status": 0
+     *      "status": 0,
+     *      "item_stage":
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -390,19 +365,7 @@ class ContractController extends BaseController
         if($contract->design_company_id !== $design->id){
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
-//        $all['demand_company_name'] = $request->input('demand_company_name');
-//        $all['demand_company_address'] = $request->input('demand_company_address');
-//        $all['demand_company_phone'] = $request->input('demand_company_phone');
-//        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-//        $all['design_company_name'] = $request->input('design_company_name');
-//        $all['design_company_address'] = $request->input('design_company_address');
-//        $all['design_company_phone'] = $request->input('design_company_phone');
-//        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-//        $all['item_content'] = $request->input('item_content');
-//        $all['design_work_content'] = $request->input('design_work_content');
-//
-//        $all['title'] = $request->input('title');
-//        $all['item_stage'] = $request->input('item_stage');
+
         $all = $request->all();
 
         $rules = [
@@ -414,12 +377,10 @@ class ContractController extends BaseController
             'design_company_address'  => 'required',
             'design_company_phone'  => 'required',
             'design_company_legal_person'  => 'required',
-
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
             'item_stage' => 'array',
-
         ];
 
         $messages = [
