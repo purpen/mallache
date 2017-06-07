@@ -194,7 +194,7 @@ class ContractController extends BaseController
         $amount = 0;
         $title_is_set = true;
         $time_is_set = true;
-
+dd($item_stage);
         foreach ($item_stage as $stage){
             $percentage += $stage['percentage'] * 100;
             $amount += $stage['amount'] * 100;
