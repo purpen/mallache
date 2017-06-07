@@ -143,6 +143,10 @@ class ContractController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
+        //验证合同是否已存在
+        if(Contract::where(['item_demand_id' => $all['item_demand_id'], 'design_company_id' => $all['design_company_id']])->count()){
+            return $this->response->array($this->apiError('合同已创建' , 403));
+        }
 
         //验证项目阶段数组数据
         if(!$this->validationItemStage($all['item_stage'], $all['total'])){
