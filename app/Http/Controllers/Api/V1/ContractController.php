@@ -132,7 +132,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-            'item_stage' => 'required|array',
+            'item_stage' => 'required',
         ];
 
         $messages = [
@@ -415,7 +415,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-            'item_stage' => 'required|array',
+            'item_stage' => 'required',
 
         ];
 
