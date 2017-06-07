@@ -101,22 +101,23 @@ class ContractController extends BaseController
             return $this->response->array($this->apiError('没有权限添加合同' , 403));
         }
 
+        $all = $request->all();
         $all['item_demand_id'] = $item->id;
         $all['design_company_id'] = $design->id;
-        $all['demand_company_name'] = $request->input('demand_company_name');
-        $all['demand_company_address'] = $request->input('demand_company_address');
-        $all['demand_company_phone'] = $request->input('demand_company_phone');
-        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-        $all['design_company_name'] = $request->input('design_company_name');
-        $all['design_company_address'] = $request->input('design_company_address');
-        $all['design_company_phone'] = $request->input('design_company_phone');
-        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-
-        $all['item_content'] = $request->input('item_content');
-        $all['design_work_content'] = $request->input('design_work_content');
-        $all['title'] = $request->input('title');
+//        $all['demand_company_name'] = $request->input('demand_company_name');
+//        $all['demand_company_address'] = $request->input('demand_company_address');
+//        $all['demand_company_phone'] = $request->input('demand_company_phone');
+//        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
+//        $all['design_company_name'] = $request->input('design_company_name');
+//        $all['design_company_address'] = $request->input('design_company_address');
+//        $all['design_company_phone'] = $request->input('design_company_phone');
+//        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
+//
+//        $all['item_content'] = $request->input('item_content');
+//        $all['design_work_content'] = $request->input('design_work_content');
+//        $all['title'] = $request->input('title');
         $all['unique_id'] = uniqid('ht');
-        $all['item_stage'] = $request->input('item_stage');
+//        $all['item_stage'] = $request->input('item_stage');
 
         $all['total'] = $item->price;
         $rules = [
@@ -132,7 +133,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-            'item_stage' => 'required|array',
+//            'item_stage' => 'required|array',
         ];
 
         $messages = [
@@ -388,19 +389,20 @@ class ContractController extends BaseController
         if($contract->design_company_id !== $design->id){
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
-        $all['demand_company_name'] = $request->input('demand_company_name');
-        $all['demand_company_address'] = $request->input('demand_company_address');
-        $all['demand_company_phone'] = $request->input('demand_company_phone');
-        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-        $all['design_company_name'] = $request->input('design_company_name');
-        $all['design_company_address'] = $request->input('design_company_address');
-        $all['design_company_phone'] = $request->input('design_company_phone');
-        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-        $all['item_content'] = $request->input('item_content');
-        $all['design_work_content'] = $request->input('design_work_content');
-
-        $all['title'] = $request->input('title');
-        $all['item_stage'] = $request->input('item_stage');
+//        $all['demand_company_name'] = $request->input('demand_company_name');
+//        $all['demand_company_address'] = $request->input('demand_company_address');
+//        $all['demand_company_phone'] = $request->input('demand_company_phone');
+//        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
+//        $all['design_company_name'] = $request->input('design_company_name');
+//        $all['design_company_address'] = $request->input('design_company_address');
+//        $all['design_company_phone'] = $request->input('design_company_phone');
+//        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
+//        $all['item_content'] = $request->input('item_content');
+//        $all['design_work_content'] = $request->input('design_work_content');
+//
+//        $all['title'] = $request->input('title');
+//        $all['item_stage'] = $request->input('item_stage');
+        $all = $request->all();
 
         $rules = [
             'demand_company_name'  => 'required',
@@ -415,7 +417,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-            'item_stage' => 'required|array',
+//            'item_stage' => 'required|array',
 
         ];
 
