@@ -194,7 +194,16 @@ class ContractController extends BaseController
         $amount = 0;
         $title_is_set = true;
         $time_is_set = true;
-        dd($item_stage);
+//        dd($item_stage);
+        $item_stage = [
+            [
+            "sort" => "0",
+            "percentage" => "22",
+            "amount" => "22",
+            "title" => "aaa",
+            "time" => "2017-06",
+          ]
+        ];
         foreach ($item_stage as $stage){
             $percentage += $stage->percentage;
             $amount += $stage->amount;
