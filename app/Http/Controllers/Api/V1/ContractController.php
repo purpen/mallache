@@ -194,14 +194,14 @@ class ContractController extends BaseController
         $amount = 0;
         $title_is_set = true;
         $time_is_set = true;
-dd($item_stage);
+
         foreach ($item_stage as $stage){
-            $percentage += $stage['percentage'] * 100;
-            $amount += $stage['amount'] * 100;
+            $percentage += $stage['percentage'];
+            $amount += $stage['amount'];
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        if($percentage == 1*100 && $amount == $total * 100 && $title_is_set && $time_is_set){
+        if($percentage == 1 && $amount == $total && $title_is_set && $time_is_set){
             return true;
         }else{
             return false;
