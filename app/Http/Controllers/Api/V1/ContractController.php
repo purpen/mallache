@@ -116,7 +116,7 @@ class ContractController extends BaseController
         $all['design_work_content'] = $request->input('design_work_content');
         $all['title'] = $request->input('title');
         $all['unique_id'] = uniqid('ht');
-
+        $all['item_stage'] = $request->input('item_stage');
 
         $all['total'] = $item->price;
         $rules = [
@@ -132,6 +132,7 @@ class ContractController extends BaseController
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
+            'item_stage' => 'required|array',
         ];
 
         $messages = [
@@ -153,7 +154,6 @@ class ContractController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        $all['item_stage'] = $request->input('item_stage');
 
 
         //验证项目阶段数组数据
@@ -165,7 +165,7 @@ class ContractController extends BaseController
             DB::beginTransaction();
 
             $contract = Contract::create($all);
-dd($all['item_stage']);
+
             foreach ($all['item_stage'] as $stage){
                 $stage['item_id'] = $contract->item_demand_id;
                 $stage['design_company_id'] = $design->id;
@@ -415,7 +415,7 @@ dd($all['item_stage']);
             'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-            'item_stage' => 'required',
+            'item_stage' => 'required|array',
 
         ];
 
