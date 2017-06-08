@@ -31,6 +31,7 @@ class ItemStageTransformer extends TransformerAbstract
             'amount' => $itemStage->amount,
             'time' => $itemStage->time,
             'confirm' => $itemStage->confirm,
+            'sort' => $itemStage->sort,
         ];
     }
 

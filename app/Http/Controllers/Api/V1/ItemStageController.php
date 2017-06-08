@@ -41,6 +41,7 @@ class ItemStageController extends BaseController
      * 'amount': 100.00,    //金额
      * 'time': 122141111,  //阶段时间
      * 'confirm': 0,       // 项目需求方是否确认 0.未确认；1.已确认
+     * "sort": 1 //阶段序号
      * },
      * "meta": {
      * "message": "Success",
@@ -81,6 +82,7 @@ class ItemStageController extends BaseController
      * 'amount': 100.00,    //金额
      * 'time': 122141111,  //阶段时间
      * 'confirm': 0,       // 项目需求方是否确认 0.未确认；1.已确认
+     * "sort": 1 //阶段序号
      * },
      * "meta": {
      * "message": "Success",
