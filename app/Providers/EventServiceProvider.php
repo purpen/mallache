@@ -25,6 +25,11 @@ class EventServiceProvider extends ServiceProvider
             //添加系统通知
             'App\Listeners\ItemMessageListener',
         ],
+        // 项目阶段确认事件
+        'App\Events\ItemStageEvent' => [
+            // 事件监听器
+            'App\Listeners\ItemStageListener',
+        ],
     ];
 
     /**

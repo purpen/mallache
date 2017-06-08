@@ -86,8 +86,6 @@ class ItemMessageListener
             case 9:
                 //向设计公司通知
                 $this->demandTrustFunds($event);
-                //项目向设计公司支付部分费用
-                $this->payPriceToDesign($event);
                 break;
             //项目进行中
             case 11:
@@ -103,8 +101,6 @@ class ItemMessageListener
             case 18:
                 // 确认项目完成,通知设计公司
                 $this->trueItemDone($event);
-                //将剩余款项转给设计公司
-                $this->payRestFunds($event);
                 break;
         }
     }
@@ -232,52 +228,52 @@ class ItemMessageListener
         $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已托管项目资金');
     }
 
-    //需求公司托管资金后，首次向设计支付一定比例项目款
-    public function payPriceToDesign(ItemStatusEvent $event)
-    {
-        $item = $event->item;
-
-        //项目总金额
-        $item_price = $item->price;
-        //需要转账金额
-        $amount = number_format($item_price * config('constant.first_pay'), 2, '.', '');
-
-        DB::beginTransaction();
-        $user_model = new User();
-
-        try{
-            $demand_user_id = $item->user_id;
-            $item_info = $item->itemInfo();
-
-            //修改项目剩余项目款
-            $item->rest_fund -= $amount;
-            $item->save();
-
-            //减少需求公司账户金额（总金额、冻结金额）
-            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
-
-            //设计公司用户ID
-            $design_user_id = $item->designCompany->user_id;
-            //增加设计公司账户总金额
-            $user_model->totalIncrease($design_user_id, $amount);
-
-            $fund_log = new FundLog();
-            //需求公司流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
-            //设计公司流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
-
-            $tools = new Tools();
-            //通知需求公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
-            //通知设计公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
-        }catch (\Exception $e){
-            DB::rollBack();
-            Log::error($e);
-        }
-        DB::commit();
-    }
+    //需求公司托管资金后，首次向设计支付一定比例项目款 (支付模式变更 该方法弃用)
+//    public function payPriceToDesign(ItemStatusEvent $event)
+//    {
+//        $item = $event->item;
+//
+//        //项目总金额
+//        $item_price = $item->price;
+//        //需要转账金额
+//        $amount = number_format($item_price * config('constant.first_pay'), 2, '.', '');
+//
+//        DB::beginTransaction();
+//        $user_model = new User();
+//
+//        try{
+//            $demand_user_id = $item->user_id;
+//            $item_info = $item->itemInfo();
+//
+//            //修改项目剩余项目款
+//            $item->rest_fund -= $amount;
+//            $item->save();
+//
+//            //减少需求公司账户金额（总金额、冻结金额）
+//            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+//
+//            //设计公司用户ID
+//            $design_user_id = $item->designCompany->user_id;
+//            //增加设计公司账户总金额
+//            $user_model->totalIncrease($design_user_id, $amount);
+//
+//            $fund_log = new FundLog();
+//            //需求公司流水记录
+//            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
+//            //设计公司流水记录
+//            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
+//
+//            $tools = new Tools();
+//            //通知需求公司
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付部分项目款');
+//            //通知设计公司
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到部分项目款');
+//        }catch (\Exception $e){
+//            DB::rollBack();
+//            Log::error($e);
+//        }
+//        DB::commit();
+//    }
 
     //项目进行中 通知需求公司
     public function itemOngoing(ItemStatusEvent $event)
@@ -314,48 +310,48 @@ class ItemMessageListener
         $tools->message($design_company_id, '【' . $item_info['name'] . '】' . '项目已确认验收');
     }
 
-    //向设计公司支付剩余款项
-    public function payRestFunds(ItemStatusEvent $event)
-    {
-        $item = $event->item;
-
-        DB::beginTransaction();
-        $user_model = new User();
-
-        try{
-            $demand_user_id = $item->user_id;
-            $item_info = $item->itemInfo();
-            //支付金额
-            $amount = $item->rest_fund;
-
-            //修改项目剩余项目款为0
-            $item->rest_fund = 0;
-            $item->save();
-
-            //减少需求公司账户金额（总金额、冻结金额）
-            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
-
-            //设计公司用户ID
-            $design_user_id = $item->designCompany->user_id;
-            //增加设计公司账户总金额
-            $user_model->totalIncrease($design_user_id, $amount);
-
-            $fund_log = new FundLog();
-            //需求公司流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
-            //设计公司流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
-
-            $tools = new Tools();
-            //通知需求公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
-            //通知设计公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
-        }catch (\Exception $e){
-            DB::rollBack();
-            Log::error($e);
-        }
-        DB::commit();
-    }
+    //向设计公司支付剩余款项  (支付模式变更 该方法弃用)
+//    public function payRestFunds(ItemStatusEvent $event)
+//    {
+//        $item = $event->item;
+//
+//        DB::beginTransaction();
+//        $user_model = new User();
+//
+//        try{
+//            $demand_user_id = $item->user_id;
+//            $item_info = $item->itemInfo();
+//            //支付金额
+//            $amount = $item->rest_fund;
+//
+//            //修改项目剩余项目款为0
+//            $item->rest_fund = 0;
+//            $item->save();
+//
+//            //减少需求公司账户金额（总金额、冻结金额）
+//            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+//
+//            //设计公司用户ID
+//            $design_user_id = $item->designCompany->user_id;
+//            //增加设计公司账户总金额
+//            $user_model->totalIncrease($design_user_id, $amount);
+//
+//            $fund_log = new FundLog();
+//            //需求公司流水记录
+//            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+//            //设计公司流水记录
+//            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+//
+//            $tools = new Tools();
+//            //通知需求公司
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+//            //通知设计公司
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+//        }catch (\Exception $e){
+//            DB::rollBack();
+//            Log::error($e);
+//        }
+//        DB::commit();
+//    }
 
 }
