@@ -156,6 +156,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
         // 需求公司评价
         $api->post('/demand/evaluate', 'DemandController@evaluate');
+        // 发布需求方确认项目阶段
+        $api->post('/itemStage/demandFirmItemStage', 'ItemStageController@demandFirmItemStage');
+
 
         // 获取当前信息匹配到的公司数量
         $api->post('/demand/matchingCount/', 'DemandController@matchingCount');
@@ -219,6 +222,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
         // 确认项目已完成
         $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
+
         /**
          * 通知消息相关路由
          */
