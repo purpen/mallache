@@ -112,6 +112,7 @@
     <el-dialog title="匹配公司" v-model="matchCompanyDialog">
       <el-form label-position="top">
         <input type="hidden" v-model="matchCompanyForm.itemId" value="" />
+        <input type="hidden" v-model="matchCompanyForm.itemStatus" value="" />
         <el-form-item label="项目名称" label-width="200px">
           <el-input v-model="matchCompanyForm.itemName" auto-complete="off" disabled></el-input>
         </el-form-item>
@@ -180,11 +181,12 @@ export default {
       }
       this.currentMatchCompany = item.designCompany
       this.matchCompanyForm.itemId = item.item.id
+      this.matchCompanyForm.itemStatus = item.item.status
       this.matchCompanyForm.itemName = item.info.name
       this.matchCompanyDialog = true
     },
     addMatchCompany() {
-      if (!this.matchCompanyForm.itemId || !this.matchCompanyForm.itemName || !this.matchCompanyForm.companyIds) {
+      if (!this.matchCompanyForm.itemId || !this.matchCompanyForm.itemName || !this.matchCompanyForm.companyIds || !this.matchCompanyForm.itemStatus) {
         this.$message.error('缺少请求参数!')
         return
       }
@@ -193,20 +195,24 @@ export default {
       this.$http.post(api.addItemToCompany, {item_id: this.matchCompanyForm.itemId, recommend: companyIds})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
-          .then (function(response1) {
-            if (response1.data.meta.status_code === 200) {
-              self.$message.success('添加成功!')
-              self.matchCompanyDialog = false
-              return
-            } else {
-              self.$message.error(response1.data.meta.message)
-              return
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-          })
+          if (self.matchCompanyForm.itemStatus === 2) {
+            self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
+            .then (function(response1) {
+              if (response1.data.meta.status_code === 200) {
+                self.$message.success('添加成功!')
+                self.matchCompanyDialog = false
+                return
+              } else {
+                self.$message.error(response1.data.meta.message)
+              }
+            })
+            .catch (function(error) {
+              self.$message.error(error.message)
+            })
+          } else {
+            self.$message.success('添加成功!')
+            self.matchCompanyDialog = false
+          }
         } else {
           self.$message.error(response.data.meta.message)
           return

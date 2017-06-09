@@ -272,7 +272,7 @@
       uploadSuccessPerson(response, file, fileList) {
       },
       beforeUpload(file) {
-        const arr = ['image/jpeg', 'image/gif', 'image/png', 'image/pdf']
+        const arr = ['image/jpeg', 'image/gif', 'image/png', 'application/pdf']
         const isLt5M = file.size / 1024 / 1024 < 5
 
         this.uploadParam['x:type'] = 3

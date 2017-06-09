@@ -11,11 +11,11 @@
             <div class="main">
               <div class="status">
                 <p class="main-status">订单状态: <span>{{ item.status_value }}</span></p>
-                <p class="main-des">请于 {{ item.expire_at }} 前完成支付，逾期会关闭交易</p>
+                <p class="main-des" v-if="item.pay_type === 5 && item.status === 0">请于 {{ item.expire_at }} 前完成支付，逾期会关闭交易</p>
               </div>
               <div class="operation">
-                <p><el-button class="is-custom" @click="rePay">更改支付方式</el-button></p>
-                <p><el-button >取消订单</el-button></p>
+                <p v-if="item.status === 0"><el-button class="is-custom" @click="rePay">更改支付方式</el-button></p>
+                <!--<p><el-button >取消订单</el-button></p>-->
               </div>
             </div>
 

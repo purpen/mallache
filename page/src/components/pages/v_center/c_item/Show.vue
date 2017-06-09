@@ -9,7 +9,7 @@
           <div class="banner">
             <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="50" />
             <h1>{{ item.name }}</h1>
-            <p>{{ item.status_value }}</p>
+            <p>{{ item.design_status_value }}</p>
           </div>
 
           <div class="select-item-box">
@@ -43,6 +43,45 @@
             </el-collapse>
           </div>
 
+          <div class="select-item-box">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="报价管理" name="4">
+                <div class="quotation-item">
+
+                  <div class="item-logo">
+                    <div class="fl">
+                      <p class="p-title fl">
+                        {{ item.company_name }}
+                      </p>
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top">
+                        <p class="contact">联系人: {{ item.contact_name }}</p>
+                        <p class="contact">职位: {{ item.position }}</p>
+                        <p class="contact">电话: {{ item.phone }}</p>
+                        <p class="contact">邮箱: {{ item.email }}</p>
+                          <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系我们</p>
+                      </el-popover>
+                    </div>
+                    <div class="fr item-stick-des" v-if="quotation && quotation.status === 0">
+                      <p>已提交报价，等待需求方确认</p>
+                    </div>
+                  </div>
+                  <div class="clear"></div>
+                  <div class="item-bj" v-if="quotation">
+                    <p>项目报价:  <span class="p-price">{{ quotation.price }} 元</span></p>
+                    <p>报价说明:  {{ quotation.summary }}</p>                   
+                  </div>
+ 
+                  <div class="btn-quo" v-if="waitTakePrice">
+                    <el-button @click="companyRefuseBtn">暂无兴趣</el-button>
+                    <el-button class="is-custom" @click="takingBtn" type="primary">提交报价</el-button>                      
+                  </div>
+
+                </div>
+
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
           <div class="select-item-box" v-if="statusLabel.contract">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
@@ -57,7 +96,8 @@
                   <div class="contract-right">
                     <p><router-link :to="{name: 'vcenterContractDown', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</router-link></p>
                     <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
-                    <p v-if="item.status < 7"><router-link :to="{name: 'vcenterContractSubmit', params: {item_id: item.id}}" target="_blank"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
+                    <p v-if="item.status < 7"><router-link :to="{name: 'vcenterContractSubmit', params: {item_id: item.id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
+                    <p v-if="item.status === 5"><a href="javascript:void(0);" @click="contractSendBtn" ><i class="fa fa-share-square-o" aria-hidden="true"></i> 发送</a></p>
                   </div>
 
                 </div>
@@ -99,23 +139,50 @@
                   </p>
                 </div>
                 <div class="manage-item add-stage" v-else>
-                  <p class="add-stage-btn" v-if="item.status === 11"><router-link :to="{name: 'vcenterDesignStageAdd', params: {item_id: item.id}}"><i class="el-icon-plus"></i> 添加阶段</router-link></p>
-                  <div v-for="(d, index) in stages">
-                    <div class="contract-left">
-                      <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
-                      <div class="contract-content">
-                        <p>{{ d.title }}</p>
-                        <p class="contract-des">{{ d.created_at }}</p>
+
+                  <div class="stage-item" v-for="(d, index) in stages">
+                    <div class="stage-title">
+                      <h3>第{{ d.no }}阶段: {{ d.title }}</h3>
+                      <p v-if="d.confirm === 0">
+                        <el-upload
+                          class=""
+                          :action="uploadUrl"
+                          :on-change="handleChange"
+                          :on-progress="stageUploadProgress"
+                          :on-preview="handlePreview"
+                          :file-list="[]"
+                          :data="uploadParam"
+                          :show-file-list="false"
+                          :on-error="uploadStageError"
+                          :on-success="uploadStageSuccess"
+                          :before-upload="beforeStageUpload"
+                          list-type="text">
+                          <el-button size="small" class="is-custom" @click="uplaodStageBtn" :stage_id="d.id" :index="index" type="primary">{{ stageUploadBtnMsg }}</el-button>
+                        </el-upload>
+                      </p>
+                      <p v-if="d.status === 0"><el-button type="primary" @click="stageSendBtn" size="small" :stage_id="d.id" :index="index" class="is-custom"></i> 发送</el-button></p>
+                      <p v-else>
+                        <span v-if="d.confirm === 1">完成</span>
+                      </p>
+                    </div>
+                    <div class="stage-asset-box clear" v-for="(asset, asset_index) in d.item_stage_image">
+                      <div class="contract-left">
+                        <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
+                        <div class="contract-content">
+                          <p>{{ asset.name }}</p>
+                          <p class="contract-des">{{ asset.created_at.date_format().format('yyyy-MM-dd') }}</p>
+                        </div>
                       </div>
+                      <div class="contract-right">
+                        <p><a href="javascript:void(0);" @click="removeStageAsset" :asset_id="asset.id" :stage_index="index" :asset_index="asset_index" v-if="d.confirm === 0"><i class="fa fa-times" aria-hidden="true"></i> 删除</a></p>
+                        <p><a :href="asset.file" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</a></p>
+
+                      </div>
+                      <div class="clear"></div>
                     </div>
-                    <div class="contract-right">
-                      <p v-if="d.status === 0"><a href="javascript:void(0)" @click="stageSend(d.id, index)"><i class="fa fa-share" aria-hidden="true"></i> 发送</a></p>
-                      <p><router-link :to="{name: 'vcenterDesignStageEdit', params: {id: d.id}}" target="_blank"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
-                      <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
-                    </div>
-                    <div class="clear"></div>
                   </div>
-                  <p class="finish-item-btn" v-if="item.status === 11"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
+
+                  <p class="finish-item-btn" v-if="sureFinishBtn"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
                   <p class="finish-item-stat" v-if="item.status === 15">等待客户验收项目</p>
                   <p class="finish-item-stat" v-if="item.status === 18">项目已验收</p>
                 </div>
@@ -124,11 +191,26 @@
             </el-collapse>
           </div>
 
-        
         </div>
 
       </el-col>
     </el-row>
+
+    <el-dialog title="提交项目报价" v-model="takingPriceDialog">
+      <el-form label-position="top" :model="takingPriceForm" :rules="takingPriceRuleForm" ref="takingPriceRuleForm">
+        <el-form-item label="项目报价" prop="price" label-width="200px">
+          <el-input type="text" v-model.number="takingPriceForm.price" :placeholder="item.design_cost_value" auto-complete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="报价说明" prop="summary" label-width="80px">
+          <el-input type="textarea" v-model="takingPriceForm.summary" :autosize="{ minRows: 2, maxRows: 8}" auto-complete="off"></el-input>
+        </el-form-item>
+        <div class="taking-price-btn">
+          <el-button @click="takingPriceDialog = false">取 消</el-button>
+          <el-button type="primary" :loading="isTakingLoadingBtn" class="is-custom" @click="takingPriceSubmit('takingPriceRuleForm')">确 定</el-button>
+        </div>
+
+      </el-form>
+    </el-dialog>
 
     <el-dialog
       title="提示"
@@ -136,9 +218,9 @@
       size="tiny">
       <span>{{ comfirmMessage }}</span>
       <span slot="footer" class="dialog-footer">
-        <input type="hidden" ref="companyId" />
         <input type="hidden" ref="comfirmType" value="1" />
-        <input type="hidden" ref="currentIndex" />
+        <input type="hidden" ref="confirmTargetId" />
+        <input type="hidden" ref="confirmIndex" />
         <el-button @click="comfirmDialog = false">取 消</el-button>
         <el-button type="primary" :loading="comfirmLoadingBtn" @click="sureComfirmSubmit">确 定</el-button>
       </span>
@@ -167,11 +249,17 @@ export default {
       secondPayLoadingBtn: false,
       item: {},
       info: {},
+      quotation: null,
       contract: null,
       isLoadingBtn: false,
       selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '15'],
       statusIconUrl: null,
       beginItemLoadingBtn: false,
+      waitTakePrice: false,
+      takingPriceDialog: false,
+      isTakingLoadingBtn: false,
+      sureFinishBtn: false,
+      stageUploadBtnMsg: '上传附件',
       statusLabel: {
         detail: true,
         selectCompany: false,
@@ -185,6 +273,27 @@ export default {
 
         end: false
       },
+      takingPriceForm: {
+        itemId: '',
+        price: '',
+        summary: ''
+      },
+      takingPriceRuleForm: {
+        price: [
+          { required: true, type: 'number', message: '请添写报价金额,必须为整数', trigger: 'blur' }
+        ],
+        summary: [
+          { required: true, message: '请添写报价说明', trigger: 'blur' }
+        ]
+      },
+      uploadParam: {
+        'token': '',
+        'x:random': '',
+        'x:user_id': this.$store.state.event.user.id,
+        'x:target_id': '',
+        'x:type': ''
+      },
+      currentStageIndex: '',
       tableData: [],
       stickCompany: [],
       offerCompany: [],
@@ -198,6 +307,45 @@ export default {
   },
   methods: {
     selectCompanyboxChange() {
+    },
+    // 提交项目报价
+    takingPriceSubmit(formName) {
+      var self = this
+      self.$refs[formName].validate((valid) => {
+        // 验证通过，提交
+        if (valid) {
+          self.isTakingLoadingBtn = true
+          var row = {
+            item_demand_id: self.item.id,
+            price: self.takingPriceForm.price,
+            summary: self.takingPriceForm.summary
+          }
+
+          var apiUrl = api.addQuotation
+          var method = 'post'
+
+          self.$http({method: method, url: apiUrl, data: row})
+          .then (function(response) {
+            if (response.data.meta.status_code === 200) {
+              self.$message.success('提交成功！')
+              self.isTakingLoadingBtn = false
+              self.takingPriceDialog = false
+              self.waitTakePrice = false
+              self.quotation = row
+              self.quotation.status = 0
+            } else {
+              self.$message.error(response.data.meta.message)
+              self.isTakingLoadingBtn = false
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+            self.isTakingLoadingBtn = false
+            return false
+          })
+        } else {
+        }
+      })
     },
     stickCompanySubmit() {
       var companyIds = this.stickCompanyIds
@@ -221,32 +369,80 @@ export default {
         self.isLoadingBtn = false
       })
     },
-    refuseCompanyBtn(event) {
-      var companyId = parseInt(event.currentTarget.getAttribute('company_id'))
-      var index = parseInt(event.currentTarget.getAttribute('index'))
-      this.$refs.companyId.value = companyId
-      this.$refs.currentIndex.value = index
-      this.$refs.comfirmType.value = 1
-      this.comfirmMessage = '您确定要拒绝此公司报价？'
-      this.comfirmDialog = true
+    // 项目报价弹出层
+    takingBtn(event) {
+      this.takingPriceDialog = true
     },
-    greeCompanyBtn(event) {
-      var companyId = parseInt(event.currentTarget.getAttribute('company_id'))
-      var index = parseInt(event.currentTarget.getAttribute('index'))
-      this.$refs.companyId.value = companyId
-      this.$refs.currentIndex.value = index
-      this.$refs.comfirmType.value = 2
-      this.comfirmMessage = '与该公司合作后将不可修改，确认执行此操作？'
-      this.comfirmDialog = true
-    },
+    // 对话框确认按钮
     sureComfirmSubmit() {
       var comfirmType = parseInt(this.$refs.comfirmType.value)
+      var confirmTargetId = parseInt(this.$refs.confirmTargetId.value)
+      var confirmIndex = parseInt(parseInt(this.$refs.confirmIndex.value))
       this.comfirmLoadingBtn = true
       if (comfirmType === 1) {
         this.sureItemSubmit()
+      } else if (comfirmType === 2) {
+        this.sureRefuseItemSubmit()
+      } else if (comfirmType === 3) {
+        this.contractSendDo()
+      } else if (comfirmType === 4) {
+        this.stageSend(confirmTargetId, confirmIndex)
       } else {
         this.comfirmLoadingBtn = false
       }
+    },
+    // 拒绝项目确认框
+    companyRefuseBtn(event) {
+      this.$refs.comfirmType.value = 2
+      this.comfirmMessage = '确认拒绝该项目？'
+      this.comfirmDialog = true
+    },
+    // 确认拒绝项目
+    sureRefuseItemSubmit() {
+      var self = this
+      this.comfirmLoadingBtn = true
+      self.$http({method: 'get', url: api.companyRefuseItemId.format(self.item.id), data: {}})
+      .then (function(response) {
+        self.comfirmLoadingBtn = false
+        self.comfirmDialog = false
+        if (response.data.meta.status_code === 200) {
+          self.$message.success('提交成功！')
+          self.$router.replace({name: 'vcenterCItemList'})
+          return
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.comfirmLoadingBtn = false
+        self.comfirmDialog = false
+      })
+    },
+    // 发送合同确认框
+    contractSendBtn(event) {
+      this.$refs.comfirmType.value = 3
+      this.comfirmMessage = '确认把合同发送给需求方？'
+      this.comfirmDialog = true
+    },
+    // 发送合同执行
+    contractSendDo() {
+      var self = this
+      self.$http({method: 'post', url: api.sendContract, data: {item_demand_id: self.item.id}})
+      .then (function(response) {
+        self.comfirmLoadingBtn = false
+        self.comfirmDialog = false
+        if (response.data.meta.status_code === 200) {
+          self.$message.success('发送成功！')
+          self.item.status = 6
+          self.item.status_value = '等待需求方确认合同'
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+      })
     },
     // 确认项目完成
     sureItemSubmit() {
@@ -257,6 +453,7 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.comfirmLoadingBtn = false
           self.item.status = 15
+          self.sureFinishBtn = false
           self.item.statue_value = '项目已完成'
           self.$message.success('操作成功!')
         } else {
@@ -291,11 +488,23 @@ export default {
         self.beginItemLoadingBtn = false
       })
     },
+    // 发送阶段确认框
+    stageSendBtn(event) {
+      var stageId = parseInt(event.currentTarget.getAttribute('stage_id'))
+      var index = parseInt(event.currentTarget.getAttribute('index'))
+      this.$refs.confirmTargetId.value = stageId
+      this.$refs.confirmIndex.value = index
+      this.$refs.comfirmType.value = 4
+      this.comfirmMessage = '确认把阶段信息发送给需求方？'
+      this.comfirmDialog = true
+    },
     // 项目阶段发送
     stageSend(id, index) {
       var self = this
       self.$http.put(api.itemStageSend, {id: id})
       .then (function(response) {
+        self.comfirmLoadingBtn = false
+        self.comfirmDialog = false
         if (response.data.meta.status_code === 200) {
           self.$message.success('发送成功!')
           self.stages[index].status = 1
@@ -304,6 +513,7 @@ export default {
         }
       })
       .catch (function(error) {
+        self.comfirmLoadingBtn = false
         self.$message.error(error.message)
       })
     },
@@ -312,6 +522,69 @@ export default {
       this.$refs.comfirmType.value = 1
       this.comfirmMessage = '确认项目已完成？'
       this.comfirmDialog = true
+    },
+    // 删除阶段附件
+    removeStageAsset(event) {
+      var assetId = parseInt(event.currentTarget.getAttribute('asset_id'))
+      var stageIndex = parseInt(event.currentTarget.getAttribute('stage_index'))
+      var assetIndex = parseInt(event.currentTarget.getAttribute('asset_index'))
+      const that = this
+      that.$http.delete(api.asset.format(assetId), {})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          that.stages[stageIndex].item_stage_image.splice(assetIndex, 1)
+        } else {
+          that.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        that.$message.error(error.message)
+        return false
+      })
+    },
+    // 上传阶段附件
+    uplaodStageBtn(event) {
+      var stageId = parseInt(event.currentTarget.getAttribute('stage_id'))
+      var index = parseInt(event.currentTarget.getAttribute('index'))
+      this.currentStageIndex = index
+      this.uploadParam['x:type'] = 8
+      this.uploadParam['x:target_id'] = stageId
+      this.stageUploadBtnMsg = '上传中...'
+    },
+    stageUploadProgress(event, file, fileList) {
+    },
+    // Before上传阶段附件
+    beforeStageUpload(file) {
+      const arr = ['image/jpeg', 'image/gif', 'image/png', 'application/pdf']
+      const isLt10M = file.size / 1024 / 1024 < 10
+
+      if (arr.indexOf(file.type) === -1) {
+        this.$message.error('上传文件格式不正确!')
+        return false
+      }
+      if (!isLt10M) {
+        this.$message.error('上传文件大小不能超过 10MB!')
+        return false
+      }
+    },
+    uploadStageSuccess(response, file, fileList) {
+      this.stageUploadBtnMsg = '上传附件'
+      var index = this.currentStageIndex
+      var row = {
+        id: response.asset_id,
+        name: response.name,
+        file: response.file,
+        created_at: response.created_at
+      }
+      this.stages[index].item_stage_image.push(row)
+    },
+    uploadStageError(err, file, fileList) {
+      this.stageUploadBtnMsg = '上传附件'
+      this.$message.error(err)
+    },
+    handlePreview(file) {
+    },
+    handleChange(value) {
     }
   },
   computed: {
@@ -351,6 +624,10 @@ export default {
           self.contract.created_at = self.contract.created_at.date_format().format('yyyy-MM-dd')
         }
         self.quotation = response.data.data.quotation
+        // 是否显示提交报价单按钮
+        if (self.quotation === null && (self.item.status === 3 || self.item.status === 4)) {
+          self.waitTakePrice = true
+        }
         switch (self.item.status) {
           case 4: // 查看已提交报价的设计公司
             self.progressButt = 2
@@ -503,9 +780,40 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               var items = response.data.data
+              var isAllPass = true
               for (var i = 0; i < items.length; i++) {
                 var item = items[i]
+                if (item.sort) {
+                  switch (item.sort) {
+                    case 1:
+                      items[i].no = '一'
+                      break
+                    case 2:
+                      items[i].no = '二'
+                      break
+                    case 3:
+                      items[i].no = '三'
+                      break
+                    case 4:
+                      items[i].no = '四'
+                      break
+                    case 5:
+                      items[i].no = '五'
+                      break
+                    default:
+                      items[i].no = ''
+                  }
+                } else {
+                  items[i].no = ''
+                }
+
                 items[i].created_at = item.created_at.date_format().format('yyyy-MM-dd')
+                if (item.confirm === 0) {
+                  isAllPass = false
+                }
+              } // endfor
+              if (self.item.status === 11 && isAllPass) {
+                self.sureFinishBtn = true
               }
               self.stages = items
               console.log('aa')
@@ -573,6 +881,21 @@ export default {
       self.$message.error(error.message)
       console.log(error.message)
     })
+
+    // 获取图片token
+    self.$http.get(api.upToken, {})
+    .then (function(response) {
+      if (response.data.meta.status_code === 200) {
+        if (response.data.data) {
+          self.uploadParam['token'] = response.data.data.upToken
+          self.uploadParam['x:random'] = response.data.data.random
+          self.uploadUrl = response.data.data.upload_url
+        }
+      }
+    })
+    .catch (function(error) {
+      self.$message.error(error.message)
+    })
   }
 }
 </script>
@@ -589,7 +912,7 @@ export default {
     border: 1px solid #ccc;
   }
   .banner img {
-    margin-top: 20px;
+    margin-top: 40px;
   }
   .banner h1 {
     padding-top: 10px;
@@ -662,15 +985,17 @@ export default {
     text-align: center;
   }
 
-  .offer-company-item {
-    padding-top: 10px;
-    height: 200px;
+  .quotation-item {
     border: 1px solid #ccc;
     margin: 20px 0 20px 0;
   }
   .item-logo {
-    text-align: center;
-    margin: 0 0 0 0px;
+    margin: 0 10px 0 10px;
+  }
+  .item-logo .p-title {
+    line-height: 50px;
+    font-size: 1.5rem;
+    font-weight: 500;
   }
   .item-logo p {
     line-height: 2;
@@ -679,6 +1004,12 @@ export default {
   .item-logo img {
     margin-bottom: 10px;
   }
+
+  .item-bj {
+    padding: 15px 10px 15px 10px;
+    border-top: 1px solid #ccc;
+  }
+
   .item-title {
     margin-left: -30px;
     height: 150px;
@@ -707,6 +1038,12 @@ export default {
     padding-right: 10px;
     text-align: right;
     line-height: 50px;
+  }
+
+  .btn-quo {
+    text-align: right;
+    padding: 10px;
+    border-top: 1px solid #ccc;
   }
 
   .contract-item {
@@ -740,10 +1077,11 @@ export default {
   }
   .contract-right {
     float: right;
+    margin-right: 10px;
   }
   .contract-right p {
     float: right;
-    margin: 10px;
+    margin: 10px 0 10px 10px;
   }
 
   .no-offer-company {
@@ -805,9 +1143,45 @@ export default {
     padding: 10px 60px 10px 60px;
   }
   .finish-item-stat {
-    margin-top: 50px;
+    margin-top: 20px;
     font-size: 2rem;
     text-align: center;
+  }
+
+  .contact-us p{
+    margin-left: 20px;
+    line-height: 50px;
+  }
+
+  p.contact {
+    line-height: 1.5;
+    font-size: 1.3rem;
+    color: #666;
+  }
+  .item-stick-des p{
+    line-height: 50px;
+  }
+  .stage-item {
+    margin: 20px 0 20px 0;
+  }
+  .stage-title {
+    height: 40px;
+    border-bottom: 1px solid #ccc;
+  }
+  .stage-item .stage-title h3 {
+    float: left;
+    font-size: 1.8rem;
+    color: #222;
+  }
+
+  .stage-title p {
+    margin: 0 0 0 10px;
+    float: right;
+  }
+
+  .stage-asset-box {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid #ccc;
   }
 
 </style>

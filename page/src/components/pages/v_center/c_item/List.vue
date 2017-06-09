@@ -14,13 +14,13 @@
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="3">
                   <p>交易金额</p>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="7">
                   <p>状态</p>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                   <p>操作</p>
                 </el-col>
               </el-row>
@@ -52,15 +52,15 @@
                     <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
                     <p>项目周期: {{ d.item.cycle_value }}</p>
                   </el-col>
-                  <el-col :span="4">
+                  <el-col :span="3">
                     <p>
                       <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
                     </p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="7">
                     <p class="status-str">{{ d.design_company_status_value }}</p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="4">
                     <div class="btn" v-show="d.design_company_status === 0">
                       <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">提交报价</el-button></p>
                       <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">暂无兴趣</el-button></p>
@@ -374,6 +374,7 @@
   .status-str {
     color: #FF5A5F;
     font-size: 1.2rem;
+    line-height: 1.3;
   }
   .item-title p {
     font-size: 1.2rem;

@@ -70,6 +70,7 @@ export default {
   itemStageDesignCompanyLists: '/itemStage/designCompany/lists', // GET 设计公司阶段查看
   itemStageId: '/itemStage/{0}', // GET 阶段详情 PUT 编辑
   itemStage: '/itemStage',  // POST 保存
+  demandFirmItemStage: '/itemStage/demandFirmItemStage', // POST 需求方确认阶段完成
 
   // 订单
   orderId: '/pay/getPayStatus/{0}',  // GET 查看订单详情

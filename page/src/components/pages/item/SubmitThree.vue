@@ -248,6 +248,7 @@
       // 获取已匹配公司数量
       matchRequest() {
         var mRow = {
+          item_id: this.itemId,
           type: this.form.type,
           design_type: this.form.design_type,
           cycle: this.form.cycle,
@@ -442,12 +443,10 @@
 
   .slider {
     border: 1px solid #ccc;
-    height: 270px;
     text-align:center;
     margin-bottom: 20px;
   }
   .slider.info {
-    height: 350px;
     text-align: left;
   }
   .slider p {

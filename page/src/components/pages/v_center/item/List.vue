@@ -33,16 +33,16 @@
 
 
               <el-row :gutter="0" class="item-title-box" v-show="itemList.length > 0">
-                <el-col :span="11">
+                <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
                 <el-col :span="3">
                   <p>交易金额</p>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="7">
                   <p>状态</p>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                   <p>操作</p>
                 </el-col>
               </el-row>
@@ -56,7 +56,7 @@
                 </el-row>
 
                 <el-row :gutter="0" class="item-content">
-                  <el-col :span="11" class="item-title">
+                  <el-col :span="10" class="item-title">
                     <p class="c-title">
                       <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
                     </p>
@@ -70,10 +70,10 @@
                       <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
                     </p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="7">
                     <p class="status-str">{{ d.item.status_value }}</p>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="4">
                     <div class="btn" v-show="d.item.status === -2">
                       <p><el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small" type="primary">重新编辑</el-button></p>
                       <p><el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small" type="gray">关闭项目</el-button></p>
@@ -86,7 +86,7 @@
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">选择设计服务供应商</el-button>
                     </p>
                     <p class="btn" v-show="d.item.status === 4">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-if="d.item.show_offer">收到{{ d.purpose_count }}家公司报价，查看</el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-if="d.item.show_offer">查看报价</el-button>
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary" v-else>查看设计公司</el-button>
 
                     </p>
@@ -197,7 +197,7 @@
                 showOffer = true
               }
               var showView = false
-              if (status === 2 || status === 5 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
+              if (status === 2 || status === 5 || status === 9 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
                 showView = true
               }
               data[i]['item']['is_view_show'] = showView
@@ -414,6 +414,7 @@
   .status-str {
     color: #FF5A5F;
     font-size: 1.2rem;
+    line-height: 1.3;
   }
   .item-title p {
     font-size: 1.2rem;

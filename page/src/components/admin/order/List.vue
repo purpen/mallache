@@ -192,7 +192,7 @@ export default {
     },
     // 确认对公打款
     sureTransferSubmit() {
-      if (!this.orderForm.orderId || !this.orderForm.itemName || !this.orderForm.bankId || !this.orderForm.payNo || !this.orderForm.index) {
+      if (!this.orderForm.orderId || !this.orderForm.itemName || !this.orderForm.bankId || !this.orderForm.payNo) {
         this.$message.error('缺少请求参数!')
         return
       }

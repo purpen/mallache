@@ -218,19 +218,29 @@
                     <p class="wait-begin">等待设计公司提交资料</p>                 
                   </div>
                   <div v-else>
-                    <div v-for="(d, index) in stages" :key="index">
-                      <div class="contract-left">
-                        <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
-                        <div class="contract-content">
-                          <p>{{ d.title }}</p>
-                          <p class="contract-des">{{ d.created_at }}</p>
+                    <div class="stage-item" v-for="(d, index) in stages">
+                      <div class="stage-title">
+                        <h3>第{{ d.no }}阶段: {{ d.title }}</h3>
+
+                        <p v-if="d.confirm === 0"><el-button type="primary" @click="passStageBtn" size="small" :stage_id="d.id" :index="index" class="is-custom"></i> 确认通过</el-button></p>
+                        <p v-else>
+                          <span v-if="d.confirm === 1">已确认</span>
+                        </p>
+                      </div>
+                      <div class="stage-asset-box clear" v-for="(asset, asset_index) in d.item_stage_image">
+                        <div class="contract-left">
+                          <img src="../../../../assets/images/icon/pdf2x.png" width="30" />
+                          <div class="contract-content">
+                            <p>{{ asset.name }}</p>
+                            <p class="contract-des">{{ asset.created_at.date_format().format('yyyy-MM-dd') }}</p>
+                          </div>
                         </div>
+                        <div class="contract-right">
+                          <p><a :href="asset.file" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</a></p>
+                        </div>
+                        <div class="clear"></div>
                       </div>
-                      <div class="contract-right">
-                        <p><router-link :to="{name: 'vcenterDesignStageShow', params: {id: d.id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
-                      </div>
-                      <div class="clear"></div>
-                    </div>                 
+                    </div>
                   </div>
 
                   <p class="finish-item-btn" v-if="item.status === 15"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
@@ -253,6 +263,7 @@
       <span>{{ comfirmMessage }}</span>
       <span slot="footer" class="dialog-footer">
         <input type="hidden" ref="companyId" />
+        <input type="hidden" ref="confirmTargetId" />
         <input type="hidden" ref="comfirmType" value="1" />
         <input type="hidden" ref="currentIndex" />
         <el-button @click="comfirmDialog = false">取 消</el-button>
@@ -280,6 +291,7 @@ export default {
       stickCompanyIds: [],
       stages: [],
       secondPayLoadingBtn: false,
+      sendStageLoadingBtn: false,
       item: {},
       info: {},
       contract: {},
@@ -363,6 +375,8 @@ export default {
         this.agreeCompanySubmit()
       } else if (comfirmType === 3) {
         this.sureItemSubmit()
+      } else if (comfirmType === 4) {
+        this.passStage()
       } else {
         this.comfirmLoadingBtn = false
       }
@@ -426,8 +440,10 @@ export default {
     // 确认项目完成
     sureItemSubmit() {
       var self = this
+      self.sendStageLoadingBtn = true
       self.$http.post(api.demandTrueItemDoneId.format(self.item.id), {})
       .then (function(response) {
+        self.sendStageLoadingBtn = false
         self.comfirmDialog = false
         if (response.data.meta.status_code === 200) {
           self.comfirmLoadingBtn = false
@@ -441,6 +457,7 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
         self.comfirmLoadingBtn = false
+        self.sendStageLoadingBtn = false
       })
     },
     // 下载合同
@@ -487,6 +504,37 @@ export default {
       this.statusIconUrl = require('@/assets/images/item/wait_submit_ht.png')
       this.statusLabel.cooperateCompany = true
       this.statusLabel.trueCompany = false
+    },
+    // 确认阶段通过按钮
+    passStageBtn(event) {
+      var stageId = parseInt(event.currentTarget.getAttribute('stage_id'))
+      var index = parseInt(event.currentTarget.getAttribute('index'))
+      this.$refs.comfirmType.value = 4
+      this.$refs.confirmTargetId.value = stageId
+      this.$refs.currentIndex.value = index
+      this.comfirmMessage = '确认执行此操作？'
+      this.comfirmDialog = true
+    },
+    // 阶段通过扫行
+    passStage() {
+      var index = this.$refs.currentIndex.value
+      var stageId = this.$refs.confirmTargetId.value
+      var self = this
+      self.$http.post(api.demandFirmItemStage, {item_stage_id: stageId})
+      .then (function(response) {
+        self.comfirmLoadingBtn = false
+        if (response.data.meta.status_code === 200) {
+          self.comfirmDialog = false
+          self.$message.success('操作成功!')
+          self.stages[index].confirm = 1
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.comfirmLoadingBtn = false
+      })
     }
   },
   computed: {
@@ -721,9 +769,40 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               var items = response.data.data
+              var isAllPass = true
               for (var i = 0; i < items.length; i++) {
                 var item = items[i]
+                if (item.sort) {
+                  switch (item.sort) {
+                    case 1:
+                      items[i].no = '一'
+                      break
+                    case 2:
+                      items[i].no = '二'
+                      break
+                    case 3:
+                      items[i].no = '三'
+                      break
+                    case 4:
+                      items[i].no = '四'
+                      break
+                    case 5:
+                      items[i].no = '五'
+                      break
+                    default:
+                      items[i].no = ''
+                  }
+                } else {
+                  items[i].no = ''
+                }
                 items[i].created_at = item.created_at.date_format().format('yyyy-MM-dd')
+                if (item.confirm === 0) {
+                  isAllPass = false
+                }
+              } // endfor
+
+              if (self.item.status === 11 && isAllPass) {
+                // self.sureFinishBtn = true
               }
               self.stages = items
               console.log('aa')
@@ -807,7 +886,7 @@ export default {
     border: 1px solid #ccc;
   }
   .banner img {
-    margin-top: 20px;
+    margin-top: 40px;
   }
   .banner h1 {
     padding-top: 10px;
@@ -1018,7 +1097,7 @@ export default {
   
   }
   .finish-item-btn {
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 20px;
     text-align: center;
   }
@@ -1041,6 +1120,28 @@ export default {
     line-height: 1.5;
     font-size: 1.3rem;
     color: #666;
+  }
+  .stage-item {
+    margin: 20px 0 20px 0;
+  }
+  .stage-title {
+    height: 40px;
+    border-bottom: 1px solid #ccc;
+  }
+  .stage-item .stage-title h3 {
+    float: left;
+    font-size: 1.8rem;
+    color: #222;
+  }
+
+  .stage-title p {
+    margin: 0 0 0 10px;
+    float: right;
+  }
+
+  .stage-asset-box {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
   }
 
 

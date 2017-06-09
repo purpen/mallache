@@ -18,22 +18,17 @@
             <p>电话: <input class="no-border" type="text" disabled v-model="form.design_company_phone" style="width:150px;" /></p>
             <p>联系人: <input class="no-border" type="text" disabled v-model="form.design_company_legal_person" style="width:150px;" /></p>
 
-            <p class="title">设计项目内容和费用</p>
-            <p>依照中华人民共和国法律及本行业相关法规条例之规定，甲乙双方本着平等自愿和互惠互利的原则，由乙方接受委托为甲方提供 <input class="bottom-border" disabled type="text" v-model="form.design_type" style="width:150px;" /> 设计 <input class="bottom-border" disabled type="text" v-model="form.design_type_paragraph" style="width:100px;" /> 款（包含： <input class="bottom-border" disabled type="text" v-model="form.design_type_contain" style="width:150px;" /> ）。本合同设计费用总额为人民币 <input class="bottom-border" disabled type="text" v-model="form.total" style="width:100px;" /> 整（￥元）。  双方共同签署此项设计委托合同（以下简称合同），甲方和乙方合称为合同双方（以下简称双方）。</p>
+            <p class="title">根据需求方与供应商在本平台的初步沟通，现确定双方合作内容与形式如下：</p>
+            <p>
+              自本协议签订之日起，需求方需在 <input class="bottom-border" disabled type="text" value="5" style="width:20px;" />个工作日内一次性支付给供应商 <input class="bottom-border" disabled type="text" v-model="form.title" style="width:100px;" />（项目名称 ） 的设计费用人民币（<input class="bottom-border" disabled type="text" v-model="form.total" style="width:50px;" />）元，其中     将作为项目预付款直接转入供应商账户，剩余款项在项目进行期间由本平台托管，并分阶段在供应商完成相应阶段工作后转入供应商账户，直至需求方确认项目完成且无异议后将全部款项转入供应商账户；供应商需按协议规定，在收到预付款后的   个工作日内启动项目相关设计工作，并按照需求方要求在规定时间内完成全部设计工作。
+            </p>
 
-            <p class="title">工作时间</p>
-            <p>1 自项目启动之日起 <input class="bottom-border" type="text" disabled v-model="form.project_start_date" style="width:100px;" /> 日内，乙方应在甲方配合下完善确定设计方向、市场研究部署、执行内部草图概念设计、内部头脑风暴决议等。</p>
-            <p>2 设计方向确定之日起 <input class="bottom-border" type="text" disabled v-model="form.determine_design_date" style="width:100px;" /> 日内，乙方应进行Layout结构布局设计验证结构。</p>
-            <p>3 结构布局验证完成后 <input class="bottom-border" type="text" disabled v-model="form.structure_layout_date" style="width:100px;" /> 日内，乙方应向甲方提供该项目ID概念PPT效果图叁款。 </p>
-            <p>4 PPT效果图经甲方商讨并提出书面意见后 <input class="bottom-border" disabled type="text" v-model="form.design_sketch_date" style="width:100px;" /> 日内，乙方应向甲方提供该项目最终由甲方选定的PPT 3D渲染效果图壹款。</p>
-            <p>5 最终3D效果图经甲方书面确认后 <input class="bottom-border" disabled type="text" v-model="form.end_date" style="width:100px;" /> 日内，乙方应完成3D外观防护建模设计内容。 6 上述之进度系乙方所需有效工作日，具体进度参照乙方提供的设计流程计划书。</p>
+            <p class="title">项目具体流程与时间节点</p>
+            <p>经双方协商，本项目共分 <input class="bottom-border" disabled type="text" v-model="form.sort" style="width:20px;" /> 个阶段进行，细节流程与时间节点如下：</p>
+            <p v-for="(d, index) in form.stages">
+            第 <input class="bottom-border" disabled type="text" v-model="d.sort" style="width:20px;" /> 阶段：供应商在 <input class="bottom-border" disabled type="text" v-model="d.time" style="width:20px;" /> 个工作日内提交 <input class="bottom-border" disabled type="text" v-model="d.title" style="width:200px;" />（项目初步方案） ，经需求方确认后，该阶段的设计款项，项目全款的 <input class="bottom-border" disabled type="text" v-model="d.percentage" style="width:20px;" /> %，即人民币 （<input class="bottom-border" disabled type="text" v-model="d.amount" style="width:50px;" />）元，将从平台托管池内转入供应商账户；
+            </p>
 
-            <p class="title">支付时间</p>
-            <p>甲方按下列付款时间和金额分阶段，以银行托付方式或者其他方式向乙方支付设计费： </p>
-            <p>1、自合同签署起3日内，甲方向乙方支付设计费的30%，即人民币 <input class="bottom-border" disabled type="text" v-model="form.one_third_total" style="width:100px;" /> 整(￥)（作为本项目启动预付款）。乙方收到甲方款项或相应付款凭证后即开始本项目的设计运作。</p>
-            <p>2、乙方完成外观设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的 <input class="bottom-border" disabled type="text" v-model="form.exterior_design_percentage" style="width:100px;" /> %，即人民币 <input class="bottom-border" disabled type="text" v-model="form.exterior_design_money" style="width:100px;" /> 整(￥)。乙方收到甲方款项或相应付款凭证后开始 <input class="bottom-border" disabled type="text" v-model="form.exterior_design_phase" style="width:100px;" /> 设计阶段的运作。  </p>
-            <p>3、乙方完成外观建模设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的设计的 <input class="bottom-border" disabled type="text" v-model="form.exterior_modeling_design_percentage" style="width:100px;" /> %，即人民币
- <input class="bottom-border" type="text" disabled v-model="form.exterior_modeling_design_money" style="width:100px;" /> 整(￥)。乙方收到甲方款项或相应付款凭证后即提交该项目全部成果之电子文档，即此项目结案，乙方应协助甲方立即开始展开模型制作和量产接洽跟踪服务。</p>
 
             <p class="title">1.1 甲方责任与义务 </p>
             <p>1.1.1 以书面形式提出对本设计项目的要求及有关技术资料。在双方合作的全过程中，向乙方提供必要的咨询，并委派专人（对该项目的方案评审具有决定权）负责本项目的事务接洽和业务联系。</p>
@@ -182,11 +177,21 @@
             var item = response.data.data
             if (item) {
               that.itemId = item.id
-              // 重新渲染
-              that.$nextTick(function() {
-                that.itemName = item.item_name + '合作协议'
-                that.form = item
-              })
+              item.stages = []
+              item.sort = item.item_stage.length
+              if (item.item_stage && item.item_stage.length > 0) {
+                for (var i = 0; i < item.item_stage.length; i++) {
+                  var stageRow = item.item_stage[i]
+                  var newStageRow = {}
+                  newStageRow.sort = parseInt(stageRow.sort)
+                  newStageRow.title = stageRow.title
+                  newStageRow.percentage = parseFloat(stageRow.percentage).mul(100)
+                  newStageRow.amount = parseFloat(stageRow.amount)
+                  newStageRow.time = parseInt(stageRow.time).date_format().format('yyyy-MM-dd')
+                  item.stages.push(newStageRow)
+                }
+              }
+              that.form = item
             }
             console.log(response.data.data)
           }

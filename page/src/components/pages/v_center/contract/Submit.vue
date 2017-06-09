@@ -7,35 +7,156 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
-            <h2>{{ itemName }}</h2>
+            <h2>{{ itemName }}合同</h2>
             <el-form :model="form" :rules="ruleForm" ref="ruleForm">
-            <p>&nbsp;</p>
-            <p>甲方: <input class="no-border" type="text" v-model="form.demand_company_name" style="width:250px;" /></p>
-            <p>地址: <input class="no-border" type="text" v-model="form.demand_company_address" style="width:500px;" /></p>
-            <p>电话: <input class="no-border" type="text" v-model="form.demand_company_phone" style="width:150px;" /></p>
-            <p>联系人: <input class="no-border" type="text" v-model="form.demand_company_legal_person" style="width:150px;" /></p>
-            <p>&nbsp;</p>
-            <p>乙方: <input class="no-border" type="text" v-model="form.design_company_name" style="width:250px;" /></p>
-            <p>地址: <input class="no-border" type="text" v-model="form.design_company_address" style="width:500px;" /></p>
-            <p>电话: <input class="no-border" type="text" v-model="form.design_company_phone" style="width:150px;" /></p>
-            <p>联系人: <input class="no-border" type="text" v-model="form.design_company_legal_person" style="width:150px;" /></p>
 
-            <p class="title">设计项目内容和费用</p>
-            <p>依照中华人民共和国法律及本行业相关法规条例之规定，甲乙双方本着平等自愿和互惠互利的原则，由乙方接受委托为甲方提供 <input class="bottom-border" type="text" v-model="form.design_type" style="width:150px;" /> 设计 <input class="bottom-border" type="text" v-model="form.design_type_paragraph" style="width:100px;" /> 款（包含： <input class="bottom-border" type="text" v-model="form.design_type_contain" style="width:150px;" /> ）。本合同设计费用总额为人民币 <input class="bottom-border" type="text" v-model="form.total" style="width:100px;" /> 整（￥元）。  双方共同签署此项设计委托合同（以下简称合同），甲方和乙方合称为合同双方（以下简称双方）。</p>
+            <p class="title">1.基本信息</p>
+            <p class="sub-title">甲方（客户）</p>
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <el-form-item label="" prop="demand_company_name">
+                  <el-input v-model="form.demand_company_name" placeholder="公司名称" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="" prop="demand_company_legal_person">
+                  <el-input v-model="form.demand_company_legal_person" placeholder="联系人" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
-            <p class="title">工作时间</p>
-            <p>1 自项目启动之日起 <input class="bottom-border" type="text" v-model="form.project_start_date" style="width:100px;" /> 日内，乙方应在甲方配合下完善确定设计方向、市场研究部署、执行内部草图概念设计、内部头脑风暴决议等。</p>
-            <p>2 设计方向确定之日起 <input class="bottom-border" type="text" v-model="form.determine_design_date" style="width:100px;" /> 日内，乙方应进行Layout结构布局设计验证结构。</p>
-            <p>3 结构布局验证完成后 <input class="bottom-border" type="text" v-model="form.structure_layout_date" style="width:100px;" /> 日内，乙方应向甲方提供该项目ID概念PPT效果图叁款。 </p>
-            <p>4 PPT效果图经甲方商讨并提出书面意见后 <input class="bottom-border" type="text" v-model="form.design_sketch_date" style="width:100px;" /> 日内，乙方应向甲方提供该项目最终由甲方选定的PPT 3D渲染效果图壹款。</p>
-            <p>5 最终3D效果图经甲方书面确认后 <input class="bottom-border" type="text" v-model="form.end_date" style="width:100px;" /> 日内，乙方应完成3D外观防护建模设计内容。 6 上述之进度系乙方所需有效工作日，具体进度参照乙方提供的设计流程计划书。</p>
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <el-form-item label="" prop="demand_company_phone">
+                  <el-input v-model="form.demand_company_phone" placeholder="电话" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="" prop="demand_company_address">
+                  <el-input v-model="form.demand_company_address" placeholder="地址" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
-            <p class="title">支付时间</p>
-            <p>甲方按下列付款时间和金额分阶段，以银行托付方式或者其他方式向乙方支付设计费： </p>
-            <p>1、自合同签署起3日内，甲方向乙方支付设计费的30%，即人民币 <input class="bottom-border" type="text" v-model="form.one_third_total" style="width:100px;" /> 整(￥)（作为本项目启动预付款）。乙方收到甲方款项或相应付款凭证后即开始本项目的设计运作。</p>
-            <p>2、乙方完成外观设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的 <input class="bottom-border" type="text" v-model="form.exterior_design_percentage" style="width:100px;" /> %，即人民币 <input class="bottom-border" type="text" v-model="form.exterior_design_money" style="width:100px;" /> 整(￥)。乙方收到甲方款项或相应付款凭证后开始 <input class="bottom-border" type="text" v-model="form.exterior_design_phase" style="width:100px;" /> 设计阶段的运作。  </p>
-            <p>3、乙方完成外观建模设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的设计的 <input class="bottom-border" type="text" v-model="form.exterior_modeling_design_percentage" style="width:100px;" /> %，即人民币
- <input class="bottom-border" type="text" v-model="form.exterior_modeling_design_money" style="width:100px;" /> 整(￥)。乙方收到甲方款项或相应付款凭证后即提交该项目全部成果之电子文档，即此项目结案，乙方应协助甲方立即开始展开模型制作和量产接洽跟踪服务。</p>
+            <p class="sub-title">乙方（服务商）</p>
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <el-form-item label="" prop="design_company_name">
+                  <el-input v-model="form.design_company_name" placeholder="公司名称" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="" prop="design_company_legal_person">
+                  <el-input v-model="form.design_company_legal_person" placeholder="联系人" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <el-form-item label="" prop="design_company_phone">
+                  <el-input v-model="form.design_company_phone" placeholder="电话" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="" prop="design_company_address">
+                  <el-input v-model="form.design_company_address" placeholder="地址" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <p class="title">2.项目内容</p>
+            <el-form-item label="" prop="item_content">
+              <el-input v-model="form.item_content" placeholder="项目设计内容" size="small"></el-input>
+            </el-form-item>
+
+            <p class="title">3.项目费用及计划</p>
+            <el-row :gutter="10">
+              <el-col :span="6">
+                <el-form-item label="" prop="total">
+                  <el-input v-model="form.total" placeholder="项目设计费用" disabled size="small">
+                    <template slot="prepend">¥</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+              <el-form-item prop="sort">
+                <el-select v-model.number="form.sort" placeholder="设置项目阶段" size="small">
+                  <el-option
+                    v-for="item in stageOptions"
+                    :label="item.label"
+                    :key="item.index"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              </el-col>
+              <el-col :span="4" style="line-height: 40px;">
+                <el-button class="is-custom" @click="genStageInput" size="small">{{ stateMsg }}</el-button>
+              </el-col>
+            </el-row>
+
+            <div v-for="(d, index) in form.stages" :key="index">
+            
+              <p class="sub-title">第{{ index + 1 }}阶段</p>
+              <input type="hidden" v-model.number="form.stages[index].sort" />
+              <el-row :gutter="10">
+                <el-col :span="4">
+                  <el-form-item
+                    :prop="'stages.' + index + '.percentage'"
+                    :rules="{
+                      type: 'number', required: true, message: '请添写阶段支付百分比', trigger: 'blur',
+                      min: 10, max: 100, message: '比例在10-100之间', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model.number="form.stages[index].percentage" placeholder="" @blur="fetchAmount(index)" size="small">
+                      <template slot="append">%</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item
+                    :prop="'stages.' + index + '.amount'"
+                    :rules="{
+                      type: 'number', required: true, message: '请添写阶段金额', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model.number="form.stages[index].amount" disabled placeholder="" size="small">
+                      <template slot="append">元</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row :gutter="6">
+                <el-col :span="8">
+                  <el-form-item
+                    :prop="'stages.' + index + '.title'"
+                    :rules="{
+                      required: true, message: '请添写阶段标题', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model="form.stages[index].title" placeholder="阶段标题" size="small"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item
+                    :prop="'stages.' + index + '.time'"
+                    :rules="{
+                      type: 'number', required: true, message: '请添写工作日', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model.number="form.stages[index].time" placeholder="工作日" size="small">
+                      <template slot="append">天</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            
+            </div>
+
 
             <p class="title">1.1 甲方责任与义务 </p>
             <p>1.1.1 以书面形式提出对本设计项目的要求及有关技术资料。在双方合作的全过程中，向乙方提供必要的咨询，并委派专人（对该项目的方案评审具有决定权）负责本项目的事务接洽和业务联系。</p>
@@ -96,6 +217,7 @@
   import api from '@/api/api'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
+  import '@/assets/js/math_format'
   // import typeData from '@/config'
 
   export default {
@@ -112,6 +234,7 @@
         companyId: '',
         isLoadingBtn: false,
         contractId: '',
+        stateMsg: '生成阶段',
         form: {
           demand_company_name: '',
           demand_company_address: '',
@@ -122,6 +245,8 @@
           design_company_address: '',
           design_company_phone: '',
           design_company_legal_person: '',
+
+          item_content: '',
 
           design_type: '',
           design_type_paragraph: '',
@@ -141,11 +266,43 @@
           exterior_modeling_design_percentage: '',
           exterior_modeling_design_money: '',
 
-          design_work_content: ''
+          design_work_content: '',
+          item_stage: [],
+          stages: [],
+          sort: ''
         },
         ruleForm: {
           demand_company_name: [
-            { required: true, message: '请添写项目名称', trigger: 'blur' }
+            { required: true, message: '请添写公司名称', trigger: 'blur' }
+          ],
+          demand_company_address: [
+            { required: true, message: '请添写公司地址名称', trigger: 'blur' }
+          ],
+          demand_company_phone: [
+            { required: true, message: '请添写联系人方式', trigger: 'blur' }
+          ],
+          demand_company_legal_person: [
+            { required: true, message: '请添写联系人姓名', trigger: 'blur' }
+          ],
+
+          design_company_name: [
+            { required: true, message: '请添写公司名称', trigger: 'blur' }
+          ],
+          design_company_address: [
+            { required: true, message: '请添写公司地址名称', trigger: 'blur' }
+          ],
+          design_company_phone: [
+            { required: true, message: '请添写联系人方式', trigger: 'blur' }
+          ],
+          design_company_legal_person: [
+            { required: true, message: '请添写联系人姓名', trigger: 'blur' }
+          ],
+
+          item_content: [
+            { required: true, message: '请添写项目内容', trigger: 'blur' }
+          ],
+          total: [
+            { type: 'number', required: true, message: '请添写项目总金额', trigger: 'blur' }
           ]
         },
         userId: this.$store.state.event.user.id
@@ -160,6 +317,42 @@
             var row = that.form
             row.item_demand_id = that.itemId
             row.title = that.itemName
+            if (!row.design_work_content) {
+              that.$message.error('请添写设计工作内容!')
+              return false
+            }
+            if (!row.sort) {
+              that.$message.error('请至少添加一项项目阶段!')
+              return false
+            }
+            if (!row.stages || row.stages.length === 0) {
+              that.$message.error('请至少添加一项项目阶段!')
+              return false
+            }
+            var totalPer = 0
+            var totalAmount = 0
+            row.item_stage = []
+            for (var i = 0; i < row.stages.length; i++) {
+              var stageRow = row.stages[i]
+              var newStageRow = {}
+              totalPer = totalPer.add(stageRow.percentage)
+              totalAmount = totalAmount.add(stageRow.amount)
+              newStageRow.sort = stageRow.sort
+              newStageRow.title = stageRow.title
+              newStageRow.amount = stageRow.amount
+              newStageRow.percentage = stageRow.percentage.mul(0.01)
+              newStageRow.time = stageRow.time
+              row.item_stage.push(newStageRow)
+            }
+            if (totalPer !== 100) {
+              that.$message.error('阶段比例之和应为100!')
+              return false
+            }
+            if (totalAmount !== row.total) {
+              that.$message.error('阶段金额总和不正确！')
+              return false
+            }
+            console.log(row)
 
             var apiUrl = null
             var method = null
@@ -177,7 +370,7 @@
               if (response.data.meta.status_code === 200) {
                 that.$message.success('提交成功！')
                 that.isLoadingBtn = false
-                that.$router.push({name: 'vcenterTrueCItemList'})
+                that.$router.push({name: 'vcenterCItemShow', params: {id: that.itemId}})
                 return false
               } else {
                 that.isLoadingBtn = false
@@ -192,14 +385,66 @@
           } else {
           }
         })
+      },
+      // 生成阶段
+      genStageInput() {
+        var count = this.form.sort
+        if (!count) {
+          this.$message.error('请选择阶段')
+          return false
+        }
+        this.form.stages = []
+        for (var i = 0; i < count; i++) {
+          var row = {
+            sort: i + 1,
+            percentage: '',
+            amount: '',
+            title: '',
+            time: ''
+          }
+          this.form.stages.push(row)
+        }
+      },
+      // 获取阶段金额
+      fetchAmount(index) {
+        var self = this
+        this.$refs['ruleForm'].validateField('stages.' + index + '.percentage', function (error) {
+          if (!error) {
+            var total = self.form.total
+            var per = self.form.stages[index].percentage.mul(0.01)
+            self.form.stages[index].amount = total.mul(per)
+            // self.$set(self.form.stages[index], 'amount', total.mul(per))
+          }
+        })
       }
     },
     computed: {
+      stageOptions() {
+        var items = []
+        for (var i = 1; i < 4; i++) {
+          var item = {
+            value: i,
+            label: '共' + i + '阶段'
+          }
+          items.push(item)
+        }
+        return items
+      }
     },
     watch: {
+      form: {
+        deep: true,
+        handler: function(val, oldVal) {
+          if (val.stages && val.stages.length > 0) {
+            this.stateMsg = '重置阶段'
+          } else {
+            this.stateMsg = '生成阶段'
+          }
+        }
+      }
     },
     created: function() {
-      const that = this
+      var that = this
       var id = this.$route.params.item_id
       if (id) {
         that.itemId = id
@@ -207,13 +452,34 @@
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             var item = that.item = response.data.data
-            that.itemName = that.item.item.name + '合作协议'
+            that.itemName = that.item.item.name
             that.companyId = item.quotation.design_company_id
             if (item.contract) {
               that.contractId = item.contract.id
-              // 重新渲染
-              that.$nextTick(function() {
-                that.form = item.contract
+              that.$http.get(api.contractId.format(item.contract.unique_id), {})
+              .then (function(response) {
+                if (response.data.meta.status_code === 200) {
+                  var contract = response.data.data
+                  if (contract) {
+                    contract.stages = []
+                    contract.sort = contract.item_stage.length
+                    contract.total = parseFloat(contract.total)
+                    that.form = contract
+                    if (that.form.item_stage && that.form.item_stage.length > 0) {
+                      for (var i = 0; i < that.form.item_stage.length; i++) {
+                        var stageRow = that.form.item_stage[i]
+                        var newStageRow = {}
+                        newStageRow.sort = parseInt(stageRow.sort)
+                        newStageRow.title = stageRow.title
+                        newStageRow.percentage = parseFloat(stageRow.percentage).mul(100)
+                        newStageRow.amount = parseFloat(stageRow.amount)
+                        newStageRow.time = parseInt(stageRow.time)
+                        that.form.stages.push(newStageRow)
+                      }
+                    }
+                  }
+                  console.log(response.data.data)
+                }
               })
             } else {  // 合同首次创建，从项目表调用基础信息
               // 获取当前公司基本信息
@@ -222,19 +488,16 @@
                 if (response.data.meta.status_code === 200) {
                   var company = response.data.data
                   if (company) {
-                    // 重新渲染
-                    that.$nextTick(function() {
-                      that.form.demand_company_name = item.item.company_name
-                      that.form.demand_company_address = item.item.address
-                      that.form.demand_company_legal_person = item.item.contact_name
-                      that.form.demand_company_phone = item.item.phone
-                      that.form.total = item.item.price
+                    that.form.demand_company_name = item.item.company_name
+                    that.form.demand_company_address = item.item.address
+                    that.form.demand_company_legal_person = item.item.contact_name
+                    that.form.demand_company_phone = item.item.phone
+                    that.form.total = item.item.price
 
-                      that.form.design_company_name = company.company_name
-                      that.form.design_company_address = company.address
-                      that.form.design_company_legal_person = company.contact_name
-                      that.form.design_company_phone = company.phone
-                    })
+                    that.form.design_company_name = company.company_name
+                    that.form.design_company_address = company.address
+                    that.form.design_company_legal_person = company.contact_name
+                    that.form.design_company_phone = company.phone
                   }
                 }
               })
@@ -263,6 +526,9 @@
 <style scoped>
   .content-box {
   }
+  .content-box form {
+    padding: 10px 50px 10px 50px;
+  }
   .content-box h2{
     text-align: center;
     margin: 20px 0 10px 0;
@@ -274,7 +540,7 @@
     color: #666;
   }
   .content-box p.title {
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 1.3rem;
     font-weight: bold;
     color: #333;
@@ -297,6 +563,18 @@
   }
   .form-btn {
     float: right;
+  }
+  .sub-title {
+    margin: 5px 0;
+    font-size: 1.5rem;
+  }
+
+  .el-input {
+    margin: 0 0;
+  }
+
+  .el-form-item {
+    margin: 5px 0 12px 0;
   }
 
 

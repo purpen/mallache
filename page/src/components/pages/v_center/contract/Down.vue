@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div><p>{{ downStatus }}</p></div>
+    <div class="show-box"><p>{{ downStatus }}</p></div>
   </div>
 </template>
 
@@ -21,7 +21,7 @@
         item: {},
         itemName: '',
         form: {},
-        downStatus: '正在生成合同，请等待...',
+        downStatus: '正在生成合同，请等待......',
         userId: this.$store.state.event.user.id
       }
     },
@@ -273,5 +273,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .container {
+    min-height: 300px;
+  }
+
+  .show-box {
+    text-align: center;
+  }
+  .show-box p {
+    font-size: 2rem;
+  }
 
 </style>
