@@ -132,10 +132,14 @@ class Recommend implements ShouldQueue
 //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 1, 'verify_status' => 1])
-            ->where('province', $province)
-            ->where('city', $city)
-            ->whereIn('user_id', $design_id_arr)
+            ->where(['status' => 1, 'verify_status' => 1]);
+
+        if($province){
+            $design->where('province', $province)
+                ->where('city', $city);
+        }
+
+        $design->whereIn('user_id', $design_id_arr)
 //            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
@@ -173,10 +177,14 @@ class Recommend implements ShouldQueue
 //Log::info($design_id_arr);
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 1, 'verify_status' => 1])
-            ->where('province', $province)
-            ->where('city', $city)
-            ->whereIn('user_id', $design_id_arr)
+            ->where(['status' => 1, 'verify_status' => 1]);
+
+        if($province){
+            $design->where('province', $province)
+                ->where('city', $city);
+        }
+
+        $design->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')

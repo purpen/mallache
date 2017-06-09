@@ -75,6 +75,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'auth.updateUser' , 'uses' => 'AuthenticateController@updateUser'
         ]);
 
+        //用户钱包信息
+        $api->get('/auth/fundInfo', ['as' => 'auth.fundInfo', 'uses' => 'AuthenticateController@fundInfo']);
+
         /**
          * 公共接口
          */

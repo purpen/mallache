@@ -20,6 +20,35 @@ class FundLogController extends BaseController
      * @apiParam {integer} sort 0.升序；1.降序（默认）；
      * @apiParam {integer} type 交易类型 -1：出账；1.入账
      * @apiParam {integer} transaction_type 交易对象类型： 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+    "data": [
+        {
+            "id": 93,
+            "user_id": 2,   // 当前用户ID
+            "type": 1,          //交易类型 -1：出账；1.入账
+            "transaction_type": 4,  //交易对象类型： 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+            "target_id": "2017060516592500000002479561",  // 交易对方用户 Id 或 交易单号
+            "amount": 0.01,  // 金额
+            "summary": "创建项目押金"  // 备注
+        },
+     ],
+        "meta": {
+        "message": "Success",
+        "status_code": 200
+        },
+        "pagination": {
+            "total": 12,
+            "count": 10,
+            "per_page": 10,
+            "current_page": 1,
+            "total_pages": 2,
+            "links": {
+            "next": "http://sa.taihuoniao.com/fundLogList?page=2"
+        }
+    }
+    }
      */
     public function index(Request $request)
     {
@@ -46,7 +75,7 @@ class FundLogController extends BaseController
 
         $lists = $fundLog->orderBy('id', $sort)->paginate($per_page);
 
-        return $this->response->paginator($lists , new FundLogTransformer())->setMeta($this->apiSuccess());
+        return $this->response->paginator($lists , new FundLogTransformer())->setMeta($this->apiMeta());
 
     }
 

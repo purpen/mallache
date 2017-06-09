@@ -421,4 +421,34 @@ class AuthenticateController extends BaseController
         return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
 
     }
+
+    /**
+     * @api {get} /auth/fundInfo 用户钱包信息
+     * @apiVersion 1.0.0
+     * @apiName user /auth/fundInfo
+     * @apiGroup User
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *      "data": {
+     *          "price_total": 1000,   // 总金额
+     *          "price_frozen": 500，  // 冻结金额
+     *          "price": 500,           // 可提现金额
+     *      }
+     *   }
+     */
+    public function fundInfo()
+    {
+        $user = $this->auth_user;
+        $price = $user->price_total - $user->price_frozen;
+        $data = ['price_total' => $user->price_total, 'price_frozen' => $user->price_frozen, 'price' => $price];
+        return $this->response->array($this->apiSuccess('Success', 200, $data));
+    }
+
 }
