@@ -75,6 +75,7 @@ class AssetModel extends BaseModel
         return [
             'id' => $asset->id,
             'name' => $asset->name,
+            'created_at' => $asset->created_at,
             'file' => config('filesystems.disks.qiniu.url') . $asset->path,
             'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
             'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),

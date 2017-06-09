@@ -109,9 +109,14 @@ class UploadController extends BaseController
                     'key' => $asset->path,
                     'payload' => [
                         'success' => 1,
-                        'name' => config('filesystems.disks.qiniu.url') . $asset->path,
+                        'name' => $asset->name,
+                        'file' => config('filesystems.disks.qiniu.url') . $asset->path,
                         'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
-                        'asset_id' => $id
+                        'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
+                        'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
+                        'asset_id' => $id,
+                        'created_at' => $asset->created_at,
+
                     ]
                 ];
                 return $this->response->array($callBackDate);
