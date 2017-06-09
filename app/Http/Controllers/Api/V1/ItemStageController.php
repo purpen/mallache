@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helper\Tools;
 use App\Http\Controllers\Api\Admin\BaseController;
 use App\Http\Transformer\ItemStageTransformer;
 use App\Models\AssetModel;
+use App\Models\FundLog;
 use App\Models\Item;
 use App\Models\ItemStage;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,9 +35,13 @@ class ItemStageController extends BaseController
      * "item_id": 2,
      * "design_company_id": 49,
      * "title": "哈哈",
-     * "content": "就是哈哈哈哈",
      * "summary": "备注",
-     * "item_stage_image": []
+     * "item_stage_image": [],
+     * 'percentage': 0.1, // 百分比
+     * 'amount': 100.00,    //金额
+     * 'time': 122141111,  //阶段时间
+     * 'confirm': 0,       // 项目需求方是否确认 0.未确认；1.已确认
+     * "sort": 1 //阶段序号
      * },
      * "meta": {
      * "message": "Success",
@@ -68,9 +76,13 @@ class ItemStageController extends BaseController
      * "item_id": 2,
      * "design_company_id": 49,
      * "title": "哈哈",
-     * "content": "就是哈哈哈哈",
      * "summary": "备注",
-     * "item_stage_image": []
+     * "item_stage_image": [],
+     * 'percentage': 0.1, // 百分比
+     * 'amount': 100.00,    //金额
+     * 'time': 122141111,  //阶段时间
+     * 'confirm': 0,       // 项目需求方是否确认 0.未确认；1.已确认
+     * "sort": 1 //阶段序号
      * },
      * "meta": {
      * "message": "Success",
@@ -128,56 +140,57 @@ class ItemStageController extends BaseController
      * }
      * }
      */
-    public function store(Request $request)
-    {
-        $all['item_id'] = $request->input('item_id');
-        $all['title'] = $request->input('title');
-        $all['content'] = $request->input('content');
-        $all['summary'] = $request->input('summary') ?? '';
-        $all['status'] = $request->input('summary') ?? 0;
-
-        $item = Item::where('id', $request->input('item_id'))->first();
-        if (!$item) {
-            return $this->response->array($this->apiError('not found item', 404));
-        }
-        if ($item->design_company_id != $this->auth_user->design_company_id) {
-            return $this->response->array($this->apiError('没有权限', 403));
-        }
-        $all['design_company_id'] = $item->design_company_id;
-        $rules = [
-            'item_id' => 'required|integer',
-            'title' => 'required',
-            'content' => 'required',
-        ];
-
-        $messages = [
-            'item_id.required' => '项目id不能为空',
-            'title.required' => '项目阶段名称不能为空',
-            'content.required' => '项目内容描述不能为空',
-        ];
-        $validator = Validator::make($all, $rules, $messages);
-
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
-
-        try {
-            if ($item->status == 11) {
-                $itemStage = ItemStage::create($all);
-                //附件
-                $random = $request->input('random');
-                AssetModel::setRandom($itemStage->id, $random);
-            } else {
-                return $this->response->array($this->apiError('项目还没有进行'));
-            }
-        } catch (\Exception $e) {
-            return $this->response->array($this->apiError());
-        }
-
-        return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
-
-
-    }
+    // 【该方法弃用】
+//    public function store(Request $request)
+//    {
+//        $all['item_id'] = $request->input('item_id');
+//        $all['title'] = $request->input('title');
+//        $all['content'] = $request->input('content');
+//        $all['summary'] = $request->input('summary') ?? '';
+//        $all['status'] = $request->input('summary') ?? 0;
+//
+//        $item = Item::where('id', $request->input('item_id'))->first();
+//        if (!$item) {
+//            return $this->response->array($this->apiError('not found item', 404));
+//        }
+//        if ($item->design_company_id != $this->auth_user->design_company_id) {
+//            return $this->response->array($this->apiError('没有权限', 403));
+//        }
+//        $all['design_company_id'] = $item->design_company_id;
+//        $rules = [
+//            'item_id' => 'required|integer',
+//            'title' => 'required',
+//            'content' => 'required',
+//        ];
+//
+//        $messages = [
+//            'item_id.required' => '项目id不能为空',
+//            'title.required' => '项目阶段名称不能为空',
+//            'content.required' => '项目内容描述不能为空',
+//        ];
+//        $validator = Validator::make($all, $rules, $messages);
+//
+//        if ($validator->fails()) {
+//            throw new StoreResourceFailedException('Error', $validator->errors());
+//        }
+//
+//        try {
+//            if ($item->status == 11) {
+//                $itemStage = ItemStage::create($all);
+//                //附件
+//                $random = $request->input('random');
+//                AssetModel::setRandom($itemStage->id, $random);
+//            } else {
+//                return $this->response->array($this->apiError('项目还没有进行'));
+//            }
+//        } catch (\Exception $e) {
+//            return $this->response->array($this->apiError());
+//        }
+//
+//        return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
+//
+//
+//    }
 
     /**
      * @api {get} /itemStage/{itemStage_id} 根据项目阶段id查看详情
@@ -348,6 +361,108 @@ class ItemStageController extends BaseController
             return $this->response->array($this->apiError('修改失败', 500));
         }
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /itemStage/demandFirmItemStage 发布需求方确认项目阶段
+     * @apiVersion 1.0.0
+     * @apiName itemStage demandFirmItemStage
+     * @apiGroup itemStage
+     *
+     * @apiParam {integer} item_stage_id  阶段ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function demandFirmItemStage(Request $request)
+    {
+        $item_stage_id = $request->input('item_stage_id');
+
+        if(!$item_stage = ItemStage::find($item_stage_id)){
+            return $this->response->array($this->apiError('not found itemStage', 404));
+        }
+
+        // 判断用户有无操作权限
+        if(Item::where(['id' => $item_stage->item_id, 'user_id' => $this->auth_user_id])->count() < 1){
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+
+        //判断阶段是否按sort 顺序确认；
+        $next_item_stage = ItemStage::where(['item_id' => $item_stage->item_id, 'confirm' => 0])->orderBy('sort', 'asc')->first();
+        //如不存在 说明阶段都已确认 返回成功
+        if(!$next_item_stage){
+            return $this->response->array($this->apiSuccess());
+        }
+        if($next_item_stage->sort != $item_stage->sort){
+            return $this->response->array($this->apiError('当前阶段不可操作', 403));
+        }
+
+        //项目信息
+        $item = Item::find($item_stage->item_id);
+        // 设计公司用户信息
+        $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
+
+        // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
+        if(!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)){
+            return $this->response->array($this->apiError());
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @param int $demand_user_id  需求用户ID
+     * @param int $design_user_id  设计公司ID
+     * @param float $amount   支付金额
+     * @param object $item 项目实例
+     * @param object $item_stage  项目阶段实例
+     * @return bool
+     */
+    protected function pay($demand_user_id, $design_user_id, $amount, $item, $item_stage)
+    {
+        DB::beginTransaction();
+        try{
+            // 项目阶段确认
+            $item_stage->confirm = 1;
+            $item_stage->save();
+
+            $user_model = new User();
+            //修改项目剩余项目款
+            $item->rest_fund = $item->rest_fund - $amount;
+            $item->save();
+
+            //减少需求公司账户金额（总金额、冻结金额）
+            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+
+            //增加设计公司账户总金额
+            $user_model->totalIncrease($design_user_id, $amount);
+
+            $fund_log = new FundLog();
+            //需求公司资金流水记录
+            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '支付项目款');
+            //设计公司资金流水记录
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到项目款');
+
+            $tools = new Tools();
+            //通知需求公司
+            $tools->message($demand_user_id, '支付设计公司项目款');
+            //通知设计公司
+            $tools->message($design_user_id, '收到项目方项目款');
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
+
+        DB::commit();
+        return true;
     }
 
 }

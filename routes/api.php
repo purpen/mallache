@@ -45,6 +45,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/pay/aliPayNotify', 'PayController@aliPayNotify');
     // 微信异步回调接口
     $api->post('/pay/wxPayNotify', 'PayController@wxPayNotify');
+    // 京东支付异步回调接口
+    $api->post('/pay/jdPayNotify', 'PayController@jdPayNotify');
 
     //忘记密码修改密码
     $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
@@ -107,6 +109,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
         // 发布需求保证金支付-微信
         $api->get('/pay/demandWxPay', 'PayController@demandWxPay');
+        // 发布需求保证金支付-京东
+        $api->get('/pay/demandJdPay', 'PayController@demandJdPay');
 
         /**
          * 支付项目尾款
@@ -117,6 +121,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/itemBankPay/{pay_order_id}', 'PayController@itemBankPay');
         // 支付项目尾款-微信
         $api->get('/pay/itemWxPay/{pay_order_id}', 'PayController@itemWxPay');
+        // 支付项目尾款-京东
+        $api->get('/pay/itemJdPay/{pay_order_id}', 'PayController@itemJdPay');
 
         //创建尾款支付订单
         $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
@@ -150,6 +156,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
         // 需求公司评价
         $api->post('/demand/evaluate', 'DemandController@evaluate');
+        // 发布需求方确认项目阶段
+        $api->post('/itemStage/demandFirmItemStage', 'ItemStageController@demandFirmItemStage');
+
 
         // 获取当前信息匹配到的公司数量
         $api->post('/demand/matchingCount/', 'DemandController@matchingCount');
@@ -213,6 +222,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
         // 确认项目已完成
         $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
+
         /**
          * 通知消息相关路由
          */

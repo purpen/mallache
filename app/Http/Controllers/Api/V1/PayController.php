@@ -11,12 +11,18 @@ use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
+use Lib\JdPay\JdPay;
 use Lib\WxPay\PayNotifyCallBack;
 use Lib\WxPay\WxPay;
 use Qiniu\Http\Request;
 
 class PayController extends BaseController
 {
+    // 发布需求保证金---交易名称
+    protected $demand_pay_title = '发布需求保证金';
+
+    // 发布需求保证金---交易描述信息
+    protected $demand_pay_content = '';
     /**
      * @api {get} /pay/demandAliPay 发布需求保证金支付-支付宝
      * @apiVersion 1.0.0
@@ -403,6 +409,147 @@ class PayController extends BaseController
         $notify->Handle(false);
     }
 
+    /**
+     * @api {get} /pay/demandJdPay 发布需求保证金支付-京东
+     * @apiVersion 1.0.0
+     * @apiName pay demandJdPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          'html_text': ""
+     *      }
+     *  }
+     */
+    public function demandJdPay()
+    {
+        //验证是否是需求用户
+        if($this->auth_user->type != 1){
+            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        }
+        //总金额
+        $total_fee = config('constant.item_price');
+
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
+
+        $jdpay = new JdPay();
+        $html_text = $jdpay->payApi($pay_order->uid, $total_fee, '发布需求保证金');
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
+    }
+
+
+    /*array (
+  'version' => 'V2.0',
+  'merchant' => '22294531',
+  'result' =>
+  array (
+    'code' => '000000',
+    'desc' => 'success',
+  ),
+  'tradeNum' => '2017060516592500000002479561',
+  'tradeType' => '0',
+  'sign' => 'U5DwNh9atht6f8JfZu3iSUJQ4BWafc5v4Fg0JzVEtu4E07VO9+RDhwxB66vHkFPi0D7JTBTCiPhlddmu+YctZdH9Tc/LHJz74k1NA3zLUE8htCDs9iT4hhaAHMRM1+v3MkqQ42+CxxXJnq/W1/34hbSB/8WTs3nNVUGVbimE2fE=',
+  'amount' => '1',
+  'status' => '2',
+  'payList' =>
+  array (
+    'pay' =>
+    array (
+      'payType' => '0',
+      'amount' => '1',
+      'currency' => 'CNY',
+      'tradeTime' => '20170606104119',
+      'detail' =>
+      array (
+        'cardHolderName' => '*梁恒',
+        'cardHolderMobile' => '186****3221',
+        'cardHolderType' => '0',
+        'cardHolderId' => '****1733',
+        'cardNo' => '621483****3605',
+        'bankCode' => 'CMB',
+        'cardType' => '1',
+      ),
+    ),
+  ),
+)*/
+    //京东支付异步回调接口
+    public function jdPayNotify()
+    {
+//        Log::info($_SERVER);
+        $jdpay = new JdPay();
+        $resData = $jdpay->asynNotify();
+        if($resData && 000000 == $resData['result']['code']){
+//            Log::info($resData);
+            try{
+                // 支付单号
+                $uid = $resData['tradeNum'];
+                // 交易类型 0-消费 1-退款
+                $trade_type =$resData['tradeType'];
+
+                if($trade_type == 0){
+                    $pay_order = PayOrder::where('uid', $uid)->first();
+                    //判断是否业务已处理
+                    if($pay_order->status === 0){
+                        $pay_order->pay_type = 4; //京东
+                        $pay_order->pay_no = $uid;
+                        $pay_order->status = 1; //支付成功
+                        $pay_order->save();
+
+                        event(new PayOrderEvent($pay_order));
+                    }
+                    echo "ok";
+                }else{
+                    //退款
+                }
+            }
+            catch (\Exception $e){
+                Log::error($e);
+                return;
+            }
+        }else{
+            echo "error";
+        }
+    }
+
+    /**
+     * @api {get} /pay/itemJdPay/{pay_order_id} 支付项目尾款-京东
+     * @apiVersion 1.0.0
+     * @apiName pay itemJdPay
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          'html_text': ""
+     *      }
+     *  }
+     */
+    public function itemJdPay($pay_order_id)
+    {
+        $pay_order = PayOrder::find((int)$pay_order_id);
+        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+
+        $jdpay = new JdPay();
+        $html_text = $jdpay->payApi($pay_order->uid, $pay_order->amount, $pay_order->summary);
+
+        return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
+    }
 
 }
 

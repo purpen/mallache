@@ -8,8 +8,10 @@ use App\Http\Transformer\ContractTransformer;
 use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
+use App\Models\ItemStage;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,24 +50,10 @@ class ContractController extends BaseController
      * @apiParam {string} design_company_address 设计公司地址
      * @apiParam {string} design_company_phone 设计公司电话
      * @apiParam {string} design_company_legal_person 设计公司法人
-     * @apiParam {string} design_type 设计类型
-     * @apiParam {string} design_type_paragraph 设计类型款项
-     * @apiParam {string} design_type_contain 设计类型包含
-     * @apiParam {string} total 总额
-     * @apiParam {string} project_start_date 项目启动日期
-     * @apiParam {string} determine_design_date 设计确定日期
-     * @apiParam {string} structure_layout_date 结构布局验证日期
-     * @apiParam {string} design_sketch_date 效果图日期
-     * @apiParam {string} end_date 最后确认日期
-     * @apiParam {string} one_third_total 30%总额
-     * @apiParam {integer} exterior_design_percentage 外观设计百分比
-     * @apiParam {string} exterior_design_money 外观设计金额
-     * @apiParam {string} exterior_design_phase 外观设计阶段
-     * @apiParam {integer} exterior_modeling_design_percentage 外观建模设计百分比
-     * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
+     * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
-     * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
      * @apiParam {string} title 合同名称
+     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12']]
      *
      * @apiParam {string} token
      *
@@ -83,24 +71,12 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
-     *      "design_type": "",
-     *      "design_type_paragraph": "",
-     *      "design_type_contain": "",
      *      "total": "",
-     *      "project_start_date": 0,
-     *      "determine_design_date": 0,
-     *      "structure_layout_date": 0,
-     *      "design_sketch_date": 0,
-     *      "end_date": 0,
-     *      "one_third_total": "",
-     *      "exterior_design_percentage": 0,
-     *      "exterior_design_money": "",
-     *      "exterior_design_phase": "",
-     *      "exterior_modeling_design_percentage": 0,
-     *      "exterior_modeling_design_money": "",
+ *          "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
-     *      "status": 0
+     *      "status": 0,
+     *      "item_stage":
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -124,35 +100,13 @@ class ContractController extends BaseController
         if($item->design_company_id !== $design->id){
             return $this->response->array($this->apiError('没有权限添加合同' , 403));
         }
+
+        $all = $request->all();
         $all['item_demand_id'] = $item->id;
         $all['design_company_id'] = $design->id;
-        $all['demand_company_name'] = $request->input('demand_company_name');
-        $all['demand_company_address'] = $request->input('demand_company_address');
-        $all['demand_company_phone'] = $request->input('demand_company_phone');
-        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-        $all['design_company_name'] = $request->input('design_company_name');
-        $all['design_company_address'] = $request->input('design_company_address');
-        $all['design_company_phone'] = $request->input('design_company_phone');
-        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-        $all['design_type'] = $request->input('design_type');
-        $all['design_type_paragraph'] = $request->input('design_type_paragraph');
-        $all['design_type_contain'] = $request->input('design_type_contain');
-        $all['total'] = $request->input('total');
-        $all['project_start_date'] = $request->input('project_start_date');
-        $all['determine_design_date'] = $request->input('determine_design_date');
-        $all['structure_layout_date'] = $request->input('structure_layout_date');
-        $all['design_sketch_date'] = $request->input('design_sketch_date');
-        $all['end_date'] = $request->input('end_date');
-        $all['one_third_total'] = $request->input('one_third_total');
-        $all['exterior_design_percentage'] = $request->input('exterior_design_percentage');
-        $all['exterior_design_money'] = $request->input('exterior_design_money');
-        $all['exterior_design_phase'] = $request->input('exterior_design_phase');
-        $all['exterior_modeling_design_percentage'] = $request->input('exterior_modeling_design_percentage');
-        $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
-        $all['design_work_content'] = $request->input('design_work_content');
-        $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
-        $all['title'] = $request->input('title');
         $all['unique_id'] = uniqid('ht');
+
+        $all['total'] = $item->price;
         $rules = [
             'item_demand_id'  => 'required|integer',
             'demand_company_name'  => 'required',
@@ -163,23 +117,10 @@ class ContractController extends BaseController
             'design_company_address'  => 'required',
             'design_company_phone'  => 'required',
             'design_company_legal_person'  => 'required',
-            'design_type'  => 'required',
-            'design_type_paragraph'  => 'required',
-            'design_type_contain'  => 'required',
-            'total'  => 'required',
-            'project_start_date'  => 'required',
-            'determine_design_date'  => 'required',
-            'structure_layout_date'  => 'required',
-            'design_sketch_date'  => 'required',
-            'end_date'  => 'required',
-            'one_third_total'  => 'required',
-            'exterior_design_percentage'  => 'required',
-            'exterior_design_money'  => 'required',
-            'exterior_design_phase'  => 'required',
-            'exterior_modeling_design_percentage'  => 'required',
-            'exterior_modeling_design_money'  => 'required',
+            'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
+//            'item_stage' => 'array',
         ];
 
         $messages = [
@@ -192,21 +133,7 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-            'design_type.required' => '设计类型不能为空',
-            'design_type_paragraph.required' => '设计类型几款不能为空',
-            'design_type_contain.required' => '设计类型包含不能为空',
-            'total.required' => '总额不能为空',
-            'project_start_date.required' => '项目启动日期不能为空',
-            'determine_design_date.required' => '设计确定日期不能为空',
-            'structure_layout_date.required' => '结构布局验证日期不能为空',
-            'design_sketch_date.required' => '效果图日期不能为空',
-            'end_date.required' => '最后确认日期不能为空',
-            'one_third_total.required' => '30%总额不能为空',
-            'exterior_design_percentage.required' => '外观设计百分比不能为空',
-            'exterior_design_money.required' => '外观设计金额不能为空',
-            'exterior_design_phase.required' => '外观设计阶段不能为空',
-            'exterior_modeling_design_percentage.required' => '外观建模设计百分比不能为空',
-            'exterior_modeling_design_money.required' => '外观建模设计金额不能为空',
+            'item_content' => '项目内容不能为空',
             'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
@@ -215,16 +142,61 @@ class ContractController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+
+        //验证合同是否已存在
+        if(Contract::where(['item_demand_id' => $all['item_demand_id'], 'design_company_id' => $all['design_company_id']])->count()){
+            return $this->response->array($this->apiError('合同已创建' , 403));
+        }
+
+        //验证项目阶段数组数据
+        if(!$this->validationItemStage($all['item_stage'], $all['total'])){
+            return $this->response->array($this->apiError('项目阶段数据不正确' , 403));
+        }
+
         try{
-                $contract = Contract::create($all);
+            DB::beginTransaction();
 
+            $contract = Contract::create($all);
 
+            foreach ($all['item_stage'] as $stage){
+                $stage['item_id'] = $contract->item_demand_id;
+                $stage['design_company_id'] = $design->id;
+                ItemStage::create($stage);
+            }
         }
         catch (\Exception $e){
-            return $this->response->array($this->apiError('项目合同已创建' , 403));
+            DB::rollBack();
+            return $this->response->array($this->apiError('创建失败' , 500));
         }
+        DB::commit();
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
 
+    }
+
+    /**
+     * 判断项目阶段信息是否正确
+     * @param $item_stage
+     * @param $total
+     * @return bool
+     */
+    protected function validationItemStage($item_stage, $total)
+    {
+        $percentage = 0;
+        $amount = 0;
+        $title_is_set = true;
+        $time_is_set = true;
+
+        foreach ($item_stage as $stage){
+            $percentage += ($stage['percentage'] * 10000);
+            $amount += ($stage['amount'] * 10000);
+            $title_is_set = !empty($stage['title']);
+            $time_is_set = !empty($stage['time']);
+        }
+        if($percentage == (1 * 10000) && $amount == ($total*10000) && $title_is_set && $time_is_set){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -288,24 +260,12 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
-     *      "design_type": "",
-     *      "design_type_paragraph": "",
-     *      "design_type_contain": "",
      *      "total": "",
-     *      "project_start_date": 0,
-     *      "determine_design_date": 0,
-     *      "structure_layout_date": 0,
-     *      "design_sketch_date": 0,
-     *      "end_date": 0,
-     *      "one_third_total": "",
-     *      "exterior_design_percentage": 0,
-     *      "exterior_design_money": "",
-     *      "exterior_design_phase": "",
-     *      "exterior_modeling_design_percentage": 0,
-     *      "exterior_modeling_design_money": "",
+     *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
-     *      "status": 0
+     *      "status": 0,
+     *      "item_stage":
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -348,7 +308,6 @@ class ContractController extends BaseController
      * @apiName contract update
      * @apiGroup contract
      *
-     * @apiParam {integer} item_demand_id 项目需求id
      * @apiParam {string} demand_company_name 需求公司名称
      * @apiParam {string} demand_company_address 需求公司地址
      * @apiParam {string} demand_company_phone 需求公司电话
@@ -357,24 +316,10 @@ class ContractController extends BaseController
      * @apiParam {string} design_company_address 设计公司地址
      * @apiParam {string} design_company_phone 设计公司电话
      * @apiParam {string} design_company_legal_person 设计公司法人
-     * @apiParam {string} design_type 设计类型
-     * @apiParam {string} design_type_paragraph 设计类型款项
-     * @apiParam {string} design_type_contain 设计类型包含
-     * @apiParam {string} total 总额
-     * @apiParam {string} project_start_date 项目启动日期
-     * @apiParam {string} determine_design_date 设计确定日期
-     * @apiParam {string} structure_layout_date 结构布局验证日期
-     * @apiParam {string} design_sketch_date 效果图日期
-     * @apiParam {string} end_date 最后确认日期
-     * @apiParam {string} one_third_total 30%总额
-     * @apiParam {integer} exterior_design_percentage 外观设计百分比
-     * @apiParam {string} exterior_design_money 外观设计金额
-     * @apiParam {string} exterior_design_phase 外观设计阶段
-     * @apiParam {integer} exterior_modeling_design_percentage 外观建模设计百分比
-     * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
+     * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
-     * @apiParam {string} exterior_modeling_design_money 外观建模设计金额
      * @apiParam {string} title 合同名称
+     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12']]
      *
      * @apiParam {string} token
      *
@@ -392,24 +337,12 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
-     *      "design_type": "",
-     *      "design_type_paragraph": "",
-     *      "design_type_contain": "",
      *      "total": "",
-     *      "project_start_date": 0,
-     *      "determine_design_date": 0,
-     *      "structure_layout_date": 0,
-     *      "design_sketch_date": 0,
-     *      "end_date": 0,
-     *      "one_third_total": "",
-     *      "exterior_design_percentage": 0,
-     *      "exterior_design_money": "",
-     *      "exterior_design_phase": "",
-     *      "exterior_modeling_design_percentage": 0,
-     *      "exterior_modeling_design_money": "",
+     *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
-     *      "status": 0
+     *      "status": 0,
+     *      "item_stage":
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -436,35 +369,10 @@ class ContractController extends BaseController
         if($contract->design_company_id !== $design->id){
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
-        $all['item_demand_id'] = $request->input('item_demand_id');
-        $all['demand_company_name'] = $request->input('demand_company_name');
-        $all['demand_company_address'] = $request->input('demand_company_address');
-        $all['demand_company_phone'] = $request->input('demand_company_phone');
-        $all['demand_company_legal_person'] = $request->input('demand_company_legal_person');
-        $all['design_company_name'] = $request->input('design_company_name');
-        $all['design_company_address'] = $request->input('design_company_address');
-        $all['design_company_phone'] = $request->input('design_company_phone');
-        $all['design_company_legal_person'] = $request->input('design_company_legal_person');
-        $all['design_type'] = $request->input('design_type');
-        $all['design_type_paragraph'] = $request->input('design_type_paragraph');
-        $all['design_type_contain'] = $request->input('design_type_contain');
-        $all['total'] = $request->input('total');
-        $all['project_start_date'] = $request->input('project_start_date');
-        $all['determine_design_date'] = $request->input('determine_design_date');
-        $all['structure_layout_date'] = $request->input('structure_layout_date');
-        $all['design_sketch_date'] = $request->input('design_sketch_date');
-        $all['end_date'] = $request->input('end_date');
-        $all['one_third_total'] = $request->input('one_third_total');
-        $all['exterior_design_percentage'] = $request->input('exterior_design_percentage');
-        $all['exterior_design_money'] = $request->input('exterior_design_money');
-        $all['exterior_design_phase'] = $request->input('exterior_design_phase');
-        $all['exterior_modeling_design_percentage'] = $request->input('exterior_modeling_design_percentage');
-        $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
-        $all['design_work_content'] = $request->input('design_work_content');
-        $all['exterior_modeling_design_money'] = $request->input('exterior_modeling_design_money');
-        $all['title'] = $request->input('title');
+
+        $all = $request->all();
+
         $rules = [
-            'item_demand_id'  => 'required|integer',
             'demand_company_name'  => 'required',
             'demand_company_address'  => 'required',
             'demand_company_phone'  => 'required',
@@ -473,24 +381,10 @@ class ContractController extends BaseController
             'design_company_address'  => 'required',
             'design_company_phone'  => 'required',
             'design_company_legal_person'  => 'required',
-            'design_type'  => 'required',
-            'design_type_paragraph'  => 'required',
-            'design_type_contain'  => 'required',
-            'total'  => 'required',
-            'project_start_date'  => 'required',
-            'determine_design_date'  => 'required',
-            'structure_layout_date'  => 'required',
-            'design_sketch_date'  => 'required',
-            'end_date'  => 'required',
-            'one_third_total'  => 'required',
-            'exterior_design_percentage'  => 'required',
-            'exterior_design_money'  => 'required',
-            'exterior_design_phase'  => 'required',
-            'exterior_modeling_design_percentage'  => 'required',
-            'exterior_modeling_design_money'  => 'required',
+            'item_content' => 'required',
             'design_work_content'  => 'required',
             'title'  => 'required|max:20',
-
+//            'item_stage' => 'array',
         ];
 
         $messages = [
@@ -503,21 +397,6 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-            'design_type.required' => '设计类型不能为空',
-            'design_type_paragraph.required' => '设计类型几款不能为空',
-            'design_type_contain.required' => '设计类型包含不能为空',
-            'total.required' => '总额不能为空',
-            'project_start_date.required' => '项目启动日期不能为空',
-            'determine_design_date.required' => '设计确定日期不能为空',
-            'structure_layout_date.required' => '结构布局验证日期不能为空',
-            'design_sketch_date.required' => '效果图日期不能为空',
-            'end_date.required' => '最后确认日期不能为空',
-            'one_third_total.required' => '30%总额不能为空',
-            'exterior_design_percentage.required' => '外观设计百分比不能为空',
-            'exterior_design_money.required' => '外观设计金额不能为空',
-            'exterior_design_phase.required' => '外观设计阶段不能为空',
-            'exterior_modeling_design_percentage.required' => '外观建模设计百分比不能为空',
-            'exterior_modeling_design_money.required' => '外观建模设计金额不能为空',
             'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
@@ -527,10 +406,30 @@ class ContractController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $contract->update($all);
-        if(!$contract){
-            return $this->response->array($this->apiError());
+        //验证项目阶段数组数据
+        if(!$this->validationItemStage($all['item_stage'], $contract->total)){
+            return $this->response->array($this->apiError('项目阶段数据不正确' , 403));
         }
+
+        try{
+            DB::beginTransaction();
+
+            $contract->update($all);
+
+            //删除项目阶段信息
+            ItemStage::where(['item_id' => $contract->item_demand_id, 'design_company_id' => $design->id])->delete();
+
+            foreach ($all['item_stage'] as $stage){
+                $stage['item_id'] = $contract->item_demand_id;
+                $stage['design_company_id'] = $design->id;
+                ItemStage::create($stage);
+            }
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            return $this->response->array($this->apiError('创建失败' , 500));
+        }
+        DB::commit();
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
 
     }

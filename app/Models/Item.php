@@ -49,7 +49,7 @@ class Item extends BaseModel
     }
 
     /**
-     * 一对多关联报价
+     * 一对-关联报价
      */
     public function quotation()
     {

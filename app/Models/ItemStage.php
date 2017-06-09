@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class ItemStage extends BaseModel
 {
     protected $table = 'item_stage';
 
+    protected $appends = ['item_stage_image'];
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['item_id', 'design_company_id' , 'title' , 'content' , 'summary' , 'status'];
+    protected $fillable = ['item_id', 'design_company_id' , 'title' , 'content' , 'summary', 'percentage', 'amount', 'time', 'sort'];
 
 
     /**
