@@ -184,6 +184,11 @@ class BankController extends BaseController
         if(!$bank){
             return $this->response->array($this->apiError('not found bank', 404));
         }
+
+        if($bank->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 404));
+        }
+
         return $this->response->item($bank, new BankTransformer())->setMeta($this->apiMeta());
 
     }
@@ -260,6 +265,11 @@ class BankController extends BaseController
         if (!$bank) {
             return $this->response->array($this->apiError('not found bank', 404));
         }
+
+        if($bank->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 404));
+        }
+
         $bank->update($all);
 
         if(!empty($all['default'])){
@@ -306,6 +316,11 @@ class BankController extends BaseController
         if (!$bank) {
             return $this->response->array($this->apiError('not found bank', 404));
         }
+
+        if($bank->user_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 404));
+        }
+
         $status = Bank::status($id, -1);
         if (!$status) {
             return $this->response->array($this->apiError('修改失败', 500));
@@ -337,7 +352,7 @@ class BankController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if($bank_id !== $this->auth_user_id){
+        if($bank->user_id !== $this->auth_user_id){
             return $this->response->array($this->apiError('无操作权限', 404));
         }
 
