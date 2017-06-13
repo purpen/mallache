@@ -10,6 +10,31 @@ class FundLog extends BaseModel
 
     protected $fillable = ['user_id', 'amount', 'transaction_type', 'target_id', 'type', 'summary'];
 
+    public function getTransactionTypeValueAttribute()
+    {
+        // 交易对象类型： 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+        switch ($this->transaction_type){
+            case 1:
+                $value = '平台内转账';
+                break;
+            case 2:
+                $value = '支付宝';
+                break;
+            case 3:
+                $value = '微信支付';
+                break;
+            case 4:
+                $value = '京东支付';
+                break;
+            case 5:
+                $value = '银行转账';
+                break;
+            default:
+                $value = '';
+        }
+        return $value;
+    }
+
     /**
      * 交易入账流水记录
      *

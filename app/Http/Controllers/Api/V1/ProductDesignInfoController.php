@@ -144,7 +144,6 @@ class ProductDesignInfoController extends BaseController
 //            $all['competing_product'] = implode('&', $request->input('competing_product'));
             $design->update($all);
         }catch(\Exception $e){
-            dd($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 
