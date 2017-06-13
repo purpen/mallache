@@ -33,6 +33,10 @@ class BankController extends BaseController
                 "city": 1,
                 "status": 0,
                 "summary": "",
+     *          "bank_val": "中国建设银行",
+     *          "bank_province_value": "北京市",
+     *          "bank_city_value": "市辖区",
+     *          "default": 0  //默认 0.否 1.是
             },
             "meta": {
                 "message": "Success",
@@ -90,6 +94,10 @@ class BankController extends BaseController
                 "city": 1,
                 "status": 0,
                 "summary": "",
+     *          "bank_val": "中国建设银行",
+     *          "bank_province_value": "北京市",
+     *          "bank_city_value": "市辖区",
+     *          "default": 0  //默认 0.否 1.是
             },
             "meta": {
                 "message": "Success",
@@ -148,6 +156,10 @@ class BankController extends BaseController
                 "city": 1,
                 "status": 0,
                 "summary": "",
+     *          "bank_val": "中国建设银行",
+     *          "bank_province_value": "北京市",
+     *          "bank_city_value": "市辖区",
+     *          "default": 0  //默认 0.否 1.是
             },
             "meta": {
                 "message": "Success",
@@ -205,6 +217,10 @@ class BankController extends BaseController
                 "city": 1,
                 "status": 0,
                 "summary": "",
+     *          "bank_val": "中国建设银行",
+     *          "bank_province_value": "北京市",
+     *          "bank_city_value": "市辖区",
+     *          "default": 0  //默认 0.否 1.是
             },
             "meta": {
                 "message": "Success",
@@ -342,6 +358,10 @@ class BankController extends BaseController
             "city": 1,
             "status": 0,
             "summary": "",
+     *      "bank_val": "中国建设银行",
+     *       "bank_province_value": "北京市",
+     *       "bank_city_value": "市辖区",
+     *       "default": 0  //默认 0.否 1.是
         },
         "meta": {
             "message": "Success",
