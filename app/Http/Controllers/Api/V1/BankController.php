@@ -124,6 +124,10 @@ class BankController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
+        if(Bank::where(['status' => 0, 'user_id' => $this->auth_user_id])->count() >= 5){
+            return $this->response->array($this->apiError('银行卡数量超过上限', 403));
+        }
+
         try{
             $bank = Bank::create($all);
         }
@@ -372,6 +376,9 @@ class BankController extends BaseController
     public function getDefaultBank()
     {
         $bank = Bank::where(['status' => 0, 'user_id' => $this->auth_user_id, 'default' => 1])->first();
+        if(!$bank){
+            return $this->response->array($this->apiSuccess("Success", 200, []));
+        }
 
         return $this->response->item($bank, new BankTransformer())->setMeta($this->apiMeta());
     }
