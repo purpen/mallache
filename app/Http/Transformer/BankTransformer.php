@@ -35,6 +35,7 @@ class BankTransformer extends TransformerAbstract
             'bank_val' => $bank->bank_val,
             'bank_province_value' => $bank->bank_province_value,
             'bank_city_value' => $bank->bank_city_value,
+            'default' => $bank->default,
         ];
     }
 
