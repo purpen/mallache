@@ -278,4 +278,82 @@ class BankController extends BaseController
         }
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {put} /bank/setDefaultBank 设置默认银行卡
+     * @apiVersion 1.0.0
+     * @apiName bank setDefaultBank
+     * @apiGroup bank
+     *
+     * @apiParam {integer} bank_id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function setDefaultBank(Request $request)
+    {
+        $bank_id = (int)$request->input('bank_id');
+        if(!$bank = Bank::find($bank_id)){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if($bank_id !== $this->auth_user_id){
+            return $this->response->array($this->apiError('无操作权限', 404));
+        }
+
+        //修改该银行卡为默认
+        $bank->default = 1;
+        $bank->save();
+
+        // 当前用户其他银行卡取消默认
+        $banks = Bank::where('user_id', $this->auth_user_id)->where('id', '!=', $bank_id)->get();
+        foreach ($banks as $v){
+            $v->default = 0;
+            $v->save();
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /bank/getDefaultBank 获取默认的银行卡信息
+     * @apiVersion 1.0.0
+     * @apiName bank getDefaultBank
+     * @apiGroup bank
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *{
+        "data": {
+            "id": 1,
+            "user_id": 1,
+            "account_name": "北京银行",
+            "account_bank_id": 1,
+            "branch_name": "酒仙桥支行",
+            "account_number": "110",
+            "province": 1,
+            "city": 1,
+            "status": 0,
+            "summary": "",
+        },
+        "meta": {
+            "message": "Success",
+            "status_code": 200
+        }
+      }
+     */
+    public function getDefaultBank()
+    {
+        $bank = Bank::where(['status' => 0, 'user_id' => $this->auth_user_id, 'default' => 1])->first();
+
+        return $this->response->item($bank, new BankTransformer())->setMeta($this->apiMeta());
+    }
+
 }
