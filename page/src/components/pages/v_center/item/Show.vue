@@ -72,7 +72,8 @@
                 </div>
                 <div class="clear"></div>
                 <div class="pub-btn" v-if="item.status === 3">
-                  <el-button class="is-custom" @click="stickCompanySubmit" :loading="isLoadingBtn" :disabled="showStickCompanyBtn" type="primary">已选中<span>{{ selectedStickCompanyCount }}</span>家，推送给设计公司</el-button>
+                  <el-button class="is-custom" @click="stickCompanySubmit" :loading="isLoadingBtn" :disabled="this.stickCompanyIds.length <= 0" type="primary">发送项目需求</el-button>
+                  <p class="send-company-des">项目需求详情将发送给已选中的设计服务供应商</p>
                 </div>
               </el-collapse-item>
             </el-collapse>         
@@ -538,15 +539,6 @@ export default {
     }
   },
   computed: {
-    selectedStickCompanyCount() {
-      var cnt = this.stickCompanyIds.length
-      if (cnt > 0) {
-        this.showStickCompanyBtn = false
-      } else {
-        this.showStickCompanyBtn = true
-      }
-      return cnt
-    }
   },
   watch: {
     statusLabel: {
@@ -1142,6 +1134,11 @@ export default {
   .stage-asset-box {
     padding: 10px;
     border-bottom: 1px solid #ccc;
+  }
+  .send-company-des {
+    font-size: 1rem;
+    margin: 5px;
+    color: #666;
   }
 
 

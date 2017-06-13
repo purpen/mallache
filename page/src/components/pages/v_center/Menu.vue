@@ -15,7 +15,7 @@
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
         我的钱包
       </router-link>
       <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
@@ -27,7 +27,7 @@
       <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
         我的项目
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
+      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
         我的钱包
       </router-link>
       <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
@@ -101,7 +101,7 @@ export default {
   }
 
   .menu-list .item {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
   .menu-list .item:hover {

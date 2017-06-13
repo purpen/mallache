@@ -4,11 +4,6 @@
     <div class="vcenter-menu-sub-list">
       <router-link :to="{name: 'vcenterItemList', query: {type: 0}}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
     </div>
-    <!--
-    <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterItemList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 8}">已完成</router-link>
-    </div>
-    -->
   </div>
 </template>
 

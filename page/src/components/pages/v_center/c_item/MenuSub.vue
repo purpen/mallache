@@ -2,10 +2,10 @@
   <div class="vcenter-menu-sub">
 
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true}">待确认项目({{ waitCountProp }})</router-link>
+      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true}">待确认({{ waitCountProp }})</router-link>
     </div>
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterTrueCItemList'}" :class="{'item': true}">已合作项目({{ ingCountProp }})</router-link>
+      <router-link :to="{name: 'vcenterTrueCItemList'}" :class="{'item': true}">已合作({{ ingCountProp }})</router-link>
     </div>
   </div>
 </template>

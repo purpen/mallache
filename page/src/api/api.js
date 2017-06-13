@@ -21,6 +21,8 @@ export default {
   check_account: '/auth/phoneState/',  // 验证手机号是否存在
   fetch_msm_code: '/auth/sms', // 获取手机验证码
   user: '/auth/user',  // 获取用户信息
+  authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
+  fundLogList: '/fundLogList', // GET 交易记录
 
   // 支付
   demandAlipay: '/pay/demandAliPay',  // 支付保证金-支付宝

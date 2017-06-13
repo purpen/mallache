@@ -76,11 +76,12 @@
         </div>
       </el-col>
       <el-col :span="5">
-
-        <div class="slider info">
-          <p>提示</p>
-          <p class="slide-des" style="margin-bottom: -10px;">关于设计类别：</p>
-          <p class="slide-des">根据您的项目需求，选择相应的设计服务类别，这里只能单选。</p>
+        <div id="right_box">
+          <div class="slider info">
+            <p>提示</p>
+            <p class="slide-des" style="margin-bottom: -10px;">关于设计类型：</p>
+            <p class="slide-des">根据您的项目需求，选择相应的设计服务类别，这里只能单选。</p>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -248,6 +249,8 @@
 
         return typeData.COMPANY_TYPE[index].industry
       }
+    },
+    mounted: function() {
     },
     created: function() {
       const that = this

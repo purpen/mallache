@@ -342,16 +342,6 @@ const routes = [
     },
     component: require('@/components/pages/v_center/design_case/Submit')
   },
-  // 我的钱包
-  {
-    path: '/vcenter/wallet/list',
-    name: 'vcenterWalletList',
-    meta: {
-      title: '我的钱包',
-      requireAuth: true
-    },
-    component: require('@/components/pages/v_center/company/Profile')
-  },
   // 我的项目列表(需求方)
   {
     path: '/vcenter/item/list',
@@ -515,6 +505,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/d_company/Identification')
+  },
+  // 我的钱包列表
+  {
+    path: '/vcenter/wallet/list',
+    name: 'vcenterWalletList',
+    meta: {
+      title: '我的钱包',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/wallet/List')
   },
 
   // 后台管理

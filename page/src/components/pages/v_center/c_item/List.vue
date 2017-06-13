@@ -58,11 +58,11 @@
                     </p>
                   </el-col>
                   <el-col :span="7">
-                    <p class="status-str">{{ d.design_company_status_value }}</p>
+                    <p class="status-str">{{ d.status_value }}</p>
                   </el-col>
                   <el-col :span="4">
                     <div class="btn" v-show="d.design_company_status === 0">
-                      <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">提交报价</el-button></p>
+                      <p><el-button class="is-custom" @click="takingBtn" size="small" :item_id="d.item.id" :index="index" :cost="d.item.design_cost_value" type="primary">提交报价单</el-button></p>
                       <p><el-button class="is-custom" @click="companyRefuseBtn" size="small" :index="index" :item_id="d.item.id">暂无兴趣</el-button></p>
 
                     </div>

@@ -11,7 +11,7 @@
         <p id="p2" class="base" @click="redirect" step="3">3.填写公司信息</p>
       </el-col>
       <el-col :span="5">
-        <p id="p3" class="base" @click="redirect" step="4">4.检查并发布</p>
+        <p id="p3" class="base" @click="redirect" step="4">4.项目需求预览</p>
       </el-col>
       <el-col :span="5">
         <p id="p4" class="over" @click="redirect" step="5">5.推荐设计公司</p>

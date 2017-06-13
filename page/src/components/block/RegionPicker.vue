@@ -3,7 +3,7 @@
     <el-form-item :label="titleProp" prop="chinaCity" :style="propStyle">
         <el-select v-model="province" event="province" placeholder="省份/自治区/直辖市">
           <el-option
-            v-for="item in provinces"
+            v-for="(item, index) in provinces"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
@@ -12,7 +12,7 @@
 
         <el-select v-model="city" event="city" placeholder="城市">
           <el-option
-            v-for="item in cities"
+            v-for="(item, index) in cities"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
@@ -21,7 +21,7 @@
 
         <el-select v-model="district" event="district" v-if="!twoSelect" placeholder="区/县">
           <el-option
-            v-for="item in districts"
+            v-for="(item, index) in districts"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
@@ -57,6 +57,9 @@
       required: Boolean,
       disabled: Boolean,
       isFirstProp: Boolean,
+      isEmpty: {
+        default: false
+      },
       rootCode: {
         default: '86'
       }
@@ -66,6 +69,7 @@
       _filter (pid) {
         const result = []
         const items = this.$options.region[pid]
+        result.push([0, '不限'])
         for (let code in items) {
           result.push([parseInt(code, 10), items[code]])
         }

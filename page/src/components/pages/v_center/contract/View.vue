@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <el-row :gutter="24">
-      <v-menu></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="24">
         <div class="right-content">
           <div class="content-box">
             <h2>{{ itemName }}</h2>
@@ -69,7 +68,7 @@
             <div class="sept"></div>
 
             <div class="form-btn" v-if="userType !== 2">
-                <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="agreeBtn" v-show="form.status === 0">我同意</el-button>
+                <el-button type="primary" :loading="isLoadingBtn" class="is-custom" @click="agreeBtn" v-show="form.status === 0">确认合同</el-button>
                 <router-link :to="{name: 'vcenterContractDown', params: {unique_id: uniqueId}}" target="_blank" v-show="form.status === 1"><i class="fa fa-download" aria-hidden="true"></i> 下载合同</router-link>
             </div>
             <div class="form-btn" v-else>
@@ -177,6 +176,7 @@
             var item = response.data.data
             if (item) {
               that.itemId = item.id
+              that.itemName = item.title + '合同'
               item.stages = []
               item.sort = item.item_stage.length
               if (item.item_stage && item.item_stage.length > 0) {

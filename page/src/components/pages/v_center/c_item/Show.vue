@@ -73,7 +73,7 @@
  
                   <div class="btn-quo" v-if="waitTakePrice">
                     <el-button @click="companyRefuseBtn">暂无兴趣</el-button>
-                    <el-button class="is-custom" @click="takingBtn" type="primary">提交报价</el-button>                      
+                    <el-button class="is-custom" @click="takingBtn" type="primary">提交报价单</el-button>                      
                   </div>
 
                 </div>
@@ -94,10 +94,11 @@
                     </div>
                   </div>
                   <div class="contract-right">
+                    <p v-if="item.status === 5"><el-button @click="contractSendBtn" class="is-custom" type="primary" size="small" ><i class="fa fa-share-square-o" aria-hidden="true"></i> 发送</el-button></p>
                     <p><router-link :to="{name: 'vcenterContractDown', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载</router-link></p>
                     <p><router-link :to="{name: 'vcenterContractView', params: {unique_id: contract.unique_id}}" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i> 预览</router-link></p>
                     <p v-if="item.status < 7"><router-link :to="{name: 'vcenterContractSubmit', params: {item_id: item.id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</router-link></p>
-                    <p v-if="item.status === 5"><a href="javascript:void(0);" @click="contractSendBtn" ><i class="fa fa-share-square-o" aria-hidden="true"></i> 发送</a></p>
+
                   </div>
 
                 </div>
@@ -1081,7 +1082,8 @@ export default {
   }
   .contract-right p {
     float: right;
-    margin: 10px 0 10px 10px;
+    margin: 5px 0 5px 10px;
+    line-height: 30px;
   }
 
   .no-offer-company {
@@ -1182,6 +1184,10 @@ export default {
   .stage-asset-box {
     padding: 10px 0 10px 0;
     border-bottom: 1px solid #ccc;
+  }
+  .taking-price-btn {
+    float: right;
+    margin-bottom: 20px;
   }
 
 </style>

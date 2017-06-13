@@ -102,33 +102,6 @@
             
               <p class="sub-title">第{{ index + 1 }}阶段</p>
               <input type="hidden" v-model.number="form.stages[index].sort" />
-              <el-row :gutter="10">
-                <el-col :span="4">
-                  <el-form-item
-                    :prop="'stages.' + index + '.percentage'"
-                    :rules="{
-                      type: 'number', required: true, message: '请添写阶段支付百分比', trigger: 'blur',
-                      min: 10, max: 100, message: '比例在10-100之间', trigger: 'blur'
-                    }"
-                  >
-                    <el-input v-model.number="form.stages[index].percentage" placeholder="" @blur="fetchAmount(index)" size="small">
-                      <template slot="append">%</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item
-                    :prop="'stages.' + index + '.amount'"
-                    :rules="{
-                      type: 'number', required: true, message: '请添写阶段金额', trigger: 'blur'
-                    }"
-                  >
-                    <el-input v-model.number="form.stages[index].amount" disabled placeholder="" size="small">
-                      <template slot="append">元</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
 
               <el-row :gutter="6">
                 <el-col :span="8">
@@ -148,8 +121,37 @@
                       type: 'number', required: true, message: '请添写工作日', trigger: 'blur'
                     }"
                   >
-                    <el-input v-model.number="form.stages[index].time" placeholder="工作日" size="small">
-                      <template slot="append">天</template>
+                    <el-input v-model.number="form.stages[index].time" placeholder="" size="small">
+                      <template slot="append">工作日</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row :gutter="10">
+
+                <el-col :span="4">
+                  <el-form-item
+                    :prop="'stages.' + index + '.percentage'"
+                    :rules="{
+                      type: 'number', required: true, message: '请添写阶段支付百分比', trigger: 'blur',
+                      min: 10, max: 100, message: '比例在10-100之间', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model.number="form.stages[index].percentage" placeholder="阶段百分比" @blur="fetchAmount(index)" size="small">
+                      <template slot="append">%</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item
+                    :prop="'stages.' + index + '.amount'"
+                    :rules="{
+                      type: 'number', required: true, message: '请添写阶段金额', trigger: 'blur'
+                    }"
+                  >
+                    <el-input v-model.number="form.stages[index].amount" disabled placeholder="" size="small">
+                      <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
                 </el-col>

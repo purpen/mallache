@@ -2,39 +2,52 @@
   <div class="container">
 
     <v-progress :baseStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
-    <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="19">
-        <div class="content">
-            <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
+    <div ref="content_box">
+      <el-row :gutter="18">
 
-              <el-form-item label="项目名称" prop="name">
-                <el-input v-model="form.name" placeholder="为你的项目取个简短的名称"></el-input>
-              </el-form-item> 
+        <el-col :span="19">
+          <div class="content">
+              <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
-              <el-form-item label="项目进展阶段" prop="stage">
-                <el-radio-group v-model.number="form.stage">
-                  <el-radio class="radio" :label="1">已有app／网站，需重新设计</el-radio>
-                  <el-radio class="radio" :label="2">没有app／网站，需要全新设计</el-radio>
-                </el-radio-group>
-              </el-form-item>
+                <el-form-item label="项目名称" prop="name">
+                  <el-input v-model="form.name" placeholder="为你的项目取个简短的名称"></el-input>
+                </el-form-item> 
 
-              <el-form-item label="已有项目设计内容" prop="complete_content">
-                <el-checkbox-group v-model="form.complete_content">
-                  <el-checkbox label="流程图"></el-checkbox>
-                  <el-checkbox label="线框图、原型图"></el-checkbox>
-                  <el-checkbox label="页面内容"></el-checkbox>
-                  <el-checkbox label="产品功能需求点"></el-checkbox>
-                  <el-checkbox label="其它" @change="otherContent">其它
-                    <el-input v-show="showOtherContent" v-model="form.other_content" size="small" placeholder="自定义添加"></el-input>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-form-item>
+                <el-form-item label="项目进展阶段" prop="stage">
+                  <el-radio-group v-model.number="form.stage">
+                    <el-radio class="radio" :label="1">已有app／网站，需重新设计</el-radio>
+                    <el-radio class="radio" :label="2">没有app／网站，需要全新设计</el-radio>
+                  </el-radio-group>
+                </el-form-item>
 
-                <el-form-item label="项目周期" prop="cycle">
-                  <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany">
+                <el-form-item label="已有项目设计内容" prop="complete_content">
+                  <el-checkbox-group v-model="form.complete_content">
+                    <el-checkbox label="流程图"></el-checkbox>
+                    <el-checkbox label="线框图、原型图"></el-checkbox>
+                    <el-checkbox label="页面内容"></el-checkbox>
+                    <el-checkbox label="产品功能需求点"></el-checkbox>
+                    <el-checkbox label="其它" @change="otherContent">其它
+                      <el-input v-show="showOtherContent" v-model="form.other_content" size="small" placeholder="自定义添加"></el-input>
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+
+                  <el-form-item label="项目周期" prop="cycle">
+                    <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany">
+                      <el-option
+                        v-for="item in cycleOptions"
+                        :label="item.label"
+                        :key="item.index"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+
+                <el-form-item label="设计费用预算" prop="design_cost">
+                  <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
                     <el-option
-                      v-for="item in cycleOptions"
+                      v-for="item in costOptions"
                       :label="item.label"
                       :key="item.index"
                       :value="item.value">
@@ -42,85 +55,77 @@
                   </el-select>
                 </el-form-item>
 
-              <el-form-item label="设计费用预算" prop="design_cost">
-                <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
-                  <el-option
-                    v-for="item in costOptions"
-                    :label="item.label"
-                    :key="item.index"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
+                <region-picker :isEmpty="true" :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
 
-              <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
+                <el-row :gutter="24">
+                  <el-col :span="12">
+                    <el-form-item label="上传附件及相关参考资料" prop="">
+                      <el-upload
+                        class="upload-demo"
+                        :action="uploadUrl"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :file-list="fileList"
+                        :data="uploadParam"
+                        :on-error="uploadError"
+                        :on-success="uploadSuccess"
+                        :before-upload="beforeUpload"
+                        list-type="picture">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过5M</div>
+                      </el-upload>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
 
-              <el-row :gutter="24">
-                <el-col :span="12">
-                  <el-form-item label="上传附件及相关参考资料" prop="">
-                    <el-upload
-                      class="upload-demo"
-                      :action="uploadUrl"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :file-list="fileList"
-                      :data="uploadParam"
-                      :on-error="uploadError"
-                      :on-success="uploadSuccess"
-                      :before-upload="beforeUpload"
-                      list-type="picture">
-                      <el-button size="small" type="primary">点击上传</el-button>
-                      <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过5M</div>
-                    </el-upload>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+                <div class="sept"></div>
+                <div class="return-btn">
+                    <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
+                </div>
+                <div class="form-btn">
+                    <el-button type="primary" size="large" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
+                </div>
+                <div class="clear"></div>
+                
+              </el-form>
 
-              <div class="sept"></div>
-              <div class="return-btn">
-                  <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
+          
+          </div>
+        </el-col>
+        <el-col :span="5">
+          <div id="right_box" :class="{'fixed': isFixed}">
+            <div class="slider" v-loading.body="matchLoading">
+
+              <div v-if="matchCount === 0">
+                <p class="slide-str error"><img src="../../../assets/images/icon/item_stick_fail.png" width="25" /> 匹配失败</p>
+                <p class="slide-des error">可能出现的原因：</p>
+                <p class="slide-des error">当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
+                <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p> 
+                <p class="slide-des error">选择当前的城市没有对应的设计公司。</p> 
               </div>
-              <div class="form-btn">
-                  <el-button type="primary" size="large" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
+              <div v-else-if="matchCount > 0">
+                <p class="slide-str success"><img src="../../../assets/images/icon/item_stick.png" width="25" /> {{ matchCount }} 家推荐</p>
+                <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
               </div>
-              <div class="clear"></div>
-              
-            </el-form>
+              <div v-else>
+                <p class="slide-str">系统推荐中..</p>
+                <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
+              </div>
 
-        
-        </div>
-      </el-col>
-      <el-col :span="5">
-        <div class="slider">
+            </div>
 
-          <div v-if="matchCount === 0">
-            <p class="slide-str error"><img src="../../../assets/images/icon/item_stick_fail.png" width="25" /> 匹配失败</p>
-            <p class="slide-des error">可能出现的原因：</p>
-            <p class="slide-des error">当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
-            <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p> 
-            <p class="slide-des error">选择当前的城市没有对应的设计公司。</p> 
+            <div class="slider info">
+              <p>提示</p>
+              <p>项目需求填写</p>
+              <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
+              <div class="blank20"></div>
+              <p>项目预算设置</p>
+              <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
+            </div>
           </div>
-          <div v-else-if="matchCount > 0">
-            <p class="slide-str success"><img src="../../../assets/images/icon/item_stick.png" width="25" /> {{ matchCount }} 家推荐</p>
-            <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
-          </div>
-          <div v-else>
-            <p class="slide-str"><img src="../../../assets/images/wait_blank.gif" width="20" /> 家推荐</p>
-            <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
-          </div>
-
-        </div>
-
-        <div class="slider info">
-          <p>提示</p>
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
-        </div>
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -153,6 +158,8 @@
         uploadUrl: '',
         showOtherContent: false,
         matchCount: '',
+        matchLoading: false,
+        isFixed: false,
         uploadParam: {
           'token': '',
           'x:random': '',
@@ -166,6 +173,7 @@
           cycle: '',
           complete_content: [],
           other_content: '',
+          scroll: '',
           design_cost: ''
         },
         ruleForm: {
@@ -189,16 +197,30 @@
       }
     },
     methods: {
+      montiorWindow() {
+        var currentScroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+        if (currentScroll > this.scroll) {
+          var rObj = document.querySelector('#right_box')
+          var l1 = document.querySelector('.container').offsetLeft
+          var l2 = document.querySelector('.content').offsetWidth
+          var w = rObj.offsetWidth
+          rObj.style.left = l1 + l2 + 18 + 'px'
+          rObj.style.width = w + 'px'
+          this.isFixed = true
+        } else {
+          this.isFixed = false
+        }
+      },
       submit(formName) {
         const that = this
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            if (!that.province) {
+            if (that.province === '') {
               that.$message.error('请选择所在省份!')
               return false
             }
-            if (!that.city) {
+            if (that.city === '') {
               that.$message.error('请选择所在城市')
               return false
             }
@@ -211,6 +233,10 @@
               that.form.complete_content.splice(cIndex, 1)
             } else {
               that.form.other_content = ''
+            }
+            if (that.matchCount === 0) {
+              that.$message.error('匹配失败，请重新匹配!')
+              return false
             }
             var row = {
               name: that.form.name,
@@ -279,8 +305,10 @@
         }
         const that = this
         that.matchCount = ''
+        that.matchLoading = true
         that.$http({url: api.demandMatchingCount, method: 'POST', data: mRow})
         .then (function(response) {
+          that.matchLoading = false
           if (response.data.meta.status_code === 200) {
             that.matchCount = response.data.data.count
           }
@@ -375,6 +403,16 @@
         return items
       }
     },
+    mounted: function() {
+      window.addEventListener('scroll', this.montiorWindow)
+      this.scroll = this.$refs.content_box.offsetTop
+
+      window.onresize = () => {
+        return (() => {
+          this.montiorWindow()
+        })()
+      }
+    },
     created: function() {
       const that = this
       var id = this.$route.params.id
@@ -386,7 +424,7 @@
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
             if (row.type === 1) {
-              that.$router.push({name: 'itemSubmitThree', params: {id: row.id}})
+              that.$router.replace({name: 'itemSubmitThree', params: {id: row.id}})
             }
             that.form.id = row.id
             that.form.type = row.type
@@ -475,10 +513,21 @@
     border: 1px solid #ccc;
   }
 
+  #right_box {
+    background-color: #fff;
+    z-index: 9999;
+  }
+
   .slider {
     border: 1px solid #ccc;
     text-align:center;
     margin-bottom: 20px;
+  }
+  .fixed{
+    position: fixed;
+    top: 0;
+    width: 255px;
+    left: 75%;
   }
   .slider.info {
     text-align: left;

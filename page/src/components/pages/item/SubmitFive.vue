@@ -40,7 +40,7 @@
               <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
           </div>
           <div class="form-btn">
-              <el-button type="primary" size="large" class="is-custom" @click="publish">发布</el-button>
+              <el-button type="primary" size="large" class="is-custom" @click="publish">确认发布</el-button>
           </div>
           <div class="clear"></div>
         
