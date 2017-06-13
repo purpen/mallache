@@ -21,10 +21,10 @@ class FundLog extends BaseModel
                 $value = '支付宝';
                 break;
             case 3:
-                $value = '微信';
+                $value = '微信支付';
                 break;
             case 4:
-                $value = '京东';
+                $value = '京东支付';
                 break;
             case 5:
                 $value = '银行转账';
