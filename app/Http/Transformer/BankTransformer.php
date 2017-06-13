@@ -25,7 +25,7 @@ class BankTransformer extends TransformerAbstract
             'id' => intval($bank->id),
             'user_id' => intval($bank->user_id),
             'account_name' => strval($bank->account_name),
-            'bank_id' => intval($bank->bank_id),
+            'account_bank_id' => intval($bank->account_bank_id),
             'branch_name' => strval($bank->branch_name),
             'account_number' => strval($bank->account_number),
             'province' => intval($bank->province),
