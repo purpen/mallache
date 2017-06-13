@@ -78,6 +78,7 @@ class BankController extends BaseController
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {string} summary 备注
+     * @apiParam {integer} default //默认 0.否 1.是
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -114,6 +115,7 @@ class BankController extends BaseController
             'account_number' => 'required|max:50',
             'province' => 'required|integer',
             'city' => 'required|integer',
+            'default' => 'integer'
         ];
         $all = $request->all();
         $all['user_id'] = $this->auth_user_id;
@@ -130,6 +132,11 @@ class BankController extends BaseController
 
         try{
             $bank = Bank::create($all);
+
+            if(!empty($all['default'])){
+                // 当前用户其他银行卡取消默认
+                $this->unsetDefault($bank->id);
+            }
         }
         catch (\Exception $e){
             return $this->response->array($this->apiError());
@@ -205,6 +212,7 @@ class BankController extends BaseController
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
      * @apiParam {string} summary 备注
+     * @apiParam {integer} default //默认 0.否 1.是
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -241,9 +249,9 @@ class BankController extends BaseController
             'account_number' => 'required|max:50',
             'province' => 'required|integer',
             'city' => 'required|integer',
+            'default' => 'integer',
         ];
         $all = $request->except(['token']);
-        $all['summary'] = $request->input('summary') ?? '';
         $validator = Validator::make($all, $rules);
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -253,6 +261,12 @@ class BankController extends BaseController
             return $this->response->array($this->apiError('not found bank', 404));
         }
         $bank->update($all);
+
+        if(!empty($all['default'])){
+            // 当前用户其他银行卡取消默认
+            $this->unsetDefault($bank_id);
+        }
+
         return $this->response->item($bank, new BankTransformer())->setMeta($this->apiMeta());
     }
 
@@ -332,13 +346,23 @@ class BankController extends BaseController
         $bank->save();
 
         // 当前用户其他银行卡取消默认
+        $this->unsetDefault($bank_id);
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * 当前用户其他银行卡取消默认
+     *
+     * @param $bank_id
+     */
+    protected function unsetDefault($bank_id)
+    {
         $banks = Bank::where('user_id', $this->auth_user_id)->where('id', '!=', $bank_id)->get();
         foreach ($banks as $v){
             $v->default = 0;
             $v->save();
         }
-
-        return $this->response->array($this->apiSuccess());
     }
 
     /**
