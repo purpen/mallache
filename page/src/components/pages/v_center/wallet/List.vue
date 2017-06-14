@@ -16,7 +16,7 @@
               <div class="amount-btn">
                 <p>
                   <el-button class="is-custom" size="small">提现</el-button>
-                  <el-button class="is-custom" type="primary" size="small">充值</el-button>
+                  <!--<el-button class="is-custom" type="primary" size="small">充值</el-button>-->
                 </p>
               </div>
             </div>
@@ -84,6 +84,18 @@
 
       </el-col>
     </el-row>
+
+    <!--弹框模板-->
+    <el-dialog :title="itemModelTitle" v-model="itemModel">
+
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="itemModel = false">取 消</el-button>
+        <el-button type="primary" :loading="isLoadingBtn" @click="withdraw">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -102,6 +114,12 @@
       return {
         walletLoading: false,
         isLoading: false,
+        isLoadingBtn: false,
+        itemModel: false,
+        itemModelTitle: '提现操作',
+        sureDialog: false,
+        sureDialogMessage: '确认执行此操作？',
+        sureDialogLoadingBtn: false,
         wallet: {},
         tableData: [],
         itemList: [],
@@ -160,6 +178,10 @@
       handleCurrentChange(val) {
         this.query.page = val
         this.$router.push({name: this.$route.name, query: {page: val}})
+      },
+      // 提现弹出框
+      withdraw() {
+        alert(123)
       }
     },
     computed: {

@@ -187,7 +187,7 @@
                   newStageRow.title = stageRow.title
                   newStageRow.percentage = parseFloat(stageRow.percentage).mul(100)
                   newStageRow.amount = parseFloat(stageRow.amount)
-                  newStageRow.time = parseInt(stageRow.time).date_format().format('yyyy-MM-dd')
+                  newStageRow.time = parseInt(stageRow.time)
                   item.stages.push(newStageRow)
                 }
               }
