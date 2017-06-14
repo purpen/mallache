@@ -244,10 +244,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 银行
          */
-        $api->resource('/bank' , 'BankController');
+        // 设置默认银行卡
+        $api->put('/bank/setDefaultBank', 'BankController@setDefaultBank');
+        // 获取默认的银行卡信息
+        $api->get('/bank/getDefaultBank', 'BankController@getDefaultBank');
         //更新银行状态
         $api->put('/bank/un/status', [
             'as' => 'bank.unStatus', 'uses' => 'BankController@unStatus'
         ]);
+        $api->resource('/bank' , 'BankController');
+
+
+
     });
 });
