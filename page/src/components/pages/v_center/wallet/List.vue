@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="bank-box">
-              <p><a href=""><i class="fa fa-credit-card" aria-hidden="true"></i> 银行账户管理</a></p>
+              <p><router-link :to="{name: 'vcenterBankList'}"><i class="fa fa-credit-card" aria-hidden="true"></i> 银行账户管理</router-link></p>
             </div>
           </div>
 

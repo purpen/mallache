@@ -69,7 +69,9 @@
       _filter (pid) {
         const result = []
         const items = this.$options.region[pid]
-        result.push([0, '不限'])
+        if (this.isEmpty) {
+          result.push([0, '不限'])
+        }
         for (let code in items) {
           result.push([parseInt(code, 10), items[code]])
         }

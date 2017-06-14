@@ -516,6 +516,26 @@ const routes = [
     },
     component: require('@/components/pages/v_center/wallet/List')
   },
+  // 我的银行卡列表
+  {
+    path: '/vcenter/bank/list',
+    name: 'vcenterBankList',
+    meta: {
+      title: '我的银行卡',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/bank/List')
+  },
+  // 添加银行卡
+  {
+    path: '/vcenter/bank/add',
+    name: 'vcenterBankAdd',
+    meta: {
+      title: '我的银行卡',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/bank/submit')
+  },
 
   // 后台管理
   // 控制台

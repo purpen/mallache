@@ -24,6 +24,11 @@ export default {
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
   fundLogList: '/fundLogList', // GET 交易记录
 
+  // 银行卡
+  bank: '/bank', // GET/POST 查看列表／保存银行卡
+  bankId: '/bank/{0}', // PUT 更新银行卡信息
+  bankUnStatus: '/bank/un/status', // PUT 关闭银行卡
+
   // 支付
   demandAlipay: '/pay/demandAliPay',  // 支付保证金-支付宝
   endPayOrderItemId: '/pay/endPayOrder/{0}', // GET 创建尾款支付订单
