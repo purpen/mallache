@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\Recommend;
 use App\Helper\Tools;
 use App\Http\Transformer\DemandCompanyTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
@@ -18,7 +19,6 @@ use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendDesignCompanyTransformer;
 use App\Http\Transformer\RecommendListTransformer;
-use App\Jobs\Recommend;
 use App\Models\Contract;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
@@ -571,7 +571,12 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
 
-        dispatch(new Recommend($item));
+        //添加匹配队列
+//        dispatch(new Recommend($item));
+
+        // 同步调用匹配方法
+        $recommend = new Recommend($item);
+        $recommend->handle();
 
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if (!$demand_company || $demand_company->verify_status != 1) {
