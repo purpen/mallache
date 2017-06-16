@@ -117,7 +117,7 @@ class ItemRecommend extends BaseModel
         }elseif($item_status == 0 && $design_company_status == 2){
             $status = 4;
             $status_value = '请确认设计服务供应商报价单内容';
-            $design_status_value = '等待需求方确认';
+            $design_status_value = '报价单已发送给项目需求方，等待对方确认';
         }elseif ($item_status == 1){
             $status = 5;
             $status_value = '确认合作';

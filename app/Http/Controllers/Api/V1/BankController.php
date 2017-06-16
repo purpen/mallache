@@ -47,7 +47,7 @@ class BankController extends BaseController
     public function index()
     {
         $user_id = intval($this->auth_user_id);
-        $bank = Bank::where('user_id' , $user_id)->where('status' , 0)->get();
+        $bank = Bank::where('user_id' , $user_id)->where('status' , 0)->orderBy('id', 'desc')->get();
         if(!$bank){
             return $this->response->array($this->apiError('not found bank', 404));
         }

@@ -1,51 +1,20 @@
 <?php
-
-namespace App\Jobs;
+namespace App\Helper;
 
 use App\Events\ItemStatusEvent;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
 use App\Models\Item;
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
-/**
- * 推荐设计公司队列
- * Class Recommend
- * @package App\Jobs
- */
-class Recommend implements ShouldQueue
+class Recommend
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * 任务最大尝试次数
-     *
-     * @var int
-     */
-    public $tries = 3;
-
-    protected $item;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
     public function __construct(Item $item)
     {
         $this->item = $item;
     }
 
     /**
-     * Execute the job.
-     *
-     * @return void
+     * 匹配执行
      */
     public function handle()
     {
@@ -227,5 +196,4 @@ class Recommend implements ShouldQueue
 
         return $max;
     }
-
 }
