@@ -18,7 +18,7 @@
             <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
             <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
           </div>
-          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
+          <el-button type="primary" :loading="isLoadingBtn" @keyup="submit('ruleForm')" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
 
         <div class="reg">
@@ -137,6 +137,14 @@ export default {
     }
   },
   computed: {
+  },
+  mounted: function() {
+    const self = this
+    window.addEventListener('keydown', function(e) {
+      if (e.keyCode === 13) {
+        self.submit('ruleForm')
+      }
+    })
   },
   created: function() {
     var prevUrlName = this.$store.state.event.prevUrlName

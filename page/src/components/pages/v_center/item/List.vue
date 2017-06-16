@@ -71,7 +71,8 @@
                     </p>
                   </el-col>
                   <el-col :span="7">
-                    <p class="status-str">{{ d.item.status_value }}</p>
+                    <p class="status-str" v-if="d.item.show_offer ">有设计服务供应商报价</p>
+                    <p class="status-str" v-else>{{ d.item.status_value }}</p>
                   </el-col>
                   <el-col :span="4">
                     <div class="btn" v-show="d.item.status === -2">

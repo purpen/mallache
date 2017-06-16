@@ -73,7 +73,7 @@ export default {
       time: 0,
       labelPosition: 'top',
       form: {
-        type: '',
+        type: 1,
         account: '',
         smsCode: '',
         password: '',
@@ -270,6 +270,14 @@ export default {
     codeMsg() {
       return this.time > 0 ? '重新发送' + this.time + 's' : '获取验证码'
     }
+  },
+  mounted: function() {
+    const self = this
+    window.addEventListener('keydown', function(e) {
+      if (e.keyCode === 13) {
+        self.submit('ruleForm')
+      }
+    })
   }
 
 }

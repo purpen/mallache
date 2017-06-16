@@ -22,7 +22,7 @@
       </div>
 
       <div class="process-item">
-        <p>项目管理管理</p>
+        <p>项目管理</p>
         <el-steps :space="50" direction="vertical" finish-status="process" :active="progressItem">
           <el-step title="项目进行中" description=""></el-step>
           <el-step title="项目验收"></el-step>

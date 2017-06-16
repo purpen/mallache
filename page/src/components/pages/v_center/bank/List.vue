@@ -62,7 +62,7 @@
           </el-select>
         </el-form-item>
 
-        <region-picker :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" :isFirstProp="isFirst" @onchange="change"></region-picker>
+        <region-picker :isEmpty="false" :isFirstProp="isFirst" :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" @onchange="change"></region-picker>
 
         <el-form-item label="支行名称" prop="branch_name" label-width="200px">
           <el-input type="text" v-model="form.branch_name" auto-complete="off" ></el-input>
@@ -192,11 +192,14 @@
           account_number: '',
           default: false
         }
-        this.isFirst = false
-        this.province = ''
-        this.city = ''
         this.itemModelTitle = '添加银行卡'
         this.itemModel = true
+        const self = this
+        setTimeout(function() {
+          self.isFirst = true
+          self.province = ''
+          self.city = ''
+        }, 100)
       },
       edit(event) {
         this.current.id = parseInt(event.currentTarget.getAttribute('item_id'))
@@ -205,14 +208,18 @@
         this.itemModelTitle = '编辑银行卡'
         this.itemModel = true
         this.form = this.itemList[this.current.index]
-        this.isFirst = true
-        this.province = this.form.province
-        this.city = this.form.city
         if (this.form.default === 1) {
           this.form.default = true
         } else {
           this.form.default = false
         }
+
+        const self = this
+        setTimeout(function() {
+          self.isFirst = true
+          self.province = self.form.province
+          self.city = self.form.city
+        }, 100)
       },
       del(event) {
         this.current.id = parseInt(event.currentTarget.getAttribute('item_id'))

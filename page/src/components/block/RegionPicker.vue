@@ -56,7 +56,10 @@
       completed: Boolean,
       required: Boolean,
       disabled: Boolean,
-      isFirstProp: Boolean,
+      isFirstProp: {
+        type: Boolean,
+        default: false
+      },
       isEmpty: {
         default: false
       },
@@ -147,6 +150,9 @@
       districtProp(d) {
         this.district = d
       },
+      isFirstProp: function(d) {
+        this.isFirst = d
+      },
       province(d) {
         this.$emit('onchange', {
           province: d,
@@ -167,9 +173,6 @@
           city: this.city,
           district: d
         })
-      },
-      isFirstProp(d) {
-        this.isFirst = d
       }
     }
   }
