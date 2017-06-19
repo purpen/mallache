@@ -106,6 +106,8 @@ class WithdrawOrderActionController extends BaseController
 
             $withdraw_order->status = 1;
             $withdraw_order->summary = $summary;
+            $withdraw_order->true_time = date("Y-m-d H:i:s");
+            $withdraw_order->true_user_id = $this->auth_user_id;
             $withdraw_order->save();
 
             //减少 用户总金额和冻结金额

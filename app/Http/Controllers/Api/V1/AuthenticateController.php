@@ -446,7 +446,7 @@ class AuthenticateController extends BaseController
     public function fundInfo()
     {
         $user = $this->auth_user;
-        $price = $user->price_total - $user->price_frozen;
+        $price = sprintf("%01.2f",$user->price_total - $user->price_frozen);
         $data = ['price_total' => $user->price_total, 'price_frozen' => $user->price_frozen, 'price' => $price];
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }

@@ -54,7 +54,7 @@ class WithdrawOrderController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $amount = $payload['amount'];
+        $amount = sprintf("%0.2f", $payload['amount']);
         $bank_id = $payload['bank_id'];
 
         //可提现金额
@@ -93,11 +93,11 @@ class WithdrawOrderController extends BaseController
         }catch (\Exception $e){
             DB::rollBack();
             Log::error($e);
+            return $this->response->array($this->apiError('Error', 500));
         }
 
-
         if($withdraw){
-            return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiSuccess());
+            return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
         }
     }
 
