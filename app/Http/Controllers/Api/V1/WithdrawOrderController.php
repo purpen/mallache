@@ -97,7 +97,7 @@ class WithdrawOrderController extends BaseController
 
 
         if($withdraw){
-            return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
+            return $this->response->array($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
         }
     }
 
