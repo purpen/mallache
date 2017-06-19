@@ -8,6 +8,6 @@ class WithdrawOrderTransformer extends TransformerAbstract
 {
     public function transform(WithdrawOrder $withdrawOrder)
     {
-        return $withdrawOrder;
+        return $withdrawOrder->toArray();
     }
 }
