@@ -235,6 +235,10 @@ export default {
       self.query.page = this.$route.query.page || 1
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
+      this.menuType = 0
+      if (self.query.type) {
+        this.menuType = parseInt(self.query.type)
+      }
       self.isLoading = true
       self.$http.get(api.adminItemList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
       .then (function(response) {
@@ -278,11 +282,6 @@ export default {
   watch: {
     '$route' (to, from) {
       // 对路由变化作出响应...
-      var type = this.$route.query.type
-      this.menuType = 0
-      if (type) {
-        this.menuType = parseInt(type)
-      }
       this.loadList()
     }
   }

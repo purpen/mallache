@@ -23,6 +23,7 @@ export default {
   user: '/auth/user',  // 获取用户信息
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
   fundLogList: '/fundLogList', // GET 交易记录
+  withdrawCreate: '/withdraw/create', // POST 提现
 
   // 银行卡
   bank: '/bank', // GET/POST 查看列表／保存银行卡
@@ -129,6 +130,10 @@ export default {
   // 订单管理
   adminPayOrderLists: '/admin/payOrder/lists', // GET 订单列表
   adminPayOrderTruePay: '/admin/payOrder/truePay', // POST 确认订单支付款（对公转账）
+
+  // 提现管理
+  adminWithDrawLists: '/admin/withdrawOrder/lists', // GET 订单列表
+  adminWithDrawTruePay: '/admin/withdrawOrder/trueWithdraw', // 确认提现单已提现
 
   test: '/'  // End
 }

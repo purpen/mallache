@@ -15,7 +15,7 @@
               </div>
               <div class="amount-btn">
                 <p>
-                  <el-button class="is-custom" size="small">提现</el-button>
+                  <el-button class="is-custom" @click="withdraw" size="small">提现</el-button>
                   <!--<el-button class="is-custom" type="primary" size="small">充值</el-button>-->
                 </p>
               </div>
@@ -88,10 +88,29 @@
     <!--弹框模板-->
     <el-dialog :title="itemModelTitle" v-model="itemModel">
 
+      <div class="withdraw-input">
+        <p class="withdraw-title">选择银行卡</p>
+        <el-select v-model.number="bankId" placeholder="选择银行卡银行卡">
+          <el-option
+            v-for="(item, index) in bankOptions"
+            :label="item.label"
+            :key="index"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+
+      <div class="withdraw-input">
+        <p class="withdraw-title">提现金额</p>
+        <el-input placeholder="提现额度" v-model.number="withdrawPrice">
+          <template slot="prepend">¥</template>
+        </el-input>
+        <p class="withdraw-des">可提现金额: ¥ {{ wallet.price }} <a href="javascript:void(0)" @click="allPrice">全部提现</a></p>
+      </div>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="itemModel = false">取 消</el-button>
-        <el-button type="primary" :loading="isLoadingBtn" @click="withdraw">确 定</el-button>
+        <el-button type="primary" :loading="isLoadingBtn" @click="withdrawSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -123,6 +142,9 @@
         wallet: {},
         tableData: [],
         itemList: [],
+        withdrawPrice: '',
+        bankId: '',
+        bankOptions: [],
         query: {
           page: 1,
           pageSize: 10,
@@ -181,7 +203,58 @@
       },
       // 提现弹出框
       withdraw() {
-        alert(123)
+        if (this.wallet.price <= 0) {
+          this.$message.error('没有可提现余额!')
+          return false
+        }
+        this.itemModel = true
+        if (this.bankOptions.length === 0) {
+          const self = this
+          // 银行卡列表
+          self.$http.get(api.bank, {})
+          .then (function(response) {
+            if (response.data.meta.status_code === 200) {
+              for (var i = 0; i < response.data.data.length; i++) {
+                var item = response.data.data[i]
+                var newItem = {}
+                var number = item.account_number.substr(item.account_number.length - 4)
+                newItem.label = item.bank_val + '[' + number + ']'
+                newItem.value = item.id
+                if (item.default === 1) {
+                  self.bankId = item.id
+                }
+                self.bankOptions.push(newItem)
+              } // endfor
+              console.log('aaa')
+              console.log(response.data.data)
+            }
+          })
+          .catch (function(error) {
+            self.$message.error(error.message)
+          })
+        }
+      },
+      allPrice() {
+        this.withdrawPrice = this.wallet.price
+      },
+      // 提现执行
+      withdrawSubmit() {
+        const self = this
+        self.isLoadingBtn = true
+        self.$http.post(api.withdrawCreate, {bank_id: self.bankId, amount: self.withdrawPrice})
+        .then (function(response) {
+          self.isLoadingBtn = false
+          if (response.data.meta.status_code === 200) {
+            self.itemModel = false
+            self.$message.success('操作成功！')
+          } else {
+            console.log(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          self.isLoadingBtn = false
+          self.$message.error(error.message)
+        })
       }
     },
     computed: {
@@ -198,6 +271,7 @@
           if (wallet) {
             self.wallet = wallet
           }
+          console.log(self.wallet)
         }
       })
       .catch (function(error) {
@@ -282,6 +356,26 @@
     font-size: 1.5rem;
     color: #666;
     line-height: 2;
+  }
+
+  .withdraw-input {
+    margin: 10px;
+  }
+
+  .withdraw-input p.withdraw-title {
+    line-height: 2;
+    color: #222;
+  }
+  .withdraw-input .el-input {
+    width: 150px;
+  }
+  .withdraw-input p.withdraw-des {
+    border-top: 1px solid #ccc;
+    line-height: 2;
+    margin-top: 20px;
+    font-size: 1.3rem;
+    color: #666;
+
   }
 
 

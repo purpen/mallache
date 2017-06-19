@@ -10,19 +10,24 @@
           <template slot="title"><i class="fa fa-file-text"></i> 项目管理</template>
             <el-menu-item index="itemList" :route="{name: 'adminItemList'}">列表</el-menu-item>
         </el-submenu>
+
         <el-submenu index="3">
-          <template slot="title"><i class="fa fa-file-text"></i> 订单管理</template>
-            <el-menu-item index="orderList" :route="{name: 'adminOrderList'}">列表</el-menu-item>
-        </el-submenu>
-        <el-submenu index="4">
           <template slot="title"><i class="fa fa-product-hunt"></i> 设计公司管理</template>
             <el-menu-item index="companyList" :route="{name: 'adminCompanyList'}">列表</el-menu-item>
         </el-submenu>
-        <el-submenu index="5">
+        <el-submenu index="4">
           <template slot="title"><i class="fa fa-product-hunt"></i> 需求公司管理</template>
             <el-menu-item index="demandCompanyList" :route="{name: 'adminDemandCompanyList'}">列表</el-menu-item>
         </el-submenu>
+        <el-submenu index="5">
+          <template slot="title"><i class="fa fa-file-text"></i> 订单管理</template>
+            <el-menu-item index="orderList" :route="{name: 'adminOrderList'}">列表</el-menu-item>
+        </el-submenu>
         <el-submenu index="6">
+          <template slot="title"><i class="fa fa-file-text"></i> 提现管理</template>
+            <el-menu-item index="withDrawList" :route="{name: 'adminWithDrawList'}">列表</el-menu-item>
+        </el-submenu>
+        <el-submenu index="7">
           <template slot="title"><i class="fa fa-user"></i> 用户管理</template>
             <el-menu-item index="userList" :route="{name: 'adminUserList'}">列表</el-menu-item>
         </el-submenu>

@@ -568,6 +568,16 @@ const routes = [
     },
     component: require('@/components/admin/order/List')
   },
+  // 提现列表
+  {
+    path: '/admin/with_draw/list',
+    name: 'adminWithDrawList',
+    meta: {
+      title: '提现列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/with_draw/List')
+  },
   // 设计公司列表
   {
     path: '/admin/company/list',

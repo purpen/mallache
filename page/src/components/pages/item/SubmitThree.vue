@@ -464,6 +464,9 @@
       })
     },
     watch: {
+    },
+    destroyed() {
+      window.removeEventListener('scroll', this.montiorWindow)
     }
   }
 </script>
