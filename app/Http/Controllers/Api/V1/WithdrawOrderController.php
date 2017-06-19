@@ -93,9 +93,9 @@ class WithdrawOrderController extends BaseController
         }catch (\Exception $e){
             DB::rollBack();
             Log::error($e);
+            return $this->response->array($this->apiError('Error', 500));
         }
 
-        dd($withdraw);
         if($withdraw){
             return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
         }
