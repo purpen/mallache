@@ -54,7 +54,7 @@ class WithdrawOrderController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $amount = $payload['amount'];
+        $amount = sprintf("%0.2f", $payload['amount']);
         $bank_id = $payload['bank_id'];
 
         //可提现金额
