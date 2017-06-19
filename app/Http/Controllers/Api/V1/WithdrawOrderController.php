@@ -59,7 +59,6 @@ class WithdrawOrderController extends BaseController
 
         //可提现金额
         $cash = $this->auth_user->cash;
-        dd($amount, $cash);
         if($amount > $cash){
             return $this->response->array($this->apiError('可提现金额不足', 403));
         }
