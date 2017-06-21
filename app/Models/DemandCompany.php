@@ -217,7 +217,7 @@ class DemandCompany extends BaseModel
             'email' => '',
             'position' => '',
             'user_id' => $user_id,
-            'document_type' => 1,
+            'document_type' => 0,
         ];
 
         $user = User::where('id' , $user_id)->first();

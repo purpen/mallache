@@ -65,12 +65,13 @@ return [
 
         'qiniu' => [
             'driver'  => 'qiniu',
-            'upload_url' => 'http://up-z1.qiniu.com',
+            'upload_url' => env('QINIU_UPLOAD_URL','http://up-z1.qiniu.com'),
             'access_key'=> 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i',  //AccessKey
             'secret_key'=> 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6',  //SecretKey
             'bucket'    => 'frmallache',  //Bucket名字
-            'domain' => 'saas',                                              //存储域
-            'call_back_url' => 'http://sa.taihuoniao.com/asset/callback',
+            'domain' => 'saas',
+            'call_back_url' => env('QINIU_CALL_BACK_URL', 'http://sa.taihuoniao.com/asset/callback'),
+            //
             'url' => 'http://oni525j96.bkt.clouddn.com/',                    //图片服务器
             'small' => '-p280x210.jpg',       //缩略图
             'big' => '-p800.jpg',                 //大图
