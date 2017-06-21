@@ -1,5 +1,5 @@
 <template>
-  <div class="container footer">
+  <div class="footer clear">
     <div class="line"></div>
     <el-row :gutter="24" type="flex" justify="center">
       <el-col class="item" :span="6">

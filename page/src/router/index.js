@@ -41,6 +41,14 @@ const routes = [
     component: require('@/components/pages/home/Server')
   },
   {
+    path: '/server_design',
+    name: 'serverDesign',
+    meta: {
+      title: '服务-设计公司'
+    },
+    component: require('@/components/pages/home/ServerDesign')
+  },
+  {
     path: '/stuff',
     name: 'stuff',
     meta: {

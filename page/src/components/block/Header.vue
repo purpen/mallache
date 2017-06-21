@@ -42,7 +42,7 @@ export default {
   name: 'header',
   data () {
     return {
-      menuactive: this.$route.path.split('/')[1],
+      // menuactive: this.$route.path.split('/')[1],
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
@@ -87,6 +87,13 @@ export default {
     },
     isAdmin() {
       return this.$store.state.event.user.role_id
+    },
+    menuactive() {
+      let menu = this.$route.path.split('/')[1]
+      if (menu === 'server_design') {
+        return 'server'
+      }
+      return menu
     }
   }
 }
@@ -100,7 +107,6 @@ export default {
     padding: 0 100px;
     background: #fff;
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
-    margin-bottom: 30px;
   }
   .el-menu--horizontal>.el-menu-item.logo{
     width: 110px;

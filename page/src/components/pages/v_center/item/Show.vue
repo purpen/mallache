@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-
+    <div class="blank20"></div>
     <el-row :gutter="24" type="flex" justify="center">
       <v-item-progress :progressButt="progressButt" :progressContract="progressContract" :progressItem="progressItem"></v-item-progress>
 

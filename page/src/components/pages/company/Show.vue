@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-
-    <el-row :gutter="24">
+    <div class="blank20"></div>
+    <el-row :gutter="10">
 
       <el-col :span="6">
         <div class="design-case-slide">

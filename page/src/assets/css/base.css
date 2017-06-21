@@ -200,12 +200,12 @@ button.is-custom.is-outlined.is-loading:after {
 .footer{
   text-align:center;
   margin-top: 50px;
-  margin-bottom: 50px;
+  padding-bottom: 50px;
+  background-color: #FAFAFA;
 }
 .footer .line {
   margin-top: 30px;
   margin-bottom: 30px;
-  border-top: 1px solid #ccc;
 }
 .footer .item {
   float: left;
