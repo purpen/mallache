@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
       <v-menu></v-menu>
 
       <el-col :span="20">
@@ -10,7 +10,7 @@
           <div class="content-box">
 
             <div class="form-title">
-              <span>公司认证</span>
+              <span>企业实名认证</span>
             </div>
 
             <div class="rz-box" v-if="isReady">
@@ -19,7 +19,7 @@
               </div>
               <div class="rz-stat">
                 <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
-                  +申请公司认证
+                  +申请企业认证
                 </router-link>
               </div>
             </div>
