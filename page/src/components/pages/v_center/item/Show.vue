@@ -193,7 +193,7 @@
                   <p>项目资金</p>
                   <p class="capital-money">¥ {{ item.price }}</p>
                   <p class="pay-btn">
-                      <span>项目资金已拖管 </span>
+                      <span>项目资金已拖管</span>
                   </p>
                 </div>
                 <div class="capital-item" v-else>
@@ -1086,8 +1086,11 @@ export default {
     font-size: 1rem;
   }
   .capital-item .pay-btn {
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin: 10px 0 20px 0;
+  }
+  .capital-item .pay-btn span {
+    color: #00AC84;
   }
   .capital-item .capital-btn {
     padding: 10px 30px 10px 30px;
