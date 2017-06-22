@@ -74,7 +74,7 @@ class DesignCaseController extends BaseController
             case 1:
                 $query->orderBy('id', 'desc');
                 break;
-            case 3:
+            case 2:
                 $query->orderBy('open_time', 'desc');
             break;
         }
