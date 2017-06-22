@@ -61,7 +61,6 @@ class DesignCompanyModel extends BaseModel
     protected $appends = [
         'company_type_val',
         'company_size_val',
-//        'item_quantity_val',
         'city_arr',
         'logo_image',
         'item_type'

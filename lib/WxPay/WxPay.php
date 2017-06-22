@@ -3,6 +3,7 @@ namespace Lib\WxPay;
 
 use Lib\WxPay\lib\WxPayApi;
 use Lib\WxPay\lib\WxPayUnifiedOrder;
+include_once __DIR__ . "/lib/WxPayData.php";
 
 /**
  *
@@ -51,6 +52,7 @@ class WxPay
         $input->SetProduct_id($product_id);  //商品ID
 
         $result = $this->GetPayUrl($input);
+        dd($result);
         $url = $result["code_url"];
         return $url;
     }

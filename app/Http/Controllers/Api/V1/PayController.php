@@ -359,7 +359,7 @@ class PayController extends BaseController
         $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
 
         $wx_pay = new WxPay();
-        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee, 1);
+        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee*100, 1);
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('code_url')));
     }
@@ -391,7 +391,7 @@ class PayController extends BaseController
         }
 
         $wx_pay = new WxPay();
-        $code_url = $wx_pay->wxPayApi($pay_order->summary, $pay_order->uid, $pay_order->amount, 1);
+        $code_url = $wx_pay->wxPayApi($pay_order->summary, $pay_order->uid, $pay_order->amount * 100, 1);
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('code_url')));
     }

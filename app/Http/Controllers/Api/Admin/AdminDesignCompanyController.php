@@ -7,6 +7,8 @@ use App\Http\AdminTransformer\AdminDesignCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 
 class AdminDesignCompanyController extends Controller
@@ -326,8 +328,43 @@ class AdminDesignCompanyController extends Controller
     }
 
     // 公开设计公司资料
+    /**
+     * @api {put} /admin/designCompany/openInfo 公开或关闭设计公司资料
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignCompany openInfo
+     * @apiGroup AdminDesignCompany
+     *
+     * @apiParam {integer} design_id 设计公司id
+     * @apiParam {integer} is_open 参数：0.关闭；1.公开
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
     public function openInfo(Request $request)
     {
+        $this->validate($request, [
+            'design_id' => 'required|integer',
+            'is_open' => ['required', Rule::in([0, 1])],
+        ]);
+
         $design_id = $request->input('design_id');
+        $is_open = $request->input('is_open');
+
+        if(!$design_company = DesignCompanyModel::find($design_id)){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $design_company->open = 1;
+        if(!$design_company->save()){
+            return $this->response->array($this->apiError('error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
     }
 }

@@ -43,7 +43,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'profile' => strval($designCase->profile),
             'status' => intval($designCase->status),
             'case_image' => $designCase->case_image,
-            'first_image' => $designCase->first_image,
+            'cover' => $designCase->cover,
             'industry' => intval($designCase->industry),
             'industry_val' => $designCase->industry_val,
             'type' => intval($designCase->type),
