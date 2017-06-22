@@ -19,6 +19,9 @@ return [
         '/admin/designCompany/okStatus',
         '/admin/designCompany/unStatus',
         '/admin/designCompany/lists',
+        // 公开或关闭设计公司资料
+        '/admin/designCompany/openInfo',
+
 
         //更新需求公司审核状态
         '/admin/demandCompany/verifyStatus',
@@ -51,6 +54,11 @@ return [
         '/admin/withdrawOrder/lists',
         // 确认提现单已提现
         '/admin/withdrawOrder/trueWithdraw',
+
+        // 设计公司案例列表
+        '/admin/designCase/lists',
+        // 开放设计案例
+        '/admin/designCase/openInfo',
     ],
 
     /**
@@ -70,6 +78,8 @@ return [
         '/admin/designCompany/okStatus',
         '/admin/designCompany/unStatus',
         '/admin/designCompany/lists',
+        // 公开或关闭设计公司资料
+        '/admin/designCompany/openInfo',
 
         //更新需求公司审核状态
         '/admin/demandCompany/verifyStatus',
@@ -92,6 +102,11 @@ return [
         '/admin/withdrawOrder/lists',
         // 确认提现单已提现
         '/admin/withdrawOrder/trueWithdraw',
+
+        // 设计公司案例列表
+        '/admin/designCase/lists',
+        // 开放设计案例
+        '/admin/designCase/openInfo',
     ],
 
     /**
@@ -105,5 +120,7 @@ return [
         '/admin/payOrder/lists',
         // 提现项目列表
         '/admin/withdrawOrder/lists',
+        // 设计公司案例列表
+        '/admin/designCase/lists',
     ],
 ];

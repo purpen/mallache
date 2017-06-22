@@ -39,6 +39,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/designCompany/lists', [
             'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
         ]);
+        // 公开或关闭设计公司资料
+        $api->put('/admin/designCompany/openInfo',[
+            'as' => 'AdminDesignCompany.openInfo', 'uses' => 'AdminDesignCompanyController@openInfo'
+        ]);
+
+        // 设计公司案例列表
+        $api->get('/admin/designCase/lists', [
+            'as' => 'DesignCase.lists', 'uses' => 'DesignCaseController@lists'
+        ]);
+        // 开放设计案例
+        $api->put('/admin/designCase/openInfo', [
+            'as' => 'DesignCase.openInfo', 'uses' => 'DesignCaseController@openInfo'
+        ]);
+
 
         //更新需求公司审核状态
         $api->put('/admin/demandCompany/verifyStatus', [

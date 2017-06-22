@@ -232,6 +232,13 @@ class DesignCaseController extends BaseController
     {
         $case_id = intval($case_id);
         $designCase = DesignCaseModel::find($case_id);
+
+        //判断是否有有权限查看案例详情
+        $design_company = new DesignCompanyModel();
+        if(!$designCase->open && !$design_company->isRead($this->auth_user_id, $designCase->design_company_id)){
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
         if(!$designCase){
             return $this->response->array($this->apiError('not found', 404));
         }
