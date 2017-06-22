@@ -1,10 +1,10 @@
 <?php
 return [
     //商户开通的商户号
-'merchantNum' => 22294531,
+'merchantNum' => 110218183002,
 
 // 商户DES密钥
-'desKey' => 'ta4E/aspLA3lgFGKmNDNRYU92RkZ4w2t',
+'desKey' => 'WhSSDUsR9uVTwog8Zaxn4BMlAB4W4gRM',
 
 // 京东支付服务地址
 'serverPayUrl' => 'https://wepay.jd.com/jdpay/saveOrder',
