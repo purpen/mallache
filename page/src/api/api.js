@@ -18,7 +18,9 @@ export default {
   login: '/auth/login', // 登录
   logout: '/auth/logout', // 退出登录
   register: '/auth/register', // 注册
-  check_account: '/auth/phoneState/',  // 验证手机号是否存在
+  forget: '/auth/forgetPassword', // POST 找回密码
+  modifyPwd: '/auth/changePassword', // POST 修改密码
+  check_account: '/auth/phoneState/{0}',  // 验证手机号是否存在
   fetch_msm_code: '/auth/sms', // 获取手机验证码
   user: '/auth/user',  // 获取用户信息
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
@@ -134,6 +136,10 @@ export default {
   // 提现管理
   adminWithDrawLists: '/admin/withdrawOrder/lists', // GET 订单列表
   adminWithDrawTruePay: '/admin/withdrawOrder/trueWithdraw', // 确认提现单已提现
+
+  // 案例管理
+  adminDesignCaseLists: '/admin/designCase/lists', // GET 案例列表
+  adminDesignCaseOpenInfo: '/admin/designCase/openInfo', // GUT 案例是否公开
 
   test: '/'  // End
 }

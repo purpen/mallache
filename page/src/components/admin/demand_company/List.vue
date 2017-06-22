@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
       <v-menu selectedName="demandCompanyList"></v-menu>
 
       <el-col :span="20">
@@ -43,15 +43,18 @@
                 </template>
             </el-table-column>
             <el-table-column
-              label="名称"
-              width="180">
+              label="内容"
+              min-width="180">
                 <template scope="scope">
                   <p>全称: {{ scope.row.company_name }}</p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
                   <p>网址: {{ scope.row.company_web }}</p>
+                  <p>规模: {{ scope.row.company_property_value }}</p>
+                  <p>地址: {{ scope.row.province_value }} {{ scope.row.city_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column
+              width="120"
               label="创建人">
                 <template scope="scope">
                   <p v-if="scope.row.user">
@@ -60,22 +63,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-              prop="company_type_val"
-              label="类型">
-            </el-table-column>
-            <el-table-column
-              prop="company_property_value"
-              label="规模">
-            </el-table-column>
-            <el-table-column
-              width="100"
-              label="地点">
-                <template scope="scope">
-                  <p>{{ scope.row.province_value }}</p>
-                  <p>{{ scope.row.city_value }}</p>
-                </template>
-            </el-table-column>
-            <el-table-column
+              width="80"
               label="是否认证">
                 <template scope="scope">
                   <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>

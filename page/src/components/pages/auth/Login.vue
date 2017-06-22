@@ -16,7 +16,7 @@
           </el-form-item>
           <div class="opt">
             <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
-            <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
+            <p class="forget"><router-link :to="{name: 'forget'}">忘记密码?</router-link></p>
           </div>
           <el-button type="primary" :loading="isLoadingBtn" @keyup="submit('ruleForm')" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
@@ -161,7 +161,7 @@ export default {
   .login-box{
     border: 1px solid #aaa;
     width: 800px;
-    height: 500px;
+    height: 400px;
     text-align:center;
     margin: 30px auto 30px auto;
   }

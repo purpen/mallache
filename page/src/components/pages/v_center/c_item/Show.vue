@@ -271,6 +271,7 @@ export default {
         isPay: false,
         manage: false,
         stage: false,
+        evaluate: false,
 
         end: false
       },
@@ -744,7 +745,7 @@ export default {
           case 20:
             self.progressButt = 3
             self.progressContract = 3
-            self.progressItem = 3
+            self.progressItem = 4
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
@@ -752,6 +753,7 @@ export default {
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
+            self.statusLabel.evaluate = true
             break
           default:
         }

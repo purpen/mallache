@@ -245,8 +245,25 @@
                   </div>
 
                   <p class="finish-item-btn" v-if="item.status === 15"><el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">项目确认完成</el-button></p>
-                  <p class="finish-item-btn" v-if="item.status === 18"><el-button type="primary" class="is-custom">项目交易成功,给设计公司评价</el-button></p>
+                  <p class="finish-item" v-if="item.status === 18">项目已验收</p>
                 </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
+          <div class="select-item-box" v-if="statusLabel.evaluate">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="评价" name="10">
+                <div class="evaluate-report" v-if="item.status === 18">
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                </div>
+
+                <div class="evaluate-result" v-else>
+                
+                </div>
+
               </el-collapse-item>
             </el-collapse>
           </div>
@@ -309,6 +326,7 @@ export default {
         isPay: false,
         manage: false,
         stage: false,
+        evaluate: false,
 
         end: false
       },
@@ -698,11 +716,12 @@ export default {
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
+            self.statusLabel.evaluate = true
             break
           case 20:
             self.progressButt = 3
             self.progressContract = 3
-            self.progressItem = 3
+            self.progressItem = 4
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
@@ -710,6 +729,7 @@ export default {
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
+            self.statusLabel.evaluate = true
             break
           default:
         }
@@ -1096,6 +1116,11 @@ export default {
   .finish-item-btn button {
     padding: 10px 60px 10px 60px;
   }
+  .finish-item {
+    font-size: 2rem;
+    text-align: center;
+    color: #00AC84;
+  }
   .item-bj {
     padding: 15px 10px 15px 10px;
     border-top: 1px solid #ccc;
@@ -1139,6 +1164,14 @@ export default {
     font-size: 1rem;
     margin: 5px;
     color: #666;
+  }
+
+  .evaluate-report {
+  
+  }
+
+  .evaluate-result {
+  
   }
 
 

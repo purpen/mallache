@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
       <v-menu selectedName="orderList"></v-menu>
 
       <el-col :span="20">

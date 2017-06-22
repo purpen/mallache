@@ -24,10 +24,14 @@
             <el-menu-item index="orderList" :route="{name: 'adminOrderList'}">列表</el-menu-item>
         </el-submenu>
         <el-submenu index="6">
-          <template slot="title"><i class="fa fa-file-text"></i> 提现管理</template>
+          <template slot="title"><i class="fa fa-money"></i> 提现管理</template>
             <el-menu-item index="withDrawList" :route="{name: 'adminWithDrawList'}">列表</el-menu-item>
         </el-submenu>
         <el-submenu index="7">
+          <template slot="title"><i class="fa fa-clipboard"></i> 案例管理</template>
+            <el-menu-item index="designCaseList" :route="{name: 'adminDesignCaseList'}">列表</el-menu-item>
+        </el-submenu>
+        <el-submenu index="20">
           <template slot="title"><i class="fa fa-user"></i> 用户管理</template>
             <el-menu-item index="userList" :route="{name: 'adminUserList'}">列表</el-menu-item>
         </el-submenu>

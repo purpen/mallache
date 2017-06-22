@@ -89,6 +89,15 @@ const routes = [
     },
     component: require('@/components/pages/auth/Register')
   },
+  // 找回密码
+  {
+    path: '/forget',
+    name: 'forget',
+    meta: {
+      title: '找回密码'
+    },
+    component: require('@/components/pages/auth/Forget')
+  },
 
   // 发布需求(第一步) 支付
   {
@@ -535,7 +544,18 @@ const routes = [
     component: require('@/components/pages/v_center/bank/List')
   },
 
-  // 后台管理
+  // ### 安全设置 #####
+  // 修改密码
+  {
+    path: '/vcenter/modify_pwd',
+    name: 'modifyPwd',
+    meta: {
+      title: '修改密码'
+    },
+    component: require('@/components/pages/v_center/account/ModifyPwd')
+  },
+
+  // ###### 后台管理 ##########
   // 控制台
   {
     path: '/admin',
@@ -605,6 +625,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/demand_company/List')
+  },
+  // 案例列表
+  {
+    path: '/admin/design_case/list',
+    name: 'adminDesignCaseList',
+    meta: {
+      title: '案例列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/design_case/List')
   },
   // 用户列表
   {

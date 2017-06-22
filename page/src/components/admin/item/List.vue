@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
       <v-menu selectedName="itemList"></v-menu>
 
       <el-col :span="20">
@@ -36,31 +36,25 @@
               width="60">
             </el-table-column>
             <el-table-column
-              prop="info.name"
-              label="名称"
-              width="140">
+              label="内容"
+              min-width="140">
+                <template scope="scope">
+                  <p>
+                    标题: {{ scope.row.info.name }}
+                    类型: {{ scope.row.item.type_label }}
+                    预算: {{ scope.row.info.design_cost_value }}
+                    周期: {{ scope.row.info.cycle_value }}
+                  </p>
+                </template>
             </el-table-column>
             <el-table-column
-              width="140"
+              width="120"
               label="创建人">
                 <template scope="scope">
                   <p>
                     {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
                   </p>
                 </template>
-            </el-table-column>
-            <el-table-column
-              prop="item.type_label"
-              label="类型"
-              width="150">
-            </el-table-column>
-            <el-table-column
-              prop="info.design_cost_value"
-              label="预算">
-            </el-table-column>
-            <el-table-column
-              prop="info.cycle_value"
-              label="周期">
             </el-table-column>
             <el-table-column
               prop="info.locale"

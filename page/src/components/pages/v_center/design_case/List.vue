@@ -20,7 +20,7 @@
                   :span="8">
                   <div class="item">
                     <div class="img">
-                      <img v-if="hasImg(d.first_image)" :src="d.first_image[0]['small']" />
+                      <img v-if="hasImg(d.first_image)" :src="d.cover['small']" />
                       <img v-else src="https://p4.taihuoniao.com/topic/170302/58b81d1020de8dfc6e8bd658-2-p325x200.jpg" />
                       <div class="opt">
                         <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">

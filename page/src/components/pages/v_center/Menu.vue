@@ -21,6 +21,9 @@
       <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
       </router-link>
+      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
+        安全设置
+      </router-link>
     </div>
 
     <div class="menu-list" v-else>
@@ -32,6 +35,9 @@
       </router-link>
       <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
+      </router-link>
+      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
+        安全设置
       </router-link>
     </div>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
       <v-menu selectedName="companyList"></v-menu>
 
       <el-col :span="20">
@@ -43,12 +43,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-              label="名称"
-              width="180">
+              label="内容"
+              min-width="180">
                 <template scope="scope">
                   <p>全称: {{ scope.row.company_name }}</p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
                   <p>网址: {{ scope.row.web }}</p>
+                  <p>类型: {{ scope.row.company_type_val }}</p>
+                  <p>规模: {{ scope.row.company_size_val }}</p>
+                  <p>地址: {{ scope.row.province_value }} {{ scope.row.city_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -57,22 +60,6 @@
                   <p>
                     {{ scope.row.users.account }}[{{ scope.row.user_id }}]
                   </p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              prop="company_type_val"
-              label="类型">
-            </el-table-column>
-            <el-table-column
-              prop="company_size_val"
-              label="规模">
-            </el-table-column>
-            <el-table-column
-              width="100"
-              label="地点">
-                <template scope="scope">
-                  <p>{{ scope.row.province_value }}</p>
-                  <p>{{ scope.row.city_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column

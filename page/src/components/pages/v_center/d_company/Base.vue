@@ -483,7 +483,7 @@
   }
   .edit a{
     font-size: 1.3rem;
-    color: #FE3824;
+    color: #0995F8;
   }
   .item p {
     line-height: 1.6;

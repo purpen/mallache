@@ -2,41 +2,27 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册毕方鸟账户</h2>
-      </div>
-      <div class="register-tab">
-        <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
-          <p><h3>我是客户</h3></p>
-          <p class="des">发布项目，找到精准设计公司</p>
-        </div>
-        <div :class="{'register-tab-computer': true, active: cActive}" @click="selectComputer">
-          <p><h3>我是设计公司</h3></p>
-          <p class="des">用专业设计服务，助力客户成长</p>
-        </div>
+        <h2>找回密码</h2>
       </div>
       <div class="register-content">
 
-        <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
+        <el-form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
           <el-form-item label="" prop="account">
-            <el-input v-model="form.account" name="account" ref="account" placeholder="手机号"></el-input>
+            <el-input v-model="form.account" name="account" ref="account" auto-complete="on" placeholder="手机号"></el-input>
           </el-form-item>
           <el-form-item label="" prop="smsCode">
-            <el-input v-model="form.smsCode" name="smsCode" ref="smsCode" placeholder="验证码">
+            <el-input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
               <template slot="append"><el-button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</el-button></template>
             </el-input>
           </el-form-item>
           <el-form-item label="" prop="password">
-            <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
+            <el-input v-model="form.password" type="password" name="password" ref="password" auto-complete="off" placeholder="重置密码"></el-input>
           </el-form-item>
           <el-form-item label="" prop="checkPassword">
-            <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
+            <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" auto-complete="off" placeholder="确认密码"></el-input>
           </el-form-item>
-          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
+          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">重置</el-button>
         </el-form>
-
-        <div class="reg">
-          <p>已有毕方鸟账户？<router-link :to="{name: 'login'}" >立即登录</router-link></p>
-        </div>
       
       </div>   
     </div>
@@ -46,10 +32,9 @@
 
 <script>
 import api from '@/api/api'
-import auth from '@/helper/auth'
 
 export default {
-  name: 'register',
+  name: 'forget',
   props: {
     second: {
       type: Number,
@@ -68,12 +53,8 @@ export default {
     }
     return {
       isLoadingBtn: false,
-      uActive: true,
-      cActive: false,
       time: 0,
-      labelPosition: 'top',
       form: {
-        type: 1,
         account: '',
         smsCode: '',
         password: '',
@@ -101,16 +82,6 @@ export default {
     }
   },
   methods: {
-    selectUser() {
-      this.form.type = 1
-      this.uActive = true
-      this.cActive = false
-    },
-    selectComputer() {
-      this.form.type = 2
-      this.cActive = true
-      this.uActive = ''
-    },
     submit(formName) {
       const that = this
       that.$refs[formName].validate((valid) => {
@@ -118,58 +89,17 @@ export default {
           var account = this.$refs.account.value
           var password = this.$refs.password.value
           var smsCode = this.$refs.smsCode.value
-          var type = this.form.type
-          if (!type) {
-            that.$message.error('请选择客户或设计公司')
-            return false
-          }
 
           that.isLoadingBtn = true
-          // 验证通过，注册
-          that.$http.post(api.register, {account: account, password: password, type: type, sms_code: smsCode})
+          // 验证通过，重置
+          that.$http.post(api.forget, {phone: account, password: password, sms_code: smsCode})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
-              var token = response.data.data.token
-              // 写入localStorage
-              auth.write_token(token)
-              // ajax拉取用户信息
-              that.$http.get(api.user, {})
-              .then (function(response) {
-                if (response.data.meta.status_code === 200) {
-                  auth.write_user(response.data.data)
-
-                  that.$message({
-                    showClose: true,
-                    message: '注册成功!',
-                    type: 'success'
-                  })
-
-                  that.$router.push('/home')
-                } else {
-                  auth.logout()
-                  that.$message({
-                    showClose: true,
-                    message: response.data.meta.message,
-                    type: 'error'
-                  })
-                  that.isLoadingBtn = false
-                }
-              })
-              .catch (function(error) {
-                auth.logout()
-                that.$message({
-                  showClose: true,
-                  message: error.message,
-                  type: 'error'
-                })
-                that.isLoadingBtn = false
-              })
+              that.$message.success('重置密码成功!')
+              that.$router.replace('/login')
+              return
             } else {
-              that.$message({
-                showClose: true,
-                message: response.data.meta.message,
-                type: 'error'
-              })
+              that.$message.error(response.data.meta.message)
               that.isLoadingBtn = false
             }
           })
@@ -215,7 +145,7 @@ export default {
       const that = this
       that.$http.get(url, {})
       .then (function(response) {
-        if (response.data.meta.status_code === 200) {
+        if (response.data.meta.status_code !== 200) {
           // 获取验证码
           that.$http.post(api.fetch_msm_code, {phone: account})
           .then (function(response) {
@@ -224,38 +154,18 @@ export default {
               that.timer()
               that.$emit('send')
             } else {
-              that.$message({
-                showClose: true,
-                message: '获取验证码失败!',
-                type: 'error'
-              })
+              that.$message.error('获取验证码失败')
             }
           })
           .catch (function(error) {
-            that.$message({
-              showClose: true,
-              message: error.message,
-              type: 'error'
-            })
-            console.log(error.message)
-            return false
+            that.$message.error(error.message)
           })
         } else {
-          that.$message({
-            showClose: true,
-            message: response.data.meta.message,
-            type: 'error'
-          })
-          return false
+          that.$message.error(response.data.meta.message)
         }
       })
       .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
-        })
-        return false
+        that.$message.error(error.message)
       })
     },
 
@@ -288,7 +198,7 @@ export default {
   .register-box{
     border: 1px solid #aaa;
     width: 800px;
-    height: 600px;
+    height: 450px;
     text-align:center;
     margin: 30px auto 30px auto;
   }
@@ -300,54 +210,10 @@ export default {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    border-bottom: 1px solid #aaa;
   }
 
   .regisiter-title h2{
-  }
-
-  .register-tab{
-    font-size: 1.8rem;
-    width: 100%;
-    height: 100px;
-    border-top: 1px solid #aaa;
-    border-bottom: 1px solid #aaa;
-    position:relative;
-
-
-  }
-
-  .register-tab-user{
-    padding-top: 20px;
-    width: 50%;
-    height: 80px;
-    position:absolute;
-    cursor: pointer;
-  }
-  .register-tab-user.active{
-    border-bottom: 2px solid #FF5A5F;
-    background-color: #eee;
-  }
-  .register-tab-user.active h3{
-    color: #FF5A5F;
-  }
-  .register-tab-computer{
-    padding-top: 20px;
-    width: 50%;
-    height: 80px;
-    position:absolute;
-    left: 50%;
-    cursor: pointer;
-  }
-  .register-tab-computer.active{
-    border-bottom: 2px solid #FF5A5F;
-    background-color: #eee;
-  }
-  .register-tab-computer.active h3{
-    color: #FF5A5F;
-  }
-
-  .register-tab p{
-    padding:3px;
   }
 
   p.des{
@@ -367,14 +233,6 @@ export default {
   .code-btn {
     cursor: pointer;
   }
-  .reg {
-    margin-top: 40px;
-  }
-  .reg p {
-    color: #666;
-  }
-  .reg p a {
-    color: #FF5A5F;
-  }
+
 
 </style>
