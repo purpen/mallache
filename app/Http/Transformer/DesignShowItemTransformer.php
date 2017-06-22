@@ -17,6 +17,11 @@ class DesignShowItemTransformer extends TransformerAbstract
     public function transform(Item $item)
     {
         $data = $item->itemInfo();
+
+        // 添加 项目完成后支付金额和其他金额信息
+        $data['warranty_money'] = sprintf("%0.2f", $item->price * config("constant.warranty_money"));
+        $data['other_money'] = sprintf("%0.2f", $item->price - $item->warranty_money);
+
         return [
             'item' => $data,
             'quotation' => $this->quotation($item->id),

@@ -4,13 +4,20 @@ namespace Lib\JdPay\common;
 
 class ConfigUtil {
 	public static function get_val_by_key($key) {
-		$settings = new Settings_INI ();
-		$settings->load ( __DIR__ . '/../config/config.ini' );
-		return $settings->get ( "wepay." . $key );
+	    // 原内容
+//		$settings = new Settings_INI ();
+//		$settings->load ( __DIR__ . '/../config/config.ini' );
+//		return $settings->get ( "wepay." . $key );
+
+        // 新修改
+        return config('jdpay.' . $key);
+
 	}
+
 	public static function get_trade_num() {
 		return ConfigUtil::get_val_by_key ( 'merchantNum' ) . ConfigUtil::getMillisecond ();
 	}
+
 	public static function getMillisecond() {
 		list ( $s1, $s2 ) = explode ( ' ', microtime () );
 		return ( float ) sprintf ( '%.0f', (floatval ( $s1 ) + floatval ( $s2 )) * 1000 );

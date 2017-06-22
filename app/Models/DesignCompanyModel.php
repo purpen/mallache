@@ -344,7 +344,7 @@ class DesignCompanyModel extends BaseModel
     {
         $all['company_abbreviation'] = '';
         $all['legal_person'] = '';
-        $all['document_type'] = 1;
+        $all['document_type'] = 0;
         $all['document_number'] = '';
         $all['open'] = 0;
         $all['user_id'] = $user_id;

@@ -1327,11 +1327,11 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if ($province) {
+        if ($province && $province != -1) {
             $design->where('province', $province);
         }
 
-        if ($city) {
+        if ($city && $city != -1) {
             $design->where('city', $city);
         }
 

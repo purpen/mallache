@@ -35,6 +35,7 @@ class Contract extends BaseModel
         'status',
         'unique_id',
         'title',
+        'warranty_money'
     ];
 
     //相对关联 项目表

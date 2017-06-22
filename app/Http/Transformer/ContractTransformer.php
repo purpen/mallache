@@ -62,6 +62,7 @@ class ContractTransformer extends TransformerAbstract
             'unique_id' => strval($contract->unique_id),
             'item_name' => $contract->item_name,
             'title' => strval($contract->title),
+            'warranty_money' => $contract->warranty_money,
             'item_stage' => $this->itemStage($contract->item_demand_id),
         ];
     }

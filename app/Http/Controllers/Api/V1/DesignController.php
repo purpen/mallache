@@ -188,7 +188,9 @@ class DesignController extends BaseController
                     "address": null,    //详细地址
                     "contact_name": null,   //联系人
                     "phone": "172734923",
-                    "email": "qq@qq.com"
+                    "email": "qq@qq.com",
+     *              "warranty_money": ,  // 项目完成时 支付金额
+     *              "other_money": ,     // 阶段总金额
                 },
      *      "quotation": {      //报价单信息
                 "id": 19,
@@ -229,6 +231,7 @@ class DesignController extends BaseController
         if(!$item){
             return $this->response->array($this->apiError());
         }
+
         return $this->response->item($item, new DesignShowItemTransformer($design_company->id))->setMeta($this->apiMeta());
     }
 
