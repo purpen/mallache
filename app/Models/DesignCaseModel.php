@@ -68,9 +68,9 @@ class DesignCaseModel extends BaseModel
     /**
      * 封面图
      */
-    public function getFirstImageAttribute()
+    public function getCoverAttribute()
     {
-        return AssetModel::getImageUrl($this->id , 5 , 1 , 1);
+        return AssetModel::getOneImageUrl($this->id , 5 , 1);
     }
 
     public function getSalesVolumeValAttribute()

@@ -420,4 +420,10 @@ class DesignCaseController extends BaseController
         return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
 
     }
+
+    // 设计案例推荐列表
+    public function openLists()
+    {
+
+    }
 }

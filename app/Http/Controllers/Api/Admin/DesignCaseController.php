@@ -18,8 +18,8 @@ class DesignCaseController extends BaseController
      *
      * @apiParam {integer} page 页码
      * @apiParam {integer} per_page  页面数量
-     * @apiParam {integer} sort 创建时间排序 0.正序；1.倒序；
-     * @apiParam {integer} open_sort 开放时间排序 0.正序；1.倒序；
+     * @apiParam {integer} sort 创建时间排序 0.创建时间正序；1.创建时间倒序；2.推荐倒序；
+     * @apiParam {integer} type 1.全部；2.未公开；3.公开；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -48,6 +48,7 @@ class DesignCaseController extends BaseController
      *      "design_type_val": "产品策略",
      *      "other_prize": "",
      *      "mass_production": 1,
+     *      "design_company":{},
      *  }
      * ],
      *      "meta": {
@@ -61,21 +62,35 @@ class DesignCaseController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $sort = $request->input('sort');
-        $open_sort = $request->input('open_sort');
+        $type = $request->input('type');
 
-        if (!$sort && $sort !== null) {
-            $sort = 'asc';
-        } else {
-            $sort = 'desc';
+        $query = DesignCaseModel::with('DesignCompany');
+
+        //排序
+        switch ($sort){
+            case 0:
+                $query->orderBy('id', 'asc');
+                break;
+            case 1:
+                $query->orderBy('id', 'desc');
+                break;
+            case 3:
+                $query->orderBy('open_time', 'desc');
+            break;
         }
 
-        if (!$open_sort && $open_sort !== null) {
-            $open_sort = 'asc';
-        } else {
-            $open_sort = 'desc';
+        // 类型
+        switch ($type){
+            case 2:
+                $query->where('open', 0);
+                break;
+            case 3:
+                $query->where('open', 1);
+                break;
+
         }
 
-        $lists = DesignCaseModel::orderBy('id', $sort)->orderBy('open_time', $open_sort)->paginate($per_page);
+        $lists = $query->paginate($per_page);
 
         return $this->response->paginator($lists, new DesignCaseTransformer())->setMeta($this->apiMeta());
     }

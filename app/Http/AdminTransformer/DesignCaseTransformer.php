@@ -30,6 +30,7 @@ class DesignCaseTransformer extends TransformerAbstract
     {
         return [
             'id' => intval($designCase->id),
+            'user_id' => $designCase->user_id,
             'prize' => intval($designCase->prize),
             'prize_val' => $designCase->prize_val,
             'title' => strval($designCase->title),
@@ -42,7 +43,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'profile' => strval($designCase->profile),
             'status' => intval($designCase->status),
             'case_image' => $designCase->case_image,
-            'first_image' => $designCase->first_image,
+            'cover' => $designCase->cover,
             'industry' => intval($designCase->industry),
             'industry_val' => $designCase->industry_val,
             'type' => intval($designCase->type),
@@ -52,6 +53,60 @@ class DesignCaseTransformer extends TransformerAbstract
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
+            'design_company' => $this->designCompany($designCase)
+        ];
+    }
+
+    protected function designCompany(DesignCaseModel $designCase)
+    {
+        $DesignCompany = $designCase->DesignCompany;
+        return [
+            'id' => intval($DesignCompany->id),
+            'user_id' => intval($DesignCompany->user_id),
+            'company_type' => intval($DesignCompany->company_type),
+            'company_type_val' => $DesignCompany->company_type_val,
+            'company_name' => strval($DesignCompany->company_name),
+            'company_abbreviation' => strval($DesignCompany->company_abbreviation),
+            'registration_number' => strval($DesignCompany->registration_number),
+            'province' => intval($DesignCompany->province),
+            'city' => intval($DesignCompany->city),
+            'area' => intval($DesignCompany->area),
+            'province_value' => $DesignCompany->company_province_value,
+            'city_value' => $DesignCompany->company_city_value,
+            'area_value' => $DesignCompany->company_area_value,
+            'address' => strval($DesignCompany->address),
+            'contact_name' => strval($DesignCompany->contact_name),
+            'position' => strval($DesignCompany->position),
+            'phone' => strval($DesignCompany->phone),
+            'email' => strval($DesignCompany->email),
+            'company_size' => intval($DesignCompany->company_size),
+            'company_size_val' => $DesignCompany->company_size_val,
+            'branch_office' => intval($DesignCompany->branch_office),
+            'good_field' => explode(",",$DesignCompany->good_field),
+            'web' => strval($DesignCompany->web),
+            'company_profile' => strval($DesignCompany->company_profile),
+            'design_type' => strval($DesignCompany->design_type),
+            'establishment_time' => strval($DesignCompany->establishment_time),
+            'professional_advantage' => strval($DesignCompany->professional_advantage),
+            'awards' => strval($DesignCompany->awards),
+            'score' => intval($DesignCompany->score),
+            'status' => intval($DesignCompany->status),
+            'is_recommend' => intval($DesignCompany->is_recommend),
+            'verify_status' => intval($DesignCompany->verify_status),
+            'logo' => $DesignCompany->logo,
+            'logo_image' => $DesignCompany->logo_image,
+            'license_image' => $DesignCompany->license_image,
+            'unique_id' => strval($DesignCompany->unique_id),
+            'created_at' => $DesignCompany->created_at,
+            'users' => $DesignCompany->user,
+            'city_arr' => $DesignCompany->city_arr,
+            'legal_person' => strval($DesignCompany->legal_person),
+            'document_type' => intval($DesignCompany->document_type),
+            'document_type_val' => $DesignCompany->document_type_val,
+            'document_number' => strval($DesignCompany->document_number),
+            'document_image' => $DesignCompany->document_image,
+            'item_type' => $DesignCompany->item_type,
+            'open' => $DesignCompany->open,
         ];
     }
 }
