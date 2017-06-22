@@ -125,22 +125,22 @@
           <div class="select-item-box" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合作的设计公司" name="5">
-                <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index" v-if="d.status === 5">
+                <div class="offer-company-item">
 
                   <div class="item-logo">
                     <div class="fl">
-                      <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">
-                        <img class="avatar fl" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="40" />
+                      <router-link :to="{name: 'companyShow', params: {id: cooperateCompany.design_company.id}}" target="_blank">
+                        <img class="avatar fl" v-if="cooperateCompany.design_company.logo_url" :src="cooperateCompany.design_company.logo_url" width="40" />
                         <img class="avatar fl" v-else src="../../../../assets/images/avatar_100.png" width="40" />
                       </router-link>
                       <p class="p-title fl">
-                        <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">{{ d.design_company.company_name }}</router-link>
+                        <router-link :to="{name: 'companyShow', params: {id: cooperateCompany.design_company.id}}" target="_blank">{{ cooperateCompany.design_company.company_name }}</router-link>
                       </p>
-                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="d.design_company_status === 2">
-                        <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
-                        <p class="contact">职位: {{ d.design_company.position }}</p>
-                        <p class="contact">电话: {{ d.design_company.phone }}</p>
-                        <p class="contact">邮箱: {{ d.design_company.email }}</p>
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top">
+                        <p class="contact">联系人: {{ cooperateCompany.design_company.contact_name }}</p>
+                        <p class="contact">职位: {{ cooperateCompany.design_company.position }}</p>
+                        <p class="contact">电话: {{ cooperateCompany.design_company.phone }}</p>
+                        <p class="contact">邮箱: {{ cooperateCompany.design_company.email }}</p>
                           <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> 联系我们</p>
                       </el-popover>
                     </div>
@@ -148,16 +148,10 @@
                     </div>
                   </div>
                   <div class="clear"></div>
-                  <div class="item-bj" v-if="d.quotation">
-                    <p>项目报价:  <span class="p-price">{{ d.quotation.price }} 元</span></p>
-                    <p>报价说明:  {{ d.quotation.summary }}</p>                   
+                  <div class="item-bj">
+                    <p>项目报价:  <span class="p-price">{{ cooperateCompany.quotation.price }} 元</span></p>
+                    <p>报价说明:  {{ cooperateCompany.quotation.summary }}</p>                   
                   </div>
- 
-                  <div class="btn" v-if="d.item_status === 0 && d.design_company_status === 2">
-                    <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
-                    <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button>                      
-                  </div>
-
 
                 </div>
 
@@ -253,9 +247,15 @@
 
           <div class="select-item-box" v-if="statusLabel.evaluate">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="评价" name="10">
+              <el-collapse-item title="评价" name="12">
                 <div class="evaluate-report" v-if="item.status === 18">
-                  <p></p>
+                  <p class="ev-c-ava">
+                    <img class="avatar" v-if="cooperateCompany.design_company.logo_url" :src="cooperateCompany.design_company.logo_url" width="60" />
+                    <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="60" />
+                  </p>
+                  <p class="ev-c-name">
+                    {{ cooperateCompany.design_company.company_name }}
+                  </p>
                   <p></p>
                   <p></p>
                 </div>
@@ -314,7 +314,7 @@ export default {
       info: {},
       contract: {},
       isLoadingBtn: false,
-      selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '15'],
+      selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '15'],
       statusIconUrl: null,
       statusLabel: {
         detail: true,
@@ -333,6 +333,7 @@ export default {
       tableData: [],
       stickCompany: [],
       offerCompany: [],
+      cooperateCompany: '',
       company: null,
       hasOfferCompany: false,
       progressButt: 0,
@@ -574,6 +575,9 @@ export default {
                   offerCompany[i].design_company.logo_url = item.design_company.logo_image.logo
                 } else {
                   offerCompany[i].design_company.logo_url = false
+                }
+                if (item.status === 5) {
+                  self.cooperateCompany = offerCompany[i]
                 }
               } // endfor
               self.offerCompany = offerCompany
@@ -1170,6 +1174,13 @@ export default {
   }
 
   .evaluate-report {
+    text-align: center;
+  }
+  .evaluate-report .ev-c-ava {
+  
+  }
+  .evaluate-report .ev-c-name {
+    line-height: 2;
   
   }
 
