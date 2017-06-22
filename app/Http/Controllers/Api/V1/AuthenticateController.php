@@ -15,6 +15,7 @@ use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -250,7 +251,8 @@ class AuthenticateController extends BaseController
      * @apiName user changePassword
      * @apiGroup User
      *
-     * @apiParam {string} password
+     * @apiParam {string} old_password 原密码
+     * @apiParam {string} password     新密码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -266,8 +268,19 @@ class AuthenticateController extends BaseController
      */
     public function changePassword(Request $request)
     {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'required',
+        ]);
+
+        $old_password = $request->input('old_password');
         $newPassword = $request->input('password');
+
         $user  =  JWTAuth::parseToken()->authenticate();
+
+        if(!Hash::check($old_password, $user->password)){
+            return $this->response->array($this->apiError('原密码不正确', 403));
+        }
 
         $user->password = bcrypt($newPassword);
         if($user->save()){
