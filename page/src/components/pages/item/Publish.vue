@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-
+    <div class="blank20"></div>
     <div class="publish-box">
       <div v-if="verifyStatus === 1">
         <p class="success-img"><img src="../../../assets/images/icon/success_2x.png" width="80" /></p>

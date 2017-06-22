@@ -44,37 +44,46 @@
     </div>
 
     <div class=" container">
+
+        <div class="pub-title">入驻设计服务供应商</div>
+        <div class="design-company">
+          <img src="../../../assets/images/home/server_logo_01.png" />
+          <img src="../../../assets/images/home/server_logo_02.png" />
+          <img src="../../../assets/images/home/server_logo_03.png" />
+          <img src="../../../assets/images/home/server_logo_04.png" />
+          <img src="../../../assets/images/home/server_logo_05.png" />
+        </div>
     
-        <div class="pub-title">发布项目流程</div>
+        <div class="pub-title clear">公司入驻流程</div>
         <div class="process">
           <div class="item-process">
-            <img src="../../../assets/images/item/item_dj.png" width="68" />
-            <p>1.支付预付金</p>
+            <img src="../../../assets/images/item/d_item_join.png" />
+            <p>1.加入铟果</p>
           </div>
           <div class="item-process line"></div>
           <div class="item-process">
-            <img src="../../../assets/images/item/item_fb.png" width="68" />
-            <p>2.选择项目类型</p>
+            <img src="../../../assets/images/item/d_item_ws.png" />
+            <p>2.完善公司信息</p>
           </div>
           <div class="item-process line"></div>
           <div class="item-process">
-            <img src="../../../assets/images/item/item_xq.png" width="68" />
-            <p>3.完善项目需求</p>
+            <img src="../../../assets/images/item/d_item_rz.png" />
+            <p>3.实名认证</p>
           </div>
           <div class="item-process line"></div>
           <div class="item-process">
-            <img src="../../../assets/images/item/item_lxx.png" width="68" />
-            <p>4.填写公司信息</p>
+            <img src="../../../assets/images/item/d_item_jd.png" />
+            <p>4.接单设置</p>
           </div>
           <div class="item-process line"></div>
           <div class="item-process">
-            <img src="../../../assets/images/item/item_fb.png" width="68" />
-            <p>5.检查并发布</p>
+            <img src="../../../assets/images/item/d_item_sc.png" />
+            <p>5.上传案列</p>
           </div>
           <div class="item-process line"></div>
           <div class="item-process">
-            <img src="../../../assets/images/item/item_tj.png" width="68" />
-            <p>6.匹配设计服务</p>
+            <img src="../../../assets/images/item/d_item_dd.png" width="68" />
+            <p>6.等待审核</p>
           </div>
         </div>
     
@@ -176,19 +185,31 @@ export default {
     height: 150px;
   }
   .process .item-process {
+    width: 8.5%;
     margin: 10px 1%;
     text-align: center;
     float: left;
   }
   .process .item-process img, .process .item-process p {
-    padding: 2px;
+    padding: 10px 1%;
     color: #555;
+  }
+  .process .item-process img {
+    width: 70%;
   }
   .process .item-process.line {
     width: 5%;
-    height: 50px;
-    line-height: 30px;
+    height: 30%;
     border-bottom: 1px dashed #979797;
+  }
+
+  .design-company {
+    height: 150px;
+  }
+  .design-company img {
+    width: 10%;
+    float: left;
+    margin: 10px 5%;
   }
 
 

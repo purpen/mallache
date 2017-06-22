@@ -35,7 +35,7 @@
             <p>联系人: {{ item.contact_name }}</p>
             <p>电话: {{ item.phone }}</p>
             <p>邮箱: {{ item.email }}</p>
-            <p>网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
+            <p class="web">网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
           </div>
         
         </div>
@@ -236,6 +236,10 @@
   }
   .design-case-list .content a {
     font-size: 1.5rem;
+  }
+
+  p.web {
+    word-wrap: break-word;
   }
 
 </style>

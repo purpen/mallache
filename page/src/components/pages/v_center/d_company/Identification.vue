@@ -35,7 +35,7 @@
               <el-row :gutter="24">
                 <el-col :span="12">
                   <el-form-item label="注册号" prop="registration_number">
-                    <el-input v-model="form.registration_number" placeholder=""></el-input>
+                    <el-input v-model.number="form.registration_number" placeholder=""></el-input>
                   </el-form-item>          
                 </el-col>
               </el-row>
@@ -163,6 +163,23 @@
       vMenuSub
     },
     data () {
+      var checkNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请添写公司注册号!'))
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('注册号只能为数字！'))
+          } else {
+            var len = value.toString().length
+            if (len === 15 || len === 18) {
+              callback()
+            } else {
+              callback(new Error('注册号长度应为15或18位'))
+            }
+          }
+        }, 1000)
+      }
       return {
         isLoading: false,
         isLoadingBtn: false,
@@ -204,8 +221,7 @@
             { type: 'number', required: true, message: '请添写公司全称', trigger: 'change' }
           ],
           registration_number: [
-            { required: true, message: '请添写公司注册号', trigger: 'blur' },
-            { pattern: /[(^.{15})|(^.{18})]$/, message: '注册号格式不正确', trigger: 'blur' }
+            { validator: checkNumber, trigger: 'blur' }
           ],
           legal_person: [
             { required: true, message: '请添写法人真实姓名', trigger: 'blur' }
@@ -392,6 +408,7 @@
             // 重新渲染
             that.$nextTick(function() {
               that.form = response.data.data
+              that.form.registration_number = parseInt(that.form.registration_number)
               that.form.company_type = that.form.company_type === 0 ? '' : that.form.company_type
               that.form.document_type = that.form.document_type === 0 ? '' : that.form.document_type
               that.companyId = response.data.data.id

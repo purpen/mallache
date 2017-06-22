@@ -20,7 +20,7 @@
 
             <p class="title">根据需求方与供应商在本平台的初步沟通，现确定双方合作内容与形式如下：</p>
             <p>
-              自本协议签订之日起，需求方需在 <input class="bottom-border" disabled type="text" value="5" style="width:20px;" />个工作日内一次性支付给供应商 <input class="bottom-border" disabled type="text" v-model="form.title" style="width:100px;" />（项目名称 ） 的设计费用人民币（<input class="bottom-border" disabled type="text" v-model="form.total" style="width:50px;" />）元，其中     将作为项目预付款直接转入供应商账户，剩余款项在项目进行期间由本平台托管，并分阶段在供应商完成相应阶段工作后转入供应商账户，直至需求方确认项目完成且无异议后将全部款项转入供应商账户；供应商需按协议规定，在收到预付款后的   个工作日内启动项目相关设计工作，并按照需求方要求在规定时间内完成全部设计工作。
+              自本协议签订之日起，需求方需在 <input class="bottom-border" disabled type="text" value="5" style="width:20px;" />个工作日内一次性支付给供应商 <input class="bottom-border" disabled type="text" v-model="form.title" style="width:100px;" />（项目名称 ） 的设计费用人民币（<input class="bottom-border" disabled type="text" v-model="form.total" style="width:50px;" />）元，全部项目设计费用将分为阶段款和尾款两部分。
             </p>
 
             <p class="title">项目具体流程与时间节点</p>

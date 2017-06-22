@@ -73,7 +73,7 @@
         const result = []
         const items = this.$options.region[pid]
         if (this.isEmpty) {
-          result.push([0, '不限'])
+          result.push([-1, '不限'])
         }
         for (let code in items) {
           result.push([parseInt(code, 10), items[code]])

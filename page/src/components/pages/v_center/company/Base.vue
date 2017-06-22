@@ -564,7 +564,8 @@
     font-size: 1.5rem;
   }
   .edit a{
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    color: #FE3824;
   }
   .item p {
     line-height: 1.6;

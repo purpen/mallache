@@ -18,32 +18,32 @@
         <div class="pub-title process-title">发布项目流程</div>
         <div class="process">
           <div class="item">
-            <img src="../../../assets/images/item/item_dj.png" width="68" />
+            <img src="../../../assets/images/item/item_dj.png" />
             <p>1.支付预付金</p>
           </div>
           <div class="item line"></div>
           <div class="item">
-            <img src="../../../assets/images/item/item_fb.png" width="68" />
+            <img src="../../../assets/images/item/item_lx.png" />
             <p>2.选择项目类型</p>
           </div>
           <div class="item line"></div>
           <div class="item">
-            <img src="../../../assets/images/item/item_xq.png" width="68" />
+            <img src="../../../assets/images/item/item_xq.png" />
             <p>3.完善项目需求</p>
           </div>
           <div class="item line"></div>
           <div class="item">
-            <img src="../../../assets/images/item/item_lxx.png" width="68" />
+            <img src="../../../assets/images/item/item_lxx.png" />
             <p>4.填写公司信息</p>
           </div>
           <div class="item line"></div>
           <div class="item">
-            <img src="../../../assets/images/item/item_fb.png" width="68" />
+            <img src="../../../assets/images/item/item_fb.png" />
             <p>5.检查并发布</p>
           </div>
           <div class="item line"></div>
           <div class="item">
-            <img src="../../../assets/images/item/item_tj.png" width="68" />
+            <img src="../../../assets/images/item/item_tj.png" />
             <p>6.匹配设计服务</p>
           </div>
         </div>
@@ -111,20 +111,24 @@ export default {
 
   }
   .process {
+    height: 150px;
   }
   .process .item {
+    width: 8.5%;
     margin: 10px 1%;
     text-align: center;
     float: left;
   }
   .process .item img, .process .item p {
-    padding: 2px;
+    padding: 10px 2px;
     color: #555;
+  }
+  .process .item img {
+    width: 70%;
   }
   .process .item.line {
     width: 5%;
-    height: 50px;
-    line-height: 30px;
+    height: 30%;
     border-bottom: 1px dashed #979797;
   }
   .pub-btn {

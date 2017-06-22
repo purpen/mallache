@@ -10,7 +10,61 @@
           <div class="content-box">
 
             <div class="form-title">
-              <span>公司认证</span>
+              <span>企业实名认证</span>
+            </div>
+
+            <div class="company-show" v-if="isApply">
+              <div class="item">
+                <p class="p-key">企业名称</p>
+                <p class="p-val">{{ item.company_name }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">企业证件类型</p>
+                <p class="p-val">{{ item.company_type_value }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">注册号</p>
+                <p class="p-val">{{ item.registration_number }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">法人姓名</p>
+                <p class="p-val">{{ item.legal_person }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">法人证件类型</p>
+                <p class="p-val">{{ item.document_type_value }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">证件号码</p>
+                <p class="p-val">{{ item.document_number }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">联系人</p>
+                <p class="p-val">{{ item.contact_name }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">职位</p>
+                <p class="p-val">{{ item.position }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">手机</p>
+                <p class="p-val">{{ item.phone }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">邮箱</p>
+                <p class="p-val">{{ item.email }}</p>
+              </div>
+
+
             </div>
 
             <div class="rz-box" v-if="isReady">
@@ -25,12 +79,18 @@
             </div>
 
             <div class="rz-box" v-if="isApply">
-              <div class="rz-title">
-                <span>{{ statusLabel }}</span>
+              <div class="rz-title success" v-if="item.verify_status === 1">
+                <p>认证通过</p>
               </div>
-              <div class="rz-stat">
-                <router-link :to="{name: 'vcenterComputerIdentification'}" class="item">
-                  重新提交认证
+              <div class="rz-title wait" v-else-if="item.verify_status === 0">
+                <p>等待认证</p>
+              </div>
+              <div class="rz-title rejust" v-else-if="item.verify_status === 2">
+                <p>认证未通过</p>
+              </div>
+              <div class="rz-stat" v-if="item.verify_status !== 1">
+                <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
+                  <el-button class="is-custom" type="primary">重新提交认证</el-button>
                 </router-link>
               </div>
             </div>
@@ -72,12 +132,9 @@
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
+            that.item = response.data.data
+            that.item.phone = that.item.phone === '0' ? '' : that.item.phone
             that.companyId = response.data.data.id
-            if (response.data.data.verify_status === 1) {
-              that.statusLabel = '公司认证已审核通过'
-            } else if (response.data.data.verify_status === 0) {
-              that.statusLabel = '等待认证'
-            }
             that.isApply = true
           } else {
             that.isReady = true
@@ -103,11 +160,52 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .rz-box {
+    margin-top: 50px;
+  }
   .rz-title {
     float: left;
   }
+  .rz-title p{
+    font-size: 1.8rem;
+  }
+  .success p {
+    color: #008000;
+  }
+  .wait p {
+    color: #FF4500;
+  }
+  .rejust p {
+    color: #FF4500;
+  }
   .rz-stat {
     float: right;
+  }
+
+  .company-show {
+  
+  }
+
+  .company-show .item {
+    clear: both;
+    height: 40px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .item p {
+    line-height: 3;
+  }
+
+  .item p.p-key {
+    float: left;
+    width: 150px;
+    color: #666;
+  }
+
+  .item p.p-val {
+    width: 300px;
+    float: left;
+    font-size: 1.5rem;
   }
 
 </style>

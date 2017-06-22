@@ -313,9 +313,9 @@
                     that.form.email = bRow.email
                     that.form.position = bRow.position
 
-                    that.province = bRow.company_province === 0 ? '' : bRow.province
-                    that.city = bRow.company_city === 0 ? '' : bRow.city
-                    that.district = bRow.company_area === 0 ? '' : bRow.area
+                    that.province = bRow.province === 0 ? '' : bRow.province
+                    that.city = bRow.city === 0 ? '' : bRow.city
+                    that.district = bRow.area === 0 ? '' : bRow.area
                   }
                 }
               })

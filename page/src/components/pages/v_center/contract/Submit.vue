@@ -6,7 +6,6 @@
 
       <el-col :span="20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
           <div class="content-box">
             <h2>{{ itemName }}合同</h2>
             <el-form :model="form" :rules="ruleForm" ref="ruleForm">
@@ -72,6 +71,9 @@
             </el-form-item>
 
             <p class="title">3.项目费用及计划</p>
+            <p>项目总金额(¥):  <input class="bottom-border" type="text" disabled v-model="form.total" style="width:50px;" /> ; 阶段金额(¥): <input class="bottom-border" type="text" disabled :value="form.stage_money" style="width:50px;" /> 尾款金额(¥): <input class="bottom-border" type="text" disabled v-model="form.warranty_money" style="width:50px;" /></p>
+            <div class="blank20"></div>
+            <!--
             <el-row :gutter="10">
               <el-col :span="6">
                 <el-form-item label="" prop="total">
@@ -81,6 +83,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            -->
             <el-row>
               <el-col :span="6">
               <el-form-item prop="sort">
@@ -255,6 +258,7 @@
           design_type_paragraph: '',
           design_type_contain: '',
           total: '',
+          warranty_money: '',
 
           project_start_date: '',
           determine_design_date: '',
@@ -351,7 +355,8 @@
               that.$message.error('阶段比例之和应为100!')
               return false
             }
-            if (totalAmount !== row.total) {
+            var stagePrice = parseFloat(row.total - parseFloat(row.warranty_money))
+            if (totalAmount !== stagePrice) {
               that.$message.error('阶段金额总和不正确！')
               return false
             }
@@ -413,7 +418,7 @@
         var self = this
         this.$refs['ruleForm'].validateField('stages.' + index + '.percentage', function (error) {
           if (!error) {
-            var total = self.form.total
+            var total = self.form.total - self.form.warranty_money
             var per = self.form.stages[index].percentage.mul(0.01)
             self.form.stages[index].amount = total.mul(per)
             // self.$set(self.form.stages[index], 'amount', total.mul(per))
@@ -467,6 +472,8 @@
                     contract.stages = []
                     contract.sort = contract.item_stage.length
                     contract.total = parseFloat(contract.total)
+                    contract.warranty_money = parseFloat(contract.warranty_money)
+                    contract.stage_money = contract.total - contract.warranty_money
                     that.form = contract
                     if (that.form.item_stage && that.form.item_stage.length > 0) {
                       for (var i = 0; i < that.form.item_stage.length; i++) {
@@ -495,7 +502,9 @@
                     that.form.demand_company_address = item.item.address
                     that.form.demand_company_legal_person = item.item.contact_name
                     that.form.demand_company_phone = item.item.phone
-                    that.form.total = item.item.price
+                    that.form.total = parseFloat(item.item.price)
+                    that.form.warranty_money = parseFloat(item.item.warranty_money)
+                    that.form.stage_money = that.form.total - that.form.warranty_money
 
                     that.form.design_company_name = company.company_name
                     that.form.design_company_address = company.address
@@ -528,6 +537,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .content-box {
+  }
+  .right-content {
+    margin-top: -20px;
   }
   .content-box form {
     padding: 10px 50px 10px 50px;

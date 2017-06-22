@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="blank20"></div>
     <div class="show-box"><p>{{ downStatus }}</p></div>
   </div>
 </template>
@@ -28,6 +29,28 @@
     methods: {
       // 下载
       downBtn() {
+        var stages = []
+        for (var i = 0; i < this.form.stages.length; i++) {
+          var d = this.form.stages[i]
+          var item = {
+            text: [
+              { text: '第' },
+              { text: '    ' + d.sort + '   ', style: 'write' },
+              { text: '阶段：供应商在' },
+              { text: '    ' + d.time + '   ', style: 'write' },
+              { text: '个工作日内提交' },
+              { text: '    ' + d.title + '   ', style: 'write' },
+              { text: '（项目初步方案） ，经需求方确认后，该阶段的设计款项，项目全款的' },
+              { text: '    ' + d.percentage + '   ', style: 'write' },
+              { text: '%，即人民币 （' },
+              { text: '    ' + d.amount + '   ', style: 'write' },
+              { text: '）元，将从平台托管池内转入供应商账户；' }
+            ],
+            style: 'p'
+          }
+          stages.push(item)
+        }
+
         var dd = {
           content: [
             { text: this.itemName, style: 'header' },
@@ -45,93 +68,19 @@
             { text: '设计项目内容和费用', style: 'title' },
             {
               text: [
-                { text: '依照中华人民共和国法律及本行业相关法规条例之规定，甲乙双方本着平等自愿和互惠互利的原则，由乙方接受委托为甲方提供' },
-                { text: '     ' + this.form.design_type + '     ', style: 'write' },
-                { text: '设计' },
-                { text: '     ' + this.form.design_type_paragraph + '     ', style: 'write' },
-                { text: '款（包含：' },
-                { text: '     ' + this.form.design_type_contain + '     ', style: 'write' },
-                { text: '）。本合同设计费用总额为人民币' },
+                { text: '自本协议签订之日起，需求方需在' },
+                { text: ' 5 ', style: 'write' },
+                { text: '个工作日内一次性支付给供应商' },
+                { text: '     ' + this.form.title + '     ', style: 'write' },
+                { text: '（项目名称 ） 的设计费用人民币' },
                 { text: '     ' + this.form.total + '     ', style: 'write' },
-                { text: '整（￥元）。  双方共同签署此项设计委托合同（以下简称合同），甲方和乙方合称为合同双方（以下简称双方）。' }
+                { text: '元，全部项目设计费用将分为阶段款和尾款两部分。' }
               ],
               style: 'p'
             },
 
-            { text: '工作时间', style: 'title' },
-            {
-              text: [
-                { text: '1 自项目启动之日起' },
-                { text: '     ' + this.form.project_start_date + '     ', style: 'write' },
-                { text: '日内，乙方应在甲方配合下完善确定设计方向、市场研究部署、执行内部草图概念设计、内部头脑风暴决议等。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '2 设计方向确定之日起' },
-                { text: '     ' + this.form.determine_design_date + '     ', style: 'write' },
-                { text: '日内，乙方应进行Layout结构布局设计验证结构。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '3 结构布局验证完成后' },
-                { text: '     ' + this.form.structure_layout_date + '     ', style: 'write' },
-                { text: '日内，乙方应向甲方提供该项目ID概念PPT效果图叁款。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '4 PPT效果图经甲方商讨并提出书面意见后' },
-                { text: '     ' + this.form.design_sketch_date + '     ', style: 'write' },
-                { text: '日内，乙方应向甲方提供该项目最终由甲方选定的PPT 3D渲染效果图壹款。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '5 最终3D效果图经甲方书面确认后' },
-                { text: '     ' + this.form.end_date + '     ', style: 'write' },
-                { text: '日内，乙方应完成3D外观防护建模设计内容。 6 上述之进度系乙方所需有效工作日，具体进度参照乙方提供的设计流程计划书。' }
-              ],
-              style: 'p'
-            },
-
-            { text: '支付时间', style: 'title' },
-            { text: '甲方按下列付款时间和金额分阶段，以银行托付方式或者其他方式向乙方支付设计费：', style: 'p' },
-            {
-              text: [
-                { text: '1、自合同签署起3日内，甲方向乙方支付设计费的30%，即人民币' },
-                { text: '     ' + this.form.one_third_total + '     ', style: 'write' },
-                { text: '整(￥)（作为本项目启动预付款）。乙方收到甲方款项或相应付款凭证后即开始本项目的设计运作。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '2、乙方完成外观设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的' },
-                { text: '     ' + this.form.exterior_design_percentage + '     ', style: 'write' },
-                { text: '%，即人民币' },
-                { text: '     ' + this.form.exterior_design_money + '     ', style: 'write' },
-                { text: '整(￥)。乙方收到甲方款项或相应付款凭证后开始' },
-                { text: '     ' + this.form.exterior_design_phase + '     ', style: 'write' },
-                { text: '设计阶段的运作。' }
-              ],
-              style: 'p'
-            },
-            {
-              text: [
-                { text: '3、乙方完成外观建模设计并为甲方确认后（以确认书为准），甲方即于3日内支付该项目设计费的设计的' },
-                { text: '     ' + this.form.exterior_modeling_design_percentage + '     ', style: 'write' },
-                { text: '%，即人民币' },
-                { text: '     ' + this.form.exterior_modeling_design_money + '     ', style: 'write' },
-                { text: '整(￥)。乙方收到甲方款项或相应付款凭证后即提交该项目全部成果之电子文档，即此项目结案，乙方应协助甲方立即开始展开模型制作和量产接洽跟踪服务。' }
-              ],
-              style: 'p'
-            },
+            { text: '项目具体流程与时间节点', style: 'title' },
+            stages,
 
             { text: '1.1 甲方责任与义务', style: 'title' },
             { text: '1.1.1 以书面形式提出对本设计项目的要求及有关技术资料。在双方合作的全过程中，向乙方提供必要的咨询，并委派专人（对该项目的方案评审具有决定权）负责本项目的事务接洽和业务联系。', style: 'p' },
@@ -242,10 +191,25 @@
           if (response.data.meta.status_code === 200) {
             var item = response.data.data
             if (item) {
+              item.stages = []
+              item.sort = item.item_stage.length
+              if (item.item_stage && item.item_stage.length > 0) {
+                for (var i = 0; i < item.item_stage.length; i++) {
+                  var stageRow = item.item_stage[i]
+                  var newStageRow = {}
+                  newStageRow.sort = parseInt(stageRow.sort)
+                  newStageRow.title = stageRow.title
+                  newStageRow.percentage = parseFloat(stageRow.percentage).mul(100)
+                  newStageRow.amount = parseFloat(stageRow.amount)
+                  newStageRow.time = parseInt(stageRow.time)
+                  item.stages.push(newStageRow)
+                }
+              }
+
               that.itemId = item.id
               // 重新渲染
               that.$nextTick(function() {
-                that.itemName = item.item_name + '合作协议'
+                that.itemName = item.item_name + '合同'
                 that.form = item
                 // 生成pdf插件太大，实现懒加载
                 require.ensure(['../../../../../static/js/pdfmake.min.js', '../../../../../static/js/vfs_fonts.js'], function (require) {

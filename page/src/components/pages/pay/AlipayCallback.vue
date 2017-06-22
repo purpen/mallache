@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="blank20"></div>
     <div class="pay-result" v-if="payResult">
       <div class="publish-box" v-if="paySuccess">
         <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
