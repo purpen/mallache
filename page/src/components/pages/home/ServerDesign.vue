@@ -148,6 +148,7 @@ export default {
     color: #222;
     font-size: 1.5rem;
     margin-top: 10px;
+    margin-bottom: 10px;
     line-height: 2;
   }
   .item_1_desc {

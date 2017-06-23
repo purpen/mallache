@@ -3,13 +3,13 @@
     <div class="blank20"></div>
     <h3>成功例案</h3>
     <div class="case-list">
-      <el-row :gutter="10">
+      <el-row :gutter="10" v-loading.body="isLoading">
 
         <el-col :span="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
               <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">
-                <img src="https://p4.taihuoniao.com/asset/170623/594cafcb3ffca2f0138b54c8-1-hu.jpg">
+                <img :src="d.cover.middle">
               </router-link>
             </div>
             <div class="content">
@@ -35,13 +35,16 @@ export default {
   data () {
     return {
       itemList: [],
+      isLoading: false,
       test: ''
     }
   },
   created: function() {
     const self = this
+    self.isLoading = true
     self.$http.get(api.designCaseOpenLists, {params: {page: 1, per_page: 9, sort: 2}})
     .then (function(response) {
+      self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.itemList = response.data.data
         console.log(self.itemList)
@@ -50,6 +53,7 @@ export default {
       }
     })
     .catch (function(error) {
+      self.isLoading = false
       self.$message.error(error.message)
     })
   }

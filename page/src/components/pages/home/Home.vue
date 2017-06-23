@@ -74,10 +74,12 @@
             <el-card class="box-card">
               <div class="avatar-header">
                 <div class="avator-box">
-                  <img src="../../../assets/images/avatar_180.png" class="avatar" width="60" />
+                  <router-link :to="{name: 'companyShow', params: {id: 7}}" target="_blank"><img src="http://oni525j96.bkt.clouddn.com/saas/20170504/590af689c88cd-p180x180.jpg" class="avatar" width="60" /></router-link>
                 </div>
                 <div class="avator-content">
-                  <p class="avatar-title">YANG DESIGN</p>
+                  <p class="avatar-title">
+                    <router-link :to="{name: 'companyShow', params: {id: 7}}" target="_blank">YANG DESIGN</router-link>
+                  </p>
                   <p class="avatar-des">全球四大设计奖项的顾问</p>
                 </div>
               </div>
@@ -90,10 +92,12 @@
             <el-card class="box-card">
               <div class="avatar-header">
                 <div class="avator-box">
-                  <img src="../../../assets/images/avatar_180.png" class="avatar" width="60" />
+                  <router-link :to="{name: 'companyShow', params: {id: 20}}" target="_blank"><img src="http://oni525j96.bkt.clouddn.com/saas/20170525/592635419f3e7-p180x180.jpg" class="avatar" width="60" /></router-link>
                 </div>
                 <div class="avator-content">
-                  <p class="avatar-title">YANG DESIGN</p>
+                  <p class="avatar-title">
+                    <router-link :to="{name: 'companyShow', params: {id: 7}}" target="_blank">北京一流设计有限公司</router-link>
+                    </p>
                   <p class="avatar-des">全球四大设计奖项的顾问</p>
                 </div>
               </div>
@@ -198,7 +202,8 @@ export default {
   .item_1_title {
     color: #222;
     font-size: 2rem;
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     line-height: 2;
   }
   .item_1_desc {
@@ -228,13 +233,13 @@ export default {
   }
 
   .item_2 h3 {
-    padding-bottom: 30px;
+    padding-bottom: 80px;
   }
 
   .item_3 {
   }
   .item_3 h3 {
-    padding-bottom: 30px;
+    padding-bottom: 80px;
     color: #4B4B4B;
   }
   .item_3_back {
