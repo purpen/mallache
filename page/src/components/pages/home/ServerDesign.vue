@@ -20,21 +20,21 @@
         <el-row :gutter="24">
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_01.png" width="150" />
+              <img src="../../../assets/images/home/server_01.png" />
               <p class="item_1_title">需求明确</p>
               <p class="item_1_desc">3万+项目需求方带着他们明确的设计需求在这里等您</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_02.png" width="150" />
+              <img src="../../../assets/images/home/server_02.png" />
               <p class="item_1_title">创意变现</p>
               <p class="item_1_desc">需求方主动下单，接单无忧，设计费有保障</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_03.png" width="150" />
+              <img src="../../../assets/images/home/server_03.png" />
               <p class="item_1_title">版权保护</p>
               <p class="item_1_desc">SaaS平台担保版权，设计服务供应商放心将全部精力用来服务客户</p>
             </div>
@@ -139,7 +139,7 @@ export default {
   .banner {
     width: 100%;
     height: 650px;
-    background: url('../../../assets/images/home/service_banner_02.png');
+    background: url('../../../assets/images/home/service_banner_02.jpg');
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -163,6 +163,9 @@ export default {
 
   .item_2_box {
     margin: 0 8%;
+  }
+  .item_2_box img {
+    width: 30%;
   }
 
   .item {

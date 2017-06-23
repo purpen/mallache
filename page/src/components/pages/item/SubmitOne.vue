@@ -83,8 +83,8 @@ export default {
     margin: 80px 0 30px 0;
   }
   .pub-content {
-    height: 500px;
-    background: url('../../../assets/images/item/item_submit_01.png') no-repeat;
+    height: 400px;
+    background: url('../../../assets/images/item/item_submit_01.jpg') no-repeat;
     background-size: cover;
     position: relative;
   }
@@ -94,7 +94,7 @@ export default {
     position: absolute;
     top: 0;
     background-color: #000000;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.1);
   }
 
   .shade p {

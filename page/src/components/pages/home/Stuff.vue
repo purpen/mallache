@@ -5,36 +5,53 @@
     <div class="case-list">
       <el-row :gutter="10">
 
-        <el-col :span="8">
+        <el-col :span="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <a href="#" target="_blank">
-                <img src="http://img3.imgtn.bdimg.com/it/u=1981414114,346497044&fm=214&gp=0.jpg">
-              </a>
+              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">
+                <img src="https://p4.taihuoniao.com/asset/170623/594cafcb3ffca2f0138b54c8-1-hu.jpg">
+              </router-link>
             </div>
             <div class="content">
-              <a href="">好吃的汉堡</a>
+              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
               <div class="des">
-                <p>几年来一直坚持做最专业的导航产品，是一家集研发、制造与销售于一体的世界级GPS品牌。产品涉及航空、航海,几年来一直坚持做最专业的导航产品，是一家集研发、制造与销售于一体的世界级GPS品牌。产品涉及航空、航海</p>
+                <p>{{ d.profile }}</p>
               </div>
             </div>
           </el-card>
         </el-col>
 
-
       </el-row>
     
     </div>
+    <div class="blank20"></div>
   </div>
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
-  name: 'test',
+  name: 'design_case_list',
   data () {
     return {
-      msg: 'This is Stuff'
+      itemList: [],
+      test: ''
     }
+  },
+  created: function() {
+    const self = this
+    self.$http.get(api.designCaseOpenLists, {params: {page: 1, per_page: 9, sort: 2}})
+    .then (function(response) {
+      if (response.data.meta.status_code === 200) {
+        self.itemList = response.data.data
+        console.log(self.itemList)
+        for (var i = 0; i < self.itemList.length; i++) {
+        } // endfor
+      }
+    })
+    .catch (function(error) {
+      self.$message.error(error.message)
+    })
   }
 }
 
@@ -43,18 +60,16 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .container{
-    height: 500px;
   }
   .container h3 {
     font-size: 2rem;
     margin-bottom: 10px;
   }
   .case-list {
-  
   }
 
   .item {
-    height: 280px;
+    height: 300px;
     margin: 5px 0;
   }
 
@@ -63,7 +78,7 @@ export default {
   }
 
   .image-box {
-    height: 200px;
+    height: 220px;
     overflow: hidden;
   }
 

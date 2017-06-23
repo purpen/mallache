@@ -278,6 +278,12 @@ export default {
         self.submit('ruleForm')
       }
     })
+  },
+  created: function() {
+    if (this.$store.state.event.token) {
+      this.$message.error('已经登录!')
+      this.$router.replace({name: 'home'})
+    }
   }
 
 }

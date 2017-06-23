@@ -33,7 +33,9 @@ export default {
   bankUnStatus: '/bank/un/status', // PUT 关闭银行卡
 
   // 支付
-  demandAlipay: '/pay/demandAliPay',  // 支付保证金-支付宝
+  demandAlipay: '/pay/demandAliPay',  // GET 支付保证金-支付宝
+  demandJdPay: '/pay/demandJdPay',  // GET 支付保证金-京东
+  demandWxPay: '/pay/demandWxPay',  // GET 支付保证金-微信
   endPayOrderItemId: '/pay/endPayOrder/{0}', // GET 创建尾款支付订单
   secondAlipayId: '/pay/itemAliPay/{0}',  // GET 支付尾款-支付宝
   payItemBankPayId: '/pay/itemBankPay/{0}',  // GET 支付项目尾款--公对公银行转账
@@ -54,6 +56,7 @@ export default {
   demandCloseItem: '/demand/closeItem', // post 用户关闭项目
   demandTrueItemDoneId: '/demand/trueItemDone/{0}', // POST 确认项目完成
   demandMatchingCount: '/demand/matchingCount', // POST 获取已匹配公司数量
+  demandEvaluate: '/demand/evaluate', // POST 评价设计公司
 
   // 需求方公司管理
   demandCompany: '/demandCompany', // POST 保存需求方公司信息;  GET 获取信息
@@ -95,6 +98,7 @@ export default {
   designCase: '/designCase',  // 公司案例
   designCaseId: '/designCase/{0}',  // 公司案例
   designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
+  designCaseOpenLists: '/designCase/openLists', // GET 案例列表
 
   // 设计公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情

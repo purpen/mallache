@@ -20,21 +20,21 @@
         <el-row :gutter="24">
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_10.png" width="150" />
+              <img src="../../../assets/images/home/server_10.png" />
               <p class="item_1_title">专业服务</p>
               <p class="item_1_desc">SaaS能为项目需求方提供上千家可供选择的专业设计服务供应商，为您解决问题</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_11.png" width="150" />
+              <img src="../../../assets/images/home/server_11.png" />
               <p class="item_1_title">精准匹配</p>
               <p class="item_1_desc">云平台后台大数据计算，帮您高效、精准地找到心仪的设计服务供应商</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/server_12.png" width="150" />
+              <img src="../../../assets/images/home/server_12.png" />
               <p class="item_1_title">便捷高效</p>
               <p class="item_1_desc">您只需要向SaaS说明您的设计需求，就能在最短的时间内看到符合您要求的供应商信息</p>
             </div>
@@ -130,7 +130,7 @@ export default {
   .banner {
     width: 100%;
     height: 650px;
-    background: url('../../../assets/images/home/service_banner.png');
+    background: url('../../../assets/images/home/service_banner.jpg');
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -154,6 +154,9 @@ export default {
 
   .item_2_box {
     margin: 0 8%;
+  }
+  .item_2_box img {
+    width: 30%;
   }
 
   .item {

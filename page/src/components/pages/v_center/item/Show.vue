@@ -125,7 +125,7 @@
           <div class="select-item-box" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合作的设计公司" name="5">
-                <div class="offer-company-item">
+                <div class="offer-company-item" v-if="cooperateCompany">
 
                   <div class="item-logo">
                     <div class="fl">
@@ -247,7 +247,7 @@
 
           <div class="select-item-box" v-if="statusLabel.evaluate">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="评价" name="12">
+              <el-collapse-item title="评价" name="12" v-if="cooperateCompany">
                 <div class="evaluate-report" v-if="item.status === 18">
                   <p class="ev-c-ava">
                     <img class="avatar" v-if="cooperateCompany.design_company.logo_url" :src="cooperateCompany.design_company.logo_url" width="60" />
@@ -256,12 +256,27 @@
                   <p class="ev-c-name">
                     {{ cooperateCompany.design_company.company_name }}
                   </p>
-                  <p></p>
-                  <p></p>
+                  <p>
+                    <el-rate
+                      v-model.number="evaluateScore"
+                      show-text>
+                    </el-rate>
+                  </p>
+                  <p class="ev-c-content">
+                    <el-input
+                      type="textarea"
+                      :rows="5"
+                      placeholder="请输入内容"
+                      v-model="evaluateContent">
+                    </el-input>
+                  </p>
+                  <p class="ev-c-btn">
+                    <el-button class="is-custom" type="primary" :loading="evaluateLoadingBtn" @click="evaluateSubmit" >提交</el-button>
+                  </p>
                 </div>
 
                 <div class="evaluate-result" v-else>
-                
+                  <p>已评价</p>
                 </div>
 
               </el-collapse-item>
@@ -310,12 +325,15 @@ export default {
       stages: [],
       secondPayLoadingBtn: false,
       sendStageLoadingBtn: false,
+      evaluateLoadingBtn: false,
       item: {},
       info: {},
       contract: {},
       isLoadingBtn: false,
       selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '15'],
       statusIconUrl: null,
+      evaluateScore: 0,
+      evaluateContent: '',
       statusLabel: {
         detail: true,
         selectCompany: false,
@@ -468,7 +486,7 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.comfirmLoadingBtn = false
           self.item.status = 18
-          self.item.statue_value = '项目已完成'
+          self.item.status_value = '项目已完成'
           self.$message.success('操作成功!')
         } else {
           self.$message.error(response.data.meta.message)
@@ -554,6 +572,41 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
         self.comfirmLoadingBtn = false
+      })
+    },
+    // 评价设计公司
+    evaluateSubmit() {
+      if (this.evaluateScore === 0) {
+        this.$message.error('请选择分数！')
+        return
+      }
+      if (!this.evaluateContent) {
+        this.$message.error('请添写评价内容！')
+        return
+      }
+
+      var row = {
+        item_id: this.item.id,
+        score: this.evaluateScore,
+        content: this.evaluateContent
+      }
+
+      var self = this
+      self.evaluateLoadingBtn = true
+      self.$http.post(api.demandEvaluate, row)
+      .then (function(response) {
+        self.evaluateLoadingBtn = false
+        if (response.data.meta.status_code === 200) {
+          self.item.status = 22
+          self.item.status_value = '已评价'
+          self.$message.success('评价成功!')
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.evaluateLoadingBtn = false
       })
     }
   },
@@ -735,6 +788,19 @@ export default {
             self.statusLabel.stage = true
             self.statusLabel.evaluate = true
             break
+          case 22:
+            self.progressButt = 3
+            self.progressContract = 3
+            self.progressItem = 4
+            self.statusIconUrl = require('@/assets/images/item/item_success.png')
+            self.statusLabel.cooperateCompany = true
+            self.statusLabel.contract = true
+            self.statusLabel.amount = true
+            self.statusLabel.isPay = true
+            self.statusLabel.manage = true
+            self.statusLabel.stage = true
+            self.statusLabel.evaluate = true
+            break
           default:
         }
 
@@ -821,8 +887,6 @@ export default {
                 // self.sureFinishBtn = true
               }
               self.stages = items
-              console.log('aa')
-              console.log(self.stages)
             }
           })
           .catch (function(error) {
@@ -1175,6 +1239,17 @@ export default {
 
   .evaluate-report {
     text-align: center;
+  }
+  .evaluate-report p {
+    line-height: 4;
+  }
+  p.ev-c-content {
+    padding: 10px 50px;
+  }
+  p.ev-c-btn {
+  }
+  p.ev-c-btn button {
+    padding: 10px 50px;
   }
   .evaluate-report .ev-c-ava {
   

@@ -191,10 +191,20 @@ const routes = [
     path: '/alipay/callback',
     name: 'alipayCallback',
     meta: {
-      title: '支付结果',
+      title: '支付宝-支付结果',
       requireAuth: false
     },
     component: require('@/components/pages/pay/AlipayCallback')
+  },
+  // 京东回调
+  {
+    path: '/jdpay/callback',
+    name: 'jdpayCallback',
+    meta: {
+      title: '京东-支付结果',
+      requireAuth: false
+    },
+    component: require('@/components/pages/pay/JdCallback')
   },
   // 支付项目资金
   {

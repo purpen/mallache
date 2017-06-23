@@ -73,10 +73,10 @@ export default {
           url = api.demandAlipay
           break
         case 'wxpay':
-          url = 'wxpay'
+          url = api.demandWxPay
           break
         case 'jdpay':
-          url = 'jdpay'
+          url = api.demandJdPay
           break
       }
       if (!url) {
@@ -90,9 +90,17 @@ export default {
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           that.$nextTick(function() {
-            that.toHtml = response.data.data.html_text
-            document.getElementById('payBlock').innerHTML = response.data.data.html_text
-            document.forms['alipaysubmit'].submit()
+            if (payType === 'alipay') {
+              that.toHtml = response.data.data.html_text
+              document.getElementById('payBlock').innerHTML = response.data.data.html_text
+              document.forms['alipaysubmit'].submit()
+            } else if (payType === 'jdpay') {
+              that.toHtml = response.data.data.html_text
+              document.getElementById('payBlock').innerHTML = response.data.data.html_text
+              document.forms['batchForm'].submit()
+            } else if (payType === 'wxpay') {
+              alert('wxpay')
+            }
           })
         }
       })

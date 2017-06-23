@@ -151,6 +151,11 @@ export default {
     if (prevUrlName) {
       this.$message.error('请先登录！')
     }
+
+    if (this.$store.state.event.token) {
+      this.$message.error('已经登录!')
+      this.$router.replace({name: 'home'})
+    }
   }
 
 }

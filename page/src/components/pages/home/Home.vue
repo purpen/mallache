@@ -43,21 +43,21 @@
         <el-row :gutter="24">
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/index_03.png" width="150" />
+              <img src="../../../assets/images/home/index_03.png" />
               <p class="item_1_title">智能</p>
               <p class="item_1_desc">我们通过云平台+大数据计算，帮您智能匹配最精准的设计服务供应商</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/index_04.png" width="150" />
+              <img src="../../../assets/images/home/index_04.png" />
               <p class="item_1_title">安全</p>
               <p class="item_1_desc">丰富的资源通过精密的算法迅速找到对方，令您的工作效率大大提高 </p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
-              <img src="../../../assets/images/home/index_05.png" width="150" />
+              <img src="../../../assets/images/home/index_05.png" />
               <p class="item_1_title">高效</p>
               <p class="item_1_desc">我们全程托管，保证资金安全；对版权环节进行严格监控，最大限度保证合作双方的权益</p>
             </div>
@@ -141,12 +141,12 @@ export default {
         {
           'clickUrl': '#',
           'desc': 'nhwc',
-          'image': require('@/assets/images/home/banner1.png')
+          'image': require('@/assets/images/home/banner1.jpg')
         },
         {
           'clickUrl': '#',
           'desc': 'hxrj',
-          'image': require('@/assets/images/home/banner2.png')
+          'image': require('@/assets/images/home/banner2.jpg')
         }
       ],
       msg: ''
@@ -197,13 +197,13 @@ export default {
   }
   .item_1_title {
     color: #222;
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-top: 10px;
     line-height: 2;
   }
   .item_1_desc {
     color: #666;
-    font-size: 1rem;
+    font-size: 1.5rem;
     line-height: 1.5;
     padding: 0 20px;
   }
@@ -222,6 +222,9 @@ export default {
 
   .item_2_box {
     margin: 0 8%;
+  }
+  .item_2_box img {
+    width: 35%;
   }
 
   .item_2 h3 {
