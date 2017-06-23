@@ -16,7 +16,7 @@ return [
 'refundUrl' => 'https://paygate.jd.com/service/refund',
 
 // callback地址
-'callbackUrl' => env('JD_CALL_BACK_URL', 'http://mc.taihuoniao.com/alipay/callback'),
+'callbackUrl' => env('JD_CALL_BACK_URL', 'http://mc.taihuoniao.com/jdpay/callback'),
 
 // notify地址
 'notifyUrl' => env('JD_NOTIFY_URL', 'http://sa.taihuoniao.com/pay/jdPayNotify'),

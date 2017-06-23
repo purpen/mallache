@@ -53,7 +53,8 @@ class DesignCaseTransformer extends TransformerAbstract
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
-            'design_company' => $this->designCompany($designCase)
+            'design_company' => $this->designCompany($designCase),
+            'created_at' => $designCase->created_at,
         ];
     }
 

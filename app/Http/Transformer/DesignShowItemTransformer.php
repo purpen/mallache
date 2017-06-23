@@ -26,6 +26,7 @@ class DesignShowItemTransformer extends TransformerAbstract
             'item' => $data,
             'quotation' => $this->quotation($item->id),
             'contract' => $item->contract,
+            'evaluate' => $item->evaluate,
         ];
     }
 

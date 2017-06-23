@@ -248,6 +248,7 @@ class DemandController extends BaseController
      * },
      * "quotation": null, //报价单信息
      * "contract": null   //合同
+     * "evaluate": null  //评价
      * },
      * "meta": {
      * "message": "Success",

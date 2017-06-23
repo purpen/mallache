@@ -14,6 +14,7 @@ class ItemTransformer extends TransformerAbstract
             'item' => $data,
             'quotation' => $item->quotation,
             'contract' => $item->contract,
+            'evaluate' => $item->evaluate,
         ];
     }
 

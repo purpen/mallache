@@ -219,7 +219,7 @@ class AdminDesignCompanyController extends Controller
      *
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
-     * @apiParam {integer} sort 0.升序；1.降序（默认）
+     * @apiParam {integer} sort 0.升序；1.降序（默认）;2.推荐降序；
      * @apiParam {integer} type_status 0.禁用; 1.正常；
      * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
      * @apiParam {string} token
@@ -306,14 +306,7 @@ class AdminDesignCompanyController extends Controller
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2]) ? $request->input('type_verify_status') : null;
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
-        if($request->input('sort') == 0 && $request->input('sort') !== null)
-        {
-            $sort = 'asc';
-        }
-        else
-        {
-            $sort = 'desc';
-        }
+        $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : null;
 
         $query = DesignCompanyModel::query();
         if($type_status !== null){
@@ -321,6 +314,19 @@ class AdminDesignCompanyController extends Controller
         }
         if($type_verify_status !== null){
             $query->where('verify_status', $type_verify_status);
+        }
+
+        //排序
+        switch ($sort){
+            case 0:
+                $query->orderBy('id', 'asc');
+                break;
+            case 1:
+                $query->orderBy('id', 'desc');
+                break;
+            case 2:
+                $query->orderBy('open_time', 'desc');
+                break;
         }
 
         $lists = $query->orderBy('id', $sort)->paginate($per_page);
