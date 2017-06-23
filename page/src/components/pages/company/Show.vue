@@ -117,7 +117,7 @@
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
-          if (self.item.logo_image && self.item.logo_image.length !== 0) {
+          if (self.item.logo_image) {
             self.item.logo_url = self.item.logo_image.logo
           } else {
             self.item.logo_url = false

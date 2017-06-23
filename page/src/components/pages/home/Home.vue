@@ -15,14 +15,14 @@
           <el-col :span="12">
             <div class="item_1_l">
               <img src="../../../assets/images/home/index_01.png" width="200" />
-              <p class="item_1_title">产品设计</p>
+              <p class="item_1_title font-weight5">产品设计</p>
               <p class="item_1_desc">产品策略／产品外观设计／结构设计</p>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="item_1_r">
               <img src="../../../assets/images/home/index_02.png" width="200" />
-              <p class="item_1_title">UI/UE设计</p>
+              <p class="item_1_title font-weight5">UI/UE设计</p>
               <p class="item_1_desc">App设计／网页设计</p>
             </div>
           </el-col>
@@ -188,7 +188,6 @@ export default {
 
 
   .item h3 {
-    color: #222;
     font-size: 2.5rem;
     padding-bottom: 80px;
   }
@@ -214,7 +213,7 @@ export default {
   }
 
   .pub {
-    margin: 60px 0 0 0;
+    margin: 80px 0 0 0;
   }
   .pub .pub-btn {
     padding: 10px 60px 10px 60px;

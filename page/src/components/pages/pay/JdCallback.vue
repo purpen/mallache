@@ -38,7 +38,7 @@ export default {
   created: function() {
     var self = this
     // 获取回调参数
-    // console.log(self.$route.query)
+    console.log(self.$route.query)
     var outTradeNo = self.$route.query.out_trade_no
     // var subject = self.$route.query.subject
 

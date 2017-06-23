@@ -104,6 +104,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin: 20px;
 }
 
+.font-weight4 {
+  font-weight: 400;
+}
+.font-weight5 {
+  font-weight: 500;
+}
+
 .loading {
   position:fixed;
   top: 30%;

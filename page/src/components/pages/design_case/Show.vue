@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="20">
 
       <el-col :span="18">
         <div class="design-case-content edit-content">
@@ -20,11 +20,12 @@
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <router-link :to="{name: 'vcenterDesignCaseList'}" target="_blank">
-              <img src="../../../assets/images/avatar_100.png" width="100" />
+            <router-link :to="{name: 'companyShow', params: {id: item.design_company.id}}" target="_blank">
+              <img class="avatar" v-if="item.design_company.logo_url" :src="item.design_company.logo_url" width="100" />                     
+              <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
             </router-link>
-            <h3>太火鸟</h3>
-            <p><span>北京</span>&nbsp;&nbsp;&nbsp;<span>朝阳</span></p>
+            <h3>{{ item.design_company.company_name }}</h3>
+            <p><span>{{ item.design_company.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.design_company.city_value }}</span></p>
           </div>
           <div class="rate">
             <el-rate
@@ -36,10 +37,12 @@
             </el-rate>
           </div>
           <div class="cate">
-            <p>类别: 产品设计</p>
-            <p>领域: 消费电子</p>
-            <p>行业: 日用消费</p>
-            <p>服务客户: {{ item.customer }}</p>
+            <p class="c-title">设计类别</p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_company.design_type_val" :key="index">{{ d }}</el-tag></p>
+          </div>
+          <div class="cate">
+            <p class="c-title">擅长领域</p>
+            <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
           </div>
 
           <div class="prize" v-if="item.prize_val">
@@ -73,6 +76,11 @@
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           that.item = response.data.data
+          if (that.item.design_company.logo_image) {
+            that.item.design_company.logo_url = that.item.design_company.logo_image.logo
+          } else {
+            that.item.design_company.logo_url = false
+          }
           console.log(that.item)
         }
       })
@@ -139,6 +147,18 @@
   }
   .design-case-slide .cate {
     line-height: 2;
+    margin-top: 20px;
+  }
+  .cate p {
+    color: #666;
+  }
+  .cate p.c-title {
+    text-align: center;
+    font-size: 1.6rem;
+    color: #333;
+  }
+  .cate p.tag span {
+    margin: 5px;
   }
   .design-case-slide .prize {
     margin-top: 20px;
