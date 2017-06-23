@@ -12,4 +12,10 @@ class Evaluate extends BaseModel
         'content',
         'score',
     ];
+
+    // 一对一 相对关联项目表
+    public function item()
+    {
+        return $this->belongsTo('App\Models\Item', 'user_id');
+    }
 }

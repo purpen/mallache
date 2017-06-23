@@ -82,6 +82,12 @@ class Item extends BaseModel
         return $this->hasMany('App\Models\PayOrder', 'item_id');
     }
 
+    // 一对一关联评价表
+    public function evaluate()
+    {
+        return $this->hasOne('App\Models\Evaluate', 'item_id');
+    }
+
     /**
      * 判断item对应的详细信息
      *

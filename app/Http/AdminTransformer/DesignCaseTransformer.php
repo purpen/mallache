@@ -53,7 +53,8 @@ class DesignCaseTransformer extends TransformerAbstract
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
-            'design_company' => $this->designCompany($designCase)
+            'design_company' => $this->designCompany($designCase),
+            'created_at' => $designCase->created_at,
         ];
     }
 
@@ -98,7 +99,6 @@ class DesignCaseTransformer extends TransformerAbstract
             'license_image' => $DesignCompany->license_image,
             'unique_id' => strval($DesignCompany->unique_id),
             'created_at' => $DesignCompany->created_at,
-            'users' => $DesignCompany->user,
             'city_arr' => $DesignCompany->city_arr,
             'legal_person' => strval($DesignCompany->legal_person),
             'document_type' => intval($DesignCompany->document_type),

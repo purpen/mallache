@@ -218,7 +218,7 @@ class DemandController extends BaseController
      * "type_value": "产品设计类型",
      * "design_type": 2,
      * "design_type_value": "产品设计",
-     * "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。20.项目交易成功；22.已评价
+     * "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。；22.已评价
      * "field": 2,
      * "field_value": "消费电子",
      * "industry": 2,
@@ -248,6 +248,7 @@ class DemandController extends BaseController
      * },
      * "quotation": null, //报价单信息
      * "contract": null   //合同
+     * "evaluate": null  //评价
      * },
      * "meta": {
      * "message": "Success",

@@ -205,6 +205,7 @@ class DesignController extends BaseController
                 "user_id": 30
             },
             "contract": null   //合同
+ *           "evaluate": null  //评价
             },
             "meta": {
                 "message": "Success",
