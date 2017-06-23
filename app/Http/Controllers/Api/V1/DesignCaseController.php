@@ -126,18 +126,18 @@ class DesignCaseController extends BaseController
      */
     public function store(Request $request)
     {
-        $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
+        $design = DesignCompanyModel::where('user_id', $this->auth_user_id)->first();
         // 验证规则
         $rules = [
-            'title'  => 'required|max:50',
-            'mass_production'  => 'required|integer',
-            'customer'  => 'required|max:50',
-            'profile'  => 'required|max:500',
-            'field'  => 'nullable|integer',
-            'type'  => 'integer',
-            'design_type'  => 'integer',
-            'industry'  => 'nullable|integer',
-            'prize_time'  => 'nullable|date',
+            'title' => 'required|max:50',
+            'mass_production' => 'required|integer',
+            'customer' => 'required|max:50',
+            'profile' => 'required|max:500',
+            'field' => 'nullable|integer',
+            'type' => 'integer',
+            'design_type' => 'integer',
+            'industry' => 'nullable|integer',
+            'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
         ];
@@ -157,7 +157,7 @@ class DesignCaseController extends BaseController
         ];
         $all['title'] = $request->input('title');
         $all['prize'] = $request->input('prize') ?? 0;
-        if($all['prize'] == 20){
+        if ($all['prize'] == 20) {
             $all['other_prize'] = $request->input('other_prize');
         }
         $all['prize_time'] = $request->input('prize_time');
@@ -167,21 +167,20 @@ class DesignCaseController extends BaseController
         $all['field'] = $request->input('field') ?? 0;
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
-        $all['type'] = $request->input('type' , 0);
-        $all['design_type'] = $request->input('design_type' , 0);
+        $all['type'] = $request->input('type', 0);
+        $all['design_type'] = $request->input('design_type', 0);
         $all['industry'] = $request->input('industry') ?? 0;
-        $all['status'] = 0;
+        $all['status'] = 1;
         $all['design_company_id'] = $design->id;
-        $validator = Validator::make($all , $rules, $messages);
-        if($validator->fails()){
+        $validator = Validator::make($all, $rules, $messages);
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        try{
+        try {
             $designCase = DesignCaseModel::create($all);
             $random = $request->input('random') ?? '';
-            AssetModel::setRandom($designCase->id , $random);
-        }
-        catch (\Exception $e){
+            AssetModel::setRandom($designCase->id, $random);
+        } catch (\Exception $e) {
 
             throw new HttpException($e->getMessage());
         }
@@ -235,11 +234,11 @@ class DesignCaseController extends BaseController
 
         //判断是否有有权限查看案例详情
         $design_company = new DesignCompanyModel();
-        if(!$designCase->open && !$design_company->isRead($this->auth_user_id, $designCase->design_company_id)){
+        if (!$designCase->open && !$design_company->isRead($this->auth_user_id, $designCase->design_company_id)) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
-        if(!$designCase){
+        if (!$designCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
@@ -306,19 +305,19 @@ class DesignCaseController extends BaseController
      *      }
      *   }
      */
-    public function update(Request $request , $id)
+    public function update(Request $request, $id)
     {
         // 验证规则
         $rules = [
-            'title'  => 'required|max:50',
-            'mass_production'  => 'required|integer',
-            'customer'  => 'required|max:50',
-            'profile'  => 'required|max:500',
-            'field'  => 'integer',
-            'type'  => 'integer',
-            'design_type'  => 'integer',
-            'industry'  => 'integer',
-            'prize_time'  => 'nullable|date',
+            'title' => 'required|max:50',
+            'mass_production' => 'required|integer',
+            'customer' => 'required|max:50',
+            'profile' => 'required|max:500',
+            'field' => 'integer',
+            'type' => 'integer',
+            'design_type' => 'integer',
+            'industry' => 'integer',
+            'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
         ];
@@ -335,29 +334,26 @@ class DesignCaseController extends BaseController
             'design_type.integer' => '设计类别必须为整形',
             'industry.integer' => '所属行业必须为整形',
         ];
-        $validator = Validator::make($request->only(['type' , 'design_type' , 'industry' , 'title' , 'mass_production' , 'customer' , 'field' , 'profile' , 'status']), $rules, $messages);
+        $validator = Validator::make($request->only(['type', 'design_type', 'industry', 'title', 'mass_production', 'customer', 'field', 'profile']), $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $all = $request->except(['token']);
-        $status = $request->input('status');
-        if($status == null){
-            $all['status'] = 0;
-        }
+        $all = $request->except(['token', 'status']);
+
         //检验是否存在该案例
         $case = DesignCaseModel::find($id);
-        if(!$case){
+        if (!$case) {
             return $this->response->array($this->apiError('not found!', 404));
         }
         //检验是否是当前用户创建的案例
-        if($case->user_id != $this->auth_user_id){
+        if ($case->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
         $designCase = DesignCaseModel::where('id', intval($id))->first();
         $designCase->update($all);
-        if(!$designCase){
+        if (!$designCase) {
             return $this->response->array($this->apiError());
         }
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
@@ -384,15 +380,15 @@ class DesignCaseController extends BaseController
     {
         //检验是否存在该案例
         $case = DesignCaseModel::find($id);
-        if(!$case){
+        if (!$case) {
             return $this->response->array($this->apiError('not found!', 404));
         }
         //检验是否是当前用户创建的案例
-        if($case->user_id != $this->auth_user_id){
+        if ($case->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
         $designCase = $case->delete();
-        if(!$designCase){
+        if (!$designCase) {
             return $this->response->array($this->apiError());
         }
         return $this->response->array($this->apiSuccess());
@@ -409,21 +405,89 @@ class DesignCaseController extends BaseController
     public function lists($design_company_id)
     {
         $design = DesignCompanyModel::find($design_company_id);
-        if(!$design->isRead($this->auth_user_id , $design_company_id)){
-            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+        if (!$design->isRead($this->auth_user_id, $design_company_id)) {
+            return $this->response->array($this->apiSuccess('没有权限访问', 403));
 
         }
-        if(!$design){
+        if (!$design) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $designCase = $design->designCase;
+        $designCase = $design->designCase->where('status', 1);
         return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
 
     }
 
-    // 设计案例推荐列表
-    public function openLists()
+    /**
+     * @api {get} /designCase/openLists  设计案例推荐列表
+     * @apiVersion 1.0.0
+     * @apiName designCase openLists
+     * @apiGroup designCase
+     *
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} per_page  页面数量
+     * @apiParam {integer} sort 创建时间排序 0.创建时间正序；1.创建时间倒序；2.推荐倒序；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     *   {
+     *    "data": [
+     *  {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": "",
+     *      "mass_production": 1,
+     *      "design_company":{},
+     *  }
+     * ],
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
+     *   }
+     *
+     */
+    public function openLists(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $sort = $request->input('sort');
 
+        $query = DesignCaseModel::with('DesignCompany')
+            ->where('status', 1);
+
+        //排序
+        switch ($sort) {
+            case 0:
+                $query->orderBy('id', 'asc');
+                break;
+            case 1:
+                $query->orderBy('id', 'desc');
+                break;
+            case 2:
+                $query->orderBy('open_time', 'desc');
+                break;
+        }
+
+
+        $lists = $query->paginate($per_page);
+
+        return $this->response->paginator($lists, new DesignCaseTransformer())->setMeta($this->apiMeta());
     }
 }

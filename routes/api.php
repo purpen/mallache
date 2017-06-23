@@ -183,8 +183,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designCompany/otherIndex/{id}', ['as' => 'designCompany.otherIndex', 'uses' => 'DesignCompanyController@otherIndex']);
 
         //设计公司案例
-        $api->resource('/designCase', 'DesignCaseController');
         $api->get('/designCase/designCompany/{design_company_id}', 'DesignCaseController@lists');
+        // 设计案例推荐列表
+        $api->get('/designCase/openLists', 'DesignCaseController@openLists');
+        $api->resource('/designCase', 'DesignCaseController');
+
 
         //报价
         $api->resource('/quotation', 'QuotationController');

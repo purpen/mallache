@@ -20,6 +20,7 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} per_page  页面数量
      * @apiParam {integer} sort 创建时间排序 0.创建时间正序；1.创建时间倒序；2.推荐倒序；
      * @apiParam {integer} type 1.全部；2.未公开；3.公开；
+     * @apiParam {integer} status 状态 0.未审核；1.已审核；默认：全部；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -63,6 +64,7 @@ class DesignCaseController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $sort = $request->input('sort');
         $type = $request->input('type');
+        $status = $request->input('status');
 
         $query = DesignCaseModel::with('DesignCompany');
 
@@ -88,6 +90,18 @@ class DesignCaseController extends BaseController
                 $query->where('open', 1);
                 break;
 
+        }
+
+        // 状态
+        switch ($status){
+            case null:
+                break;
+            case 0:
+                $query->where('status', 0);
+                break;
+            case 1:
+                $query->where('status', 1);
+                break;
         }
 
         $lists = $query->paginate($per_page);
