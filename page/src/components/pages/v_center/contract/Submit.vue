@@ -71,7 +71,7 @@
             </el-form-item>
 
             <p class="title">3.项目费用及计划</p>
-            <p>项目总金额(¥):  <input class="bottom-border" type="text" disabled v-model="form.total" style="width:50px;" /> ; 阶段金额(¥): <input class="bottom-border" type="text" disabled :value="form.stage_money" style="width:50px;" /> 尾款金额(¥): <input class="bottom-border" type="text" disabled v-model="form.warranty_money" style="width:50px;" /></p>
+            <p>项目总金额(¥):  <input class="bottom-border" type="text" disabled v-model="form.total" style="width:50px;" /> ; 阶段金额(¥): <input class="bottom-border" type="text" disabled :value="form.stage_money" style="width:50px;" /> 尾款金额(¥): <input class="bottom-border" type="text" disabled v-model="form.warranty_money" style="width:50px;" />(尾款金额占比总项目额度的5%)</p>
             <div class="blank20"></div>
             <!--
             <el-row :gutter="10">

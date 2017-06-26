@@ -44,8 +44,8 @@ export default {
 
     if (!outTradeNo) {
       self.$message.error('缺少请求回调参数!')
-      self.$router.push({name: 'home'})
-      return false
+      // self.$router.push({name: 'home'})
+      // return false
     }
 
     self.$http.get(api.orderId.format(outTradeNo), {})

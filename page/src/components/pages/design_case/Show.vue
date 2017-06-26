@@ -38,7 +38,7 @@
           </div>
           <div class="cate">
             <p class="c-title">设计类别</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_company.design_type_val" :key="index">{{ d }}</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_company.design_type_value" :key="index">{{ d }}</el-tag></p>
           </div>
           <div class="cate">
             <p class="c-title">擅长领域</p>
