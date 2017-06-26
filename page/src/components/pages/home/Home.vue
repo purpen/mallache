@@ -126,7 +126,6 @@
         <img src="../../../assets/images/home/2logo.png" />
         <img src="../../../assets/images/home/3logo.png" />
         <img src="../../../assets/images/home/4logo.png" />
-        <img src="../../../assets/images/home/5logo.png" />
       </div>
 
     </div>
@@ -310,7 +309,7 @@ export default {
     text-align: center;
   }
   .logo-list img {
-    margin: 10px;
+    margin: 10px 35px;
     width: 150px;
   }
 
