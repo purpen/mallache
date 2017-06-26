@@ -258,7 +258,7 @@
                   </p>
                   <p>
                     <el-rate
-                      v-model.number="evaluateScore"
+                      v-model.number="evaluate.score"
                       show-text>
                     </el-rate>
                   </p>
@@ -267,7 +267,7 @@
                       type="textarea"
                       :rows="5"
                       placeholder="请输入内容"
-                      v-model="evaluateContent">
+                      v-model="evaluate.content">
                     </el-input>
                   </p>
                   <p class="ev-c-btn">
@@ -275,8 +275,28 @@
                   </p>
                 </div>
 
-                <div class="evaluate-result" v-else>
-                  <p>已评价</p>
+                <div class="evaluate-result" v-if="item.status === 22">
+                  <p class="ev-c-ava fl">
+                    <img class="avatar" v-if="cooperateCompany.design_company.logo_url" :src="cooperateCompany.design_company.logo_url" width="50" />
+                    <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
+                  </p>
+                  <div class="eva-content fl">
+                    <p class="ev-c-name">
+
+                      <router-link :to="{name: 'companyShow', params: {id: cooperateCompany.design_company.id}}" target="_blank">
+                        {{ cooperateCompany.design_company.company_name }}
+                      </router-link>
+                    </p>
+                    <p class="eva-score">
+                      <el-rate
+                        v-model.number="evaluate.score"
+                        disabled>
+                      </el-rate>
+                    </p>
+                    <p class="ev-c-content">
+                      {{ evaluate.content }}
+                    </p>
+                  </div>
                 </div>
 
               </el-collapse-item>
@@ -332,8 +352,10 @@ export default {
       isLoadingBtn: false,
       selectCompanyCollapse: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '15'],
       statusIconUrl: null,
-      evaluateScore: 0,
-      evaluateContent: '',
+      evaluate: {
+        score: 0,
+        content: ''
+      },
       statusLabel: {
         detail: true,
         selectCompany: false,
@@ -487,6 +509,7 @@ export default {
           self.comfirmLoadingBtn = false
           self.item.status = 18
           self.item.status_value = '项目已完成'
+          self.statusLabel.evaluate = true
           self.$message.success('操作成功!')
         } else {
           self.$message.error(response.data.meta.message)
@@ -576,19 +599,19 @@ export default {
     },
     // 评价设计公司
     evaluateSubmit() {
-      if (this.evaluateScore === 0) {
+      if (this.evaluate.score === 0) {
         this.$message.error('请选择分数！')
         return
       }
-      if (!this.evaluateContent) {
+      if (!this.evaluate.content) {
         this.$message.error('请添写评价内容！')
         return
       }
 
       var row = {
         item_id: this.item.id,
-        score: this.evaluateScore,
-        content: this.evaluateContent
+        score: this.evaluate.score,
+        content: this.evaluate.content
       }
 
       var self = this
@@ -665,6 +688,9 @@ export default {
         self.item = response.data.data.item
         // self.info = response.data.data.info
         self.contract = response.data.data.contract
+        if (response.data.data.evaluate) {
+          self.evaluate = response.data.data.evaluate
+        }
         if (self.contract) {
           self.contract.created_at = self.contract.created_at.date_format().format('yy-MM-dd')
         }
@@ -1260,7 +1286,18 @@ export default {
   }
 
   .evaluate-result {
-  
+  }
+
+  .eva-content {
+    margin: 15px 0 20px 20px;
+  }
+
+  .eva-content .ev-c-name {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  .eva-content .ev-c-content {
+    padding: 10px 0;
   }
 
 

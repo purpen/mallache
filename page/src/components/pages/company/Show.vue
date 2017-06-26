@@ -103,7 +103,7 @@
     },
     methods: {
       hasImg(d) {
-        if (d.length === 0) {
+        if (!d) {
           return false
         } else {
           return true

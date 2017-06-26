@@ -194,6 +194,33 @@
 
         </div>
 
+          <div class="select-item-box" v-if="statusLabel.evaluate">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="评价" name="12">
+
+                <div class="evaluate-result" v-if="item.status === 22">
+
+                  <div class="eva-content fl">
+                    <p class="ev-c-name">
+                      {{ item.company_name }}
+                    </p>
+                    <p class="eva-score">
+                      <el-rate
+                        v-model.number="evaluate.score"
+                        disabled>
+                      </el-rate>
+                    </p>
+                    <p class="ev-c-content">
+                      {{ evaluate.content }}
+                    </p>
+                  </div>
+                </div>
+
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+
+
       </el-col>
     </el-row>
 
@@ -261,6 +288,10 @@ export default {
       isTakingLoadingBtn: false,
       sureFinishBtn: false,
       stageUploadBtnMsg: '上传附件',
+      evaluate: {
+        score: 0,
+        content: ''
+      },
       statusLabel: {
         detail: true,
         selectCompany: false,
@@ -621,6 +652,9 @@ export default {
         console.log(response.data.data)
         self.item = response.data.data.item
         // self.info = response.data.data.info
+        if (response.data.data.evaluate) {
+          self.evaluate = response.data.data.evaluate
+        }
         self.contract = response.data.data.contract
         if (self.contract) {
           self.contract.created_at = self.contract.created_at.date_format().format('yyyy-MM-dd')
@@ -1203,6 +1237,21 @@ export default {
   .taking-price-btn {
     float: right;
     margin-bottom: 20px;
+  }
+
+  .evaluate-result {
+  }
+
+  .eva-content {
+    margin: 15px 0 20px 0;
+  }
+
+  .eva-content .ev-c-name {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  .eva-content .ev-c-content {
+    padding: 10px 0;
   }
 
 </style>

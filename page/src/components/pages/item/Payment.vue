@@ -45,7 +45,7 @@
       </div>
     
     </div>
-    <div id="payBlock"></div>
+    <div id="payBlock" style="display:none;"></div>
   </div>
 </template>
 
