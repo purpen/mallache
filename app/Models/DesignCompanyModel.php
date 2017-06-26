@@ -63,7 +63,7 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
         'city_arr',
         'logo_image',
-        'item_type'
+        'design_type_value'
 
     ];
 
@@ -320,15 +320,15 @@ class DesignCompanyModel extends BaseModel
     }
 
     //设计公司接单类型
-    public function getItemTypeAttribute()
+    public function getDesignTypeValueAttribute()
     {
         $item_type = config('constant.item_type');
         $arr = [];
-        $design_case = $this->designCase;
-        if(!$design_case->isEmpty()){
-            foreach($design_case as $case){
+        $design_item = $this->user->designItem;
+        if(!$design_item->isEmpty()){
+            foreach($design_item as $case){
                 try{
-                    $arr[] = $item_type[$case->type][$case->design_type - 1];
+                    $arr[] = $item_type[$case->type][$case->design_type];
                 }catch (\Exception $e){
                     continue;
                 }
