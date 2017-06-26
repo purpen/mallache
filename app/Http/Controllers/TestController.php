@@ -16,7 +16,7 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        echo sys_get_temp_dir();
+//        echo sys_get_temp_dir();
 
 //        $designs = DesignCaseModel::get();
 //        foreach ($designs as $design){
