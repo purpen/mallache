@@ -85,7 +85,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'good_field' => explode(",",$DesignCompany->good_field),
             'web' => strval($DesignCompany->web),
             'company_profile' => strval($DesignCompany->company_profile),
-            'design_type' => strval($DesignCompany->design_type),
+            'design_type_value' => $DesignCompany->design_type_value,
             'establishment_time' => strval($DesignCompany->establishment_time),
             'professional_advantage' => strval($DesignCompany->professional_advantage),
             'awards' => strval($DesignCompany->awards),
@@ -104,7 +104,6 @@ class DesignCaseTransformer extends TransformerAbstract
             'document_type_val' => $DesignCompany->document_type_val,
             'document_number' => strval($DesignCompany->document_number),
             'document_image' => $DesignCompany->document_image,
-            'item_type' => $DesignCompany->item_type,
             'open' => $DesignCompany->open,
         ];
     }
