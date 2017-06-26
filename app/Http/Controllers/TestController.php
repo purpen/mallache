@@ -16,12 +16,14 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        $designs = DesignCaseModel::get();
-        foreach ($designs as $design){
-            $design->status = 1;
-            $design->save();
-        }
-        echo "ok";
+        echo sys_get_temp_dir();
+
+//        $designs = DesignCaseModel::get();
+//        foreach ($designs as $design){
+//            $design->status = 1;
+//            $design->save();
+//        }
+//        echo "ok";
 
 //        phpinfo();
 //        $user = User::get();
