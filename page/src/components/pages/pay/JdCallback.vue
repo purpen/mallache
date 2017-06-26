@@ -38,14 +38,14 @@ export default {
   created: function() {
     var self = this
     // 获取回调参数
-    console.log(self.$route.query)
+    // console.log(self.$route.query)
     var outTradeNo = self.$route.query.out_trade_no
     // var subject = self.$route.query.subject
 
     if (!outTradeNo) {
       self.$message.error('缺少请求回调参数!')
-      // self.$router.push({name: 'home'})
-      // return false
+      self.$router.push({name: 'home'})
+      return false
     }
 
     self.$http.get(api.orderId.format(outTradeNo), {})
