@@ -238,6 +238,17 @@ const routes = [
     component: require('@/components/pages/user/Show')
   },
 
+  // 控制面板
+  {
+    path: '/vcenter/control',
+    name: 'vcenterControl',
+    meta: {
+      title: '控制面板',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/common/Control')
+  },
+
   // 公司主页
   {
     path: '/company/:id',
@@ -341,7 +352,7 @@ const routes = [
   },
   // 作品详情
   {
-    path: '/vcenter/design_case/show/:id',
+    path: '/design_case/show/:id',
     name: 'vcenterDesignCaseShow',
     meta: {
       title: '作品详情',

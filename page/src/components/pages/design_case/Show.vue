@@ -64,7 +64,9 @@
     name: 'design_case_show',
     data () {
       return {
-        item: {},
+        item: {
+          design_company: ''
+        },
         rateValue: 3.5,
         msg: 'This is About!!!'
       }

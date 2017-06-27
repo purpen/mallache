@@ -226,7 +226,6 @@
                 }
                 self.bankOptions.push(newItem)
               } // endfor
-              console.log('aaa')
               console.log(response.data.data)
             }
           })
@@ -241,13 +240,21 @@
       // 提现执行
       withdrawSubmit() {
         const self = this
+        if (self.withdrawPrice <= 0) {
+          self.$message.error('请输入正确的金额!')
+          return
+        }
+        if (self.withdrawPrice > self.wallet.price) {
+          self.$message.error('提现金额超出范围!')
+          return
+        }
         self.isLoadingBtn = true
         self.$http.post(api.withdrawCreate, {bank_id: self.bankId, amount: self.withdrawPrice})
         .then (function(response) {
           self.isLoadingBtn = false
           if (response.data.meta.status_code === 200) {
             self.itemModel = false
-            self.$message.success('操作成功！')
+            self.$message.success('操作成功,等待财务打款！')
           } else {
             console.log(response.data.meta.message)
           }

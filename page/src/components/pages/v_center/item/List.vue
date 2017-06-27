@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24" type="flex" justify="center">
+    <el-row :gutter="20">
       <v-menu currentName="item"></v-menu>
 
       <el-col :span="20">
@@ -33,7 +33,7 @@
               </div>
 
 
-              <el-row :gutter="0" class="item-title-box" v-show="itemList.length > 0">
+              <el-row :gutter="0" class="item-title-box list-box" v-show="itemList.length > 0">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -50,13 +50,13 @@
 
               <div class="item" v-for="(d, index) in itemList">
 
-                <el-row class="banner">
+                <el-row class="banner list-box">
                   <el-col :span="12">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
                 </el-row>
 
-                <el-row :gutter="0" class="item-content">
+                <el-row :gutter="0" class="item-content list-box">
                   <el-col :span="10" class="item-title">
                     <p class="c-title">
                       <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
@@ -407,7 +407,7 @@
     margin-bottom: 10px;
     border: 1px solid #ccc;
   }
-  .el-col {
+  .list-box .el-col {
     padding: 10px 20px 10px 20px;
   }
   .el-col p {

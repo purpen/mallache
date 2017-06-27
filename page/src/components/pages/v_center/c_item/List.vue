@@ -11,7 +11,7 @@
           <div class="loading" v-loading.body="isLoading"></div>
           <div class="content-item-box" v-show="!isLoading">
 
-              <el-row :gutter="0" class="item-title-box" v-show="designItems.length > 0">
+              <el-row :gutter="0" class="item-title-box list-box" v-show="designItems.length > 0">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -28,7 +28,7 @@
 
             <div class="item" v-for="(d, index) in designItems">
 
-                <el-row class="banner">
+                <el-row class="banner list-box">
                   <el-col :span="3">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
@@ -43,7 +43,7 @@
                   </el-col>
                 </el-row>
 
-                <el-row class="item-content">
+                <el-row class="item-content list-box">
                   <el-col :span="10" class="item-title">
                     <p class="c-title">
                       <router-link :to="{name: 'vcenterCItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
@@ -366,7 +366,7 @@
     margin-top: 20px;
     border: 1px solid #ccc;
   }
-  .el-col {
+  .list-box .el-col {
     padding: 10px 20px 10px 20px;
   }
   .el-col p {

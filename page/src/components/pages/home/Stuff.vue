@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <h3>成功例案</h3>
-    <div class="case-list">
-      <el-row :gutter="10" v-loading.body="isLoading">
+    <div class="case-list" v-loading.body="isLoading">
+      <el-row :gutter="10">
 
         <el-col :span="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
@@ -70,6 +69,7 @@ export default {
     margin-bottom: 10px;
   }
   .case-list {
+    min-height: 350px;
   }
 
   .item {
