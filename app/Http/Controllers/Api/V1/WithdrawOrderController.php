@@ -59,8 +59,13 @@ class WithdrawOrderController extends BaseController
 
         //可提现金额
         $cash = $this->auth_user->cash;
+
         if($amount > $cash){
             return $this->response->array($this->apiError('可提现金额不足', 403));
+        }
+
+        if($cash == 0){
+            return $this->response->array($this->apiError('提现金额不能为空', 403));
         }
 
         if(!$bank = Bank::where(['id' => $bank_id, 'status' => 0])->first()){
