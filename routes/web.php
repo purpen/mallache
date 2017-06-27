@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['namespace' => 'Web'], function () {
+    Route::post('/jdCallbackUrl', 'JdCallBackController@callUrl');
+});
+
+
+
 Route::get('/test' , 'TestController@index');
 Route::get('/test/create' , 'TestController@create');
 Route::post('/test/store' , 'TestController@store');

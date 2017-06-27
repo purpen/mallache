@@ -132,4 +132,14 @@ class JdPay
             return false;
         }
     }
+
+    // 解码京东回调参数
+    public static function deStr($str)
+    {
+        $desKey = ConfigUtil::get_val_by_key("desKey");
+        $keys = base64_decode($desKey);
+
+        return TDESUtil::decrypt4HexStr($keys, $_POST["tradeNum"]);
+    }
+
 }

@@ -16,7 +16,7 @@ return [
 'refundUrl' => 'https://paygate.jd.com/service/refund',
 
 // callback地址
-'callbackUrl' => env('JD_CALL_BACK_URL', 'http://mc.taihuoniao.com/jdpay/callback'),
+'callbackUrl' => env('JD_CALL_BACK_URL', ''),
 
 // notify地址
 'notifyUrl' => env('JD_NOTIFY_URL', 'http://sa.taihuoniao.com/pay/jdPayNotify'),
@@ -31,6 +31,11 @@ return [
 'revokeUrl' => 'https://paygate.jd.com/service/revoke',
 
 // 付款码支付
-'fkmPayUrl' => 'https://paygate.jd.com/service/fkmPay'
+'fkmPayUrl' => 'https://paygate.jd.com/service/fkmPay',
 
+/**
+ * 自定义部分
+ */
+// 京东同步通知由服务器转跳至前端的URL
+'z_callbackUrl' => env('Z_CALL_BACK_URL', 'http://mc.taihuoniao.com/jdpay/callback'),
 ];

@@ -470,7 +470,7 @@ class DesignCaseController extends BaseController
         $sort = $request->input('sort');
 
         $query = DesignCaseModel::with('DesignCompany')
-            ->where('status', 1);
+            ->where('status', 1)->where('open', 1);
 
         //排序
         switch ($sort) {
