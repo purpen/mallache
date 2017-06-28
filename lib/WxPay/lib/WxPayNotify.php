@@ -6,6 +6,7 @@
  *
  */
 namespace Lib\WxPay\lib;
+include_once __DIR__ . "/WxPayData.php";
 
 class WxPayNotify extends WxPayNotifyReply
 {
