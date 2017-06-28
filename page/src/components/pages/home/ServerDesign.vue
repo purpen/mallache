@@ -12,7 +12,8 @@
     </div>
 
     <div class="banner">
-    
+      <h3>成为铟果SaaS设计服务商</h3>
+      <p>用专业服务，助力客户精准定位，从不同的角度观察、思考，感知风险，寻找机会，利用设计思维保持您竞争的优势。</p>
     </div>
 
     <div class="item item_2">
@@ -105,6 +106,10 @@ export default {
     return {
       msg: 'This is Home'
     }
+  },
+  created: function() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
   }
 }
 
@@ -142,6 +147,22 @@ export default {
     background: url('../../../assets/images/home/service_banner_02.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+    text-align: center;
+  }
+
+  .banner h3 {
+    padding-top: 150px;
+    padding-bottom: 10px;
+    font-size: 5rem;
+    color: #fff;
+    line-height: 2;
+    font-weight: 300;
+  }
+  .banner p {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 300;
+    padding: 0 150px;
   }
 
   .item_1_title {
@@ -189,7 +210,7 @@ export default {
     height: 150px;
   }
   .process .item-process {
-    width: 8.5%;
+    width: 9%;
     margin: 10px 1%;
     text-align: center;
     float: left;
@@ -199,10 +220,10 @@ export default {
     color: #555;
   }
   .process .item-process img {
-    width: 70%;
+    width: 60%;
   }
   .process .item-process.line {
-    width: 5%;
+    width: 4%;
     height: 30%;
     border-bottom: 1px dashed #979797;
   }

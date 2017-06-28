@@ -16,6 +16,8 @@ body{
 
 .container {
   margin: 0 auto;
+}
+.min-height350 {
   min-height: 350px;
 }
 
@@ -103,6 +105,12 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 .blank20 {
   margin: 20px;
+}
+.blank40 {
+  margin: 40px;
+}
+.blank60 {
+  margin: 60px;
 }
 
 .font-weight4 {
@@ -209,11 +217,7 @@ button.is-custom.is-outlined.is-loading:after {
   text-align:center;
   margin-top: 50px;
   padding-bottom: 50px;
-  background-color: #FAFAFA;
-}
-.footer .line {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  background-color: #333;
 }
 .footer .item {
   float: left;
@@ -221,10 +225,18 @@ button.is-custom.is-outlined.is-loading:after {
 }
 .footer p {
   margin: 10px;
+  line-height: 2;
+}
+.footer p a {
+  color: #999;
+}
+.footer p a.is-active {
+    color: #ccc;
 }
 .footer p.title {
   font-size: 1.5rem;
-  margin: 20px;
+  margin: 40px 20px 10px 20px;
+  color: #fff;
 }
 .footer .share-box {
   width: 160px;
@@ -289,6 +301,21 @@ button.is-custom.is-outlined.is-loading:after {
   color: #222;
 }
 
+/**
+ * Home TopMenu
+ */
+.top-menu-list {
+  height: 30px;
+}
+.top-menu-list .item {
+  float: right;
+  padding: 0 10px;
+  font-size: 1.5rem;
+}
+.top-menu-list .item.is-active {
+  color: #222;
+}
+
 
 /**
  * vCenter Menu Sub --- Start
@@ -317,6 +344,53 @@ button.is-custom.is-outlined.is-loading:after {
  * vCenter Menu Sub --- End
  */
 
+/**
+ * vCenter LeftMenu
+ */
+.left-menu {
+}
+
+.menu-list {
+  padding: 0 0 0 0;
+}
+
+.menu-list .item {
+  display: block;
+  cursor: pointer;
+  border: none;
+  height: auto;
+  text-align: left;
+  line-height: 1em;
+  color: rgba(112,123,135,.92);
+  text-transform: none;
+  font-weight: 400;
+  padding: .85rem 1.5rem .85rem 1.5rem!important;
+}
+
+.menu-list .item {
+  font-size: 1.5rem;
+}
+
+.menu-list .item:hover {
+  color: #222;
+  background-color: #fff;
+}
+
+.item.is-active {
+  background-color: #fff;
+  color: #222;
+  font-weight: bold;
+
+}
+
+.computer-btn {
+  margin-top: 30px;
+  text-align: left;
+}
+.computer-btn a {
+  font-size: 1.2rem;
+}
+
 
 /**
  * vCenter Content
@@ -329,12 +403,26 @@ button.is-custom.is-outlined.is-loading:after {
   min-height: 350px;
 }
 
+
 .form-title {
   margin: 20px 0 20px 0px;
 }
 .form-title span {
   font-size: 1.8rem;
   font-weight: 400;
+}
+
+/**
+ * Home SubMenu
+ */
+.h-right-content .content-box {
+  margin-top: 20px;
+  min-height: 350px;
+}
+.content-box p {
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1.5;
 }
 
 img.avatar {

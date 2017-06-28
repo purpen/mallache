@@ -68,6 +68,10 @@ export default {
     return {
       msg: 'This is About!!!'
     }
+  },
+  created: function() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
   }
 }
 </script>
@@ -114,7 +118,7 @@ export default {
     height: 150px;
   }
   .process .item {
-    width: 8.5%;
+    width: 9%;
     margin: 10px 1%;
     text-align: center;
     float: left;
@@ -124,10 +128,10 @@ export default {
     color: #555;
   }
   .process .item img {
-    width: 70%;
+    width: 60%;
   }
   .process .item.line {
-    width: 5%;
+    width: 4%;
     height: 30%;
     border-bottom: 1px dashed #979797;
   }

@@ -1,58 +1,46 @@
 <template>
 
   <el-col :span="4" class="left-menu">
-
-    <div class="menu-list" v-if="isCompany()">
-      <router-link :to="{name: 'vcenterControl'}" class="item">
-        控制面板
+    <div class="blank20"></div>
+    <div class="menu-list">
+      <router-link :to="{name: 'question', query: {name: 'auth'}}" :class="{'item': true, 'is-active': currentName === 'auth' ? true : false}">
+        注册与登录
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
-        消息
+      <router-link :to="{name: 'vcenterOrderList'}" :class="{'item': true, 'is-active': currentName === 'ident' ? true : false}">
+        关于实名认证
       </router-link>
-      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
-        项目订单
+      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'cooper' ? true : false}">
+        合作双方情形
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
-        作品案例
+        您最关心的资金问题
       </router-link>
       <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
-        我的钱包
+        关于实行时效问题
       </router-link>
       <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
-        账号设置
+        关于项目异议的处理
       </router-link>
       <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
-        安全设置
-      </router-link>
-    </div>
-
-    <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterControl'}" class="item">
-        控制面板
-      </router-link>
-      <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
-        我的项目
+        关于违规词语
       </router-link>
       <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
-        我的钱包
+        关于设计商品版权
       </router-link>
-      <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
-        账号设置
+      <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
+        关于保密协议
       </router-link>
       <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
-        安全设置
+        意见与反馈
       </router-link>
     </div>
 
-    <div class="computer-btn" v-if="isCompany()">
-      <el-button @click="redirectCompany">查看公司主页</el-button>
-    </div>
   </el-col>
 </template>
 
 <script>
 export default {
-  name: 'vcenter_menu',
+  name: 'question_menu',
   props: {
     currentName: {
       default: ''
@@ -63,24 +51,8 @@ export default {
       msg: 'This is menu'
     }
   },
-  // 判断是客户还是设计公司
+  // 方法集
   methods: {
-    isCompany() {
-      var uType = this.$store.state.event.user.type
-      if (uType === 2) {
-        return true
-      } else {
-        return false
-      }
-    },
-    redirectCompany() {
-      var companyId = this.$store.state.event.user.design_company_id
-      if (!companyId || companyId === 0) {
-        this.$message.error('请先申请公司认证!')
-      } else {
-        this.$router.push({name: 'companyShow', params: {id: companyId}})
-      }
-    }
   }
 }
 
@@ -89,48 +61,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .left-menu {
-  }
-
-  .menu-list {
-    padding: 0 0 0 0;
-  }
-
-  .menu-list .item {
-    display: block;
-    cursor: pointer;
-    border: none;
-    height: auto;
-    text-align: left;
-    line-height: 1em;
-    color: rgba(112,123,135,.92);
-    text-transform: none;
-    font-weight: 400;
-    padding: .85rem 1.5rem .85rem 1.5rem!important;
-  }
-
-  .menu-list .item {
-    font-size: 1.5rem;
-  }
-
-  .menu-list .item:hover {
-    color: #222;
-    background-color: #fff;
-  }
-
-  .item.is-active {
-    background-color: #fff;
-    color: #222;
-    font-weight: bold;
-
-  }
-
-  .computer-btn {
-    margin-top: 30px;
-    text-align: left;
-  }
-  .computer-btn a {
-    font-size: 1.2rem;
-  }
 
 </style>

@@ -12,7 +12,8 @@
     </div>
 
     <div class="banner">
-    
+      <h3>成为铟果SaaS设计客户</h3>
+      <p>铟果能为项目需求方提供上千家可供选择的专业设计服务供应商，运用云平台后台大数据计算，帮您高效、精准地找到心仪的设计服务供应商。</p>
     </div>
 
     <div class="item item_2">
@@ -133,6 +134,22 @@ export default {
     background: url('../../../assets/images/home/service_banner.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+    text-align: center;
+  }
+
+  .banner h3 {
+    padding-top: 150px;
+    padding-bottom: 10px;
+    font-size: 5rem;
+    color: #fff;
+    line-height: 2;
+    font-weight: 300;
+  }
+  .banner p {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 300;
+    padding: 0 150px;
   }
 
   .item_1_title {
@@ -180,21 +197,20 @@ export default {
     height: 150px;
   }
   .process .item-process {
-    width: 8.5%;
+    width: 9%;
     margin: 10px 1%;
     text-align: center;
     float: left;
   }
   .process .item-process img, .process .item-process p {
-    padding: 10px 1%;
+    padding: 10px 2px;
     color: #555;
   }
   .process .item-process img {
-    width: 70%;
+    width: 60%;
   }
   .process .item-process.line {
-    width: 5%;
-    height: 100%;
+    width: 4.5%;
     height: 30%;
     border-bottom: 1px dashed #979797;
   }

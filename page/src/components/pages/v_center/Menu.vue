@@ -89,48 +89,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .left-menu {
-  }
-
-  .menu-list {
-    padding: 0 0 0 0;
-  }
-
-  .menu-list .item {
-    display: block;
-    cursor: pointer;
-    border: none;
-    height: auto;
-    text-align: left;
-    line-height: 1em;
-    color: rgba(112,123,135,.92);
-    text-transform: none;
-    font-weight: 400;
-    padding: .85rem 1.5rem .85rem 1.5rem!important;
-  }
-
-  .menu-list .item {
-    font-size: 1.5rem;
-  }
-
-  .menu-list .item:hover {
-    color: #222;
-    background-color: #fff;
-  }
-
-  .item.is-active {
-    background-color: #fff;
-    color: #222;
-    font-weight: bold;
-
-  }
-
-  .computer-btn {
-    margin-top: 30px;
-    text-align: left;
-  }
-  .computer-btn a {
-    font-size: 1.2rem;
-  }
 
 </style>

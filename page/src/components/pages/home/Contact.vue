@@ -1,141 +1,50 @@
 <template>
-  <div class="container">
+  <div class="">
     <div class="blank20"></div>
-    <el-row :gutter="20">
-      <v-menu></v-menu>
+    <div class="container">
+      <div class="top-menu-list">
+        <router-link :to="{name: 'contact'}" class="item is-active">联系我们</router-link>
+        <router-link :to="{name: 'about'}" class="item">关于我们</router-link>
+      </div>
+    </div>
+    <div class="line"></div>
+    <div class="container">
+      <el-row :gutter="20">
 
-      <el-col :span="20">
-        <div class="right-content">
-          <div class="content-box" v-if="isCompany()">
+        <el-col :span="24">
+          <div class="h-right-content">
 
-            <div class="form-title">
-              <span>提示信息</span>
-            </div>
-            <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
-
-            <div class="item">
-              <h3>完善公司信息</h3>
-              <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerBase'}">编辑</router-link></p>
-            </div>
-
-            <div class="item">
-              <h3>公司认证</h3>
-              <p class="item-title">提交公司认证信息</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link></p>
-            </div>
-
-            <div class="item">
-              <h3>公司接单设置</h3>
-              <p class="item-title">设计项目接单价格</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerTaking'}">设置接单价格</router-link></p>
-            </div>
-
-            <div class="item no-line">
-              <h3>上传案例作品</h3>
-              <p class="item-title">向客户更好的展示和推荐项目案例</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterDesignCaseList'}">上传</router-link></p>
+            <div class="content-box">
+              <h3>联系我们</h3>
+              <p><img src="../../../assets/images/icon/iconfont-shouhuodizhi.png" width="20" /> 北京市朝阳区 酒仙桥路4号 751北京时尚设计广场B7栋</p>
+              <p><img src="../../../assets/images/icon/iconfont-tel.png" width="20" /> 010-84799327</p>
+              <p><img src="../../../assets/images/icon/iconfont-email.png" width="20" /> support@taihuoniao.com</p>
             </div>
 
           </div>
 
-          <div class="content-box" v-else>
-
-            <div class="form-title">
-              <span>提示信息</span>
-            </div>
-            <p class="alert-title"><span>*</span> 在铟果平台发布需求前，请先完善以下信息并完成公司认证，便于系统精准匹配设计服务供应商。</p>
-
-            <div class="item">
-              <h3>完善公司信息</h3>
-              <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerBase'}">编辑</router-link></p>
-            </div>
-
-            <div class="item no-line">
-              <h3>公司认证</h3>
-              <p class="item-title">提交公司认证信息</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link></p>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="right-content message">
-          <div class="content-box">
-            <div class="form-title">
-              <span>待处理事项</span>
-            </div>
-            <p class="alert-title">0 条消息</p>
-            <div class="message-btn">
-              <router-link :to="{name: 'home'}"><el-button class="is-custom">返回首页</el-button></router-link> &nbsp;&nbsp;
-              <router-link :to="{name: 'home'}"><el-button type="primary" class="is-custom">查看消息</el-button></router-link>
-            </div>
-          </div>
-        </div>
-
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
-  import vMenu from '@/components/pages/v_center/Menu'
-  import api from '@/api/api'
 
   export default {
-    name: 'vcenter_control',
+    name: 'contact',
     components: {
-      vMenu
     },
     data () {
       return {
-        isReady: false,
-        isApply: false,
-        userId: this.$store.state.event.user.id,
-        item: '',
-        companyId: '',
-        statusLabel: ''
+        test: ''
       }
     },
     methods: {
-      isCompany() {
-        var uType = this.$store.state.event.user.type
-        if (uType === 2) {
-          return true
-        } else {
-          return false
-        }
-      }
     },
     created: function() {
-      const that = this
-      that.$http.get(api.demandCompany, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          console.log(response.data.data)
-          if (response.data.data) {
-            that.item = response.data.data
-            that.item.phone = that.item.phone === '0' ? '' : that.item.phone
-            that.companyId = response.data.data.id
-            that.isApply = true
-          } else {
-            that.isReady = true
-          }
-        } else {
-          that.isReady = true
-        }
-      })
-      .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
-        })
-        console.log(error.message)
-        return false
-      })
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
     }
   }
 
@@ -144,58 +53,28 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .right-content .content-box {
-    margin-top: 0;
+  .container {
+    min-height: ;
   }
 
-  p.alert-title {
-    font-size: 1.6rem;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  .alert-title span {
-    color: red;
-  }
-
-  .item {
-    height: 60px;
+  .line {
     border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
   }
-  
-  .item h3 {
-    color: #222;
-    font-size: 1.6rem;
+
+  .content-box {
+    padding: 20px 120px;
+  }
+  .content-box h3 {
+    font-size: 1.8rem;
+    line-height: 2;
+    margin: 10px 0;
+  }
+
+  .content-box p {
     line-height: 2;
   }
-  .item .item-title {
-    float: left;
-    color: #666;
-    font-size: 1.4rem;
-    line-height: 1.7;
-  }
-  .item .item-btn {
-    float: right;
-    margin-right: 10px;
-    font-size: 1.4rem;
-    line-height: 1.7;
-  }
-  .item .item-btn a {
-    color: #FE3824;
-  }
-
-  .no-line {
-    border: 0;
-    margin-bottom: 0;
-  }
-
-  .right-content.message {
-    margin: 20px 0;
-  }
-
-  .message-btn {
-    text-align: center;
-    margin-bottom: 20px;
+  .content-box p img {
+    vertical-align: middle;
   }
 
 

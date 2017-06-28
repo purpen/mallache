@@ -1,141 +1,59 @@
 <template>
-  <div class="container">
+  <div class="">
     <div class="blank20"></div>
-    <el-row :gutter="20">
-      <v-menu></v-menu>
+    <div class="container">
+      <div class="top-menu-list">
+        <router-link :to="{name: 'item'}" class="item">服务条款</router-link>
+        <router-link :to="{name: 'question'}" class="item">常见问题</router-link>
+        <router-link :to="{name: 'trade'}" class="item is-active">交易保障</router-link>
+      </div>
+    </div>
+    <div class="line"></div>
+    <div class="banner">
+      <h3>选择太火鸟SaaS，交易有保障</h3>
+    </div>
 
-      <el-col :span="20">
-        <div class="right-content">
-          <div class="content-box" v-if="isCompany()">
+    <div class="">
 
-            <div class="form-title">
-              <span>提示信息</span>
-            </div>
-            <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
-
-            <div class="item">
-              <h3>完善公司信息</h3>
-              <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerBase'}">编辑</router-link></p>
-            </div>
-
-            <div class="item">
-              <h3>公司认证</h3>
-              <p class="item-title">提交公司认证信息</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link></p>
-            </div>
-
-            <div class="item">
-              <h3>公司接单设置</h3>
-              <p class="item-title">设计项目接单价格</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerTaking'}">设置接单价格</router-link></p>
-            </div>
-
-            <div class="item no-line">
-              <h3>上传案例作品</h3>
-              <p class="item-title">向客户更好的展示和推荐项目案例</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterDesignCaseList'}">上传</router-link></p>
-            </div>
-
-          </div>
-
-          <div class="content-box" v-else>
-
-            <div class="form-title">
-              <span>提示信息</span>
-            </div>
-            <p class="alert-title"><span>*</span> 在铟果平台发布需求前，请先完善以下信息并完成公司认证，便于系统精准匹配设计服务供应商。</p>
-
-            <div class="item">
-              <h3>完善公司信息</h3>
-              <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerBase'}">编辑</router-link></p>
-            </div>
-
-            <div class="item no-line">
-              <h3>公司认证</h3>
-              <p class="item-title">提交公司认证信息</p>
-              <p class="item-btn"><router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link></p>
-            </div>
-
-          </div>
-
+      <div class="content-box">
+        <div class="trade-text gray">
+          <h3>保证交易完成</h3>
+          <p>服务商未在约定工期内完成工作时，雇主有权发起维权并申请赔付，若判定成立，雇主将获得双倍赔付（双赔赔付由服务商的保证金赔付和服务商需退还的交易款项两部分共同构成）</p>
         </div>
 
-        <div class="right-content message">
-          <div class="content-box">
-            <div class="form-title">
-              <span>待处理事项</span>
-            </div>
-            <p class="alert-title">0 条消息</p>
-            <div class="message-btn">
-              <router-link :to="{name: 'home'}"><el-button class="is-custom">返回首页</el-button></router-link> &nbsp;&nbsp;
-              <router-link :to="{name: 'home'}"><el-button type="primary" class="is-custom">查看消息</el-button></router-link>
-            </div>
-          </div>
+        <div class="trade-text">
+          <h3>保证原创</h3>
+          <p>铟果平台担保版权。交易完成一年内，如设计需求方发现交易产品非原创，有权发起维权。经判定非原创事实，需求方将获得双倍赔付。</p>
         </div>
 
-      </el-col>
-    </el-row>
+        <div class="trade-text gray">
+          <h3>版权保护</h3>
+          <p>铟果引入时间戳工具，保证设计服务供应商的产品版权，以切实有效的法律手段避免侵权事件发生。</p>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 </template>
 
 <script>
-  import vMenu from '@/components/pages/v_center/Menu'
-  import api from '@/api/api'
 
   export default {
-    name: 'vcenter_control',
+    name: 'trade',
     components: {
-      vMenu
     },
     data () {
       return {
-        isReady: false,
-        isApply: false,
-        userId: this.$store.state.event.user.id,
-        item: '',
-        companyId: '',
-        statusLabel: ''
+        test: ''
       }
     },
     methods: {
-      isCompany() {
-        var uType = this.$store.state.event.user.type
-        if (uType === 2) {
-          return true
-        } else {
-          return false
-        }
-      }
     },
     created: function() {
-      const that = this
-      that.$http.get(api.demandCompany, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          console.log(response.data.data)
-          if (response.data.data) {
-            that.item = response.data.data
-            that.item.phone = that.item.phone === '0' ? '' : that.item.phone
-            that.companyId = response.data.data.id
-            that.isApply = true
-          } else {
-            that.isReady = true
-          }
-        } else {
-          that.isReady = true
-        }
-      })
-      .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
-        })
-        console.log(error.message)
-        return false
-      })
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
     }
   }
 
@@ -144,58 +62,74 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .right-content .content-box {
-    margin-top: 0;
+  .container {
+    min-height: ;
   }
 
-  p.alert-title {
-    font-size: 1.6rem;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  .alert-title span {
-    color: red;
-  }
-
-  .item {
-    height: 60px;
+  .line {
     border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
   }
-  
-  .item h3 {
-    color: #222;
-    font-size: 1.6rem;
+
+  .banner {
+    width: 100%;
+    height: 450px;
+    background: url('../../../assets/images/home/trade_banner.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+  }
+
+  .banner h3 {
+    padding-top: 150px;
+    padding-bottom: 10px;
+    font-size: 5rem;
+    color: #fff;
+    line-height: 2;
+    font-weight: 300;
+  }
+  .banner p {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 300;
+    padding: 0 150px;
+  }
+
+  .content-box {
+  }
+  .content-box h3 {
+    font-size: 1.8rem;
+    line-height: 2;
+    margin: 10px 0;
+  }
+
+  .content-box p {
     line-height: 2;
   }
-  .item .item-title {
-    float: left;
-    color: #666;
-    font-size: 1.4rem;
-    line-height: 1.7;
-  }
-  .item .item-btn {
-    float: right;
-    margin-right: 10px;
-    font-size: 1.4rem;
-    line-height: 1.7;
-  }
-  .item .item-btn a {
-    color: #FE3824;
+  .content-box p img {
+    vertical-align: middle;
   }
 
-  .no-line {
-    border: 0;
-    margin-bottom: 0;
-  }
-
-  .right-content.message {
-    margin: 20px 0;
-  }
-
-  .message-btn {
+  .trade-text {
     text-align: center;
-    margin-bottom: 20px;
+    padding: 50px;
+  }
+  .trade-text.gray {
+    background: #FAFAFA;
+  }
+
+  .trade-text h3 {
+    color: #222;
+    font-size: 3rem;
+    margin: 0 0;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  .trade-text p {
+    text-align: left;
+    color: #666;
+    font-size: 1.8rem;
+    line-height: 2;
+    padding: 0 350px;
   }
 
 

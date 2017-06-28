@@ -12,6 +12,8 @@ if (window.localStorage.getItem('token')) {
 }
 
 const routes = [
+
+  // ### 静态页面 #####
   {
     path: '/',
     redirect: '/home'
@@ -19,6 +21,14 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    meta: {
+      title: '首页'
+    },
+    component: require('@/components/pages/home/Home')
+  },
+  {
+    path: '/test',
+    name: 'test',
     meta: {
       title: '首页'
     },
@@ -55,6 +65,46 @@ const routes = [
       title: '灵感'
     },
     component: require('@/components/pages/home/Stuff')
+  },
+  // 联系我们
+  {
+    path: '/contact',
+    name: 'contact',
+    meta: {
+      title: '联系我们',
+      requireAuth: false
+    },
+    component: require('@/components/pages/home/Contact')
+  },
+  // 服务条款
+  {
+    path: '/item',
+    name: 'item',
+    meta: {
+      title: '服务条款',
+      requireAuth: false
+    },
+    component: require('@/components/pages/home/Item')
+  },
+  // 常见问题
+  {
+    path: '/question',
+    name: 'question',
+    meta: {
+      title: '常见问题',
+      requireAuth: false
+    },
+    component: require('@/components/pages/home/Question')
+  },
+  // 交易保障
+  {
+    path: '/trade',
+    name: 'trade',
+    meta: {
+      title: '交易保障',
+      requireAuth: false
+    },
+    component: require('@/components/pages/home/Trade')
   },
   {
     path: '/apply',

@@ -4,6 +4,8 @@
     <el-carousel :interval="5000" height="650px">
       <el-carousel-item v-for="item in slideList" :key="item">
         <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.desc }}</p>
         </div>
       </el-carousel-item>
     </el-carousel>
@@ -143,12 +145,14 @@ export default {
       slideList: [
         {
           'clickUrl': '#',
-          'desc': 'nhwc',
+          'title': '铟果',
+          'desc': '太火鸟产品创新SaaS平台',
           'image': require('@/assets/images/home/banner1.jpg')
         },
         {
           'clickUrl': '#',
-          'desc': 'hxrj',
+          'title': '铟果',
+          'desc': '太火鸟产品创新SaaS平台',
           'image': require('@/assets/images/home/banner2.jpg')
         }
       ],
@@ -185,6 +189,19 @@ export default {
     background-repeat: no-repeat;
   }
 
+  .slide h3 {
+    font-size: 6rem;
+    color: #fff;
+    line-height: 1.5;
+    font-weight: 300;
+    padding: 150px 0 0 100px;
+  }
+  .slide p {
+    font-size: 4rem;
+    color: #fff;
+    font-weight: 300;
+    padding: 0 100px;
+  }
 
   .item h3 {
     font-size: 2.5rem;
