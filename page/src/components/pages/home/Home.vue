@@ -194,13 +194,13 @@ export default {
     color: #fff;
     line-height: 1.5;
     font-weight: 300;
-    padding: 150px 0 0 100px;
+    padding: 250px 0 0 100px;
   }
   .slide p {
     font-size: 4rem;
     color: #fff;
     font-weight: 300;
-    padding: 0 100px;
+    padding: 0 105px;
   }
 
   .item h3 {

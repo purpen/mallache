@@ -3,20 +3,6 @@
     <div class="blank20"></div>
     <el-row :gutter="20">
 
-      <el-col :span="18">
-        <div class="design-case-content edit-content">
-          <div class="title">
-            <h1>{{ item.title }}</h1>
-          </div>
-          <div class="summary">
-            <p>{{ item.profile }}</p>
-          </div>
-          <div class="des">
-            <p v-for="d in item.case_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
-          </div>
-        </div>
-      </el-col>
-
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
@@ -49,6 +35,20 @@
             <p>获得奖项: {{ item.prize_val }}</p>
           </div>
         
+        </div>
+      </el-col>
+
+      <el-col :span="18">
+        <div class="design-case-content edit-content">
+          <div class="title">
+            <h1>{{ item.title }}</h1>
+          </div>
+          <div class="summary">
+            <p>{{ item.profile }}</p>
+          </div>
+          <div class="des">
+            <p v-for="d in item.case_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
+          </div>
         </div>
       </el-col>
 

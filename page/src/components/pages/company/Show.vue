@@ -46,25 +46,25 @@
           <div class="">
             <h2>作品案例</h2>
 
-            <div class="design-case-list">
-              <el-row :gutter="24">
-                <el-col
-                  v-for="(d, index) in designCases"
-                  :key="index"
-                  :span="8">
-                  <div class="item">
-                    <div class="img">
-                      <img v-if="hasImg(d.first_image)" :src="d.cover['small']" />
-                      <img v-else src="https://p4.taihuoniao.com/topic/170302/58b81d1020de8dfc6e8bd658-2-p325x200.jpg" />
-                    </div>
-                    <div class="content">
+            <div class="design-case-list" v-loading.body="isLoading">
+
+              <el-row :gutter="10">
+
+                <el-col :span="8" v-for="(d, index) in designCases" :key="index">
+                  <el-card :body-style="{ padding: '0px' }" class="item">
+                    <div class="image-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">
-                        {{ d.title }}
+                        <img :src="d.cover.middle">
                       </router-link>
                     </div>
-                  </div>
+                    <div class="content">
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                    </div>
+                  </el-card>
                 </el-col>
+
               </el-row>
+
             </div>
 
           </div>
@@ -93,6 +93,7 @@
   import '@/assets/js/format'
   export default {
     name: 'company_show',
+    isLoading: false,
     data () {
       return {
         item: {},
@@ -122,24 +123,23 @@
           } else {
             self.item.logo_url = false
           }
-          console.log(self.item)
 
+          self.isLoading = true
           self.$http.get(api.designCaseCompanyId.format(id), {})
           .then (function(response) {
+            self.isLoading = false
             if (response.data.meta.status_code === 200) {
               self.designCases = response.data.data
             }
           })
           .catch (function(error) {
+            self.isLoading = false
             self.$message.error(error.message)
-            console.log(error.message)
           })
         }
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
-        return false
       })
     }
   }
@@ -212,34 +212,36 @@
     margin-top: 20px;
   }
 
+  p.web {
+    word-wrap: break-word;
+  }
+
+
   .design-case-list {
-  
+    min-height: 350px;
   }
   .design-case-list .item {
-    height: 250px;
+    height: 190px;
   }
-  .design-case-list .img {
-    height: 210px;
+
+  .item {
+    margin: 5px 0;
+  }
+
+  .item img {
+    width: 100%;
+  }
+
+  .image-box {
+    height: 150px;
     overflow: hidden;
   }
 
-  .design-case-list .img:hover {
-    position:relative;
-    background-color:#fff;filter:Alpha(Opacity=90);opacity:0.9;
+  .content {
+    padding: 10px;
   }
-
-  .design-case-list .item img {
-    width: 100%;
-  }
-  .design-case-list .content {
-    padding: 5px 5px 5px 5px;
-  }
-  .design-case-list .content a {
+  .content a {
     font-size: 1.5rem;
-  }
-
-  p.web {
-    word-wrap: break-word;
   }
 
 </style>

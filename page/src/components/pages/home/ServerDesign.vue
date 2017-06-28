@@ -151,7 +151,7 @@ export default {
   }
 
   .banner h3 {
-    padding-top: 150px;
+    padding-top: 220px;
     padding-bottom: 10px;
     font-size: 5rem;
     color: #fff;
