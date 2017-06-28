@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 
 class FundLog extends BaseModel
 {
     public $table = 'fund_log';
 
-    protected $fillable = ['user_id', 'amount', 'transaction_type', 'target_id', 'type', 'summary'];
+    protected $fillable = ['user_id', 'amount', 'transaction_type', 'target_id', 'type', 'summary', 'number'];
 
     public function getTransactionTypeValueAttribute()
     {
@@ -52,6 +53,7 @@ class FundLog extends BaseModel
             'target_id' => $target_id,
             'type' => 1,
             'summary' => $summary,
+            'number' => Tools::orderId($user_id),
         ]);
     }
 
@@ -72,6 +74,7 @@ class FundLog extends BaseModel
             'target_id' => $target_id,
             'type' => -1,
             'summary' => $summary,
+            'number' => Tools::orderId($user_id),
         ]);
     }
 

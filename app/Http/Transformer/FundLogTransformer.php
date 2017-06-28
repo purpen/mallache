@@ -28,6 +28,7 @@ class FundLogTransformer extends TransformerAbstract
             'amount' => floatval($fundLog->amount),
             'summary' => $fundLog->summary,
             'created_at' => $fundLog->created_at,
+            'number' => $fundLog->number,
         ];
     }
 }
