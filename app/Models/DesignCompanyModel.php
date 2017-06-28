@@ -123,7 +123,7 @@ class DesignCompanyModel extends BaseModel
     //企业类型
     public function getCompanyTypeValAttribute()
     {
-        switch ($this->attributes['company_type']){
+        switch ($this->company_type){
             case 1:
                 $company_type_val = '普通';
                 break;
@@ -142,7 +142,7 @@ class DesignCompanyModel extends BaseModel
     //企业人数规模
     public function getCompanySizeValAttribute()
     {
-        switch ($this->attributes['company_size']){
+        switch ($this->company_size){
             case 1:
                 $company_size_val = '20人以下';
                 break;

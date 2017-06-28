@@ -30,14 +30,18 @@ class CalculationWeight implements ShouldQueue
     //用户ID
     protected $user_id = null;
 
+    // 设计公司ID
+    protected $design_company_id = null;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($user_id)
+    public function __construct($user_id, $design_company_id)
     {
         $this->user_id = (int)$user_id;
+        $this->design_company_id = (int)$design_company_id;
     }
 
     /**
@@ -51,7 +55,7 @@ class CalculationWeight implements ShouldQueue
             return;
         }
         //计算权重值
-        $weighted = new WeightedSort($this->user_id);
+        $weighted = new WeightedSort($this->user_id, $this->design_company_id);
         $score = $weighted->getScore();
 
         try{
