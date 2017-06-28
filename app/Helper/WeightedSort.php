@@ -138,30 +138,35 @@ class WeightedSort
      */
     protected function weightedCalculation($table, array $data)
     {
-        $query = DB::table($table)->query();
-
         switch ($data['where']){
             case 'user_id':
-                $query->where('user_id', $this->user_id);
+                $table_data = DB::table($table)->where('user_id', $this->user_id)->get();
                 break;
             case 'design_company_id':
-                $query->where('design_company_id', $this->design_company_id);
+                $table_data = DB::table($table)->where('design_company_id', $this->design_company_id)->get();
                 break;
+            default:
+                return;
         }
-        $table_data = $query->get();
         if($table_data->isEmpty()){
             return;
         }
         foreach ($table_data as $value) {
 
-            $bool_config = $data['bool'];
-            $this->boolCalculation($value, $bool_config);
+            if(array_key_exists('bool', $data)){
+                $bool_config = $data['bool'];
+                $this->boolCalculation($value, $bool_config);
+            }
 
-            $enum_config = $data['enum'];
-            $this->enumCalculation($value, $enum_config);
+            if(array_key_exists('enum', $data)){
+                $enum_config = $data['enum'];
+                $this->enumCalculation($value, $enum_config);
+            }
 
-            $accumulation_config = $data['accumulation'];
-            $this->accumulationCalculation($value, $accumulation_config);
+            if(array_key_exists('accumulation', $data)){
+                $accumulation_config = $data['accumulation'];
+                $this->accumulationCalculation($value, $accumulation_config);
+            }
         }
     }
 
