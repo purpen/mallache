@@ -32,6 +32,7 @@ class FundLogController extends BaseController
             "target_id": "2017060516592500000002479561",  // 交易对方用户 Id 或 交易单号
             "amount": 0.01,  // 金额
             "summary": "创建项目押金"  // 备注
+            "number":                // 单号
         },
      ],
         "meta": {
