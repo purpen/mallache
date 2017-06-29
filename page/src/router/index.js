@@ -256,6 +256,16 @@ const routes = [
     },
     component: require('@/components/pages/pay/JdCallback')
   },
+  // 微信回调
+  {
+    path: '/wxpay/callback',
+    name: 'wxpayCallback',
+    meta: {
+      title: '微信-支付结果',
+      requireAuth: true
+    },
+    component: require('@/components/pages/pay/wxCallback')
+  },
   // 支付项目资金
   {
     path: '/item/pay_fund/:item_id',

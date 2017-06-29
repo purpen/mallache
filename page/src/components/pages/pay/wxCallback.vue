@@ -25,7 +25,7 @@
 <script>
 import api from '@/api/api'
 export default {
-  name: 'jdpay_callback',
+  name: 'wxpay_callback',
   data () {
     return {
       payResult: false,

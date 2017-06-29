@@ -9,8 +9,6 @@
   import api from '@/api/api'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
-  // import '../../../../../static/js/pdfmake.min.js'
-  // import '../../../../../static/js/vfs_fonts.js'
 
   export default {
     name: 'vcenter_contract_submit',

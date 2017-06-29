@@ -26,7 +26,7 @@
           <p>铟果平台担保版权。交易完成一年内，如设计需求方发现交易产品非原创，有权发起维权。经判定非原创事实，需求方将获得双倍赔付。</p>
         </div>
 
-        <div class="trade-text gray">
+        <div class="trade-text in-foot gray">
           <h3>版权保护</h3>
           <p>铟果引入时间戳工具，保证设计服务供应商的产品版权，以切实有效的法律手段避免侵权事件发生。</p>
         </div>
@@ -125,11 +125,14 @@
     margin-bottom: 30px;
   }
   .trade-text p {
-    text-align: left;
     color: #666;
     font-size: 1.8rem;
     line-height: 2;
     padding: 0 350px;
+  }
+
+  .in-foot {
+    margin-bottom: -50px;
   }
 
 

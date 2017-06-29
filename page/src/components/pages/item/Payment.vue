@@ -41,11 +41,20 @@
         <div class="clear"></div>
       </div>
       <div class="pay-btn">
-        <p><el-button class="is-custom" @click="pay" type="primary">立即支付</el-button></p>     
+        <p><el-button class="is-custom" @click="pay" :loading="isLoadingBtn" type="primary">立即支付</el-button></p>     
       </div>
+
     
     </div>
     <div id="payBlock" style="display:none;"></div>
+
+    <el-dialog title="使用微信支付" v-model="wxPayDialog" :close-on-press-escape="false" :close-on-click-modal="false" @close="closeWxPay()">
+      <div class="wx-pay-box">
+        <img :src="wxBase64" width="180" />
+        <p>等待支付结果...</p>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -56,7 +65,11 @@ export default {
   data () {
     return {
       payType: '',
+      isLoadingBtn: false,
       toHtml: '',
+      wxPayDialog: false,
+      wxBase64: '',
+      siObj: '',
       msg: 'This is About!!!'
     }
   },
@@ -86,29 +99,55 @@ export default {
 
       // 请求支付
       var that = this
+      that.isLoadingBtn = true
       that.$http.get(url, {})
       .then (function(response) {
+        that.isLoadingBtn = false
         if (response.data.meta.status_code === 200) {
-          that.$nextTick(function() {
-            if (payType === 'alipay') {
-              that.toHtml = response.data.data.html_text
-              document.getElementById('payBlock').innerHTML = response.data.data.html_text
-              document.forms['alipaysubmit'].submit()
-            } else if (payType === 'jdpay') {
-              that.toHtml = response.data.data.html_text
-              document.getElementById('payBlock').innerHTML = response.data.data.html_text
-              document.forms['batchForm'].submit()
-            } else if (payType === 'wxpay') {
-              alert('wxpay')
-            }
-          })
+          if (payType === 'alipay') {
+            that.toHtml = response.data.data.html_text
+            document.getElementById('payBlock').innerHTML = response.data.data.html_text
+            document.forms['alipaysubmit'].submit()
+          } else if (payType === 'jdpay') {
+            that.toHtml = response.data.data.html_text
+            document.getElementById('payBlock').innerHTML = response.data.data.html_text
+            document.forms['batchForm'].submit()
+          } else if (payType === 'wxpay') {
+            var qrUrl = response.data.data.code_url
+            var uid = response.data.data.uid
+            var jrQrcode = require('jr-qrcode')
+            var imgBase64 = jrQrcode.getQrBase64(qrUrl)
+            that.wxPayDialog = true
+            that.wxBase64 = imgBase64
+            // 定时请求支付结果
+            that.siObj = setInterval(function() {
+              that.$http.get(api.orderId.format(uid), {})
+              .then (function(response) {
+                if (response.data.meta.status_code === 200) {
+                  if (response.data.data.status === 1) {
+                    clearInterval(that.siObj)
+                    that.$router.push({name: 'wxpayCallback', query: {out_trade_no: uid}})
+                    return
+                  }
+                } else {
+                }
+              })
+              .catch (function(error) {
+                that.$message.error(error.message)
+              })
+            }, 5000)
+          }
         }
       })
       .catch (function(error) {
+        that.isLoadingBtn = false
         that.$message.error(error.message)
-        console.log(error.message)
-        return false
       })
+    },
+    closeWxPay() {
+      if (this.siObj) {
+        clearInterval(this.siObj)
+      }
     }
   },
   created: function() {
@@ -129,7 +168,7 @@ export default {
     border: 1px solid #ccc;
     width: 800px;
     height: 280px;
-    margin: 30px auto 30px auto;
+    margin: 30px auto 150px auto;
   }
   .payment p {
     padding: 10px;
@@ -176,6 +215,10 @@ export default {
     line-height: 30px;
     font-size: 1.5rem;
     padding-left: 10px;
+  }
+
+  .wx-pay-box {
+    text-align: center;
   }
 
 </style>

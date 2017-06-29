@@ -31,15 +31,15 @@
               <div class="outline-pay" v-show="item.pay_type === 5">
                 <p class="detail-banner">对公转账</p>
                 <p>收款公司: 北京太火红鸟科技有限公司</p>
-                <p>收款账户: 1219 6215 6039 6010 3058 086</p>
-                <p>开&nbsp;&nbsp;户&nbsp;行: 招商银行北京三里屯支行</p>
+                <p>收款账户: 1109 1002 8310 202</p>
+                <p>开&nbsp;&nbsp;户&nbsp;行: 招商银行北京华贸中心支行</p>
               </div>
             </div>
 
             <div class="server">
               <p>如果您有任何疑问，请立即联系客服。</p>
               <p>邮箱：support@taihuoniao.com</p>
-              <p>电话：400-1234567</p>
+              <p>电话：010-84599328</p>
             </div>
 
           </div>
