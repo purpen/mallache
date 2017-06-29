@@ -102,6 +102,9 @@
                     <p class="btn" v-show="d.item.status === 8">
                       <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">支付项目款</el-button>
                     </p>
+                    <p class="btn" v-show="d.item.status === 15">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">验收项目</el-button>
+                    </p>
                     <p class="btn" v-show="d.item.is_view_show">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">查看详情</el-button>
                     </p>
@@ -417,6 +420,7 @@
     color: #FF5A5F;
     font-size: 1.2rem;
     line-height: 1.3;
+    text-align: center;
   }
   .item-title p {
     font-size: 1.2rem;

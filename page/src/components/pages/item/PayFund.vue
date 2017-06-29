@@ -25,7 +25,7 @@
                 </div>
               </label>
             </li>
-            <li>
+            <!--
             <li>
               <label>
                 <div :class="{'item': true, active: payType === 2 ? true : false}" @click="checkedPayBtn(2)">
@@ -34,6 +34,7 @@
                 </div>
               </label>
             </li>
+            -->
             <li>
               <label>
                 <div :class="{'item': true, active: payType === 5 ? true : false}" @click="checkedPayBtn(5)">
@@ -134,6 +135,12 @@ export default {
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
+          // 如果已支付完成,跳到项目页
+          if (self.item.status === 1) {
+            self.$message.error('已支付款项!')
+            self.$router.replace({name: 'vcenterItemShow', params: {id: self.itemId}})
+            return
+          }
           console.log(response.data.data)
         } else {
           self.$message.error(response.data.meta.message)

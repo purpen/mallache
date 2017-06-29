@@ -417,7 +417,6 @@ button.is-custom.is-outlined.is-loading:after {
  */
 .h-right-content .content-box {
   margin-top: 20px;
-  min-height: 350px;
 }
 .content-box p {
   color: #666;

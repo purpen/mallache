@@ -795,7 +795,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_yanshou.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
@@ -808,7 +808,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
@@ -821,7 +821,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true

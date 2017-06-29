@@ -376,6 +376,7 @@
     color: #FF5A5F;
     font-size: 1.2rem;
     line-height: 1.3;
+    text-align: center;
   }
   .item-title p {
     font-size: 1.2rem;

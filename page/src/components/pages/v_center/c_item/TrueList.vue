@@ -64,7 +64,7 @@
                   <el-col :span="4">
                     <div class="btn">
                       <div v-if="d.is_contract === 0">
-                        <p><el-button class="is-custom" @click="contractBtn" :index="index" size="small" :item_id="d.item.id" type="primary">提交在线合同</el-button></p>
+                        <p><el-button class="is-custom" @click="contractBtn" :index="index" size="small" :item_id="d.item.id" type="primary">编辑在线合同</el-button></p>
                       </div>
                       <div v-else>
                         <div v-show="d.item.status === 5">
@@ -344,6 +344,7 @@
     color: #FF5A5F;
     font-size: 1.2rem;
     line-height: 1.3;
+    text-align: center;
   }
   .item-title p {
     font-size: 1.2rem;

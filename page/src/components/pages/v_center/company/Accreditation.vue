@@ -127,6 +127,12 @@
     methods: {
     },
     created: function() {
+      var uType = this.$store.state.event.user.type
+      // 如果是需求公司，跳到设计公司
+      if (uType !== 2) {
+        this.$router.replace({name: 'vcenterDCompanyAccreditation'})
+        return
+      }
       const that = this
       that.$http.get(api.designCompany, {})
       .then (function(response) {

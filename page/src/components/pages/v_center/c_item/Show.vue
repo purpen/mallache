@@ -103,7 +103,7 @@
 
                 </div>
                 <div class="contract-item new" v-else>
-                  <el-button @click="contractBtn" class="contract-btn is-custom">添写在线合同</el-button>
+                  <el-button @click="contractBtn" class="contract-btn is-custom">编辑在线合同</el-button>
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -158,7 +158,7 @@
                           :on-success="uploadStageSuccess"
                           :before-upload="beforeStageUpload"
                           list-type="text">
-                          <el-button size="small" class="is-custom" @click="uplaodStageBtn" :stage_id="d.id" :index="index" type="primary">{{ stageUploadBtnMsg }}</el-button>
+                          <el-button size="small" class="is-custom" :id="'upload_btn_' + index" @click="uplaodStageBtn" :stage_id="d.id" :index="index" type="primary">{{ stageUploadBtnMsg }}</el-button>
                         </el-upload>
                       </p>
                       <p v-if="d.status === 0"><el-button type="primary" @click="stageSendBtn" size="small" :stage_id="d.id" :index="index" class="is-custom"></i> 发送</el-button></p>
@@ -287,7 +287,7 @@ export default {
       takingPriceDialog: false,
       isTakingLoadingBtn: false,
       sureFinishBtn: false,
-      stageUploadBtnMsg: '上传附件',
+      stageUploadBtnMsg: '上传附件(格式: jpg/png/pdf)',
       evaluate: {
         score: 0,
         content: ''
@@ -525,6 +525,10 @@ export default {
     stageSendBtn(event) {
       var stageId = parseInt(event.currentTarget.getAttribute('stage_id'))
       var index = parseInt(event.currentTarget.getAttribute('index'))
+      if (this.stages[index].item_stage_image.length <= 0) {
+        this.$message.error('请上传当前阶段附件!')
+        return false
+      }
       this.$refs.confirmTargetId.value = stageId
       this.$refs.confirmIndex.value = index
       this.$refs.comfirmType.value = 4
@@ -582,7 +586,7 @@ export default {
       this.currentStageIndex = index
       this.uploadParam['x:type'] = 8
       this.uploadParam['x:target_id'] = stageId
-      this.stageUploadBtnMsg = '上传中...'
+      document.getElementById('upload_btn_' + index).innerText = '上传中...'
     },
     stageUploadProgress(event, file, fileList) {
     },
@@ -601,8 +605,8 @@ export default {
       }
     },
     uploadStageSuccess(response, file, fileList) {
-      this.stageUploadBtnMsg = '上传附件'
       var index = this.currentStageIndex
+      document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
       var row = {
         id: response.asset_id,
         name: response.name,
@@ -612,7 +616,8 @@ export default {
       this.stages[index].item_stage_image.push(row)
     },
     uploadStageError(err, file, fileList) {
-      this.stageUploadBtnMsg = '上传附件'
+      var index = this.currentStageIndex
+      document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
       this.$message.error(err)
     },
     handlePreview(file) {
@@ -771,7 +776,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_yanshou.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
@@ -783,7 +788,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
@@ -796,7 +801,7 @@ export default {
             self.statusIconUrl = require('@/assets/images/item/item_success.png')
             self.statusLabel.cooperateCompany = true
             self.statusLabel.contract = true
-            self.statusLabel.amount = true
+            self.statusLabel.amount = false
             self.statusLabel.isPay = true
             self.statusLabel.manage = true
             self.statusLabel.stage = true
