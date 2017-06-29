@@ -7,7 +7,7 @@
       <el-col :span="18">
         <div class="content">
           <div class="banner">
-            <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="50" />
+            <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="100" />
             <h1>{{ item.name }}</h1>
             <p>{{ item.design_status_value }}</p>
           </div>
@@ -967,7 +967,7 @@ export default {
     border: 1px solid #ccc;
   }
   .banner img {
-    margin-top: 40px;
+    margin-top: 20px;
   }
   .banner h1 {
     padding-top: 10px;

@@ -210,7 +210,7 @@ export default {
     height: 150px;
   }
   .process .item-process {
-    width: 9%;
+    width: 9.5%;
     margin: 10px 1%;
     text-align: center;
     float: left;

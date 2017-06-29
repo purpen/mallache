@@ -201,7 +201,7 @@
     color: #666;
   }
   .cate p.c-title {
-    text-align: center;
+    text-align: left;
     font-size: 1.6rem;
     color: #333;
   }

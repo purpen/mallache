@@ -270,7 +270,7 @@ export default {
 
   .item {
     text-align: center;
-    padding: 60px 0 40px 0;
+    padding: 60px 0 60px 0;
   }
 
   .box-card {

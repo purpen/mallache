@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <div class="case-list" v-loading.body="isLoading">
-      <el-row :gutter="10">
+      <el-row :gutter="20">
 
         <el-col :span="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
@@ -74,7 +74,7 @@ export default {
 
   .item {
     height: 300px;
-    margin: 5px 0;
+    margin: 10px 0;
   }
 
   .item img {
