@@ -360,8 +360,8 @@ class PayController extends BaseController
 
         $wx_pay = new WxPay();
         $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee*100, 1);
-
-        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url')));
+        $uid = $pay_order->uid;
+        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url','uid')));
     }
 
     /**

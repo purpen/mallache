@@ -39,7 +39,7 @@ class CalculationWeight extends Command
      */
     public function handle()
     {
-        $user_id_arr = DesignCompanyModel::select('user_id')
+        $user_id_arr = DesignCompanyModel::select('user_id','id')
             ->where('status', 1)
             ->get()
             ->toArray();
@@ -47,7 +47,7 @@ class CalculationWeight extends Command
         $bar = $this->output->createProgressBar(count($user_id_arr));
 
         for ($i = 0;$i < count($user_id_arr);$i++){
-            dispatch(new calculation($user_id_arr[$i]));
+            dispatch(new calculation($user_id_arr[$i]['user_id'], $user_id_arr[$i]['id']));
 
             $bar->advance();
         }
