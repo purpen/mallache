@@ -258,6 +258,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/bank' , 'BankController');
 
 
+        /**
+         * 概况
+         */
+        // 设计公司信息概况
+        $api->get('/survey/designCompanySurvey', 'SurveyController@designCompanySurvey');
+        // 需求公司信息概况
+        $api->get('/survey/demandCompanySurvey', 'SurveyController@demandCompanySurvey');
+
 
     });
 });
