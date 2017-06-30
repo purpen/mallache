@@ -1,38 +1,41 @@
 <template>
   <div id="header-layout">
-    <div class="nav-header">
-      <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-          <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
-          <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
-        <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
-        <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
-        <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
-        <!--<el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>-->
-      </el-menu>
-      <div class="nav-right nav-menu" v-if="isLogin">
-        <router-link :to="{name: 'remind'}" class="nav-item is-hidden-mobile">
-          <span class="icon">
-            <i class="fa fa-bell-o" aria-hidden="true"></i>
-          </span>
-        </router-link>
-        <el-menu class="el-menu-info" mode="horizontal" router>
-          <el-submenu index="2">
-            <template slot="title">
-              <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url" />
-              <img class="avatar" v-else src="../../assets/images/avatar_100.png" />
-              <span class="b-nickname">{{ eventUser.account }}</span>
-            </template>
-            <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
-            <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
-            <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
-          </el-submenu>
+    <div class="container">
+      <div class="nav-header">
+        <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
+            <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
+            <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
+          <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
+          <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
+          <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
+          <!--<el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>-->
+        </el-menu>
+        <div class="nav-right nav-menu" v-if="isLogin">
+          <router-link :to="{name: 'remind'}" class="nav-item is-hidden-mobile">
+            <span class="icon">
+              <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </span>
+          </router-link>
+          <el-menu class="el-menu-info" mode="horizontal" router>
+            <el-submenu index="2">
+              <template slot="title">
+                <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url" />
+                <img class="avatar" v-else src="../../assets/images/avatar_100.png" />
+                <span class="b-nickname">{{ eventUser.account }}</span>
+              </template>
+              <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
+              <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
+              <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </div>
+        <el-menu class="el-menu-header nav-right" :default-active="menuactive" mode="horizontal" router v-else>
+          <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
+          <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
         </el-menu>
       </div>
-      <el-menu class="el-menu-header nav-right" :default-active="menuactive" mode="horizontal" router v-else>
-        <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
-        <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
-      </el-menu>
     </div>
+    <div class="buttom-line"></div>
   </div>
 </template>
 
@@ -104,9 +107,8 @@ export default {
   .nav-header{
     align-items: stretch;
     display: flex;
-    padding: 0 100px;
     background: #fff;
-    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+    padding-left: 5px;
   }
   .el-menu--horizontal>.el-menu-item.logo{
     width: 110px;
@@ -225,6 +227,12 @@ export default {
   }
   .nav-item a:hover, a.nav-item:hover {
     color: #363636;
+  }
+
+  .buttom-line {
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+    border-top: 3px solid transparent;
+    margin-top: -3px;
   }
 </style>
 
