@@ -400,6 +400,16 @@ const routes = [
     },
     component: require('@/components/pages/v_center/order/Show')
   },
+  // 消息列表
+  {
+    path: '/vcenter/message/list',
+    name: 'vcenterMessageList',
+    meta: {
+      title: '消息列表',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/message/List')
+  },
   // 作品列表
   {
     path: '/vcenter/design_case',
@@ -521,7 +531,7 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/v_center/contract/Down'], resolve) }
+    component: require('@/components/pages/v_center/contract/Down')
   },
   // 基本设置
   {

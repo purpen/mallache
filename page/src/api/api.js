@@ -107,6 +107,10 @@ export default {
   surveyDemandCompanySurvey: '/survey/demandCompanySurvey', // GET 需求方控制面板
   surveyDesignCompanySurvey: '/survey/designCompanySurvey', // GET 设计公司控制面板
 
+  // 系统通知
+  messageGetMessageQuantity: '/message/getMessageQuantity', // GET 获取数量
+  messageGetMessageList: '/message/getMessageList', // GET 列表
+
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token

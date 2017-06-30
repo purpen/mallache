@@ -6,7 +6,7 @@
       <router-link :to="{name: 'vcenterControl'}" class="item">
         控制面板
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
         消息
       </router-link>
       <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
@@ -29,6 +29,9 @@
     <div class="menu-list" v-else>
       <router-link :to="{name: 'vcenterControl'}" class="item">
         控制面板
+      </router-link>
+      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
+        消息
       </router-link>
       <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
         我的项目

@@ -25,10 +25,12 @@
             <p class="c-title">设计类别</p>
             <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag></p>
           </div>
+          <!--
           <div class="cate">
             <p class="c-title">擅长领域</p>
             <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
           </div>
+          -->
           <div class="cate">
             <p class="c-title">联系方式</p>
             <p>地址: {{ item.address }}</p>

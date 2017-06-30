@@ -8,12 +8,11 @@
           <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
           <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
           <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
-          <!--<el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>-->
         </el-menu>
         <div class="nav-right nav-menu" v-if="isLogin">
-          <router-link :to="{name: 'remind'}" class="nav-item is-hidden-mobile">
-            <span class="icon">
-              <i class="fa fa-bell-o" aria-hidden="true"></i>
+          <router-link :to="{name: 'vcenterMessageList'}" class="nav-item is-hidden-mobile">
+            <span class="icon active">
+              <i class="fa fa-bell-o" aria-hidden="true"><span v-if="messageCount > 0">{{ messageCount }}</span></i>
             </span>
           </router-link>
           <el-menu class="el-menu-info" mode="horizontal" router>
@@ -41,11 +40,14 @@
 
 <script>
 import auth from '@/helper/auth'
+import api from '@/api/api'
 export default {
   name: 'header',
   data () {
     return {
       // menuactive: this.$route.path.split('/')[1],
+      messageCount: 0,
+      requestMessageTask: null,
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
@@ -73,6 +75,16 @@ export default {
         type: 'success'
       })
       this.$router.push('/home')
+    },
+    // 请求消息数量
+    fetchMessageCount() {
+      const self = this
+      this.$http.get(api.messageGetMessageQuantity, {})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.messageCount = parseInt(response.data.data.quantity)
+        }
+      })
     }
   },
   computed: {
@@ -98,6 +110,17 @@ export default {
       }
       return menu
     }
+  },
+  created: function() {
+    const self = this
+    // 定时请求消息数量
+    self.fetchMessageCount()
+    self.requestMessageTask = setInterval(function() {
+      self.fetchMessageCount()
+    }, 20000)
+  },
+  destroyed() {
+    clearInterval(this.requestMessageTask)
   }
 }
 </script>
@@ -199,9 +222,28 @@ export default {
     height: 1.5rem;
     vertical-align: top;
     width: 1.5rem;
+    position:relative;
   }
   .icon .fa {
     font-size: 21px;
+  }
+  .icon.active span {
+  }
+  .icon.active span {
+    width: 18px;
+    min-height: 18px;
+    border: 1px solid red;/*设置红色*/
+    border-radius:50%;/*设置圆角*/
+    overflow: hidden;
+    background-color: red;
+    position: absolute;
+    z-index: 1000;
+    right: 0%;
+    margin-right: -10px;
+    margin-top: -10px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 18px;
   }
   .fa {
     display: inline-block;

@@ -26,10 +26,12 @@
             <p class="c-title">设计类别</p>
             <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_company.design_type_value" :key="index">{{ d }}</el-tag></p>
           </div>
+          <!--
           <div class="cate">
             <p class="c-title">擅长领域</p>
             <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
           </div>
+          -->
 
           <div class="prize" v-if="item.prize_val">
             <p>获得奖项: {{ item.prize_val }}</p>
