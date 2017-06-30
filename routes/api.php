@@ -51,6 +51,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     //忘记密码修改密码
     $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
 
+    // 设计案例推荐列表
+    $api->get('/designCase/openLists', 'DesignCaseController@openLists');
+    // 公司案例ID查看详情
+    $api->get('/designCase/{case_id}', 'DesignCaseController@show');
+
     /**
      * 需验证用户token
      */
@@ -184,8 +189,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //设计公司案例
         $api->get('/designCase/designCompany/{design_company_id}', 'DesignCaseController@lists');
-        // 设计案例推荐列表
-        $api->get('/designCase/openLists', 'DesignCaseController@openLists');
+
         $api->resource('/designCase', 'DesignCaseController');
 
 
