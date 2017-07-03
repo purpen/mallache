@@ -86,9 +86,9 @@ export default {
                   if (prevUrlName) {
                     // 清空上一url
                     auth.clear_prev_url_name()
-                    that.$router.push({name: prevUrlName})
+                    that.$router.replace({name: prevUrlName})
                   } else {
-                    that.$router.push({name: 'home'})
+                    that.$router.replace({name: 'home'})
                   }
                 } else {
                   auth.logout()

@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="min-height350">
     <div class="blank20"></div>
     <div class="container">
       <div class="top-menu-list">

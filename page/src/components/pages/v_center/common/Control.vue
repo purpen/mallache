@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container min-height350">
     <div class="blank20"></div>
     <el-row :gutter="20">
       <v-menu></v-menu>
@@ -118,7 +118,6 @@
           test: ''
         },
         itemIngList: [],
-        messageCount: 0,
         showBase: false,
         isLoading: false,
         companyId: '',
@@ -133,6 +132,11 @@
         } else {
           return false
         }
+      }
+    },
+    computed: {
+      messageCount() {
+        return this.$store.state.event.msgCount
       }
     },
     created: function() {

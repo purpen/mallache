@@ -9,7 +9,7 @@
     </div>
 
     <div class="banner">
-      <h3>铟果的使用 重塑设计尊严</h3>
+      <h3>铟果的使命 重塑设计尊严</h3>
     </div>
 
     <div class="container">

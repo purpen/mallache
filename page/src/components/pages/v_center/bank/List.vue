@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container min-height350">
     <div class="blank20"></div>
     <el-row :gutter="24">
       <v-menu currentName="wallet"></v-menu>

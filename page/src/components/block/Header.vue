@@ -41,12 +41,12 @@
 <script>
 import auth from '@/helper/auth'
 import api from '@/api/api'
+import { MSG_COUNT } from '@/store/mutation-types'
 export default {
   name: 'header',
   data () {
     return {
       // menuactive: this.$route.path.split('/')[1],
-      messageCount: 0,
       requestMessageTask: null,
       menu: {
         home: { path: '/home' },
@@ -59,7 +59,10 @@ export default {
     }
   },
   watch: {
-    '$route': 'navdefact'
+    '$route' (to, from) {
+      // 对路由变化作出响应...
+      // this.navdefact()
+    }
   },
   methods: {
     navdefact() {
@@ -74,7 +77,8 @@ export default {
         message: '登出成功!',
         type: 'success'
       })
-      this.$router.push('/home')
+      clearInterval(this.requestMessageTask)
+      this.$router.replace('/home')
     },
     // 请求消息数量
     fetchMessageCount() {
@@ -82,9 +86,19 @@ export default {
       this.$http.get(api.messageGetMessageQuantity, {})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          self.messageCount = parseInt(response.data.data.quantity)
+          var messageCount = parseInt(response.data.data.quantity)
+          // 写入localStorage
+          self.$store.commit(MSG_COUNT, messageCount)
         }
       })
+    },
+    // 定时加载消息数量
+    timeLoadMessage() {
+      const self = this
+      // 定时请求消息数量
+      self.requestMessageTask = setInterval(function() {
+        self.fetchMessageCount()
+      }, 5000)
     }
   },
   computed: {
@@ -109,15 +123,17 @@ export default {
         return 'server'
       }
       return menu
+    },
+    messageCount() {
+      return this.$store.state.event.msgCount
     }
   },
   created: function() {
     const self = this
-    // 定时请求消息数量
-    self.fetchMessageCount()
-    self.requestMessageTask = setInterval(function() {
+    if (self.isLogin) {
       self.fetchMessageCount()
-    }, 20000)
+      self.timeLoadMessage()
+    }
   },
   destroyed() {
     clearInterval(this.requestMessageTask)
