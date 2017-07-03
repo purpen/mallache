@@ -62,7 +62,7 @@ class MessageController extends BaseController
 
         $lists =Message::where('user_id', $this->auth_user_id)->orderby('id', 'desc')->paginate($per_page);
 
-        return $this->response->paginator($lists, new MessageTransformer)->setMeta($this->apiSuccess());
+        return $this->response->paginator($lists, new MessageTransformer)->setMeta($this->apiMeta());
     }
 
     /**
