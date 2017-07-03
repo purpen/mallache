@@ -37,7 +37,6 @@ class SurveyController extends BaseController
         $design_case_status = 1;        // 设计案例是否添加
         $design_item_status = 1;        // 接单设置是否添加
 
-//        $design_company = DesignCompanyModel::where('user_id', $this->auth_user_id)->first();
         if (!$design_company = $this->auth_user->designCompany) {
             return $this->response->array($this->apiError('无权限', 402));
         }
@@ -55,20 +54,6 @@ class SurveyController extends BaseController
             'awards',
             'web',
         ];
-
-        // design_verify 设计公司审核信息
-//        $design_verify = [
-//            'company_name',
-//            'company_type',
-//            'registration_number',
-//            'legal_person',
-//            'document_type',
-//            'document_number',
-//            'contact_name',
-//            'position',
-//            'phone',
-//            'email',
-//        ];
 
         foreach ($design_info as $v) {
             if (empty($design_company->$v)) {
@@ -128,20 +113,6 @@ class SurveyController extends BaseController
             'company_web',
         ];
 
-        // 需求公司审核信息
-//        $demand_verify = [
-//            'company_name',
-//            'company_type',
-//            'registration_number',
-//            'legal_person',
-//            'document_type',
-//            'document_number',
-//            'contact_name',
-//            'position',
-//            'phone',
-//            'email',
-//        ];
-
         if (!$demand_company = $this->auth_user->demandCompany) {
             return $this->response->array($this->apiError('无权限', 402));
         }
@@ -152,13 +123,6 @@ class SurveyController extends BaseController
                 break;
             }
         }
-
-//        foreach ($demand_verify as $v){
-//            if(empty($design_company->$v)){
-//                $demand_verify_status = 0;
-//                break;
-//            }
-//        }
 
         $demand_verify_status = $demand_company->verify_status;
 
