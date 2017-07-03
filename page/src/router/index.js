@@ -234,7 +234,8 @@ const routes = [
       title: '支付',
       requireAuth: true
     },
-    component: require('@/components/pages/item/Payment')
+    // 按需加载
+    component: (resolve) => { require(['@/components/pages/item/Payment'], resolve) }
   },
   // 支付宝回调
   {
@@ -531,7 +532,7 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: require('@/components/pages/v_center/contract/Down')
+    component: (resolve) => { require(['@/components/pages/v_center/contract/Down'], resolve) }
   },
   // 基本设置
   {
