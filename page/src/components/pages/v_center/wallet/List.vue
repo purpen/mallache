@@ -37,9 +37,9 @@
               @selection-change="handleSelectionChange"
               style="width: 100%">
               <el-table-column
-                prop="id"
+                prop="number"
                 label="交易单号"
-                width="80">
+                width="200">
               </el-table-column>
               <el-table-column
                 prop="created_at"

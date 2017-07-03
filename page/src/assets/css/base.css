@@ -131,6 +131,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   cursor: pointer;
 }
 
+/**
+ * 面包屑
+ */
+.bread {
+  margin: 0 0 10px 0;
+}
+
 
 /**
  *  新添按钮颜色值

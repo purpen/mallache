@@ -5,7 +5,15 @@
       <v-menu currentName="wallet"></v-menu>
 
       <el-col :span="20">
+
         <div class="right-content">
+
+          <el-breadcrumb separator="/" class="bread">
+            <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ name: 'vcenterWalletList' }">我的钱包</el-breadcrumb-item>
+            <el-breadcrumb-item>银行卡管理</el-breadcrumb-item>
+          </el-breadcrumb>
+
           <div class="item-list" v-loading.body="isLoading">
               <el-row :gutter="15">
 
@@ -343,6 +351,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .bread {
+    margin-bottom: 10px;
+  }
 
   .item-list {
 

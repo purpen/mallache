@@ -1,6 +1,13 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
+
+    <el-breadcrumb separator="/" class="bread">
+      <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ name: 'vcenterCItemList' }">项目列表</el-breadcrumb-item>
+      <el-breadcrumb-item>详情</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <el-row :gutter="24" type="flex" justify="center">
       <v-item-progress :progressButt="progressButt" :progressContract="progressContract" :progressItem="progressItem"></v-item-progress>
 
