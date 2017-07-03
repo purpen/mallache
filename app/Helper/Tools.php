@@ -120,14 +120,14 @@ class Tools
     }
 
     /**
-     * 生成单号  日期 + 8位用户ID + 6位随机数
+     * 生成单号  日期 + 6位用户ID + 2位随机数
      *
      * @param $user_id
      * @return string
      */
     public static function orderId($user_id)
     {
-        return  date("YmdHis") . sprintf("%08d", $user_id) . Tools::randNumber();
+        return  date("mdHis") . sprintf("%06d", $user_id) . mt_rand(00,99);
     }
 
 }
