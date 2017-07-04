@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helper\Tools;
 use App\Http\Transformer\QuotationTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
@@ -104,6 +105,14 @@ class QuotationController extends BaseController
                 $item_recommend->quotation_id = $quotation->id;
                 $item_recommend->design_company_status = 2;
                 $item_recommend->save();
+
+
+                // 需求方通知信息
+                $item = Item::find($all['item_demand_id']);
+                $title = '收到报价';
+                $content = '收到【' . $design->company_name . '】公司报价';
+                $tools = new Tools();
+                $tools->message($item->user_id, $title, $content, 2, $item->id);
 
             }else{
                 return $this->response->array($this->apiError('该项目已经报价' , 403));

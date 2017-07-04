@@ -241,7 +241,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //获取系统通知列表
         $api->get('/message/getMessageList', 'MessageController@getMessageList');
         //新消息数量确认阅读
-        $api->get('/message/trueRead', 'MessageController@trueRead');
+        $api->put('/message/trueRead', 'MessageController@trueRead');
 
         /**
          * 资金流水记录列表
