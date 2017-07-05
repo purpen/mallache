@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading.fullscreen.lock="isFullLoading">
     <div class="blank20"></div>
     <el-row :gutter="20">
 
@@ -66,6 +66,7 @@
     name: 'design_case_show',
     data () {
       return {
+        isFullLoading: false,
         item: {
           design_company: ''
         },
@@ -76,8 +77,10 @@
     created: function() {
       var id = this.$route.params.id
       const that = this
+      that.isFullLoading = true
       that.$http.get(api.designCaseId.format(id), {})
       .then (function(response) {
+        that.isFullLoading = false
         if (response.data.meta.status_code === 200) {
           that.item = response.data.data
           if (that.item.design_company.logo_image) {
@@ -89,13 +92,8 @@
         }
       })
       .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
-        })
-        console.log(error.message)
-        return false
+        that.$message.error(error.message)
+        that.isFullLoading = false
       })
     }
   }

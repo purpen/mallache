@@ -75,6 +75,9 @@ const mutations = {
     state.user = user
   },
   [MSG_COUNT](state, msgCount) {
+    if (msgCount < 0) {
+      msgCount = 0
+    }
     localStorage.setItem('msgCount', JSON.stringify(msgCount))
     state.msgCount = msgCount
   },

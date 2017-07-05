@@ -95,6 +95,9 @@
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
                   -->
+                  <p>
+                    <router-link :to="{name: 'adminDemandCompanyShow', params: {id: scope.row.id}}" target="_blank">查看</router-link>
+                  </p>
                 </template>
             </el-table-column>
           </el-table>

@@ -668,6 +668,16 @@ const routes = [
     },
     component: require('@/components/admin/item/List')
   },
+  // 项目详情
+  {
+    path: '/admin/item/show/:id',
+    name: 'adminItemShow',
+    meta: {
+      title: '项目详情',
+      requireAuth: true
+    },
+    component: require('@/components/admin/item/Show')
+  },
   // 项目匹配公司
   {
     path: '/admin/item/match/:id',
@@ -708,6 +718,16 @@ const routes = [
     },
     component: require('@/components/admin/company/List')
   },
+  // 设计公司详情
+  {
+    path: '/admin/company/show/:id',
+    name: 'adminCompanyShow',
+    meta: {
+      title: '设计公司详情',
+      requireAuth: true
+    },
+    component: require('@/components/admin/company/Show')
+  },
   // 需求公司列表
   {
     path: '/admin/demand_company/list',
@@ -717,6 +737,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/demand_company/List')
+  },
+  // 需求公司详情
+  {
+    path: '/admin/demand_company/show/:id',
+    name: 'adminDemandCompanyShow',
+    meta: {
+      title: '需求公司详情',
+      requireAuth: true
+    },
+    component: require('@/components/admin/demand_company/Show')
   },
   // 案例列表
   {

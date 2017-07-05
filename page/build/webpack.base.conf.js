@@ -11,8 +11,7 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js',
-    vendors: ['./static/js/pdfmake.min.js', './static/js/vfs_fonts.js']
+    app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,

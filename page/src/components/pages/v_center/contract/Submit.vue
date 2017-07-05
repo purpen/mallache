@@ -355,7 +355,8 @@
               that.$message.error('阶段比例之和应为100!')
               return false
             }
-            var stagePrice = parseFloat(row.total - parseFloat(row.warranty_money))
+            var stagePrice = parseFloat(row.total.sub(parseFloat(row.warranty_money)))
+            alert(stagePrice)
             if (totalAmount !== stagePrice) {
               that.$message.error('阶段金额总和不正确！')
               return false
@@ -418,7 +419,7 @@
         var self = this
         this.$refs['ruleForm'].validateField('stages.' + index + '.percentage', function (error) {
           if (!error) {
-            var total = self.form.total - self.form.warranty_money
+            var total = parseFloat(self.form.total.sub(self.form.warranty_money))
             var per = self.form.stages[index].percentage.mul(0.01)
             self.form.stages[index].amount = total.mul(per)
             // self.$set(self.form.stages[index], 'amount', total.mul(per))
@@ -473,7 +474,7 @@
                     contract.sort = contract.item_stage.length
                     contract.total = parseFloat(contract.total)
                     contract.warranty_money = parseFloat(contract.warranty_money)
-                    contract.stage_money = contract.total - contract.warranty_money
+                    contract.stage_money = (contract.total - contract.warranty_money).toFixed(2)
                     that.form = contract
                     if (that.form.item_stage && that.form.item_stage.length > 0) {
                       for (var i = 0; i < that.form.item_stage.length; i++) {
@@ -504,7 +505,7 @@
                     that.form.demand_company_phone = item.item.phone
                     that.form.total = parseFloat(item.item.price)
                     that.form.warranty_money = parseFloat(item.item.warranty_money)
-                    that.form.stage_money = that.form.total - that.form.warranty_money
+                    that.form.stage_money = (that.form.total - that.form.warranty_money).toFixed(2)
 
                     that.form.design_company_name = company.company_name
                     that.form.design_company_address = company.address

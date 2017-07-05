@@ -110,6 +110,7 @@ export default {
   // 系统通知
   messageGetMessageQuantity: '/message/getMessageQuantity', // GET 获取数量
   messageGetMessageList: '/message/getMessageList', // GET 列表
+  messageTrueRead: '/message/trueRead', // PUT 确认已读
 
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
