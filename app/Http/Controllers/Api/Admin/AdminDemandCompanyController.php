@@ -11,44 +11,6 @@ use App\Http\Controllers\Controller;
 class AdminDemandCompanyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit()
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy()
-    {
-        //
-    }
-
-
-    /**
      * @api {put} /admin/demandCompany/verifyStatus 需求公司通过审核
      * @apiVersion 1.0.0
      * @apiName AdminDemandCompany verifyStatus
@@ -177,4 +139,24 @@ class AdminDemandCompanyController extends Controller
         return $this->response->paginator($lists , new DemandCompanyTransformer)->setMeta($this->apiMeta());
 
     }
+
+    /**
+     * @api {get} /admin/demandCompany/show 需求公司详情
+     * @apiVersion 1.0.0
+     * @apiName AdminDemandCompany show
+     * @apiGroup AdminDemandCompany
+     *
+     * @apiParam {integer} id 需求公司ID
+     * @apiParam {string} token
+     */
+    public function show(Request $request)
+    {
+        $id = $request->input('id');
+        if(!$demand = DemandCompany::find($id)){
+            return $this->response->array($this->apiError('not found demandcompany', 404));
+        }
+
+        return $this->response->item($demand, new DemandCompanyTransformer)->setMeta($this->apiMeta());
+    }
+
 }

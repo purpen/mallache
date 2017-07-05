@@ -13,6 +13,6 @@ class Message extends BaseModel
 {
     protected $table = 'message';
 
-    protected $fillable = ['user_id', 'content', 'type'];
+    protected $fillable = ['user_id', 'content', 'type', 'title', 'target_id'];
 
 }

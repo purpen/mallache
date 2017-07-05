@@ -14,46 +14,6 @@ use Illuminate\Validation\Rule;
 class AdminDesignCompanyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\DesignCompanyModel  $designCompanyModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DesignCompanyModel $designCompanyModel)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\DesignCompanyModel  $designCompanyModel
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DesignCompanyModel $designCompanyModel)
-    {
-        //
-    }
-
-
-    /**
      * @api {put} /admin/designCompany/verifyStatus 设计公司通过审核
      * @apiVersion 1.0.0
      * @apiName AdminDesignCompany verifyStatus
@@ -333,7 +293,6 @@ class AdminDesignCompanyController extends Controller
         return $this->response->paginator($lists , new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 
-    // 公开设计公司资料
     /**
      * @api {put} /admin/designCompany/openInfo 公开或关闭设计公司资料
      * @apiVersion 1.0.0
@@ -372,5 +331,24 @@ class AdminDesignCompanyController extends Controller
         }
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /admin/designCompany/show 设计公司详细信息
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignCompany show
+     * @apiGroup AdminDesignCompany
+     *
+     * @apiParam {integer} id 设计公司ID
+     * @apiParam {string} token
+     */
+    public function show(Request $request)
+    {
+        $id = $request->input('id');
+        if(!$design = DesignCompanyModel::find($id)){
+            return $this->response->array($this->apiError('not found design company', 404));
+        }
+
+        return $this->response->item($design, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 }

@@ -7,6 +7,7 @@ return [
      */
     'root' => [
         '/admin/item/lists',         // 项目列表
+        '/admin/item/show',           // 项目详情
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
 
@@ -19,6 +20,8 @@ return [
         '/admin/designCompany/okStatus',
         '/admin/designCompany/unStatus',
         '/admin/designCompany/lists',
+        // 设计公司详情
+        '/admin/designCompany/show',
         // 公开或关闭设计公司资料
         '/admin/designCompany/openInfo',
 
@@ -28,6 +31,8 @@ return [
         '/admin/demandCompany/unVerifyStatus',
         '/admin/demandCompany/noVerifyStatus',
         '/admin/demandCompany/lists',
+        // 需求公司详情
+        '/admin/demandCompany/show',
 
         /**
          * 用户相关路由
@@ -59,6 +64,9 @@ return [
         '/admin/designCase/lists',
         // 开放设计案例
         '/admin/designCase/openInfo',
+
+        // 后台控制台信息
+        '/admin/survey/index',
     ],
 
     /**
@@ -66,6 +74,7 @@ return [
      */
     'admin_plus' => [
         '/admin/item/lists',         // 项目列表
+        '/admin/item/show',           // 项目详情
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
 
@@ -78,6 +87,8 @@ return [
         '/admin/designCompany/okStatus',
         '/admin/designCompany/unStatus',
         '/admin/designCompany/lists',
+        // 设计公司详情
+        '/admin/designCompany/show',
         // 公开或关闭设计公司资料
         '/admin/designCompany/openInfo',
 
@@ -86,6 +97,8 @@ return [
         '/admin/demandCompany/unVerifyStatus',
         '/admin/demandCompany/noVerifyStatus',
         '/admin/demandCompany/lists',
+        // 需求公司详情
+        '/admin/demandCompany/show',
 
         /**
          * 支付单相关路由
@@ -107,6 +120,9 @@ return [
         '/admin/designCase/lists',
         // 开放设计案例
         '/admin/designCase/openInfo',
+
+        // 后台控制台信息
+        '/admin/survey/index',
     ],
 
     /**
@@ -114,13 +130,23 @@ return [
      */
     'admin' => [
         '/admin/item/lists',         // 项目列表
+        '/admin/item/show',           // 项目详情
+
         '/admin/designCompany/lists',    // 设计公司列表
+        // 设计公司详情
+        '/admin/designCompany/show',
+
         '/admin/demandCompany/lists',    // 需求公司列表
+        // 需求公司详情
+        '/admin/demandCompany/show',
         //支付单列表
         '/admin/payOrder/lists',
         // 提现项目列表
         '/admin/withdrawOrder/lists',
         // 设计公司案例列表
         '/admin/designCase/lists',
+
+        // 后台控制台信息
+        '/admin/survey/index',
     ],
 ];

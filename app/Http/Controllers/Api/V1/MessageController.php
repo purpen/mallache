@@ -51,9 +51,18 @@ class MessageController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      },
-     *      "data":{
-    "quantity": 2;
-     *      }
+     *      "data":[
+                {
+                "id": 11,
+                "type": 1,                                  // 1.系统通知。2.项目通知。3.资金通知
+                "title": "",                                // 标题
+                "content": "【esisd】需求公司已确认合同",      // 内容
+                "target_id": null,                          // 目标ID
+                "created_at": 1495104499,
+                "status": 1,                                // 状态 0.未读；1.已读
+                "is_url": 0                                 // 是否有链接 0：无；1.有；
+                },
+     *      ]
      *  }
      */
     public function getMessageList(Request $request)
@@ -66,11 +75,12 @@ class MessageController extends BaseController
     }
 
     /**
-     * @api {get} /message/trueRead 新消息确认阅读
+     * @api {put} /message/trueRead 新消息确认阅读
      * @apiVersion 1.0.0
      * @apiName message trueRead
      * @apiGroup Message
      *
+     * @apiParam {int} id 消息ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -81,12 +91,17 @@ class MessageController extends BaseController
      *      }
      *  }
      */
-    public function trueRead()
+    public function trueRead(Request $request)
     {
+        $id = (int) $request->input('id');
         $tools = new Tools();
-        $tools->emptyMessageQuantity($this->auth_user_id);
+        if($tools->haveRead($id)){
+            return $this->response->array($this->apiSuccess());
+        }else{
+            return $this->response->array($this->apiError());
+        }
 
-        return $this->response->array($this->apiSuccess());
+
     }
 
 }

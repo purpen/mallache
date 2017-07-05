@@ -117,7 +117,10 @@ class ItemMessageListener
         $item_info = $item->itemInfo();
         //添加系统通知
         $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '已匹配了合适的设计公司');
+//        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '已匹配了合适的设计公司');
+        $title = '查看匹配结果';
+        $content = '您好，铟果平台为您的【' . $item_info['name'] . '】项目匹配了适合您的设计服务供应商';
+        $tools->message($item->user_id, $title, $content, 2, $item->id);
 
         //给项目联系人发送信息
 //        $text = '已匹配了合适的设计公司';
@@ -144,8 +147,12 @@ class ItemMessageListener
         //添加系统通知
         $tools = new Tools();
         $n = count($user_id_arr);
+
+        $title = '收到项目邀约';
+        $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
         for ($i = 0; $i < $n; ++$i){
-            $tools->message($user_id_arr[$i], '系统向您推荐了项目' . '【' . $item->itemInfo()['name'] . '】');
+//            $tools->message($user_id_arr[$i], '系统向您推荐了项目' . '【' . $item->itemInfo()['name'] . '】');
+            $tools->message($user_id_arr[$i], $title, $content, 2, $item->id);
         }
 
         //短信通知设计公司有新项目推送
@@ -168,7 +175,10 @@ class ItemMessageListener
         //选定公司ID
         $design_company_id = $event->design_company_id['yes'];
         $design = DesignCompanyModel::find($design_company_id);
-        $tools->message($design->user_id, '【' . $item_info['name'] . '】' . '确认了您的报价');
+//        $tools->message($design->user_id, '【' . $item_info['name'] . '】' . '确认了您的报价');
+        $title = '确认报价';
+        $content = '【' . $item_info['name'] . '】' . '项目报价已确认，请尽快编辑并向对方发送项目合同';
+        $tools->message($design->user_id, $title, $content, 2, $item->id);
 
         //拒绝公司ID
         $design_company_id_arr = $event->design_company_id['no'];
@@ -177,9 +187,12 @@ class ItemMessageListener
 
         $user_id_arr = $designCompanies->pluck('user_id')->all();
         //添加系统通知
+        $title = '需求方拒绝报价';
+        $content = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
         $n = count($user_id_arr);
         for ($i = 0; $i < $n; ++$i){
-            $tools->message($user_id_arr[$i], '【' . $item_info['name'] . '】' . '已选择其他设计公司');
+//            $tools->message($user_id_arr[$i], '【' . $item_info['name'] . '】' . '已选择其他设计公司');
+            $tools->message($user_id_arr[$i], $title, $content, 1, null);
         }
     }
 
@@ -190,7 +203,10 @@ class ItemMessageListener
         $item_info = $item->itemInfo();
 
         $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '未达成合作，匹配失败');
+//        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '未达成合作，匹配失败');
+        $title = '匹配失败';
+        $content = '【' . $item_info['name'] . '】' . '未达成合作，匹配失败';
+        $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
     //设计公司提交合同，通知需求公司
@@ -200,7 +216,10 @@ class ItemMessageListener
         $item_info = $item->itemInfo();
 
         $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '设计公司已提交合同，请查阅');
+//        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '设计公司已提交合同，请查阅');
+        $title = '收到合同';
+        $content = '收到设计公司发来【' . $item_info['name'] . '】项目合同书请查看并确认或与设计服务供应商沟通做进一步修改';
+        $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
     //需求公司确认合同，通知设计公司
@@ -213,7 +232,10 @@ class ItemMessageListener
         $user_id = $item->designCompany->user_id;
 
         $tools = new Tools();
-        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已确认合同');
+//        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已确认合同');
+        $title = '合同确认';
+        $content = '您与' . $item->company_name . '公司的【' . $item_info['name'] . '】合同已订立，请按合同规定在收到项目款后开始设计工作';
+        $tools->message($user_id, $title, $content, 2, $item->id);
     }
 
     //需求公司已托管项目资金
@@ -227,7 +249,10 @@ class ItemMessageListener
 
         //通知设计公司
         $tools = new Tools();
-        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已托管项目资金');
+//        $tools->message($user_id, '【' . $item_info['name'] . '】' . '需求公司已托管项目资金');
+        $title = '项目已托管项目资金';
+        $content = '【' . $item_info['name'] . '】' . '项目需求公司已托管项目资金，请开始设计工作';
+        $tools->message($user_id, $title, $content, 2, $item->id);
     }
 
     //需求公司托管资金后，首次向设计支付一定比例项目款 (支付模式变更 该方法弃用)
@@ -285,7 +310,10 @@ class ItemMessageListener
 
         //系统消息通知需求公司
         $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目进行中');
+//        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目进行中');
+        $title = '项目进行中';
+        $content = '设计服务供应商已开始【' . $item_info['name'] . '】项目，项目进行中，请及时跟进进度，保持与设计服务供应商的沟通';
+        $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
     //项目已完成
@@ -296,7 +324,10 @@ class ItemMessageListener
 
         //系统消息通知需求公司
         $tools = new Tools();
-        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目已完成，请前往确认');
+//        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '项目已完成，请前往确认');
+        $title = '项目验收';
+        $content = '【' . $item_info['name'] . '】项目全部阶段已完成，请尽快确认支付项目尾款，并对服务进行评价';
+        $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
     //确认项目完成
@@ -307,9 +338,12 @@ class ItemMessageListener
 
         $design_company_id = User::where('design_company_id', $item->design_company_id)->first()->id;
 
-        //系统消息通知需求公司
+        //系统消息通知设计公司
         $tools = new Tools();
-        $tools->message($design_company_id, '【' . $item_info['name'] . '】' . '项目已确认验收');
+//        $tools->message($design_company_id, '【' . $item_info['name'] . '】' . '项目已确认验收');
+        $title = '项目确认验收';
+        $content = '需求方已对【' . $item_info['name'] . '】' . '项目确认验收';
+        $tools->message($design_company_id, $title, $content, 2, $item->id);
     }
 
     //向设计公司支付项目剩余款项
@@ -346,9 +380,16 @@ class ItemMessageListener
 
             $tools = new Tools();
             //通知需求公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+            $title = '支付尾款';
+            $content = '【' . $item_info['name'] . '】项目已向设计公司支付剩余项目款';
+            $tools->message($demand_user_id, $title, $content, 3, null);
+
             //通知设计公司
-            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+//            $tools->message($design_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+            $title1 = '收到尾款';
+            $content1 = '【' . $item_info['name'] . '】项目已收到剩余项目款';
+            $tools->message($design_user_id, $title1, $content1, 3, null);
         }catch (\Exception $e){
             DB::rollBack();
             Log::error($e);

@@ -17,6 +17,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/item/addDesignToItem', 'ItemActionController@addDesignToItem');
         //确认项目给推荐的设计公司
         $api->post('/admin/item/trueItem', 'ItemActionController@trueItem');
+        // 项目详情
+        $api->get('/admin/item/show', 'ItemActionController@show');
 
 
         //更新设计公司审核状态
@@ -38,6 +40,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         ]);
         $api->get('/admin/designCompany/lists', [
             'as' => 'AdminDesignCompany.lists', 'uses' => 'AdminDesignCompanyController@lists'
+        ]);
+        // 设计公司详细信息
+        $api->get('/admin/designCompany/show', [
+            'as' => 'AdminDesignCompany.show', 'uses' => 'AdminDesignCompanyController@show'
         ]);
         // 公开或关闭设计公司资料
         $api->put('/admin/designCompany/openInfo',[
@@ -67,6 +73,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/demandCompany/lists', [
             'as' => 'AdminDemandCompany.lists', 'uses' => 'AdminDemandCompanyController@lists'
         ]);
+        // 需求公司详情
+        $api->get('/admin/demandCompany/show', [
+            'as' => 'AdminDemandCompany.show', 'uses' => 'AdminDemandCompanyController@show'
+        ]);
 
         /**
          * 用户相关路由
@@ -93,6 +103,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/withdrawOrder/lists', 'WithdrawOrderActionController@lists');
         // 确认提现单已提现
         $api->post('/admin/withdrawOrder/trueWithdraw', 'WithdrawOrderActionController@trueWithdraw');
+
+        /**
+         * 控制中心
+         */
+        // 后台控制台信息
+        $api->get('/admin/survey/index', 'SurveyController@index');
     });
 
 });

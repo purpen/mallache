@@ -449,11 +449,18 @@ class ItemStageController extends BaseController
             //设计公司资金流水记录
             $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到项目款');
 
+            $item_info = $item->itemInfo();
             $tools = new Tools();
             //通知需求公司
-            $tools->message($demand_user_id, '支付设计公司项目款');
+//            $tools->message($demand_user_id, '支付设计公司项目款');
+            $title1 = '支付阶段项目款';
+            $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
+            $tools->message($demand_user_id, $title1, $content1, 3, null);
             //通知设计公司
-            $tools->message($design_user_id, '收到项目方项目款');
+//            $tools->message($design_user_id, '收到项目方项目款');
+            $title2 = '收到阶段项目款';
+            $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
+            $tools->message($design_user_id, $title2, $content2, 3, null);
 
         }catch (\Exception $e){
             DB::rollBack();

@@ -1064,7 +1064,10 @@ class DemandController extends BaseController
         //消息通知
         $design = DesignCompanyModel::find($all['design_company_id']);
         $tools = new Tools();
-        $tools->message($design->user_id, '【' . ($item->itemInfo())['name'] . '】' . '已选择其他设计公司');
+
+        $title = '项目报价被拒';
+        $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司';;
+        $tools->message($design->user_id, $title, $content, 1, null);
 
         //项目是否匹配失败
         $item->itemIsFail($all['item_id']);

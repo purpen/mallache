@@ -4,6 +4,7 @@
  * @Date 2017-3-27
  * @User llh
  */
+
 namespace App\Helper;
 
 use App\Models\Message;
@@ -20,7 +21,7 @@ class Tools
      */
     static public function randNumber()
     {
-        return mt_rand(100000,999999);
+        return mt_rand(100000, 999999);
     }
 
     /**
@@ -32,12 +33,12 @@ class Tools
         $code = (int)$code;
         $data = config('city.data');
         $data_arr = [];
-        foreach(json_decode($data, true) as $v){
+        foreach (json_decode($data, true) as $v) {
             $data_arr = $data_arr + $v;
         }
-        if(array_key_exists($code, $data_arr)){
+        if (array_key_exists($code, $data_arr)) {
             $name = $data_arr[$code];
-        }else{
+        } else {
             $name = '';
         }
 
@@ -48,23 +49,27 @@ class Tools
      * 添加系统通知
      *
      * @param int $user_id 用户ID
+     * @param string $title 标题
      * @param string $message 消息内容
-     * @param int $type 消息类型：1.系统通知；
+     * @param int $type 消息类型：1.系统通知。2.项目通知。3.资金通知
+     * @param int $target_id 目标ID
      * @return bool 返回值
      */
-    public function message(int $user_id, string $message, int $type = 1)
+    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null)
     {
         $message = Message::create([
             'user_id' => $user_id,
+            'title' => $title,
             'content' => $message,
             'type' => $type,
+            'target_id' => $target_id
         ]);
 
-        if($message){
+        if ($message) {
             //新消息数量加1
-            $this->addMessageQuantity($user_id, $type);
+            $this->addMessageQuantity($user_id);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -72,15 +77,33 @@ class Tools
     /**
      * 添加新消息数量
      * @param int $user_id
-     * @param int $type
      */
-    public function addMessageQuantity(int $user_id, int $type = 1)
+    public function addMessageQuantity(int $user_id)
     {
         //有序列表key
-        $key = 'mallache:user:message:' . $type;
+        $key = 'mallache:user:message';
         //member
         $member = 'user:' . $user_id;
         Redis::zincrby($key, 1, $member);
+    }
+
+    /**
+     * 减少未读消息数量
+     * @param int $user_id
+     * @param int $type
+     */
+    public function reduceMessageQuantity(int $user_id)
+    {
+        //有序列表key
+        $key = 'mallache:user:message';
+        //member
+        $member = 'user:' . $user_id;
+        $quantity = Redis::zscore($key, $member);
+        if($quantity < 0){
+            Redis::zadd($key, 0, $member);
+        }else{
+            Redis::zincrby($key, -1, $member);
+        }
     }
 
     /**
@@ -90,20 +113,39 @@ class Tools
      * @param int $type 消息类型：1.系统消息
      * @return int 消息数量
      */
-    public function getMessageQuantity(int $user_id, int $type = 1)
+    public function getMessageQuantity(int $user_id)
     {
-        //有序列表key
-        $key = 'mallache:user:message:' . $type;
-        //member
-        $member = 'user:' . $user_id;
+//        //有序列表key
+//        $key = 'mallache:user:message';
+//        //member
+//        $member = 'user:' . $user_id;
+//
+//        //ZSCORE key member
+//        $quantity = Redis::zscore($key, $member);
+//        if ($quantity == 'nil') {
+//            return 0;
+//        }
 
-        //ZSCORE key member
-        $quantity = Redis::zscore($key, $member);
-        if($quantity == 'nil'){
-            return 0;
-        }
-
+        $quantity = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return (int)$quantity;
+    }
+
+    /**
+     * 消息已读
+     * @param int $id
+     */
+    public function haveRead(int $id)
+    {
+        if ($message = Message::find($id)) {
+            $message->status = 1;
+            if($message->save()){
+                $this->reduceMessageQuantity($message->user_id);
+            }
+
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -112,7 +154,7 @@ class Tools
     public function emptyMessageQuantity(int $user_id, int $type = 1)
     {
         //有序列表key
-        $key = 'mallache:user:message:' . $type;
+        $key = 'mallache:user:message' . $type;
         //member
         $member = 'user:' . $user_id;
         //ZADD key score member
@@ -127,7 +169,7 @@ class Tools
      */
     public static function orderId($user_id)
     {
-        return  date("mdHis") . sprintf("%06d", $user_id) . mt_rand(00,99);
+        return date("mdHis") . sprintf("%06d", $user_id) . mt_rand(00, 99);
     }
 
 }
