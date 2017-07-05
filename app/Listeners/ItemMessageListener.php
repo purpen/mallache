@@ -118,8 +118,8 @@ class ItemMessageListener
         //添加系统通知
         $tools = new Tools();
 //        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '已匹配了合适的设计公司');
-        $title = '您好，铟果平台为您的【' . $item_info['name'] . '】项目匹配了适合您的设计服务供应商';
-        $content = $title;
+        $title = '查看匹配结果';
+        $content = '您好，铟果平台为您的【' . $item_info['name'] . '】项目匹配了适合您的设计服务供应商';
         $tools->message($item->user_id, $title, $content, 2, $item->id);
 
         //给项目联系人发送信息
@@ -148,8 +148,8 @@ class ItemMessageListener
         $tools = new Tools();
         $n = count($user_id_arr);
 
-        $title = '新收到项目邀约';
-        $content = $title;
+        $title = '收到项目邀约';
+        $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
         for ($i = 0; $i < $n; ++$i){
 //            $tools->message($user_id_arr[$i], '系统向您推荐了项目' . '【' . $item->itemInfo()['name'] . '】');
             $tools->message($user_id_arr[$i], $title, $content, 2, $item->id);
@@ -176,8 +176,8 @@ class ItemMessageListener
         $design_company_id = $event->design_company_id['yes'];
         $design = DesignCompanyModel::find($design_company_id);
 //        $tools->message($design->user_id, '【' . $item_info['name'] . '】' . '确认了您的报价');
-        $title = '【' . $item_info['name'] . '】' . '项目报价已确认，请尽快编辑并向对方发送项目合同';
-        $content = $title;
+        $title = '确认报价';
+        $content = '【' . $item_info['name'] . '】' . '项目报价已确认，请尽快编辑并向对方发送项目合同';
         $tools->message($design->user_id, $title, $content, 2, $item->id);
 
         //拒绝公司ID
@@ -190,8 +190,8 @@ class ItemMessageListener
         $n = count($user_id_arr);
         for ($i = 0; $i < $n; ++$i){
 //            $tools->message($user_id_arr[$i], '【' . $item_info['name'] . '】' . '已选择其他设计公司');
-            $title = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
-            $content = $title;
+            $title = '需求方拒绝报价';
+            $content = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
             $tools->message($user_id_arr[$i], $title, $content, 1, null);
         }
     }
@@ -204,8 +204,8 @@ class ItemMessageListener
 
         $tools = new Tools();
 //        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '未达成合作，匹配失败');
-        $title = '【' . $item_info['name'] . '】' . '未达成合作，匹配失败';
-        $content = $title;
+        $title = '匹配失败';
+        $content = '【' . $item_info['name'] . '】' . '未达成合作，匹配失败';
         $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
@@ -217,8 +217,8 @@ class ItemMessageListener
 
         $tools = new Tools();
 //        $tools->message($item->user_id, '【' . $item_info['name'] . '】' . '设计公司已提交合同，请查阅');
-        $title = '收到设计公司发来【' . $item_info['name'] . '】项目合同书请查看并确认或与设计服务供应商沟通做进一步修改';
-        $content = $title;
+        $title = '收到合同';
+        $content = '收到设计公司发来【' . $item_info['name'] . '】项目合同书请查看并确认或与设计服务供应商沟通做进一步修改';
         $tools->message($item->user_id, $title, $content, 2, $item->id);
     }
 
