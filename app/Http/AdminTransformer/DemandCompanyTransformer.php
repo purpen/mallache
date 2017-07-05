@@ -9,6 +9,6 @@ class DemandCompanyTransformer extends TransformerAbstract
     public function transform(DemandCompany $demand)
     {
         $demand->user;
-        return $demand;
+        return $demand->toArray();
     }
 }

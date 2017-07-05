@@ -270,4 +270,34 @@ class ItemActionController extends Controller
         return $this->response->array($this->apiSuccess());
     }
 
+    /**
+     * @api {get} /admin/item/show 项目详情
+     * @apiVersion 1.0.0
+     * @apiName item show
+     * @apiGroup AdminItem
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      },
+     *      "data": {
+     *
+     *      }
+     *  }
+     */
+    public function show(Request $request)
+    {
+        $id = $request->input('id');
+        if(! $item = Item::find($id)){
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+    }
+
 }
