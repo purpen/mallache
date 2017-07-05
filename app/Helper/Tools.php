@@ -142,7 +142,6 @@ class Tools
                 $this->reduceMessageQuantity($message->user_id);
             }
 
-
             return true;
         }else{
             return false;
