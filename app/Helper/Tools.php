@@ -98,7 +98,12 @@ class Tools
         $key = 'mallache:user:message';
         //member
         $member = 'user:' . $user_id;
-        Redis::zincrby($key, -1, $member);
+        $quantity = Redis::zscore($key, $member);
+        if($quantity < 0){
+            Redis::zadd($key, 0, $member);
+        }else{
+            Redis::zincrby($key, -1, $member);
+        }
     }
 
     /**
@@ -110,17 +115,18 @@ class Tools
      */
     public function getMessageQuantity(int $user_id)
     {
-        //有序列表key
-        $key = 'mallache:user:message';
-        //member
-        $member = 'user:' . $user_id;
+//        //有序列表key
+//        $key = 'mallache:user:message';
+//        //member
+//        $member = 'user:' . $user_id;
+//
+//        //ZSCORE key member
+//        $quantity = Redis::zscore($key, $member);
+//        if ($quantity == 'nil') {
+//            return 0;
+//        }
 
-        //ZSCORE key member
-        $quantity = Redis::zscore($key, $member);
-        if ($quantity == 'nil') {
-            return 0;
-        }
-
+        $quantity = Message::where('status', 0)->count();
         return (int)$quantity;
     }
 
@@ -132,8 +138,10 @@ class Tools
     {
         if ($message = Message::find($id)) {
             $message->status = 1;
-            $message->save();
-            $this->reduceMessageQuantity($message->user_id);
+            if($message->save()){
+                $this->reduceMessageQuantity($message->user_id);
+            }
+
 
             return true;
         }else{
