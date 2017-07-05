@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
 
 export default {
   actions: {
@@ -7,6 +7,9 @@ export default {
     },
     [USER_SIGNOUT]({commit}) {
       commit(USER_SIGNOUT)
+    },
+    [MSG_COUNT]({commit}, msgCount) {
+      commit(MSG_COUNT, parseInt(msgCount))
     },
     [PREV_URL_NAME]({commit}, urlName) {
       commit(PREV_URL_NAME, urlName)

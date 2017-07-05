@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <v-header></v-header>
-
-    <div>
+    <div class="container-test">
       <router-view></router-view>   
     </div>
 
@@ -22,7 +21,6 @@
     },
     data () {
       return {
-
       }
     },
     methods: {
@@ -30,6 +28,10 @@
     },
     computed: {
 
+    },
+    watch: {
+    },
+    mounted () {
     }
   }
 </script>

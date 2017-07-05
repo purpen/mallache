@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login-box">
       <div class="login-title">
-        <h2>登录太火鸟SaaS账户</h2>
+        <h2>登录毕方鸟</h2>
       </div>
 
       <div class="login-content">
@@ -14,8 +14,16 @@
           <el-form-item label="" prop="password">
             <el-input v-model="form.password" type="password" name="password" ref="password" placeholder="密码"></el-input>
           </el-form-item>
-          <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
+          <div class="opt">
+            <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
+            <p class="forget"><router-link :to="{name: 'forget'}">忘记密码?</router-link></p>
+          </div>
+          <el-button type="primary" :loading="isLoadingBtn" @keyup="submit('ruleForm')" @click="submit('ruleForm')" class="login-btn is-custom">登录</el-button>
         </el-form>
+
+        <div class="reg">
+          <p>还没有毕方鸟账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
+        </div>
 
       </div>   
     </div>
@@ -78,9 +86,9 @@ export default {
                   if (prevUrlName) {
                     // 清空上一url
                     auth.clear_prev_url_name()
-                    that.$router.push({name: prevUrlName})
+                    that.$router.replace({name: prevUrlName})
                   } else {
-                    that.$router.push({name: 'home'})
+                    that.$router.replace({name: 'home'})
                   }
                 } else {
                   auth.logout()
@@ -130,10 +138,23 @@ export default {
   },
   computed: {
   },
+  mounted: function() {
+    const self = this
+    window.addEventListener('keydown', function(e) {
+      if (e.keyCode === 13) {
+        self.submit('ruleForm')
+      }
+    })
+  },
   created: function() {
     var prevUrlName = this.$store.state.event.prevUrlName
     if (prevUrlName) {
       this.$message.error('请先登录！')
+    }
+
+    if (this.$store.state.event.token) {
+      this.$message.error('已经登录!')
+      this.$router.replace({name: 'home'})
     }
   }
 
@@ -145,7 +166,7 @@ export default {
   .login-box{
     border: 1px solid #aaa;
     width: 800px;
-    height: 500px;
+    height: 400px;
     text-align:center;
     margin: 30px auto 30px auto;
   }
@@ -173,6 +194,30 @@ export default {
 
   .login-btn {
     width: 100%;
+  }
+  .reg {
+    margin-top: 40px;
+  }
+  .reg p {
+    color: #666;
+  }
+  .reg p a {
+    color: #FF5A5F;
+  }
+  .opt {
+    margin-top: -25px;
+    line-height: 45px;
+  }
+  .forget {
+    float: right;
+  }
+  .rember {
+    float: left;
+    font-size: 1.3rem; 
+  }
+  .forget a{
+    font-size: 1.3rem; 
+    color: #666;
   }
 
 </style>

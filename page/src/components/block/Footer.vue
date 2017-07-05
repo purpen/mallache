@@ -1,34 +1,31 @@
 <template>
-  <div class="container footer">
-    <div class="line"></div>
-    <el-row :gutter="24">
+  <div class="footer clear">
+    <el-row :gutter="24" type="flex" justify="center">
       <el-col class="item" :span="6">
-        <p class="title">太火鸟 SaaS</p>
-        <p><router-link :to="{}" class="">关于我们</router-link></p>
-        <p><router-link :to="{}" class="">联系我们</router-link></p>
-        <p><router-link :to="{}" class="">公司介绍</router-link></p>
+        <p class="title">铟果</p>
+        <p><router-link :to="{name: 'about'}">关于我们</router-link></p>
+        <p><router-link :to="{name: 'contact'}">联系我们</router-link></p>
       </el-col>
 
       <el-col class="item" :span="6">
         <p class="title">服务</p>
-        <p><router-link :to="{}" class="">工作流程</router-link></p>
-        <p><router-link :to="{}" class="">媒体报道</router-link></p>
+        <p><router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link></p>
+        <p><router-link :to="{name: 'serverDesign'}" class="">申请加入</router-link></p>
       </el-col>
 
       <el-col class="item" :span="6">
-        <p class="title">帮助中心</p>
-        <p><router-link :to="{}" class="">常见问题</router-link></p>
-        <p><router-link :to="{}" class="">服务条款</router-link></p>
-        <p><router-link :to="{}" class="">网站地图</router-link></p>
-        <p><router-link :to="{}" class="">友情链接</router-link></p>
+        <p class="title">帮助</p>
+        <p><router-link :to="{name: 'trade'}" class="">交易保障</router-link></p>
+        <p><router-link :to="{name: 'question'}" class="">常见问题</router-link></p>
+        <p><router-link :to="{name: 'item'}" class="">服务条款</router-link></p>
       </el-col>
 
       <el-col class="item" :span="6">
         <p class="title">关注我们</p>
         <div class="share-box">
-          <p class="share"><router-link :to="{}" class=""><i class="fa fa-weixin fa-2x" aria-hidden="true"></i></router-link></p>
-          <p class="share"><router-link :to="{}" class=""><i class="fa fa-weibo fa-2x" aria-hidden="true"></i></router-link></p>
-          <p class="share"><router-link :to="{}" class=""><i class="fa fa-qq fa-2x" aria-hidden="true"></i></router-link></p>
+          <p class="share"><router-link :to="{name: 'test'}" class=""><i class="fa fa-weixin fa-2x" aria-hidden="true"></i></router-link></p>
+          <p class="share"><router-link :to="{name: 'test'}" class=""><i class="fa fa-weibo fa-2x" aria-hidden="true"></i></router-link></p>
+          <p class="share"><router-link :to="{name: 'test'}" class=""><i class="fa fa-qq fa-2x" aria-hidden="true"></i></router-link></p>
         </div>
       </el-col>
     </el-row>
@@ -38,7 +35,12 @@
 
 <script>
 export default {
-  name: 'test',
+  name: 'footer',
+  props: {
+    currentName: {
+      default: ''
+    }
+  },
   data () {
     return {
       msg: ''
@@ -49,5 +51,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 
 </style>

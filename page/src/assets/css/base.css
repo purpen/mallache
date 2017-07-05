@@ -6,9 +6,42 @@ html{
   font-size:62.5%; /* 10÷16=62.5% */
 }
 body{
-  font-size:12px;
-  font-size:1.2rem ; /* 12÷10=1.2 */
+  overflow-x: hidden;
+  margin: 0 auto;
+  font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
 }
+
+#app {
+  margin: 0 auto;
+}
+
+.container {
+  margin: 0 auto;
+}
+.min-height350 {
+  min-height: 350px;
+}
+
+@media screen and (min-width: 1201px) { 
+  .container {width: 1200px} 
+} 
+/* css 注释说明：设置了浏览器宽度不小于1201px时 abc 显示1200px宽度 */
+
+@media screen and (max-width: 1200px) { 
+  .container {width: 900px} 
+} 
+/* 设置了浏览器宽度不大于1200px时 abc 显示900px宽度 */ 
+
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  .container {
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 959px) {
+  .container {
+  }
+}
+
 p{
   font-size:14px;
   font-size:1.4rem;
@@ -28,6 +61,7 @@ a.is_active {
   color: #222;
 }
 
+/**
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   font-size: 1.2rem;
 }
@@ -40,17 +74,31 @@ input::-moz-placeholder, textarea::-moz-placeholder {
 input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 1.2rem;
 }
+**/
 
 .field .select {
   font-size: 0.875rem;
 }
 
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
 .clear {
   clear: both;
 }
 
+.el-form-item__label {
+  font-size: 1.6rem;
+}
+.el-form-item__label:before {
+  display: none;
+}
 .el-form-item__content {
   line-height: 10px;
+  margin-bottom: 10px;
 }
 
 .blank10 {
@@ -59,21 +107,63 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .blank20 {
   margin: 20px;
 }
+.blank40 {
+  margin: 40px;
+}
+.blank60 {
+  margin: 60px;
+}
+
+.font-weight4 {
+  font-weight: 400;
+}
+.font-weight5 {
+  font-weight: 500;
+}
+
+.loading {
+  position:fixed;
+  top: 30%;
+  left: 50%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/**
+ * 面包屑
+ */
+.bread {
+  margin: 0 0 10px 0;
+}
 
 
 /**
  *  新添按钮颜色值
  */
-button.is-custom.el-button {
+button.is-custom.el-button.el-button--primary {
   background-color: #FF5A5F;
   border-color: transparent;
   color: #fff;
 }
 
-button.is-custom:hover, .button.is-custom.is-hovered {
+button.is-custom.el-button--primary:hover {
   background-color: #FF4500;
   border-color: transparent;
   color: #fff;
+}
+
+button.is-custom.el-button.el-button--default {
+  background-color: #fff;
+  border-color: #FF4500;
+  color: #FF4500;
+}
+
+button.is-custom.el-button.el-button--default:hover {
+  background-color: #fff;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
 }
 
 button.is-custom:focus, .button.is-custom.is-focused {
@@ -92,6 +182,11 @@ button.is-custom:active, .button.is-custom.is-active {
 button.is-custom.is-inverted {
   background-color: #fff;
   color: #FF5A5F;
+}
+
+button.el-button.is-custom.is-disabled {
+  background-color: #eef1f6;
+  color: #666;
 }
 
 button.is-custom.is-inverted:hover {
@@ -118,16 +213,6 @@ button.is-custom.is-outlined.is-loading:after {
   border-color: transparent transparent #FF5A5F #FF5A5F !important;
 }
 
-button.is-custom.is-inverted.is-outlined {
-  background-color: transparent;
-  border-color: #fff;
-  color: #fff;
-}
-
-button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is-outlined:focus {
-  background-color: #fff;
-  color: #FF5A5F;
-}
 
 /**
  * Common Part --- End
@@ -139,12 +224,8 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
 .footer{
   text-align:center;
   margin-top: 50px;
-  margin-bottom: 50px;
-}
-.footer .line {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  border-top: 1px solid #ccc;
+  padding-bottom: 50px;
+  background-color: #333;
 }
 .footer .item {
   float: left;
@@ -152,13 +233,21 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
 }
 .footer p {
   margin: 10px;
+  line-height: 2;
+}
+.footer p a {
+  color: #999;
+}
+.footer p a.is-active {
+    color: #ccc;
 }
 .footer p.title {
   font-size: 1.5rem;
-  margin: 20px;
+  margin: 40px 20px 10px 20px;
+  color: #fff;
 }
 .footer .share-box {
-  width: 150px;
+  width: 160px;
   margin: 0 auto;
 }
 .footer p.share {
@@ -172,18 +261,17 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
  * header右侧
  */
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title{
-  height: 52px;
-  line-height: 52px;
+  height: 60px;
+  line-height: 60px;
   border: none;
   background: #fff;
   color: #7a7a7a;
   padding: 0 14px;
 }
 .el-menu-info.el-menu--horizontal .el-submenu>.el-menu{
-  top: 52px;
+  top: 60px;
   border: 1px solid #ccc;
   width: 150px;
-  height: 132px;
   min-width: 150px;
   padding: 0;
 }
@@ -207,7 +295,7 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
   color: #222;
 }
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title img{
-  max-height: 1.75rem;
+  max-height: 3rem;
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
@@ -215,9 +303,24 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
 .el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title .b-nickname{
   padding-left: 8px;
   padding-right: 3px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 .el-menu-info.el-menu--horizontal:hover>.el-submenu .el-submenu__title,.el-menu--horizontal:hover .el-submenu .el-submenu__icon-arrow {
+  color: #222;
+}
+
+/**
+ * Home TopMenu
+ */
+.top-menu-list {
+  height: 30px;
+}
+.top-menu-list .item {
+  float: right;
+  padding: 0 10px;
+  font-size: 1.5rem;
+}
+.top-menu-list .item.is-active {
   color: #222;
 }
 
@@ -249,24 +352,94 @@ button.is-custom.is-inverted.is-outlined:hover, .button.is-custom.is-inverted.is
  * vCenter Menu Sub --- End
  */
 
-.container {
-  margin: 0 100px 0 100px;
+/**
+ * vCenter LeftMenu
+ */
+.left-menu {
 }
+
+.menu-list {
+  padding: 0 0 0 0;
+}
+
+.menu-list .item {
+  display: block;
+  cursor: pointer;
+  border: none;
+  height: auto;
+  text-align: left;
+  line-height: 1em;
+  color: rgba(112,123,135,.92);
+  text-transform: none;
+  font-weight: 400;
+  padding: .85rem 1.5rem .85rem 1.5rem!important;
+}
+
+.menu-list .item {
+  font-size: 1.5rem;
+}
+
+.menu-list .item:hover {
+  color: #222;
+  background-color: #fff;
+}
+
+.item.is-active {
+  background-color: #fff;
+  color: #222;
+  font-weight: bold;
+
+}
+
+.computer-btn {
+  margin-top: 30px;
+  text-align: left;
+}
+.computer-btn a {
+  font-size: 1.2rem;
+}
+
 
 /**
  * vCenter Content
  */
 .right-content .content-box {
-  margin-top: 30px;
+  margin-top: 20px;
   clear: both;
   border: 1px solid #ccc;
   padding: 0px 20px 20px 20px;
+  min-height: 350px;
 }
+
 
 .form-title {
   margin: 20px 0 20px 0px;
 }
 .form-title span {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+/**
+ * Home SubMenu
+ */
+.h-right-content .content-box {
+  margin-top: 20px;
+}
+.content-box p {
+  color: #666;
   font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+img.avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+}
+
+.font-weight {
   font-weight: bold;
 }
+

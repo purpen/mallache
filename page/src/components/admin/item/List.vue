@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-
-    <el-row :gutter="24">
+    <div class="blank20"></div>
+    <el-row :gutter="20">
       <v-menu selectedName="itemList"></v-menu>
 
       <el-col :span="20">
@@ -12,16 +12,17 @@
             <router-link :to="{name: 'adminItemList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">正在进行的项目</router-link>
+            <router-link :to="{name: 'adminItemList', query: {type: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType === 1}">完善资料</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminItemList', query: {type: 8}}" active-class="false" :class="{'item': true, 'is-active': menuType === 8}">已完成</router-link>
+            <router-link :to="{name: 'adminItemList', query: {type: 2}}" active-class="false" :class="{'item': true, 'is-active': menuType === 2}">等待推荐</router-link>
           </div>
         </div>
 
           <el-table
             :data="tableData"
             border
+            v-loading.body="isLoading"
             class="admin-table"
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -35,26 +36,25 @@
               width="60">
             </el-table-column>
             <el-table-column
-              prop="info.name"
-              label="名称"
-              width="140">
+              label="内容"
+              min-width="140">
+                <template scope="scope">
+                  <p>
+                    标题: {{ scope.row.info.name }}
+                    类型: {{ scope.row.item.type_label }}
+                    预算: {{ scope.row.info.design_cost_value }}
+                    周期: {{ scope.row.info.cycle_value }}
+                  </p>
+                </template>
             </el-table-column>
             <el-table-column
-              prop="item.user_id"
+              width="120"
               label="创建人">
-            </el-table-column>
-            <el-table-column
-              prop="item.type_label"
-              label="类型"
-              width="150">
-            </el-table-column>
-            <el-table-column
-              prop="info.design_cost_value"
-              label="预算">
-            </el-table-column>
-            <el-table-column
-              prop="info.cycle_value"
-              label="周期">
+                <template scope="scope">
+                  <p>
+                    {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
+                  </p>
+                </template>
             </el-table-column>
             <el-table-column
               prop="info.locale"
@@ -62,10 +62,12 @@
             </el-table-column>
             <el-table-column
               prop="item.status_label"
+              width="120"
               label="状态">
             </el-table-column>
             <el-table-column
               prop="item.created_at"
+              width="80"
               label="创建时间">
             </el-table-column>
             <el-table-column
@@ -73,11 +75,14 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
+                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
                   </p>
                   <p>
+                  <!--
                     <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.item.id)">编辑</a>
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">删除</a>                 
+                    -->
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">查看</a> 
                   </p>
                 </template>
             </el-table-column>
@@ -87,11 +92,11 @@
             class="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="[100, 200, 300, 400, 500]"
-            :page-size="100"
+            :current-page="query.page"
+            :page-sizes="[20, 50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="query.totalCount">
           </el-pagination>
 
         </div>
@@ -101,9 +106,14 @@
     <el-dialog title="匹配公司" v-model="matchCompanyDialog">
       <el-form label-position="top">
         <input type="hidden" v-model="matchCompanyForm.itemId" value="" />
+        <input type="hidden" v-model="matchCompanyForm.itemStatus" value="" />
         <el-form-item label="项目名称" label-width="200px">
           <el-input v-model="matchCompanyForm.itemName" auto-complete="off" disabled></el-input>
         </el-form-item>
+        <div class="match-company-box">
+        <p>已匹配的公司：</p>
+        <p><el-tag class="match-company-tag" type="success" v-for="(d, index) in currentMatchCompany" :key="index">{{ d.company_name }}</el-tag></p>
+        </div>
         <el-form-item label="添加公司" label-width="80px">
           <el-input v-model="matchCompanyForm.companyIds" placeholder="多个公司ID用','分隔" auto-complete="off"></el-input>
         </el-form-item>
@@ -131,12 +141,21 @@ export default {
       matchCompanyDialog: false,
       itemList: [],
       tableData: [],
-      page: 1,
-      total: 1000,
+      currentMatchCompany: [],
+      isLoading: false,
       matchCompanyForm: {
         itemId: '',
         itemName: '',
         companyIds: ''
+      },
+      query: {
+        page: 1,
+        pageSize: 20,
+        totalCount: 0,
+        sort: 1,
+        type: 0,
+
+        test: null
       },
       msg: ''
     }
@@ -151,15 +170,17 @@ export default {
     },
     handleMatch(index, item) {
       if (item.item.status !== 2) {
-        this.$message.error('项目状态不允许推荐公司')
-        return
+        // this.$message.error('项目状态不允许推荐公司')
+        // return
       }
+      this.currentMatchCompany = item.designCompany
       this.matchCompanyForm.itemId = item.item.id
+      this.matchCompanyForm.itemStatus = item.item.status
       this.matchCompanyForm.itemName = item.info.name
       this.matchCompanyDialog = true
     },
     addMatchCompany() {
-      if (!this.matchCompanyForm.itemId || !this.matchCompanyForm.itemName || !this.matchCompanyForm.companyIds) {
+      if (!this.matchCompanyForm.itemId || !this.matchCompanyForm.itemName || !this.matchCompanyForm.companyIds || !this.matchCompanyForm.itemStatus) {
         this.$message.error('缺少请求参数!')
         return
       }
@@ -168,21 +189,24 @@ export default {
       this.$http.post(api.addItemToCompany, {item_id: this.matchCompanyForm.itemId, recommend: companyIds})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
-          .then (function(response1) {
-            if (response1.data.meta.status_code === 200) {
-              self.$message.success('添加成功!')
-              self.matchCompanyDialog = false
-              return
-            } else {
-              self.$message.error(response1.data.meta.message)
-              return
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-            console.log(error.message)
-          })
+          if (self.matchCompanyForm.itemStatus === 2) {
+            self.$http.post(api.ConfirmItemToCompany, {item_id: self.matchCompanyForm.itemId})
+            .then (function(response1) {
+              if (response1.data.meta.status_code === 200) {
+                self.$message.success('添加成功!')
+                self.matchCompanyDialog = false
+                return
+              } else {
+                self.$message.error(response1.data.meta.message)
+              }
+            })
+            .catch (function(error) {
+              self.$message.error(error.message)
+            })
+          } else {
+            self.$message.success('添加成功!')
+            self.matchCompanyDialog = false
+          }
         } else {
           self.$message.error(response.data.meta.message)
           return
@@ -190,61 +214,69 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
       })
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.query.pageSize = val
+      this.loadList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.$router.push({name: this.$route.name, query: {page: val}})
+    },
+    loadList() {
+      const self = this
+      self.query.page = this.$route.query.page || 1
+      self.query.sort = this.$route.query.sort || 1
+      self.query.type = this.$route.query.type || 0
+      this.menuType = 0
+      if (self.query.type) {
+        this.menuType = parseInt(self.query.type)
+      }
+      self.isLoading = true
+      self.$http.get(api.adminItemList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      .then (function(response) {
+        self.isLoading = false
+        self.tableData = []
+        if (response.data.meta.status_code === 200) {
+          self.itemList = response.data.data
+          self.query.totalCount = response.data.meta.pagination.total
+          for (var i = 0; i < self.itemList.length; i++) {
+            var item = self.itemList[i]
+
+            var typeLabel = ''
+            if (item.item.type === 1) {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.info.field_value + '/' + item.info.industry_value
+            } else {
+              typeLabel = item.item.type_value + '/' + item.item.design_type_value
+            }
+
+            item['item']['type_label'] = typeLabel
+            item['item']['status_label'] = '[{0}]{1}'.format(item.item.status, item.item.status_value)
+
+            if (item.info) {
+              item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
+            }
+            item['item']['created_at'] = item.item.created_at.date_format().format('yy-MM-dd')
+            self.tableData.push(item)
+          } // endfor
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.isLoading = false
+        self.$message.error(error.message)
+      })
     }
   },
   created: function() {
-    const self = this
-    var page = this.$route.query.page || 1
-    var perPage = 5
-    self.$http.get(api.adminItemList, {page: page, per_page: perPage})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-
-        for (var i = 0; i < self.itemList.length; i++) {
-          var item = self.itemList[i]
-
-          var typeLabel = ''
-          if (item.item.type === 1) {
-            typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
-          } else {
-            typeLabel = item.item.type_value + '/' + item.item.design_type_value
-          }
-
-          item['item']['type_label'] = typeLabel
-          item['item']['status_label'] = '[{0}]{1}'.format(item.item.status, item.item.status_value)
-
-          if (item.info) {
-            item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
-          }
-
-          self.tableData.push(item)
-        } // endfor
-
-        console.log(self.itemList)
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-      console.log(error.message)
-    })
+    this.loadList()
   },
   watch: {
     '$route' (to, from) {
       // 对路由变化作出响应...
-      var type = this.$route.query.type
-      this.menuType = 0
-      if (type) {
-        this.menuType = parseInt(type)
-      }
+      this.loadList()
     }
   }
 }
@@ -252,5 +284,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .match-company-box {
+    margin: 10px;
+  }
+  .match-company-box p {
+    line-height: 2;
+  }
+  .match-company-tag {
+    margin: 5px;
+  }
 
 </style>

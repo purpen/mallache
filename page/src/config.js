@@ -12,7 +12,7 @@ const COMPANY_TYPE = [
       {
         id: 2,
         key: 'item_1_2',
-        name: '产品设计'
+        name: '产品外观设计'
       },
       {
         id: 3,
@@ -284,6 +284,60 @@ const CYCLE_OPTIONS = [
 
 ]
 
+// 证件类型
+const DOCUMENT_TYPE = [
+  {
+    id: 1,
+    name: '身份证'
+  },
+  {
+    id: 2,
+    name: '港澳通行证'
+  },
+  {
+    id: 3,
+    name: '台胞证'
+  },
+  {
+    id: 4,
+    name: '护照'
+  }
+
+]
+
+// 需求方公司类型
+const COMPANY_PROPERTY_TYPE = [
+  {
+    id: 1,
+    name: '初创企业'
+  },
+  {
+    id: 2,
+    name: '私企'
+  },
+  {
+    id: 3,
+    name: '国有企业'
+  },
+  {
+    id: 4,
+    name: '事业单位'
+  },
+  {
+    id: 5,
+    name: '外资'
+  },
+  {
+    id: 6,
+    name: '合资'
+  },
+  {
+    id: 7,
+    name: '上市公司'
+  }
+
+]
+
 // 设计费用预算
 const DESIGN_COST_OPTIONS = [
   {
@@ -296,22 +350,18 @@ const DESIGN_COST_OPTIONS = [
   },
   {
     id: 3,
-    name: '10-15万'
+    name: '10-20万'
   },
   {
     id: 4,
-    name: '15-20万'
-  },
-  {
-    id: 5,
     name: '20-30万'
   },
   {
-    id: 6,
+    id: 5,
     name: '30-50万'
   },
   {
-    id: 7,
+    id: 6,
     name: '50万以上'
   }
 
@@ -341,11 +391,125 @@ const COMPANY_SIZE = [
   }
 ]
 
+// 银行卡信息
+const BANK_OPTIONS = [
+  {
+    id: 1,
+    name: '中国建设银行',
+    mark: 'js'
+  },
+  {
+    id: 2,
+    name: '中国银行',
+    mark: 'zh'
+  },
+  {
+    id: 3,
+    name: '中国农业银行',
+    mark: 'ny'
+  },
+  {
+    id: 4,
+    name: '中国工商银行',
+    mark: 'gs'
+  },
+  {
+    id: 6,
+    name: '民生银行',
+    mark: 'ms'
+  },
+  {
+    id: 7,
+    name: '招商银行',
+    mark: 'zs'
+  },
+  {
+    id: 8,
+    name: '兴业银行',
+    mark: 'xy'
+  },
+  {
+    id: 9,
+    name: '国家开发银行',
+    mark: 'gjkf'
+  },
+  {
+    id: 10,
+    name: '汇丰银行',
+    mark: 'hf'
+  },
+  {
+    id: 11,
+    name: '中国人民银行',
+    mark: 'rm'
+  },
+  {
+    id: 12,
+    name: '中国光大银行',
+    mark: 'gd'
+  },
+  {
+    id: 13,
+    name: '中信银行',
+    mark: 'zx'
+  },
+  {
+    id: 14,
+    name: '交通银行',
+    mark: 'jt'
+  },
+  {
+    id: 15,
+    name: '华夏银行',
+    mark: 'hx'
+  },
+  {
+    id: 16,
+    name: '深圳发展银行',
+    mark: 'szfz'
+  },
+  {
+    id: 17,
+    name: '浦发银行',
+    mark: 'pf'
+  },
+  {
+    id: 18,
+    name: '中国邮政储蓄银行',
+    mark: 'yzcx'
+  }
+]
+
+// 公司证件类型certificate
+const COMPANY_CERTIFICATE_TYPE = [
+  {
+    id: 1,
+    name: '普通营业执照（存在独立的组织机构代码证）'
+  },
+  {
+    id: 2,
+    name: '多证合一营业执照（不含统一社会信用代码）'
+  },
+  {
+    id: 3,
+    name: '多证合一营业执照（含统一社会信用代码）'
+  }
+]
+
+// test
+const TEST = {}
+
 module.exports = {
   COMPANY_TYPE,
   DESIGN_CASE_PRICE_OPTIONS,
   DESIGN_CASE_SALE_OPTIONS,
   CYCLE_OPTIONS,
   DESIGN_COST_OPTIONS,
-  COMPANY_SIZE
+  COMPANY_SIZE,
+  BANK_OPTIONS,
+  DOCUMENT_TYPE,
+  COMPANY_PROPERTY_TYPE,
+  COMPANY_CERTIFICATE_TYPE,
+
+  TEST
 }

@@ -2,40 +2,52 @@
 
   <el-col :span="4" class="left-menu">
 
-    <div class="menu-list" v-if="isComputer()">
-      <router-link :to="{name: 'vcenterItemList'}" class="item">
-        项目动态
+    <div class="menu-list" v-if="isCompany()">
+      <router-link :to="{name: 'vcenterControl'}" class="item">
+        控制面板
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
+      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
+        消息
+      </router-link>
+      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
         项目订单
-      </router-link>
-      <router-link :to="{name: 'vcenterCItemList', query: {type: 1}}" class="item">
-        我的项目
       </router-link>
       <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
         作品案例
       </router-link>
-      <router-link :to="{name: 'vcenterComputerAccreditation'}" class="item">
-        公司信息
+      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
+        我的钱包
       </router-link>
-      <router-link :to="{name: 'vcenterProfile'}" class="item">
+      <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
+      </router-link>
+      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
+        安全设置
       </router-link>
     </div>
 
     <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterItemList', query: {type: 1}}" class="item">
+      <router-link :to="{name: 'vcenterControl'}" class="item">
+        控制面板
+      </router-link>
+      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
+        消息
+      </router-link>
+      <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
         我的项目
       </router-link>
-      <router-link :to="{name: 'vcenterOrderList'}" class="item">
-        项目订单
+      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
+        我的钱包
       </router-link>
-      <router-link :to="{name: 'vcenterProfile'}" class="item">
+      <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
         账号设置
+      </router-link>
+      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
+        安全设置
       </router-link>
     </div>
 
-    <div class="computer-btn" v-if="isComputer()">
+    <div class="computer-btn" v-if="isCompany()">
       <el-button @click="redirectCompany">查看公司主页</el-button>
     </div>
   </el-col>
@@ -44,6 +56,11 @@
 <script>
 export default {
   name: 'vcenter_menu',
+  props: {
+    currentName: {
+      default: ''
+    }
+  },
   data () {
     return {
       msg: 'This is menu'
@@ -51,7 +68,7 @@ export default {
   },
   // 判断是客户还是设计公司
   methods: {
-    isComputer() {
+    isCompany() {
       var uType = this.$store.state.event.user.type
       if (uType === 2) {
         return true
@@ -75,44 +92,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .left-menu {
-  }
-
-  .menu-list {
-    padding: 0 0 0 0;
-  }
-
-  .menu-list .item {
-    display: block;
-    cursor: pointer;
-    border: none;
-    height: auto;
-    text-align: center;
-    line-height: 1em;
-    color: rgba(112,123,135,.92);
-    text-transform: none;
-    font-weight: 400;
-    padding: .85rem 1.5rem .85rem 1.5rem!important;
-  }
-
-  .menu-list .item:hover {
-    color: #222;
-    background-color: #fff;
-  }
-
-  .item.is-active {
-    background-color: #fff;
-    color: #222;
-    font-weight: bold;
-
-  }
-
-  .computer-btn {
-    margin-top: 30px;
-    text-align: center;
-  }
-  .computer-btn a {
-    font-size: 1.2rem;
-  }
 
 </style>

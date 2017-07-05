@@ -2,14 +2,14 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册太火鸟SaaS账户</h2>
+        <h2>注册毕方鸟账户</h2>
       </div>
       <div class="register-tab">
-        <div class="register-tab-user" @click="selectUser" :style="{background: uActive}">
+        <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
           <p><h3>我是客户</h3></p>
           <p class="des">发布项目，找到精准设计公司</p>
         </div>
-        <div class="register-tab-computer" @click="selectComputer" :style="{background: cActive}">
+        <div :class="{'register-tab-computer': true, active: cActive}" @click="selectComputer">
           <p><h3>我是设计公司</h3></p>
           <p class="des">用专业设计服务，助力客户成长</p>
         </div>
@@ -31,8 +31,12 @@
           <el-form-item label="" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" placeholder="重复密码"></el-input>
           </el-form-item>
-          <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
+          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">注册</el-button>
         </el-form>
+
+        <div class="reg">
+          <p>已有毕方鸟账户？<router-link :to="{name: 'login'}" >立即登录</router-link></p>
+        </div>
       
       </div>   
     </div>
@@ -64,12 +68,12 @@ export default {
     }
     return {
       isLoadingBtn: false,
-      uActive: '',
-      cActive: '',
+      uActive: true,
+      cActive: false,
       time: 0,
       labelPosition: 'top',
       form: {
-        type: '',
+        type: 1,
         account: '',
         smsCode: '',
         password: '',
@@ -99,12 +103,12 @@ export default {
   methods: {
     selectUser() {
       this.form.type = 1
-      this.uActive = '#ccc'
-      this.cActive = ''
+      this.uActive = true
+      this.cActive = false
     },
     selectComputer() {
       this.form.type = 2
-      this.cActive = '#ccc'
+      this.cActive = true
       this.uActive = ''
     },
     submit(formName) {
@@ -206,7 +210,7 @@ export default {
         return
       }
 
-      var url = api.check_account + account
+      var url = api.check_account.format(account)
       // 检测手机号是否存在
       const that = this
       that.$http.get(url, {})
@@ -266,6 +270,20 @@ export default {
     codeMsg() {
       return this.time > 0 ? '重新发送' + this.time + 's' : '获取验证码'
     }
+  },
+  mounted: function() {
+    const self = this
+    window.addEventListener('keydown', function(e) {
+      if (e.keyCode === 13) {
+        self.submit('ruleForm')
+      }
+    })
+  },
+  created: function() {
+    if (this.$store.state.event.token) {
+      this.$message.error('已经登录!')
+      this.$router.replace({name: 'home'})
+    }
   }
 
 }
@@ -309,6 +327,14 @@ export default {
     width: 50%;
     height: 80px;
     position:absolute;
+    cursor: pointer;
+  }
+  .register-tab-user.active{
+    border-bottom: 2px solid #FF5A5F;
+    background-color: #eee;
+  }
+  .register-tab-user.active h3{
+    color: #FF5A5F;
   }
   .register-tab-computer{
     padding-top: 20px;
@@ -316,6 +342,14 @@ export default {
     height: 80px;
     position:absolute;
     left: 50%;
+    cursor: pointer;
+  }
+  .register-tab-computer.active{
+    border-bottom: 2px solid #FF5A5F;
+    background-color: #eee;
+  }
+  .register-tab-computer.active h3{
+    color: #FF5A5F;
   }
 
   .register-tab p{
@@ -338,6 +372,15 @@ export default {
   }
   .code-btn {
     cursor: pointer;
+  }
+  .reg {
+    margin-top: 40px;
+  }
+  .reg p {
+    color: #666;
+  }
+  .reg p a {
+    color: #FF5A5F;
   }
 
 </style>

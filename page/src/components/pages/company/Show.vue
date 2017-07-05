@@ -1,12 +1,13 @@
 <template>
   <div class="container">
-
-    <el-row :gutter="24">
+    <div class="blank20"></div>
+    <el-row :gutter="10">
 
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <img :src="item.logo.logo" width="100" />
+            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />                     
+            <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
@@ -22,19 +23,21 @@
 
           <div class="cate">
             <p class="c-title">设计类别</p>
-            <p class="tag"><el-tag type="gray">产品设计</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">日用消费</el-tag><el-tag type="gray">这是一个长标签</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag></p>
           </div>
+          <!--
           <div class="cate">
             <p class="c-title">擅长领域</p>
             <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
           </div>
+          -->
           <div class="cate">
             <p class="c-title">联系方式</p>
             <p>地址: {{ item.address }}</p>
             <p>联系人: {{ item.contact_name }}</p>
             <p>电话: {{ item.phone }}</p>
             <p>邮箱: {{ item.email }}</p>
-            <p>网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
+            <p class="web">网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
           </div>
         
         </div>
@@ -45,25 +48,25 @@
           <div class="">
             <h2>作品案例</h2>
 
-            <div class="design-case-list">
-              <el-row :gutter="24">
-                <el-col
-                  v-for="(d, index) in designCases"
-                  :key="index"
-                  :span="8">
-                  <div class="item">
-                    <div class="img">
-                      <img v-if="hasImg(d.first_image)" :src="d.first_image[0]['small']" />
-                      <img v-else src="https://p4.taihuoniao.com/topic/170302/58b81d1020de8dfc6e8bd658-2-p325x200.jpg" />
-                    </div>
-                    <div class="content">
+            <div class="design-case-list" v-loading.body="isLoading">
+
+              <el-row :gutter="10">
+
+                <el-col :span="8" v-for="(d, index) in designCases" :key="index">
+                  <el-card :body-style="{ padding: '0px' }" class="item">
+                    <div class="image-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">
-                        {{ d.title }}
+                        <img :src="d.cover.middle">
                       </router-link>
                     </div>
-                  </div>
+                    <div class="content">
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                    </div>
+                  </el-card>
                 </el-col>
+
               </el-row>
+
             </div>
 
           </div>
@@ -92,6 +95,7 @@
   import '@/assets/js/format'
   export default {
     name: 'company_show',
+    isLoading: false,
     data () {
       return {
         item: {},
@@ -102,7 +106,7 @@
     },
     methods: {
       hasImg(d) {
-        if (d.length === 0) {
+        if (!d) {
           return false
         } else {
           return true
@@ -116,24 +120,28 @@
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
-          console.log(self.item)
+          if (self.item.logo_image) {
+            self.item.logo_url = self.item.logo_image.logo
+          } else {
+            self.item.logo_url = false
+          }
 
-          self.$http.get(api.designCase, {})
+          self.isLoading = true
+          self.$http.get(api.designCaseCompanyId.format(id), {})
           .then (function(response) {
+            self.isLoading = false
             if (response.data.meta.status_code === 200) {
               self.designCases = response.data.data
             }
           })
           .catch (function(error) {
+            self.isLoading = false
             self.$message.error(error.message)
-            console.log(error.message)
           })
         }
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
-        return false
       })
     }
   }
@@ -178,12 +186,6 @@
     margin: 10px;
     text-align: center;
   }
-  .design-case-slide .info img {
-    border-radius: 50%;
-    overflow: hidden;
-    vertical-align: middle;
-    border: 1px solid;
-  }
   .design-case-slide h3 {
     margin: 10px;
     font-size: 2rem;   
@@ -201,7 +203,7 @@
     color: #666;
   }
   .cate p.c-title {
-    text-align: center;
+    text-align: left;
     font-size: 1.6rem;
     color: #333;
   }
@@ -212,29 +214,35 @@
     margin-top: 20px;
   }
 
+  p.web {
+    word-wrap: break-word;
+  }
+
+
   .design-case-list {
-  
+    min-height: 350px;
   }
   .design-case-list .item {
-    height: 250px;
+    height: 190px;
   }
-  .design-case-list .img {
-    height: 210px;
+
+  .item {
+    margin: 5px 0;
+  }
+
+  .item img {
+    width: 100%;
+  }
+
+  .image-box {
+    height: 150px;
     overflow: hidden;
   }
 
-  .design-case-list .img:hover {
-    position:relative;
-    background-color:#fff;filter:Alpha(Opacity=90);opacity:0.9;
+  .content {
+    padding: 10px;
   }
-
-  .design-case-list .item img {
-    width: 100%;
-  }
-  .design-case-list .content {
-    padding: 5px 5px 5px 5px;
-  }
-  .design-case-list .content a {
+  .content a {
     font-size: 1.5rem;
   }
 

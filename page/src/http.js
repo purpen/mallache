@@ -13,11 +13,11 @@ import router from './router'
 import Qs from 'qs'
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
-  timeout: 10000,
+  timeout: 50000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Access-Control-Allow-Origin': 'http://mc.taihuoniao.com',
+    // 'Access-Control-Allow-Origin': 'http://mc.taihuoniao.com',
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
     'X-Requested-With': 'XMLHttpRequest'
@@ -53,7 +53,7 @@ axiosInstance.interceptors.response.use(
           // 401 清除token信息并跳转到登录页面
           store.commit(types.USER_SIGNOUT)
           router.replace({
-            path: 'login',
+            path: '/login',
             query: {redirect: router.currentRoute.fullPath}
           })
       }

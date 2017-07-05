@@ -1,47 +1,53 @@
 <template>
   <div id="header-layout">
-    <div class="nav-header">
-      <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-          <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
-          <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
-        <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
-        <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
-        <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
-        <el-menu-item index="apply" v-bind:route="menu.apply">申请入驻</el-menu-item>
-      </el-menu>
-      <div class="nav-right nav-menu" v-if="isLogin">
-        <router-link :to="{name: 'remind'}" class="nav-item is-hidden-mobile">
-          <span class="icon">
-            <i class="fa fa-bell-o" aria-hidden="true"></i>
-          </span>
-        </router-link>
-        <el-menu class="el-menu-info" mode="horizontal" router>
-          <el-submenu index="2">
-            <template slot="title">
-              <img class="avatar" src="../../assets/images/avatar_default.jpg" />
-              <span class="b-nickname">{{ eventUser.account }}</span>
-            </template>
-            <el-menu-item index="/vcenter/item/list?type=1">个人中心</el-menu-item>
-            <el-menu-item index="/admin">后台管理</el-menu-item>
-            <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
-          </el-submenu>
+    <div class="container">
+      <div class="nav-header">
+        <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
+            <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
+            <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
+          <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
+          <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
+          <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
+        </el-menu>
+        <div class="nav-right nav-menu" v-if="isLogin">
+          <router-link :to="{name: 'vcenterMessageList'}" class="nav-item is-hidden-mobile">
+            <span class="icon active">
+              <i class="fa fa-bell-o" aria-hidden="true"><span v-if="messageCount > 0">{{ messageCount }}</span></i>
+            </span>
+          </router-link>
+          <el-menu class="el-menu-info" mode="horizontal" router>
+            <el-submenu index="2">
+              <template slot="title">
+                <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url" />
+                <img class="avatar" v-else src="../../assets/images/avatar_100.png" />
+                <span class="b-nickname">{{ eventUser.account }}</span>
+              </template>
+              <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
+              <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
+              <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </div>
+        <el-menu class="el-menu-header nav-right" :default-active="menuactive" mode="horizontal" router v-else>
+          <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
+          <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
         </el-menu>
       </div>
-      <el-menu class="el-menu-header nav-right" :default-active="menuactive" mode="horizontal" router v-else>
-        <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
-        <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
-      </el-menu>
     </div>
+    <div class="buttom-line"></div>
   </div>
 </template>
 
 <script>
 import auth from '@/helper/auth'
+import api from '@/api/api'
+import { MSG_COUNT } from '@/store/mutation-types'
 export default {
   name: 'header',
   data () {
     return {
-      menuactive: this.$route.path.split('/')[1],
+      // menuactive: this.$route.path.split('/')[1],
+      requestMessageTask: null,
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
@@ -53,7 +59,10 @@ export default {
     }
   },
   watch: {
-    '$route': 'navdefact'
+    '$route' (to, from) {
+      // 对路由变化作出响应...
+      // this.navdefact()
+    }
   },
   methods: {
     navdefact() {
@@ -68,7 +77,28 @@ export default {
         message: '登出成功!',
         type: 'success'
       })
-      this.$router.push('/home')
+      clearInterval(this.requestMessageTask)
+      this.$router.replace('/home')
+    },
+    // 请求消息数量
+    fetchMessageCount() {
+      const self = this
+      this.$http.get(api.messageGetMessageQuantity, {})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          var messageCount = parseInt(response.data.data.quantity)
+          // 写入localStorage
+          self.$store.commit(MSG_COUNT, messageCount)
+        }
+      })
+    },
+    // 定时加载消息数量
+    timeLoadMessage() {
+      const self = this
+      // 定时请求消息数量
+      self.requestMessageTask = setInterval(function() {
+        self.fetchMessageCount()
+      }, 5000)
     }
   },
   computed: {
@@ -76,8 +106,37 @@ export default {
       return this.$store.state.event.token
     },
     eventUser() {
-      return this.$store.state.event.user
+      var user = this.$store.state.event.user
+      if (user.avatar) {
+        user.logo_url = user.avatar.logo
+      } else {
+        user.logo_url = null
+      }
+      return user
+    },
+    isAdmin() {
+      return this.$store.state.event.user.role_id
+    },
+    menuactive() {
+      let menu = this.$route.path.split('/')[1]
+      if (menu === 'server_design') {
+        return 'server'
+      }
+      return menu
+    },
+    messageCount() {
+      return this.$store.state.event.msgCount
     }
+  },
+  created: function() {
+    const self = this
+    if (self.isLogin) {
+      self.fetchMessageCount()
+      self.timeLoadMessage()
+    }
+  },
+  destroyed() {
+    clearInterval(this.requestMessageTask)
   }
 }
 </script>
@@ -87,22 +146,20 @@ export default {
   .nav-header{
     align-items: stretch;
     display: flex;
-    padding: 0 100px;
     background: #fff;
-    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
-    margin-bottom: 30px;
+    padding-left: 5px;
   }
   .el-menu--horizontal>.el-menu-item.logo{
-    width: 54px;
-    height: 50px;
+    width: 110px;
+    height: 60px;
     transition:none;
     padding: 0 10px;
     margin-right: 30px;
 
     background-image: url(../../assets/images/logo.png);
     background-repeat: no-repeat;
-    background-position: 0 4px;
-    background-size: 54px 42px;
+    background-position: 0 15px;
+    background-size: 110px 30px;
     text-indent: -9999px;
   }
   .el-menu--horizontal>.el-menu-item.logo:hover,.el-menu--horizontal>.el-menu-item.logo.is-active{
@@ -111,16 +168,16 @@ export default {
     transition:none;
     background-image: url(../../assets/images/logo.png);
     background-repeat: no-repeat;
-    background-position: 0 4px;
-    background-size: 54px 42px;
+    background-position: 0 15px;
+    background-size: 110px 30px;
     text-indent: -9999px;
   }
   .el-menu-header{
     background: #fff;
   }
   .el-menu-header .el-menu-item,.el-menu-header .el-submenu{
-    height: 52px;
-    line-height: 52px;
+    height: 60px;
+    line-height: 60px;
     border-bottom: 3px solid transparent;
     color: #7a7a7a;
     font-size: 1.5rem;
@@ -181,9 +238,28 @@ export default {
     height: 1.5rem;
     vertical-align: top;
     width: 1.5rem;
+    position:relative;
   }
   .icon .fa {
     font-size: 21px;
+  }
+  .icon.active span {
+  }
+  .icon.active span {
+    width: 18px;
+    min-height: 18px;
+    border: 1px solid red;/*设置红色*/
+    border-radius:50%;/*设置圆角*/
+    overflow: hidden;
+    background-color: red;
+    position: absolute;
+    z-index: 1000;
+    right: 0%;
+    margin-right: -10px;
+    margin-top: -10px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 18px;
   }
   .fa {
     display: inline-block;
@@ -209,6 +285,12 @@ export default {
   }
   .nav-item a:hover, a.nav-item:hover {
     color: #363636;
+  }
+
+  .buttom-line {
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+    border-top: 3px solid transparent;
+    margin-top: -3px;
   }
 </style>
 

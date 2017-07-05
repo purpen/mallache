@@ -1,13 +1,13 @@
 <template>
   <div class="container">
 
-    <v-progress :companyStep="true"></v-progress>
-    <el-row :gutter="24">
+    <v-progress :companyStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
+    <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="18">
+      <el-col :span="24">
         <div class="content">
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
-
+              <div class="input">
               <el-row :gutter="24">
                 <el-col :span="10">
                   <el-form-item label="公司名称" prop="company_name">
@@ -34,14 +34,16 @@
               <el-row :gutter="24">
                 <el-col :span="8">
                   <el-form-item label="公司网站" prop="company_web">
-                    <el-input v-model="form.company_web" placeholder="http://"></el-input>
-                  </el-form-item>             
+                    <el-input v-model="form.company_web" placeholder="">
+                      <template slot="prepend">http://</template>
+                    </el-input>
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-              <region-picker :provinceProp="province" :cityProp="city" :districtProp="district" :isFirstProp="isFirst" @onchange="change"></region-picker>
-              <el-form-item label="详细地址" prop="address">
-                <el-input v-model="form.address" name="address" ref="address" placeholder="请输入公司的详细地址"></el-input>
+              <region-picker :provinceProp="province" :cityProp="city" propStyle="margin:0;" :districtProp="district" :isFirstProp="isFirst" titleProp="详细地址" @onchange="change"></region-picker>
+              <el-form-item label="" prop="address">
+                <el-input v-model="form.address" placeholder="街道地址"></el-input>
               </el-form-item>
 
               <el-row :gutter="24">
@@ -51,23 +53,28 @@
                   </el-form-item>             
                 </el-col>
                 <el-col :span="6">
-                  <el-form-item label="电话" prop="phone">
+                  <el-form-item label="职位" prop="position">
+                    <el-input v-model="form.position" placeholder=""></el-input>
+                  </el-form-item>             
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="手机" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
                   </el-form-item>             
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
               </el-row>
-
+              </div>
               <div class="sept"></div>
               <div class="return-btn">
                   <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
               </div>
               <div class="form-btn">
-                  <el-button type="success" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
+                  <el-button type="primary" size="large" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
               </div>
               <div class="clear"></div>
               
@@ -76,21 +83,7 @@
         
         </div>
       </el-col>
-      <el-col :span="6">
-        <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
-        </div>
 
-        <div class="slider info">
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
-        </div>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -119,6 +112,8 @@
         city: '',
         district: '',
         isFirst: false,
+        baseCompany: {},
+        matchCount: '',
         form: {
           company_name: '',
           // company_abbreviation: '',
@@ -131,6 +126,7 @@
           contact_name: '',
           phone: '',
           email: '',
+          position: '',
           stage_status: ''
         },
         ruleForm: {
@@ -139,9 +135,6 @@
           ],
           company_size: [
             { type: 'number', required: true, message: '请选择公司规模', trigger: 'change' }
-          ],
-          company_web: [
-            { required: true, message: '请添写公司网址', trigger: 'blur' }
           ],
           address: [
             { required: true, message: '请添写公司详细地址', trigger: 'blur' }
@@ -155,6 +148,9 @@
           email: [
             { required: true, message: '请添写联系人邮箱', trigger: 'blur' },
             { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+          ],
+          position: [
+            { required: true, message: '请添写联系人职位', trigger: 'blur' }
           ]
         },
         msg: ''
@@ -174,15 +170,22 @@
               that.$message.error('请选择所在城市')
               return false
             }
-            that.isLoadingBtn = true
+            var web = that.form.company_web
+            if (that.form.company_web) {
+              var urlRegex = /http:\/\/|https:\/\//
+              if (!urlRegex.test(that.form.company_web)) {
+                web = 'http://' + that.form.company_web
+              }
+            }
             var row = {
               company_name: that.form.company_name,
               company_size: that.form.company_size,
-              company_web: that.form.company_web,
+              company_web: web,
               address: that.form.address,
               contact_name: that.form.contact_name,
               phone: that.form.phone,
               email: that.form.email,
+              position: that.form.position,
               company_province: that.province,
               company_city: that.city,
               company_area: that.district
@@ -200,31 +203,34 @@
               method = 'post'
               apiUrl = api.demand
             }
+
+            that.isLoadingBtn = true
             that.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
+              that.isLoadingBtn = false
               if (response.data.meta.status_code === 200) {
                 that.$message.success('提交成功！')
                 that.$router.push({name: 'itemSubmitFive', params: {id: response.data.data.item.id}})
                 return false
               } else {
-                that.isLoadingBtn = false
                 that.$message.error(response.data.meta.message)
               }
             })
             .catch (function(error) {
               that.$message.error(error.message)
-              that.isLoadingBtn = false
               console.log(error.message)
               return false
             })
 
             return false
           } else {
-            that.isLoadingBtn = false
             console.log('error submit!!')
             return false
           }
         })
+      },
+      // 获取已匹配公司数量
+      matchRequest() {
       },
       change: function(obj) {
         this.province = obj.province
@@ -258,13 +264,24 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
+            var web = row.company_web
+            if (web) {
+              var urlRegex = /http:\/\/|https:\/\//
+              if (urlRegex.test(web)) {
+                web = web.replace(urlRegex, '')
+              }
+            }
+            that.form.id = row.id
+            that.form.type = row.type
+            that.form.design_type = row.design_type
             that.form.company_name = row.company_name
             that.form.company_size = row.company_size
-            that.form.company_web = row.company_web
+            that.form.company_web = web
             that.form.address = row.address
             that.form.contact_name = row.contact_name
             that.form.phone = row.phone
             that.form.email = row.email
+            that.form.position = row.position
             that.form.stage_status = row.stage_status
             if (row.company_size === 0) {
               that.form.company_size = ''
@@ -272,15 +289,45 @@
             that.province = row.company_province === 0 ? '' : row.company_province
             that.city = row.company_city === 0 ? '' : row.company_city
             that.district = row.company_area === 0 ? '' : row.company_area
+
+            // 如果是第一次添写，获取公司基本信息
+            if (that.form.stage_status < 3) {
+              that.$http.get(api.demandCompany, {})
+              .then (function(response) {
+                if (response.data.meta.status_code === 200) {
+                  if (response.data.data) {
+                    var bRow = response.data.data
+                    var bWeb = bRow.company_web
+                    if (bWeb) {
+                      var urlRegex = /http:\/\/|https:\/\//
+                      if (urlRegex.test(bWeb)) {
+                        bWeb = bWeb.replace(urlRegex, '')
+                      }
+                    }
+                    that.form.company_name = bRow.company_name
+                    that.form.company_size = bRow.company_size === 0 ? '' : bRow.company_size
+                    that.form.company_web = bWeb
+                    that.form.address = bRow.address
+                    that.form.contact_name = bRow.contact_name
+                    that.form.phone = bRow.phone
+                    that.form.email = bRow.email
+                    that.form.position = bRow.position
+
+                    that.province = bRow.province === 0 ? '' : bRow.province
+                    that.city = bRow.city === 0 ? '' : bRow.city
+                    that.district = bRow.area === 0 ? '' : bRow.area
+                  }
+                }
+              })
+            }
           } else {
             that.$message.error(response.data.meta.message)
-            console.log(response.data.meta.message)
-            return false
+            that.$router.push({name: 'home'})
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
+          that.$router.push({name: 'home'})
           return false
         })
       }
@@ -296,6 +343,9 @@
   .content {
     padding: 20px;
     border: 1px solid #ccc;
+  }
+  .content .input {
+    padding: 0 150px;
   }
 
   .slider {
@@ -337,8 +387,11 @@
   .return-btn {
     float: left;
   }
+  .return-btn a {
+    font-size: 2rem;
+  }
   .return-btn a img {
-    vertical-align: -8px;
+    vertical-align: -5px;
   }
   .sept {
     width: 100%;

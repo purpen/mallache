@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function() {
@@ -30,6 +30,16 @@ var prevUrlName = function() {
   }
 }
 
+// 消息数量
+var msgCount = function() {
+  var messageCount = localStorage.getItem('msgCount')
+  if (messageCount) {
+    return messageCount
+  } else {
+    return 0
+  }
+}
+
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
@@ -37,6 +47,7 @@ const state = {
   apiUrl: 'http://sa.taihuoniao.com', // 接口base url
   imgUrl: 'http://sa.taihuoniao.com', // 图片base url
   prevUrlName: prevUrlName(),
+  msgCount: msgCount(),
   indexConf: {
     isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
@@ -55,12 +66,17 @@ const mutations = {
   [USER_SIGNOUT](state) {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    localStorage.setItem('msgCount', 0)
     state.token = false
   },
   [USER_INFO](state, user) {
     localStorage.setItem('user', {})
     localStorage.setItem('user', JSON.stringify(user))
     state.user = user
+  },
+  [MSG_COUNT](state, msgCount) {
+    localStorage.setItem('msgCount', JSON.stringify(msgCount))
+    state.msgCount = msgCount
   },
   [PREV_URL_NAME](state, urlName) {
     localStorage.setItem('prev_url_name', urlName)

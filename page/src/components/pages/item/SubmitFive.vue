@@ -1,10 +1,10 @@
 <template>
   <div class="container">
 
-    <v-progress :checkStep="true"></v-progress>
-    <el-row :gutter="24">
+    <v-progress :checkStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
+    <el-row :gutter="24" type="flex" justify="center">
 
-      <el-col :span="18">
+      <el-col :span="24">
         <div class="content">
 
           <el-table
@@ -23,8 +23,15 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="value"
               label="客户添写信息">
+                <template scope="scope">
+                  <div v-if="scope.row.key === '相关附件'">
+                    <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+                  </div>
+                  <div v-else>
+                    <p>{{ scope.row.value }}</p>
+                  </div>
+                </template>
             </el-table-column>
           </el-table>
 
@@ -33,28 +40,26 @@
               <a href="javascript:void(0);" @click="returnBtn"><img src="../../../assets/images/icon/return.png" />&nbsp;&nbsp;返回</a>
           </div>
           <div class="form-btn">
-              <el-button type="success" class="is-custom" @click="publish">发布</el-button>
+              <el-button type="primary" size="large" class="is-custom" @click="publish">确认发布</el-button>
           </div>
           <div class="clear"></div>
         
         </div>
       </el-col>
-      <el-col :span="6">
-        <div class="slider">
-          <p class="slide-img"><img src="../../../assets/images/icon/zan.png" /></p>
-          <p class="slide-str">100家推荐</p>
-          <p class="slide-des">根据你当前填写的项目需求，系统为你匹配出符合条件的设计公司</p>
-        </div>
 
-        <div class="slider info">
-          <p>项目需求填写</p>
-          <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
-          <div class="blank20"></div>
-          <p>项目预算设置</p>
-          <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>
-        </div>
-      </el-col>
     </el-row>
+
+    <el-dialog
+      title="提示"
+      v-model="comfirmDialog"
+      size="tiny">
+      <span>{{ comfirmMessage }}</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="comfirmType" value="1" />
+        <el-button @click="comfirmDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="comfirmLoadingBtn" @click="sureComfirmSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -72,6 +77,11 @@
       return {
         isLoadingBtn: false,
         isLoading: true,
+        matchCount: '',
+        comfirmDialog: false,
+        comfirmMessage: '确认执行此操作？',
+        comfirmLoadingBtn: false,
+        form: {},
         tableData: [{
           name: '',
           key: '',
@@ -82,12 +92,23 @@
     },
     methods: {
       publish() {
+        if (this.matchCount === 0) {
+          this.comfirmMessage = '您添写的信息没有匹配到合适的设计公司，确认发布？'
+          this.comfirmDialog = true
+        } else {
+          this.publishSubmit()
+        }
+      },
+      sureComfirmSubmit() {
+        this.publishSubmit()
+      },
+      publishSubmit() {
         const that = this
         that.isLoadingBtn = true
         that.$http({method: 'POST', url: api.release, data: {id: that.itemId}})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
-            that.$router.push({name: 'itemPublish'})
+            that.$router.push({name: 'itemPublish', query: {verify_status: response.data.data.verify_status}})
             return false
           } else {
             that.isLoadingBtn = false
@@ -124,18 +145,28 @@
               tab = [
                 {
                   name: '',
-                  key: '项目类别',
-                  value: row.type_value + '/' + row.design_type_value + '/' + row.field_value + '/' + row.industry_value
+                  key: '项目类型',
+                  value: row.type_value
+                },
+                {
+                  name: '',
+                  key: '设计类别',
+                  value: row.design_type_value
+                },
+                {
+                  name: '',
+                  key: '产品领域',
+                  value: row.field_value
+                },
+                {
+                  name: '',
+                  key: '所属行业',
+                  value: row.industry_value
                 },
                 {
                   name: '',
                   key: '项目功能或卖点',
                   value: row.product_features
-                },
-                {
-                  name: '',
-                  key: '项目竞品',
-                  value: row.competing_product.join(',')
                 }
               ]
             } else if (row.type === 2) {
@@ -146,8 +177,13 @@
               tab = [
                 {
                   name: '',
-                  key: '项目类别',
-                  value: row.type_value + '/' + row.design_type_value
+                  key: '项目类型',
+                  value: row.type_value
+                },
+                {
+                  name: '',
+                  key: '设计类别',
+                  value: row.design_type_value
                 },
                 {
                   name: '',
@@ -185,6 +221,15 @@
               }
             ]
 
+            var assetFile = [
+              {
+                name: '',
+                key: '相关附件',
+                value: '',
+                image: row.image
+              }
+            ]
+
             var baseTab = [
               {
                 name: '公司基本信息',
@@ -218,6 +263,11 @@
               },
               {
                 name: '',
+                key: '职位',
+                value: row.position
+              },
+              {
+                name: '',
                 key: '电话',
                 value: row.phone
               },
@@ -228,18 +278,17 @@
               }
             ]
 
-            that.tableData = itemTab.concat(tab.concat(baseTab))
+            that.tableData = itemTab.concat(tab.concat(assetFile.concat(baseTab)))
+
             console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
-            console.log(response.data.meta.message)
-            return false
+            that.$router.push({name: 'home'})
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
-          return false
+          that.$router.push({name: 'home'})
         })
       }
     },
@@ -254,6 +303,9 @@
   .content {
     padding: 20px;
     border: 1px solid #ccc;
+  }
+  .content .input {
+    padding: 0 150px;
   }
 
   .slider {
@@ -273,6 +325,9 @@
   }
   .form-btn {
     float: right;
+  }
+  .form-btn button {
+    padding: 10px 30px;
   }
 
   .slide-img {
@@ -296,8 +351,11 @@
   .return-btn {
     float: left;
   }
+  .return-btn a {
+    font-size: 2rem;
+  }
   .return-btn a img {
-    vertical-align: -8px;
+    vertical-align: -5px;
   }
   .sept {
     width: 100%;

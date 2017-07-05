@@ -2,11 +2,19 @@
  * Admin CSS
  */
 
+.admin-table {
+  min-height: 400px;
+}
 .admin-table, .admin-table p {
   font-size: 1rem;
 }
 .pagination {
   margin: 20px 0 20px 0;
+}
+
+.el-table .cell, .el-table th>div {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 

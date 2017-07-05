@@ -1,27 +1,27 @@
 <template>
 
-    <el-form-item :label="titleProp" prop="chinaCity">
-        <el-select v-model="province" event="province" placeholder="请选择省份">
+    <el-form-item :label="titleProp" prop="chinaCity" :style="propStyle">
+        <el-select v-model="province" event="province" placeholder="省份/自治区/直辖市">
           <el-option
-            v-for="item in provinces"
+            v-for="(item, index) in provinces"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
           </el-option>
         </el-select>
 
-        <el-select v-model="city" event="city" placeholder="请选择城市">
+        <el-select v-model="city" event="city" placeholder="城市">
           <el-option
-            v-for="item in cities"
+            v-for="(item, index) in cities"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
           </el-option>
         </el-select>
 
-        <el-select v-model="district" event="district" v-if="!twoSelect" placeholder="请选择区县">
+        <el-select v-model="district" event="district" v-if="!twoSelect" placeholder="区/县">
           <el-option
-            v-for="item in districts"
+            v-for="(item, index) in districts"
             :label="item[1]"
             :key="item.index"
             :value="item[0]">
@@ -48,12 +48,21 @@
       titleProp: {
         default: '选择城市'
       },
+      propStyle: {
+        default: ''
+      },
       twoSelect: Boolean,
       auto: Boolean,
       completed: Boolean,
       required: Boolean,
       disabled: Boolean,
-      isFirstProp: Boolean,
+      isFirstProp: {
+        type: Boolean,
+        default: false
+      },
+      isEmpty: {
+        default: false
+      },
       rootCode: {
         default: '86'
       }
@@ -63,6 +72,9 @@
       _filter (pid) {
         const result = []
         const items = this.$options.region[pid]
+        if (this.isEmpty) {
+          result.push([-1, '不限'])
+        }
         for (let code in items) {
           result.push([parseInt(code, 10), items[code]])
         }
@@ -138,6 +150,9 @@
       districtProp(d) {
         this.district = d
       },
+      isFirstProp: function(d) {
+        this.isFirst = d
+      },
       province(d) {
         this.$emit('onchange', {
           province: d,
@@ -158,9 +173,6 @@
           city: this.city,
           district: d
         })
-      },
-      isFirstProp(d) {
-        this.isFirst = d
       }
     }
   }

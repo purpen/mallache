@@ -1,10 +1,11 @@
 <template>
   <div class="container">
+    <div class="blank20"></div>
     <div class="pay-result" v-if="payResult">
       <div class="publish-box" v-if="paySuccess">
         <p class="success-img"><img src="../../../assets/images/icon/success.png" /></p>
         <p class="success-str">支付成功</p>
-        <p class="success-des">请稍后，系统自动跳转发布需要页面...</p>
+        <p class="success-des">请稍后...</p>
       </div>
 
       <div class="publish-box" v-else>
@@ -47,48 +48,49 @@ export default {
       return false
     }
 
-    // 定时提示,每次3秒,最多5次
-    var limitTimes = 0
-    var limitObj = setInterval(function() {
-      if (limitTimes >= 3) {
-        self.payResult = true
-        return
-      } else {
-        self.$http.get(api.orderId.format(outTradeNo), {})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-            if (response.data.data.status === 1) {
-              self.payResult = true
-              self.paySuccess = true
-              var itemId = response.data.data.item_id
-              setTimeout(function() {
-                self.$router.push({name: 'itemSubmitTwo', params: {id: itemId}})
-              }, 3000)
-              clearInterval(limitObj)
+    self.$http.get(api.orderId.format(outTradeNo), {})
+    .then (function(response) {
+      if (response.data.meta.status_code === 200) {
+        if (response.data.data.status === 1) {
+          self.payResult = true
+          self.paySuccess = true
+          setTimeout(function () {
+            var itemId = response.data.data.item_id
+            var type = response.data.data.type
+            if (type === 1) {
+              self.$router.replace({name: 'itemSubmitTwo', params: {id: itemId}})
+            } else {
+              self.$router.replace({name: 'vcenterItemShow', params: {id: itemId}})
             }
-          } else {
-            console.log(response.data.meta.message)
-            self.payResult = true
-            self.errorMessage = response.data.meta.message
-            clearInterval(limitObj)
-            return false
-          }
-        })
-        .catch (function(error) {
-          clearInterval(limitObj)
-          self.errorMessage = error.message
-          console.log(error.message)
-          return false
-        })
+          }, 3000)
+          return
+        }
+      } else {
+        console.log(response.data.meta.message)
+        self.payResult = true
+        self.errorMessage = response.data.meta.message
+        return false
       }
-      limitTimes += 1
-    }, 1000 * 3)
+    })
+    .catch (function(error) {
+      self.errorMessage = error.message
+      console.log(error.message)
+      return false
+    })
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .pay-result {
+    text-align: center;
+    width: auto;
+    margin: 0 100px;
+    min-height: 450px;
+    border: 1px solid #ccc;
+  }
 
   .wait {
     
@@ -103,7 +105,6 @@ export default {
 
   .publish-box{
     width: 100%;
-    height: 500px;
     text-align:center;
     margin: 30px auto 30px auto;
     padding: 100px 0 0 0;

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-
-    <el-row :gutter="24">
+    <div class="blank20"></div>
+    <el-row :gutter="20">
       <v-menu selectedName="companyList"></v-menu>
 
       <el-col :span="20">
@@ -12,16 +12,17 @@
             <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">待审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
           </div>
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 8}}" :class="{'item': true, 'is-active': menuType === 8}" active-class="false">通过审核</router-link>
+            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
           </div>
         </div>
 
           <el-table
             :data="tableData"
             border
+            v-loading.body="isLoading"
             class="admin-table"
             @selection-change="handleSelectionChange"
             style="width: 100%">
@@ -42,32 +43,23 @@
                 </template>
             </el-table-column>
             <el-table-column
-              label="名称"
-              width="180">
+              label="内容"
+              min-width="180">
                 <template scope="scope">
-                  <p>全称: {{ scope.row.company_abbreviation }}</p>
-                  <p>简称: {{ scope.row.company_name }}</p>
+                  <p>全称: {{ scope.row.company_name }}</p>
+                  <p>简称: {{ scope.row.company_abbreviation }}</p>
                   <p>网址: {{ scope.row.web }}</p>
+                  <p>类型: {{ scope.row.company_type_val }}</p>
+                  <p>规模: {{ scope.row.company_size_val }}</p>
+                  <p>地址: {{ scope.row.province_value }} {{ scope.row.city_value }}</p>
                 </template>
             </el-table-column>
             <el-table-column
-              prop="user_id"
               label="创建人">
-            </el-table-column>
-            <el-table-column
-              prop="company_type_val"
-              label="类型">
-            </el-table-column>
-            <el-table-column
-              prop="company_size_val"
-              label="规模">
-            </el-table-column>
-            <el-table-column
-              label="地点">
                 <template scope="scope">
-                  <p>省份: {{ scope.row.province_value }}</p>
-                  <p>城市: {{ scope.row.city_value }}</p>
-                  <p>地址: {{ scope.row.address_value }}</p>
+                  <p>
+                    {{ scope.row.users.account }}[{{ scope.row.user_id }}]
+                  </p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -87,6 +79,7 @@
             </el-table-column>
             <el-table-column
               prop="created_at"
+              width="80"
               label="创建时间">
             </el-table-column>
             <el-table-column
@@ -99,10 +92,12 @@
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
+                  <!--
                   <p>
                     <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
+                  -->
                 </template>
             </el-table-column>
           </el-table>
@@ -111,11 +106,11 @@
             class="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="[100, 200, 300, 400, 500]"
-            :page-size="100"
+            :current-page="query.page"
+            :page-sizes="[50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="query.totalCount">
           </el-pagination>
 
         </div>
@@ -130,17 +125,25 @@
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 export default {
-  name: 'admin_item_list',
+  name: 'admin_company_list',
   components: {
     vMenu
   },
   data () {
     return {
       menuType: 0,
-      page: 1,
-      total: 1000,
       itemList: [],
       tableData: [],
+      isLoading: false,
+      query: {
+        page: 1,
+        pageSize: 50,
+        totalCount: 0,
+        sort: 1,
+        type: 0,
+
+        test: null
+      },
       msg: ''
     }
   },
@@ -149,10 +152,12 @@ export default {
       this.multipleSelection = val
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.query.pageSize = val
+      this.loadList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.$router.push({name: this.$route.name, query: {page: val}})
     },
     setVerify(index, item, evt) {
       var id = item.id
@@ -199,42 +204,53 @@ export default {
         self.$message.error(error.message)
         console.log(error.message)
       })
+    },
+    loadList() {
+      const self = this
+      self.query.page = parseInt(this.$route.query.page || 1)
+      self.query.sort = this.$route.query.sort || 1
+      self.query.type = this.$route.query.type || 0
+      this.menuType = 0
+      if (self.query.type) {
+        this.menuType = parseInt(self.query.type)
+      }
+      self.isLoading = true
+      self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      .then (function(response) {
+        self.isLoading = false
+        self.tableData = []
+        if (response.data.meta.status_code === 200) {
+          self.itemList = response.data.data
+          self.query.totalCount = parseInt(response.data.meta.pagination.total)
+
+          for (var i = 0; i < self.itemList.length; i++) {
+            var item = self.itemList[i]
+            item.logo_url = ''
+            if (item.logo_image) {
+              item.logo_url = item.logo_image.logo
+            }
+            item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+            self.tableData.push(item)
+          } // endfor
+
+          console.log(self.itemList)
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.isLoading = false
+      })
     }
   },
   created: function() {
-    const self = this
-    var page = this.$route.query.page || 1
-    var perPage = 5
-    self.$http.get(api.adminCompanyList, {page: page, per_page: perPage})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-
-        for (var i = 0; i < self.itemList.length; i++) {
-          var item = self.itemList[i]
-          item.logo_url = ''
-          if (item.logo) {
-            item.logo_url = item.logo['logo']
-          }
-          self.tableData.push(item)
-        } // endfor
-
-        console.log(self.itemList)
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-      console.log(error.message)
-    })
+    this.loadList()
   },
   watch: {
     '$route' (to, from) {
       // 对路由变化作出响应...
-      var type = this.$route.query.type
-      this.menuType = 0
-      if (type) {
-        this.menuType = parseInt(type)
-      }
+      this.loadList()
     }
   }
 }

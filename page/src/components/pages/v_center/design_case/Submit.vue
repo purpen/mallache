@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="blank20"></div>
     <el-row :gutter="24">
       <v-menu></v-menu>
 
@@ -143,7 +144,7 @@
               </el-form-item>
 
               <div class="form-btn">
-                  <el-button>取消</el-button>
+                  <el-button @click="returnList">取消</el-button>
                   <el-button type="success" :loading="isLoadingBtn" @click="submit('ruleForm')">提交</el-button>
               </div>
               <div class="clear"></div>
@@ -287,6 +288,9 @@
             return false
           }
         })
+      },
+      returnList() {
+        this.$router.push({name: 'vcenterDesignCaseList'})
       },
       typeChange(d) {
         if (d === 1) {
