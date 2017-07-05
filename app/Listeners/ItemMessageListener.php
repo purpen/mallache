@@ -187,11 +187,11 @@ class ItemMessageListener
 
         $user_id_arr = $designCompanies->pluck('user_id')->all();
         //添加系统通知
+        $title = '需求方拒绝报价';
+        $content = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
         $n = count($user_id_arr);
         for ($i = 0; $i < $n; ++$i){
 //            $tools->message($user_id_arr[$i], '【' . $item_info['name'] . '】' . '已选择其他设计公司');
-            $title = '需求方拒绝报价';
-            $content = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
             $tools->message($user_id_arr[$i], $title, $content, 1, null);
         }
     }
