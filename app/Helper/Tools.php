@@ -126,7 +126,7 @@ class Tools
 //            return 0;
 //        }
 
-        $quantity = Message::where('status', 0)->count();
+        $quantity = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return (int)$quantity;
     }
 
