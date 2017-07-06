@@ -26,6 +26,7 @@ class Item extends BaseModel
         'company_city_value',
         'company_area_value',
         'status_value',
+        'company_size_value',
     ];
 
     //一对一关联UX UI设计表

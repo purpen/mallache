@@ -16,6 +16,7 @@ class ProductDesign extends BaseModel
         'design_cost_value',
         'province_value',
         'city_value',
+        'image',
     ];
 
     protected $fillable = [

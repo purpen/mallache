@@ -63,7 +63,7 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
         'city_arr',
         'logo_image',
-        'design_type_value'
+        'design_type_value',
 
     ];
 

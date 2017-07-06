@@ -28,7 +28,8 @@ class ItemTransformer extends TransformerAbstract
         }
         $design_company_id = explode(',' , $item->recommend);
         $designCompany = DesignCompanyModel::whereIn("id", $design_company_id)->get();
-        $user = $item->user;
+        $item->user;
+
         unset($item->productDesign, $item->uDesign);
 
         return [
