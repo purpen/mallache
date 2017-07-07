@@ -42,6 +42,16 @@ class DesignItemModel extends BaseModel
     //判断设计类别
     public function getDesignTypeValAttribute()
     {
+        $item_type = config('constant.item_type');
+
+        if(array_key_exists($this->type, $item_type)){
+            if(array_key_exists($this->design_type, $item_type[$this->type])){
+                return $item_type[$this->type][$this->design_type];
+            }
+        }
+
+        return '';
+
         if($this->attributes['type'] == 1){
             switch ($this->attributes['design_type']){
                 case 1:

@@ -434,9 +434,15 @@ class DesignCompanyController extends BaseController
         }
         //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        if(!empty($goodField)){
+        $data = [];
+        foreach ($goodField as $v){
+            if ((int)$v){
+                $data[] = (int)$v;
+            }
+        }
+        if(!empty($data)){
             //合并擅长领域
-            $good_field = implode(',' , [$goodField]);
+            $good_field = implode(',' , $data);
             $all['good_field'] = $good_field;
         }
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
