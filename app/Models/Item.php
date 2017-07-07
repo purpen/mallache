@@ -189,6 +189,8 @@ class Item extends BaseModel
                     'type_value' => $item->type_value,
                     'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
+                    'industry' => $info->industry,
+                    'industry_value' => $info->industry_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,

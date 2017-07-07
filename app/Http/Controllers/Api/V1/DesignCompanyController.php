@@ -251,9 +251,7 @@ class DesignCompanyController extends BaseController
         $user_id = intval($this->auth_user_id);
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
-        if(!empty($design)){
-            $design->good_field = explode(',' , $design['good_field']);
-        }
+
         if(!$design){
             return $this->response->array($this->apiError('没有找到' , 404));
         }
@@ -278,9 +276,7 @@ class DesignCompanyController extends BaseController
             return $this->response->array($this->apiSuccess('没有权限访问' , 403));
 
         }
-        if(!empty($design)){
-            $design->good_field = explode(',' , $design['good_field']);
-        }
+
         $items = DesignItemModel::where('user_id', $design->user_id)->get();
 
 

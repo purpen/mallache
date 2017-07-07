@@ -98,6 +98,7 @@ class UDesignInfoController extends BaseController
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} province 省份
      * @apiParam {integer} city 城市
+     * @apiParam {integer} industry 行业
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -126,6 +127,7 @@ class UDesignInfoController extends BaseController
             'province' => 'required|integer',
             'city' => 'required|integer',
             'cycle' => 'required|integer',
+            'industry' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
         if($validator->fails()){
