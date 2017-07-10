@@ -46,7 +46,7 @@
               label="内容"
               min-width="180">
                 <template scope="scope">
-                  <p>全称: {{ scope.row.company_name }}</p>
+                  <p>全称: <router-link :to="{name: 'companyShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.company_name }}</router-link></p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
                   <p>网址: {{ scope.row.web }}</p>
                   <p>类型: {{ scope.row.company_type_val }}</p>
@@ -98,6 +98,9 @@
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
                   -->
+                  <p>
+                    <router-link :to="{name: 'adminCompanyShow', params: {id: scope.row.id}}" target="_blank">查看</router-link>
+                  </p>
                 </template>
             </el-table-column>
           </el-table>

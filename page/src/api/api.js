@@ -110,12 +110,16 @@ export default {
   // 系统通知
   messageGetMessageQuantity: '/message/getMessageQuantity', // GET 获取数量
   messageGetMessageList: '/message/getMessageList', // GET 列表
+  messageTrueRead: '/message/trueRead', // PUT 确认已读
 
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token
 
   /** 后台管理 */
+
+  // 控制台
+  adminSurveyIndex: '/admin/survey/index', // GET 控制台
 
   // 用户管理
   adminUserLists: '/admin/user/lists', // GET 用户列表
@@ -124,17 +128,20 @@ export default {
 
   // 项目管理
   adminItemList: '/admin/item/lists', // 项目列表
+  adminItemShow: '/admin/item/show', // GET 项目详情
   addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
   ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
 
   // 需求公司管理
   adminDemandCompanyList: '/admin/demandCompany/lists', // GET 需求公司列表
+  adminDemandCompanyShow: '/admin/demandCompany/show', // GET 需求公司详情
   adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中
   adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过
   adminDemandCompanyVerifyOk: '/admin/demandCompany/verifyStatus', // PUT 通过审核
 
   // 设计公司管理
   adminCompanyList: '/admin/designCompany/lists', // GET 设计公司列表
+  adminCompanyShow: '/admin/designCompany/show', // GET 设计公司详情
   adminCompanyStatusOk: '/admin/designCompany/okStatus', // PUT 启用
   adminCompanyStatusDisable: '/admin/designCompany/unStatus', // PUT 禁用
   adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // PUT 通过审核

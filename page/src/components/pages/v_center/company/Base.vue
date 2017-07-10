@@ -229,6 +229,42 @@
 
             <el-row :gutter="gutter" class="item">
               <el-col :span="titleSpan" class="title">
+                <p>擅长领域</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+
+                <div v-if="element.good_field" class="type-content">
+                  <el-button :class="{ 'tag': true }" size="small" :key="index" @click="selectFieldBtn(d.value, d.label)" v-for="(d, index) in fieldOptions">{{ d.label }}</el-button>
+
+                  <div class="edit-field-tag field-box">
+                    <el-tag
+                      v-for="(d, index) in form.good_field_value"
+                      :key="index"
+                      :closable="true"
+                      @close="delFieldBtn(index)"
+                    >
+                    {{ d }}
+                    </el-tag>
+                  </div>
+                </div>
+                <p class="field-box" v-else>
+                  <el-tag
+                    v-for="(d, index) in form.good_field_value"
+                    :key="index"
+                    :closable="false"
+                  >
+                  {{ d }}
+                  </el-tag>
+                </p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.good_field" title="保存" href="javascript:void(0)" @click="saveBtn('good_field', ['good_field'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('good_field')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" class="item">
+              <el-col :span="titleSpan" class="title">
                 <p>分公司</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
@@ -304,6 +340,7 @@
         form: {
           company_abbreviation: '',
           company_type: '',
+          good_field: [],
           branch: '',
           registration_number: '',
           web: '',
@@ -318,6 +355,7 @@
         element: {
           company_abbreviation: false,
           contact: false,
+          good_field: false,
           address: false,
           company_size: false,
           advantage: false,
@@ -341,6 +379,18 @@
       }
     },
     computed: {
+      // 擅长领域下拉选项
+      fieldOptions() {
+        var items = []
+        for (var i = 0; i < typeData.FIELD.length; i++) {
+          var item = {
+            value: typeData.FIELD[i]['id'],
+            label: typeData.FIELD[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      },
       sizeOptions() {
         var items = []
         for (var i = 0; i < typeData.COMPANY_SIZE.length; i++) {
@@ -354,6 +404,18 @@
       }
     },
     methods: {
+      // 删除领域标签
+      delFieldBtn(index) {
+        this.form.good_field_value.splice(index, 1)
+        this.form.good_field.splice(index, 1)
+      },
+      // 选择领域
+      selectFieldBtn(cId, cName) {
+        if (this.$phenix.in_array(this.form.good_field, cId) === -1) {
+          this.form.good_field_value.push(cName)
+          this.form.good_field.push(cId)
+        }
+      },
       editBtn(mark) {
         if (!mark) {
           return false
@@ -595,5 +657,35 @@
     height: 100px;
     display: block;
   }
+
+  .type-content .el-checkbox-button {
+    margin: 3px 0;
+  }
+
+  .field-box .el-tag {
+    margin: 5px;
+  }
+
+  .edit-field-tag{
+    margin-top: 20px;
+  }
+  .type-content p {
+    color: #222;
+    font-size: 1.8rem;
+    margin: 20px 0 10px 0;
+  }
+
+  .tag {
+    margin: 5px 0;
+  }
+  .tag:hover {
+    border: 1px solid #FF5A5F;
+    color: #FF5A5F; 
+  }
+  .tag.active {
+    border: 1px solid #FF5A5F;
+    color: #FF5A5F;
+  }
+
 
 </style>

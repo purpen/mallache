@@ -132,6 +132,31 @@
         } else {
           return false
         }
+      },
+      editItem(event) {
+        var progress = parseInt(event.currentTarget.getAttribute('progress'))
+        var itemId = event.currentTarget.getAttribute('item_id')
+        var type = parseInt(event.currentTarget.getAttribute('item_type'))
+        var name = null
+        switch (progress) {
+          case 0:
+            name = 'itemSubmitTwo'
+            break
+          case 1:
+            if (type === 1) {
+              name = 'itemSubmitThree'
+            } else if (type === 2) {
+              name = 'itemSubmitUIThree'
+            }
+            break
+          case 2:
+            name = 'itemSubmitFour'
+            break
+          case 3:
+            name = 'itemSubmitFive'
+            break
+        }
+        this.$router.push({name: name, params: {id: itemId}})
       }
     },
     computed: {

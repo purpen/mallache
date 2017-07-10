@@ -21,7 +21,7 @@
 
               <div class="item">
                 <p class="p-key">企业证件类型</p>
-                <p class="p-val">{{ item.company_type_value }}</p>
+                <p class="p-val">{{ item.company_type_val }}</p>
               </div>
 
               <div class="item">
@@ -36,7 +36,7 @@
 
               <div class="item">
                 <p class="p-key">法人证件类型</p>
-                <p class="p-val">{{ item.document_type_value }}</p>
+                <p class="p-val">{{ item.document_type_val }}</p>
               </div>
 
               <div class="item">

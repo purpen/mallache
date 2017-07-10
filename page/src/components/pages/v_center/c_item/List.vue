@@ -172,17 +172,21 @@
         self.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            self.isTakingLoadingBtn = true
             var row = {
               item_demand_id: self.takingPriceForm.itemId,
               price: self.takingPriceForm.price,
               summary: self.takingPriceForm.summary
             }
 
-            console.log(row)
+            if ((row.price + '').indexOf('.') !== -1) {
+              self.$message.error('金额必须为整数!')
+              return false
+            }
+
             var apiUrl = api.addQuotation
             var method = 'post'
 
+            self.isTakingLoadingBtn = true
             self.$http({method: method, url: apiUrl, data: row})
             .then (function(response) {
               if (response.data.meta.status_code === 200) {
@@ -376,7 +380,6 @@
     color: #FF5A5F;
     font-size: 1.2rem;
     line-height: 1.3;
-    text-align: center;
   }
   .item-title p {
     font-size: 1.2rem;

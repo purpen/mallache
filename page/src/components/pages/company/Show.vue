@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading.fullscreen.lock="isFullLoading">
     <div class="blank20"></div>
     <el-row :gutter="10">
 
@@ -12,25 +12,17 @@
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
           <div class="rate">
-            <el-rate
-              v-model="rateValue"
-              disabled
-              show-text
-              text-color="#ff9900"
-              text-template="{value}">
-            </el-rate>
+            <p>信用指数：<span>{{ item.score }}分</span></p>
           </div>
 
           <div class="cate">
             <p class="c-title">设计类别</p>
             <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag></p>
           </div>
-          <!--
           <div class="cate">
             <p class="c-title">擅长领域</p>
-            <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field" :key="index">{{ d }}</el-tag></p>
           </div>
-          -->
           <div class="cate">
             <p class="c-title">联系方式</p>
             <p>地址: {{ item.address }}</p>
@@ -99,6 +91,8 @@
     data () {
       return {
         item: {},
+        isLoading: false,
+        isFullLoading: false,
         designCases: [],
         rateValue: 3.5,
         msg: ''
@@ -116,10 +110,13 @@
     created: function() {
       var id = this.$route.params.id
       const self = this
+      self.isFullLoading = true
       self.$http.get(api.designCompanyId.format(id), {})
       .then (function(response) {
+        self.isFullLoading = false
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
+          console.log(self.item)
           if (self.item.logo_image) {
             self.item.logo_url = self.item.logo_image.logo
           } else {
@@ -141,6 +138,7 @@
         }
       })
       .catch (function(error) {
+        self.isFullLoading = false
         self.$message.error(error.message)
       })
     }

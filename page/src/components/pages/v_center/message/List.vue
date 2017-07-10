@@ -9,9 +9,17 @@
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
 
-            <div class="item" v-for="(d, index) in itemList">
-              <p class="title">系统通知 <span>{{ d.created_at }}</span></p>
-              <p class="content">{{ d.content }}</p>
+            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)">
+              <div class="banner">
+                <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
+                <p class="title">{{ d.title }}</p>
+                <p class="icon">
+                  <i v-if="d.is_show" class="el-icon-arrow-up"></i>
+                  <i v-else class="el-icon-arrow-down"></i>
+                </p>
+                <p class="time">{{ d.created_at }}</p>
+              </div>
+              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
             </div>
 
           </div>
@@ -78,6 +86,7 @@
             for (var i = 0; i < data.length; i++) {
               var item = data[i]
               data[i]['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
+              data[i]['is_show'] = false
             }
             self.itemList = data
             console.log(data)
@@ -97,6 +106,35 @@
       handleCurrentChange(val) {
         this.query.page = val
         this.$router.push({name: this.$route.name, query: {page: val}})
+      },
+      // 下拉展开
+      showDes(d, index) {
+        const self = this
+        if (d.is_show) {
+          this.itemList[index].is_show = false
+        } else {
+          this.itemList[index].is_show = true
+          // 确认已读状态
+          if (d.status === 0) {
+            self.$http.put(api.messageTrueRead, {id: d.id})
+            .then (function(response) {
+              if (response.data.meta.status_code === 200) {
+                self.itemList[index].status = 1
+              }
+            })
+            .catch (function(error) {
+              self.$message.error(error.message)
+            })
+          }
+        }
+      },
+      // 根据类型跳转
+      redirect(d) {
+        if (d.type === 2) {
+          this.$router.push({name: 'vcenterItemShow', params: {id: d.target_id}})
+        } else if (d.type === 3) {
+          this.$router.push({name: 'vcenterWalletList'})
+        }
       }
     },
     computed: {
@@ -129,25 +167,62 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .content-box {
-  
+  .right-content .content-box {
+    padding: 0 0 0 0;
   }
   .content-box .item {
     border-bottom: 1px solid #ccc;
-    padding: 10px 0;
+    padding: 10px 20px 10px;
+    cursor: pointer;
+  }
+  .content-box .item:hover {
+    background-color: #F2F1F1;
   }
   .item p {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
+  }
+  .item .banner {
+    height: 30px;
+    line-height: 30px;
+  }
+  .item p.read {
+　　position: relative;
+    float: left;
   }
   .item p.title {
-    color: #FF5A5F
+    float: left;
+    color: #222;
   }
-  .item p.title span {
+  .item p.time {
     color: #666;
     font-size: 1.2rem;
+    float: right;
+    margin: 0 30px;
+  }
+  .item p.icon {
+    float: right;
   }
   .item p.content {
-  
+    clear: both;
+    line-height: 3;
+    color: #666;
+  }
+  .item p.content a {
+    font-size: 1.2rem;
+  }
+
+  i.alert {
+    display: block;
+    background: #f00;
+    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    margin-top: 7px;
+    margin-left: -13px;
+    position: absolute;
+  }
+  i.alert.gray {
+    background: #ddd;
   }
 
 

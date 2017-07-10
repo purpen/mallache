@@ -202,7 +202,7 @@
                 showOffer = true
               }
               var showView = false
-              if (status === 2 || status === 5 || status === 9 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
+              if (status === 2 || status === 5 || status === 9 || status === 11 || status === 18 || status === 20 || status === 22) {
                 showView = true
               }
               data[i]['item']['is_view_show'] = showView
@@ -420,7 +420,6 @@
     color: #FF5A5F;
     font-size: 1.2rem;
     line-height: 1.3;
-    text-align: center;
   }
   .item-title p {
     font-size: 1.2rem;
