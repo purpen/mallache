@@ -329,6 +329,16 @@ class ItemStageController extends BaseController
         if (!$status) {
             return $this->response->array($this->apiError('修改失败', 500));
         }
+
+        //项目信息
+        $item = Item::find($itemStage->item_id);
+        $item_info = $item->itemInfo();
+        //通知需求公司
+        $title = '项目阶段';
+        $content = '设计公司已提交【' . $item_info['name'] . '】项目阶段内容,请前往确认';
+        $tools = new Tools();
+        $tools->message($item->user_id, $title, $content, 2, $itemStage->item_id);
+
         return $this->response->array($this->apiSuccess());
     }
 
