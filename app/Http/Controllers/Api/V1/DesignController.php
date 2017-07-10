@@ -413,10 +413,10 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('无权操作', 403));
         }
 
-        //验证是否上传项目阶段信息
-        $item_stage_count = ItemStage::where('item_id', $item_id)->count();
-        if($item_stage_count < 1){
-            return $this->response->array($this->apiError('项目目前没有阶段信息，不能确认完成', 403));
+        //验证项目阶段信息都已确认
+        $item_stage_count = ItemStage::where(['item_id' => $item->id, 'confirm' => 0])->count();
+        if($item_stage_count){  //如果存在未确认的阶段，不能确认完成
+            return $this->response->array($this->apiError('项目目前阶段未完成，不能确认完成', 403));
         }
 
         $item->status = 15;  //项目已完成

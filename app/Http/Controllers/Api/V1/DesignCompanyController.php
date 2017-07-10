@@ -159,10 +159,18 @@ class DesignCompanyController extends BaseController
         $all['city'] = $request->input('city') ?? 0;
         $all['area'] = $request->input('area') ?? 0;
         $all['branch_office'] = $request->input('branch_office') ?? 0;
+
+        //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        if(!empty($goodField)){
+        $data = [];
+        foreach ($goodField as $v){
+            if ((int)$v){
+                $data[] = (int)$v;
+            }
+        }
+        if(!empty($data)){
             //合并擅长领域
-            $good_field = implode(',' , $goodField);
+            $good_field = implode(',' , $data);
             $all['good_field'] = $good_field;
         }
 
