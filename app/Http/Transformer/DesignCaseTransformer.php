@@ -82,7 +82,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'company_size' => intval($DesignCompany->company_size),
             'company_size_val' => $DesignCompany->company_size_val,
             'branch_office' => intval($DesignCompany->branch_office),
-            'good_field' => explode(",",$DesignCompany->good_field),
+            'good_field' => $DesignCompany->good_field,
             'web' => strval($DesignCompany->web),
             'company_profile' => strval($DesignCompany->company_profile),
             'design_type_value' => $DesignCompany->design_type_value,
