@@ -78,11 +78,7 @@
                     <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
                   </p>
                   <p>
-                  <!--
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.item.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">删除</a>                 
-                    -->
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">查看</a> 
+                    <router-link :to="{name: 'adminItemShow', params: {id: scope.row.item.id}}" target="_blank">查看</router-link>
                   </p>
                 </template>
             </el-table-column>

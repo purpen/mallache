@@ -356,7 +356,6 @@
               return false
             }
             var stagePrice = parseFloat(row.total.sub(parseFloat(row.warranty_money)))
-            alert(stagePrice)
             if (totalAmount !== stagePrice) {
               that.$message.error('阶段金额总和不正确！')
               return false

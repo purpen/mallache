@@ -7,6 +7,7 @@ import store from './store/index'
 import axios from './http'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+import phenix from '@/assets/js/base'
 
 // 样式表导入
 import './assets/css/reset.css'
@@ -22,6 +23,9 @@ Vue.config.productionTip = false
 
 // 将axios挂载到prototype上，在组件中可以直接使用this.http访问
 Vue.prototype.$http = axios
+
+// js自定义方法集
+Vue.prototype.$phenix = phenix
 
 /* eslint-disable no-new */
 new Vue({

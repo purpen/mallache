@@ -168,6 +168,21 @@ const COMPANY_TYPE = [
         id: 2,
         key: 'item_2_2',
         name: '网页设计'
+      },
+      {
+        id: 3,
+        key: 'item_2_3',
+        name: '界面设计'
+      },
+      {
+        id: 4,
+        key: 'item_2_4',
+        name: '服务设计'
+      },
+      {
+        id: 5,
+        key: 'item_2_5',
+        name: '用户体验咨询'
       }
     ],
     field: [
@@ -232,6 +247,144 @@ const DESIGN_CASE_PRICE_OPTIONS = [
     name: '英国设计奖'
   }
 
+]
+
+// 擅长领域
+const FIELD = [
+  {
+    id: 1,
+    key: 'item_1_1',
+    name: '智能硬件'
+  },
+  {
+    id: 2,
+    key: 'item_1_2',
+    name: '消费电子'
+  },
+  {
+    id: 3,
+    key: 'item_1_3',
+    name: '交通工具'
+  },
+  {
+    id: 4,
+    key: 'item_1_4',
+    name: '工业设备'
+  },
+  {
+    id: 5,
+    key: 'item_1_5',
+    name: '厨电厨具'
+  },
+  {
+    id: 6,
+    key: 'item_1_6',
+    name: '医疗设备'
+  },
+  {
+    id: 7,
+    key: 'item_1_7',
+    name: '家具用品'
+  },
+  {
+    id: 8,
+    key: 'item_1_8',
+    name: '办公用品'
+  },
+  {
+    id: 9,
+    key: 'item_1_9',
+    name: '大家电'
+  },
+  {
+    id: 10,
+    key: 'item_1_10',
+    name: '小家电'
+  },
+  {
+    id: 11,
+    key: 'item_1_11',
+    name: '卫浴'
+  },
+  {
+    id: 12,
+    key: 'item_1_12',
+    name: '玩具'
+  },
+  {
+    id: 13,
+    key: 'item_1_13',
+    name: '体育用品'
+  },
+  {
+    id: 14,
+    key: 'item_1_14',
+    name: '军工设备'
+  },
+  {
+    id: 15,
+    key: 'item_1_15',
+    name: '户外用品'
+  }
+]
+
+// 行业
+const INDUSTRY = [
+  {
+    id: 1,
+    key: 'item_1_1',
+    name: '制造业'
+  },
+  {
+    id: 2,
+    key: 'item_1_2',
+    name: '消费零售'
+  },
+  {
+    id: 3,
+    key: 'item_1_3',
+    name: '信息技术'
+  },
+  {
+    id: 4,
+    key: 'item_1_4',
+    name: '能源'
+  },
+  {
+    id: 5,
+    key: 'item_1_5',
+    name: '金融地产'
+  },
+  {
+    id: 6,
+    key: 'item_1_6',
+    name: '服务业'
+  },
+  {
+    id: 7,
+    key: 'item_1_7',
+    name: '医疗保健'
+  },
+  {
+    id: 8,
+    key: 'item_1_8',
+    name: '原材料'
+  },
+  {
+    id: 9,
+    key: 'item_1_9',
+    name: '工业制造'
+  },
+  {
+    id: 10,
+    key: 'item_1_10',
+    name: '军工'
+  },
+  {
+    id: 11,
+    key: 'item_1_11',
+    name: '公用事业'
+  }
 ]
 
 // 作品案例销售额
@@ -501,6 +654,8 @@ const TEST = {}
 
 module.exports = {
   COMPANY_TYPE,
+  FIELD,
+  INDUSTRY,
   DESIGN_CASE_PRICE_OPTIONS,
   DESIGN_CASE_SALE_OPTIONS,
   CYCLE_OPTIONS,

@@ -12,13 +12,7 @@
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
           <div class="rate">
-            <el-rate
-              v-model="rateValue"
-              disabled
-              show-text
-              text-color="#ff9900"
-              text-template="{value}">
-            </el-rate>
+            <p>信用指数：<span>{{ item.score }}分</span></p>
           </div>
 
           <div class="cate">
@@ -27,7 +21,7 @@
           </div>
           <div class="cate">
             <p class="c-title">擅长领域</p>
-            <p class="tag"><el-tag type="gray">家电维修</el-tag><el-tag type="gray">消费电子</el-tag><el-tag type="gray">设计</el-tag><el-tag type="gray">技术</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field" :key="index">{{ d }}</el-tag></p>
           </div>
           <div class="cate">
             <p class="c-title">联系方式</p>
@@ -122,6 +116,7 @@
         self.isFullLoading = false
         if (response.data.meta.status_code === 200) {
           self.item = response.data.data
+          console.log(self.item)
           if (self.item.logo_image) {
             self.item.logo_url = self.item.logo_image.logo
           } else {

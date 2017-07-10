@@ -4,37 +4,37 @@
     <el-row :gutter="20">
       <v-menu></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="20" v-loading.body="isLoading">
 
         <div class="count-items">
           <el-row :gutter="10">
             <el-col :span="countNum">
               <div class="count-item red">
-                <p class="count">32323</p>
+                <p class="count">{{ item.user_count }}</p>
                 <p class="title">注册用户</p>
-                <p class="des">供应商: 100 | 需求方: 320</p>
+                <p class="des">供应商: <span class="red">{{ item.design_user }}</span> | 需求方: <span class="red">{{ item.demand_user }}</span></p>
               </div>
             </el-col>
 
             <el-col :span="countNum">
               <div class="count-item blue">
-                <p class="count">12343</p>
+                <p class="count">{{ item.item_count }}</p>
                 <p class="title">项目</p>
-                <p class="des">关闭: 100 | 进行中: 320 | 已完成: 5000</p>
+                <p class="des">关闭: <span class="red">{{ item.close_item }}</span> | 进行中: <span class="red">{{ item.processing_item }}</span> | 已完成: <span class="red">{{ item.finish_item }}</span></p>
               </div>
             </el-col>
 
             <el-col :span="countNum">
               <div class="count-item green">
-                <p class="count">555</p>
+                <p class="count">{{ item.pay_order }}</p>
                 <p class="title">订单</p>
-                <p class="des">待支付: 320</p>
+                <p class="des">待支付: <span class="red">{{ item.not_pay }}</span></p>
               </div>
             </el-col>
 
             <el-col :span="countNum">
               <div class="count-item yellow">
-                <p class="count">555</p>
+                <p class="count">{{ item.withdraw_order }}</p>
                 <p class="title">提现单</p>
                 <p class="des">~</p>
               </div>
@@ -44,41 +44,46 @@
         </div>
 
         <div class="content-items">
-          <el-row :gutter="8">
+          <el-row :gutter="20">
             <el-col :span="10">
               <div class="content-item">
                 <div class="form-title">
                   <span>通知</span>
                 </div>
 
-                <div class="content-box">
+                <div class="content-box" v-if="isNotice">
 
                   <p class="alert-title"><span>*</span> 请您尽快解决如下问题，不要让用户等太久哦〜</p>
 
-                  <div class="item">
+                  <div class="item" v-show="item.not_design > 0">
                     <h3>设计公司</h3>
-                    <p class="item-title">有 <span class="green">12</span> 家设计公司等待认证</p>
+                    <p class="item-title">有 <span class="green">{{ item.not_design }}</span> 家设计公司等待认证</p>
                     <p class="item-btn"><router-link :to="{name: 'adminCompanyList'}">查看</router-link></p>
                   </div>
 
-                  <div class="item">
+                  <div class="item" v-show="item.not_demand > 0">
                     <h3>需求公司</h3>
-                    <p class="item-title">有 <span class="green">12</span> 家需求公司等待认证</p>
+                    <p class="item-title">有 <span class="green">{{ item.not_demand }}</span> 家需求公司等待认证</p>
                     <p class="item-btn"><router-link :to="{name: 'adminDemandCompanyList'}">查看</router-link></p>
                   </div>
 
-                  <div class="item no-line">
+                  <div class="item" v-show="item.bank_pay > 0">
                     <h3>订单</h3>
-                    <p class="item-title">有 <span class="green">12</span> 个订单申请对公打款，请留意账户打款动向〜</p>
+                    <p class="item-title">有 <span class="green">{{ item.bank_pay }}</span> 个订单申请对公打款，请留意账户打款动向〜</p>
                     <p class="item-btn"><router-link :to="{name: 'adminOrderList'}">查看</router-link></p>
                   </div>
 
-                  <div class="item no-line">
+                  <div class="item no-line" v-show="item.not_withdraw > 0">
                     <h3>提现单</h3>
-                    <p class="item-title">有 <span class="green">12</span> 个提现单等待提现，请处理~</p>
+                    <p class="item-title">有 <span class="green">{{ item.not_withdraw }}</span> 个提现单等待提现，请处理~</p>
                     <p class="item-btn"><router-link :to="{name: 'adminWithDrawList'}">查看</router-link></p>
                   </div>
 
+                </div>
+
+                <div class="content-box center" v-else>
+                  <img src="../../assets/images/icon/control_icon.png" />
+                  <p>当前无待处理事项</p>
                 </div>
 
               </div>
@@ -145,7 +150,10 @@ export default {
   data () {
     return {
       countNum: 6,
+      isLoading: false,
       isItemLoading: false,
+      isNotice: false,
+      item: '',
       tableItemData: [],
       msg: ''
     }
@@ -157,6 +165,27 @@ export default {
   },
   created: function() {
     const self = this
+
+    // 加载统计数
+    self.isLoading = true
+    self.$http.get(api.adminSurveyIndex, {})
+    .then (function(response) {
+      self.isLoading = false
+      self.tableItemData = []
+      if (response.data.meta.status_code === 200) {
+        self.item = response.data.data
+        if (self.item.not_design > 0 || self.item.bank_pay > 0 || self.item.not_demand > 0 || self.item.not_withdraw > 0) {
+          self.isNotice = true
+        }
+      } else {
+        self.$message.error(response.data.meta.message)
+      }
+    })
+    .catch (function(error) {
+      self.isLoading = false
+      self.$message.error(error.message)
+    })
+
     // 加载最近的项目列表
     self.isItemLoading = true
     self.$http.get(api.adminItemList, {params: {page: 1, per_page: 10}})
@@ -256,6 +285,9 @@ export default {
     min-height: 200px;
     padding: 20px 10px;
   }
+  .content-box.center {
+    text-align: center;
+  }
   .content-box .item {
     height: 60px;
     border-bottom: 1px solid #ccc;
@@ -298,6 +330,10 @@ export default {
   span.green {
     color: green;
     font-size: 1.8rem;
+  }
+  span.red {
+    color: red;
+    font-size: 1.5rem;
   }
 
 </style>

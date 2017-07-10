@@ -20,8 +20,7 @@
         </div>
 
 
-
-        <div class="content-box">
+        <div class="content-box" v-loading.body="isLoading">
 
           <div class="form-title">
             <span>基本信息</span>
@@ -29,44 +28,49 @@
 
           <div class="company-show">
 
-            <div class="item">
+            <div class="item" style="height: 90px;">
               <p class="p-key">头像</p>
-              <p class="p-val">{{ item.phone }}</p>
+              <p class="p-val"><img v-if="item.logo_url" :src="item.logo_url" width="80" /></p>
             </div>
 
             <div class="item">
               <p class="p-key">简称</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.company_abbreviation }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">地址</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val"><span v-for="(d, index) in item.city_arr" :key="index">{{ d }} &nbsp;</span> {{ item.address }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">网址</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.web }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">规模</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.company_size_val }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">分公司</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.branch_office }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">公司简介</p>
+              <p class="p-val">{{ item.company_profile }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">专业优势</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.professional_advantage }}</p>
             </div>
 
             <div class="item">
               <p class="p-key">荣誉奖项</p>
-              <p class="p-val">{{ item.email }}</p>
+              <p class="p-val">{{ item.awards }}</p>
             </div>
 
           </div>
@@ -83,7 +87,12 @@
 
             <div class="item">
               <p class="p-key">企业证件类型</p>
-              <p class="p-val">{{ item.company_type_value }}</p>
+              <p class="p-val">{{ item.company_type_val }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">企业营业执照</p>
+              <p class="p-val"><a v-for="(d, index) in item.license_image" :key="index" :href="d.file" target="_blank">{{ d.name }} </a></p>
             </div>
 
             <div class="item">
@@ -98,7 +107,12 @@
 
             <div class="item">
               <p class="p-key">法人证件类型</p>
-              <p class="p-val">{{ item.document_type_value }}</p>
+              <p class="p-val">{{ item.document_type_val }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">法人证件附件</p>
+              <p class="p-val"><a v-for="(d, index) in item.document_image" :key="index" :href="d.file" target="_blank">{{ d.name }} </a></p>
             </div>
 
             <div class="item">
@@ -127,6 +141,30 @@
             </div>
 
           </div>
+
+          <div class="form-title">
+            <span>状态</span>
+          </div>
+
+          <div class="company-show">
+            <div class="item">
+              <p class="p-key">认证</p>
+              <p class="p-val">
+                  <span v-if="item.verify_status === 1" type="success">通过</span>
+                  <span v-else-if="item.verify_status === 2" type="gray">拒绝</span>
+                  <span v-else type="warning">待认证</span>
+              </p>
+              <p class="opt" v-if="item.verify_status === 0">
+                <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" @click="setVerify(2)">拒绝</el-button>
+                <el-button type="primary" class="is-custom" :loading="verifyLoadingBtn" size="small" @click="setVerify(1)">通过</el-button>
+              </p>
+              <p class="opt" v-else>
+                <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" v-if="item.verify_status === 1" @click="setVerify(2)">拒绝</el-button>
+                <el-button type="primary" class="is-custom" :loading="verifyLoadingBtn" size="small" v-else @click="setVerify(1)">通过</el-button>
+              </p>
+            </div>
+          </div>
+
         </div>
 
 
@@ -149,14 +187,15 @@ export default {
   data () {
     return {
       menuType: 0,
-      item: null,
+      item: '',
+      itemId: '',
       isLoading: false,
+      verifyLoadingBtn: false,
       msg: ''
     }
   },
   methods: {
-    setVerify(item, evt) {
-      var id = item.id
+    setVerify(evt) {
       var url = ''
       if (evt === 0) {
         url = api.adminCompanyVerifyCancel
@@ -164,8 +203,10 @@ export default {
         url = api.adminCompanyVerifyOk
       }
       var self = this
-      self.$http.put(url, {id: id})
+      self.verifyLoadingBtn = true
+      self.$http.put(url, {id: self.itemId})
       .then (function(response) {
+        self.verifyLoadingBtn = false
         if (response.data.meta.status_code === 200) {
           self.item.verify_status = evt
           self.$message.success('操作成功')
@@ -174,8 +215,8 @@ export default {
         }
       })
       .catch (function(error) {
+        self.verifyLoadingBtn = false
         self.$message.error(error.message)
-        console.log(error.message)
       })
     },
     setStatus(item, evt) {
@@ -202,13 +243,20 @@ export default {
     }
   },
   created: function() {
+    var id = this.$route.params.id
     const self = this
+    self.itemId = id
     self.isLoading = true
-    self.$http.get(api.adminCompanyList, {})
+    self.$http.get(api.adminCompanyShow, {params: {id: id}})
     .then (function(response) {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.item = response.data.data
+        if (self.item.logo_image) {
+          self.item.logo_url = self.item.logo_image.logo
+        } else {
+          self.item.logo_url = false
+        }
         console.log(self.item)
       } else {
         self.$message.error(response.data.meta.message)
@@ -238,9 +286,14 @@ export default {
     min-height: 350px;
   }
 
+  .company-show {
+    clear: both;
+    margin-bottom: 40px;
+    margin-top: -5px;
+  }
   .company-show .item {
     clear: both;
-    height: 40px;
+    min-height: 40px;
     border-bottom: 1px solid #ccc;
   }
 
@@ -258,6 +311,13 @@ export default {
     width: 300px;
     float: left;
     font-size: 1.5rem;
+  }
+
+  .company-show .item p.opt {
+    width: 150px;
+    float: right;
+    text-align: right;
+    font-size: 1.2rem;
   }
 
 </style>

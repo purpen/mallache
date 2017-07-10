@@ -19,85 +19,146 @@
           </div>
         </div>
 
-          <el-table
-            :data="tableData"
-            border
-            v-loading.body="isLoading"
-            class="admin-table"
-            @selection-change="handleSelectionChange"
-            style="width: 100%">
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              prop="item.id"
-              label="ID"
-              width="60">
-            </el-table-column>
-            <el-table-column
-              label="内容"
-              min-width="140">
-                <template scope="scope">
-                  <p>
-                    标题: {{ scope.row.info.name }}
-                    类型: {{ scope.row.item.type_label }}
-                    预算: {{ scope.row.info.design_cost_value }}
-                    周期: {{ scope.row.info.cycle_value }}
-                  </p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              width="120"
-              label="创建人">
-                <template scope="scope">
-                  <p>
-                    {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
-                  </p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              prop="info.locale"
-              label="工作地点">
-            </el-table-column>
-            <el-table-column
-              prop="item.status_label"
-              width="120"
-              label="状态">
-            </el-table-column>
-            <el-table-column
-              prop="item.created_at"
-              width="80"
-              label="创建时间">
-            </el-table-column>
-            <el-table-column
-              width="100"
-              label="操作">
-                <template scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3" @click="handleMatch(scope.$index, scope.row)">匹配公司</a>
-                  </p>
-                  <p>
-                  <!--
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.item.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">删除</a>                 
-                    -->
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.item.id)">查看</a> 
-                  </p>
-                </template>
-            </el-table-column>
-          </el-table>
 
-          <el-pagination
-            class="pagination"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="query.page"
-            :page-sizes="[20, 50, 100, 500]"
-            :page-size="query.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="query.totalCount">
-          </el-pagination>
+        <div class="content-box" v-loading.body="isLoading">
+
+          <div class="form-title">
+            <span>基本信息</span>
+          </div>
+
+          <div class="company-show">
+
+            <div class="item">
+              <p class="p-key">名称</p>
+              <p class="p-val">{{ info.name }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">类型</p>
+              <p class="p-val">{{ item.type_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">类别</p>
+              <p class="p-val">{{ item.design_type_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">领域</p>
+              <p class="p-val">{{ info.field_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">行业</p>
+              <p class="p-val">{{ info.industry_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">预算</p>
+              <p class="p-val">{{ info.design_cost_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">周期</p>
+              <p class="p-val">{{ info.cycle_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">工作地点</p>
+              <p class="p-val">{{ info.province_value }} {{ info.city_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">功能或卖点</p>
+              <p class="p-val">{{ info.product_features }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">相关附件</p>
+              <p class="p-val" v-for="(d, index) in info.image"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
+            </div>
+
+          </div>
+
+          <div class="form-title">
+            <span>公司信息</span>
+          </div>
+
+          <div class="company-show">
+            <div class="item">
+              <p class="p-key">名称</p>
+              <p class="p-val">{{ item.company_name }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">规模</p>
+              <p class="p-val">{{ item.company_size_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">网址</p>
+              <p class="p-val">{{ item.company_web }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">所在地区</p>
+              <p class="p-val">{{ item.company_province_value + ', ' + item.company_city_value + ', ' + item.company_area_value }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">详细地址</p>
+              <p class="p-val">{{ item.address }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">联系人</p>
+              <p class="p-val">{{ item.contact_name }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">职位</p>
+              <p class="p-val">{{ item.position }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">手机</p>
+              <p class="p-val">{{ item.phone }}</p>
+            </div>
+
+            <div class="item">
+              <p class="p-key">邮箱</p>
+              <p class="p-val">{{ item.email }}</p>
+            </div>
+
+          </div>
+
+          <div class="form-title">
+            <span>相关信息</span>
+          </div>
+
+          <div class="company-show">
+            <div class="item">
+              <p class="p-key">项目报价</p>
+              <p class="p-val">{{ item.price }}</p>
+            </div>
+          </div>
+
+          <div class="form-title">
+            <span>状态</span>
+          </div>
+
+          <div class="company-show">
+            <div class="item">
+              <p class="p-key">状态</p>
+              <p class="p-val">
+                {{ item.status_value }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+
 
         </div>
       </el-col>
@@ -139,8 +200,9 @@ export default {
     return {
       menuType: 0,
       matchCompanyDialog: false,
-      itemList: [],
-      tableData: [],
+      item: '',
+      info: '',
+      itemId: '',
       currentMatchCompany: [],
       isLoading: false,
       matchCompanyForm: {
@@ -148,26 +210,10 @@ export default {
         itemName: '',
         companyIds: ''
       },
-      query: {
-        page: 1,
-        pageSize: 20,
-        totalCount: 0,
-        sort: 1,
-        type: 0,
-
-        test: null
-      },
       msg: ''
     }
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    handleEdit() {
-    },
-    handleDelete() {
-    },
     handleMatch(index, item) {
       if (item.item.status !== 2) {
         // this.$message.error('项目状态不允许推荐公司')
@@ -215,63 +261,34 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
       })
-    },
-    handleSizeChange(val) {
-      this.query.pageSize = val
-      this.loadList()
-    },
-    handleCurrentChange(val) {
-      this.query.page = val
-      this.$router.push({name: this.$route.name, query: {page: val}})
-    },
-    loadList() {
-      const self = this
-      self.query.page = this.$route.query.page || 1
-      self.query.sort = this.$route.query.sort || 1
-      self.query.type = this.$route.query.type || 0
-      this.menuType = 0
-      if (self.query.type) {
-        this.menuType = parseInt(self.query.type)
-      }
-      self.isLoading = true
-      self.$http.get(api.adminItemList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
-      .then (function(response) {
-        self.isLoading = false
-        self.tableData = []
-        if (response.data.meta.status_code === 200) {
-          self.itemList = response.data.data
-          self.query.totalCount = response.data.meta.pagination.total
-          for (var i = 0; i < self.itemList.length; i++) {
-            var item = self.itemList[i]
-
-            var typeLabel = ''
-            if (item.item.type === 1) {
-              typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.info.field_value + '/' + item.info.industry_value
-            } else {
-              typeLabel = item.item.type_value + '/' + item.item.design_type_value
-            }
-
-            item['item']['type_label'] = typeLabel
-            item['item']['status_label'] = '[{0}]{1}'.format(item.item.status, item.item.status_value)
-
-            if (item.info) {
-              item['info']['locale'] = '{0}/{1}'.format(item.info.province_value, item.info.city_value)
-            }
-            item['item']['created_at'] = item.item.created_at.date_format().format('yy-MM-dd')
-            self.tableData.push(item)
-          } // endfor
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.isLoading = false
-        self.$message.error(error.message)
-      })
     }
   },
   created: function() {
-    this.loadList()
+    var id = this.$route.params.id
+    if (!id) {
+      this.$message.error('缺少请求参数!')
+      this.$router.replace({name: 'home'})
+      return false
+    }
+    const self = this
+    self.itemId = id
+    self.isLoading = true
+    self.$http.get(api.adminItemShow, {params: {id: id}})
+    .then (function(response) {
+      self.isLoading = false
+      if (response.data.meta.status_code === 200) {
+        self.item = response.data.data.item
+        self.info = response.data.data.info
+        console.log(self.item)
+        console.log(self.info)
+      } else {
+        self.$message.error(response.data.meta.message)
+      }
+    })
+    .catch (function(error) {
+      self.$message.error(error.message)
+      self.isLoading = false
+    })
   },
   watch: {
     '$route' (to, from) {
@@ -285,14 +302,46 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .match-company-box {
-    margin: 10px;
+  .content-box {
+    margin-top: 20px;
+    clear: both;
+    border: 1px solid #ccc;
+    padding: 0px 20px 20px 20px;
+    min-height: 350px;
   }
-  .match-company-box p {
-    line-height: 2;
+
+  .company-show {
+    clear: both;
+    margin-bottom: 40px;
+    margin-top: -5px;
   }
-  .match-company-tag {
-    margin: 5px;
+  .company-show .item {
+    clear: both;
+    min-height: 40px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .company-show .item p {
+    line-height: 3;
+  }
+
+  .company-show .item p.p-key {
+    float: left;
+    width: 150px;
+    color: #666;
+  }
+
+  .company-show .item p.p-val {
+    width: 300px;
+    float: left;
+    font-size: 1.5rem;
+  }
+
+  .company-show .item p.opt {
+    text-align: right;
+    width: 150px;
+    float: right;
+    font-size: 1.2rem;
   }
 
 </style>

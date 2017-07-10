@@ -228,7 +228,7 @@ export default {
     },
     loadList() {
       const self = this
-      self.query.page = this.$route.query.page || 1
+      self.query.page = parseInt(this.$route.query.page || 1)
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
       self.payType = this.$route.query.pay_type || 0

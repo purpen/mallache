@@ -14,6 +14,17 @@
                   <el-input v-model="form.name" placeholder="为你的项目取个简短的名称"></el-input>
                 </el-form-item> 
 
+                <el-form-item label="所属行业" prop="industry">
+                  <el-select v-model.number="form.industry" placeholder="请选择行业">
+                    <el-option
+                      v-for="item in industryOptions"
+                      :label="item.label"
+                      :key="item.index"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
                 <el-form-item label="项目进展阶段" prop="stage">
                   <el-radio-group v-model.number="form.stage">
                     <el-radio class="radio" :label="1">已有app／网站，需重新设计</el-radio>
@@ -169,6 +180,7 @@
         },
         form: {
           name: '',
+          industry: '',
           stage: '',
           cycle: '',
           complete_content: [],
@@ -182,6 +194,9 @@
           ],
           complete_content: [
             { type: 'array', required: true, message: '请至少选择一项已有项目设计内容', trigger: 'blur' }
+          ],
+          industry: [
+            { type: 'number', required: true, message: '请选择所属行业', trigger: 'change' }
           ],
           cycle: [
             { type: 'number', required: true, message: '请选择项目周期', trigger: 'change' }
@@ -240,6 +255,7 @@
             }
             var row = {
               name: that.form.name,
+              industry: that.form.industry,
               stage: that.form.stage,
               cycle: that.form.cycle,
               design_cost: that.form.design_cost,
@@ -380,6 +396,18 @@
       }
     },
     computed: {
+      // 所属行业下拉选项
+      industryOptions() {
+        var items = []
+        for (var i = 0; i < typeData.INDUSTRY.length; i++) {
+          var item = {
+            value: typeData.INDUSTRY[i]['id'],
+            label: typeData.INDUSTRY[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      },
       cycleOptions() {
         var items = []
         for (var i = 0; i < typeData.CYCLE_OPTIONS.length; i++) {
@@ -423,6 +451,8 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             var row = response.data.data.item
+            console.log('aaaa')
+            console.log(row)
             if (row.type === 1) {
               that.$router.replace({name: 'itemSubmitThree', params: {id: row.id}})
             }
@@ -431,6 +461,7 @@
             that.form.design_type = row.design_type
             that.form.name = row.name
             that.form.stage = row.stage
+            that.form.industry = row.industry === 0 ? '' : row.industry
             that.form.complete_content = row.complete_content
             that.form.other_content = row.other_content
             that.form.cycle = row.cycle === 0 ? '' : row.cycle

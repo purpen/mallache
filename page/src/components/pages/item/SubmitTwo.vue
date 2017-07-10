@@ -32,10 +32,12 @@
                 <el-button :class="{ 'tag': true, active: d.id === form.field ? true : false }" :key="index" @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions">{{ d.name }}</el-button>               
               </div>
 
+              <!--
               <p>所属行业</p>
               <div class="category-box">
                 <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
               </div>
+              -->
             
             </div>
 
@@ -117,15 +119,14 @@
         const that = this
         var row = {}
         if (that.form.type === 1) {
-          if (!that.form.design_type || !that.form.field || !that.form.industry) {
+          if (!that.form.design_type || !that.form.field) {
             that.$message.error('添写信息不完整!')
             return false
           }
           row = {
             type: that.form.type,
             design_type: that.form.design_type,
-            field: that.form.field,
-            industry: that.form.industry
+            field: that.form.field
           }
         } else if (that.form.type === 2) {
           if (!that.form.design_type) {
@@ -196,7 +197,6 @@
           // 清空已选子类
           // this.form.design_type = ''
           // this.form.field = ''
-          // this.form.industry = ''
         }
       },
       designTypeBtn(typeId) {
@@ -265,7 +265,6 @@
             that.form.type = row.type
             that.form.design_type = row.design_type
             that.form.field = row.field
-            that.form.industry = row.industry
             that.form.stage_status = row.stage_status
             console.log(response.data.data)
           } else {

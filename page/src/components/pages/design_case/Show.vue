@@ -14,13 +14,7 @@
             <p><span>{{ item.design_company.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.design_company.city_value }}</span></p>
           </div>
           <div class="rate">
-            <el-rate
-              v-model="rateValue"
-              disabled
-              show-text
-              text-color="#ff9900"
-              text-template="{value}">
-            </el-rate>
+            <p>信用指数：<span>{{ item.design_company.score }}分</span></p>
           </div>
           <div class="cate">
             <p class="c-title">设计类别</p>
