@@ -300,7 +300,6 @@ class DemandController extends BaseController
      * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
      * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
      * @apiParam {integer} field 所属领域
-     * @apiParam {integer} industry 行业
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} company_abbreviation 公司简称
      * @apiParam {integer} company_size 公司规模
@@ -377,10 +376,10 @@ class DemandController extends BaseController
                 'type' => 'required|integer',
                 'design_type' => 'required|integer',
                 'field' => 'required|integer',
-                'industry' => 'required|integer',
+//                'industry' => 'required|integer',
             ];
 
-            $all = $request->only(['stage_status', 'type', 'design_type', 'field', 'industry']);
+            $all = $request->only(['stage_status', 'type', 'design_type', 'field']);
 
             $validator = Validator::make($all, $rules);
             if ($validator->fails()) {
@@ -404,7 +403,7 @@ class DemandController extends BaseController
 
                 $product_design = ProductDesign::firstOrCreate(['item_id' => intval($item->id)]);
                 $product_design->field = $request->input('field');
-                $product_design->industry = $request->input('industry');
+//                $product_design->industry = $request->input('industry');
                 $product_design->save();
             } catch (\Exception $e) {
                 Log::error($e->getMessage());

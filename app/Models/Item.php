@@ -26,6 +26,7 @@ class Item extends BaseModel
         'company_city_value',
         'company_area_value',
         'status_value',
+        'company_size_value',
     ];
 
     //一对一关联UX UI设计表
@@ -188,6 +189,8 @@ class Item extends BaseModel
                     'type_value' => $item->type_value,
                     'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
+                    'industry' => $info->industry,
+                    'industry_value' => $info->industry_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
@@ -252,6 +255,16 @@ class Item extends BaseModel
     //设计类别
     public function getDesignTypeValueAttribute()
     {
+        $item_type = config('constant.item_type');
+
+        if(array_key_exists($this->type, $item_type)){
+            if(array_key_exists($this->design_type, $item_type[$this->type])){
+                return $item_type[$this->type][$this->design_type];
+            }
+        }
+
+        return '';
+
         if($this->type == 1){
             switch ($this->design_type){
                 case 1:

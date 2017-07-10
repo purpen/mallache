@@ -17,7 +17,8 @@ class UDesign extends BaseModel
         'design_cost_value',
         'province_value',
         'city_value',
-        'cycle_value'
+        'cycle_value',
+        'industry_value',
     ];
 
     //允许批量赋值的属性
@@ -38,6 +39,7 @@ class UDesign extends BaseModel
         'city',
 //        'summary',
 //        'artificial',
+        'industry',
     ];
 
     //一对一关联项目表
@@ -161,6 +163,15 @@ class UDesign extends BaseModel
     public function getCityValueAttribute()
     {
         return Tools::cityName($this->city) ?? "";
+    }
+
+    public function getIndustryValueAttribute()
+    {
+        $industries = config('constant.industry');
+        if(!array_key_exists($this->industry, $industries)){
+            return '';
+        }
+        return $industries[$this->industry];
     }
 
 }

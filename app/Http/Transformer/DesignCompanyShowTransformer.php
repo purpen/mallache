@@ -67,6 +67,7 @@ class DesignCompanyShowTransformer extends TransformerAbstract
 //            'item_quantity' => intval($DesignCompany->item_quantity),
 //            'item_quantity_val' => $DesignCompany->item_quantity_val,
             'good_field' => $DesignCompany->good_field,
+            'good_field_value' => $DesignCompany->good_field_value,
             'web' => strval($DesignCompany->web),
             'company_profile' => strval($DesignCompany->company_profile),
             'design_type_value' => $DesignCompany->design_type_value,

@@ -63,7 +63,7 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
         'city_arr',
         'logo_image',
-        'design_type_value'
+        'design_type_value',
 
     ];
 
@@ -103,7 +103,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 更改设计公司审核状态
      */
-    static public function verifyStatus($id, $verify_status=0)
+    static public function verifyStatus($id, $verify_status = 0)
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;
@@ -113,7 +113,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 更改设计公司状态
      */
-    static public function unStatus($id, $status=1)
+    static public function unStatus($id, $status = 1)
     {
         $design_company = self::findOrFail($id);
         $design_company->status = $status;
@@ -123,7 +123,7 @@ class DesignCompanyModel extends BaseModel
     //企业类型
     public function getCompanyTypeValAttribute()
     {
-        switch ($this->company_type){
+        switch ($this->company_type) {
             case 1:
                 $company_type_val = '普通';
                 break;
@@ -142,7 +142,7 @@ class DesignCompanyModel extends BaseModel
     //企业人数规模
     public function getCompanySizeValAttribute()
     {
-        switch ($this->company_size){
+        switch ($this->company_size) {
             case 1:
                 $company_size_val = '20人以下';
                 break;
@@ -190,7 +190,6 @@ class DesignCompanyModel extends BaseModel
     }
 
 
-
     /**
      * 获取图片logo
      *
@@ -209,7 +208,7 @@ class DesignCompanyModel extends BaseModel
      */
     public function getLicenseImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 3, 1 , 5);
+        return AssetModel::getImageUrl($this->id, 3, 1, 5);
     }
 
     /**
@@ -219,7 +218,6 @@ class DesignCompanyModel extends BaseModel
     {
         return $this->hasMany('App\Models\DesignCaseModel', 'design_company_id');
     }
-
 
 
     /**
@@ -253,7 +251,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 验证有无设计公司访问权限
      *
-     * @param int $user_id  访问用户user_iD
+     * @param int $user_id 访问用户user_iD
      * @param int $design_company_id 公司ID
      * @return bool
      */
@@ -264,15 +262,15 @@ class DesignCompanyModel extends BaseModel
 
         //检查是否推荐了该公司
         $is_recommend = false;
-        foreach($item_s as $item){
-            if(in_array($design_company_id, explode(',', $item->recommend))){
+        foreach ($item_s as $item) {
+            if (in_array($design_company_id, explode(',', $item->recommend))) {
                 $is_recommend = true;
                 break;
             }
         }
 
         //公司是否开放、是否自己访问自己、是否推荐了该公司
-        if($design->open != 1 && $design->user_id != $user_id && $is_recommend != true){
+        if ($design->open != 1 && $design->user_id != $user_id && $is_recommend != true) {
             return false;
         }
 
@@ -282,12 +280,12 @@ class DesignCompanyModel extends BaseModel
     public function getCityArrAttribute()
     {
         $array = [110000, 120000, 310000, 500000];
-        if(in_array($this->province, $array)){
+        if (in_array($this->province, $array)) {
             return [
                 $this->company_province_value,
                 $this->company_area_value,
             ];
-        }else{
+        } else {
             return [
                 $this->company_province_value,
                 $this->company_city_value,
@@ -303,7 +301,7 @@ class DesignCompanyModel extends BaseModel
      */
     public function getDocumentImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 10, 1 , 5);
+        return AssetModel::getImageUrl($this->id, 10, 1, 5);
     }
 
 
@@ -311,7 +309,7 @@ class DesignCompanyModel extends BaseModel
     public function getDocumentTypeValAttribute()
     {
         $key = $this->attributes['document_type'];
-        if(array_key_exists($key,config('constant.document_type'))){
+        if (array_key_exists($key, config('constant.document_type'))) {
             $document_type_val = config('constant.document_type')[$key];
             return $document_type_val;
 
@@ -325,17 +323,41 @@ class DesignCompanyModel extends BaseModel
         $item_type = config('constant.item_type');
         $arr = [];
         $design_item = $this->user->designItem;
-        if(!$design_item->isEmpty()){
-            foreach($design_item as $case){
-                try{
+        if (!$design_item->isEmpty()) {
+            foreach ($design_item as $case) {
+                try {
                     $arr[] = $item_type[$case->type][$case->design_type];
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     continue;
                 }
             }
         }
 
         return $arr;
+    }
+
+    // 擅长领域访问修改器
+    public function getGoodFieldAttribute($key)
+    {
+        return empty($key) ? [] : explode(',', $key);
+    }
+
+    // 擅长领域访问修改器--文字
+    public function getGoodFieldValueAttribute()
+    {
+        $data = $this->good_field;
+
+        if (empty($data)) {
+            return [];
+        } else {
+            $field_array = config('constant.field');
+            $good_field_array = [];
+            foreach ($data as $v) {
+                $good_field_array[] = $field_array[$v];
+            }
+
+            return $good_field_array;
+        }
     }
 
     //创建设计公司
@@ -347,10 +369,10 @@ class DesignCompanyModel extends BaseModel
         $all['document_number'] = '';
         $all['open'] = 0;
         $all['user_id'] = $user_id;
-        $user = User::where('id' , $user_id)->first();
+        $user = User::where('id', $user_id)->first();
         $design = DesignCompanyModel::create($all);
         $user->design_company_id = $design->id;
-        if($design){
+        if ($design) {
             $user->save();
         }
 
