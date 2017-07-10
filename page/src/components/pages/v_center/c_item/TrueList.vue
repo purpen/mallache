@@ -79,9 +79,6 @@
                       <p class="btn" v-show="d.item.status === 9">
                         <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始</el-button>
                       </p>
-                      <p class="btn" v-show="d.item.status === 11">
-                        <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id" type="primary">提交项目阶段</el-button>
-                      </p>
                       <p class="btn" v-show="d.item.is_show_view">
                         <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id" type="primary">查看详情</el-button>
                       </p>
@@ -230,7 +227,7 @@
             var showView = false
             var status = item.item.status
             if (item.item.status >= 5) showPrice = true
-            if (status === 7 || status === 8 || status === 15 || status === 18 || status === 20 || status === 22) {
+            if (status === 7 || status === 8 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
               showView = true
             }
             designItems[i].item.show_price = showPrice

@@ -21,7 +21,7 @@
           </div>
           <div class="cate">
             <p class="c-title">擅长领域</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field" :key="index">{{ d }}</el-tag></p>
+            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag></p>
           </div>
           <div class="cate">
             <p class="c-title">联系方式</p>

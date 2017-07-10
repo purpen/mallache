@@ -105,6 +105,9 @@
                     <p class="btn" v-show="d.item.status === 15">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">验收项目</el-button>
                     </p>
+                    <p class="btn" v-show="d.item.status === 18">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">评价</el-button>
+                    </p>
                     <p class="btn" v-show="d.item.is_view_show">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">查看详情</el-button>
                     </p>
@@ -202,7 +205,7 @@
                 showOffer = true
               }
               var showView = false
-              if (status === 2 || status === 5 || status === 9 || status === 11 || status === 18 || status === 20 || status === 22) {
+              if (status === 2 || status === 5 || status === 9 || status === 11 || status === 20 || status === 22) {
                 showView = true
               }
               data[i]['item']['is_view_show'] = showView

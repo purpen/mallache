@@ -573,17 +573,17 @@ export default {
       this.statusLabel.cooperateCompany = true
       this.statusLabel.trueCompany = false
     },
-    // 确认阶段通过按钮
+    // 确认阶段通过按钮提示框
     passStageBtn(event) {
       var stageId = parseInt(event.currentTarget.getAttribute('stage_id'))
       var index = parseInt(event.currentTarget.getAttribute('index'))
       this.$refs.comfirmType.value = 4
       this.$refs.confirmTargetId.value = stageId
       this.$refs.currentIndex.value = index
-      this.comfirmMessage = '确认执行此操作？'
+      this.comfirmMessage = '确认验收阶段成果？验收成功后该阶段项目款将进入设计服务供应商账户。'
       this.comfirmDialog = true
     },
-    // 阶段通过扫行
+    // 阶段确认通过
     passStage() {
       var index = this.$refs.currentIndex.value
       var stageId = this.$refs.confirmTargetId.value

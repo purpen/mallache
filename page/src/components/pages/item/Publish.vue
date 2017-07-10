@@ -12,7 +12,7 @@
       </div>
 
       <p class="success-des" v-if="verifyStatus === 0">发布项目，需认证公司信息，请你尽快认证</p>
-      <p class="success-des" v-else>项目需求发布成功，平台会在24小时内为您匹配最符合您要求的设计服务供应商，请您耐心等待</p>
+      <p class="success-des" v-else>项目需求发布成功，平台会尽快为您匹配最符合您要求的设计服务供应商，请您耐心等待并注意查收系统通知。</p>
       <p v-if="verifyStatus === 0">
         <router-link :to="{name: 'vcenterDCompanyAccreditation'}" class="renzheng"><el-button class="is-custom" type="primary">去认证</el-button></router-link>
       </p>

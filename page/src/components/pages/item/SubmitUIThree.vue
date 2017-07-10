@@ -11,19 +11,8 @@
               <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
                 <el-form-item label="项目名称" prop="name">
-                  <el-input v-model="form.name" placeholder="为你的项目取个简短的名称"></el-input>
+                  <el-input v-model="form.name" placeholder="为您的项目取个简短的名称"></el-input>
                 </el-form-item> 
-
-                <el-form-item label="所属行业" prop="industry">
-                  <el-select v-model.number="form.industry" placeholder="请选择行业">
-                    <el-option
-                      v-for="item in industryOptions"
-                      :label="item.label"
-                      :key="item.index"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
 
                 <el-form-item label="项目进展阶段" prop="stage">
                   <el-radio-group v-model.number="form.stage">
@@ -59,6 +48,17 @@
                   <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
                     <el-option
                       v-for="item in costOptions"
+                      :label="item.label"
+                      :key="item.index"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item label="所属行业" prop="industry">
+                  <el-select v-model.number="form.industry" placeholder="请选择行业">
+                    <el-option
+                      v-for="item in industryOptions"
                       :label="item.label"
                       :key="item.index"
                       :value="item.value">
@@ -128,7 +128,7 @@
             <div class="slider info">
               <p>提示</p>
               <p>项目需求填写</p>
-              <p class="slide-des">为了充分了解企业需求，达成合作，针对以下问题为了保证反馈的准确性，做出客观真实的简述，请务必由高层管理人员亲自填写。</p>
+              <p class="slide-des">为了充分了解企业需求，保证反馈的准确性并最终达成合作，以下信息请务必由企业高层管理人员亲自填写，保证信息的真实准确与完整。</p>
               <div class="blank20"></div>
               <p>项目预算设置</p>
               <p class="slide-des">产品研发费用通常是由产品设计、结构设计、硬件开发、样机、模具等费用构成，以普通消费电子产品为例设计费用占到产品研发费用10-20%，设置有竞争力的项目预算，能吸引到实力强的设计公司参与到项目中，建议预算设置到产品研发费用的20-30%。</p>

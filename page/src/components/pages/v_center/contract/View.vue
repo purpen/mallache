@@ -132,7 +132,7 @@
     methods: {
       // 同意合同
       agreeBtn() {
-        this.sureDialogMessage = '确认对合同内容熟知？'
+        this.sureDialogMessage = '本合同具有法律效力，确认合同后将按照合同内容付款并开始项目，请确保熟知合同内容。'
         this.sureDialog = true
       },
       // 提示框确认操作
