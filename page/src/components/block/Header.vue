@@ -166,7 +166,7 @@ export default {
     background: none;
     border: none;
     transition:none;
-    background-image: url(../../assets/images/logo.png);
+    background-image: url(../../assets/images/d3ingo_logo_2x.png);
     background-repeat: no-repeat;
     background-position: 0 15px;
     background-size: 110px 30px;
