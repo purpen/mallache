@@ -778,7 +778,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title + '-毕方鸟 SaaS'
+    document.title = to.meta.title + '-铟果-中国领先的产品创新SaaS平台'
   } else {
     document.title = '毕方鸟 SaaS'
   }

@@ -2,16 +2,16 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册毕方鸟账户</h2>
+        <h2>注册铟果账户</h2>
       </div>
       <div class="register-tab">
         <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
-          <p><h3>我是客户</h3></p>
-          <p class="des">发布项目，找到精准设计公司</p>
+          <p><h3>我是需求方</h3></p>
+          <p class="des">100+专业设计服务供应商帮您实现创意需求 </p>
         </div>
         <div :class="{'register-tab-computer': true, active: cActive}" @click="selectComputer">
-          <p><h3>我是设计公司</h3></p>
-          <p class="des">用专业设计服务，助力客户成长</p>
+          <p><h3>我是服务方</h3></p>
+          <p class="des">大量现实设计需求等您解决</p>
         </div>
       </div>
       <div class="register-content">
@@ -35,7 +35,7 @@
         </el-form>
 
         <div class="reg">
-          <p>已有毕方鸟账户？<router-link :to="{name: 'login'}" >立即登录</router-link></p>
+          <p>已经有铟果账号，您可以直接登录 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
         </div>
       
       </div>   

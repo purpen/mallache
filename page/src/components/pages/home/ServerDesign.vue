@@ -3,17 +3,17 @@
     <div>
       <el-row :gutter="0">
         <el-col :span="12" class="banner-item left">
-          <router-link :to="{name: 'server'}">我是客户</router-link>
+          <router-link :to="{name: 'server'}">我是需求方</router-link>
         </el-col>
         <el-col :span="12" class="banner-item right">
-          <a href="javascript:void(0);" class="is-active">我是设计公司</a>
+          <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
         </el-col>
       </el-row>
     </div>
 
     <div class="banner">
-      <h3>成为铟果SaaS设计服务商</h3>
-      <p>用专业服务，助力客户精准定位，从不同的角度观察、思考，感知风险，寻找机会，利用设计思维保持您竞争的优势。</p>
+      <h3>成为铟果设计服务商</h3>
+      <p>洞察市场需求，运用专业设计与技术，提供更好的产品和服务，助力需求方成长，帮助企业赢得挑战。</p>
     </div>
 
     <div class="item item_2">
@@ -22,24 +22,26 @@
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/server_01.png" />
-              <p class="item_1_title">需求明确</p>
-              <p class="item_1_desc">3万+项目需求方带着他们明确的设计需求在这里等您</p>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="">
-              <img src="../../../assets/images/home/server_02.png" />
-              <p class="item_1_title">创意变现</p>
-              <p class="item_1_desc">需求方主动下单，接单无忧，设计费有保障</p>
+              <p class="item_1_title">收益保障</p>
+              <p class="item_1_desc">创意变现，完备的线上交易资金保护机制</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/server_03.png" />
               <p class="item_1_title">版权保护</p>
-              <p class="item_1_desc">SaaS平台担保版权，设计服务供应商放心将全部精力用来服务客户</p>
+              <p class="item_1_desc">时间戳保障设计原创性与归属权 </p>
             </div>
           </el-col>
+          <el-col :span="8">
+            <div class="">
+              <img src="../../../assets/images/home/server_02.png" />
+              <p class="item_1_title">需求丰富</p>
+              <p class="item_1_desc">链接庞大智能硬件群体，助力设计市场实现良性、自主、可持续发展 
+入驻设计服务供应商改为已入驻设计服务商 </p>
+            </div>
+          </el-col>
+
         </el-row>
       </div>
     </div>

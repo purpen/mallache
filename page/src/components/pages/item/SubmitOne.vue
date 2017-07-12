@@ -42,9 +42,9 @@
             <p>5.检查并发布</p>
           </div>
           <div class="item line"></div>
-          <div class="item">
+          <div class="item item-last">
             <img src="../../../assets/images/item/item_tj.png" />
-            <p>6.匹配设计服务</p>
+            <p>6.匹配设计服务商</p>
           </div>
         </div>
         <div class="clear"></div>
@@ -128,7 +128,10 @@ export default {
     color: #555;
   }
   .process .item img {
-    width: 60%;
+    width: 65%;
+  }
+  .process .item-last p {
+    width: 100%;
   }
   .process .item.line {
     width: 4%;

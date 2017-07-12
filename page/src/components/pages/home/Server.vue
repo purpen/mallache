@@ -3,17 +3,17 @@
     <div>
       <el-row :gutter="0">
         <el-col :span="12" class="banner-item left">
-          <a href="javascript:void(0);" class="is-active">我是客户</a>
+          <a href="javascript:void(0);" class="is-active">我是需求方</a>
         </el-col>
         <el-col :span="12" class="banner-item right">
-          <router-link :to="{name: 'serverDesign'}">我是设计公司</router-link>
+          <router-link :to="{name: 'serverDesign'}">我是设计服务商</router-link>
         </el-col>
       </el-row>
     </div>
 
     <div class="banner">
-      <h3>成为铟果SaaS设计客户</h3>
-      <p>铟果能为项目需求方提供上千家可供选择的专业设计服务供应商，运用云平台后台大数据计算，帮您高效、精准地找到心仪的设计服务供应商。</p>
+      <h3>把需求交给铟果来解决</h3>
+      <p>铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助需求方洞察先机。 </p>
     </div>
 
     <div class="item item_2">
@@ -23,21 +23,21 @@
             <div class="">
               <img src="../../../assets/images/home/server_10.png" />
               <p class="item_1_title">专业服务</p>
-              <p class="item_1_desc">SaaS能为项目需求方提供上千家可供选择的专业设计服务供应商，为您解决问题</p>
+              <p class="item_1_desc">聚合国内100+专业设计服务供应商</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/server_11.png" />
-              <p class="item_1_title">精准匹配</p>
-              <p class="item_1_desc">云平台后台大数据计算，帮您高效、精准地找到心仪的设计服务供应商</p>
+              <p class="item_1_title">智能精准</p>
+              <p class="item_1_desc">云平台大数据，高效匹配项目需求 </p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/server_12.png" />
-              <p class="item_1_title">便捷高效</p>
-              <p class="item_1_desc">您只需要向SaaS说明您的设计需求，就能在最短的时间内看到符合您要求的供应商信息</p>
+              <p class="item_1_title">优质设计</p>
+              <p class="item_1_desc">在线项目管理协同追踪，保证设计质量</p>
             </div>
           </el-col>
         </el-row>
@@ -73,9 +73,9 @@
             <p>5.检查并发布</p>
           </div>
           <div class="item-process line"></div>
-          <div class="item-process">
+          <div class="item-process item-last">
             <img src="../../../assets/images/item/item_tj.png" />
-            <p>6.匹配设计服务</p>
+            <p>6.匹配设计服务商</p>
           </div>
         </div>
     
@@ -197,8 +197,8 @@ export default {
     height: 150px;
   }
   .process .item-process {
-    width: 9%;
-    margin: 10px 1%;
+    width: 10%;
+    margin: 10px 0.8%;
     text-align: center;
     float: left;
   }
@@ -207,10 +207,13 @@ export default {
     color: #555;
   }
   .process .item-process img {
-    width: 60%;
+    width: 65%;
+  }
+  .process .item-last p {
+    width: 100%;
   }
   .process .item-process.line {
-    width: 4.5%;
+    width: 4%;
     height: 30%;
     border-bottom: 1px dashed #979797;
   }
