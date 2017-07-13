@@ -11,9 +11,7 @@ import phenix from '@/assets/js/base'
 
 // 样式表导入
 import './assets/css/reset.css'
-// import './assets/css/bulma.css'
 import './assets/css/font-awesome.min.css'
-import 'vuex-toast/dist/vuex-toast.css'
 import './assets/css/base.css'
 import './assets/css/admin.css'
 
@@ -31,7 +29,6 @@ Vue.prototype.$phenix = phenix
 new Vue({
   el: '#app',
   router,
-  axios,
   store,
   template: '<App/>',
   components: { App }

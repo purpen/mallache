@@ -13,12 +13,10 @@
     "axios": "^0.16.0",
     "china-area-data": "^3.0.0",
     "element-ui": "^1.2.8",
-    "jquery": "^3.2.0",
     "jr-qrcode": "^1.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue": "^2.2.2",
-    "vue-awesome-swiper": "^2.4.0",
     "vue-router": "^2.2.0",
     "vuex": "^2.2.1",
     "vuex-toast": "^0.1.1"

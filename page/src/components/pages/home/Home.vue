@@ -12,20 +12,20 @@
 
     <div class="container">
       <div class="item_1 item">
-        <h3>满足你的创意需求</h3>
-        <el-row :gutter="24">
+        <h3>提供专业设计解决方案</h3>
+        <el-row :gutter="0">
           <el-col :span="12">
             <div class="item_1_l">
-              <img src="../../../assets/images/home/index_01.png" width="200" />
+              <img src="../../../assets/images/home/index_01.png" width="150" />
               <p class="item_1_title font-weight5">产品设计</p>
               <p class="item_1_desc">产品策略／产品外观设计／结构设计</p>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="item_1_r">
-              <img src="../../../assets/images/home/index_02.png" width="200" />
+              <img src="../../../assets/images/home/index_02.png" width="150" />
               <p class="item_1_title font-weight5">UI/UE设计</p>
-              <p class="item_1_desc">App设计／网页设计</p>
+              <p class="item_1_desc">App设计／网页设计／界面设计／服务设计／用户体验咨询</p>
             </div>
           </el-col>
         </el-row>
@@ -41,27 +41,27 @@
 
     <div class="item item_2">
       <div class="item_2_box">
-        <h3>太火鸟SaaS</h3>
+        <h3>铟果优势</h3>
         <el-row :gutter="24">
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/index_03.png" />
               <p class="item_1_title">智能</p>
-              <p class="item_1_desc">我们通过云平台+大数据计算，帮您智能匹配最精准的设计服务供应商</p>
+              <p class="item_1_desc">通过云平台+大数据计算，帮您智能匹配设计服务供应商</p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/index_04.png" />
               <p class="item_1_title">安全</p>
-              <p class="item_1_desc">丰富的资源通过精密的算法迅速找到对方，令您的工作效率大大提高 </p>
+              <p class="item_1_desc">资金托管、时间戳、供应商信用评级为交易提供全方位的安全保障 </p>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="">
               <img src="../../../assets/images/home/index_05.png" />
               <p class="item_1_title">高效</p>
-              <p class="item_1_desc">我们全程托管，保证资金安全；对版权环节进行严格监控，最大限度保证合作双方的权益</p>
+              <p class="item_1_desc">重构产品创新流程，提供高效、便捷的设计体验 </p>
             </div>
           </el-col>
         </el-row>
@@ -70,7 +70,7 @@
 
     <div class="container">
       <div class="item item_3">
-        <h3>优秀设计公司展示</h3>
+        <h3>铟果案例</h3>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-card class="box-card">
@@ -115,20 +115,17 @@
     <div class="item item_4">
       <h3>战略合作</h3>
       <div>
-        <img src="../../../assets/images/home/jdjr_logo.png" width="200" />
+        <img src="../../../assets/images/home/jdjr_logo.png" width="150" />
       </div>
-    </div>
-
-    <div class="container">
-      <div class="item item_5">
-        <h3>合作伙伴</h3>
-      </div>
+      <div class="blank40"></div>
+      <h3>合作伙伴</h3>
       <div class="logo-list">
         <img src="../../../assets/images/home/1logo.png" />
         <img src="../../../assets/images/home/2logo.png" />
         <img src="../../../assets/images/home/3logo.png" />
         <img src="../../../assets/images/home/4logo.png" />
       </div>
+    </div>
 
     </div>
 
@@ -146,13 +143,13 @@ export default {
         {
           'clickUrl': '#',
           'title': '铟果',
-          'desc': '太火鸟产品创新SaaS平台',
+          'desc': '用设计重塑品质生活',
           'image': require('@/assets/images/home/banner1.jpg')
         },
         {
           'clickUrl': '#',
-          'title': '铟果',
-          'desc': '太火鸟产品创新SaaS平台',
+          'title': '专业设计资源',
+          'desc': '汇聚100+国内专业设计服务商，满足你的创意需求',
           'image': require('@/assets/images/home/banner2.jpg')
         }
       ],
@@ -187,32 +184,33 @@ export default {
     margin: 0;
     background-size: cover;
     background-repeat: no-repeat;
+    text-align: center;
   }
 
   .slide h3 {
-    font-size: 6rem;
+    font-size: 5rem;
     color: #fff;
     line-height: 1.5;
     font-weight: 300;
-    padding: 250px 0 0 100px;
+    padding: 250px 0 0 0;
   }
   .slide p {
     font-size: 4rem;
     color: #fff;
     font-weight: 300;
-    padding: 0 105px;
+    padding: 0;
   }
 
   .item h3 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     padding-bottom: 80px;
   }
 
   .item_1_l {
-    margin-left: 50px;
+    margin-left: 120px;
   }
   .item_1_r {
-    margin-right: 50px;
+    margin-right: 120px;
   }
   .item_1_title {
     color: #222;
@@ -232,7 +230,7 @@ export default {
     margin: 80px 0 0 0;
   }
   .pub .pub-btn {
-    padding: 10px 60px 10px 60px;
+    padding: 20px 80px 20px 80px;
   }
 
   .item_2 {
@@ -265,7 +263,7 @@ export default {
     background-color: #FAFAFA;
   }
   .item_4 h3{
-    padding-bottom: 50px;
+    padding-bottom: 40px;
   }
 
   .item {
@@ -327,7 +325,7 @@ export default {
   }
   .logo-list img {
     margin: 10px 35px;
-    width: 150px;
+    width: 100px;
   }
 
 </style>

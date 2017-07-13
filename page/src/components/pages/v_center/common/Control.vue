@@ -92,7 +92,7 @@
             </div>
             <div class="message-btn" v-else>
               <router-link :to="{name: 'home'}"><el-button class="is-custom">返回首页</el-button></router-link> &nbsp;&nbsp;
-              <router-link :to="{name: 'home'}"><el-button type="primary" class="is-custom">查看消息</el-button></router-link>
+              <router-link :to="{name: 'vcenterMessageList'}"><el-button type="primary" class="is-custom">查看消息</el-button></router-link>
             </div>
           </div>
         </div>

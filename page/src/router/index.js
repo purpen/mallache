@@ -778,9 +778,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title + '-铟果-中国领先的产品创新SaaS平台'
+    if (to.meta.title === '首页') {
+      document.title = '铟果-中国领先的产品创新SaaS平台'
+    } else {
+      document.title = to.meta.title + '-铟果-中国领先的产品创新SaaS平台'
+    }
   } else {
-    document.title = '毕方鸟 SaaS'
+    document.title = '铟果-中国领先的产品创新SaaS平台'
   }
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.event.token) {

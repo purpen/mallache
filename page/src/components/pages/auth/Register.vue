@@ -318,7 +318,7 @@ export default {
     border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
     position:relative;
-
+    background-color: #eee;
 
   }
 
@@ -331,7 +331,7 @@ export default {
   }
   .register-tab-user.active{
     border-bottom: 2px solid #FF5A5F;
-    background-color: #eee;
+    background-color: #fff;
   }
   .register-tab-user.active h3{
     color: #FF5A5F;
@@ -346,7 +346,7 @@ export default {
   }
   .register-tab-computer.active{
     border-bottom: 2px solid #FF5A5F;
-    background-color: #eee;
+    background-color: #fff;
   }
   .register-tab-computer.active h3{
     color: #FF5A5F;

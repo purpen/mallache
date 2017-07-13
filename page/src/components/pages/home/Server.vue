@@ -1,11 +1,11 @@
 <template>
   <div class="content-box">
     <div>
-      <el-row :gutter="0">
-        <el-col :span="12" class="banner-item left">
+      <el-row :gutter="12" type="flex" justify="center">
+        <el-col :span="5" class="banner-item left">
           <a href="javascript:void(0);" class="is-active">我是需求方</a>
         </el-col>
-        <el-col :span="12" class="banner-item right">
+        <el-col :span="5" class="banner-item right">
           <router-link :to="{name: 'serverDesign'}">我是设计服务商</router-link>
         </el-col>
       </el-row>
@@ -13,7 +13,7 @@
 
     <div class="banner">
       <h3>把需求交给铟果来解决</h3>
-      <p>铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助需求方洞察先机。 </p>
+      <p>铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
     </div>
 
     <div class="item item_2">
@@ -111,6 +111,7 @@ export default {
     margin: 10px 0;
     text-align: center;
   }
+
   .banner-item a {
     font-size: 1.8rem;
     color: #666;
@@ -119,13 +120,6 @@ export default {
 
   .banner-item a.is-active {
     color: #FF5A5F;
-  }
-
-  .left {
-    border-right: 1px solid #ccc;
-  }
-  .right {
-    border-left: 1px solid #ccc;
   }
 
   .banner {
@@ -154,14 +148,14 @@ export default {
 
   .item_1_title {
     color: #222;
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-top: 10px;
     margin-bottom: 10px;
     line-height: 2;
   }
   .item_1_desc {
     color: #666;
-    font-size: 1rem;
+    font-size: 1.5rem;
     line-height: 1.5;
     padding: 0 20px;
   }

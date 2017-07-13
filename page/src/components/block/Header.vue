@@ -181,6 +181,8 @@ export default {
     border-bottom: 3px solid transparent;
     color: #7a7a7a;
     font-size: 1.5rem;
+    padding: 0;
+    margin: 0 25px;
   }
   .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title{
     height: 52px;
@@ -220,6 +222,9 @@ export default {
     -webkit-box-pack: end;
     -ms-flex-pack: end;
     justify-content: flex-end;
+  }
+  .nav-right .el-menu-item {
+    margin: 0 10px;
   }
   .nav-item {
     align-items: center;
