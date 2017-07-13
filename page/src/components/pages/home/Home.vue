@@ -261,6 +261,7 @@ export default {
 
   .item_4 {
     background-color: #FAFAFA;
+    margin-bottom: -50px;
   }
   .item_4 h3{
     padding-bottom: 40px;

@@ -181,8 +181,8 @@ export default {
     border-bottom: 3px solid transparent;
     color: #7a7a7a;
     font-size: 1.5rem;
-    padding: 0;
-    margin: 0 25px;
+    padding: 0 3px;
+    margin: 0 22px;
   }
   .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title{
     height: 52px;
