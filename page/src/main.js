@@ -6,10 +6,10 @@ import router from './router'
 import store from './store/index'
 import axios from './http'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
 import phenix from '@/assets/js/base'
 
 // 样式表导入
+import 'element-ui/lib/theme-default/index.css'
 import './assets/css/reset.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/base.css'

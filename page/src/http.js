@@ -16,11 +16,11 @@ const axiosInstance = axios.create({
   timeout: 50000,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Content-Type': 'application/x-www-form-urlencoded',
     // 'Access-Control-Allow-Origin': 'http://mc.taihuoniao.com',
-    'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-    'X-Requested-With': 'XMLHttpRequest'
+    // 'Access-Control-Allow-Credentials': 'true',
+    // 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    // 'X-Requested-With': 'XMLHttpRequest'
   },
   transformRequest: [function (data) {
     data = Qs.stringify(data)
