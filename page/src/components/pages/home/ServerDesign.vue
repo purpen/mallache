@@ -37,8 +37,7 @@
             <div class="">
               <img src="../../../assets/images/home/server_02.png" />
               <p class="item_1_title">需求丰富</p>
-              <p class="item_1_desc">链接庞大智能硬件群体，助力设计市场实现良性、自主、可持续发展 
-入驻设计服务供应商改为已入驻设计服务商 </p>
+              <p class="item_1_desc">链接庞大智能硬件群体，助力设计市场实现良性、自主、可持续发展</p>
             </div>
           </el-col>
 
@@ -50,11 +49,19 @@
 
         <div class="pub-title">入驻设计服务供应商</div>
         <div class="design-company">
-          <img src="../../../assets/images/home/server_logo_01.png" />
-          <img src="../../../assets/images/home/server_logo_02.png" />
-          <img src="../../../assets/images/home/server_logo_03.png" />
-          <img src="../../../assets/images/home/server_logo_04.png" />
-          <img src="../../../assets/images/home/server_logo_05.png" />
+          <img src="../../../assets/images/company_logo/logo_pinwu.jpg" />
+          <img src="../../../assets/images/company_logo/logo_muma.jpg" />
+          <img src="../../../assets/images/company_logo/logo_langjian.jpg" />
+          <img src="../../../assets/images/company_logo/logo_daye.jpg" />
+          <img src="../../../assets/images/company_logo/logo_weiman.jpg" />
+          <img src="../../../assets/images/company_logo/logo_feiyu.jpg" />
+
+          <img src="../../../assets/images/company_logo/logo_haoyu.jpg" />
+          <img src="../../../assets/images/company_logo/logo_jiajian.jpg" />
+          <img src="../../../assets/images/company_logo/logo_shangpin.jpg" />
+          <img src="../../../assets/images/company_logo/logo_shangshan.jpg" />
+          <img src="../../../assets/images/company_logo/logo_relang.jpg" />
+          <img src="../../../assets/images/company_logo/logo_dingdian.jpg" />
         </div>
     
         <div class="pub-title clear">公司入驻流程</div>
@@ -224,12 +231,15 @@ export default {
   }
 
   .design-company {
-    height: 150px;
+    height: 350px;
+    margin: 0 20px;
   }
   .design-company img {
-    width: 10%;
+    border: 1px solid #eee;
+    border-radius: 160px;
+    width: 12%;
     float: left;
-    margin: 10px 5%;
+    margin: 20px 2%;
   }
 
 
