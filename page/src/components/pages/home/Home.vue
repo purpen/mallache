@@ -72,8 +72,19 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-card class="box-card">
+          <el-col :span="8">
+            <el-card class="box-card" :body-style="{ padding: '0px' }">
+              <div class="image-box">
+                <img src="../../../assets/images/home/stuff_01.jpg">
+              </div>
+              <div class="content">
+                <p class="stuff-title">Amiro LUX明肌高清灯光化妆镜</p>
+                <div class="des">
+                  <p>专为室内“梳妆时刻”研发，采用高科技PureLux明肌光，精准显色，真实还原的镜面光源技术，照明系统包括高肤色显色LED灯珠，调光芯片，专利环形导光板，度假设计反光网点等，具有显色准、亮度高、光线均匀柔和等优点，专门针对亚洲人肤色，R15显色指数提升两倍，亮度高清至“珠宝陈列级别”，重现自然光感，还有三种光源模式，满足用户不同需求，让用户的化妆过程始终有专业、适度的极致光线照射。</p>
+                </div>
+              </div>
+
+              <!--
               <div class="avatar-header">
                 <div class="avator-box">
                   <router-link :to="{name: 'companyShow', params: {id: 7}}" target="_blank"><img src="http://oni525j96.bkt.clouddn.com/saas/20170504/590af689c88cd-p180x180.jpg" class="avatar" width="60" /></router-link>
@@ -88,24 +99,37 @@
               <div class="company-des">
                 <p>YANG DESIGN（杨设计顾问）为中国最具前瞻思维的设计顾问公司，也是中国首家囊获包括德国红点、iF、日本 G-Mark、美国 IDEA 在内全球四大设计奖项的顾问公司，至今累计获得了近百项设计大奖。 </p>      
               </div>
+              -->
             </el-card>
           </el-col>
-          <el-col :span="12">
-            <el-card class="box-card">
-              <div class="avatar-header">
-                <div class="avator-box">
-                  <router-link :to="{name: 'companyShow', params: {id: 20}}" target="_blank"><img src="http://oni525j96.bkt.clouddn.com/saas/20170525/592635419f3e7-p180x180.jpg" class="avatar" width="60" /></router-link>
-                </div>
-                <div class="avator-content">
-                  <p class="avatar-title">
-                    <router-link :to="{name: 'companyShow', params: {id: 7}}" target="_blank">北京一流设计有限公司</router-link>
-                    </p>
-                  <p class="avatar-des">全球四大设计奖项的顾问</p>
+          <el-col :span="8">
+            <el-card class="box-card" :body-style="{ padding: '0px' }">
+              <div class="image-box">
+                <img src="../../../assets/images/home/stuff_02.jpg">
+              </div>
+              <div class="content">
+                <p class="stuff-title">wowstick螺丝刀1f和1fs</p>
+                <div class="des">
+                  <p>wowstick的系列螺丝刀不只是工具，还是一套新而不同的乐趣和探索方案，堪称人类工具发展史上的革命性变革。这套工具重新定义了工具和生活的关系，在为我们的生活带来便捷、简单的同时，还能够融入到我们日益提高的生活美学和品位中。</p>
+                  <p>螺丝刀身全铝一体成型，全套工具加配十多根常用附件批头，国际大品牌代工，S2硬质合金钢，整体喷砂深空灰，颜值高，实用性强，取用方便。</p>
                 </div>
               </div>
-              <div class="company-des">
-                <p>YANG DESIGN（杨设计顾问）为中国最具前瞻思维的设计顾问公司，也是中国首家囊获包括德国红点、iF、日本 G-Mark、美国 IDEA 在内全球四大设计奖项的顾问公司，至今累计获得了近百项设计大奖。 </p>      
+
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card class="box-card" :body-style="{ padding: '0px' }">
+              <div class="image-box">
+                <img src="../../../assets/images/home/stuff_03.jpg">
               </div>
+              <div class="content">
+                <p class="stuff-title">素士牙刷 白金升级版</p>
+                <div class="des">
+                  <p>让刷牙成为一种品位，每个人的品位和生活品质都蕴藏在日常的细节之中。</p>
+                  <p>精巧的外形，更加精致的科技内核，弥补市面所有电动牙刷的缺陷，具备高效能磁悬浮声波马达，高密度植毛3D刷头，美国进口杜邦刷毛，全机身防水，四种高效清洁模式，可通过APP智能定制，电池超长续航25天，紫外线UV杀菌真空包装。全方位智能、彻底清洁口腔环境。</p>
+                </div>
+              </div>
+
             </el-card>
           </el-col>
         </el-row>
@@ -327,6 +351,41 @@ export default {
   .logo-list img {
     margin: 10px 35px;
     width: 100px;
+  }
+
+  .box-card {
+    height: 460px;
+    margin: 10px 0;
+  }
+
+  .box-card img {
+    width: 100%;
+  }
+
+  .image-box {
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .box-card .content {
+    padding: 10px;
+  }
+  .box-card .content p.stuff-title {
+    font-size: 1.5rem;
+    color: #222;
+  }
+
+  .box-card .des {
+    margin: 10px 0;
+    overflow: hidden;
+  }
+
+  .box-card .des p {
+    color: #666;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    font-weight: 300;
+    text-overflow: ellipsis;
   }
 
 </style>
