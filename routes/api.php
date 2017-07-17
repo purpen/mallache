@@ -189,7 +189,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //设计公司案例
         $api->get('/designCase/designCompany/{design_company_id}', 'DesignCaseController@lists');
-
+        // 设计案例图片添加描述
+        $api->put('/designCase/imageSummary', 'DesignCaseController@imageSummary');
         $api->resource('/designCase', 'DesignCaseController');
 
 
