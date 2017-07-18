@@ -71,6 +71,7 @@ export default {
           // 验证通过，登录
           that.$http.post(api.login, {account: account, password: password})
           .then (function(response) {
+            that.isLoadingBtn = false
             if (response.data.meta.status_code === 200) {
               var token = response.data.data.token
               // 写入localStorage
@@ -81,7 +82,6 @@ export default {
                 if (response.data.meta.status_code === 200) {
                   that.$message.success('登录成功')
                   auth.write_user(response.data.data)
-                  console.log(response.data.data)
                   var prevUrlName = that.$store.state.event.prevUrlName
                   if (prevUrlName) {
                     // 清空上一url
@@ -92,43 +92,21 @@ export default {
                   }
                 } else {
                   auth.logout()
-                  that.$message({
-                    showClose: true,
-                    message: response.data.meta.message,
-                    type: 'error'
-                  })
-                  that.isLoadingBtn = false
+                  that.$message.error(response.data.meta.message)
                 }
               })
               .catch (function(error) {
                 auth.logout()
-                that.$message({
-                  showClose: true,
-                  message: error.message,
-                  type: 'error'
-                })
-                that.isLoadingBtn = false
+                that.$message.error(error.message)
               })
             } else {
-              that.$message({
-                showClose: true,
-                message: response.data.meta.message,
-                type: 'error'
-              })
-              that.isLoadingBtn = false
+              that.$message.error(response.data.meta.message)
             }
           })
           .catch (function(error) {
-            that.$message({
-              showClose: true,
-              message: error.message,
-              type: 'error'
-            })
-            console.log(error.message)
-            return false
+            that.isLoadingBtn = false
+            that.$message.error(error.message)
           })
-
-          return false
         } else {
           console.log('error submit!!')
           return false
