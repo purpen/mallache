@@ -141,6 +141,9 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
+            if(!$this->phoneIsRegister($credentials['account'])){
+                return $this->response->array($this->apiError('手机号未注册', 401));
+            }
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('账户名或密码错误', 401));
@@ -242,7 +245,7 @@ class AuthenticateController extends BaseController
         //插入单条短信发送队列
         $this->dispatch(new SendOneSms($phone,$text));
 
-        return $this->response->array($this->apiSuccess('请求成功！', 200, compact('sms_code')));
+        return $this->response->array($this->apiSuccess('请求成功！', 200));
     }
 
     /**
@@ -309,11 +312,20 @@ class AuthenticateController extends BaseController
      */
     public function phoneState($phone)
     {
-        if(User::where('account', intval($phone))->count() > 0){
+        if($this->phoneIsRegister($phone)){
             return $this->response->array($this->apiError('手机号已注册！', 412));
         };
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    protected function phoneIsRegister($account)
+    {
+        if(User::where('account', intval($account))->count() > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**

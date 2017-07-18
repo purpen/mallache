@@ -99,6 +99,7 @@ class PayController extends BaseController
      */
     public function aliPayNotify()
     {
+        Log::info($_POST);
         $alipay = new Alipay();
         //支付成功
         if($alipay->notifyUrl()){
