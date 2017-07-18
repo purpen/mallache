@@ -118,12 +118,14 @@ class PayController extends BaseController
                     $pay_order = PayOrder::where('uid', $out_trade_no)->first();
 
                     //判断是否业务已处理
-                    if($pay_order->status === 0){
+                    if($pay_order->status == 0){
                         $pay_order->pay_type = 2; //支付宝
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
-                        $pay_order->save();
-
+                        if(!$pay_order->save()){
+                            Log::error('支付吧业务处理失败')；
+                        }
+                        Log::info($pay_order);
                         event(new PayOrderEvent($pay_order));
                     }
                 }
