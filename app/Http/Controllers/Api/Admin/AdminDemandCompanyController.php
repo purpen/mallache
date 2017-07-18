@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Helper\Tools;
 use App\Http\AdminTransformer\DemandCompanyTransformer;
 use Illuminate\Http\Request;
 use App\Models\DemandCompany;
@@ -38,6 +39,13 @@ class AdminDemandCompanyController extends Controller
         if(!$demand){
             return $this->response->array($this->apiError('修改失败' , 500));
         }
+
+        // 系统消息通知
+        $tools = new Tools();
+        $title = '公司信息审核';
+        $content = '公司信息已通过审核';
+        $tools->message($demand_company->user_id, $title, $content, 1, null);
+
         return $this->response->array($this->apiSuccess());
     }
 
@@ -101,6 +109,13 @@ class AdminDemandCompanyController extends Controller
         if(!$demand){
             return $this->response->array($this->apiError('修改失败' , 500));
         }
+
+        // 系统消息通知
+        $tools = new Tools();
+        $title = '公司信息审核';
+        $content = '公司信息未通过审核，请修改资料重新提交';
+        $tools->message($demand_company->user_id, $title, $content, 1, null);
+
         return $this->response->array($this->apiSuccess());
     }
 
