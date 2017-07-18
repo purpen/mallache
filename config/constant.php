@@ -7,7 +7,7 @@
 return [
 
     //创建项目项目保证金
-    'item_price' => 99,
+    'item_price' => 0.01,
 
     //项目验收之后支付比例
     'warranty_money' => 0.05,
