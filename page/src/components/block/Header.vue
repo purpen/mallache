@@ -98,7 +98,7 @@ export default {
       // 定时请求消息数量
       self.requestMessageTask = setInterval(function() {
         self.fetchMessageCount()
-      }, 15000)
+      }, 30000)
     }
   },
   computed: {
