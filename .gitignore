@@ -9,6 +9,9 @@ Homestead.yaml
 .env
 .DS_Store
 page/node_modules
+page/config/dev.env.js
+page/config/index.js
+page/config/prod.env.js
 *.swp
 *.swo
 *.swn
