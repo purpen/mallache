@@ -34,14 +34,13 @@ class QiniuApi
         return $upToken;
     }
 
-
     /**
      * 安全的Url编码urlsafe_base64_encode函数
      */
     function urlsafe_base64_encode($data)
     {
         $data = base64_encode($data);
-        $data = str_replace(array('+','/'),array('-','_'),$data);
+        $data = str_replace(array('+', '/'), array('-', '_'), $data);
 
         return $data;
     }

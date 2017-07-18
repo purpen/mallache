@@ -374,7 +374,7 @@ class DesignCaseController extends BaseController
      *       "status_code": 200
      *     }
      *   }
-     *  }
+     *
      */
     public function destroy($id)
     {
@@ -490,4 +490,44 @@ class DesignCaseController extends BaseController
 
         return $this->response->paginator($lists, new DesignCaseTransformer())->setMeta($this->apiMeta());
     }
+
+    /**
+     * @api {put} /designCase/imageSummary  设计案例图片添加描述
+     * @apiVersion 1.0.0
+     * @apiName designCase imageSummary
+     * @apiGroup designCase
+     *
+     * @apiParam {integer} asset_id 图片ID
+     * @apiParam {string} summary 描述
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function imageSummary(Request $request)
+    {
+        $this->validate($request, [
+            'asset_id' => 'required|integer',
+            'summary' => 'required|max:100',
+        ]);
+
+        $asset = AssetModel::find($request->input('asset_id'));
+        if(!$asset){
+            return $this->response->array($this->apiError("not found asset", 404));
+        }
+
+        $asset->summary = $request->input("summary");
+        if(!$asset->save()){
+            return $this->response->array($this->apiError());
+        }else{
+            return $this->response->array($this->apiSuccess());
+        }
+
+    }
+
 }

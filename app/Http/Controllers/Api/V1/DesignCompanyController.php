@@ -37,7 +37,7 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * @api {post} /designCompany 保存更改设计公司信息
+     * @api {post} /designCompany 保存更改设计公司信息 (停用)
      * @apiVersion 1.0.0
      * @apiName designCompany store
      * @apiGroup designCompany
@@ -162,16 +162,18 @@ class DesignCompanyController extends BaseController
 
         //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        $data = [];
-        foreach ($goodField as $v){
-            if ((int)$v){
-                $data[] = (int)$v;
+        if($goodField){
+            $data = [];
+            foreach ($goodField as $v){
+                if ((int)$v){
+                    $data[] = (int)$v;
+                }
             }
-        }
-        if(!empty($data)){
-            //合并擅长领域
-            $good_field = implode(',' , $data);
-            $all['good_field'] = $good_field;
+            if(!empty($data)){
+                //合并擅长领域
+                $good_field = implode(',' , $data);
+                $all['good_field'] = $good_field;
+            }
         }
 
         $all['unique_id'] = uniqid();
@@ -382,57 +384,50 @@ class DesignCompanyController extends BaseController
         // 验证规则
         $rules = [
             'design_type'  => 'nullable|max:50',
-            'company_name'  => 'required|max:50',
-            'company_abbreviation'  => 'required|max:50',
-            'province'  => 'required|integer',
-            'address'  => 'required|max:50',
-            'contact_name'  => 'required|max:20',
-            'phone'  => 'required',
-            'email'  => 'required|email',
+            'company_name'  => 'nullable|max:50',
+            'company_abbreviation'  => 'nullable|max:50',
+            'province'  => 'nullable|integer',
+            'address'  => 'nullable|max:50',
+            'contact_name'  => 'nullable|max:20',
+            'phone'  => 'nullable',
+            'email'  => 'nullable|email',
             'company_size'  => 'nullable|integer',
             'branch_office'  => 'nullable|integer',
-            'web'  => 'max:50',
-            'company_profile'  => 'max:500',
+            'position' => 'nullable',
+//            'item_quantity'  => 'nullable|integer',
+            'web'  => 'nullable|max:50',
+            'company_profile'  => 'nullable|max:500',
             'establishment_time'  => 'nullable|date',
-            'good_field'  => 'max:50',
-            'professional_advantage'  => 'max:500',
-            'awards'  => 'max:500',
-            'legal_person'  => 'required|max:20',
-            'document_type'  => 'required|integer',
-            'document_number'  => 'required|max:20',
+            'good_field'  => 'nullable|max:50',
+            'professional_advantage'  => 'nullable|max:500',
+            'awards'  => 'nullable|max:500',
             'registration_number'  => 'nullable|min:15|max:18',
-
+            'legal_person'  => 'nullable|max:20',
+            'document_type'  => 'nullable|integer',
+            'document_number'  => 'nullable|max:20',
         ];
+
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
-            'company_name.required' => '公司名称不能为空',
-            'company_name.max' => '公司名称不能超过50个字',
-            'company_abbreviation.required' => '公司简称不能为空',
             'company_abbreviation.max' => '公司简称不能超过50个字',
-            'province.required' => '省份不能为空',
+            'company_name.max' => '公司名称不能超过50个字',
             'province.integer' => '省份必须为整形',
-            'address.required' => '详细地址不能为空',
             'address.max' => '详细地址不能超过50个字',
-            'contact_name.required' => '联系人姓名不能为空',
             'contact_name.max' => '联系人姓名不能超过20个字',
-            'phone.required' => '手机号不能为空',
-            'email.required' => '邮箱不能为空',
             'email.email' => '邮箱格式不正确',
             'company_size.integer' => '公司规模必须是整形',
             'branch_office.integer' => '分公司必须是整形',
             'web.max' => '公司网站不能超过50个字',
-            'establishment_time.date' => '公司成立时间格式不正确',
             'good_field.max' => '擅长领域不能超过50个字',
             'professional_advantage.max' => '专业优势不能超过500个字',
             'awards.max' => '荣誉奖项不能超过500个字',
-            'legal_person.required' => '法人不能为空',
-            'legal_person.max' => '法人不能超过20个字符',
-            'document_type.required' => '证件类型不能为空',
-            'document_type.integer' => '证件类型必须是整形',
-            'document_number.required' => '证件号码不能为空',
-            'document_number.max' => '证件号码不能超过20个字符',
+            'company_profile.max' => '公司简介不能超过500个字',
             'registration_number.min' => '注册号不能低于15字符',
             'registration_number.max' => '注册号不能超过18字符',
+            'legal_person.max' => '法人不能超过20个字符',
+            'document_type.integer' => '证件类型必须是整形',
+            'document_number.max' => '证件号码不能超过20个字符',
+
         ];
         $all = $request->except(['token']);
         $validator = Validator::make($all , $rules, $messages);
@@ -442,17 +437,20 @@ class DesignCompanyController extends BaseController
         }
         //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        $data = [];
-        foreach ($goodField as $v){
-            if ((int)$v){
-                $data[] = (int)$v;
+        if ($goodField){
+            $data = [];
+            foreach ($goodField as $v){
+                if ((int)$v){
+                    $data[] = (int)$v;
+                }
+            }
+            if(!empty($data)){
+                //合并擅长领域
+                $good_field = implode(',' , $data);
+                $all['good_field'] = $good_field;
             }
         }
-        if(!empty($data)){
-            //合并擅长领域
-            $good_field = implode(',' , $data);
-            $all['good_field'] = $good_field;
-        }
+
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
         $design->update($all);
         if(!$design){
