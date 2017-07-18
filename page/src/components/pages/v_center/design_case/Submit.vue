@@ -113,8 +113,8 @@
                 </el-select>
               </el-form-item>
 
-              <el-row :gutter="24">
-                <el-col :span="12">
+              <el-row :gutter="0">
+                <el-col :span="24">
                   <el-form-item label="上传图片" prop="">
                     <el-upload
                       class="upload-demo"
@@ -123,14 +123,44 @@
                       :on-remove="handleRemove"
                       :file-list="fileList"
                       :data="uploadParam"
+                      :on-progress="uploadProgress"
                       :on-error="uploadError"
                       :on-success="uploadSuccess"
                       :before-upload="beforeUpload"
+                      :show-file-list="false"
                       list-type="picture">
                       <el-button size="small" type="primary">点击上传</el-button>
-                      <div slot="tip" class="el-upload__tip">只能上传jpg/pdf文件，且不超过5M</div>
+                      <div slot="tip" class="el-upload__tip">{{ uploadMsg }}</div>
                     </el-upload>
+
+                    <div class="file-list">
+                      <el-row :gutter="10">
+                        <el-col :span="8" v-for="(d, index) in fileList" :key="index">
+                          <el-card :body-style="{ padding: '0px' }" class="item">
+                            <div class="image-box">
+                                <img :src="d.url">
+                            </div>
+                            <div class="content">
+                              {{ d.name }}
+                              <div class="opt">
+                                <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
+                                  编辑
+                                </router-link>
+                                <a href="javascript:void(0);" :item_id="d.id" :index="index">删除</a>
+                              </div>
+                            </div>
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                    </div>
+
                   </el-form-item>
+
+                  <div class="file-list">
+                    <div v-for="(d, index) in fileList" :key="index">
+
+                    </div>
+                  </div>
                 </el-col>
               </el-row>
 
@@ -190,6 +220,7 @@
           'x:target_id': '',
           'x:type': 5
         },
+        uploadMsg: '只能上传jpg/png文件，且不超过5M',
         pickerOptions: {
         },
         imageUrl: '',
@@ -322,13 +353,10 @@
           if (response.data.meta.status_code === 200) {
           } else {
             that.$message.error(response.data.meta.message)
-            return false
           }
         })
         .catch (function(error) {
           that.$message.error(error.message)
-          console.log(error.message)
-          return false
         })
       },
       handlePreview(file) {
@@ -336,6 +364,7 @@
       handleChange(value) {
       },
       uploadError(err, file, fileList) {
+        this.uploadMsg = '上传失败'
         this.$message({
           showClose: true,
           message: '文件上传失败!',
@@ -343,10 +372,18 @@
         })
         console.log(err)
       },
+      uploadProgress(event, file, fileList) {
+        this.uploadMsg = '上传中...'
+        console.log(event)
+      },
       uploadSuccess(response, file, fileList) {
+        this.uploadMsg = '只能上传jpg/png文件，且不超过5M'
+        console.log('success')
+        console.log(response)
+        console.log(fileList)
       },
       beforeUpload(file) {
-        const arr = ['image/jpeg', 'image/gif', 'image/png', 'image/pdf']
+        const arr = ['image/jpeg', 'image/gif', 'image/png']
         const isLt5M = file.size / 1024 / 1024 < 5
 
         if (arr.indexOf(file.type) === -1) {
@@ -468,15 +505,18 @@
                 var obj = response.data.data.case_image[i]
                 var item = {}
                 item['response'] = {}
+                item['id'] = obj['id']
                 item['name'] = obj['name']
-                item['url'] = obj['small']
+                item['url'] = obj['middle']
+                item['summary'] = obj['summary']
                 item['response']['asset_id'] = obj['id']
                 files.push(item)
               }
               that.fileList = files
             }
 
-            console.log(response.data.data)
+            console.log('aaaa')
+            console.log(that.fileList)
           }
         })
         .catch (function(error) {
@@ -549,6 +589,39 @@
     width: 178px;
     height: 178px;
     display: block;
+  }
+
+  .file-list {
+    margin: 10px 0;
+  }
+
+  .file-list .item {
+    margin: 5px 0;
+  }
+
+  .file-list .item img {
+    width: 100%;
+  }
+
+  .file-list .image-box {
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .file-list .content {
+    padding: 10px;
+  }
+  .file-list .content a {
+    font-size: 1.5rem;
+  }
+
+  .file-list .opt {
+    margin: 10px 0 0 0;
+    text-align: right;
+  }
+
+  .file-list .opt a {
+    font-size: 1.2rem;
   }
 
 

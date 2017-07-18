@@ -144,7 +144,7 @@ export default {
                     type: 'success'
                   })
 
-                  that.$router.push('/home')
+                  that.$router.replace('/vcenterControl')
                 } else {
                   auth.logout()
                   that.$message({

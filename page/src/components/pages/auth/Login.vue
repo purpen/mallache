@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login-box">
       <div class="login-title">
-        <h2>登录毕方鸟</h2>
+        <h2>登录铟果</h2>
       </div>
 
       <div class="login-content">
@@ -22,7 +22,7 @@
         </el-form>
 
         <div class="reg">
-          <p>还没有毕方鸟账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
+          <p>还没有铟果账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
         </div>
 
       </div>   
@@ -88,7 +88,7 @@ export default {
                     auth.clear_prev_url_name()
                     that.$router.replace({name: prevUrlName})
                   } else {
-                    that.$router.replace({name: 'home'})
+                    that.$router.replace({name: 'vcenterControl'})
                   }
                 } else {
                   auth.logout()

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu></v-menu>
+      <v-menu currentName="profile"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">

@@ -38,7 +38,9 @@
               </el-row>
 
             </div>
-
+            <div class="add">
+              <el-button class="is-custom" @click="add" type="primary"><i class="el-icon-plus"></i>  添加作品案例</el-button>
+            </div>
           </div>
         </div>
 
@@ -97,6 +99,10 @@
           })
         }).catch(() => {
         })
+      },
+      // 添加作品案例
+      add() {
+        this.$router.push({name: 'vcenterDesignCaseAdd'})
       }
     },
     computed: {
@@ -159,6 +165,10 @@
 
   .opt a {
     font-size: 1.2rem;
+  }
+
+  .add {
+    text-align: center;
   }
 
 </style>

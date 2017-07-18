@@ -4,7 +4,7 @@
       <router-link :to="{name: 'vcenterDesignCaseList'}" exact class="item">全部</router-link>
     </div>
     <div class="vcenter-menu-sub-list-right fr">
-      <router-link :to="{name: 'vcenterDesignCaseAdd'}" exact class="item add"><i class="el-icon-plus"></i> 添加作品案例</router-link>
+      <!--<router-link :to="{name: 'vcenterDesignCaseAdd'}" exact class="item add"><i class="el-icon-plus"></i> 添加作品案例</router-link>-->
     </div>
   </div>
 </template>
