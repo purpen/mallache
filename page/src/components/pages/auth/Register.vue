@@ -144,7 +144,7 @@ export default {
                     type: 'success'
                   })
 
-                  that.$router.replace('/vcenterControl')
+                  that.$router.replace({name: 'vcenterControl'})
                 } else {
                   auth.logout()
                   that.$message({
