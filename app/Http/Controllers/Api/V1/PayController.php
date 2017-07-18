@@ -144,6 +144,7 @@ class PayController extends BaseController
         }
         //支付失败
         else{
+            Log::error('支付验证失败');
             $alipay->flaseNotifyUrl();
         }
 
