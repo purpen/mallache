@@ -115,6 +115,7 @@ export default {
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token
+  updateImageSummary: '/designCase/imageSummary', // PUT 更新图片备注
 
   /** 后台管理 */
 

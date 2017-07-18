@@ -141,12 +141,19 @@
                                 <img :src="d.url">
                             </div>
                             <div class="content">
-                              {{ d.name }}
-                              <div class="opt">
-                                <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
-                                  编辑
-                                </router-link>
-                                <a href="javascript:void(0);" :item_id="d.id" :index="index" @click="delAsset">删除</a>
+                              <p>{{ d.name }}</p>
+                              <div class="summary-edit" v-if="d.edit">
+                                <textarea v-model="d.summary">{{ d.summary }}</textarea>
+                              </div>
+                              <div class="summary" v-else>
+                                <p>{{ d.summary }}</p>
+                              </div>
+                              <div class="opt" v-if="d.edit">
+                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="saveAssetSummary">保存</a>
+                              </div>
+                              <div class="opt" v-else>
+                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="editAssetBtn">编辑</a>
+                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset">删除</a>
                               </div>
                             </div>
                           </el-card>
@@ -156,11 +163,6 @@
 
                   </el-form-item>
 
-                  <div class="file-list">
-                    <div v-for="(d, index) in fileList" :key="index">
-
-                    </div>
-                  </div>
                 </el-col>
               </el-row>
 
@@ -359,6 +361,34 @@
           self.$message.error(error.message)
         })
       },
+      // 编辑附件
+      editAssetBtn(event) {
+        // var id = event.currentTarget.getAttribute('item_id')
+        var index = event.currentTarget.getAttribute('index')
+        this.fileList[index]['edit'] = true
+      },
+      // 保存附件描述
+      saveAssetSummary(event) {
+        var id = event.currentTarget.getAttribute('item_id')
+        var index = event.currentTarget.getAttribute('index')
+        var summary = this.fileList[index].summary
+        if (summary === '' || summary === null) {
+          this.$message.error('描述信息不能为空!')
+          return false
+        }
+        const self = this
+        self.$http.put(api.updateImageSummary, {asset_id: id, summary: summary})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.fileList[index].edit = false
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          self.$message.error(error.message)
+        })
+      },
       handleRemove(file, fileList) {
         if (file === null) {
           return false
@@ -396,9 +426,10 @@
       },
       uploadSuccess(response, file, fileList) {
         this.uploadMsg = '只能上传jpg/png文件，且不超过5M'
-        console.log('success')
-        console.log(response)
-        console.log(fileList)
+        fileList[fileList.length - 1]['edit'] = false
+        fileList[fileList.length - 1]['summary'] = ''
+        this.$set(this.fileList, fileList.length - 1, fileList[fileList.length - 1])
+        console.log(this.fileList)
       },
       beforeUpload(file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png']
@@ -528,22 +559,17 @@
                 item['url'] = obj['middle']
                 item['summary'] = obj['summary']
                 item['response']['asset_id'] = obj['id']
+                item['edit'] = false
                 files.push(item)
               }
               that.fileList = files
             }
 
-            console.log('aaaa')
             console.log(that.fileList)
           }
         })
         .catch (function(error) {
-          that.$message({
-            showClose: true,
-            message: error.message,
-            type: 'error'
-          })
-          console.log(error.message)
+          that.$message.error(error.message)
           return false
         })
       } else {
@@ -627,10 +653,23 @@
   }
 
   .file-list .content {
-    padding: 10px;
+    padding: 2px 10px 10px 10px;
   }
-  .file-list .content a {
-    font-size: 1.5rem;
+  .file-list .content p {
+    font-size: 1.3rem;
+    color: #222;
+  }
+
+  .file-list .content .summary {
+    height: 40px;
+    overflow: hidden;
+  }
+  .file-list .content .summary p {
+    color: #666;
+    font-size: 1.2rem;
+  }
+  .file-list .content .summary-edit textarea {
+    width: 100%;
   }
 
   .file-list .opt {
