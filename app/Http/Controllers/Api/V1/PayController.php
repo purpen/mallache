@@ -123,7 +123,7 @@ class PayController extends BaseController
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
                         if(!$pay_order->save()){
-                            Log::error('支付吧业务处理失败')；
+                            Log::error('支付吧业务处理失败');
                         }
                         Log::info($pay_order);
                         event(new PayOrderEvent($pay_order));
