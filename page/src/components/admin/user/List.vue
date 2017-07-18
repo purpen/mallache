@@ -63,7 +63,9 @@
               label="权限">
                 <template scope="scope">
                   <p v-if="scope.row.role_id === 0">用户</p>
-                  <p v-else-if="scope.row.role_id === 1">管理员</p>
+                  <p v-else-if="scope.row.role_id === 10">观察员</p>
+                  <p v-else-if="scope.row.role_id === 15">管理员</p>
+                  <p v-else-if="scope.row.role_id === 20">超级管理员</p>
                   <p v-else>--</p>
                 </template>
             </el-table-column>
@@ -125,7 +127,8 @@
       <div>
         <el-radio-group v-model.number="roleId">
           <el-radio :label="0">用户</el-radio>
-          <el-radio :label="1">管理员</el-radio>
+          <el-radio :label="10">观察员</el-radio>
+          <el-radio :label="15">管理员</el-radio>
         </el-radio-group>
       </div>
       <div slot="footer" class="dialog-footer">

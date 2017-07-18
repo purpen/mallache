@@ -365,7 +365,7 @@
       editAssetBtn(event) {
         // var id = event.currentTarget.getAttribute('item_id')
         var index = event.currentTarget.getAttribute('index')
-        this.fileList[index]['edit'] = true
+        this.fileList[index].edit = true
       },
       // 保存附件描述
       saveAssetSummary(event) {
@@ -426,9 +426,17 @@
       },
       uploadSuccess(response, file, fileList) {
         this.uploadMsg = '只能上传jpg/png文件，且不超过5M'
-        fileList[fileList.length - 1]['edit'] = false
-        fileList[fileList.length - 1]['summary'] = ''
-        this.$set(this.fileList, fileList.length - 1, fileList[fileList.length - 1])
+        var add = fileList[fileList.length - 1]
+        var item = {
+          name: add.name,
+          url: add.url,
+          edit: false,
+          summary: '',
+          response: {
+            asset_id: add.response.asset_id
+          }
+        }
+        this.fileList.push(item)
         console.log(this.fileList)
       },
       beforeUpload(file) {
@@ -532,6 +540,13 @@
       }
     },
     watch: {
+      fileList: {
+        handler: function (newVal) {
+          console.log('aaaaa')
+          console.log(newVal)
+        },
+        deep: true
+      }
     },
     created: function() {
       const that = this
