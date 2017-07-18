@@ -146,7 +146,7 @@
                                 <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
                                   编辑
                                 </router-link>
-                                <a href="javascript:void(0);" :item_id="d.id" :index="index">删除</a>
+                                <a href="javascript:void(0);" :item_id="d.id" :index="index" @click="delAsset">删除</a>
                               </div>
                             </div>
                           </el-card>
@@ -340,6 +340,24 @@
         } else if (val === 1) {
           this.isDisabledProduct = false
         }
+      },
+      // 删除附件
+      delAsset(event) {
+        var id = event.currentTarget.getAttribute('item_id')
+        var index = event.currentTarget.getAttribute('index')
+
+        const self = this
+        self.$http.delete(api.asset.format(id), {})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.fileList.splice(index, 1)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch (function(error) {
+          self.$message.error(error.message)
+        })
       },
       handleRemove(file, fileList) {
         if (file === null) {
