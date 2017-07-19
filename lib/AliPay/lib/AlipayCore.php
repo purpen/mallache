@@ -130,7 +130,7 @@ trait AlipayCore
         curl_setopt($curl, CURLOPT_CAINFO,$cacert_url);//证书地址
         $responseText = curl_exec($curl);
         //var_dump( curl_error($curl) );//如果执行curl过程中出现异常，可打开此开关，以便查看异常内容
-        Log::info([curl_error($curl), $cacert_url]);
+//        Log::info([curl_error($curl), $cacert_url]);
         curl_close($curl);
 
         return $responseText;
