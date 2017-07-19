@@ -82,7 +82,7 @@ class Yunpian
     {
 //        $data['mobile'] = '13300000000';
 //        $data['text'] = '【云片网】您的验证码是1234';
-        $smsOperator = new \Lib\YunPianSdk\Lib\SmsOperator();
+        $smsOperator = new SmsOperator();
 
         $data['mobile'] = $mobile;
         $data['text'] = $text;
