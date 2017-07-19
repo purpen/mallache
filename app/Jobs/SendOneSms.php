@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\Yunpian;
+use Lib\YunPianSdk\Lib\SmsOperator;
 
 class SendOneSms implements ShouldQueue
 {
@@ -46,7 +47,7 @@ class SendOneSms implements ShouldQueue
         $yun_pian = new Yunpian();
         $result = $yun_pian->sendOneSms($this->mobile, $this->text);
 
-        if(strval($result->statusCode) !== 200){
+        if(intval($result->statusCode) !== 200){
             Log::error('短信发送：' . json_encode($result));
             throw new \Exception($result->error,$result->statusCode);
         }

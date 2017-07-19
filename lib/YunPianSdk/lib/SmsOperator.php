@@ -5,11 +5,8 @@ use Lib\YunPianSdk\Yunpian;
 
 
 /**
- * Author: caowei<caoyuanlianni@foxmail.com>
- * Time: 2016.05.22
  * Use: 短信发送实现
  */
-
 class SmsOperator
 {
     public $apikey;
