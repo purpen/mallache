@@ -264,35 +264,6 @@ class Item extends BaseModel
         }
 
         return '';
-
-        if($this->type == 1){
-            switch ($this->design_type){
-                case 1:
-                    $design_type_value = '产品策略';
-                    break;
-                case 2:
-                    $design_type_value = '产品设计';
-                    break;
-                case 3:
-                    $design_type_value = '结构设计';
-                    break;
-                default:
-                    $design_type_value = '';
-            }
-        }else{
-            switch ($this->design_type){
-                case 1:
-                    $design_type_value = 'app设计';
-                    break;
-                case 2:
-                    $design_type_value = '网页设计';
-                    break;
-                default:
-                    $design_type_value = '';
-            }
-        }
-
-        return $design_type_value;
     }
 
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
