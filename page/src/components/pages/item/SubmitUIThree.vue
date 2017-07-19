@@ -250,8 +250,8 @@
               that.form.other_content = ''
             }
             if (that.matchCount === 0) {
-              that.$message.error('匹配失败，请重新匹配!')
-              return false
+              // that.$message.error('匹配失败，请重新匹配!')
+              // return false
             }
             var row = {
               name: that.form.name,

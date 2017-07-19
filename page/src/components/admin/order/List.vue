@@ -25,9 +25,9 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="id"
-              label="ID"
-              width="60">
+              prop="uid"
+              label="订单号"
+              width="150">
             </el-table-column>
             <el-table-column
               prop="item_name"
@@ -40,7 +40,7 @@
               width="80">
             </el-table-column>
             <el-table-column
-              width="140"
+              width="120"
               label="创建人">
                 <template scope="scope">
                   <p>
@@ -51,7 +51,7 @@
             <el-table-column
               prop="type_value"
               label="支付类型"
-              width="100">
+              width="80">
             </el-table-column>
             <el-table-column
               prop="pay_type_value"
