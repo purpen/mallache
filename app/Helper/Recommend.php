@@ -47,7 +47,19 @@ class Recommend
             } else {
                 $recommend = implode(',', $design);
                 $this->item->recommend = $recommend;
+
+                //判断需求公司资料是否审核
+                $demand_company = $this->item->user->demandCompany;
+                if ($demand_company->verify_status == 1) {
+                    $this->item->status = 3;   //已匹配设计公司
+                } else {
+                    $this->item->status = 2;  //2.人工干预
+                }
+
                 $this->item->save();
+
+                //触发项目状态变更事件
+                event(new ItemStatusEvent($this->item));
             }
 
         } else {
@@ -62,7 +74,12 @@ class Recommend
     //匹配失败
     protected function itemFail()
     {
-        $this->item->status = -2;  //匹配失败
+        if(config('constant.item_recommend_lose')){
+            $this->item->status = 2;  //等待后台人工干预
+        }else{
+            $this->item->status = -2;  //匹配失败
+        }
+
         $this->item->save();
         //触发项目状态变更事件
         event(new ItemStatusEvent($this->item));
@@ -81,7 +98,7 @@ class Recommend
         $max = $this->cost($this->item->productDesign->design_cost);
 
         //所属领域
-//        $field =  $this->item->productDesign->field;
+        $field =  $this->item->productDesign->field;
         //周期
         $cycle = $this->item->productDesign->cycle;
         //项目公司地点
@@ -109,7 +126,7 @@ class Recommend
         }
 
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
-//            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
+            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')

@@ -12,6 +12,9 @@ return [
     //项目验收之后支付比例
     'warranty_money' => 0.05,
 
+    //项目推荐失败后，是否人工后台介入处理
+    'item_recommend_lose' => true,     // true:人工介入； false：项目匹配失败
+
     //产品领域配置
     'field' => [
         1 => '智能硬件',
