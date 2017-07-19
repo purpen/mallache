@@ -142,7 +142,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .login-box{
-    border: 1px solid #aaa;
+    border: 1px solid #ccc;
     width: 800px;
     height: 400px;
     text-align:center;
@@ -152,7 +152,7 @@ export default {
   .login-title{
     width: 800px;
     height: 60px;
-    font-size: 1.8rem;
+    font-size: 2rem;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
