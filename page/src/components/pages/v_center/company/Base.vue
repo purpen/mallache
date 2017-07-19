@@ -451,7 +451,7 @@
             row.web = 'http://' + row['web']
           }
         }
-        that.$http({method: 'POST', url: api.designCompany, data: row})
+        that.$http({method: 'PUT', url: api.designCompany, data: row})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.element[mark] = false

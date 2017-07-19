@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login-box">
       <div class="login-title">
-        <h2>登录毕方鸟</h2>
+        <h2>登录铟果</h2>
       </div>
 
       <div class="login-content">
@@ -22,7 +22,7 @@
         </el-form>
 
         <div class="reg">
-          <p>还没有毕方鸟账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
+          <p>还没有铟果账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
         </div>
 
       </div>   
@@ -71,6 +71,7 @@ export default {
           // 验证通过，登录
           that.$http.post(api.login, {account: account, password: password})
           .then (function(response) {
+            that.isLoadingBtn = false
             if (response.data.meta.status_code === 200) {
               var token = response.data.data.token
               // 写入localStorage
@@ -81,54 +82,31 @@ export default {
                 if (response.data.meta.status_code === 200) {
                   that.$message.success('登录成功')
                   auth.write_user(response.data.data)
-                  console.log(response.data.data)
                   var prevUrlName = that.$store.state.event.prevUrlName
                   if (prevUrlName) {
                     // 清空上一url
                     auth.clear_prev_url_name()
                     that.$router.replace({name: prevUrlName})
                   } else {
-                    that.$router.replace({name: 'home'})
+                    that.$router.replace({name: 'vcenterControl'})
                   }
                 } else {
                   auth.logout()
-                  that.$message({
-                    showClose: true,
-                    message: response.data.meta.message,
-                    type: 'error'
-                  })
-                  that.isLoadingBtn = false
+                  that.$message.error(response.data.meta.message)
                 }
               })
               .catch (function(error) {
                 auth.logout()
-                that.$message({
-                  showClose: true,
-                  message: error.message,
-                  type: 'error'
-                })
-                that.isLoadingBtn = false
+                that.$message.error(error.message)
               })
             } else {
-              that.$message({
-                showClose: true,
-                message: response.data.meta.message,
-                type: 'error'
-              })
-              that.isLoadingBtn = false
+              that.$message.error(response.data.meta.message)
             }
           })
           .catch (function(error) {
-            that.$message({
-              showClose: true,
-              message: error.message,
-              type: 'error'
-            })
-            console.log(error.message)
-            return false
+            that.isLoadingBtn = false
+            that.$message.error(error.message)
           })
-
-          return false
         } else {
           console.log('error submit!!')
           return false
@@ -164,7 +142,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .login-box{
-    border: 1px solid #aaa;
+    border: 1px solid #ccc;
     width: 800px;
     height: 400px;
     text-align:center;
@@ -174,7 +152,7 @@ export default {
   .login-title{
     width: 800px;
     height: 60px;
-    font-size: 1.8rem;
+    font-size: 2rem;
     display: table-cell;
     vertical-align: middle;
     text-align: center;

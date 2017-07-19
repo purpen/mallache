@@ -264,7 +264,7 @@
               if (response.data.meta.status_code === 200) {
                 that.$message({
                   showClose: true,
-                  message: '提交成功,等待审核',
+                  message: '提交成功!',
                   type: 'success'
                 })
                 that.itemModel = false

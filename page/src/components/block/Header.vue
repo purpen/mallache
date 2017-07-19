@@ -22,7 +22,7 @@
                 <img class="avatar" v-else src="../../assets/images/avatar_100.png" />
                 <span class="b-nickname">{{ eventUser.account }}</span>
               </template>
-              <el-menu-item index="/vcenter/item/list">个人中心</el-menu-item>
+              <el-menu-item index="/vcenter/control">个人中心</el-menu-item>
               <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
               <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
             </el-submenu>
@@ -98,7 +98,7 @@ export default {
       // 定时请求消息数量
       self.requestMessageTask = setInterval(function() {
         self.fetchMessageCount()
-      }, 15000)
+      }, 30000)
     }
   },
   computed: {

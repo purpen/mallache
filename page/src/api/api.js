@@ -102,7 +102,7 @@ export default {
 
   // 设计公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情
-  designCompany: '/designCompany', // POST 保存/ GET 设计公司基本资料
+  designCompany: '/designCompany', // POST 保存 /PUT 更新 / GET 设计公司基本资料
 
   surveyDemandCompanySurvey: '/survey/demandCompanySurvey', // GET 需求方控制面板
   surveyDesignCompanySurvey: '/survey/designCompanySurvey', // GET 设计公司控制面板
@@ -115,6 +115,7 @@ export default {
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token
+  updateImageSummary: '/designCase/imageSummary', // PUT 更新图片备注
 
   /** 后台管理 */
 

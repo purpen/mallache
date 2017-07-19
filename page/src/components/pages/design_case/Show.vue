@@ -43,7 +43,10 @@
             <p>{{ item.profile }}</p>
           </div>
           <div class="des">
-            <p v-for="d in item.case_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
+            <p v-for="(d, index) in item.case_image" :key="index">
+              <img :src="d.big" :alt="d.name" :title="d.name" />
+              <slot><p class="img-des">{{ d.summary }}</p></slot>
+            </p>
           </div>
         </div>
       </el-col>
@@ -164,6 +167,10 @@
     overflow: hidden;
   }
   .edit-content img {
+  }
+
+  p.img-des {
+    margin-bottom: 20px;
   }
 
 </style>

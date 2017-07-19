@@ -2,7 +2,7 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册铟果账户</h2>
+        <h2>注册铟果</h2>
       </div>
       <div class="register-tab">
         <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
@@ -35,7 +35,7 @@
         </el-form>
 
         <div class="reg">
-          <p>已经有铟果账号，您可以直接登录 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
+          <p>已有铟果账户，您可以 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
         </div>
       
       </div>   
@@ -144,7 +144,7 @@ export default {
                     type: 'success'
                   })
 
-                  that.$router.push('/home')
+                  that.$router.replace({name: 'vcenterControl'})
                 } else {
                   auth.logout()
                   that.$message({
@@ -292,7 +292,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .register-box{
-    border: 1px solid #aaa;
+    border: 1px solid #ccc;
     width: 800px;
     height: 600px;
     text-align:center;
@@ -302,7 +302,7 @@ export default {
   .regisiter-title{
     width: 800px;
     height: 60px;
-    font-size: 1.8rem;
+    font-size: 2rem;
     display: table-cell;
     vertical-align: middle;
     text-align: center;

@@ -44,12 +44,12 @@
               <el-table-column
                 prop="created_at"
                 label="时间"
-                width="150">
+                width="130">
               </el-table-column>
               <el-table-column
                 prop="transaction_type_value"
                 label="交易类型"
-                width="140">
+                width="120">
               </el-table-column>
               <el-table-column
                 label="收入/支出"
@@ -66,7 +66,7 @@
               <el-table-column
                 prop="summary"
                 label="备注"
-                min-width="500">
+                min-width="400">
               </el-table-column>
             </el-table>
 

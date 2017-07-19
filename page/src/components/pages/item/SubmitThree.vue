@@ -222,8 +222,8 @@
               // return false
             }
             if (that.matchCount === 0) {
-              that.$message.error('匹配失败，请重新匹配!')
-              return false
+              // that.$message.error('匹配失败，请重新匹配!')
+              // return false
             }
             that.isLoadingBtn = true
             var row = {

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu></v-menu>
+      <v-menu currentName="profile"></v-menu>
 
       <el-col :span="20">
         <div class="right-content">
@@ -90,7 +90,7 @@
               </div>
               <div class="rz-stat" v-if="item.verify_status !== 1">
                 <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
-                  <el-button class="is-custom" type="primary">重新提交认证</el-button>
+                  <el-button class="is-custom" type="primary">提交认证</el-button>
                 </router-link>
               </div>
             </div>
