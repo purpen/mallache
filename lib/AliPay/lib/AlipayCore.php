@@ -5,6 +5,8 @@ namespace Lib\AliPay\lib;
  * 支付宝接口公用函数
  * 详细：该类是请求、通知返回两个文件所调用的公用函数核心处理文件。
  */
+use Illuminate\Support\Facades\Log;
+
 trait AlipayCore
 {
     /**
@@ -128,6 +130,7 @@ trait AlipayCore
         curl_setopt($curl, CURLOPT_CAINFO,$cacert_url);//证书地址
         $responseText = curl_exec($curl);
         //var_dump( curl_error($curl) );//如果执行curl过程中出现异常，可打开此开关，以便查看异常内容
+        Log::info(curl_error($curl));
         curl_close($curl);
 
         return $responseText;

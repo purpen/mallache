@@ -16,11 +16,11 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        $user_id_arr = DesignCompanyModel::select('id','user_id')
-            ->where('status', 1)
-            ->get()
-            ->toArray();
-        dd($user_id_arr);
+//        $user_id_arr = DesignCompanyModel::select('id','user_id')
+//            ->where('status', 1)
+//            ->get()
+//            ->toArray();
+//        dd($user_id_arr);
 
 //        echo sys_get_temp_dir();
 
