@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\Yunpian;
+use Lib\YunPianSdk\Lib\SmsOperator;
 
 class SendOneSms implements ShouldQueue
 {
