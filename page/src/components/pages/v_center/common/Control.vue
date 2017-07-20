@@ -66,7 +66,7 @@
 
             <div class="item" v-show="item.demand_info_status === 0">
               <h3>完善公司信息</h3>
-              <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
+              <p class="item-title">填写公司基本信息</p>
               <p class="item-btn"><router-link :to="{name: 'vcenterComputerBase'}">编辑</router-link></p>
             </div>
 
