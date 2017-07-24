@@ -79,7 +79,7 @@ class DesignCaseModel extends BaseModel
      */
     public function getCoverAttribute()
     {
-        return AssetModel::getOneImage((int)$this->cover_id);
+        return AssetModel::getOneImage((int)$this->cover_id) ?? AssetModel::getOneImageUrl($this->id, 5, 1);
     }
 
     public function getSalesVolumeValAttribute()
