@@ -107,7 +107,7 @@ class AssetModel extends BaseModel
     public static function getOneImage($id)
     {
         if (!$asset = self::find($id)) {
-            return '';
+            return null;
         }
 
         return [
