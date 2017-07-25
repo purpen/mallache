@@ -4,19 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\ColumnTransformer;
 use App\Models\Column;
-use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ColumnController extends BaseController
 {
     /**
      * @api {get} /column 栏目文章详情
      * @apiVersion 1.0.0
-     * @apiName bank columnShow
-     * @apiGroup AdminColumn
+     * @apiName column columnShow
+     * @apiGroup column
      *
      * @apiParam {integer} id 文章id
      * @apiParam {string} token
@@ -50,14 +46,14 @@ class ColumnController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($column, new AdminColumnTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($column, new ColumnTransformer)->setMeta($this->apiMeta());
     }
 
     /**
      * @api {get} /column/lists 栏目文章列表
      * @apiVersion 1.0.0
-     * @apiName bank columnLists
-     * @apiGroup AdminColumn
+     * @apiName column columnLists
+     * @apiGroup column
      *
      * @apiParam {integer} type 类型；1.灵感
      * @apiParam {integer} status 状态 0.默认；1.
@@ -91,7 +87,7 @@ class ColumnController extends BaseController
 
         $lists = $query->paginate($per_page);
 
-        return $this->response->paginator($lists, new AdminColumnListsTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new ColumnTransformer)->setMeta($this->apiMeta());
     }
 
 }

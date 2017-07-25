@@ -15,7 +15,7 @@ class ColumnController extends BaseController
     /**
      * @api {post} /admin/column 添加栏目文章
      * @apiVersion 1.0.0
-     * @apiName bank columnStore
+     * @apiName column columnStore
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} type *栏目类型：1.灵感；
@@ -53,6 +53,7 @@ class ColumnController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
+        $all['url'] = $request->input('url') ?? '';
         $all['status'] = 0;
         if (!$column = Column::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
@@ -64,7 +65,7 @@ class ColumnController extends BaseController
     /**
      * @api {put} /admin/column 更新栏目文章
      * @apiVersion 1.0.0
-     * @apiName bank columnUpdate
+     * @apiName column columnUpdate
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} type 栏目类型：1.灵感；
@@ -117,7 +118,7 @@ class ColumnController extends BaseController
     /**
      * @api {get} /admin/column 栏目文章详情
      * @apiVersion 1.0.0
-     * @apiName bank columnShow
+     * @apiName column columnShow
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} id 文章id
@@ -158,7 +159,7 @@ class ColumnController extends BaseController
     /**
      * @api {get} /admin/column/lists 栏目文章列表
      * @apiVersion 1.0.0
-     * @apiName bank columnLists
+     * @apiName column columnLists
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} type 类型；1.灵感
