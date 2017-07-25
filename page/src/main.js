@@ -7,6 +7,8 @@ import store from './store/index'
 import axios from './http'
 import ElementUI from 'element-ui'
 import phenix from '@/assets/js/base'
+// 兼容 IE
+import 'babel-polyfill'
 
 // 样式表导入
 import 'element-ui/lib/theme-default/index.css'
