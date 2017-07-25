@@ -69,9 +69,9 @@ return [
         '/admin/survey/index',
 
         // 栏目位
-        '/column',
+        '/admin/column',
         // 栏目文章列表
-        '/column/lists',
+        '/admin/column/lists',
     ],
 
     /**
@@ -130,9 +130,9 @@ return [
         '/admin/survey/index',
 
         // 栏目位
-        '/column',
+        '/admin/column',
         // 栏目文章列表
-        '/column/lists',
+        '/admin/column/lists',
     ],
 
     /**
@@ -160,8 +160,8 @@ return [
         '/admin/survey/index',
 
         // 栏目位
-        '/column',
+        '/admin/column',
         // 栏目文章列表
-        '/column/lists',
+        '/admin/column/lists',
     ],
 ];

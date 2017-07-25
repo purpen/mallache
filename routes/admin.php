@@ -114,13 +114,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          * 栏目位相关路由
          */
         // 保存栏目位文章
-        $api->post('/column', 'ColumnController@store');
+        $api->post('/admin/column', 'ColumnController@store');
         // 更新栏目位文章
-        $api->put('/column', 'ColumnController@update');
+        $api->put('/admin/column', 'ColumnController@update');
         // 文章详情
-        $api->get('/column', 'ColumnController@show');
+        $api->get('/admin/column', 'ColumnController@show');
         // 栏目文章列表
-        $api->get('/column/lists', 'ColumnController@lists');
+        $api->get('/admin/column/lists', 'ColumnController@lists');
 
     });
 

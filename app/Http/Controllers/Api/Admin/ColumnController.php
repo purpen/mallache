@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class ColumnController extends BaseController
 {
     /**
-     * @api {post} /column 添加栏目文章
+     * @api {post} /admin/column 添加栏目文章
      * @apiVersion 1.0.0
      * @apiName bank columnStore
      * @apiGroup AdminColumn
@@ -62,7 +62,7 @@ class ColumnController extends BaseController
     }
 
     /**
-     * @api {put} /column 更新栏目文章
+     * @api {put} /admin/column 更新栏目文章
      * @apiVersion 1.0.0
      * @apiName bank columnUpdate
      * @apiGroup AdminColumn
@@ -115,7 +115,7 @@ class ColumnController extends BaseController
     }
 
     /**
-     * @api {get} /column 栏目文章详情
+     * @api {get} /admin/column 栏目文章详情
      * @apiVersion 1.0.0
      * @apiName bank columnShow
      * @apiGroup AdminColumn
@@ -156,7 +156,7 @@ class ColumnController extends BaseController
     }
 
     /**
-     * @api {get} /column/lists 栏目文章列表
+     * @api {get} /admin/column/lists 栏目文章列表
      * @apiVersion 1.0.0
      * @apiName bank columnLists
      * @apiGroup AdminColumn
