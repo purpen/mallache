@@ -109,6 +109,19 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         // 后台控制台信息
         $api->get('/admin/survey/index', 'SurveyController@index');
+
+        /**
+         * 栏目位相关路由
+         */
+        // 保存栏目位文章
+        $api->post('/column', 'ColumnController@store');
+        // 更新栏目位文章
+        $api->put('/column', 'ColumnController@update');
+        // 文章详情
+        $api->get('/column', 'ColumnController@show');
+        // 栏目文章列表
+        $api->get('/column/lists', 'ColumnController@lists');
+
     });
 
 });

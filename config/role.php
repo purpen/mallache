@@ -67,6 +67,11 @@ return [
 
         // 后台控制台信息
         '/admin/survey/index',
+
+        // 栏目位
+        '/column',
+        // 栏目文章列表
+        '/column/lists',
     ],
 
     /**
@@ -123,6 +128,11 @@ return [
 
         // 后台控制台信息
         '/admin/survey/index',
+
+        // 栏目位
+        '/column',
+        // 栏目文章列表
+        '/column/lists',
     ],
 
     /**
@@ -148,5 +158,10 @@ return [
 
         // 后台控制台信息
         '/admin/survey/index',
+
+        // 栏目位
+        '/column',
+        // 栏目文章列表
+        '/column/lists',
     ],
 ];

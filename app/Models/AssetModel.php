@@ -88,7 +88,7 @@ class AssetModel extends BaseModel
             ->first();
 
         if (empty($asset)) {
-            return '';
+            return null;
         }
 
         return [
