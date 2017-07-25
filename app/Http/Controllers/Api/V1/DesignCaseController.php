@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\DesignCaseListsTransformer;
 use App\Http\Transformer\DesignCaseTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignCaseModel;
@@ -47,6 +48,8 @@ class DesignCaseController extends BaseController
      *      "design_type_val": "产品策略",
      *      "other_prize": "",
      *      "mass_production": 1,
+     *      "cover": "",
+     *      "cover_id": 2,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -91,6 +94,7 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
      * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
+     * @apiParam {integer} cover_id 封面图ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -117,6 +121,8 @@ class DesignCaseController extends BaseController
      *      "design_type_val": "产品策略",
      *      "other_prize": "",
      *      "mass_production": 1,
+     *      "cover": "",
+     *      "cover_id": 2,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -140,6 +146,7 @@ class DesignCaseController extends BaseController
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
+            'cover_id' => 'required|integer'
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -172,6 +179,7 @@ class DesignCaseController extends BaseController
         $all['industry'] = $request->input('industry') ?? 0;
         $all['status'] = 1;
         $all['design_company_id'] = $design->id;
+        $all['cover_id'] = $request->input("cover_id");
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -220,6 +228,8 @@ class DesignCaseController extends BaseController
      *      "design_type_val": "产品策略",
      *      "other_prize": "",
      *      "mass_production": 1,
+     *      "cover": "",
+     *      "cover_id": 2,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -298,6 +308,8 @@ class DesignCaseController extends BaseController
      *      "design_type_val": "产品策略",
      *      "other_prize": "",
      *      "mass_production": 1,
+     *      "cover": "",
+     *      "cover_id": 2,
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -320,6 +332,7 @@ class DesignCaseController extends BaseController
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
+            'cover_id' => 'nullable|integer'
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -413,7 +426,7 @@ class DesignCaseController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $designCase = $design->designCase->where('status', 1);
-        return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($designCase, new DesignCaseListsTransformer)->setMeta($this->apiMeta());
 
     }
 
@@ -455,6 +468,8 @@ class DesignCaseController extends BaseController
      *      "other_prize": "",
      *      "mass_production": 1,
      *      "design_company":{},
+     *      "cover": "",
+     *      "cover_id": 2,
      *  }
      * ],
      *      "meta": {
@@ -488,7 +503,7 @@ class DesignCaseController extends BaseController
 
         $lists = $query->paginate($per_page);
 
-        return $this->response->paginator($lists, new DesignCaseTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new DesignCaseListsTransformer)->setMeta($this->apiMeta());
     }
 
     /**
