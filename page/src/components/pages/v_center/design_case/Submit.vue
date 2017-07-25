@@ -146,14 +146,22 @@
                                 <textarea v-model="d.summary">{{ d.summary }}</textarea>
                               </div>
                               <div class="summary" v-else>
-                                <p>{{ d.summary }}</p>
+                                <p v-if="d.summary">{{ d.summary }}</p>
+                                <p class="image-no-summary" v-else>暂无描述信息</p>
                               </div>
                               <div class="opt" v-if="d.edit">
                                 <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="saveAssetSummary">保存</a>
                               </div>
                               <div class="opt" v-else>
-                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="editAssetBtn">编辑</a>
-                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset">删除</a>
+                                <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
+                                  <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="dark" content="编辑文字" placement="top">
+                                  <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="editAssetBtn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="dark" content="设为封面" placement="top">
+                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="setCoverBtn"><i :class="{'fa': true, 'fa-flag': true, 'is-active': parseInt(coverId) === d.response.asset_id ? true : false }" aria-hidden="true"></i></a>
+                                </el-tooltip>
                               </div>
                             </div>
                           </el-card>
@@ -226,6 +234,7 @@
         pickerOptions: {
         },
         imageUrl: '',
+        coverId: '',
         form: {
           type: '',
           field: '',
@@ -237,6 +246,7 @@
           customer: '',
           mass_production: 0,
           sales_volume: '',
+          cover_id: '',
           profile: ''
         },
         ruleForm: {
@@ -259,7 +269,8 @@
             { required: true, message: '请添写服务客户', trigger: 'blur' }
           ],
           profile: [
-            { required: true, message: '请添写案例描述', trigger: 'blur' }
+            { required: true, message: '请添写案例描述', trigger: 'blur' },
+            { min: 10, max: 500, message: '长度在 10 到 500 个字符', trigger: 'blur' }
           ]
         }
       }
@@ -283,6 +294,7 @@
               sales_volume: that.form.sales_volume,
               profile: that.form.profile
             }
+            row.cover_id = that.coverId
             row.prize_time = row.prize_time.format('yyyy-MM-dd')
             var apiUrl = null
             var method = null
@@ -388,6 +400,12 @@
         .catch (function(error) {
           self.$message.error(error.message)
         })
+      },
+      // 设置封面图
+      setCoverBtn (event) {
+        var id = event.currentTarget.getAttribute('item_id')
+        // var index = event.currentTarget.getAttribute('index')
+        this.coverId = id
       },
       handleRemove(file, fileList) {
         if (file === null) {
@@ -558,6 +576,9 @@
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.form = response.data.data
+            if (that.form.cover_id) {
+              that.coverId = that.form.cover_id
+            }
             if (response.data.data.sales_volume === 0) {
               that.form.mass_production = 0
             } else {
@@ -681,7 +702,10 @@
   }
   .file-list .content .summary p {
     color: #666;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+  .file-list .content p.image-no-summary {
+    color: #999;
   }
   .file-list .content .summary-edit textarea {
     width: 100%;
@@ -693,7 +717,12 @@
   }
 
   .file-list .opt a {
+    margin: 3px;
     font-size: 1.2rem;
+  }
+
+  i.fa.is-active {
+    color: red;
   }
 
 

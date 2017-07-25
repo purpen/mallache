@@ -26,10 +26,10 @@
                     <div class="content">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
                       <div class="opt">
+                        <a href="javascript:void(0);" :item_id="d.id" :index="index" @click="delItem">删除</a>
                         <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
                           编辑
                         </router-link>
-                        <a href="javascript:void(0);" :item_id="d.id" :index="index" @click="delItem">删除</a>
                       </div>
                     </div>
                   </el-card>

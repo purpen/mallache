@@ -3,7 +3,6 @@
     <div class="blank20"></div>
     <el-row :gutter="20">
       <v-menu></v-menu>
-
       <el-col :span="20">
         <div class="content-item-box" v-loading.body="isLoading">
           <div class="item ing" v-for="(d, index) in itemIngList">
@@ -311,7 +310,7 @@
 
 
   .content-item-box {
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .pub {
     background: #FAFAFA;
