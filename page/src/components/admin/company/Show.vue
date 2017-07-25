@@ -58,17 +58,17 @@
               <p class="p-val">{{ item.branch_office }}</p>
             </div>
 
-            <div class="item">
+            <div class="item des">
               <p class="p-key">公司简介</p>
               <p class="p-val">{{ item.company_profile }}</p>
             </div>
 
-            <div class="item">
+            <div class="item des">
               <p class="p-key">专业优势</p>
               <p class="p-val">{{ item.professional_advantage }}</p>
             </div>
 
-            <div class="item">
+            <div class="item des">
               <p class="p-key">荣誉奖项</p>
               <p class="p-val">{{ item.awards }}</p>
             </div>
@@ -296,9 +296,17 @@ export default {
     min-height: 40px;
     border-bottom: 1px solid #ccc;
   }
+  .company-show .item.des {
+    min-height: 200px;
+    border-bottom: 1px solid #ccc;
+  }
 
   .company-show .item p {
     line-height: 3;
+  }
+
+  .company-show .item.des p {
+    line-height: 1.5;
   }
 
   .company-show .item p.p-key {
@@ -308,8 +316,8 @@ export default {
   }
 
   .company-show .item p.p-val {
-    width: 300px;
     float: left;
+    width: 78%;
     font-size: 1.5rem;
   }
 
