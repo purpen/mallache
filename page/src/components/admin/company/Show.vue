@@ -142,6 +142,21 @@
             </div>
 
             <div class="form-title">
+              <span>接单设置</span>
+            </div>
+
+            <div class="company-show">
+              <div class="item" v-for="(d, index) in designItem" :key="index">
+                <p class="p-key">{{ d.type_val }}</p>
+                <p class="p-val">
+                  <p class="design-set"><span>设计类型:</span> {{ d.design_type_val }} | <span>平均周期:</span> {{ d.project_cycle_val }} | <span>最低接单价格:</span> {{ d.min_price }}</p>
+                </p>
+              </div>
+
+
+            </div>
+
+            <div class="form-title">
               <span>状态</span>
             </div>
 
@@ -186,6 +201,7 @@ export default {
       menuType: 0,
       item: '',
       itemId: '',
+      designItem: [],
       isLoading: false,
       verifyLoadingBtn: false,
       msg: ''
@@ -249,6 +265,7 @@ export default {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.item = response.data.data
+        self.designItem = response.data.data.users.design_item
         if (self.item.logo_image) {
           self.item.logo_url = self.item.logo_image.logo
         } else {
@@ -323,6 +340,11 @@ export default {
     float: right;
     text-align: right;
     font-size: 1.2rem;
+  }
+
+  .design-set span{
+    font-size: 1.2rem;
+    color: #333;
   }
 
 </style>

@@ -27,6 +27,10 @@ export default {
   fundLogList: '/fundLogList', // GET 交易记录
   withdrawCreate: '/withdraw/create', // POST 提现
 
+  // 栏目
+  columnList: '/column/lists', // GET 列表
+  column: '/column', // GET 详情
+
   // 银行卡
   bank: '/bank', // GET/POST 查看列表／保存银行卡
   bankId: '/bank/{0}', // PUT 更新银行卡信息
@@ -159,6 +163,10 @@ export default {
   // 案例管理
   adminDesignCaseLists: '/admin/designCase/lists', // GET 案例列表
   adminDesignCaseOpenInfo: '/admin/designCase/openInfo', // GUT 案例是否公开
+
+  // 栏目管理
+  adminColumnList: '/admin/column/lists', // GET 列表
+  adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新
 
   test: '/'  // End
 }

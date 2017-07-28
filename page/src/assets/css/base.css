@@ -22,23 +22,22 @@ body{
   min-height: 350px;
 }
 
-@media screen and (min-width: 1201px) { 
+
+/* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
+@media screen and (min-width: 1200px) { 
   .container {width: 1200px} 
 } 
-/* css 注释说明：设置了浏览器宽度不小于1201px时 abc 显示1200px宽度 */
 
-@media screen and (max-width: 1200px) { 
-  .container {width: 900px} 
-} 
-/* 设置了浏览器宽度不大于1200px时 abc 显示900px宽度 */ 
-
-@media screen and (min-width: 960px) and (max-width: 1199px) {
+/* 设置了浏览器宽度不大于1200px时  显示992px宽度 */ 
+@media screen and (min-width: 992px) and (max-width: 1199px) {
   .container {
+    width: 992px;
   }
 }
-
-@media screen and (min-width: 768px) and (max-width: 959px) {
+/* 设置了浏览器宽度不大于992px,不小于769时  显示768px宽度 */ 
+@media screen and (min-width: 768px) and (max-width: 991px) {
   .container {
+    width: 768px;
   }
 }
 

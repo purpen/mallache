@@ -31,6 +31,10 @@
           <template slot="title"><i class="fa fa-clipboard"></i> 案例管理</template>
             <el-menu-item index="designCaseList" :route="{name: 'adminDesignCaseList'}">列表</el-menu-item>
         </el-submenu>
+        <el-submenu index="15">
+          <template slot="title"><i class="fa fa-window-maximize" aria-hidden="true"></i> 内容管理</template>
+            <el-menu-item index="columnList" :route="{name: 'adminColumnList'}">栏目列表</el-menu-item>
+        </el-submenu>
         <el-submenu index="20">
           <template slot="title"><i class="fa fa-user"></i> 用户管理</template>
             <el-menu-item index="userList" :route="{name: 'adminUserList'}">列表</el-menu-item>
