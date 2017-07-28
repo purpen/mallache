@@ -64,7 +64,8 @@ class AssetModel extends BaseModel
      */
     public static function assetFormat(AssetModel $asset)
     {
-        $fix = array_pop(explode('/', $asset->mime));
+        $array_image  = explode('/', $asset->mime);
+        $fix = array_pop($array_image);
         return [
             'id' => $asset->id,
             'name' => $asset->name,
