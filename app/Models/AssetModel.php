@@ -40,7 +40,7 @@ class AssetModel extends BaseModel
             $sort = 'asc';
         }
 
-        $query = self::select('id', 'path', 'name', 'created_at','summary')
+        $query = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime')
             ->where(['target_id' => $target_id, 'type' => $type])
             ->orderBy('id', $sort);
         if ($limit !== null) {
@@ -50,20 +50,33 @@ class AssetModel extends BaseModel
 
         $images = [];
         foreach ($assets as $asset) {
-            $images[] = [
-                'id' => $asset->id,
-                'name' => $asset->name,
-                'created_at' => $asset->created_at,
-                'summary' => $asset->summary,
-                'file' => config('filesystems.disks.qiniu.url') . $asset->path,
-                'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
-                'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
-                'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
-                'middle' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.middle'),
-            ];
+            $images[] = AssetModel::assetFormat($asset);
         }
 
         return $images;
+    }
+
+    /**
+     *  返回格式
+     *
+     * @param AssetModel $asset
+     * @return array
+     */
+    public static function assetFormat(AssetModel $asset)
+    {
+        $array_image  = explode('/', $asset->mime);
+        $fix = array_pop($array_image);
+        return [
+            'id' => $asset->id,
+            'name' => $asset->name,
+            'created_at' => $asset->created_at,
+            'summary' => $asset->summary,
+            'file' => config('filesystems.disks.qiniu.url') . $asset->path,
+            'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
+            'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
+            'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
+            'middle' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.middle'),
+        ];
     }
 
     /**
@@ -82,25 +95,16 @@ class AssetModel extends BaseModel
             $sort = 'asc';
         }
 
-        $asset = self::select('id', 'path', 'name', 'created_at')
+        $asset = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime')
             ->where(['target_id' => $target_id, 'type' => $type])
             ->orderBy('id', $sort)
             ->first();
 
         if (empty($asset)) {
-            return '';
+            return null;
         }
 
-        return [
-            'id' => $asset->id,
-            'name' => $asset->name,
-            'created_at' => $asset->created_at,
-            'file' => config('filesystems.disks.qiniu.url') . $asset->path,
-            'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
-            'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
-            'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
-            'middle' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.middle'),
-        ];
+        return AssetModel::assetFormat($asset);
     }
 
     //根据ID查询附件信息
@@ -110,16 +114,7 @@ class AssetModel extends BaseModel
             return null;
         }
 
-        return [
-            'id' => $asset->id,
-            'name' => $asset->name,
-            'created_at' => $asset->created_at,
-            'file' => config('filesystems.disks.qiniu.url') . $asset->path,
-            'small' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.small'),
-            'big' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.big'),
-            'logo' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.logo'),
-            'middle' => config('filesystems.disks.qiniu.url') . $asset->path . config('filesystems.disks.qiniu.middle'),
-        ];
+        return AssetModel::assetFormat($asset);
     }
 
     /**

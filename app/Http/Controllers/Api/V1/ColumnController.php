@@ -4,221 +4,90 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\ColumnTransformer;
 use App\Models\Column;
-use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ColumnController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * @api {post} /column 栏目位添加
+     * @api {get} /column 栏目文章详情
      * @apiVersion 1.0.0
-     * @apiName column store
+     * @apiName column columnShow
      * @apiGroup column
-     * @apiParam {integer} type 栏目类型
-     * @apiParam {string} name 栏目名称
-     * @apiParam {string} content 内容
-     * @apiParam {string} url 链接
-     * @apiParam {integer} sort 排序
+     *
+     * @apiParam {integer} id 文章id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     *   {
-     *     "data": {
-     *       "id": 1,
-     *       "type": 1,
-     *       "name": "热门",
-     *       "content": "今天的热门",
-     *       "url": "www.baidu.com",
-     *       "sort": 1,
-     *      },
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
-     *   }
-     *  }
-     */
-    public function store(Request $request)
-    {
-        $all = $request->all();
-        $rules = [
-            'type'  => 'required|integer',
-            'name'  => 'required|max:50',
-            'content'  => 'required|max:200',
-            'url'  => 'required|max:200',
-            'sort'  => 'required|integer',
-        ];
-        $messages = [
-            'type.required' => '栏目类型不能为空',
-            'name.required' => '栏目名称不能为空',
-            'name.max' => '栏目名称最多50字符',
-            'content.required' => '内容不能为空',
-            'content.max' => '链接最多200字符',
-            'url.required' => '链接不能为空',
-            'url.max' => '链接最多200字符',
-            'sort.required' => '排序不能为空',
-        ];
-        $validator = Validator::make($all, $rules, $messages);
-        $all = $request->except(['token']);
-        if($validator->fails()){
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
-        try{
-            $column = Column::firstOrCreate($all);
-        }
-        catch (\Exception $e){
-            return $this->response->array($this->apiError());
-        }
-
-        return $this->response->item($column, new ColumnTransformer())->setMeta($this->apiMeta());
-    }
-
-    /**
-     * @api {get} /column  根据栏目类型查看内容
-     * @apiVersion 1.0.0
-     * @apiName column show
-     * @apiGroup column
      *
-     * @apiParam {integer} type 栏目类型
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
      * {
-     *      "data": [
-     *          {
-     *          "id": 1,
-     *          "type": 2,
-     *          "name": "2",
-     *          "content": "2",
-     *          "url": "2",
-     *          "sort": 2,
-     *          }
-     *      ],
+     *      "data": {
+     *          "type": 1,
+     *          "type_value": "灵感",
+     *          "title": "这是第一篇",
+     *          "content": "这是第一篇",
+     *          "url": "www.baidu.com",
+     *          "status": 0,
+     *          "cover_id": 1,
+     *          "cover": null,
+     *          "image": []
+     *      },
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
      *      }
-     *  }
-     *
+     * }
      */
     public function show(Request $request)
     {
-        $type = $request->input('type');
-        $column = Column::where('type' , $type)->get();
-        if(!$column){
-            return $this->response->array($this->apiSuccess());
+        $id = $request->input('id');
+
+        $column = Column::find($id);
+        if (!$column) {
+            return $this->response->array($this->apiError('not found', 404));
         }
-        return $this->response->collection($column, new ColumnTransformer())->setMeta($this->apiMeta());
+
+        return $this->response->item($column, new ColumnTransformer)->setMeta($this->apiMeta());
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Column  $column
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Column $column)
-    {
-        //
-    }
-
-    /**
-     * @api {put} /column/1 根据栏目位id更新
+     * @api {get} /column/lists 栏目文章列表
      * @apiVersion 1.0.0
-     * @apiName column update
+     * @apiName column columnLists
      * @apiGroup column
-     * @apiParam {integer} type 栏目类型
-     * @apiParam {string} name 栏目名称
-     * @apiParam {string} content 内容
-     * @apiParam {string} url 链接
-     * @apiParam {integer} sort 排序
+     *
+     * @apiParam {integer} type 类型；1.灵感
+     * @apiParam {integer} status 状态 0.默认；1.
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     *   {
-     *     "data": {
-     *       "id": 1,
-     *       "type": 1,
-     *       "name": "热门",
-     *       "content": "今天的热门",
-     *       "url": "www.baidu.com",
-     *       "sort": 1,
-     *      },
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
-     *   }
-     *  }
-     */
-    public function update(Request $request , $id)
-    {
-        $all = $request->all();
-        //验证规则
-        $rules = [
-            'type'  => 'required|integer',
-            'name'  => 'required|max:50',
-            'content'  => 'required|max:200',
-            'url'  => 'required|max:200',
-            'sort'  => 'required|integer',
-        ];
-        $messages = [
-            'type.required' => '栏目类型不能为空',
-            'name.required' => '栏目名称不能为空',
-            'name.max' => '栏目名称最多50字符',
-            'content.required' => '内容不能为空',
-            'content.max' => '链接最多200字符',
-            'url.required' => '链接不能为空',
-            'url.max' => '链接最多200字符',
-            'sort.required' => '排序不能为空',
-        ];
-        $validator = Validator::make($all, $rules, $messages);
-
-        if($validator->fails()){
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
-
-        $all = $request->except(['token']);
-
-        $column = Column::where('id', $id)->first();
-        $column->update($all);
-        if(!$column){
-            return $this->response->array($this->apiError());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
-
-    /**
-     * Remove the specified resource from storage.
      *
-     * @param  \App\Column  $column
-     * @return \Illuminate\Http\Response
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
      */
-    public function destroy(Column $column)
+    public function lists(Request $request)
     {
-        //
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->type;
+        $status = $request->status;
+
+        $query = Column::query();
+
+        if ($type !== null) {
+            $query->where('type', (int)$type);
+        }
+        if ($status !== null) {
+            $query->where('status', (int)$status);
+        }
+
+        $lists = $query->paginate($per_page);
+
+        return $this->response->paginator($lists, new ColumnTransformer)->setMeta($this->apiMeta());
     }
+
 }

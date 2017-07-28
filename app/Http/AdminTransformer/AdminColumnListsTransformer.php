@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Transformer;
+namespace App\Http\AdminTransformer;
 
 use App\Models\Column;
 use League\Fractal\TransformerAbstract;
 
-class ColumnTransformer extends TransformerAbstract
+class AdminColumnListsTransformer extends TransformerAbstract
 {
     public function transform(Column $column)
     {
@@ -18,7 +18,6 @@ class ColumnTransformer extends TransformerAbstract
             'status' => $column->status,
             'cover_id' => $column->cover_id,
             'cover' => $column->cover,
-            'image' => $column->image,
         ];
     }
 }

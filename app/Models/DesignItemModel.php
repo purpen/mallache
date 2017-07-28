@@ -51,35 +51,6 @@ class DesignItemModel extends BaseModel
         }
 
         return '';
-
-        if($this->attributes['type'] == 1){
-            switch ($this->attributes['design_type']){
-                case 1:
-                    $design_type_val = '产品策略';
-                    break;
-                case 2:
-                    $design_type_val = '产品外观设计';
-                    break;
-                case 3:
-                    $design_type_val = '结构设计';
-                    break;
-                default:
-                    $design_type_val = '' ;
-            }
-        }else{
-            switch ($this->attributes['design_type']){
-                case 1:
-                    $design_type_val = 'app设计';
-                    break;
-                case 2:
-                    $design_type_val = '网页设计';
-                    break;
-                default:
-                    $design_type_val = '' ;
-            }
-        }
-
-        return $design_type_val;
     }
 
     //判断周期

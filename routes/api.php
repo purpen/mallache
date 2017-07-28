@@ -198,8 +198,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/quotation', 'QuotationController');
         //项目类型
         $api->resource('/designItem', 'DesignItemController');
-        //栏目位
-        $api->resource('/column', 'ColumnController');
+
         //分类
         $api->resource('/category', 'CategoryController');
         //项目阶段
@@ -271,6 +270,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 需求公司信息概况
         $api->get('/survey/demandCompanySurvey', 'SurveyController@demandCompanySurvey');
 
+        /**
+         * 栏目位
+         */
+        // 栏目文章详情
+        $api->get('/column', 'ColumnController@show');
+        // 栏目文章列表
+        $api->get('/column/lists', 'ColumnController@lists');
 
     });
 });
