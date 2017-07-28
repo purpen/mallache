@@ -68,6 +68,7 @@ class ColumnController extends BaseController
      * @apiName column columnUpdate
      * @apiGroup AdminColumn
      *
+     * @apiParam {integer} id 文章ID
      * @apiParam {integer} type 栏目类型：1.灵感；
      * @apiParam {string} title 文章标题
      * @apiParam {string} content 内容

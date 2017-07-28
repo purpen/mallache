@@ -234,4 +234,21 @@ class User extends Authenticatable implements JWTSubject
         return $this->price_total - $this->price_frozen;
     }
 
+    /**
+     * 用户是否是管理员
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public static function isAdmin(int $user_id)
+    {
+        $auth = self::find($user_id);
+        $is_admin = false;
+        if($auth){
+            if($auth->role_id > 0){
+                $is_admin = true;
+            }
+        }
+        return $is_admin;
+    }
 }
