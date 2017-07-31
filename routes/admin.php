@@ -121,6 +121,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/column', 'ColumnController@show');
         // 栏目文章列表
         $api->get('/admin/column/lists', 'ColumnController@lists');
+        // 栏目文章变更状态
+        $api->put('/admin/column/changeStatus', 'ColumnController@changeStatus');
 
     });
 

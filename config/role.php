@@ -72,6 +72,8 @@ return [
         '/admin/column',
         // 栏目文章列表
         '/admin/column/lists',
+        // 栏目文章变更状态
+        '/admin/column/changeStatus',
     ],
 
     /**
@@ -133,6 +135,8 @@ return [
         '/admin/column',
         // 栏目文章列表
         '/admin/column/lists',
+        // 栏目文章变更状态
+        '/admin/column/changeStatus',
     ],
 
     /**
