@@ -39,9 +39,9 @@ class ColumnController extends BaseController
      */
     public function show(Request $request)
     {
-        $id = $request->input('id');
+        $id = (int)$request->input('id');
 
-        $column = Column::find($id);
+        $column = Column::where(['status' => 1, 'id' => $id])->first();
         if (!$column) {
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -76,7 +76,7 @@ class ColumnController extends BaseController
 
         $query = Column::query()->where('status', 1);
 
-        if ($type !== null) {
+        if ($type != 0) {
             $query->where('type', (int)$type);
         }
 

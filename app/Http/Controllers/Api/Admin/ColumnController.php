@@ -198,8 +198,10 @@ class ColumnController extends BaseController
                 $status = 1;
         }
 
+
+
         $query = Column::query();
-        if ($type !== null) {
+        if ($type != 0) {
             $query->where('type', (int)$type);
         }
         if ($status != null) {
@@ -250,6 +252,32 @@ class ColumnController extends BaseController
         } else {
             return $this->response->array($this->apiSuccess());
         }
+    }
+
+    /**
+     * @api {delete} /admin/column 栏目文章删除
+     * @apiVersion 1.0.0
+     * @apiName column delete
+     * @apiGroup AdminColumn
+     *
+     * @apiParam {integer} id 栏目文章ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function delete(Request $request)
+    {
+        $id = (int)$request->input('id');
+        Column::destroy($id);
+
+        return $this->response->array($this->apiSuccess());
     }
 
 }
