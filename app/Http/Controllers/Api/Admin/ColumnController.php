@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\AdminTransformer\AdminColumnListsTransformer;
 use App\Http\AdminTransformer\AdminColumnTransformer;
+use App\Models\AssetModel;
 use App\Models\Column;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -58,6 +59,10 @@ class ColumnController extends BaseController
         if (!$column = Column::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
+        if($random = $request->input('random')){
+            AssetModel::setRandom($column->id, $random);
+        }
+
 
         return $this->response->array($this->apiSuccess());
     }
