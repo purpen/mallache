@@ -278,6 +278,10 @@
     methods: {
       submit(formName) {
         const that = this
+        if (!that.coverId) {
+          that.$message.error('必须设置一张封面图!')
+          return false
+        }
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
@@ -669,60 +673,6 @@
     width: 178px;
     height: 178px;
     display: block;
-  }
-
-  .file-list {
-    margin: 10px 0;
-  }
-
-  .file-list .item {
-    margin: 5px 0;
-  }
-
-  .file-list .item img {
-    width: 100%;
-  }
-
-  .file-list .image-box {
-    height: 180px;
-    overflow: hidden;
-  }
-
-  .file-list .content {
-    padding: 2px 10px 10px 10px;
-  }
-  .file-list .content p {
-    font-size: 1.3rem;
-    color: #222;
-  }
-
-  .file-list .content .summary {
-    height: 40px;
-    overflow: hidden;
-  }
-  .file-list .content .summary p {
-    color: #666;
-    font-size: 1.3rem;
-  }
-  .file-list .content p.image-no-summary {
-    color: #999;
-  }
-  .file-list .content .summary-edit textarea {
-    width: 100%;
-  }
-
-  .file-list .opt {
-    margin: 10px 0 0 0;
-    text-align: right;
-  }
-
-  .file-list .opt a {
-    margin: 3px;
-    font-size: 1.2rem;
-  }
-
-  i.fa.is-active {
-    color: red;
   }
 
 

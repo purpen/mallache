@@ -658,6 +658,36 @@ const routes = [
     },
     component: require('@/components/admin/DashBoard')
   },
+  // 添加栏目
+  {
+    path: '/admin/column/add',
+    name: 'adminColumnAdd',
+    meta: {
+      title: '添加栏目',
+      requireAuth: true
+    },
+    component: require('@/components/admin/column/Submit')
+  },
+  // 编辑栏目
+  {
+    path: '/admin/column/edit/:id',
+    name: 'adminColumnEdit',
+    meta: {
+      title: '编辑栏目',
+      requireAuth: true
+    },
+    component: require('@/components/admin/column/Submit')
+  },
+  // 栏目列表
+  {
+    path: '/admin/column/list',
+    name: 'adminColumnList',
+    meta: {
+      title: '栏目列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/column/List')
+  },
   // 项目列表
   {
     path: '/admin/item/list',

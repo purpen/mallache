@@ -649,6 +649,18 @@ const COMPANY_CERTIFICATE_TYPE = [
   }
 ]
 
+// 栏目内容分类
+const COLUMN_TYPE = [
+  {
+    id: 1,
+    name: '灵感'
+  },
+  {
+    id: 2,
+    name: '其它'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -665,6 +677,7 @@ module.exports = {
   DOCUMENT_TYPE,
   COMPANY_PROPERTY_TYPE,
   COMPANY_CERTIFICATE_TYPE,
+  COLUMN_TYPE,
 
   TEST
 }

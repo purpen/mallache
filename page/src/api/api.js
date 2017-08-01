@@ -166,7 +166,8 @@ export default {
 
   // 栏目管理
   adminColumnList: '/admin/column/lists', // GET 列表
-  adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新
+  adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用／禁用
 
   test: '/'  // End
 }
