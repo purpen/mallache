@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\AdminTransformer\AdminColumnListsTransformer;
 use App\Http\AdminTransformer\AdminColumnTransformer;
+use App\Models\AssetModel;
 use App\Models\Column;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -58,6 +59,10 @@ class ColumnController extends BaseController
         if (!$column = Column::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
+        if($random = $request->input('random')){
+            AssetModel::setRandom($column->id, $random);
+        }
+
 
         return $this->response->array($this->apiSuccess());
     }
@@ -164,7 +169,7 @@ class ColumnController extends BaseController
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} type 类型；1.灵感
-     * @apiParam {integer} status 状态 0.默认；1.
+     * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -184,12 +189,27 @@ class ColumnController extends BaseController
         $type = $request->type;
         $status = $request->status;
 
-        $query = Column::query();
+        switch ($status) {
+            case -1:
+                $status = 0;
+                break;
+            case 0:
+                $status = null;
+                break;
+            case 1:
+                $status = 1;
+                break;
+            default:
+                $status = 1;
+        }
 
-        if ($type !== null) {
+
+
+        $query = Column::query();
+        if ($type != 0) {
             $query->where('type', (int)$type);
         }
-        if ($status !== null) {
+        if ($status != null) {
             $query->where('status', (int)$status);
         }
 
@@ -197,4 +217,72 @@ class ColumnController extends BaseController
 
         return $this->response->paginator($lists, new AdminColumnListsTransformer)->setMeta($this->apiMeta());
     }
+
+    /**
+     * @api {put} /admin/column/changeStatus 栏目文章变更状态
+     * @apiVersion 1.0.0
+     * @apiName column changeStatus
+     * @apiGroup AdminColumn
+     *
+     * @apiParam {integer} id 栏目文章ID
+     * @apiParam {integer} status 状态 0.未发布；1.发布；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function changeStatus(Request $request)
+    {
+        $id = $request->input("id");
+        $status = $request->input("status");
+
+        $column = Column::find($id);
+        if (!$column) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($status) {
+            $column->status = 1;
+        } else {
+            $column->status = 0;
+        }
+        if (!$column->save()) {
+            return $this->response->array($this->apiError('Error', 500));
+        } else {
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
+    /**
+     * @api {delete} /admin/column 栏目文章删除
+     * @apiVersion 1.0.0
+     * @apiName column delete
+     * @apiGroup AdminColumn
+     *
+     * @apiParam {integer} id 栏目文章ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function delete(Request $request)
+    {
+        $id = (int)$request->input('id');
+        Column::destroy($id);
+
+        return $this->response->array($this->apiSuccess());
+    }
+
 }

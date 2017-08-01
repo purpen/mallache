@@ -39,9 +39,9 @@ class ColumnController extends BaseController
      */
     public function show(Request $request)
     {
-        $id = $request->input('id');
+        $id = (int)$request->input('id');
 
-        $column = Column::find($id);
+        $column = Column::where(['status' => 1, 'id' => $id])->first();
         if (!$column) {
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -56,7 +56,6 @@ class ColumnController extends BaseController
      * @apiGroup column
      *
      * @apiParam {integer} type 类型；1.灵感
-     * @apiParam {integer} status 状态 0.默认；1.
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -74,15 +73,11 @@ class ColumnController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->type;
-        $status = $request->status;
 
-        $query = Column::query();
+        $query = Column::query()->where('status', 1);
 
-        if ($type !== null) {
+        if ($type != 0) {
             $query->where('type', (int)$type);
-        }
-        if ($status !== null) {
-            $query->where('status', (int)$status);
         }
 
         $lists = $query->paginate($per_page);
