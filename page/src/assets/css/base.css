@@ -100,6 +100,11 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-bottom: 10px;
 }
 
+/** 修复导航鼠标经过宽度bug **/
+.el-submenu .el-menu-item {
+    min-width: auto;
+}
+
 .blank10 {
   margin: 10px;
 }
@@ -430,7 +435,7 @@ button.is-custom.is-outlined.is-loading:after {
   min-width: 170px;
   padding: 0;
 }
-.el-menu-info .el-submenu>.el-menu .el-menu-item{
+.el-menu-info .el-menu .el-menu-item{
   display: block;
   cursor: pointer;
   border: none;
@@ -460,7 +465,7 @@ button.is-custom.is-outlined.is-loading:after {
   padding-right: 3px;
   font-size: 1.5rem;
 }
-.el-menu-info:hover>.el-submenu .el-submenu__title,.el-menu--horizontal:hover .el-submenu .el-submenu__icon-arrow {
+.el-menu-info:hover>.el-submenu .el-submenu__title,.el-menu-info:hover .el-submenu .el-submenu__icon-arrow {
   color: #222;
 }
 
