@@ -451,6 +451,27 @@
             row.web = 'http://' + row['web']
           }
         }
+        // 验证简介长度
+        if (mark === 'profile' && row['company_profile']) {
+          if (row['company_profile'].length > 500) {
+            this.$message.error('不能超过500个字符！')
+            return false
+          }
+        }
+        // 验证优势长度
+        if (mark === 'advantage' && row['professional_advantage']) {
+          if (row['professional_advantage'].length > 500) {
+            this.$message.error('不能超过500个字符！')
+            return false
+          }
+        }
+        // 验证奖项荣誉长度
+        if (mark === 'awards' && row['awards']) {
+          if (row['awards'].length > 500) {
+            this.$message.error('不能超过500个字符！')
+            return false
+          }
+        }
         that.$http({method: 'PUT', url: api.designCompany, data: row})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {

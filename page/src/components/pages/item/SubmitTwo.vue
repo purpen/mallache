@@ -12,7 +12,7 @@
               <p class="fl"><img src="../../../assets/images/icon/product.png" /></p>
               <div class="fl banner-title">
                 <p class="title">产品设计</p>
-                <p class="des">产品策略／产品设计／结构设计</p>             
+                <p class="des">产品策略／产品外观设计／结构设计</p>             
               </div>
               <p class="fr">
                 <i class="fa fa-angle-up fa-2x" aria-hidden="true" v-if="form.type === 1"></i>
