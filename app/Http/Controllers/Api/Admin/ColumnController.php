@@ -59,6 +59,7 @@ class ColumnController extends BaseController
         if (!$column = Column::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
+
         if($random = $request->input('random')){
             AssetModel::setRandom($column->id, $random);
         }

@@ -283,7 +283,7 @@ class AdminDesignCompanyController extends Controller
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
         $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : null;
 
-        $query = DesignCompanyModel::query();
+        $query = DesignCompanyModel::with('user');
         if($type_status !== null){
             $query->where('status', $type_status);
         }
