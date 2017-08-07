@@ -41,7 +41,9 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token', 'price_total','price_frozen',
     ];
 
-    protected $appends = ['logo_image'];
+    protected $appends = [
+//        'logo_image'
+    ];
 
 
     public function getJWTIdentifier()
