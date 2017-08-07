@@ -42,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $appends = [
-        'logo_image'
+//        'logo_image'
     ];
 
 
