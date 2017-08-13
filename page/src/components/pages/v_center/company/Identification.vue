@@ -34,7 +34,7 @@
 
               <el-row :gutter="24">
                 <el-col :span="12">
-                  <el-form-item label="注册号" prop="registration_number">
+                  <el-form-item label="统一社会信用代码" prop="registration_number">
                     <el-input v-model="form.registration_number" placeholder=""></el-input>
                   </el-form-item>          
                 </el-col>

@@ -25,7 +25,7 @@
               </div>
 
               <div class="item">
-                <p class="p-key">注册号</p>
+                <p class="p-key">统一社会信用代码</p>
                 <p class="p-val">{{ item.registration_number }}</p>
               </div>
 
