@@ -1248,6 +1248,7 @@ class DemandController extends BaseController
         $item->status = 18;
         $item->save();
 
+        // 项目状态变更事件
         event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());

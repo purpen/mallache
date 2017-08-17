@@ -23,6 +23,7 @@ class ItemStageTransformer extends TransformerAbstract
             'item_id' => intval($itemStage->item_id),
             'design_company_id' => intval($itemStage->design_company_id),
             'title' => strval($itemStage->title),
+            'content' => $itemStage->array_content,
             'summary' => strval($itemStage->summary),
             'item_stage_image' => $itemStage->item_stage_image,
             'status' => intval($itemStage->status),

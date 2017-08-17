@@ -53,7 +53,7 @@ class ContractController extends BaseController
      * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
-     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12']]
+     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12','content' => ['内容一','内容二'],]]
      *
      * @apiParam {string} token
      *
@@ -73,6 +73,7 @@ class ContractController extends BaseController
      *      "design_company_legal_person": "",
      *      "total": "",
      *      "warranty_money": ,
+     *      "first_payment": ,   // 首付款
      *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
@@ -108,8 +109,14 @@ class ContractController extends BaseController
         $all['unique_id'] = uniqid('ht');
 
         $all['total'] = $item->price;
+
+        //项目首付款
+        $all['first_payment'] = sprintf("%0.2f", $item->price * config("constant.first_payment"));
         // 项目验收之后支付金额
         $all['warranty_money'] = sprintf("%0.2f", $item->price * config("constant.warranty_money"));
+
+        $data['warranty_money_proportion'] = config("constant.warranty_money");
+        $data['first_payment_proportion'] = config("constant.first_payment");
         $rules = [
             'item_demand_id' => 'required|integer',
             'demand_company_name' => 'required',
@@ -120,8 +127,8 @@ class ContractController extends BaseController
             'design_company_address' => 'required',
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
-            'item_content' => 'required',
-            'design_work_content' => 'required',
+//            'item_content' => 'required',
+//            'design_work_content' => 'required',
             'title' => 'required|max:20',
 //            'item_stage' => 'array',
         ];
@@ -136,8 +143,8 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-            'item_content' => '项目内容不能为空',
-            'design_work_content.required' => '设计工作内容不能为空',
+//            'item_content' => '项目内容不能为空',
+//            'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
         ];
@@ -153,8 +160,11 @@ class ContractController extends BaseController
 
 
         //验证项目阶段数组数据
-        $other_price = sprintf("%0.2f", $all['total'] - $all['warranty_money']);
-        if (!$this->validationItemStage($all['item_stage'], $other_price)) {
+        // 阶段项目金额
+        $other_price = sprintf("%0.2f", $all['total'] - $all['warranty_money'] - $all['first_payment']);
+        // 阶段百分比
+        $other_percentage = 1 - config("constant.first_payment") - config("constant.warranty_money");
+        if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
             return $this->response->array($this->apiError('项目阶段数据不正确', 403));
         }
 
@@ -166,6 +176,7 @@ class ContractController extends BaseController
             foreach ($all['item_stage'] as $stage) {
                 $stage['item_id'] = $contract->item_demand_id;
                 $stage['design_company_id'] = $design->id;
+                $stage['content'] = implode('&', $stage['content']);
                 ItemStage::create($stage);
             }
         } catch (\Exception $e) {
@@ -179,11 +190,12 @@ class ContractController extends BaseController
 
     /**
      * 判断项目阶段信息是否正确
-     * @param $item_stage
-     * @param $total
+     * @param array $item_stage 阶段数据
+     * @param float $total 阶段金额
+     * @param float $other_percentage 阶段金额比例
      * @return bool
      */
-    protected function validationItemStage($item_stage, $total)
+    protected function validationItemStage($item_stage, $total, $other_percentage)
     {
         $percentage = 0;
         $amount = 0;
@@ -196,7 +208,7 @@ class ContractController extends BaseController
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        if ($percentage == (1 * 10000) && $amount == ($total * 10000) && $title_is_set && $time_is_set) {
+        if ($percentage == ($other_percentage * 10000) && $amount == ($total * 10000) && $title_is_set && $time_is_set) {
             return true;
         } else {
             return false;
@@ -265,9 +277,10 @@ class ContractController extends BaseController
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
      *      "total": "",
-     *      "warranty_money":   //项目质保金
-     *      "item_content": '',
-     *      "design_work_content": "",
+     *      "warranty_money":   ,  //项目尾款
+     *      "first_payment": 12,  //项目首付款
+     *      "warranty_money_proportion": 0.10,   //尾款比例
+     *      "first_payment_proportion": 0.40,    //首付款比例
      *      "unique_id": "ht59018f4e78ebe"
      *      "status": 0,
      *      "item_stage":
@@ -324,7 +337,7 @@ class ContractController extends BaseController
      * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
-     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12']]
+     * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12'],'content' => ['内容一','内容二'],]
      *
      * @apiParam {string} token
      *
@@ -412,8 +425,11 @@ class ContractController extends BaseController
         }
 
         //验证项目阶段数组数据
-        $other_price = sprintf("%0.2f", $contract->total - $contract->warranty_money);
-        if (!$this->validationItemStage($all['item_stage'], $other_price)) {
+        $other_price = sprintf("%0.2f", $contract->total - $contract->warranty_money - $contract->first_payment);
+        // 阶段百分比
+        $other_percentage = 1 - $contract->warranty_money_proportion - $contract->first_payment_proportion;
+
+        if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
             return $this->response->array($this->apiError('项目阶段数据不正确', 403));
         }
 
@@ -428,6 +444,7 @@ class ContractController extends BaseController
             foreach ($all['item_stage'] as $stage) {
                 $stage['item_id'] = $contract->item_demand_id;
                 $stage['design_company_id'] = $design->id;
+                $stage['content'] = implode('&', $stage['content']);
                 ItemStage::create($stage);
             }
         } catch (\Exception $e) {

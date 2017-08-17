@@ -19,11 +19,11 @@ class AppServiceProvider extends ServiceProvider
         // sql 记录
 //        DB::listen(function ($query) {
 //            Log::info($query->sql);
-////            Log::info($query->bindings);
+//            Log::info($query->bindings);
 //            Log::info($query->time);
 //
 //        });
-        //
+
         Schema::defaultStringLength(191);
     }
 

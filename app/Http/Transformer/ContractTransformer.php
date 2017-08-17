@@ -56,19 +56,48 @@ class ContractTransformer extends TransformerAbstract
             'design_company_phone' => strval($contract->design_company_phone),
             'design_company_legal_person' => strval($contract->design_company_legal_person),
             'total' => strval($contract->total),
-            'item_content' => $contract->item_content,
-            'design_work_content' => strval($contract->design_work_content),
+//            'item_content' => $contract->item_content,
+//            'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
             'unique_id' => strval($contract->unique_id),
             'item_name' => $contract->item_name,
             'title' => strval($contract->title),
             'warranty_money' => $contract->warranty_money,
+            'first_payment' => $contract->first_payment,
+            'warranty_money_proportion' => $contract->warranty_money_proportion,
+            'first_payment_proportion' => $contract->first_payment_proportion,
             'item_stage' => $this->itemStage($contract->item_demand_id),
         ];
     }
 
     protected function itemStage($item_id)
     {
-        return ItemStage::where('item_id', $item_id)->orderBy('sort','asc')->get() ?? null;
+        $item_stage = ItemStage::where('item_id', $item_id)->orderBy('sort','asc')->get();
+        if (!$item_stage){
+            return null;
+        }else{
+            /*id	int(10)	否
+            item_id	int(10)	否		项目ID
+            design_company_id	int(10)	否		设计公司ID
+            title	varchar(50)	否		阶段名称
+            content	varchar(500)	否		内容描述
+            summary	varcha(100)	是	''	备注
+            status	tinyint(4)	否	0	项目阶段状态：0.关闭; 1.发布；
+            percentage	decimal(10,2)	否	0	项目金额百分比
+            amount	decimal(10,2)	否	0	金额
+            time	varchar(20)	否	''	工作日
+            confirm	tinyint(4)	是	0	项目发布方是否确认。 0.未确认；1.已确认；*/
+            return [
+                'item_id' => $item_stage->item_id,
+                'design_company_id' => $item_stage->design_company_id,
+                'title' => $item_stage->title,
+                'content' => $item_stage->array_content,
+                'summary' => $item_stage->summary,
+                'percentage' => $item_stage->percentage,
+                'amount' => $item_stage->amount,
+                'time' => $item_stage->time,
+                'sort' => $item_stage->sort,
+            ];
+        }
     }
 }

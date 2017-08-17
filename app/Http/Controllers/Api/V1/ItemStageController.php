@@ -246,7 +246,7 @@ class ItemStageController extends BaseController
      * }
      * }
      */
-    public function update(Request $request, $id)
+    /*public function update(Request $request, $id)
     {
         $all['item_id'] = $request->input('item_id');
         $all['title'] = $request->input('title');
@@ -288,7 +288,7 @@ class ItemStageController extends BaseController
         }
 
         return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
-    }
+    }*/
 
     /**
      * Remove the specified resource from storage.
