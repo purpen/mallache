@@ -190,6 +190,9 @@ class DesignController extends BaseController
                     "phone": "172734923",
                     "email": "qq@qq.com",
      *              "warranty_money": ,  // 项目完成时 支付金额
+     *              "warranty_money_proportion": ,  // 项目完成时 支付金额比例
+     *              "first_payment": ,   // 项目首付款
+     *              "first_payment_proportion"  //首付款比例
      *              "other_money": ,     // 阶段总金额
                 },
      *      "quotation": {      //报价单信息

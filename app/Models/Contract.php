@@ -35,7 +35,10 @@ class Contract extends BaseModel
         'status',
         'unique_id',
         'title',
-        'warranty_money'
+        'warranty_money',
+        'first_payment',
+        'warranty_money_proportion',
+        'first_payment_proportion',
     ];
 
     //相对关联 项目表
@@ -49,4 +52,6 @@ class Contract extends BaseModel
     {
         return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
     }
+
+
 }

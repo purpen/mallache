@@ -32,4 +32,16 @@ class ItemStage extends BaseModel
         $itemStage->status = $status;
         return $itemStage->save();
     }
+
+    /**
+     * 阶段内容访问修改器
+     */
+    public function getArrayContentAttribute()
+    {
+        if($this->content){
+            return (array)explode('&', $this->content);
+        }
+
+        return [];
+    }
 }

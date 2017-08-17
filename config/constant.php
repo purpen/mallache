@@ -9,8 +9,10 @@ return [
     //创建项目项目保证金
     'item_price' => env('ITEM_PRICE', 99),
 
+    // 项目首付款支付比例
+    'first_payment' => 0.40,
     //项目验收之后支付比例
-    'warranty_money' => 0.05,
+    'warranty_money' => 0.10,
 
     //项目推荐失败后，是否人工后台介入处理
     'item_recommend_lose' => true,     // true:人工介入； false：项目匹配失败

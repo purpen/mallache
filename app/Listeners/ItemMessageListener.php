@@ -35,7 +35,7 @@ class ItemMessageListener
     /**
      * Handle the event.
      *
-     * @param  ItemStatusEvent  $event
+     * @param  ItemStatusEvent $event
      * @return void
      */
     public function handle(ItemStatusEvent $event)
@@ -45,7 +45,7 @@ class ItemMessageListener
         //记录项目状态变化时间
         $item->statusTime($item->status);
 
-        switch ($item->status){
+        switch ($item->status) {
             //项目匹配失败
             case -2:
                 $this->itemFail($event);
@@ -89,6 +89,8 @@ class ItemMessageListener
                 break;
             //项目进行中
             case 11:
+                // 支付首付款
+                $this->payFirstPayment($event);
                 //通知需求公司
                 $this->itemOngoing($event);
                 break;
@@ -135,13 +137,13 @@ class ItemMessageListener
         $item = $event->item;
         $design_company_id = $event->design_company_id;
 
-        $design_company_arr = DesignCompanyModel::select(['user_id','phone'])
+        $design_company_arr = DesignCompanyModel::select(['user_id', 'phone'])
             ->whereIn('id', $design_company_id)
             ->get();
         //设计公司ID 数组
-       $user_id_arr =  $design_company_arr->pluck('user_id')->all();
+        $user_id_arr = $design_company_arr->pluck('user_id')->all();
 
-       //设计公司联系人手机
+        //设计公司联系人手机
         $phone_arr = $design_company_arr->pluck('phone')->all();
 
         //添加系统通知
@@ -150,7 +152,7 @@ class ItemMessageListener
 
         $title = '收到项目邀约';
         $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
-        for ($i = 0; $i < $n; ++$i){
+        for ($i = 0; $i < $n; ++$i) {
 //            $tools->message($user_id_arr[$i], '系统向您推荐了项目' . '【' . $item->itemInfo()['name'] . '】');
             $tools->message($user_id_arr[$i], $title, $content, 2, $item->id);
         }
@@ -190,7 +192,7 @@ class ItemMessageListener
         $title = '需求方拒绝报价';
         $content = '【' . $item_info['name'] . '】' . '需求方已选择其他设计公司';
         $n = count($user_id_arr);
-        for ($i = 0; $i < $n; ++$i){
+        for ($i = 0; $i < $n; ++$i) {
 //            $tools->message($user_id_arr[$i], '【' . $item_info['name'] . '】' . '已选择其他设计公司');
             $tools->message($user_id_arr[$i], $title, $content, 1, null);
         }
@@ -354,7 +356,7 @@ class ItemMessageListener
         DB::beginTransaction();
         $user_model = new User();
 
-        try{
+        try {
             $demand_user_id = $item->user_id;
             $item_info = $item->itemInfo();
             //支付金额
@@ -374,23 +376,78 @@ class ItemMessageListener
 
             $fund_log = new FundLog();
             //需求公司流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
+            $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付项目尾款');
             //设计公司流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目尾款');
 
             $tools = new Tools();
             //通知需求公司
 //            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付剩余项目款');
             $title = '支付尾款';
-            $content = '【' . $item_info['name'] . '】项目已向设计公司支付剩余项目款';
+            $content = '【' . $item_info['name'] . '】项目已向设计公司支付项目尾款';
             $tools->message($demand_user_id, $title, $content, 3, null);
 
             //通知设计公司
 //            $tools->message($design_user_id, '【' . $item_info['name'] . '】' . '收到剩余项目款');
             $title1 = '收到尾款';
-            $content1 = '【' . $item_info['name'] . '】项目已收到剩余项目款';
+            $content1 = '【' . $item_info['name'] . '】项目已收到项目尾款';
             $tools->message($design_user_id, $title1, $content1, 3, null);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+        }
+        DB::commit();
+    }
+
+    /**
+     * 向设计公司支付项目首付款
+     *
+     * @param ItemStatusEvent $event
+     */
+    public function payFirstPayment(ItemStatusEvent $event)
+    {
+        $item = $event->item;
+
+        DB::beginTransaction();
+        $user_model = new User();
+
+        try {
+            $demand_user_id = $item->user_id;
+            $item_info = $item->itemInfo();
+            //支付金额
+            $amount = $item->contract->first_payment;
+
+            //修改项目剩余项目款为0
+            $item->rest_fund = $item->rest_fund - $amount;
+            $item->save();
+
+            //减少需求公司账户金额（总金额、冻结金额）
+            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+
+            //设计公司用户ID
+            $design_user_id = $item->designCompany->user_id;
+            //增加设计公司账户总金额
+            $user_model->totalIncrease($design_user_id, $amount);
+
+            $fund_log = new FundLog();
+            //需求公司流水记录
+            $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付项目首付款');
+            //设计公司流水记录
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
+
+            $tools = new Tools();
+            //通知需求公司
+//            $tools->message($demand_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付首付款');
+            $title = '支付首付款';
+            $content = '【' . $item_info['name'] . '】项目已向设计公司支付项目首付款';
+            $tools->message($demand_user_id, $title, $content, 3, null);
+
+            //通知设计公司
+//            $tools->message($design_user_id, '【' . $item_info['name'] . '】' . '收到首付款');
+            $title1 = '收到首付款';
+            $content1 = '【' . $item_info['name'] . '】项目已收到项目首付款';
+            $tools->message($design_user_id, $title1, $content1, 3, null);
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
         }

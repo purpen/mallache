@@ -80,6 +80,11 @@ return [
      * 管理员加强版--可进行操作 15
      */
     'admin_plus' => [
+        //用户列表
+        '/admin/user/lists',
+        //修改用户状态
+        '/admin/user/changeStatus',
+
         '/admin/item/lists',         // 项目列表
         '/admin/item/show',           // 项目详情
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
