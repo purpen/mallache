@@ -175,6 +175,7 @@ class ContractController extends BaseController
             DB::beginTransaction();
 
             $all['item_content'] = '';
+            $all['design_work_content'] = '';
             $contract = Contract::create($all);
 
             foreach ($all['item_stage'] as $stage) {
