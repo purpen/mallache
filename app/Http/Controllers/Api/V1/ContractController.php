@@ -396,7 +396,7 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
 
-        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person','title']);
+        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person','title','item_stage']);
 
         $rules = [
             'demand_company_name' => 'required',
