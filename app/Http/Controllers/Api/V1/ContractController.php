@@ -74,6 +74,9 @@ class ContractController extends BaseController
      *      "total": "",
      *      "warranty_money": ,
      *      "first_payment": ,   // 首付款
+     *      "warranty_money_proportion": 0.10,   //尾款比例
+     *      "first_payment_proportion": 0.40,    //首付款比例
+     *
      *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
@@ -356,6 +359,10 @@ class ContractController extends BaseController
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
      *      "total": "",
+     *      "warranty_money": ,
+     *      "first_payment": ,   // 首付款
+     *      "warranty_money_proportion": 0.10,   //尾款比例
+     *      "first_payment_proportion": 0.40,    //首付款比例
      *      "item_content": '',
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
