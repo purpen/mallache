@@ -340,8 +340,6 @@ class ContractController extends BaseController
      * @apiParam {string} design_company_address 设计公司地址
      * @apiParam {string} design_company_phone 设计公司电话
      * @apiParam {string} design_company_legal_person 设计公司法人
-     * @apiParam {string} item_content 项目内容
-     * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
      * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12'],'content' => ['内容一','内容二'],]
      *
@@ -398,7 +396,7 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
 
-        $all = $request->all();
+        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person','title', 'design_company_id']);
 
         $rules = [
             'demand_company_name' => 'required',
