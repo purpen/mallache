@@ -406,8 +406,8 @@ class ContractController extends BaseController
             'design_company_address' => 'required',
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
-            'item_content' => 'required',
-            'design_work_content' => 'required',
+//            'item_content' => 'required',
+//            'design_work_content' => 'required',
             'title' => 'required|max:20',
 //            'item_stage' => 'array',
         ];
@@ -422,7 +422,7 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-            'design_work_content.required' => '设计工作内容不能为空',
+//            'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
         ];
