@@ -118,8 +118,8 @@ class ContractController extends BaseController
         // 项目验收之后支付金额
         $all['warranty_money'] = sprintf("%0.2f", $item->price * config("constant.warranty_money"));
 
-        $data['warranty_money_proportion'] = config("constant.warranty_money");
-        $data['first_payment_proportion'] = config("constant.first_payment");
+        $all['warranty_money_proportion'] = config("constant.warranty_money");
+        $all['first_payment_proportion'] = config("constant.first_payment");
         $rules = [
             'item_demand_id' => 'required|integer',
             'demand_company_name' => 'required',
