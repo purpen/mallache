@@ -87,17 +87,21 @@ class ContractTransformer extends TransformerAbstract
             amount	decimal(10,2)	否	0	金额
             time	varchar(20)	否	''	工作日
             confirm	tinyint(4)	是	0	项目发布方是否确认。 0.未确认；1.已确认；*/
-            return [
-                'item_id' => $item_stage->item_id,
-                'design_company_id' => $item_stage->design_company_id,
-                'title' => $item_stage->title,
-                'content' => $item_stage->array_content,
-                'summary' => $item_stage->summary,
-                'percentage' => $item_stage->percentage,
-                'amount' => $item_stage->amount,
-                'time' => $item_stage->time,
-                'sort' => $item_stage->sort,
-            ];
+            $data = [];
+            foreach ($item_stage as $v){
+                $data[] = [
+                    'item_id' => $v->item_id,
+                    'design_company_id' => $v->design_company_id,
+                    'title' => $v->title,
+                    'content' => $v->array_content,
+                    'summary' => $v->summary,
+                    'percentage' => $v->percentage,
+                    'amount' => $v->amount,
+                    'time' => $v->time,
+                    'sort' => $v->sort,
+                ];
+            }
+            return $data;
         }
     }
 }
