@@ -507,7 +507,7 @@ const routes = [
     path: '/vcenter/contract/show/:unique_id',
     name: 'vcenterContractView',
     meta: {
-      title: '在线合同编辑',
+      title: '合同预览',
       requireAuth: true
     },
     // 按需加载
