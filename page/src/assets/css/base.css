@@ -4,6 +4,10 @@
 
 html{
   font-size:62.5%; /* 10÷16=62.5% */
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 body{
   overflow-x: hidden;
