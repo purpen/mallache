@@ -3,7 +3,7 @@
     <div class="container">
       <div class="nav-header">
         <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-            <!--<img src="../../assets/images/d3ingo_logo_2x.png" width="120" alt="太火鸟">-->
+            <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
             <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
           <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
           <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>

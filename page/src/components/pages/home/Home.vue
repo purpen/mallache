@@ -101,16 +101,19 @@
 
     <div class="item item_4">
       <h3>战略合作</h3>
-      <div>
-        <img src="../../../assets/images/home/jdjr_logo.png" width="150" />
+      <div class="logo-list">
+        <img src="../../../assets/images/home/logo_md.jpg" />
+        <img src="../../../assets/images/home/jdjr_logo.jpg" />
+        <img src="../../../assets/images/home/logo_cxgc.jpg" />
+        <img src="../../../assets/images/home/logo_hqjj.jpg" />
       </div>
       <div class="blank40"></div>
       <h3>合作伙伴</h3>
       <div class="logo-list">
-        <img src="../../../assets/images/home/1logo.png" />
-        <img src="../../../assets/images/home/2logo.png" />
-        <img src="../../../assets/images/home/3logo.png" />
-        <img src="../../../assets/images/home/4logo.png" />
+        <img src="../../../assets/images/home/1logo.jpg" />
+        <img src="../../../assets/images/home/2logo.jpg" />
+        <img src="../../../assets/images/home/3logo.jpg" />
+        <img src="../../../assets/images/home/4logo.jpg" />
       </div>
     </div>
 
@@ -129,15 +132,9 @@ export default {
       slideList: [
         {
           'clickUrl': '#',
-          'title': '铟果',
+          'title': '铟果D³ingo产品创新SaaS平台',
           'desc': '用设计重塑品质生活',
           'image': require('@/assets/images/home/banner1.jpg')
-        },
-        {
-          'clickUrl': '#',
-          'title': '专业设计资源',
-          'desc': '汇聚100+国内专业设计服务商，满足你的创意需求',
-          'image': require('@/assets/images/home/banner2.jpg')
         }
       ],
       caseSlideList: [
@@ -238,14 +235,14 @@ export default {
   }
 
   .slide h3 {
-    font-size: 5rem;
+    font-size: 2.3rem;
     color: #fff;
-    line-height: 1.5;
+    line-height: 1.8;
     font-weight: 300;
-    padding: 250px 0 0 0;
+    padding: 130px 0 0 0;
   }
   .slide p {
-    font-size: 4rem;
+    font-size: 5rem;
     color: #fff;
     font-weight: 300;
     padding: 0;
@@ -376,7 +373,7 @@ export default {
   }
   .logo-list img {
     margin: 10px 35px;
-    width: 100px;
+    width: 15%;
   }
 
   .box-card {
