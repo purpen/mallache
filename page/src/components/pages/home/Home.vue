@@ -135,6 +135,12 @@ export default {
           'title': '铟果D³ingo产品创新SaaS平台',
           'desc': '用设计重塑品质生活',
           'image': require('@/assets/images/home/banner1.jpg')
+        },
+        {
+          'clickUrl': '#',
+          'title': '',
+          'desc': '',
+          'image': require('@/assets/images/home/banner2.jpg')
         }
       ],
       caseSlideList: [
