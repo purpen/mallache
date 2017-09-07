@@ -1,5 +1,6 @@
 <template>
   <div class="content-box">
+    <!--
     <div>
       <el-row :gutter="12" type="flex" justify="center">
         <el-col :span="5" class="banner-item left">
@@ -10,6 +11,7 @@
         </el-col>
       </el-row>
     </div>
+    -->
 
     <div class="banner">
       <h3>成为铟果设计服务商</h3>
@@ -110,10 +112,10 @@
 
 <script>
 export default {
-  name: 'test',
+  name: 'suerver_design',
   data () {
     return {
-      msg: 'This is Home'
+      msg: ''
     }
   },
   created: function() {

@@ -115,6 +115,18 @@ const routes = [
     },
     component: require('@/components/pages/home/Apply')
   },
+
+  // #### 专题页 ######
+  // 浙江设计再造
+  {
+    path: '/subject/zj',
+    name: 'subject_zj',
+    meta: {
+      requireAuth: false,
+      title: '浙江“传统产业设计再造”对接会'
+    },
+    component: require('@/components/pages/subject/Zj')
+  },
   {
     path: '/login',
     name: 'login',

@@ -3,10 +3,12 @@
 
     <el-carousel :interval="5000" height="650px">
       <el-carousel-item v-for="item in slideList" :key="item">
-        <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.desc }}</p>
-        </div>
+        <a :href="item.clickUrl">
+          <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.desc }}</p>
+          </div>
+        </a>
       </el-carousel-item>
     </el-carousel>
 
@@ -131,13 +133,13 @@ export default {
       uType: this.$store.state.event.user.type || 1,
       slideList: [
         {
-          'clickUrl': '#',
+          'clickUrl': 'javascript:void(0);',
           'title': '铟果D³ingo产品创新SaaS平台',
           'desc': '用设计重塑品质生活',
           'image': require('@/assets/images/home/banner1.jpg')
         },
         {
-          'clickUrl': '#',
+          'clickUrl': '/subject/zj',
           'title': '',
           'desc': '',
           'image': require('@/assets/images/home/banner2.jpg')
