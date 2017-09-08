@@ -358,7 +358,7 @@ export default {
   }
   .sub-title .foo {
     height: 38px;
-    width: 750px;
+    width: 640px;
     background: url('../../../assets/images/subject/zj/sub_title_foot.png') no-repeat;
     background-size: cover;
   }
@@ -422,11 +422,11 @@ export default {
   .bottom p.content {
     line-height: 2;
     color: #057577;
-    padding: 0 380px;
+    padding: 0 23%;
     margin: 10px 0;
   }
   .bottom p.content.plug {
-    padding: 0 300px;
+    padding: 0 18%;
   }
 
 
