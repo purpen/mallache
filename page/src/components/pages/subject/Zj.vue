@@ -403,6 +403,7 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     text-align: center;
+    margin-bottom: -40px;
   }
 
   .bottom .b-title {
