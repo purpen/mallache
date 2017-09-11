@@ -35,6 +35,9 @@
           </div>
 
           <div class="nav-right" v-else>
+            <div class="server-in-btn">
+              <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
+            </div>
             <el-menu class="el-menu-header" :default-active="menuactive" mode="horizontal" router>
               <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
               <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
