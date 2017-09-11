@@ -497,7 +497,7 @@ button.is-custom.is-outlined.is-loading:after {
  */
 .vcenter-menu-sub {
   height: 25px;
-  line-height: 15px;
+  line-height: 14px;
   border-bottom: 1px solid #ccc;
 }
 
