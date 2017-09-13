@@ -44,7 +44,7 @@
           </transition>
           </div>
 
-          <div class="item">
+          <div class="item" style="clear:both;">
             <div class="banner" @click="openTypeBtn(2)">
               <p class="fl"><img src="../../../assets/images/icon/ui.png" /></p>
               <div class="fl banner-title">
@@ -299,7 +299,7 @@
     height: 100%;
   }
   .banner {
-    height: 50px;
+    height: 60px;
     background-color: #FAFAFA;
     padding: 12px;
     border-bottom: 1px solid #D2D2D2;
@@ -307,10 +307,11 @@
   }
   .banner-title{
     margin: 0 0 0 20px;
-    padding-top: 5px;
-    line-height: 25px;
+    padding-top: 0;
+    line-height: 20px;
   }
-  .banner-title p img {
+  .banner p img {
+    width: 70%;
     vertical-align: middle;
   }
   .banner-title p.title{
@@ -364,10 +365,10 @@
   }
 
   .submit-btn {
-    height: 30px;
+    height: 40px;
     border-top: 1px solid #ccc;
     margin: 30px 20px 20px 20px;
-    padding: 20px 0 10px 0;
+    padding: 10px 0 10px 0;
     text-align: right;
   }
   .submit-btn button {

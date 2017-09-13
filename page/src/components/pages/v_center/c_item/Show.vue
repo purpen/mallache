@@ -388,7 +388,6 @@ export default {
               self.takingPriceDialog = false
               self.waitTakePrice = false
               self.quotation = row
-              self.quotation.status = 0
             } else {
               self.$message.error(response.data.meta.message)
               self.isTakingLoadingBtn = false
