@@ -82,7 +82,7 @@
                     <el-button @click="companyRefuseBtn">暂无兴趣</el-button>
                     <el-button class="is-custom" @click="takingBtn" type="primary">提交报价单</el-button>                      
                   </div>
-                  <div class="btn-quo" v-else="quotation && quotation.status === 0">
+                  <div class="btn-quo" v-if="quotation && quotation.status === 0">
                     <el-button class="is-custom" @click="takingBtn" type="primary">修改报价单</el-button>                      
                   </div>
 
@@ -1131,9 +1131,9 @@ export default {
   }
 
   .contract-item {
-    height: 50px;
+    height: 60px;
     margin: 20px 0 10px 0;
-    padding: 15px 0 5px 0;
+    padding: 10px 0 5px 0;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
   }
@@ -1162,6 +1162,7 @@ export default {
   .contract-right {
     float: right;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
   .contract-right p {
     float: right;

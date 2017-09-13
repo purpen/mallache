@@ -1129,9 +1129,9 @@ export default {
   }
 
   .contract-item {
-    height: 50px;
-    margin: 15px 0 5px 0;
-    padding: 10px 0 0 0;
+    height: 60px;
+    margin: 15px 0 10px 0;
+    padding: 10px 0 5px 0;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
   }

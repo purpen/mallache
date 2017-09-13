@@ -345,6 +345,12 @@
               that.$message.error('请至少添加一项项目阶段!')
               return false
             }
+            for (var j = 0; j < row.stages.length; j++) {
+              if (!row.stages[j].content || row.stages[j].content.length === 0) {
+                that.$message.error('每个阶段至少添加一项子内容!')
+                return false
+              }
+            }
             var totalPer = 0
             var totalAmount = 0
             row.item_stage = []
