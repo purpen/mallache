@@ -234,7 +234,6 @@ export default {
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
-        console.log(111)
         console.log(response.data.meta)
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
