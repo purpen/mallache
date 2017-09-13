@@ -82,6 +82,9 @@
                     <el-button @click="companyRefuseBtn">暂无兴趣</el-button>
                     <el-button class="is-custom" @click="takingBtn" type="primary">提交报价单</el-button>                      
                   </div>
+                  <div class="btn-quo" v-else="quotation && quotation.status === 0">
+                    <el-button class="is-custom" @click="takingBtn" type="primary">修改报价单</el-button>                      
+                  </div>
 
                 </div>
 
@@ -314,6 +317,7 @@ export default {
         end: false
       },
       takingPriceForm: {
+        id: '',
         itemId: '',
         price: '',
         summary: ''
@@ -365,8 +369,15 @@ export default {
             return false
           }
 
-          var apiUrl = api.addQuotation
-          var method = 'post'
+          var apiUrl
+          var method
+          if (!self.takingPriceForm.id) {
+            apiUrl = api.addQuotation
+            method = 'post'
+          } else {
+            apiUrl = api.updateQuotation.format(self.takingPriceForm.id)
+            method = 'put'
+          }
 
           self.isTakingLoadingBtn = true
           self.$http({method: method, url: apiUrl, data: row})
@@ -666,7 +677,7 @@ export default {
     self.$http.get(api.designItemId.format(id), {})
     .then (function(response) {
       if (response.data.meta.status_code === 200) {
-        console.log(response.data.data)
+        // console.log(response.data.data)
         self.item = response.data.data.item
         // self.info = response.data.data.info
         if (response.data.data.evaluate) {
@@ -677,6 +688,12 @@ export default {
           self.contract.created_at = self.contract.created_at.date_format().format('yyyy-MM-dd')
         }
         self.quotation = response.data.data.quotation
+        // console.log(self.quotation)
+        if (self.quotation) {
+          self.takingPriceForm.id = self.quotation.id
+          self.takingPriceForm.price = self.quotation.price
+          self.takingPriceForm.summary = self.quotation.summary
+        }
         // 是否显示提交报价单按钮
         if (self.quotation === null && (self.item.status === 3 || self.item.status === 4)) {
           self.waitTakePrice = true
@@ -692,7 +709,7 @@ export default {
             .then (function(response) {
               if (response.data.meta.status_code === 200) {
                 var offerCompany = response.data.data
-                console.log(offerCompany)
+                // console.log(offerCompany)
                 for (var i = 0; i < offerCompany.length; i++) {
                   var item = offerCompany[i]
                   // 是否存在已提交报价的公司
@@ -833,6 +850,7 @@ export default {
                 logoUrl = self.company.logo_image.logo
               }
               self.company.logo_url = logoUrl
+              console.log('bbb')
               console.log(self.company)
             }
           })

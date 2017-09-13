@@ -544,7 +544,7 @@ export default {
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           var offerCompany = response.data.data
-          console.log(offerCompany)
+          // console.log(offerCompany)
           for (var i = 0; i < offerCompany.length; i++) {
             var item = offerCompany[i]
             // 是否存在已提交报价的公司
@@ -691,7 +691,7 @@ export default {
     self.$http.get(api.demandId.format(id), {})
     .then (function(response) {
       if (response.data.meta.status_code === 200) {
-        console.log(response.data.data)
+        // console.log(response.data.data)
         self.item = response.data.data.item
         // self.info = response.data.data.info
         self.contract = response.data.data.contract
@@ -870,7 +870,7 @@ export default {
                 }
                 self.stickCompany[i].cases = cases
               } // endfor
-              console.log(self.stickCompany)
+              // console.log(self.stickCompany)
             }
           })
           .catch (function(error) {
@@ -976,12 +976,12 @@ export default {
 
         self.tableData = tab.concat(itemTab)
 
-        console.log(self.item)
+        // console.log(self.item)
       }
     })
     .catch (function(error) {
       self.$message.error(error.message)
-      console.log(error.message)
+      // console.log(error.message)
     })
   }
 }

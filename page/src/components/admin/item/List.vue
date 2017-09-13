@@ -213,16 +213,16 @@ export default {
       })
     },
     handleSizeChange(val) {
-      this.query.pageSize = val
+      this.query.pageSize = parseInt(val)
       this.loadList()
     },
     handleCurrentChange(val) {
-      this.query.page = val
-      this.$router.push({name: this.$route.name, query: {page: val}})
+      this.query.page = parseInt(val)
+      this.$router.push({name: this.$route.name, query: {page: this.query.page}})
     },
     loadList() {
       const self = this
-      self.query.page = this.$route.query.page || 1
+      self.query.page = parseInt(this.$route.query.page) || 1
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
       this.menuType = 0
@@ -234,9 +234,11 @@ export default {
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
+        console.log(111)
+        console.log(response.data.meta)
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
-          self.query.totalCount = response.data.meta.pagination.total
+          self.query.totalCount = parseInt(response.data.meta.pagination.total)
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
 
