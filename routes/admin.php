@@ -126,6 +126,33 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 栏目文章删除
         $api->delete('/admin/column', 'ColumnController@delete');
 
+
+        /**
+         * 文章分类
+         */
+        // 添加分类
+        $api->post('/admin/classification', 'ClassificationController@store');
+        // 分类信息详情
+        $api->get('/admin/classification', 'ClassificationController@edit');
+        // 修改分类
+        $api->put('/admin/classification', 'ClassificationController@update');
+        // 分类列表
+        $api->get('/admin/classification/list', 'ClassificationController@index');
+
+        /**
+         * 文章
+         */
+        // 文章列表
+        $api->get('/admin/article/list', 'ArticleController@index');
+        // 添加文章
+        $api->post('/admin/article', 'ArticleController@store');
+        // 文章详情
+        $api->get('/admin/article', 'ArticleController@edit');
+        // {put} /admin/article 修改文章
+        $api->put('/admin/article', 'ArticleController@update');
+        // {put} /admin/article/verifyStatus 文章审核
+        $api->put('/admin/article/verifyStatus', 'ArticleController@verifyStatus');
+
     });
 
 });
