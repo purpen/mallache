@@ -13,6 +13,7 @@ class ClassificationTransformer extends TransformerAbstract
             'name' => $classification->name,
             'type' => $classification->type,
             'type_value' => $classification->type_value,
+            'status' => $classification->status,
         ];
     }
 }

@@ -30,7 +30,9 @@ class ClassificationController extends BaseController
         $this->validate($request, [
             'type' => 'required|integer'
         ]);
-        $list = Classification::where('type', $request->input('type'))->get();
+        $list = Classification::where('type', $request->input('type'))
+            ->where('status', 1)
+            ->get();
 
         return $this->response->collection($list, new ClassificationTransformer())->setMeta($this->apiMeta());
     }

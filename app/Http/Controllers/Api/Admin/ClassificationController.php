@@ -28,7 +28,8 @@ class ClassificationController extends BaseController
      *          "id": 1,
      *          "name": "单元测试1",
      *          "type": 1,
-     *          "type_value": "文章"
+     *          "type_value": "文章",
+     *          "status": 0,            // 0.禁用；1.启用；
      *      },
      *      ],
      *      "meta": {
@@ -193,6 +194,44 @@ class ClassificationController extends BaseController
             $classification->update($data);
             return $this->response->array($this->apiSuccess());
         }
+    }
+
+    /**
+     * @api {put} /admin/classification/changeStatus 变更分类状态
+     * @apiVersion 1.0.0
+     * @apiName classification changeStatus
+     * @apiGroup AdminClassification
+     *
+     * @apiParam {integer} id 分类ID
+     * @apiParam {integer} status 0.禁用；1.启用；
+     * @apiParam {string} token
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function changeStatus(Request $request)
+    {
+        $id = $request->input('id');
+        if (!$classification = Classification::find((int)$id)) {
+            return $this->response->array($this->apiError('not found!!!', 404));
+        }
+
+        if($request->input('status')){
+            $classification->status = 1;
+        }else{
+            $classification->status = 0;
+        }
+
+        if(!$classification->save()){
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
     }
 
     /**

@@ -79,6 +79,8 @@ return [
         '/admin/classification',
         // 分类列表
         '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
 
         // 文章列表
         '/admin/article/list',
@@ -162,6 +164,8 @@ return [
         '/admin/classification',
         // 分类列表
         '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
 
         // 文章列表
         '/admin/article/list',
@@ -204,6 +208,8 @@ return [
         '/admin/classification',
         // 分类列表
         '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
 
         // 文章列表
         '/admin/article/list',

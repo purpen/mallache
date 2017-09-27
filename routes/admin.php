@@ -138,6 +138,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/classification', 'ClassificationController@update');
         // 分类列表
         $api->get('/admin/classification/list', 'ClassificationController@index');
+        // {put} /admin/classification/changeStatus 变更分类状态
+        $api->put('/admin/classification/changeStatus', 'ClassificationController@changeStatus');
 
         /**
          * 文章
