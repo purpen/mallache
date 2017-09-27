@@ -210,8 +210,9 @@ class ArticleController extends Controller
      * @apiGroup AdminArticle
      *
      * @apiParam {integer} id
-     * @apiParam {string} title *标题；
+     * @apiParam {string} title *标题
      * @apiParam {string} content 内容
+     * @apiParam {integer} classification_id 分类ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -229,13 +230,14 @@ class ArticleController extends Controller
             'id' => 'required|integer',
             'title' => 'max:50',
             'content' => 'max:1000',
+            'classification_id' => 'integer',
         ]);
 
         $article = Article::find($request->input('id'));
         if (!$article) {
             return $this->response->array($this->apiSuccess('not found', 404));
         }
-        $data = $request->only(['title', 'content']);
+        $data = $request->only(['title', 'content','classification_id']);
         $article->update($data);
 
         return $this->response->array($this->apiSuccess());

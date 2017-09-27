@@ -5,7 +5,7 @@ class Article extends BaseModel
 {
     protected $table = 'article';
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content','classification_id'];
 
     /**
      * 一对多相对关分类表classification

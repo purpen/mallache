@@ -25,6 +25,7 @@ class ArticleTransformer extends TransformerAbstract
             'status' => $article->status,
             'recommend' => $article->recommend,
             'read_amount' => $article->read_amount,
+            'created_at' => $article->created_at,
         ];
     }
 }
