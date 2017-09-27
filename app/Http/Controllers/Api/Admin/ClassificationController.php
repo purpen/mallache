@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 
 class ClassificationController extends BaseController
 {
+
     /**
-     * @api {get} /admin/classification/list 分类列表
+     * @api {get} /admin/classification/list  分类列表
      * @apiVersion 1.0.0
-     * @apiName classification index
+     * @apiName classification list
      * @apiGroup AdminClassification
      *
      * @apiParam {integer} type *栏目类型：1.文章；
