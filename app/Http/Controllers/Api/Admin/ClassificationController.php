@@ -15,12 +15,22 @@ class ClassificationController extends BaseController
      * @apiName classification list
      * @apiGroup AdminClassification
      *
-     * @apiParam {integer} type *栏目类型：1.文章；
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} type *栏目类型：0,全部；1.文章；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *
      * {
+     *      "data": [
+     *      {
+     *          "id": 1,
+     *          "name": "单元测试1",
+     *          "type": 1,
+     *          "type_value": "文章"
+     *      },
+     *      ],
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
@@ -32,9 +42,18 @@ class ClassificationController extends BaseController
         $this->validate($request, [
             'type' => 'required|integer'
         ]);
-        $list = Classification::where('type', $request->input('type'))->get();
+        $type = $request->input('type');
 
-        return $this->response->collection($list, new ClassificationTransformer)->setMeta($this->apiMeta());
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
+        $query = Classification::query();
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        $list = $query->paginate($per_page);
+
+        return $this->response->paginator($list, new ClassificationTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -53,7 +72,7 @@ class ClassificationController extends BaseController
      * @apiName classification store
      * @apiGroup AdminClassification
      *
-     * @apiParam {integer} type *栏目类型：1.文章；
+     * @apiParam {integer} type *类型：1.文章；
      * @apiParam {string} name *分类名称
      * @apiParam {string} content 描述
      * @apiParam {string} token

@@ -16,4 +16,11 @@ class Classification extends BaseModel
     {
         return $this->hasMany('App\Models\Article','classification_id');
     }
+
+    // 分类名称
+    public function getTypeValueAttribute()
+    {
+        $classification_type = config('constant.classification_type');
+        return $classification_type[$this->type] ?? '';
+    }
 }

@@ -11,6 +11,8 @@ class ClassificationTransformer extends TransformerAbstract
         return [
             'id' => $classification->id,
             'name' => $classification->name,
+            'type' => $classification->type,
+            'type_value' => $classification->type_value,
         ];
     }
 }

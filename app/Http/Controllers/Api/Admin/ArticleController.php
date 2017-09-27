@@ -29,10 +29,30 @@ class ArticleController extends Controller
      * @apiSuccessExample 成功响应:
      *
      * {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
+     * "data": [
+     * {
+     * "id": 1,
+     * "title": "修改修改",             // 文章标题
+     * "content": "测试修改",           // 文章内容
+     * "classification_id": 1,          // 类型id
+     * "classification_value": "单元测试1", // 类型名称
+     * "status": 1,
+     * "recommend": null,               // 推荐时间
+     * "read_amount": 3                 // 阅读数量
+     * },
+     * ],
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200,
+     * "pagination": {
+     * "total": 2,
+     * "count": 2,
+     * "per_page": 10,
+     * "current_page": 1,
+     * "total_pages": 1,
+     * "links": []
+     * }
+     * }
      * }
      */
     public function index(Request $request)

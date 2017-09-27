@@ -15,6 +15,16 @@ class ArticleTransformer extends TransformerAbstract
         //        status	tinyint(4)	no	0	状态：0.未发布;1.发布
         //        recommend	timestamp	no	null	推荐时间
         //        read_amount	int(11)	no	0	阅读数量
-        return $article->toArray();
+//        return $article->toArray();
+        return [
+            'id' => $article->id,
+            'title' => $article->title,
+            'content' => $article->content,
+            'classification_id' => $article->classification_id,
+            'classification_value' => $article->classification->name,
+            'status' => $article->status,
+            'recommend' => $article->recommend,
+            'read_amount' => $article->read_amount,
+        ];
     }
 }

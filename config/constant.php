@@ -162,4 +162,10 @@ return [
     'column_type' => [
         1 => '灵感',
     ],
+
+    // 分类
+    'classification_type' => [
+        1 => '文章',
+    ],
+
 ];
