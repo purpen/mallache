@@ -289,7 +289,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // {get} /article/list 文章列表
         $api->get('/article/list', 'ArticleController@index');
         // 详情
-        $api->get('/article', 'ArticleController@index@edit');
+        $api->get('/article', 'ArticleController@edit');
 
     });
 });

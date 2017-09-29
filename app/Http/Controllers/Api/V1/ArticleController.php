@@ -31,6 +31,8 @@ class ArticleController extends BaseController
      * "status": 1,
      * "recommend": null,               // 推荐时间
      * "read_amount": 3                 // 阅读数量
+     * "cover_id": 1,                   // 封面图ID
+     * "cover": ''                      // 封面图url
      * },
      * ],
      * "meta": {
@@ -81,8 +83,9 @@ class ArticleController extends BaseController
      * "classification_id": 1,          // 分类ID
      * "recommend": null,               // 推荐时间
      * "read_amount": 1,                // 阅读数量
+     * "cover_id": 1,                   // 封面图ID
+     * "cover": ''                      // 封面图url
      * "created_at": 1505727190,
-     * "updated_at": 1505727204
      * },
      * "meta": {
      * "message": "Success",

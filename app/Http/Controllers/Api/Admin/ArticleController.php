@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\AdminTransformer\ArticleTransformer;
 use App\Models\Article;
+use App\Models\AssetModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -39,6 +40,8 @@ class ArticleController extends Controller
      * "status": 1,
      * "recommend": null,               // 推荐时间
      * "read_amount": 3                 // 阅读数量
+     * "cover_id": 1,                   // 封面图ID
+     * "cover": ''                      // 封面图url
      * },
      * ],
      * "meta": {
@@ -108,6 +111,8 @@ class ArticleController extends Controller
      * @apiParam {string} title *标题；
      * @apiParam {integer} classification_id 分类ID
      * @apiParam {string} content 内容
+     * @apiParam {string} random
+     * @apiParam {integer} cover_id  封面图ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -132,13 +137,18 @@ class ArticleController extends Controller
             'title' => 'required|max:50',
             'content' => 'required|max:1000',
             'classification_id' => 'required|integer',
+            'cover_id' => 'integer',
         ]);
 
         $article = new Article();
         $article->classification_id = $request->input('classification_id');
         $article->title = $request->input('title');
         $article->content = $request->input('content');
+        $article->cover_id = $request->input('cover_id') ?? 0;
         if ($article->save()) {
+            if($random = $request->input('random')){
+                AssetModel::setRandom($article->id, $random);
+            }
             return $this->response->array($this->apiSuccess());
         } else {
             return $this->response->array($this->apiError());
@@ -177,8 +187,9 @@ class ArticleController extends Controller
      * "status": 0,                     // 状态 0.未发布，1.已发布
      * "recommend": null,               // 推荐时间
      * "read_amount": 1,                // 阅读数量
+     * "cover_id": 1,                   // 封面图ID
+     * "cover": ''                      // 封面图url
      * "created_at": 1505727190,
-     * "updated_at": 1505727204
      * },
      * "meta": {
      * "message": "Success",
@@ -213,6 +224,7 @@ class ArticleController extends Controller
      * @apiParam {string} title *标题
      * @apiParam {string} content 内容
      * @apiParam {integer} classification_id 分类ID
+     * @apiParam {integer} cover_id  封面图ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -237,7 +249,7 @@ class ArticleController extends Controller
         if (!$article) {
             return $this->response->array($this->apiSuccess('not found', 404));
         }
-        $data = $request->only(['title', 'content','classification_id']);
+        $data = $request->only(['title', 'content','classification_id','cover_id']);
         $article->update($data);
 
         return $this->response->array($this->apiSuccess());
