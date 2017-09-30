@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Http\AdminTransformer\ArticleListTransformer;
 use App\Http\AdminTransformer\ArticleTransformer;
 use App\Models\Article;
 use App\Models\AssetModel;
@@ -10,11 +11,6 @@ use App\Http\Controllers\Controller;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     /**
      * @api {get} /admin/article/list 文章列表
      * @apiVersion 1.0.0
@@ -42,6 +38,12 @@ class ArticleController extends Controller
      * "read_amount": 3                 // 阅读数量
      * "cover_id": 1,                   // 封面图ID
      * "cover": ''                      // 封面图url
+     * "type": 1,                       // 类型：1.文章；2.专题；
+     * "topic_url": "",                 // 主题url
+     * "user_id": 0,                    // 创建者ID
+     * "label": [],                     // 文章标签
+     * "short_content": "",             // 文章简述
+     * "source_from": ""                // 来源
      * },
      * ],
      * "meta": {
@@ -88,21 +90,11 @@ class ArticleController extends Controller
         }
 
         $lists = $query
-            ->orderBy('recommend','desc')
-            ->orderBy('id','desc')
+            ->orderBy('recommend', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate($per_page);
 
-        return $this->response->paginator($lists, new ArticleTransformer())->setMeta($this->apiMeta());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->response->paginator($lists, new ArticleListTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -116,6 +108,11 @@ class ArticleController extends Controller
      * @apiParam {string} content 内容
      * @apiParam {string} random
      * @apiParam {integer} cover_id  封面图ID
+     * @apiParam {integer} type  类型：1.文章；2.专题
+     * @apiParam {string}  topic_url 专题url 100
+     * @apiParam {array} label 标签
+     * @apiParam {string} short_content 文章提要 200
+     * @apiParam {string} source_from 文章来源 50
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -129,6 +126,12 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        //    type	tinyint(4)	no	1	类型：1.文章；2.专题；
+        //    topic_url	varchar(100)	yes		专题url
+        //    user_id	int(11)	no		创建人ID
+        //    label	varchar(100)	yes		标签
+        //    short_content	vachar(200)	yes		文章提要
+        //    source_from	varchar(50)	yes		文章来源
 //        id	int(10)	否
 //        title	varchar(50)	否		标题
 //        content	varchar(1000)	no		内容
@@ -141,6 +144,11 @@ class ArticleController extends Controller
             'content' => 'required|max:1000',
             'classification_id' => 'required|integer',
             'cover_id' => 'integer',
+            'type' => 'integer|required',
+            'topic_url' => 'max:100',
+            'label' => 'array',
+            'short_content' => 'max:200',
+            'source_from' => 'max:50',
         ]);
 
         $article = new Article();
@@ -148,8 +156,15 @@ class ArticleController extends Controller
         $article->title = $request->input('title');
         $article->content = $request->input('content');
         $article->cover_id = $request->input('cover_id') ?? 0;
+        $article->type = $request->input('type');
+        $article->topic_url = $request->input('topic_url') ?? '';
+        $article->user_id = $this->auth_user_id;
+        $article->label = $request->input('label') ? implode( ',',$request->input('label')) : '';
+        $article->short_content = $request->input('short_content') ?? '';
+        $article->source_from = $request->input('source_from') ?? '';
+
         if ($article->save()) {
-            if($random = $request->input('random')){
+            if ($random = $request->input('random')) {
                 AssetModel::setRandom($article->id, $random);
             }
             return $this->response->array($this->apiSuccess());
@@ -182,6 +197,12 @@ class ArticleController extends Controller
      * "cover_id": 1,                   // 封面图ID
      * "cover": ''                      // 封面图url
      * "created_at": 1505727190,
+     * "type": 1,                       // 类型：1.文章；2.专题；
+     * "topic_url": "",                 // 主题url
+     * "user_id": 0,                    // 创建者ID
+     * "label": [],                     // 文章标签
+     * "short_content": "",             // 文章简述
+     * "source_from": ""                // 来源
      * },
      * "meta": {
      * "message": "Success",
@@ -217,6 +238,11 @@ class ArticleController extends Controller
      * @apiParam {string} content 内容
      * @apiParam {integer} classification_id 分类ID
      * @apiParam {integer} cover_id  封面图ID
+     * @apiParam {integer} type  类型：1.文章；2.专题
+     * @apiParam {string}  topic_url 专题url 100
+     * @apiParam {array} label 标签
+     * @apiParam {string} short_content 文章提要 200
+     * @apiParam {string} source_from 文章来源 50
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -235,13 +261,22 @@ class ArticleController extends Controller
             'title' => 'max:50',
             'content' => 'max:1000',
             'classification_id' => 'integer',
+            'type' => 'integer',
+            'topic_url' => 'max:100',
+            'label' => 'array',
+            'short_content' => 'max:200',
+            'source_from' => 'max:50',
         ]);
 
         $article = Article::find($request->input('id'));
         if (!$article) {
             return $this->response->array($this->apiSuccess('not found', 404));
         }
-        $data = $request->only(['title', 'content','classification_id','cover_id']);
+        $data = $request->only(['title', 'content', 'classification_id', 'cover_id', 'type', 'topic_url', 'short_content', 'source_from']);
+        if ($request->input('label')) {
+            $data['label'] = implode($request->input('label'), ',');
+        }
+
         $article->update($data);
 
         return $this->response->array($this->apiSuccess());

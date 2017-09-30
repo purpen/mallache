@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ArticleListTransformer;
 use App\Http\Transformer\ArticleTransformer;
 use App\Models\Article;
 use Illuminate\Http\Request;
@@ -33,6 +35,11 @@ class ArticleController extends BaseController
      * "read_amount": 3                 // 阅读数量
      * "cover_id": 1,                   // 封面图ID
      * "cover": ''                      // 封面图url
+     *  "type": 1,                       // 类型：1.文章；2.专题；
+     * "topic_url": "",                 // 主题url
+     * "label": [],                     // 文章标签
+     * "short_content": "",             // 文章简述
+     * "source_from": ""                // 来源
      * },
      * ],
      * "meta": {
@@ -60,11 +67,11 @@ class ArticleController extends BaseController
         }
 
         $lists = $query
-            ->orderBy('recommend','desc')
-            ->orderBy('id','desc')
+            ->orderBy('recommend', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate($per_page);
 
-        return $this->response->paginator($lists, new ArticleTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new ArticleListTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -89,6 +96,11 @@ class ArticleController extends BaseController
      * "cover_id": 1,                   // 封面图ID
      * "cover": ''                      // 封面图url
      * "created_at": 1505727190,
+     *  "type": 1,                       // 类型：1.文章；2.专题；
+     * "topic_url": "",                 // 主题url
+     * "label": [],                     // 文章标签
+     * "short_content": "",             // 文章简述
+     * "source_from": ""                // 来源
      * },
      * "meta": {
      * "message": "Success",
