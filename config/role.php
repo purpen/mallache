@@ -88,6 +88,8 @@ return [
         '/admin/article',
         // 文章审核
         '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
 
 
 
@@ -173,6 +175,8 @@ return [
         '/admin/article',
         // 文章审核
         '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
     ],
 
     /**
@@ -217,5 +221,7 @@ return [
         '/admin/article',
         // 文章审核
         '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
     ],
 ];

@@ -59,7 +59,10 @@ class ArticleController extends BaseController
             $query->where('classification_id', (int)$classification_id);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('recommend','desc')
+            ->orderBy('id','desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new ArticleTransformer())->setMeta($this->apiMeta());
     }

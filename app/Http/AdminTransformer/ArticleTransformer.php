@@ -26,7 +26,7 @@ class ArticleTransformer extends TransformerAbstract
             'read_amount' => $article->read_amount,
             'created_at' => $article->created_at,
             'cover_id' => $article->cover_id,
-            'cover' => $article->caver,
+            'cover' => $article->cover,
         ];
     }
 }

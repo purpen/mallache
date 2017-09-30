@@ -87,7 +87,10 @@ class ArticleController extends Controller
             $query->where('status', (int)$status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('recommend','desc')
+            ->orderBy('id','desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new ArticleTransformer())->setMeta($this->apiMeta());
     }
@@ -154,17 +157,6 @@ class ArticleController extends Controller
             return $this->response->array($this->apiError());
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -301,6 +293,47 @@ class ArticleController extends Controller
             $article->status = 1;
         } else {
             $article->status = 0;
+        }
+        $article->save();
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /admin/article/recommend 文章推荐
+     * @apiVersion 1.0.0
+     * @apiName classification recommend
+     * @apiGroup AdminArticle
+     *
+     * @apiParam {integer} id
+     * @apiParam {integer} status 状态 0.未推荐 1.已推荐
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function recommend(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'status' => 'required|integer',
+        ]);
+
+        $article = Article::find($request->input('id'));
+        if (!$article) {
+            return $this->response->array($this->apiSuccess('not found', 404));
+        }
+
+        if ($request->input('status')) {
+            $article->recommend = time();
+        } else {
+            $article->recommend = null;
         }
         $article->save();
 

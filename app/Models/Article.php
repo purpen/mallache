@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Models;
 
 class Article extends BaseModel
 {
     protected $table = 'article';
 
-    protected $fillable = ['title', 'content','classification_id','cover_id'];
+    protected $fillable = ['title', 'content', 'classification_id', 'cover_id'];
 
     /**
      * 一对多相对关分类表classification
