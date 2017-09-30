@@ -6,6 +6,7 @@ use App\Http\AdminTransformer\ArticleListTransformer;
 use App\Http\AdminTransformer\ArticleTransformer;
 use App\Models\Article;
 use App\Models\AssetModel;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -273,6 +274,9 @@ class ArticleController extends Controller
             return $this->response->array($this->apiSuccess('not found', 404));
         }
         $data = $request->only(['title', 'content', 'classification_id', 'cover_id', 'type', 'topic_url', 'short_content', 'source_from']);
+        $data = array_filter($data,function($v){
+            return $v === null ? false : true;
+        });
         if ($request->input('label')) {
             $data['label'] = implode($request->input('label'), ',');
         }
