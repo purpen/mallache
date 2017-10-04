@@ -74,6 +74,25 @@ return [
         '/admin/column/lists',
         // 栏目文章变更状态
         '/admin/column/changeStatus',
+
+        // 文章分类
+        '/admin/classification',
+        // 分类列表
+        '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
+
+        // 文章列表
+        '/admin/article/list',
+        // 文章
+        '/admin/article',
+        // 文章审核
+        '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
+
+
+
     ],
 
     /**
@@ -142,6 +161,22 @@ return [
         '/admin/column/lists',
         // 栏目文章变更状态
         '/admin/column/changeStatus',
+
+        // 文章分类
+        '/admin/classification',
+        // 分类列表
+        '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
+
+        // 文章列表
+        '/admin/article/list',
+        // 文章
+        '/admin/article',
+        // 文章审核
+        '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
     ],
 
     /**
@@ -172,5 +207,21 @@ return [
         '/admin/column',
         // 栏目文章列表
         '/admin/column/lists',
+
+        // 文章分类
+        '/admin/classification',
+        // 分类列表
+        '/admin/classification/list',
+        // 文章分类状态变更
+        '/admin/classification/changeStatus',
+
+        // 文章列表
+        '/admin/article/list',
+        // 文章
+        '/admin/article',
+        // 文章审核
+        '/admin/article/verifyStatus',
+        // 文章推荐
+        '/admin/article/recommend',
     ],
 ];

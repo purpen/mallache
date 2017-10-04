@@ -278,5 +278,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 栏目文章列表
         $api->get('/column/lists', 'ColumnController@lists');
 
+        /**
+         * 分类列表
+         */
+        $api->get('/classification/list', 'ClassificationController@index');
+
+        /**
+         * 文章
+         */
+        // {get} /article/list 文章列表
+        $api->get('/article/list', 'ArticleController@index');
+        // 详情
+        $api->get('/article', 'ArticleController@edit');
+
     });
 });
