@@ -117,6 +117,13 @@ export default {
   messageGetMessageList: '/message/getMessageList', // GET 列表
   messageTrueRead: '/message/trueRead', // PUT 确认已读
 
+  // 文章
+  articleList: '/article/list', // GET 列表
+  article: '/article', // GET 详情
+
+  // 分类管理
+  categoryList: '/classification/list', // GET 分类列表
+
   // 附件操作
   asset: '/upload/deleteFile/{0}',  // 删除／查看图片
   upToken: '/upload/upToken',  // 获取上传token
@@ -169,6 +176,16 @@ export default {
   adminColumnList: '/admin/column/lists', // GET 列表
   adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用／禁用
+
+  // 分类管理
+  adminCategoryList: '/admin/classification/list', // GET 列表
+  adminCategory: '/admin/classification', // GET 详情 | POST 添加 | PUT 更新
+  adminCategoryChangeStatus: '/admin/classification/changeStatus', // PUT 更新状态
+
+  // 文章管理
+  adminArticleList: '/admin/article/list', // GET 列表
+  adminArticle: '/admin/article', // GET 详情 | POST 添加 | PUT 更新
+  adminArticleChangeStatus: '/admin/article/verifyStatus', // PUT 更新状态
 
   test: '/'  // End
 }

@@ -307,7 +307,7 @@
             { required: true, message: '请添写公司全称', trigger: 'blur' }
           ],
           company_type: [
-            { type: 'number', required: true, message: '请添写公司全称', trigger: 'change' }
+            { type: 'number', required: true, message: '请选择证件类型', trigger: 'change' }
           ],
           registration_number: [
             { validator: checkNumber, trigger: 'blur' }

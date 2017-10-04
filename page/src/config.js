@@ -661,6 +661,30 @@ const COLUMN_TYPE = [
   }
 ]
 
+// 分类类别
+const CATEGORY_TYPE = [
+  {
+    id: 1,
+    name: '文章'
+  },
+  {
+    id: 2,
+    name: '未定义'
+  }
+]
+
+// 文章类别
+const ARTICLE_TYPE = [
+  {
+    id: 1,
+    name: '文章'
+  },
+  {
+    id: 2,
+    name: '专题'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -678,6 +702,8 @@ module.exports = {
   COMPANY_PROPERTY_TYPE,
   COMPANY_CERTIFICATE_TYPE,
   COLUMN_TYPE,
+  CATEGORY_TYPE,
+  ARTICLE_TYPE,
 
   TEST
 }

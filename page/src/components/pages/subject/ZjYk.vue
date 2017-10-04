@@ -21,16 +21,16 @@
 
     <div class="sub_menu">
       <p>
-        <a href="javascript:void(0);" class="active">台州黄岩</a>
+        <router-link :to="{name: 'subject_zj'}">台州黄岩</router-link>
         <router-link :to="{name: 'subject_zj_lz'}">杭州良渚</router-link>
-        <router-link :to="{name: 'subject_zj_yk'}">金华永康</router-link>
+        <a href="javascript:void(0);" class="active">金华永康</a>
       </p>
     </div>
 
     <div class=" container">
 
       <div class="sub-banner">
-        <img src="../../../assets/images/subject/zj/banner.jpg" />
+        <img src="../../../assets/images/subject/zj/yk/banner.jpg" />
       </div>
       <div class="blank60"></div>
 
@@ -44,7 +44,7 @@
         </div>
 
         <el-row :gutter="15">
-          <el-col :span="8" v-for="(d, index) in startList" :key="index">
+          <el-col :span="6" v-for="(d, index) in startList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
               <div style="padding: 14px;">
@@ -60,7 +60,7 @@
         <div class="sub-title">
           <div class="tig"><div class="jiao"></div></div>
           <div class="cont">
-            <h3>启动仪式</h3>
+            <h3>签约仪式</h3>
           </div>
           <div class="foo"></div>
         </div>
@@ -102,13 +102,13 @@
         <div class="sub-title">
           <div class="tig"><div class="jiao"></div></div>
           <div class="cont">
-            <h3>浙江“传统产业设计再造”对接会</h3>
+            <h3>活动照片</h3>
           </div>
           <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
-          <el-col :span="12" v-for="(d, index) in djList" :key="index">
+          <el-col :span="6" v-for="(d, index) in hdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
             </el-card>
@@ -120,13 +120,13 @@
         <div class="sub-title">
           <div class="tig"><div class="jiao"></div></div>
           <div class="cont">
-            <h3>活动照片</h3>
+            <h3>企业走访</h3>
           </div>
           <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
-          <el-col :span="6" v-for="(d, index) in hdList" :key="index">
+          <el-col :span="6" v-for="(d, index) in vList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
             </el-card>
@@ -182,105 +182,135 @@ export default {
       startList: [
         {
           'clickUrl': '',
-          'position': '浙江省经信委生产服务业处调研员',
-          'name': '黄哲明',
-          'image': require('@/assets/images/subject/zj/hzm.jpg')
+          'position': '永康市科技局局长',
+          'name': '李兴周',
+          'image': require('@/assets/images/subject/zj/yk/lxz.jpg')
         },
         {
           'clickUrl': '',
-          'position': '黄岩区副区长',
-          'name': '陶慧敏',
-          'image': require('@/assets/images/subject/zj/thm.jpg')
+          'position': '永康市人民政府副市长',
+          'name': '吕群勇',
+          'image': require('@/assets/images/subject/zj/yk/lqy.jpg')
         },
         {
           'clickUrl': '',
-          'position': '浙江省工业设计协会副会长',
-          'name': '章群星',
-          'image': require('@/assets/images/subject/zj/zqx.jpg')
+          'position': '科技部原高新司司长、中国生产力促进中心协会常务副理事长',
+          'name': '耿战修',
+          'image': require('@/assets/images/subject/zj/yk/gzx.jpg')
+        },
+        {
+          'clickUrl': '',
+          'position': '浙江省经信委生产服务业处处长',
+          'name': '胡震涛',
+          'image': require('@/assets/images/subject/zj/yk/hzt.jpg')
         }
       ],
       qdList: [
         {
           'clickUrl': '',
-          'des': '省经信委生产服务业处调研员黄哲明，台州市经信委副主任陈海崧，黄岩区副区长陶慧敏，黄岩区政府党组成员、区工业领导小组专职副组长王志和，黄岩区经信局局长郑建光，浙江省工业设计协会副会长章群星共同启动浙江“传统产业设计再造计划”',
-          'image': require('@/assets/images/subject/zj/qd1.jpg')
+          'des': '浙江永康五金生产力促进中心和沈阳创新设计服务有限公司签订了合作协议',
+          'image': require('@/assets/images/subject/zj/yk/qd1.jpg')
         },
         {
           'clickUrl': '',
-          'des': '浙江省工业设计创新服务基地与北京太火鸟科技有限公司正式签约《共促浙江好设计交易战略合作》',
-          'image': require('@/assets/images/subject/zj/qd2.jpg')
+          'des': '浙江省工业设计创新中心和永康五金生产力促进中心签订了永康传统产业设计再造战略合作协议',
+          'image': require('@/assets/images/subject/zj/yk/qd2.jpg')
         }
       ],
       caseList: [
         {
           'clickUrl': '',
-          'title': '星威国际家居总经理 朱坤',
-          'image': require('@/assets/images/subject/zj/case1.jpg')
+          'title': '浙江工商大学艺术设计学院院长助理 许晓峰',
+          'image': require('@/assets/images/subject/zj/yk/case1.jpg')
         },
         {
           'clickUrl': '',
-          'title': '博乐设计董事长 周立钢',
-          'image': require('@/assets/images/subject/zj/case2.jpg')
+          'title': '浙江大学工业设计系副主任、教授 罗仕鉴',
+          'image': require('@/assets/images/subject/zj/yk/case2.jpg')
         },
         {
           'clickUrl': '',
-          'title': '品物设计•火人孵化创始人 杨斐',
-          'image': require('@/assets/images/subject/zj/case3.jpg')
+          'title': '杭州源骏工业设计董事长 徐洪军',
+          'image': require('@/assets/images/subject/zj/yk/case3.jpg')
         },
         {
           'clickUrl': '',
-          'title': '太火鸟科技创始人&CEO 雷海波',
-          'image': require('@/assets/images/subject/zj/case4.jpg')
+          'title': '浙江斐络设计设计总监 AndreaFilippi',
+          'image': require('@/assets/images/subject/zj/yk/case4.jpg')
         },
         {
           'clickUrl': '',
-          'title': '奥格设计董事长 章炜',
-          'image': require('@/assets/images/subject/zj/case5.jpg')
+          'title': '品物·杭州领跑者设计创始人 杨斐',
+          'image': require('@/assets/images/subject/zj/yk/case5.jpg')
         },
         {
           'clickUrl': '',
-          'title': '京东众筹文化创意组负责人 李晓熙',
-          'image': require('@/assets/images/subject/zj/case6.jpg')
-        }
-      ],
-      djList: [
-        {
-          'image': require('@/assets/images/subject/zj/dj1.jpg')
-        },
-        {
-          'image': require('@/assets/images/subject/zj/dj2.jpg')
-        },
-        {
-          'image': require('@/assets/images/subject/zj/dj3.jpg')
-        },
-        {
-          'image': require('@/assets/images/subject/zj/dj4.jpg')
+          'title': '北京太火鸟科技合伙人 舒戈',
+          'image': require('@/assets/images/subject/zj/yk/case6.jpg')
         }
       ],
       hdList: [
         {
-          'image': require('@/assets/images/subject/zj/hd1.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd1.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd2.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd2.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd3.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd3.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd4.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd4.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd5.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd5.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd6.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd6.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd7.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd7.jpg')
         },
         {
-          'image': require('@/assets/images/subject/zj/hd8.jpg')
+          'image': require('@/assets/images/subject/zj/yk/hd8.jpg')
+        }
+      ],
+      vList: [
+        {
+          'image': require('@/assets/images/subject/zj/yk/v1.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v2.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v3.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v4.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v5.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v6.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v7.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v8.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v9.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v10.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v11.jpg')
+        },
+        {
+          'image': require('@/assets/images/subject/zj/yk/v12.jpg')
         }
       ],
       videoUrl: 'http://oni525j96.bkt.clouddn.com/video/zjgz.mp4',

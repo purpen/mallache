@@ -117,7 +117,7 @@ const routes = [
   },
 
   // #### 专题页 ######
-  // 浙江设计再造
+  // 浙江设计再造--台州黄岩
   {
     path: '/subject/zj',
     name: 'subject_zj',
@@ -126,6 +126,26 @@ const routes = [
       title: '浙江“传统产业设计再造”对接会'
     },
     component: require('@/components/pages/subject/Zj')
+  },
+  // 浙江设计再造--杭州良渚
+  {
+    path: '/subject/zj_lz',
+    name: 'subject_zj_lz',
+    meta: {
+      requireAuth: false,
+      title: '浙江“传统产业设计再造”对接会'
+    },
+    component: require('@/components/pages/subject/ZjLz')
+  },
+  // 浙江设计再造--金华永康
+  {
+    path: '/subject/zj_yk',
+    name: 'subject_zj_yk',
+    meta: {
+      requireAuth: false,
+      title: '浙江“传统产业设计再造”对接会'
+    },
+    component: require('@/components/pages/subject/ZjYk')
   },
   {
     path: '/login',
@@ -809,6 +829,67 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/user/List')
+  },
+  // 分类列表
+  {
+    path: '/admin/category/list',
+    name: 'adminCategoryList',
+    meta: {
+      title: '分类列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/category/List')
+  },
+  // 编辑分类
+  {
+    path: '/admin/category/submit',
+    name: 'adminCategorySubmit',
+    meta: {
+      title: '分类编辑',
+      requireAuth: true
+    },
+    component: require('@/components/admin/category/Submit')
+  },
+  // 分类详情
+  {
+    path: '/admin/category/show/:id',
+    name: 'adminCategoryShow',
+    meta: {
+      title: '分类详情',
+      requireAuth: true
+    },
+    component: require('@/components/admin/category/Show')
+  },
+  // 文章列表
+  {
+    path: '/admin/article/list',
+    name: 'adminArticleList',
+    meta: {
+      title: '文章列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/article/List')
+  },
+  // 编辑文章
+  {
+    path: '/admin/article/submit',
+    name: 'adminArticleSubmit',
+    meta: {
+      title: '文章编辑',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/admin/article/Submit'], resolve) }
+  },
+  // 文章详情
+  {
+    path: '/admin/article/show/:id',
+    name: 'adminArticleShow',
+    meta: {
+      title: '文章详情',
+      requireAuth: true
+    },
+    component: require('@/components/admin/category/Show')
   }
 ]
 
