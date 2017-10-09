@@ -147,6 +147,17 @@ const routes = [
     },
     component: require('@/components/pages/subject/ZjYk')
   },
+
+  // 文章列表
+  {
+    path: '/article/list',
+    name: 'articleList',
+    meta: {
+      title: '文章列表',
+      requireAuth: false
+    },
+    component: require('@/components/pages/article/List')
+  },
   {
     path: '/login',
     name: 'login',

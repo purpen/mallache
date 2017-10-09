@@ -1,4 +1,4 @@
-# mallache-page 太火鸟SaaS
+# mallache-page 太火鸟 铟果SaaS
 
 > 前端
 
@@ -23,7 +23,6 @@ npm run build --report
 > vue-router2: http://router.vuejs.org/zh-cn/
 > Vuex: https://vuex.vuejs.org/zh-cn/
 > axios: https://github.com/mzabriskie/axios
-> vee-validate: http://vee-validate.logaretm.com/ `已停用`
 > Toast: https://github.com/ktsn/vuex-toast
 > 图片沦播: https://github.com/surmon-china/vue-awesome-swiper
 > 城市联动: https://github.com/QingWei-Li/vue-region-picker
@@ -31,6 +30,5 @@ npm run build --report
 
 
 ## UI、素材
-> UI框架: http://bulma.io/  `已停用`
 > element-ui: http://element.eleme.io/#/zh-CN
 > icons: http://fontawesome.io/icons/
