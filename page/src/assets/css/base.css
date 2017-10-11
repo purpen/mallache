@@ -5,18 +5,23 @@
 html{
   font-size:62.5%; /* 10÷16=62.5% */
   box-sizing: border-box;
+  height: 100%;
+  /* overflow-y: hidden; */
 }
 *, *:before, *:after {
   box-sizing: inherit;
 }
 body{
-  overflow-x: hidden;
-  margin: 0 auto;
   font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+  height: 100%;
+  /* overflow-y: hidden; */
 }
 
 #app {
-  margin: 0 auto;
+  width: 100%;
+  min-height: 100%;
+  position: relative;
+  padding-bottom: 296px;
 }
 
 .container {
@@ -26,31 +31,9 @@ body{
   min-height: 350px;
 }
 
-
-/* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
-@media screen and (min-width: 1200px) { 
-  .container {width: 1200px} 
-} 
-
-/* 设置了浏览器宽度不大于1200px时  显示992px宽度 */ 
-@media screen and (min-width: 992px) and (max-width: 1199px) {
-  .container {
-    width: 992px;
-  }
-}
-/* 设置了浏览器宽度不大于992px,不小于769时  显示768px宽度 */ 
-@media screen and (min-width: 768px) and (max-width: 991px) {
-  .container {
-    width: 768px;
-  }
-}
-
 p{
   font-size:14px;
   font-size:1.4rem;
-}
-
-.false{
 }
 
 a {
@@ -86,10 +69,18 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .fl {
   float: left;
 }
+
 .fr {
   float: right;
 }
+
 .clear {
+  clear: both;
+}
+
+.clearfix::after{
+  content: '';
+  display: block;
   clear: both;
 }
 
@@ -233,15 +224,19 @@ button.is-custom.is-outlined.is-loading:after {
  * Footer Start
  */
 .footer{
+  width: 100%;
+  /* overflow: hidden; */
   text-align:center;
-  margin-top: 50px;
   padding-bottom: 50px;
   background-color: #333;
+  position: absolute;
+  bottom:0;
 }
 .footer .item {
   float: left;
   text-align:center;
 }
+
 .footer p {
   margin: 10px;
   line-height: 2;
@@ -257,13 +252,16 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 40px 20px 10px 0px;
   color: #fff;
 }
-.footer .share-box {
+
+.footer .share-box{
   width: 160px;
   margin: 0 auto;
 }
+
 .footer p.share {
   float: left;
 }
+
 /**
  * Footer End
  */
@@ -271,6 +269,62 @@ button.is-custom.is-outlined.is-loading:after {
 /**
  * header
  */
+.m-nav-header{
+  position: relative;
+  height: 60px;
+  background: #ffffff
+}
+
+.m-nav-header .bars{
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  font-size: 30px;
+  color: #7a7a7a;
+}
+
+.m-nav-header .m-Menu{
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100vh;
+  background: rgba(10, 10, 10, 0.2);
+  transition: 0.6s all ease-in;
+  overflow: hidden
+}
+
+.m-Nav{
+  font-family: "Lantinghei SC","Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;
+  position: relative;
+  float: left;
+  width: 54vw;
+  height: 100vh;
+  background: #1b1c1d;
+  font-size: 14px;
+}
+
+
+.m-Nav li{
+  padding: 15px 19px;
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1) */
+  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.2);
+}
+
+.m-Nav li a,.m-Sign a{
+ color: rgba(255, 255, 255, 0.9);
+}
+
+.m-Sign{
+  position: absolute;
+  left: 8px;
+  bottom: 15px;
+}
+
+.m-Sign a{
+  margin:0 10px;
+}
 
 .nav-header{
   align-items: stretch;
@@ -278,32 +332,41 @@ button.is-custom.is-outlined.is-loading:after {
   background: #fff;
   padding-left: 5px;
 }
-.nav-header .el-menu--horizontal>.el-menu-item.logo{
+
+.m-nav-header .logo{
+  width: 40px;
+  height: 60px;
+  background: url(../../assets/images/logo.png) no-repeat 0 5px;
+  background-size: 30px 50px;
+  margin: 0 auto;
+  text-indent: -9999em;
+}
+
+.nav-header .el-menu--horizontal>.el-menu-item.logo
+{
   width: 40px;
   height: 60px;
   transition:none;
   padding: 0 10px;
   margin-right: 30px;
-  background-image: url(../../assets/images/logo.png);
-  background-repeat: no-repeat;
-  background-position: 0 5px;
+  background: url(../../assets/images/logo.png) no-repeat 0 5px;
   background-size: 30px 50px;
   text-indent: -9999px;
 }
-.nav-header .el-menu--horizontal>.el-menu-item.logo:hover,.el-menu--horizontal>.el-menu-item.logo.is-active{
+
+.nav-header .el-menu--horizontal>.el-menu-item.logo:hover,
+.el-menu--horizontal>.el-menu-item.logo.is-active{
   background: none;
   border: none;
   transition:none;
-  background-image: url(../../assets/images/logo.png);
-  background-repeat: no-repeat;
-  background-position: 0 5px;
+  background-image: url(../../assets/images/logo.png) no-repeat 0 5px;
   background-size: 30px 50px;
   text-indent: -9999px;
 }
 .nav-header .el-menu-header{
   background: #fff;
 }
-.nav-header .el-menu-header .el-menu-item,.el-menu-header .el-submenu{
+.nav-header .el-menu-header .el-menu-item,.m-nav-header .el-menu-header .el-menu-item,.el-menu-header .el-submenu{
   height: 60px;
   line-height: 60px;
   border-bottom: 3px solid transparent;
@@ -312,7 +375,7 @@ button.is-custom.is-outlined.is-loading:after {
   padding: 0 3px;
   margin: 0 22px;
 }
-.nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title{
+.nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title,.m-nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title{
   height: 52px;
   line-height: 52px;
   border-bottom: 3px solid transparent;
@@ -330,7 +393,7 @@ button.is-custom.is-outlined.is-loading:after {
   border-bottom-color: #222;
 }
 .nav-header a.nav-item.is-tab:hover {
-  border-bottom-color: #222; 
+  border-bottom-color: #222;
 }
 .nav-header .nav-left {
   display: flex;
@@ -376,8 +439,7 @@ button.is-custom.is-outlined.is-loading:after {
 .nav-header .icon .fa {
   font-size: 21px;
 }
-.nav-header .icon.active span {
-}
+
 .nav-header .icon.active span {
   width: 18px;
   min-height: 18px;
@@ -387,7 +449,7 @@ button.is-custom.is-outlined.is-loading:after {
   background-color: red;
   position: absolute;
   z-index: 1000;
-  right: 0%;
+  right: 0;
   margin-right: -10px;
   margin-top: -10px;
   color: #fff;
@@ -501,9 +563,6 @@ button.is-custom.is-outlined.is-loading:after {
   border-bottom: 1px solid #ccc;
 }
 
-.vcenter-menu-sub-list {
-
-}
 .vcenter-menu-sub-list .item {
   font-size: 1.5rem;
   display: block;
@@ -522,8 +581,6 @@ button.is-custom.is-outlined.is-loading:after {
 /**
  * vCenter LeftMenu
  */
-.left-menu {
-}
 
 .menu-list {
   padding: 0 0 0 0;
@@ -666,6 +723,36 @@ img.avatar {
   .file-list i.fa.is-active {
     color: red;
   }
+
+
+/* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
+@media screen and (min-width: 1200px) {
+  .container {width: 1200px}
+}
+
+/* 设置了浏览器宽度不大于1200px时  显示992px宽度 */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    width: 992px;
+  }
+}
+/* 设置了浏览器宽度不大于992px,不小于769时  显示768px宽度 */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .container {
+    width: 768px;
+  }
+}
+
+/* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
+@media screen and (max-width: 769px) {
+  #app{
+    padding-bottom: 739px;
+  }
+ .item_2_box .item2banner{
+    margin: 60px 0;
+  }
+}
+
 /**
  * FileList End
  */

@@ -2,9 +2,8 @@
   <div id="app">
     <v-header></v-header>
     <div class="container-test">
-      <router-view></router-view>   
+      <router-view></router-view>
     </div>
-
     <v-footer></v-footer>
   </div>
 </template>

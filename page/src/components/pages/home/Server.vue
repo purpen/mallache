@@ -47,7 +47,7 @@
     </div>
 
     <div class=" container">
-    
+
         <div class="pub-title">发布项目流程</div>
         <div class="process">
           <div class="item-process">
@@ -80,8 +80,7 @@
             <p>6.匹配设计服务商</p>
           </div>
         </div>
-    
-    
+
     </div>
 
     <div class="container">

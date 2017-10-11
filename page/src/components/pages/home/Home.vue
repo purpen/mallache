@@ -1,12 +1,11 @@
 <template>
   <div class="content-box">
-
-    <el-carousel :interval="5000" height="650px">
-      <el-carousel-item v-for="item in slideList" :key="item">
+    <el-carousel :interval="50000" height="pmdHeight" class="banner">
+      <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
-          <div class="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.desc }}</p>
+          <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
+            <!-- <h3>{{ item.title }}</h3>
+                  <p>{{ item.desc }}</p> -->
           </div>
         </a>
       </el-carousel-item>
@@ -15,15 +14,15 @@
     <div class="container">
       <div class="item_1 item">
         <h3>提供专业设计解决方案</h3>
-        <el-row :gutter="0">
-          <el-col :span="12">
+        <el-row>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12">
             <div class="item_1_l">
               <img src="../../../assets/images/home/index_01.png" width="150" />
               <p class="item_1_title font-weight5">产品设计</p>
               <p class="item_1_desc">产品策略／产品外观设计／结构设计</p>
             </div>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12">
             <div class="item_1_r">
               <img src="../../../assets/images/home/index_02.png" width="150" />
               <p class="item_1_title font-weight5">UI/UE设计</p>
@@ -40,26 +39,26 @@
       </div>
     </div>
 
-
     <div class="item item_2">
       <div class="item_2_box">
         <h3>铟果优势</h3>
+
         <el-row :gutter="24">
-          <el-col :span="8">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/index_03.png" />
               <p class="item_1_title">智能</p>
               <p class="item_1_desc">通过云平台+大数据计算，帮您智能匹配设计服务供应商</p>
             </div>
           </el-col>
-          <el-col :span="8">
-            <div class="">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+            <div class="item2banner">
               <img src="../../../assets/images/home/index_04.png" />
               <p class="item_1_title">安全</p>
               <p class="item_1_desc">资金托管、时间戳、供应商信用评级为交易提供全方位的安全保障 </p>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/index_05.png" />
               <p class="item_1_title">高效</p>
@@ -74,35 +73,31 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-    <el-carousel :interval="5000" height="480px">
-      <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
-        <el-row :gutter="20">
-          <el-col :span="8" v-for="(k, i) in d" :key="i">
-            <el-card class="box-card" :body-style="{ padding: '0px' }">
-              <div class="image-box">
-                <img :src="k.image">
-              </div>
-              <div class="content">
-                <p class="stuff-title">{{ k.title }}</p>
-                <div class="des">
-                  <p>{{ k.desc }}</p>
-                </div>
-              </div>
-
-            </el-card>
-          </el-col>
-
-        </el-row>
-
-      </el-carousel-item>
-
-    </el-carousel>
-
+        <el-carousel :interval="5000" height="480px">
+          <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
+            <el-row :gutter="30">
+              <el-col :xs="24" :sm="24" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
+                <el-card class="box-card" :body-style="{ padding: '0px' }">
+                  <div class="image-box">
+                    <img :src="k.image">
+                  </div>
+                  <div class="content">
+                    <p class="stuff-title">{{ k.title }}</p>
+                    <div class="des">
+                      <p>{{ k.desc }}</p>
+                    </div>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+          </el-carousel-item>
+        </el-carousel>
       </div>
     </div>
 
     <div class="item item_4">
       <h3>战略合作</h3>
+
       <div class="logo-list">
         <img src="../../../assets/images/home/logo_md.jpg" />
         <img src="../../../assets/images/home/jdjr_logo.jpg" />
@@ -111,6 +106,7 @@
       </div>
       <div class="blank40"></div>
       <h3>合作伙伴</h3>
+
       <div class="logo-list">
         <img src="../../../assets/images/home/1logo.jpg" />
         <img src="../../../assets/images/home/2logo.jpg" />
@@ -119,16 +115,13 @@
       </div>
     </div>
 
-    </div>
-
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'index',
-  data () {
+  data() {
     return {
       uType: this.$store.state.event.user.type || 1,
       slideList: [
@@ -207,216 +200,249 @@ export default {
           }
         ]
       ],
-      msg: ''
+      msg: '',
+      pmdHeight: '650px'
     }
   },
-  mounted () {
+  created() {
+    var img = new Image()
+    img.src = this.slideList[0].image
+    var oh = img.naturalHeight
+    var ow = img.naturalWidth
+    var nw = document.documentElement.clientWidth
+    if (ow !== 0 || oh !== 0) {
+      this.pmdHeight = (nw / ow * oh) + 'px'
+    }
   },
-
-  watch: {
-  },
-  methods: {
-  },
-  created: function() {
-    console.log(this.caseSlideList)
+  mounted() {
+    var banner = document.querySelector('.banner .el-carousel__container')
+    console.log(banner.attributes, this.pmdHeight)
+    for (let i of this.$refs.slide) {
+      i.style.height = this.pmdHeight
+    }
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .content-box {
-  }
-  .container{
-  }
+.slide {
+  color: #475669;
+  font-size: 18px;
+  width: 100%;
+  margin: 0;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  text-align: center;
+}
 
-  .slide {
-    color: #475669;
-    font-size: 18px;
-    line-height: 450px;
-    height: 650px;
-    margin: 0;
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-  }
+.slide h3 {
+  font-size: 2.3rem;
+  color: #fff;
+  line-height: 1.8;
+  font-weight: 300;
+  padding: 130px 0 0 0;
+}
 
-  .slide h3 {
-    font-size: 2.3rem;
-    color: #fff;
-    line-height: 1.8;
-    font-weight: 300;
-    padding: 130px 0 0 0;
-  }
-  .slide p {
-    font-size: 5rem;
-    color: #fff;
-    font-weight: 300;
-    padding: 0;
-  }
+.slide p {
+  font-size: 5rem;
+  color: #fff;
+  font-weight: 300;
+  padding: 0;
+}
 
-  .item h3 {
-    font-size: 2.8rem;
-    padding-bottom: 80px;
-  }
+.item h3 {
+  font-size: 2.8rem;
+  padding-bottom: 80px;
+}
 
+.item_1_l {
+  margin-left: 120px;
+}
+
+.item_1_r {
+  margin-right: 120px;
+}
+
+.item_1_title {
+  color: #222;
+  font-size: 2rem;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  line-height: 2;
+}
+
+.item_1_desc {
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  padding: 0 20px;
+}
+
+.pub {
+  margin: 80px 0 0 0;
+}
+
+.pub .pub-btn {
+  padding: 20px 80px 20px 80px;
+}
+
+.item_2 {
+  margin-top: 50px;
+  background-color: #FAFAFA;
+}
+
+.item_2_box {
+  margin: 0 8%;
+}
+
+.item_2_box img {
+  width: 35%;
+}
+
+.item_2 h3 {
+  padding-bottom: 80px;
+}
+
+.item_3 h3 {
+  padding-bottom: 20px;
+  color: #4B4B4B;
+}
+
+.item_4 {
+  background-color: #FAFAFA;
+  margin-bottom: -50px;
+}
+
+.item_4 h3 {
+  padding-bottom: 40px;
+}
+
+.item {
+  text-align: center;
+  padding: 60px 0 60px 0;
+}
+
+.avatar-header {
+  height: 60px;
+  padding-bottom: 30px;
+}
+
+.avator-box {
+  float: left;
+  width: 60px;
+}
+
+.avator-content {
+  float: left;
+  margin: 0 0 0 20px;
+  border-bottom: 1px solid #ccc;
+  width: 80%;
+  padding: 10px 0 20px 0;
+}
+
+.avator-content p {
+  line-height: 1.5;
+}
+
+.avatar-title {
+  color: #222;
+  font-size: 1.5rem;
+}
+
+.avatar-des {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.company-des {
+  clear: both;
+}
+
+.company-des p {
+  color: 1.2rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.item_5 h3 {
+  padding-bottom: 0px;
+}
+
+.logo-list {
+  text-align: center;
+}
+
+.logo-list img {
+  margin: 10px 35px;
+  width: 15%;
+}
+
+.box-card {
+  text-align: left;
+  width: 100%;
+  height: 460px;
+  margin: 10px 0;
+}
+
+.box-card img {
+  width: 100%;
+}
+
+.image-box {
+  margin: 0 auto;
+  max-width: 549px;
+  max-height: 347px;
+  overflow: hidden;
+}
+
+.box-card .content {
+  padding: 10px;
+}
+
+.box-card .content p.stuff-title {
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.box-card .des {
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.box-card .des p {
+  color: #666;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  font-weight: 300;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 786px) {
   .item_1_l {
-    margin-left: 120px;
+    margin-left: 0;
+    margin-bottom: 50px;
   }
+
   .item_1_r {
-    margin-right: 120px;
-  }
-  .item_1_title {
-    color: #222;
-    font-size: 2rem;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    line-height: 2;
-  }
-  .item_1_desc {
-    color: #666;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    padding: 0 20px;
+    margin-right: 0;
   }
 
-  .pub {
-    margin: 80px 0 0 0;
-  }
-  .pub .pub-btn {
-    padding: 20px 80px 20px 80px;
-  }
-
-  .item_2 {
-    margin-top: 50px;
-    background-color: #FAFAFA;
-  }
-
-  .item_2_box {
-    margin: 0 8%;
-  }
-  .item_2_box img {
-    width: 35%;
-  }
-
-  .item_2 h3 {
-    padding-bottom: 80px;
-  }
-
-  .item_3 {
-  }
-  .item_3 h3 {
-    padding-bottom: 20px;
-    color: #4B4B4B;
-  }
-  .item_3_back {
-
-  }
-
-  .item_4 {
-    background-color: #FAFAFA;
-    margin-bottom: -50px;
-  }
-  .item_4 h3{
-    padding-bottom: 40px;
-  }
-
-  .item {
-    text-align: center;
-    padding: 60px 0 60px 0;
-  }
-
-  .box-card {
-    text-align: left;
-    height: 250px;
-    width: 100%;
-  }
-
-  .avatar-header {
-    height: 60px;
-    padding-bottom: 30px;
-  }
-
-  .avator-box {
-    float: left;
-    width: 60px;
-  }
-
-  .avator-content {
-    float: left;
-    margin: 0 0 0 20px;
-    border-bottom: 1px solid #ccc;
-    width: 80%;
-    padding: 10px 0 20px 0;
-  }
-  .avator-content p {
-    line-height: 1.5;
-  }
-
-  .avatar-title {
-    color: #222;
-    font-size: 1.5rem;
-  }
-  .avatar-des {
-    font-size: 1.2rem;
-    color: #666;
-  }
-
-  .company-des {
-    clear: both;
-  }
-  .company-des p {
-    color: 1.2rem;
-    color: #666;
-    line-height: 1.5;
-  }
-
-  .item_5 h3 {
-    padding-bottom: 0px;
-  }
-
-  .logo-list {
-    text-align: center;
-  }
   .logo-list img {
     margin: 10px 35px;
-    width: 15%;
+    width: 30%;
   }
 
-  .box-card {
-    height: 460px;
-    margin: 10px 0;
+  .item_2 .item2banner {
+    margin: 60px 0;
   }
+}
+/* 有待修改 */
 
-  .box-card img {
-    width: 100%;
-  }
-
-  .image-box {
-    height: 250px;
-    overflow: hidden;
-  }
-
+@media screen and (max-width: 500px) {
   .box-card .content {
-    padding: 10px;
+    padding-top: 28px;
   }
-  .box-card .content p.stuff-title {
-    font-size: 1.5rem;
-    color: #222;
-  }
-
-  .box-card .des {
-    margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .box-card .des p {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 1.8;
-    font-weight: 300;
-    text-overflow: ellipsis;
-  }
-
+}
 </style>

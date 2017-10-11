@@ -115,7 +115,6 @@ const routes = [
     },
     component: require('@/components/pages/home/Apply')
   },
-
   // #### 专题页 ######
   // 浙江设计再造--台州黄岩
   {
@@ -901,6 +900,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/category/Show')
+  },
+  // 404
+  {
+    path: '*',
+    name: '404',
+    meta: {
+      title: '找不到此页面',
+      requireAuth: true
+    },
+    component: require('components/pages/notfind/notfind')  // webpack 设置新的别名 components
   }
 ]
 
@@ -925,7 +934,7 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       store.commit(types.PREV_URL_NAME, to.name)
-      next({name: 'login'})
+      next({ name: 'login' })
     }
   } else {
     next()

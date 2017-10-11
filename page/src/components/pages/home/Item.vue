@@ -95,11 +95,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  .container {
-    min-height: ;
-  }
-
   .line {
     border-bottom: 1px solid #ccc;
   }
@@ -119,6 +114,5 @@
   .content-box p img {
     vertical-align: middle;
   }
-
 
 </style>
