@@ -64,8 +64,8 @@
               label="状态"
               width="60">
                 <template scope="scope">
-                  <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
-                  <p v-else><el-tag type="gray">禁用</el-tag></p>
+                  <p v-if="scope.row.status === 1"><el-tag type="success">发布</el-tag></p>
+                  <p v-else><el-tag type="gray">草稿</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -78,8 +78,8 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">草稿</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发布</a>
                   </p>
                   <p>
                     <router-link :to="{name: 'adminArticleSubmit', query: {id: scope.row.id}}">编辑</router-link>

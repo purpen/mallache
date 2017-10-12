@@ -75,7 +75,7 @@
 
               <el-row :gutter="0">
                 <el-col :span="24">
-                  <el-form-item label="上传图片" prop="">
+                  <el-form-item label="上传封面图" prop="">
                     <el-upload
                       class="upload-demo"
                       :action="uploadUrl"

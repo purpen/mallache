@@ -114,7 +114,7 @@ export default {
   }
 
   .item {
-    height: 450px;
+    height: 460px;
     margin: 10px 0;
   }
 
