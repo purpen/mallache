@@ -147,6 +147,27 @@ const routes = [
     },
     component: require('@/components/pages/subject/ZjYk')
   },
+  // RCIP衍生创新峰会
+  {
+    path: '/subject/rcip',
+    name: 'subject_rcip',
+    meta: {
+      requireAuth: false,
+      title: 'RCIP衍生创新峰会'
+    },
+    component: require('@/components/pages/subject/Rcip')
+  },
+
+  // 专题列表
+  {
+    path: '/subject/list',
+    name: 'subjectList',
+    meta: {
+      title: '专题列表',
+      requireAuth: false
+    },
+    component: require('@/components/pages/subject/List')
+  },
 
   // 文章列表
   {
@@ -157,6 +178,17 @@ const routes = [
       requireAuth: false
     },
     component: require('@/components/pages/article/List')
+  },
+  // 文章详情
+  {
+    path: '/article/show/:id',
+    name: 'articleShow',
+    meta: {
+      title: '文章详情',
+      requireAuth: false
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/pages/article/Show'], resolve) }
   },
   {
     path: '/login',

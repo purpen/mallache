@@ -104,6 +104,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-bottom: 10px;
 }
 
+.description {
+  color: #666;
+  font-size: 1.2rem;
+  font-weight: 200;
+  line-height: 1.5;
+}
+
 /** 修复导航鼠标经过宽度bug **/
 .el-submenu .el-menu-item {
     min-width: auto;
@@ -669,4 +676,41 @@ img.avatar {
 /**
  * FileList End
  */
+
+/**
+ * Article Body Start
+ */
+.content .body {
+  clear: both;
+}
+.content .body p {
+  font-size: 1.4rem;
+  color: #222;
+  line-height: 1.8;
+}
+.content .body p img, .content .body img {
+  text-align: center;
+  margin: 20px auto;
+  max-width: 100%;
+  display: block;
+}
+.content .body h1 {
+  font-size: 5.5rem;
+}
+.content .body h2 {
+  font-size: 3.5rem;
+}
+.content .body h3 {
+  font-size: 3rem;
+}
+.content .body strong {
+  font-weight: bold;
+}
+.content .body em {
+  font-style: italic;
+}
+/**
+ * Article Body End
+ */
+
 

@@ -39,6 +39,14 @@
                 </el-radio-group>
               </el-form-item>
 
+              <el-row :gutter="24">
+                <el-col :span="16">
+                  <el-form-item label="专题地址" prop="topic_url">
+                    <el-input v-model="form.topic_url" placeholder=""></el-input>
+                  </el-form-item>           
+                </el-col>
+              </el-row>
+
               <el-form-item label="分类" prop="classification_id">
                 <el-radio-group v-model.number="form.classification_id">
                   <el-radio-button
@@ -57,9 +65,10 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="16">
-                  <el-form-item label="专题地址" prop="topic_url">
-                    <el-input v-model="form.topic_url" placeholder=""></el-input>
+                <el-col :span="12">
+                  <el-form-item label="标签" prop="label_str">
+                    <el-input v-model="form.label_str" placeholder="多个标签用','分隔"></el-input>
+                    <div class="description">*多个标签用','分隔,每个标签不超过7个字符，尽量避免使用特殊字符。</div>
                   </el-form-item>           
                 </el-col>
               </el-row>
@@ -185,6 +194,7 @@ export default {
         topic_url: '',
         short_content: '',
         label: [],
+        label_str: '',
         content: ''
       },
       ruleForm: {
@@ -221,8 +231,11 @@ export default {
             source_from: that.form.source_from,
             topic_url: that.form.topic_url,
             short_content: that.form.short_content,
-            label: that.form.label,
+            label_str: that.form.label_str,
             content: that.form.content
+          }
+          if (row.label_str) {
+            row.label = row.label_str.split(',')
           }
           row.cover_id = that.coverId
           var method = null
@@ -454,6 +467,10 @@ export default {
           that.form = response.data.data
           if (that.form.cover_id) {
             that.coverId = that.form.cover_id
+          }
+          that.form.label_str = ''
+          if (that.form.label) {
+            that.form.label_str = that.form.label.join(',')
           }
           console.log(that.form)
 

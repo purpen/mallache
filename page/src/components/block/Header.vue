@@ -64,7 +64,7 @@ export default {
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
-        topic: { path: '/subject/zj' },
+        topic: { path: '/article/list' },
         stuff: { path: '/stuff' },
         apply: { path: '/apply' },
         login: { path: '/login' },
@@ -136,7 +136,7 @@ export default {
     },
     menuactive() {
       let menu = this.$route.path.split('/')[1]
-      if (menu === 'subject') {
+      if (menu === 'article') {
         return 'topic'
       }
       return menu
