@@ -72,7 +72,7 @@ return [
             'domain' => 'saas',
             'call_back_url' => env('QINIU_CALL_BACK_URL', 'http://sa.taihuoniao.com/asset/callback'),
             //
-            'url' => 'http://oni525j96.bkt.clouddn.com/',                    //图片服务器
+            'url' => 'https://d3g.taihuoniao.com/',                    //图片服务器
             'small' => '-p280x210.jpg',       //缩略图
             'big' => '-p800.jpg',                 //大图
             'logo' => '-p180x180.jpg',      //头像

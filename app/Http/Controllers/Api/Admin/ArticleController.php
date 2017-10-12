@@ -160,7 +160,7 @@ class ArticleController extends Controller
         $article->type = $request->input('type');
         $article->topic_url = $request->input('topic_url') ?? '';
         $article->user_id = $this->auth_user_id;
-        $article->label = $request->input('label') ? implode( ',',$request->input('label')) : '';
+        $article->label = $request->input('label') ? implode(',', $request->input('label')) : '';
         $article->short_content = $request->input('short_content') ?? '';
         $article->source_from = $request->input('source_from') ?? '';
 
@@ -274,7 +274,7 @@ class ArticleController extends Controller
             return $this->response->array($this->apiSuccess('not found', 404));
         }
         $data = $request->only(['title', 'content', 'classification_id', 'cover_id', 'type', 'topic_url', 'short_content', 'source_from']);
-        $data = array_filter($data,function($v){
+        $data = array_filter($data, function ($v) {
             return $v === null ? false : true;
         });
         if ($request->input('label')) {
