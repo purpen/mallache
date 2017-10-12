@@ -66,7 +66,7 @@ export default {
     weChat() {
       this.dialogVisible = true
       let canvas = qrcanvas({
-        data: this.oLink,
+        data: this.link,
         size: 250,
         correctLevel: 'M'
       })

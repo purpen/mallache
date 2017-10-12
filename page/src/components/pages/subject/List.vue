@@ -16,7 +16,7 @@
               </a>
             </div>
             <div class="content">
-              <a :href="d.url" target="_blank">{{ d.title }}</a>
+              <p class="title"><a :href="d.url" target="_blank">{{ d.title }}</a></p>
               <div class="des">
                 <p>{{ d.content }}</p>
               </div>
@@ -129,6 +129,11 @@ export default {
   .content {
     padding: 10px;
   }
+  .content p.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .content a {
     color: #222;
     font-size: 1.8rem;
@@ -144,7 +149,11 @@ export default {
     color: #666;
     font-size: 1.4rem;
     line-height: 1.3;
-    text-overflow: ellipsis;
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2; 
   }
 
 </style>
