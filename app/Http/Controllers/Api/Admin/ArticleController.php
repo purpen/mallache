@@ -260,7 +260,6 @@ class ArticleController extends Controller
         $this->validate($request, [
             'id' => 'required|integer',
             'title' => 'max:50',
-            'content' => 'max:1000',
             'classification_id' => 'integer',
             'type' => 'integer',
             'topic_url' => 'max:100',
