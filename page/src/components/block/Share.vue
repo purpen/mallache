@@ -66,7 +66,7 @@ export default {
     weChat() {
       this.dialogVisible = true
       let canvas = qrcanvas({
-        data: this.link,
+        data: 'http://www.baidu.com',
         size: 250,
         correctLevel: 'M'
       })
