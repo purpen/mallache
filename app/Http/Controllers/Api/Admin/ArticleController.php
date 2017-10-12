@@ -142,7 +142,7 @@ class ArticleController extends Controller
 //        read_amount	int(11)	no	0	阅读数量
         $this->validate($request, [
             'title' => 'required|max:50',
-            'content' => 'required|max:1000',
+            'content' => 'required',
             'classification_id' => 'required|integer',
             'cover_id' => 'integer',
             'type' => 'integer|required',
