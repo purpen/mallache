@@ -30,6 +30,14 @@
                 </el-col>
               </el-row>
 
+              <el-row :gutter="24">
+                <el-col :span="6">
+                  <el-form-item label="文章来源" prop="source_from">
+                    <el-input v-model="form.source_from" placeholder=""></el-input>
+                  </el-form-item>           
+                </el-col>
+              </el-row>
+
               <el-form-item label="类型" prop="type">
                 <el-radio-group v-model.number="form.type">
                   <el-radio-button
@@ -55,14 +63,6 @@
                     :label="item.value">{{ item.label }}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
-
-              <el-row :gutter="24">
-                <el-col :span="6">
-                  <el-form-item label="文章来源" prop="source_from">
-                    <el-input v-model="form.source_from" placeholder=""></el-input>
-                  </el-form-item>           
-                </el-col>
-              </el-row>
 
               <el-row :gutter="24">
                 <el-col :span="12">
@@ -189,7 +189,7 @@ export default {
       form: {
         classification_id: '',
         title: '',
-        type: 0,
+        type: 1,
         source_from: '',
         topic_url: '',
         short_content: '',

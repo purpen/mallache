@@ -98,7 +98,8 @@ export default {
     margin-bottom: 10px;
   }
   .category-list {
-    margin: 30px 0 20px 0;
+    margin: 30px auto 20px auto;
+    text-align: center;
   }
   .category-list a {
     font-size: 1.6rem;
@@ -113,7 +114,7 @@ export default {
   }
 
   .item {
-    height: 440px;
+    height: 450px;
     margin: 10px 0;
   }
 
@@ -127,7 +128,7 @@ export default {
   }
 
   .content {
-    padding: 10px;
+    padding: 20px;
   }
   .content p.title {
     white-space: nowrap;
@@ -148,7 +149,7 @@ export default {
   .des p {
     color: #666;
     font-size: 1.4rem;
-    line-height: 1.3;
+    line-height: 1.5;
     overflow:hidden; 
     text-overflow:ellipsis;
     display:-webkit-box; 
