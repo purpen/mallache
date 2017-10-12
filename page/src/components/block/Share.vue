@@ -42,25 +42,21 @@ export default {
     return {
       windowName: 'tShare',
       dialogVisible: false,
-      oLink: '',
-      oTitle: '',
-      oPicUrl: '',
-      oSite: '',
       msg: ''
     }
   },
-  watch: {
-    link(d) {
-      this.oLink = encodeURIComponent(d)
+  computed: {
+    oLink() {
+      return encodeURIComponent(this.link)
     },
-    title(d) {
-      this.oTitle = encodeURIComponent(d)
+    oTitle() {
+      return encodeURIComponent(this.title)
     },
-    picUrl(d) {
-      this.oPicUrl = d
+    oPicUrl() {
+      return encodeURIComponent(this.picUrl)
     },
-    site(d) {
-      this.oSite = encodeURIComponent(d)
+    oSite() {
+      return encodeURIComponent(this.site)
     }
   },
   methods: {
@@ -72,7 +68,7 @@ export default {
       let canvas = qrcanvas({
         data: this.oLink,
         size: 250,
-        correctLevel: 'H'
+        correctLevel: 'M'
       })
       var timer = setInterval(function() {
         if (document.getElementById('qrcode')) {
@@ -84,13 +80,13 @@ export default {
       }, 100)
     },
     weibo() {
-      var url = 'http://v.t.sina.com.cn/share/share.php?url=' + this.link + '&title=' + this.title + '&pic=' + this.picUrl
+      var url = 'http://v.t.sina.com.cn/share/share.php?url=' + this.oLink + '&title=' + this.oTitle + '&pic=' + this.oPicUrl
       var params = this.getParamsOfShareWindow(607, 523)
       window.open(url, this.windowName, params)
       return false
     },
     qZone() {
-      var url = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + this.link + '&title=' + this.title + '&pics=' + this.picUrl + '&site=' + this.site
+      var url = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + this.oLink + '&title=' + this.oTitle + '&pics=' + this.oPicUrl + '&site=' + this.oSite
       var params = this.getParamsOfShareWindow(600, 560)
       window.open(url, this.windowName, params)
       return false

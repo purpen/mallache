@@ -16,7 +16,7 @@
               </router-link>
             </div>
             <div class="content">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+              <p class="title"><router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link><p>
               <div class="des">
                 <p>{{ d.short_content }}</p>
               </div>
@@ -33,9 +33,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[50, 100, 500]"
             :page-size="query.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
+            layout="total, prev, pager, next, jumper"
             :total="query.totalCount">
           </el-pagination>
 
@@ -55,7 +54,7 @@ export default {
       isLoading: false,
       query: {
         page: 1,
-        pageSize: 3,
+        pageSize: 9,
         totalCount: 0,
         sort: 1,
         type: 0,
@@ -180,6 +179,11 @@ export default {
   .content {
     padding: 10px;
   }
+  .content p.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .content a {
     color: #222;
     font-size: 1.8rem;
@@ -195,7 +199,11 @@ export default {
     color: #666;
     font-size: 1.4rem;
     line-height: 1.3;
-    text-overflow: ellipsis;
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2; 
   }
 
 </style>
