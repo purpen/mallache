@@ -57,31 +57,31 @@
           <i class="fa fa-bars" aria-hidden="true"></i>
         </div>
         <section class="m-Menu" ref="mMenu" @click="mNavClick">
-          <div class="m-Nav" el="mNav">
-            <ul>
-              <li @click="closeMenu">
-                <router-link to="/home">首页</router-link>
-              </li>
-              <li @click="closeMenu">
-                <router-link to="/server">服务</router-link>
-              </li>
-              <li @click="closeMenu">
-                <router-link to="/subject/zj">铟果说</router-link>
-              </li>
-              <li @click="closeMenu">
-                <router-link to="/stuff">灵感</router-link>
-              </li>
-            </ul>
-            <div class="m-Sign">
-              <span @click="closeMenu">
-                <router-link to="login">登录</router-link>
-              </span>
-              <span @click="closeMenu">
-                <router-link to="register" @click="closeMenu">注册</router-link>
-              </span>
-            </div>
-          </div>
         </section>
+        <div class="m-Nav" ref="mNav">
+          <ul>
+            <li @click="closeMenu">
+              <router-link to="/home">首页</router-link>
+            </li>
+            <li @click="closeMenu">
+              <router-link to="/server">服务</router-link>
+            </li>
+            <li @click="closeMenu">
+              <router-link to="/subject/zj">铟果说</router-link>
+            </li>
+            <li @click="closeMenu">
+              <router-link to="/stuff">灵感</router-link>
+            </li>
+          </ul>
+          <div class="m-Sign">
+            <span @click="closeMenu">
+              <router-link to="login">登录</router-link>
+            </span>
+            <span @click="closeMenu">
+              <router-link to="register" @click="closeMenu">注册</router-link>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="header-buttom-line"></div>
@@ -161,26 +161,35 @@ export default {
     mmenuHide() {
       this.menuHide = !this.menuHide
       if (this.menuHide) {
-        this.$refs.mMenu.style.width = 0
+        this.reScroll()
       } else {
-        var that = this
-        this.$refs.mMenu.style.display = 'block'
-        setTimeout(() => {
-          that.$refs.mMenu.style.width = '100%'
-        }, 200)
+        this.addScroll()
       }
     },
     // 点击超链接关闭菜单
     closeMenu(e) {
       e.stopPropagation()
       this.menuHide = !this.menuHide
-      this.$refs.mMenu.style.width = 0
+      this.reScroll()
     },
+    // 点击其他地方关闭菜单
     mNavClick(e) {
-      e.stopPropagation()
-      if (e.target !== this.$refs.mNav) {
-        this.closeMenu(e)
-      }
+      this.closeMenu(e)
+      console.log(1)
+    },
+    addScroll() {
+      // this.$refs.mCover.style.width = '100%'
+      this.$refs.mNav.style.marginLeft = 0
+      this.$refs.mMenu.style.width = '100%'
+      document.body.setAttribute('class', 'disableScroll')
+      document.childNodes[1].setAttribute('class', 'disableScroll')
+    },
+    reScroll() {
+      // this.$refs.mCover.style.width = 0
+      this.$refs.mNav.style.marginLeft = '-54vw'
+      this.$refs.mMenu.style.width = 0
+      document.body.removeAttribute('class', 'disableScroll')
+      document.childNodes[1].removeAttribute('class', 'disableScroll')
     }
   },
   computed: {

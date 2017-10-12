@@ -6,7 +6,6 @@ html{
   font-size:62.5%; /* 10÷16=62.5% */
   box-sizing: border-box;
   height: 100%;
-  /* overflow-y: hidden; */
 }
 *, *:before, *:after {
   box-sizing: inherit;
@@ -14,7 +13,10 @@ html{
 body{
   font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
   height: 100%;
-  /* overflow-y: hidden; */
+}
+
+.disableScroll{
+  overflow-y: hidden;
 }
 
 #app {
@@ -285,21 +287,23 @@ button.is-custom.is-outlined.is-loading:after {
 
 .m-nav-header .m-Menu{
   position: absolute;
-  z-index: 9;
+  z-index: 8;
   top: 0;
-  left: 0;
+  right: 0;
   width: 0;
   height: 100vh;
-  background: rgba(10, 10, 10, 0.2);
-  transition: 0.6s all ease-in;
-  overflow: hidden
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .m-Nav{
   font-family: "Lantinghei SC","Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;
-  position: relative;
+  position: absolute;
+  top: 0;
+  z-index: 9;
   float: left;
   width: 54vw;
+  transition: all .5s;
+  margin-left: -54vw;
   height: 100vh;
   background: #1b1c1d;
   font-size: 14px;
@@ -307,13 +311,18 @@ button.is-custom.is-outlined.is-loading:after {
 
 
 .m-Nav li{
-  padding: 15px 19px;
   /* border-bottom: 1px solid rgba(255, 255, 255, 0.1) */
   box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.2);
 }
 
-.m-Nav li a,.m-Sign a{
- color: rgba(255, 255, 255, 0.9);
+.m-Nav li a{
+  display: block;
+  padding: 15px 19px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.m-Sign a{
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .m-Sign{

@@ -1,11 +1,11 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="50000" height="pmdHeight" class="banner">
+    <el-carousel :interval="50000" :height="pmdHeight" class="banner" rel="calBanner">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
           <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
-            <!-- <h3>{{ item.title }}</h3>
-                  <p>{{ item.desc }}</p> -->
+            <h3 :class="{'m-h3' : isMob}">{{ item.title }}</h3>
+            <p :class="{'m-p' : isMob}">{{ item.desc }}</p>
           </div>
         </a>
       </el-carousel-item>
@@ -15,14 +15,14 @@
       <div class="item_1 item">
         <h3>提供专业设计解决方案</h3>
         <el-row>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12">
             <div class="item_1_l">
               <img src="../../../assets/images/home/index_01.png" width="150" />
               <p class="item_1_title font-weight5">产品设计</p>
               <p class="item_1_desc">产品策略／产品外观设计／结构设计</p>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12">
             <div class="item_1_r">
               <img src="../../../assets/images/home/index_02.png" width="150" />
               <p class="item_1_title font-weight5">UI/UE设计</p>
@@ -44,21 +44,21 @@
         <h3>铟果优势</h3>
 
         <el-row :gutter="24">
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/index_03.png" />
               <p class="item_1_title">智能</p>
               <p class="item_1_desc">通过云平台+大数据计算，帮您智能匹配设计服务供应商</p>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <div class="item2banner">
               <img src="../../../assets/images/home/index_04.png" />
               <p class="item_1_title">安全</p>
               <p class="item_1_desc">资金托管、时间戳、供应商信用评级为交易提供全方位的安全保障 </p>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/index_05.png" />
               <p class="item_1_title">高效</p>
@@ -76,7 +76,7 @@
         <el-carousel :interval="5000" height="480px">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30">
-              <el-col :xs="24" :sm="24" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
+              <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
                 <el-card class="box-card" :body-style="{ padding: '0px' }">
                   <div class="image-box">
                     <img :src="k.image">
@@ -119,6 +119,9 @@
 </template>
 
 <script>
+import { calcImgSize } from 'assets/js/calc'
+import { IsMobile } from 'assets/js/base'
+
 export default {
   name: 'index',
   data() {
@@ -201,22 +204,25 @@ export default {
         ]
       ],
       msg: '',
-      pmdHeight: '650px'
+      pmdHeight: '650px',
+      isMob: false
     }
   },
   created() {
-    var img = new Image()
-    img.src = this.slideList[0].image
-    var oh = img.naturalHeight
-    var ow = img.naturalWidth
-    var nw = document.documentElement.clientWidth
-    if (ow !== 0 || oh !== 0) {
-      this.pmdHeight = (nw / ow * oh) + 'px'
+    if (IsMobile()) {
+      this.pmdHeight = '186px'
+      this.isMob = true
+    } else {
+      this.pmdHeight = '650px'
+      this.isMob = false
     }
+    this.pmdHeight = calcImgSize(this.slideList[0].image)
   },
   mounted() {
-    var banner = document.querySelector('.banner .el-carousel__container')
-    console.log(banner.attributes, this.pmdHeight)
+    var that = this
+    window.onresize = () => {
+      that.pmdHeight = calcImgSize(that.slideList[0].image)
+    }
     for (let i of this.$refs.slide) {
       i.style.height = this.pmdHeight
     }
@@ -242,7 +248,7 @@ export default {
   color: #fff;
   line-height: 1.8;
   font-weight: 300;
-  padding: 130px 0 0 0;
+  padding: 10% 0 0 0;
 }
 
 .slide p {
@@ -250,6 +256,14 @@ export default {
   color: #fff;
   font-weight: 300;
   padding: 0;
+}
+
+.slide .m-h3 {
+  font-size: 1.3rem;
+}
+
+.slide .m-p {
+  font-size: 3rem;
 }
 
 .item h3 {
@@ -419,7 +433,7 @@ export default {
   text-overflow: ellipsis;
 }
 
-@media screen and (max-width: 786px) {
+@media screen and (max-width: 768px) {
   .item_1_l {
     margin-left: 0;
     margin-bottom: 50px;
@@ -438,6 +452,17 @@ export default {
     margin: 60px 0;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 /* 有待修改 */
 
 @media screen and (max-width: 500px) {
