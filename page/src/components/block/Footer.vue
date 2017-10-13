@@ -1,7 +1,7 @@
 <template>
   <div class="footer clear">
     <el-row>
-      <el-col class="item" :xs="24" :sm="24" :md="6" :lg="6">
+      <el-col class="item" :xs="24" :sm="6" :md="6" :lg="6">
         <p class="title">铟果</p>
         <p>
           <router-link :to="{name: 'about'}">关于我们</router-link>
@@ -11,7 +11,7 @@
         </p>
       </el-col>
 
-      <el-col class="item" :xs="24" :sm="24" :md="6" :lg="6">
+      <el-col class="item" :xs="24" :sm="6" :md="6" :lg="6">
         <p class="title">服务</p>
         <p>
           <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
@@ -21,7 +21,7 @@
         </p>
       </el-col>
 
-      <el-col class="item" :xs="24" :sm="24" :md="6" :lg="6">
+      <el-col class="item" :xs="24" :sm="6" :md="6" :lg="6">
         <p class="title">帮助</p>
         <p>
           <router-link :to="{name: 'trade'}" class="">交易保障</router-link>
@@ -34,7 +34,7 @@
         </p>
       </el-col>
 
-      <el-col class="item" :xs="24" :sm="24" :md="6" :lg="6">
+      <el-col class="item" :xs="24" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
         <div class="share-box">
           <p class="share">

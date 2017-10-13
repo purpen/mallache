@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/index'
 import * as types from '../store/mutation-types'
+import {
+  calcImgSize
+} from 'assets/js/common'
 
 Vue.use(VueRouter)
 
@@ -277,7 +280,9 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/item/Payment'], resolve) }
+    component: (resolve) => {
+      require(['@/components/pages/item/Payment'], resolve)
+    }
   },
   // 支付宝回调
   {
@@ -553,7 +558,9 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/v_center/contract/View'], resolve) }
+    component: (resolve) => {
+      require(['@/components/pages/v_center/contract/View'], resolve)
+    }
   },
   // 在线合同编辑
   {
@@ -574,7 +581,9 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/v_center/contract/Down'], resolve) }
+    component: (resolve) => {
+      require(['@/components/pages/v_center/contract/Down'], resolve)
+    }
   },
   // 基本设置
   {
@@ -889,7 +898,9 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/admin/article/Submit'], resolve) }
+    component: (resolve) => {
+      require(['@/components/admin/article/Submit'], resolve)
+    }
   },
   // 文章详情
   {
@@ -909,7 +920,7 @@ const routes = [
       title: '找不到此页面',
       requireAuth: true
     },
-    component: require('components/pages/notfind/notfind')  // webpack 设置新的别名 components
+    component: require('components/pages/notfind/notfind') // webpack 设置新的别名 components
   }
 ]
 
@@ -934,11 +945,17 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       store.commit(types.PREV_URL_NAME, to.name)
-      next({ name: 'login' })
+      next({
+        name: 'login'
+      })
     }
   } else {
     next()
   }
+})
+
+router.afterEach((to, from) => {
+  calcImgSize()
 })
 
 export default router

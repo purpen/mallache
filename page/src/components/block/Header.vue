@@ -1,7 +1,7 @@
 <template>
   <div id="header-layout">
     <div class="container">
-      <div class="nav-header" v-if="!isMob">
+      <div class="nav-header" v-if="!this.isMob">
         <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
           <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
           <div class="el-menu-item logo">
@@ -49,38 +49,38 @@
           </div>
         </div>
       </div>
-      <div class="m-nav-header" v-if="isMob">
-        <div class="el-menu-item logo">
-          <span class="logo">太火鸟&nbsp;SaaS</span>
-        </div>
-        <div class="bars" @click="mmenuHide">
-          <i class="fa fa-bars" aria-hidden="true"></i>
-        </div>
-        <section class="m-Menu" ref="mMenu" @click="mNavClick">
-        </section>
-        <div class="m-Nav" ref="mNav">
-          <ul>
-            <li @click="closeMenu">
-              <router-link to="/home">首页</router-link>
-            </li>
-            <li @click="closeMenu">
-              <router-link to="/server">服务</router-link>
-            </li>
-            <li @click="closeMenu">
-              <router-link to="/subject/zj">铟果说</router-link>
-            </li>
-            <li @click="closeMenu">
-              <router-link to="/stuff">灵感</router-link>
-            </li>
-          </ul>
-          <div class="m-Sign">
-            <span @click="closeMenu">
-              <router-link to="login">登录</router-link>
-            </span>
-            <span @click="closeMenu">
-              <router-link to="register" @click="closeMenu">注册</router-link>
-            </span>
-          </div>
+    </div>
+    <div class="m-nav-header" v-if="this.isMob">
+      <div class="el-menu-item logo">
+        <span class="logo">太火鸟&nbsp;SaaS</span>
+      </div>
+      <div class="bars" @click="mmenuHide">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+      <section class="m-Menu" ref="mMenu" @click="mNavClick">
+      </section>
+      <div class="m-Nav" ref="mNav">
+        <ul>
+          <li @click="closeMenu">
+            <router-link to="/home">首页</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/server">服务</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/subject/zj">铟果说</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/stuff">灵感</router-link>
+          </li>
+        </ul>
+        <div class="m-Sign">
+          <span @click="closeMenu">
+            <router-link to="login">登录</router-link>
+          </span>
+          <span @click="closeMenu">
+            <router-link to="register" @click="closeMenu">注册</router-link>
+          </span>
         </div>
       </div>
     </div>
@@ -92,7 +92,6 @@
 import auth from '@/helper/auth'
 import api from '@/api/api'
 import { MSG_COUNT } from '@/store/mutation-types'
-import { IsMobile } from 'assets/js/base'
 export default {
   name: 'header',
   data() {
@@ -108,8 +107,7 @@ export default {
         login: { path: '/login' },
         register: { path: '/register' }
       },
-      menuHide: true,
-      isMob: false
+      menuHide: true
     }
   },
   watch: {
@@ -175,7 +173,6 @@ export default {
     // 点击其他地方关闭菜单
     mNavClick(e) {
       this.closeMenu(e)
-      console.log(1)
     },
     addScroll() {
       // this.$refs.mCover.style.width = '100%'
@@ -193,6 +190,9 @@ export default {
     }
   },
   computed: {
+    isMob() {
+      return this.$store.state.event.isMob
+    },
     isLogin() {
       return this.$store.state.event.token
     },
@@ -220,11 +220,6 @@ export default {
     }
   },
   created: function() {
-    if (IsMobile()) {
-      this.isMob = true
-    } else {
-      this.isMob = false
-    }
     const self = this
     if (self.isLogin) {
       self.fetchMessageCount()

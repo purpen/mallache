@@ -4,13 +4,13 @@
     <div class="banner">
     </div>
 
-    <div class=" container">
+    <div class="container">
 
       <div class="domain">
-        <el-row :gutter="20">
+        <el-row :gutter="20" class="domain-row">
           <el-col :span="8">
             <a href="javascript:void(0);" @click="playBtn">
-              <img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%;" />
+              <img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%" />
             </a>
           </el-col>
           <el-col :span="16">

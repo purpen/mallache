@@ -1,9 +1,9 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="50000" :height="pmdHeight" class="banner" rel="calBanner">
+    <el-carousel :interval="5000" :height="calcHeight" class="banner">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
-          <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')'}">
+          <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
             <h3 :class="{'m-h3' : isMob}">{{ item.title }}</h3>
             <p :class="{'m-p' : isMob}">{{ item.desc }}</p>
           </div>
@@ -119,9 +119,6 @@
 </template>
 
 <script>
-import { calcImgSize } from 'assets/js/calc'
-import { IsMobile } from 'assets/js/base'
-
 export default {
   name: 'index',
   data() {
@@ -202,30 +199,24 @@ export default {
             'image': require('@/assets/images/home/case_fxy.jpg')
           }
         ]
-      ],
-      msg: '',
-      pmdHeight: '650px',
-      isMob: false
+      ]
     }
-  },
-  created() {
-    if (IsMobile()) {
-      this.pmdHeight = '186px'
-      this.isMob = true
-    } else {
-      this.pmdHeight = '650px'
-      this.isMob = false
-    }
-    this.pmdHeight = calcImgSize(this.slideList[0].image)
   },
   mounted() {
-    var that = this
-    window.onresize = () => {
-      that.pmdHeight = calcImgSize(that.slideList[0].image)
-    }
     for (let i of this.$refs.slide) {
-      i.style.height = this.pmdHeight
+      i.style.height = this.calcHeight
     }
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
+    },
+    calcHeight() {
+      return this.inputValue
+    }
+  },
+  props: {
+    inputValue: String
   }
 }
 </script>
@@ -259,11 +250,12 @@ export default {
 }
 
 .slide .m-h3 {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  padding: 0;
 }
 
 .slide .m-p {
-  font-size: 3rem;
+  font-size: 2.4rem;
 }
 
 .item h3 {
@@ -447,23 +439,7 @@ export default {
     margin: 10px 35px;
     width: 30%;
   }
-
-  .item_2 .item2banner {
-    margin: 60px 0;
-  }
 }
-
-
-
-
-
-
-
-
-
-
-
-/* 有待修改 */
 
 @media screen and (max-width: 500px) {
   .box-card .content {

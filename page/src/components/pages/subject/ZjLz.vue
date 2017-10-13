@@ -7,7 +7,7 @@
     <div class=" container">
 
       <div class="domain">
-        <el-row :gutter="20">
+        <el-row :gutter="20" class="domain-row">
           <el-col :span="8">
             <a href="javascript:void(0);" @click="playBtn"><img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%;" /></a>
           </el-col>
@@ -348,10 +348,10 @@ export default {
   }
 
   .block_1 {
-  
+
   }
   .block_1 .item {
-  
+
   }
   .item img {
     width: 100%;
@@ -390,7 +390,7 @@ export default {
     width: 190px;
     height: 24px;
     margin: 30px auto 30px auto;
-    background: url('../../../assets/images/subject/zj/title-bg.png'); 
+    background: url('../../../assets/images/subject/zj/title-bg.png');
     background-size: cover;
     background-repeat: no-repeat;
     text-align: center;
