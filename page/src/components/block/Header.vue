@@ -1,10 +1,12 @@
 <template>
   <div id="header-layout">
     <div class="container">
-      <div class="nav-header">
+      <div class="nav-header" v-if="!this.isMob">
         <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-            <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
-            <li class="el-menu-item logo"><span class="logo">太火鸟&nbsp;SaaS</span></li>
+          <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
+          <div class="el-menu-item logo">
+            <span class="logo">太火鸟&nbsp;SaaS</span>
+          </div>
           <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
           <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
           <el-menu-item index="topic" v-bind:route="menu.topic">铟果说</el-menu-item>
@@ -17,7 +19,9 @@
             </div>
             <router-link :to="{name: 'vcenterMessageList'}" class="nav-item is-hidden-mobile">
               <span class="icon active">
-                <i class="fa fa-bell-o" aria-hidden="true"><span v-if="messageCount > 0">{{ messageCount }}</span></i>
+                <i class="fa fa-bell-o" aria-hidden="true">
+                  <span v-if="messageCount > 0">{{ messageCount }}</span>
+                </i>
               </span>
             </router-link>
             <el-menu class="el-menu-info" mode="horizontal" router>
@@ -29,9 +33,9 @@
                 </template>
                 <el-menu-item index="/vcenter/control">个人中心</el-menu-item>
                 <el-menu-item index="/admin" v-show="isAdmin > 0 ? true : false">后台管理</el-menu-item>
-                <el-menu-item index=" " @click="logout">安全退出</el-menu-item>
+                <el-menu-item index="" @click="logout">安全退出</el-menu-item>
               </el-submenu>
-            </el-menu>         
+            </el-menu>
           </div>
 
           <div class="nav-right" v-else>
@@ -44,7 +48,40 @@
             </el-menu>
           </div>
         </div>
-
+      </div>
+    </div>
+    <div class="m-nav-header" v-if="this.isMob">
+      <div class="el-menu-item logo">
+        <span class="logo">太火鸟&nbsp;SaaS</span>
+      </div>
+      <div class="bars" @click="mmenuHide">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+      <section class="m-Menu" ref="mMenu" @click="mNavClick">
+      </section>
+      <div class="m-Nav" ref="mNav">
+        <ul>
+          <li @click="closeMenu">
+            <router-link to="/home">首页</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/server">服务</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/subject/zj">铟果说</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link to="/stuff">灵感</router-link>
+          </li>
+        </ul>
+        <div class="m-Sign">
+          <span @click="closeMenu">
+            <router-link to="login">登录</router-link>
+          </span>
+          <span @click="closeMenu">
+            <router-link to="register" @click="closeMenu">注册</router-link>
+          </span>
+        </div>
       </div>
     </div>
     <div class="header-buttom-line"></div>
@@ -57,7 +94,7 @@ import api from '@/api/api'
 import { MSG_COUNT } from '@/store/mutation-types'
 export default {
   name: 'header',
-  data () {
+  data() {
     return {
       // menuactive: this.$route.path.split('/')[1],
       requestMessageTask: null,
@@ -69,11 +106,12 @@ export default {
         apply: { path: '/apply' },
         login: { path: '/login' },
         register: { path: '/register' }
-      }
+      },
+      menuHide: true
     }
   },
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
       // 对路由变化作出响应...
       // this.navdefact()
     }
@@ -95,19 +133,19 @@ export default {
       this.$router.replace('/home')
     },
     toServer() {
-      this.$router.push({name: 'serverDesign'})
+      this.$router.push({ name: 'serverDesign' })
     },
     // 请求消息数量
     fetchMessageCount() {
       const self = this
       this.$http.get(api.messageGetMessageQuantity, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          var messageCount = parseInt(response.data.data.quantity)
-          // 写入localStorage
-          self.$store.commit(MSG_COUNT, messageCount)
-        }
-      })
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            var messageCount = parseInt(response.data.data.quantity)
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, messageCount)
+          }
+        })
     },
     // 定时加载消息数量
     timeLoadMessage() {
@@ -116,9 +154,45 @@ export default {
       self.requestMessageTask = setInterval(function() {
         self.fetchMessageCount()
       }, 30000)
+    },
+    // 移动端菜单显示/隐藏
+    mmenuHide() {
+      this.menuHide = !this.menuHide
+      if (this.menuHide) {
+        this.reScroll()
+      } else {
+        this.addScroll()
+      }
+    },
+    // 点击超链接关闭菜单
+    closeMenu(e) {
+      e.stopPropagation()
+      this.menuHide = !this.menuHide
+      this.reScroll()
+    },
+    // 点击其他地方关闭菜单
+    mNavClick(e) {
+      this.closeMenu(e)
+    },
+    addScroll() {
+      // this.$refs.mCover.style.width = '100%'
+      this.$refs.mNav.style.marginLeft = 0
+      this.$refs.mMenu.style.width = '100%'
+      document.body.setAttribute('class', 'disableScroll')
+      document.childNodes[1].setAttribute('class', 'disableScroll')
+    },
+    reScroll() {
+      // this.$refs.mCover.style.width = 0
+      this.$refs.mNav.style.marginLeft = '-54vw'
+      this.$refs.mMenu.style.width = 0
+      document.body.removeAttribute('class', 'disableScroll')
+      document.childNodes[1].removeAttribute('class', 'disableScroll')
     }
   },
   computed: {
+    isMob() {
+      return this.$store.state.event.isMob
+    },
     isLogin() {
       return this.$store.state.event.token
     },
@@ -160,12 +234,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  .server-in-btn {
-    height: 60px;
-    line-height: 60px;
-    margin-right: 20px;
-  }
-
+.server-in-btn {
+  height: 60px;
+  line-height: 60px;
+  margin-right: 20px;
+}
 </style>
 

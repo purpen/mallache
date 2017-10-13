@@ -1,7 +1,14 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
+import {
+  USER_SIGNIN,
+  USER_SIGNOUT,
+  USER_INFO,
+  MSG_COUNT,
+  PREV_URL_NAME,
+  CLEAR_PREV_URL_NAME
+} from './mutation-types.js'
 
 // 判断是否登录
-var isLoggedIn = function() {
+var isLoggedIn = function () {
   // TODO 此处可以写异步请求，到后台一直比较Token
   var token = localStorage.getItem('token')
   if (token) {
@@ -11,7 +18,7 @@ var isLoggedIn = function() {
   }
 }
 
-var userInfo = function() {
+var userInfo = function () {
   // TODO 用户从Store获取
   var user = localStorage.getItem('user')
   if (user) {
@@ -21,7 +28,7 @@ var userInfo = function() {
   }
 }
 
-var prevUrlName = function() {
+var prevUrlName = function () {
   var urlName = localStorage.getItem('prev_url_name')
   if (urlName) {
     return urlName
@@ -31,7 +38,7 @@ var prevUrlName = function() {
 }
 
 // 消息数量
-var msgCount = function() {
+var msgCount = function () {
   var messageCount = localStorage.getItem('msgCount')
   if (messageCount) {
     return messageCount
@@ -43,7 +50,7 @@ var msgCount = function() {
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
-  loading: false,  // 是否显示loading
+  loading: false, // 是否显示loading
   apiUrl: 'http://sa.taihuoniao.com', // 接口base url
   imgUrl: 'http://sa.taihuoniao.com', // 图片base url
   prevUrlName: prevUrlName(),
@@ -54,6 +61,27 @@ const state = {
     isBack: false, // 是否显示返回
     isShare: false, // 是否显示分享
     title: '' // 标题
+  },
+  pmdHeight: '0px', // 页面大图高度
+  isMob: false
+}
+
+var IsMobile = function () {
+  var sUserAgent = navigator.userAgent
+  var mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
+  var ismob = 0
+
+  for (var i = 0; i < mobileAgents.length; i++) {
+    if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
+      ismob = 1
+      break
+    }
+  }
+
+  if (ismob) {
+    return true
+  } else {
+    return false
   }
 }
 
@@ -88,6 +116,13 @@ const mutations = {
   [CLEAR_PREV_URL_NAME](state) {
     localStorage.removeItem('prev_url_name')
     state.prevUrlName = null
+  },
+  INIT_PAGE(state) {
+    if (IsMobile()) {
+      state.isMob = true
+    } else {
+      state.isMob = false
+    }
   }
 }
 

@@ -37,8 +37,8 @@
         <div class="reg">
           <p>已有铟果账户，您可以 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
         </div>
-      
-      </div>   
+
+      </div>
     </div>
 
   </div>
@@ -314,7 +314,7 @@ export default {
   .register-tab{
     font-size: 1.8rem;
     width: 100%;
-    height: 100px;
+    height: 80px;
     border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
     position:relative;

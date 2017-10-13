@@ -5,7 +5,7 @@ var vueLoaderConfig = require('./vue-loader.conf')
 // var webpack = require('webpack')
 // var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
 // var ignoreFiles = new webpack.IgnorePlugin(/pdfmake.min$/, /vfs_fonts$/)
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -24,7 +24,9 @@ module.exports = {
     extensions: ['.js', '.vue', '.json', '.styl'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'components': resolve('src/components'),
+      'assets': resolve('src/assets')
     }
   },
   // 增加一个plugins

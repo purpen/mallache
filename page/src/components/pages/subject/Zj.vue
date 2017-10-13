@@ -1,15 +1,17 @@
 <template>
   <div class="content-box">
 
-    <div class="banner">
+    <div class="banner" ref="banner">
     </div>
 
-    <div class=" container">
+    <div class="container">
 
       <div class="domain">
-        <el-row :gutter="20">
+        <el-row :gutter="20" class="domain-row">
           <el-col :span="8">
-            <a href="javascript:void(0);" @click="playBtn"><img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%;" /></a>
+            <a href="javascript:void(0);" @click="playBtn">
+              <img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%" />
+            </a>
           </el-col>
           <el-col :span="16">
             <p class="title">什么是设计再造计划</p>
@@ -36,7 +38,9 @@
 
       <div class="block block_1">
         <div class="sub-title">
-          <div class="tig"><div class="jiao"></div></div>
+          <div class="tig">
+            <div class="jiao"></div>
+          </div>
           <div class="cont">
             <h3>开幕致辞</h3>
           </div>
@@ -58,7 +62,9 @@
 
       <div class="block block_2">
         <div class="sub-title">
-          <div class="tig"><div class="jiao"></div></div>
+          <div class="tig">
+            <div class="jiao"></div>
+          </div>
           <div class="cont">
             <h3>启动仪式</h3>
           </div>
@@ -79,7 +85,9 @@
 
       <div class="block block_3">
         <div class="sub-title">
-          <div class="tig"><div class="jiao"></div></div>
+          <div class="tig">
+            <div class="jiao"></div>
+          </div>
           <div class="cont">
             <h3>浙江“传统产业设计再造”高峰论坛</h3>
           </div>
@@ -100,7 +108,9 @@
 
       <div class="block">
         <div class="sub-title">
-          <div class="tig"><div class="jiao"></div></div>
+          <div class="tig">
+            <div class="jiao"></div>
+          </div>
           <div class="cont">
             <h3>浙江“传统产业设计再造”对接会</h3>
           </div>
@@ -118,7 +128,9 @@
 
       <div class="block">
         <div class="sub-title">
-          <div class="tig"><div class="jiao"></div></div>
+          <div class="tig">
+            <div class="jiao"></div>
+          </div>
           <div class="cont">
             <h3>活动照片</h3>
           </div>
@@ -154,17 +166,12 @@
       <p class="content plug">铟果D³INGO是太火鸟旗下基于大数据和智能匹配的产品创新SaaS平台，链接庞大智能硬件创业群体，吸引100万注册用户，1000+家专业设计企业，覆盖2000万创新设计群体。利用大数据和智能匹配技术连接制造企业和设计服务商，以设计驱动创新，挖掘消费需求，加速消费升级，用创新改变世界。</p>
     </div>
 
-    <el-dialog
-      title="视频播放"
-      :visible.sync="dialogVisible"
-      top="5%"
-      :close-on-click-modal="false"
-      size="large">
-        <div style="text-align: center;">
-          <video :src="videoUrl" controls="controls" width="960">
-            您的浏览器不支持 video 标签。
-          </video>
-        </div>
+    <el-dialog title="视频播放" :visible.sync="dialogVisible" top="5%" :close-on-click-modal="false" size="large">
+      <div style="text-align: center;">
+        <video :src="videoUrl" controls="controls" width="960">
+          您的浏览器不支持 video 标签。
+        </video>
+      </div>
       <span slot="footer" class="dialog-footer">
 
       </span>
@@ -176,7 +183,7 @@
 <script>
 export default {
   name: 'subject_zj',
-  data () {
+  data() {
     return {
       dialogVisible: false,
       startList: [
@@ -293,6 +300,17 @@ export default {
       // http://oni525j96.bkt.clouddn.com/video/zjgz.mp4
       this.dialogVisible = true
     }
+  },
+  mounted() {
+    this.$refs.banner.style.height = this.calcHeight
+  },
+  computed: {
+    calcHeight() {
+      return this.inputValue
+    }
+  },
+  props: {
+    inputValue: String
   }
 }
 
@@ -300,178 +318,184 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .container{
-  }
+.container {}
 
-  .banner-item {
-    margin: 10px 0;
-    text-align: center;
-  }
+.banner-item {
+  margin: 10px 0;
+  text-align: center;
+}
 
-  .banner-item a {
-    font-size: 1.8rem;
-    color: #666;
-    line-height: 1.5;
-  }
+.banner-item a {
+  font-size: 1.8rem;
+  color: #666;
+  line-height: 1.5;
+}
 
-  .banner-item a.is-active {
-    color: #FF5A5F;
-  }
+.banner-item a.is-active {
+  color: #FF5A5F;
+}
 
-  .banner {
-    width: 100%;
-    height: 650px;
-    background: url('../../../assets/images/subject/zj/header.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-  }
+.banner {
+  width: 100%;
+  height: 650px;
+  background: url('../../../assets/images/subject/zj/header.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+}
 
-  .domain {
-    margin: 20px 0 20px 0;
-  }
-  .domain .title {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  .domain .des {
-    font-size: 1.5rem;
-    line-height: 1.9;
-    color: #666;
-    font-weight: 300;
-  }
+.domain {
+  margin: 20px 0 20px 0;
+}
 
-  .sub_menu {
-    width: 100%;
-    height: 50px;
-    background-color: #222;
-  }
+.domain .title {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
 
-  .sub_menu p {
-    text-align: center;
-  }
+.domain .des {
+  font-size: 1.5rem;
+  line-height: 1.9;
+  color: #666;
+  font-weight: 300;
+}
 
-  .sub_menu a {
-    line-height: 50px;
-    color: #fff;
-    font-size: 1.8rem;
-    margin: 0 15px;
-    font-weight: 300;
-  }
+.sub_menu {
+  width: 100%;
+  height: 50px;
+  background-color: #222;
+}
 
-  .sub_menu a.active {
-    color: #FBEF76;
-  }
+.sub_menu p {
+  text-align: center;
+}
 
-  .sub-banner img {
-    width: 100%;
-  }
+.sub_menu a {
+  line-height: 50px;
+  color: #fff;
+  font-size: 1.8rem;
+  margin: 0 15px;
+  font-weight: 300;
+}
 
-  .sub-title {
-    display: flex;
-    height: 38px;
-    line-height: 38px;
-    margin-bottom: 20px;
-  }
-  .sub-title h3 {
-    color: #0F7553;
-    font-size: 1.5rem;
-  }
-  .sub-title .tig {
-    position: relative;
-    height: 38px;
-    width: 76px;
-    background: url('../../../assets/images/subject/zj/sub_title_head.png') no-repeat;
-    background-size: cover;
-  }
-  .sub-title .tig .jiao {
-    position: absolute;
-    left: 0;
-    top: -12px;
-    height: 12px;
-    width: 76px;
-    background: url('../../../assets/images/subject/zj/sub_title_jiao.png') no-repeat;
-    background-size: cover;
-  }
-  .sub-title .cont {
-    height: 38px;
-    width: 100%;
-    flex: 1;
-    background-color: #FFF037;
-  }
-  .sub-title .foo {
-    height: 38px;
-    width: 640px;
-    background: url('../../../assets/images/subject/zj/sub_title_foot.png') no-repeat;
-    background-size: cover;
-  }
+.sub_menu a.active {
+  color: #FBEF76;
+}
 
-  .block {
-    margin-top: 20px;
-  }
+.sub-banner img {
+  width: 100%;
+}
 
-  .block_1 {
-  
-  }
-  .block_1 .item {
-  
-  }
-  .item img {
-    width: 100%;
-  }
+.sub-title {
+  display: flex;
+  height: 38px;
+  line-height: 38px;
+  margin-bottom: 20px;
+}
 
-  .item {
-    margin-bottom: 15px;
-  }
+.sub-title h3 {
+  color: #0F7553;
+  font-size: 1.5rem;
+}
 
-  .block_2 .item {
-    height: 400px;
-  }
+.sub-title .tig {
+  position: relative;
+  height: 38px;
+  width: 76px;
+  background: url('../../../assets/images/subject/zj/sub_title_head.png') no-repeat;
+  background-size: cover;
+}
 
-  .item p {
-    color: #666;
-    font-size: 1.4rem;
-  }
-  .item p.des {
-    font-weight: 300;
-  }
-  .item p.title {
-    line-height: 2;
-  }
+.sub-title .tig .jiao {
+  position: absolute;
+  left: 0;
+  top: -12px;
+  height: 12px;
+  width: 76px;
+  background: url('../../../assets/images/subject/zj/sub_title_jiao.png') no-repeat;
+  background-size: cover;
+}
 
-  .bottom {
-    overflow: hidden;
-    height: 570px;
-    background: url('../../../assets/images/subject/zj/bottom.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-    margin-bottom: -40px;
-  }
+.sub-title .cont {
+  height: 38px;
+  width: 100%;
+  flex: 1;
+  background-color: #FFF037;
+}
 
-  .bottom .b-title {
-    width: 190px;
-    height: 24px;
-    margin: 30px auto 30px auto;
-    background: url('../../../assets/images/subject/zj/title-bg.png'); 
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-  }
-  .bottom .b-title p {
-    color: #fff;
-  }
+.sub-title .foo {
+  height: 38px;
+  width: 640px;
+  background: url('../../../assets/images/subject/zj/sub_title_foot.png') no-repeat;
+  background-size: cover;
+}
 
-  .bottom p.content {
-    line-height: 2;
-    color: #057577;
-    padding: 0 23%;
-    margin: 10px 0;
-  }
-  .bottom p.content.plug {
-    padding: 0 18%;
-  }
+.block {
+  margin-top: 20px;
+}
 
+.block_1 {}
 
+.block_1 .item {}
+
+.item img {
+  width: 100%;
+}
+
+.item {
+  margin-bottom: 15px;
+}
+
+.block_2 .item {
+  height: 400px;
+}
+
+.item p {
+  color: #666;
+  font-size: 1.4rem;
+}
+
+.item p.des {
+  font-weight: 300;
+}
+
+.item p.title {
+  line-height: 2;
+}
+
+.bottom {
+  overflow: hidden;
+  height: 570px;
+  background: url('../../../assets/images/subject/zj/bottom.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+  margin-bottom: -40px;
+}
+
+.bottom .b-title {
+  width: 190px;
+  height: 24px;
+  margin: 30px auto 30px auto;
+  background: url('../../../assets/images/subject/zj/title-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+.bottom .b-title p {
+  color: #fff;
+}
+
+.bottom p.content {
+  line-height: 2;
+  color: #057577;
+  padding: 0 23%;
+  margin: 10px 0;
+}
+
+.bottom p.content.plug {
+  padding: 0 18%;
+}
 </style>

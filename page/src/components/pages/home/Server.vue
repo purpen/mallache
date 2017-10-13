@@ -1,41 +1,28 @@
 <template>
   <div class="content-box">
-    <!--
-    <div>
-      <el-row :gutter="12" type="flex" justify="center">
-        <el-col :span="5" class="banner-item left">
-          <a href="javascript:void(0);" class="is-active">我是需求方</a>
-        </el-col>
-        <el-col :span="5" class="banner-item right">
-          <router-link :to="{name: 'serverDesign'}">我是设计服务商</router-link>
-        </el-col>
-      </el-row>
-    </div>
-    -->
-
-    <div class="banner">
-      <h3>把需求交给铟果来解决</h3>
-      <p>铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
+    <div class="banner" ref="banner">
+      <h3 :class="{'m-h3' : BMob}">把需求交给铟果来解决</h3>
+      <p :class="{'m-p' : BMob}">铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
     </div>
 
     <div class="item item_2">
       <div class="item_2_box">
         <el-row :gutter="24">
-          <el-col :span="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/server_10.png" />
               <p class="item_1_title">专业服务</p>
               <p class="item_1_desc">聚合国内100+专业设计服务供应商</p>
             </div>
           </el-col>
-          <el-col :span="8">
-            <div class="">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
+            <div class="item2banner">
               <img src="../../../assets/images/home/server_11.png" />
               <p class="item_1_title">智能精准</p>
               <p class="item_1_desc">云平台大数据，高效匹配项目需求 </p>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <div class="">
               <img src="../../../assets/images/home/server_12.png" />
               <p class="item_1_title">优质设计</p>
@@ -47,172 +34,252 @@
     </div>
 
     <div class=" container">
-    
-        <div class="pub-title">发布项目流程</div>
-        <div class="process">
-          <div class="item-process">
-            <img src="../../../assets/images/item/item_dj.png" />
-            <p>1.支付预付金</p>
-          </div>
-          <div class="item-process line"></div>
-          <div class="item-process">
-            <img src="../../../assets/images/item/item_lx.png" />
-            <p>2.选择项目类型</p>
-          </div>
-          <div class="item-process line"></div>
-          <div class="item-process">
-            <img src="../../../assets/images/item/item_xq.png" />
-            <p>3.完善项目需求</p>
-          </div>
-          <div class="item-process line"></div>
-          <div class="item-process">
-            <img src="../../../assets/images/item/item_lxx.png" />
-            <p>4.填写公司信息</p>
-          </div>
-          <div class="item-process line"></div>
-          <div class="item-process">
-            <img src="../../../assets/images/item/item_fb.png" />
-            <p>5.检查并发布</p>
-          </div>
-          <div class="item-process line"></div>
-          <div class="item-process item-last">
-            <img src="../../../assets/images/item/item_tj.png" />
-            <p>6.匹配设计服务商</p>
-          </div>
+
+      <div class="pub-title">发布项目流程</div>
+      <div class="process" v-if="!BMob">
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_dj.png" />
+          <p>1.支付预付金</p>
         </div>
-    
-    
-    </div>
+        <div class="item-process line"></div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_lx.png" />
+          <p>2.选择项目类型</p>
+        </div>
+        <div class="item-process line"></div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_xq.png" />
+          <p>3.完善项目需求</p>
+        </div>
+        <div class="item-process line"></div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_lxx.png" />
+          <p>4.填写公司信息</p>
+        </div>
+        <div class="item-process line"></div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_fb.png" />
+          <p>5.检查并发布</p>
+        </div>
+        <div class="item-process line"></div>
+        <div class="item-process item-last">
+          <img src="../../../assets/images/item/item_tj.png" />
+          <p>6.匹配设计服务商</p>
+        </div>
+      </div>
 
-    <div class="container">
+      <el-row class="m-process" v-if="BMob">
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_dj.png" />
+          <p>1.支付预付金</p>
+        </div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_lx.png" />
+          <p>2.选择项目类型</p>
+        </div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_xq.png" />
+          <p>3.完善项目需求</p>
+        </div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_lxx.png" />
+          <p>4.填写公司信息</p>
+        </div>
+        <div class="item-process">
+          <img src="../../../assets/images/item/item_fb.png" />
+          <p>5.检查并发布</p>
+        </div>
+        <div class="item-process item-last">
+          <img src="../../../assets/images/item/item_tj.png" />
+          <p>6.匹配设计服务商</p>
+        </div>
+      </el-row>
     </div>
-
   </div>
-
-
 </template>
 
 <script>
 export default {
   name: 'server',
-  data () {
+  data() {
     return {
-      msg: ''
     }
+  },
+  mounted() {
+    this.$refs.banner.style.height = this.inputValue
+  },
+  computed: {
+    BMob() {
+      return this.$store.state.event.isMob
+    }
+  },
+  props: {
+    inputValue: String
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .container{
-  }
+.banner-item {
+  margin: 10px 0;
+  text-align: center;
+}
 
-  .banner-item {
-    margin: 10px 0;
-    text-align: center;
-  }
+.banner-item a {
+  font-size: 1.8rem;
+  color: #666;
+  line-height: 1.5;
+}
 
-  .banner-item a {
-    font-size: 1.8rem;
-    color: #666;
-    line-height: 1.5;
-  }
+.banner-item a.is-active {
+  color: #FF5A5F;
+}
 
-  .banner-item a.is-active {
-    color: #FF5A5F;
-  }
+.banner {
+  width: 100%;
+  height: 650px;
+  background: url('../../../assets/images/home/service_banner.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+}
 
-  .banner {
-    width: 100%;
-    height: 650px;
-    background: url('../../../assets/images/home/service_banner.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-  }
+.banner h3 {
+  padding-top: 13%;
+  padding-bottom: 10px;
+  font-size: 5rem;
+  color: #fff;
+  line-height: 2;
+  font-weight: 300;
+}
 
+.banner p {
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 300;
+  padding: 0 150px;
+}
+
+.banner .m-h3 {
+  font-size: 2rem;
+  padding-top: 0;
+}
+
+.banner .m-p {
+  font-size: 1.2rem;
+  padding: 0 80px
+}
+
+@media screen and (min-width: 500px) and (max-width: 767px) {
   .banner h3 {
-    padding-top: 220px;
-    padding-bottom: 10px;
-    font-size: 5rem;
-    color: #fff;
-    line-height: 2;
-    font-weight: 300;
-  }
-  .banner p {
-    font-size: 3rem;
-    color: #fff;
-    font-weight: 300;
-    padding: 0 150px;
+    padding-top: 0;
   }
 
-  .item_1_title {
-    color: #222;
+  .banner .m-h3 {
     font-size: 2rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    line-height: 2;
+    padding-top: 15%;
   }
-  .item_1_desc {
-    color: #666;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    padding: 0 20px;
+  .banner .m-p {
+    padding: 0 120px
   }
+}
 
-  .item_2 {
-    background-color: #FAFAFA;
+@media screen and (min-width: 400px) and (max-width: 430px) {
+  .banner .m-p {
+    padding: 0 130px
   }
+}
 
-  .item_2_box {
-    margin: 0 8%;
+@media screen and (min-width: 320px) and (max-width: 399px) {
+  .banner .m-p {
+    padding: 0 100px
   }
-  .item_2_box img {
-    width: 30%;
-  }
+}
 
-  .item {
-    text-align: center;
-    padding: 60px 0 40px 0;
-  }
+.item_1_title {
+  color: #222;
+  font-size: 2rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  line-height: 2;
+}
 
-  .item_3 {
-  }
+.item_1_desc {
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  padding: 0 20px;
+}
 
-  .pub-title {
-    font-size: 2rem;
-    margin: 60px 0 40px 0;
-    text-align: center;
-  }
+.item_2 {
+  background-color: #FAFAFA;
+}
 
-  .process {
-    text-align: center;
-    margin: 0 auto;
-    height: 150px;
-  }
-  .process .item-process {
-    width: 10%;
-    margin: 10px 0.8%;
-    text-align: center;
-    float: left;
-  }
-  .process .item-process img, .process .item-process p {
-    padding: 10px 2px;
-    color: #555;
-  }
-  .process .item-process img {
-    width: 65%;
-  }
-  .process .item-last p {
-    width: 100%;
-  }
-  .process .item-process.line {
-    width: 4%;
-    height: 30%;
-    border-bottom: 1px dashed #979797;
-  }
+.item_2_box {
+  margin: 0 8%;
+}
 
+.item_2_box img {
+  width: 30%;
+}
 
+.item {
+  text-align: center;
+  padding: 60px 0 40px 0;
+}
+
+.pub-title {
+  font-size: 2rem;
+  margin: 60px 0 40px 0;
+  text-align: center;
+}
+
+.process {
+  text-align: center;
+  margin: 0 auto;
+  height: 150px;
+}
+
+.process .item-process {
+  width: 10%;
+  margin: 10px 0.8%;
+  text-align: center;
+  float: left;
+}
+
+.m-process {
+  margin-top: -20px;
+}
+
+.m-process .item-process img {
+  width: 100%;
+  padding: 5% 40%;
+}
+
+.m-process .item-process p {
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+}
+
+.process .item-process img,
+.process .item-process p {
+  padding: 10px 2px;
+  color: #555;
+}
+
+.process .item-process img {
+  width: 65%;
+}
+
+.process .item-last p {
+  width: 100%;
+}
+
+.process .item-process.line {
+  width: 4%;
+  height: 30%;
+  border-bottom: 1px dashed #979797;
+}
 </style>
