@@ -8,15 +8,15 @@
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20">
 
-        <el-col :span="12" v-for="(d, index) in itemList" :key="index">
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <a :href="d.url" target="_blank">
+              <a :href="d.url">
                 <img :src="d.cover_url">
               </a>
             </div>
             <div class="content">
-              <p class="title"><a :href="d.url" target="_blank">{{ d.title }}</a></p>
+              <p class="title"><a :href="d.url">{{ d.title }}</a></p>
               <div class="des">
                 <p>{{ d.content }}</p>
               </div>
@@ -25,7 +25,7 @@
         </el-col>
 
       </el-row>
-    
+
     </div>
 
     <div class="blank20"></div>
@@ -51,7 +51,7 @@ export default {
           id: 4,
           title: 'RCIP衍生创新峰会',
           cover_url: require('@/assets/images/subject/list_02.jpg'),
-          url: 'http://d3ingo.taihuoniao.com/subject/rcip',
+          url: '/subject/rcip',
           content: '这是一场IP生态集群的权威路演；也是众多创新设计机构以IP内容结合的发布盛典想要了解更多？'
         }
       ],
@@ -110,11 +110,11 @@ export default {
     color: #FF5A5F;
   }
   .case-list {
-    min-height: 350px;
+    min-height: 350px; /* 为啥要加这俩 去掉很舒服呀?*/
   }
 
   .item {
-    height: 460px;
+    height: 460px; /* 为啥要加这俩 */
     margin: 10px 0;
   }
 
@@ -150,11 +150,11 @@ export default {
     color: #666;
     font-size: 1.4rem;
     line-height: 1.5;
-    overflow:hidden; 
+    overflow:hidden;
     text-overflow:ellipsis;
-    display:-webkit-box; 
+    display:-webkit-box;
     -webkit-box-orient:vertical;
-    -webkit-line-clamp:2; 
+    -webkit-line-clamp:2;
   }
 
 </style>

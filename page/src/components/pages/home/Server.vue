@@ -139,7 +139,7 @@ export default {
 .banner {
   width: 100%;
   height: 650px;
-  background: url('../../../assets/images/home/service_banner.jpg');
+  background: url('../../../assets/images/home/service_banner.jpg') #fafafa;
   background-size: contain;
   background-repeat: no-repeat;
   text-align: center;
