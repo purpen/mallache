@@ -9,7 +9,14 @@ export function calcImgSize() {
   if (window.document.getElementsByClassName('banner').length) {
     window.document.getElementsByClassName('banner')[0].style.height = (nw / ow * oh) + 'px'
   }
-  if (ow !== 0 || oh !== 0) {
-    return (nw / ow * oh) + 'px'
+  var nh = nw / ow * oh
+  if (ow !== 0 && oh !== 0) {
+    if (nh > 650) {
+      nh = 650
+    }
+  } else {
+    console.log('width: 0')
+    return false
   }
+  return nh + 'px'
 }
