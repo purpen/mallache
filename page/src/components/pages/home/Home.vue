@@ -264,6 +264,7 @@ export default {
   padding-bottom: 80px;
 }
 
+
 .item_1_l {
   margin-left: 120px;
 }
@@ -286,6 +287,7 @@ export default {
   line-height: 1.5;
   padding: 0 20px;
 }
+
 
 .pub {
   margin: 80px 0 0 0;

@@ -31,6 +31,11 @@ body {
   padding-bottom: 296px;
 }
 
+.container-test {
+  position: relative;
+  z-index: 1;
+}
+
 .container {
   margin: 0 auto;
 }
@@ -61,10 +66,12 @@ a.is_active {
 /**
  * 分页
  */
+
 ul.el-pager li.number.active {
   background-color: #FF5A5F;
   border-color: #FF5A5F;
 }
+
 
 /**
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
@@ -122,6 +129,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-weight: 200;
   line-height: 1.5;
 }
+
 
 /** 修复导航鼠标经过宽度bug **/
 
@@ -840,6 +848,7 @@ img.avatar {
   align-items: center
 }
 
+
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1200px) {
@@ -883,12 +892,16 @@ img.avatar {
  * FileList End
  */
 
+
 /**
  * Article Body Start
  */
+
 .content .body {
   clear: both;
 }
+
+
 /**
 .content .body p {
   font-size: 1.4rem;
@@ -920,7 +933,8 @@ img.avatar {
   margin: 5px 0;
 }
 **/
+
+
 /**
  * Article Body End
  */
-
