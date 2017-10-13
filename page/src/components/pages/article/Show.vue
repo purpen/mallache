@@ -70,11 +70,6 @@ export default {
       that.isFullLoading = false
       if (response.data.meta.status_code === 200) {
         that.item = response.data.data
-        if (that.item.type === 2) {
-          that.$route.replace(that.item.topic_url)
-          return
-        }
-
         var markdownConfig = {
           html: true,        // Enable HTML tags in source
           xhtmlOut: true,        // Use '/' to close single tags (<br />).
