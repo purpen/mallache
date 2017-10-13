@@ -132,7 +132,7 @@
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
-                <mavon-editor ref="mavonEditor" v-model="form.content" id="editor" @imgAdd="$imgAdd" @imgDel="$imgDel" ></mavon-editor>
+                <mavon-editor ref="mavonEditor" :ishljs="false" v-model="form.content" id="editor" @imgAdd="$imgAdd" @imgDel="$imgDel" ></mavon-editor>
               </el-form-item>
 
               <div class="form-btn fr">

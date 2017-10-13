@@ -136,7 +136,7 @@ export default {
     },
     menuactive() {
       let menu = this.$route.path.split('/')[1]
-      if (menu === 'article') {
+      if (menu === 'article' || menu === 'subject') {
         return 'topic'
       }
       return menu

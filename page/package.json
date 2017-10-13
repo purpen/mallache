@@ -19,6 +19,7 @@
     "element-ui": "^1.2.8",
     "jr-qrcode": "^1.1.0",
     "markdown-it": "^8.4.0",
+    "markdown-it-container": "^2.0.0",
     "mavon-editor": "^2.2.7",
     "qrcanvas": "^1.1.2",
     "qs": "^6.5.0",

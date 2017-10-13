@@ -65,6 +65,14 @@ a.is_active {
 }
 
 /**
+ * 分页
+ */
+ul.el-pager li.number.active {
+  background-color: #FF5A5F;
+  border-color: #FF5A5F;
+}
+
+/**
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   font-size: 1.2rem;
 }
@@ -683,6 +691,7 @@ img.avatar {
 .content .body {
   clear: both;
 }
+/**
 .content .body p {
   font-size: 1.4rem;
   color: #222;
@@ -709,6 +718,10 @@ img.avatar {
 .content .body em {
   font-style: italic;
 }
+.content .body p {
+  margin: 5px 0;
+}
+**/
 /**
  * Article Body End
  */

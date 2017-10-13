@@ -32,6 +32,9 @@
     watch: {
     },
     mounted () {
+      window.onresize = function() {
+        console.log('aaa')
+      }
     }
   }
 </script>

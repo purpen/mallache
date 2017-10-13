@@ -12,14 +12,14 @@
 
     <div class="content">
       <div class="title">
-        <p class="title-menu">铟果说/{{ item.classification_value }}</p>
+        <p class="title-menu"><router-link :to="{name: 'articleList'}">铟果说</router-link> / <router-link :to="{name: 'articleList', query: {category_id: item.classification_id}}">{{ item.classification_value }}</router-link></p>
         <h3>{{ item.title }}</h3>
         <p class="from" v-if="item.source_from">by {{ item.source_from }} &nbsp;&nbsp;&nbsp;{{ item.created_at }} </p>
         <p class="from" v-else>{{ item.created_at }} </p>
 
         <v-share :link="share.link" :title="share.title" :picUrl="share.picUrl"></v-share>
       </div>
-      <div class="body" v-html="item.content"></div>
+      <div class="body markdown-body" v-html="item.content"></div>
     </div>
 
     <div class="tag-box">
@@ -33,6 +33,8 @@
 import api from '@/api/api'
 import '@/assets/js/format'
 import vShare from '@/components/block/Share'
+// import 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'article_show',
   components: {
@@ -72,9 +74,29 @@ export default {
           that.$route.replace(that.item.topic_url)
           return
         }
-        var md = require('markdown-it')()
-        that.item['content'] = md.render(that.item.content)
-        that.item['created_at'] = that.item.created_at.date_format().format('yy-MM-dd')
+
+        var markdownConfig = {
+          html: true,        // Enable HTML tags in source
+          xhtmlOut: true,        // Use '/' to close single tags (<br />).
+          breaks: true,        // Convert '\n' in paragraphs into <br>
+          langPrefix: 'language-markdown',  // CSS language prefix for fenced blocks. Can be
+          linkify: false,        // 自动识别url
+          typographer: true,
+          quotes: '“”‘’',
+          highlight: function (str, lang) {
+            return '<pre class="hljs"><code class="' + lang + '">' + markdown.utils.escapeHtml(str) + '</code></pre>'
+          }
+        }
+
+        var markdown = require('markdown-it')(markdownConfig)
+        var container = require('markdown-it-container')
+        markdown.use(container)
+          .use(container, 'hljs-left') /* align left */
+          .use(container, 'hljs-center') /* align center */
+          .use(container, 'hljs-right') /* align right */
+
+        that.item['content'] = markdown.render(that.item.content)
+        that.item['created_at'] = that.item.created_at.date_format().format('yyyy年MM月dd日')
         console.log(that.item)
 
         that.share.title = that.item.title
@@ -120,7 +142,7 @@ export default {
     color: #666; 
     height: 40px;
   }
-  p.title-menu {
+  p.title-menu, p.title-menu a {
     color: #FF5A5F;
     font-size: 1.6rem;
     line-height: 2;

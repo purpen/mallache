@@ -28,15 +28,17 @@
     
     </div>
 
-          <el-pagination
-            class="pagination"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="query.page"
-            :page-size="query.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="query.totalCount">
-          </el-pagination>
+    <div class="pager">
+      <el-pagination
+        class="pagination"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="query.page"
+        :page-size="query.pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="query.totalCount">
+      </el-pagination>
+    </div>
 
     <div class="blank20"></div>
   </div>
@@ -205,6 +207,14 @@ export default {
     display:-webkit-box; 
     -webkit-box-orient:vertical;
     -webkit-line-clamp:2; 
+  }
+
+  .pager {
+    margin: 0 auto;
+  }
+
+  .pager .pagination {
+    text-align: center;
   }
 
 </style>
