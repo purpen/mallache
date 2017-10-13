@@ -56,6 +56,11 @@
               width="120">
             </el-table-column>
             <el-table-column
+              prop="user_id"
+              label="创建人"
+              width="60">
+            </el-table-column>
+            <el-table-column
               prop="read_amount"
               label="浏览量"
               width="60">
