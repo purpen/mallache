@@ -203,6 +203,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.calcHeight)
     for (let i of this.$refs.slide) {
       i.style.height = this.calcHeight
     }

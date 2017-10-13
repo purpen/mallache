@@ -106,11 +106,15 @@ export default {
     }
   },
   mounted() {
+    this.$refs.banner.style.height = this.inputValue
   },
   computed: {
     BMob() {
       return this.$store.state.event.isMob
     }
+  },
+  props: {
+    inputValue: String
   }
 }
 </script>

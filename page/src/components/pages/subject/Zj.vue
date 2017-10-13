@@ -1,7 +1,7 @@
 <template>
   <div class="content-box">
 
-    <div class="banner">
+    <div class="banner" ref="banner">
     </div>
 
     <div class="container">
@@ -300,6 +300,17 @@ export default {
       // http://oni525j96.bkt.clouddn.com/video/zjgz.mp4
       this.dialogVisible = true
     }
+  },
+  mounted() {
+    this.$refs.banner.style.height = this.calcHeight
+  },
+  computed: {
+    calcHeight() {
+      return this.inputValue
+    }
+  },
+  props: {
+    inputValue: String
   }
 }
 
