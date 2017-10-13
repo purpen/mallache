@@ -57,6 +57,27 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/designCase/{case_id}', 'DesignCaseController@show');
 
     /**
+     * 栏目位
+     */
+    // 栏目文章详情
+    $api->get('/column', 'ColumnController@show');
+    // 栏目文章列表
+    $api->get('/column/lists', 'ColumnController@lists');
+
+    /**
+     * 分类列表
+     */
+    $api->get('/classification/list', 'ClassificationController@index');
+
+    /**
+     * 文章
+     */
+    // {get} /article/list 文章列表
+    $api->get('/article/list', 'ArticleController@index');
+    // 详情
+    $api->get('/article', 'ArticleController@edit');
+
+    /**
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api){
@@ -270,26 +291,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 需求公司信息概况
         $api->get('/survey/demandCompanySurvey', 'SurveyController@demandCompanySurvey');
 
-        /**
-         * 栏目位
-         */
-        // 栏目文章详情
-        $api->get('/column', 'ColumnController@show');
-        // 栏目文章列表
-        $api->get('/column/lists', 'ColumnController@lists');
 
-        /**
-         * 分类列表
-         */
-        $api->get('/classification/list', 'ClassificationController@index');
-
-        /**
-         * 文章
-         */
-        // {get} /article/list 文章列表
-        $api->get('/article/list', 'ArticleController@index');
-        // 详情
-        $api->get('/article', 'ArticleController@edit');
 
     });
 });
