@@ -1,8 +1,4 @@
 export function calcImgSize(width, height) {
-  // var img = new Image()
-  // img.src = src
-  // var oh = img.naturalHeight
-  // var ow = img.naturalWidth
   var oh = width || 1520
   var ow = height || 2880
   var nw = document.documentElement.clientWidth

@@ -318,6 +318,7 @@ export default {
 <style scoped>
 .content-box {
   overflow-x: hidden;
+  margin-bottom:  -52px
 }
 
 .banner-item {
