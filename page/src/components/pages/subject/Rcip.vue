@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'subject_zj',
   data() {
@@ -296,19 +297,16 @@ export default {
         }
       ],
       videoUrl: 'http://oni525j96.bkt.clouddn.com/video/zjgz.mp4',
-      msg: 'This is subject'
+      msg: 'This is subject',
+      calcHeight: ''
     }
   },
-  methods: {
-  },
-  computed: {
-    calcHeight() {
-      console.log(this.inputValue)
-      return this.inputValue
+  mounted() {
+    var that = this
+    window.onresize = () => {
+      that.calcHeight = calcImgSize(1520, 2880)
     }
-  },
-  props: {
-    inputValue: String
+    this.calcHeight = calcImgSize(1520, 2880)
   }
 }
 
@@ -318,6 +316,7 @@ export default {
 <style scoped>
 .content-box {
   overflow-x: hidden;
+  margin-bottom: -52px
 }
 
 .banner-item {

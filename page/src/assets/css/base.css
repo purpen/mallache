@@ -31,11 +31,6 @@ body {
   padding-bottom: 296px;
 }
 
-.container-test {
-  position: relative;
-  z-index: 1;
-}
-
 .container {
   margin: 0 auto;
 }
@@ -411,19 +406,14 @@ button.is-custom.is-outlined.is-loading:after {
   transition: none;
   padding: 0 16px;
   margin-right: 30px;
-  background: url(../../assets/images/logo.png) no-repeat 0 5px;
-  background-size: 30px 50px;
+  background: url(../../assets/images/logo.png) no-repeat 0 5px!important;
+  background-size: 30px 50px!important;
   text-indent: -9999px;
 }
 
 .nav-header .el-menu--horizontal>.el-menu-item.logo:hover,
 .el-menu--horizontal>.el-menu-item.logo.is-active {
-  background: none;
-  border: none;
-  transition: none;
-  background-image: url(../../assets/images/logo.png) no-repeat 0 5px;
-  background-size: 30px 50px;
-  text-indent: -9999px;
+  border: none
 }
 
 .nav-header .el-menu-header {

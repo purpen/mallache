@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <div class="banner" ref="banner">
+    <div class="banner" ref="banner" :style="{height : calcHeight}">
       <h3 :class="{'m-h3' : BMob}">把需求交给铟果来解决</h3>
       <p :class="{'m-p' : BMob}">铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
     </div>
@@ -99,22 +99,29 @@
 </template>
 
 <script>
+import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'server',
   data() {
     return {
+      calcHeight: ''
     }
   },
+  created() {
+  },
   mounted() {
-    this.$refs.banner.style.height = this.inputValue
+    var that = this
+    window.onresize = () => {
+      that.$store.commit('INIT_PAGE')
+      that.calcHeight = calcImgSize(650, 1440)
+    }
+    this.$store.commit('INIT_PAGE')
+    this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {
     BMob() {
       return this.$store.state.event.isMob
     }
-  },
-  props: {
-    inputValue: String
   }
 }
 </script>

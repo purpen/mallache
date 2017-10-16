@@ -31,7 +31,7 @@
           </el-col>
         </el-row>
 
-        <div class="pub" v-if="uType !== 2">
+        <div class="pub" v-if="uType !== 2 && !isMob">
           <router-link :to="{name: 'itemSubmitOne'}">
             <el-button class="pub-btn is-custom" type="primary" size="large">发布项目</el-button>
           </router-link>
@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'index',
   data() {
@@ -199,25 +200,25 @@ export default {
             'image': require('@/assets/images/home/case_fxy.jpg')
           }
         ]
-      ]
+      ],
+      calcHeight: ''
     }
   },
+  created() {
+  },
   mounted() {
-    console.log(this.calcHeight)
-    for (let i of this.$refs.slide) {
-      i.style.height = this.calcHeight
+    var that = this
+    window.onresize = () => {
+      that.$store.commit('INIT_PAGE')
+      that.calcHeight = calcImgSize(650, 1440)
     }
+    this.$store.commit('INIT_PAGE')
+    this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {
     isMob() {
       return this.$store.state.event.isMob
-    },
-    calcHeight() {
-      return this.inputValue
     }
-  },
-  props: {
-    inputValue: String
   }
 }
 </script>

@@ -62,24 +62,24 @@
       <div class="m-Nav" ref="mNav">
         <ul>
           <li @click="closeMenu">
-            <router-link to="/home">首页</router-link>
+            <router-link :to="menu.home">首页</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link to="/server">服务</router-link>
+            <router-link :to="menu.server">服务</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link to="/subject/zj">铟果说</router-link>
+            <router-link :to="menu.topic">铟果说</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link to="/stuff">灵感</router-link>
+            <router-link :to="menu.stuff">灵感</router-link>
           </li>
         </ul>
         <div class="m-Sign">
           <span @click="closeMenu">
-            <router-link to="login">登录</router-link>
+            <router-link :to="menu.login">登录</router-link>
           </span>
           <span @click="closeMenu">
-            <router-link to="register" @click="closeMenu">注册</router-link>
+            <router-link :to="menu.register" @click="closeMenu">注册</router-link>
           </span>
         </div>
       </div>

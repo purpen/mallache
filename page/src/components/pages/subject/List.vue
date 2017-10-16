@@ -16,7 +16,9 @@
               </a>
             </div>
             <div class="content">
-              <p class="title"><a :href="d.url">{{ d.title }}</a></p>
+              <p class="title">
+                <a :href="d.url">{{ d.title }}</a>
+              </p>
               <div class="des">
                 <p>{{ d.content }}</p>
               </div>
@@ -36,7 +38,7 @@
 import api from '@/api/api'
 export default {
   name: 'article_list',
-  data () {
+  data() {
     return {
       cateList: [],
       itemList: [
@@ -75,15 +77,15 @@ export default {
   created: function() {
     const self = this
     // 分类列表
-    self.$http.get(api.categoryList, {params: {page: 1, per_page: 4, type: 1, sort: 1}})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        self.cateList = response.data.data
-      }
-    })
-    .catch (function(error) {
-      self.$message.error(error.message)
-    })
+    self.$http.get(api.categoryList, { params: { page: 1, per_page: 4, type: 1, sort: 1 } })
+      .then(function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.cateList = response.data.data
+        }
+      })
+      .catch(function(error) {
+        self.$message.error(error.message)
+      })
   }
 }
 
@@ -91,70 +93,76 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .container{
-  }
-  .container h3 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  .category-list {
-    margin: 30px auto 20px auto;
-    text-align: center;
-  }
-  .category-list a {
-    font-size: 1.6rem;
-    margin-right: 40px;
-    color: #666;
-  }
-  .category-list a:hover, .category-list a.active {
-    color: #FF5A5F;
-  }
-  .case-list {
-    min-height: 350px; /* 为啥要加这俩 去掉很舒服呀?*/
-  }
+.container h3 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
 
-  .item {
-    height: 460px; /* 为啥要加这俩 */
-    margin: 10px 0;
-  }
+.category-list {
+  margin: 30px auto 20px auto;
+  text-align: center;
+}
 
-  .item img {
-    width: 100%;
-  }
+.category-list a {
+  font-size: 1.6rem;
+  margin-right: 40px;
+  color: #666;
+}
 
-  .image-box {
-    height: 350px;
-    overflow: hidden;
-  }
+.category-list a:hover,
+.category-list a.active {
+  color: #FF5A5F;
+}
 
-  .content {
-    padding: 20px;
-  }
-  .content p.title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .content a {
-    color: #222;
-    font-size: 1.8rem;
-  }
+.case-list {
+  min-height: 350px;
+  /* 为啥要加这俩 去掉很舒服呀?*/
+}
 
-  .des {
-    height: 40px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
+.item {
+  height: 460px;
+  /* 为啥要加这俩 */
+  margin: 10px 0;
+}
 
-  .des p {
-    color: #666;
-    font-size: 1.4rem;
-    line-height: 1.5;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:2;
-  }
+.item img {
+  width: 100%;
+}
 
+.image-box {
+  height: 350px;
+  overflow: hidden;
+}
+
+.content {
+  padding: 20px;
+}
+
+.content p.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content a {
+  color: #222;
+  font-size: 1.8rem;
+}
+
+.des {
+  height: 40px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.des p {
+  color: #666;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 </style>
