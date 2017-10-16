@@ -119,13 +119,11 @@
 </template>
 
 <script>
-import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'index',
   data() {
     return {
       uType: this.$store.state.event.user.type || 1,
-      calcHeight: '',
       slideList: [
         {
           'clickUrl': 'javascript:void(0);',
@@ -209,14 +207,13 @@ export default {
     for (let i of this.$refs.slide) {
       i.style.height = this.calcHeight
     }
-    window.onresize = () => {
-      this.calcHeight = calcImgSize()
-    }
-    this.calcHeight = calcImgSize()
   },
   computed: {
     isMob() {
       return this.$store.state.event.isMob
+    },
+    calcHeight() {
+      return this.inputValue
     }
   },
   props: {
