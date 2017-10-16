@@ -5,6 +5,7 @@
       <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
       <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
     </div>
+
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20">
 
@@ -99,8 +100,12 @@ export default {
 }
 
 .category-list {
-  margin: 30px auto 20px auto;
+  padding-bottom: 10px;
+  margin: 30px auto 10px auto;
   text-align: center;
+  white-space: nowrap;
+  overflow-x: auto;
+  min-width: 100%;
 }
 
 .category-list a {
@@ -115,13 +120,11 @@ export default {
 }
 
 .case-list {
-  min-height: 350px;
-  /* 为啥要加这俩 去掉很舒服呀?*/
+  /* min-height: 350px; */
 }
 
 .item {
-  height: 460px;
-  /* 为啥要加这俩 */
+  /* height: 460px; */
   margin: 10px 0;
 }
 
@@ -130,7 +133,7 @@ export default {
 }
 
 .image-box {
-  height: 350px;
+  /* height: 350px; */
   overflow: hidden;
 }
 
@@ -164,5 +167,31 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+@media screen and ( max-width:440px) {
+  .category-list {
+    padding-left: 40px
+  }
+
+   ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #F5F5F5;
+  }
+
+  /*定义滚动条轨道 内阴影+圆角*/
+   ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+  /*定义滑块 内阴影+圆角*/
+   ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #c3c3c3;
+  }
 }
 </style>

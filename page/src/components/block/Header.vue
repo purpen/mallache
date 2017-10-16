@@ -73,6 +73,9 @@
           <li @click="closeMenu">
             <router-link :to="menu.stuff">灵感</router-link>
           </li>
+          <li @click="closeMenu">
+            <router-link :to="menu.design">设计服务商入驻</router-link>
+          </li>
         </ul>
         <div class="m-Sign">
           <span @click="closeMenu">
@@ -101,6 +104,7 @@ export default {
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
+        design: { path: '/server' },
         topic: { path: '/article/list' },
         stuff: { path: '/stuff' },
         apply: { path: '/apply' },
