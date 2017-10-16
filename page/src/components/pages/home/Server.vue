@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <div class="banner" ref="banner" :style="{height : calcHeight}">
+    <div class="banner" :style="{height : calcHeight}">
       <h3 :class="{'m-h3' : BMob}">把需求交给铟果来解决</h3>
       <p :class="{'m-p' : BMob}">铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
     </div>
@@ -34,7 +34,6 @@
     </div>
 
     <div class=" container">
-
       <div class="pub-title">发布项目流程</div>
       <div class="process" v-if="!BMob">
         <div class="item-process">
@@ -168,41 +167,6 @@ export default {
   padding: 0 150px;
 }
 
-.banner .m-h3 {
-  font-size: 2rem;
-  padding-top: 0;
-}
-
-.banner .m-p {
-  font-size: 1.2rem;
-  padding: 0 80px
-}
-
-@media screen and (min-width: 500px) and (max-width: 767px) {
-  .banner h3 {
-    padding-top: 0;
-  }
-
-  .banner .m-h3 {
-    font-size: 2rem;
-    padding-top: 15%;
-  }
-  .banner .m-p {
-    padding: 0 120px
-  }
-}
-
-@media screen and (min-width: 400px) and (max-width: 430px) {
-  .banner .m-p {
-    padding: 0 130px
-  }
-}
-
-@media screen and (min-width: 320px) and (max-width: 399px) {
-  .banner .m-p {
-    padding: 0 100px
-  }
-}
 
 .item_1_title {
   color: #222;
@@ -253,21 +217,6 @@ export default {
   margin: 10px 0.8%;
   text-align: center;
   float: left;
-}
-
-.m-process {
-  margin-top: -20px;
-}
-
-.m-process .item-process img {
-  width: 100%;
-  padding: 5% 40%;
-}
-
-.m-process .item-process p {
-  width: 100%;
-  text-align: center;
-  font-size: 20px;
 }
 
 .process .item-process img,
