@@ -344,7 +344,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 
 /**
- * Footer End
+ * Footer mobile
  */
 
 
@@ -862,19 +862,14 @@ img.avatar {
 }
 
 
-/*subject*/
-
-.domain-row {
-  display: flex;
-  align-items: center
-}
-
-
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1200px) {
   .container {
     width: 1200px
+  }
+  .banner h3 {
+    padding-top: 15%!important;
   }
 }
 
@@ -885,6 +880,9 @@ img.avatar {
   .container {
     width: 992px;
   }
+  .banner h3 {
+    padding-top: 15%!important;
+  }
 }
 
 
@@ -894,6 +892,10 @@ img.avatar {
   .container {
     width: 768px;
   }
+
+  .banner h3 {
+    padding-top: 10%!important;
+  }
 }
 
 
@@ -901,13 +903,32 @@ img.avatar {
 
 @media screen and (max-width: 767px) {
   #app {
-    padding-bottom: 739px;
+    padding-bottom: 360px;
   }
   .item_2_box .item2banner {
     margin: 60px 0;
   }
-  .banner h3 {
-    padding-top: 0!important;
+  .footer .item {
+    text-align: left
+  }
+  .footer p {
+    margin: 10px 10px 10px 60px;
+    line-height: 1.5;
+  }
+  .footer p.title {
+    font-size: 1.5rem;
+    margin: 20px 20px 10px 40px;
+  }
+  .footer .share-box {
+    overflow: hidden;
+    width: 160px;
+  }
+  .footer .share-box p {
+    margin-left: 0px;
+    margin-right: 20px
+  }
+  .anli-elrow {
+    margin: 0 1px!important;
   }
 }
 
@@ -930,6 +951,9 @@ img.avatar {
 @media screen and (min-width: 320px) and (max-width: 399px) {
   .banner .m-p {
     padding: 0 100px!important
+  }
+  .banner h3 {
+    padding-top: 5%!important;
   }
 }
 

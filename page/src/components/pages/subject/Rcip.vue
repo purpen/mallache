@@ -355,7 +355,7 @@ export default {
 
 .domain .des {
   text-indent: 1em;
-  padding: 0 2em;
+  padding: 0 1em;
   font-size: 1.4rem;
   color: #666;
   font-weight: 300;

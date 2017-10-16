@@ -73,9 +73,9 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-        <el-carousel :interval="5000" height="480px">
+        <el-carousel :interval="500000" height="480px">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
-            <el-row :gutter="30">
+            <el-row :gutter="30" class="anli-elrow">
               <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
                 <el-card class="box-card" :body-style="{ padding: '0px' }">
                   <div class="image-box">
@@ -274,6 +274,7 @@ export default {
   margin-right: 120px;
 }
 
+
 .item_1_title {
   color: #222;
   font-size: 2rem;
@@ -437,6 +438,12 @@ export default {
 
   .item_1_r {
     margin-right: 0;
+    padding: 0 18%;
+  }
+
+  .item_1_l img,
+  .item_1_r img {
+    width: 120px;
   }
 
   .logo-list img {

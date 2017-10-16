@@ -1,17 +1,17 @@
 <template>
   <div class="content-box">
     <!--
-                              <div>
-                                <el-row :gutter="12" type="flex" justify="center">
-                                  <el-col :span="5" class="banner-item left">
-                                    <router-link :to="{name: 'server'}">我是需求方</router-link>
-                                  </el-col>
-                                  <el-col :span="5" class="banner-item right">
-                                    <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
-                                  </el-col>
-                                </el-row>
-                              </div>
-                              -->
+                                <div>
+                                  <el-row :gutter="12" type="flex" justify="center">
+                                    <el-col :span="5" class="banner-item left">
+                                      <router-link :to="{name: 'server'}">我是需求方</router-link>
+                                    </el-col>
+                                    <el-col :span="5" class="banner-item right">
+                                      <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
+                                    </el-col>
+                                  </el-row>
+                                </div>
+                                -->
 
     <div class="banner" :style="{height : calcHeight}">
       <h3 :class="{'m-h3' : BMob}">成为铟果设计服务商</h3>
@@ -187,7 +187,6 @@ export default {
 }
 
 .banner h3 {
-  padding-top: 13%;
   padding-bottom: 10px;
   font-size: 5rem;
   color: #fff;
@@ -233,8 +232,6 @@ export default {
   text-align: center;
   padding: 60px 0 40px 0;
 }
-
-.item_3 {}
 
 .pub-title {
   font-size: 2rem;

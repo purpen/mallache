@@ -36,7 +36,7 @@
                 <el-col :span="12">
                   <el-form-item label="标题" prop="title">
                     <el-input v-model="form.title" placeholder=""></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -44,7 +44,7 @@
                 <el-col :span="12">
                   <el-form-item label="链接" prop="url">
                     <el-input v-model="form.url" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 

@@ -104,7 +104,7 @@ export default {
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
-        design: { path: '/server' },
+        design: { path: '/server_design' },
         topic: { path: '/article/list' },
         stuff: { path: '/stuff' },
         apply: { path: '/apply' },

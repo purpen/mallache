@@ -1,19 +1,19 @@
 <template>
   <div class="content-box">
 
-    <div class="banner" ref="banner">
+    <div class="banner" :style="{height: calcHeight}">
     </div>
 
     <div class="container">
 
       <div class="domain">
         <el-row :gutter="20" class="domain-row">
-          <el-col :span="8">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <a href="javascript:void(0);" @click="playBtn">
               <img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%" />
             </a>
           </el-col>
-          <el-col :span="16">
+          <el-col :xs="24" :sm="16" :md="16" :lg="16">
             <p class="title">什么是设计再造计划</p>
             <p class="des">浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业设计示范基地共同发起，由浙江省工业设计创新服务基地运营公司杭州合创共响工业设计管理有限公司负责执行。该计划旨在贯彻落实省政府《浙江省全面改造提升传统制造业行动计划（2017—2020年）》，积极发挥工业设计在改造传统产业中的作用，集聚创新要素，用好创新平台，把浙江近五年集聚的设计优势转化为产业优势、市场优势、竞争优势，整合省内外工业设计产业生态链优势资源，通过工业设计为浙江传统产业注入创新活力，帮助制造企业“增品种、提品质、创品牌”，实现传统产业的转型升级。</p>
           </el-col>
@@ -42,9 +42,10 @@
             <div class="jiao"></div>
           </div>
           <div class="cont">
+          </div>
+          <div class="foo">
             <h3>开幕致辞</h3>
           </div>
-          <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
@@ -66,9 +67,10 @@
             <div class="jiao"></div>
           </div>
           <div class="cont">
+          </div>
+          <div class="foo">
             <h3>启动仪式</h3>
           </div>
-          <div class="foo"></div>
         </div>
 
         <el-row :gutter="20">
@@ -89,9 +91,10 @@
             <div class="jiao"></div>
           </div>
           <div class="cont">
+          </div>
+          <div class="foo">
             <h3>浙江“传统产业设计再造”高峰论坛</h3>
           </div>
-          <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
@@ -112,9 +115,10 @@
             <div class="jiao"></div>
           </div>
           <div class="cont">
+          </div>
+          <div class="foo">
             <h3>浙江“传统产业设计再造”对接会</h3>
           </div>
-          <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
@@ -132,9 +136,10 @@
             <div class="jiao"></div>
           </div>
           <div class="cont">
+          </div>
+          <div class="foo">
             <h3>活动照片</h3>
           </div>
-          <div class="foo"></div>
         </div>
 
         <el-row :gutter="15">
@@ -172,15 +177,14 @@
           您的浏览器不支持 video 标签。
         </video>
       </div>
-      <span slot="footer" class="dialog-footer">
-
-      </span>
+      <span slot="footer" class="dialog-footer"></span>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
+import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'subject_zj',
   data() {
@@ -291,7 +295,8 @@ export default {
         }
       ],
       videoUrl: 'http://oni525j96.bkt.clouddn.com/video/zjgz.mp4',
-      msg: 'This is subject'
+      msg: 'This is subject',
+      calcHeight: ''
     }
   },
   methods: {
@@ -302,15 +307,18 @@ export default {
     }
   },
   mounted() {
-    this.$refs.banner.style.height = this.calcHeight
+    var that = this
+    window.onresize = () => {
+      that.$store.commit('INIT_PAGE')
+      that.calcHeight = calcImgSize(600, 1440)
+    }
+    this.$store.commit('INIT_PAGE')
+    this.calcHeight = calcImgSize(600, 1440)
   },
   computed: {
-    calcHeight() {
-      return this.inputValue
+    BMob() {
+      return this.$store.state.event.isMob
     }
-  },
-  props: {
-    inputValue: String
   }
 }
 
@@ -337,25 +345,26 @@ export default {
 
 .banner {
   width: 100%;
-  height: 650px;
   background: url('../../../assets/images/subject/zj/header.jpg');
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   text-align: center;
 }
 
 .domain {
-  margin: 20px 0 20px 0;
+  margin: 20px 0 30px 0;
 }
 
 .domain .title {
   font-size: 2.5rem;
+  text-align: center;
   margin-bottom: 15px;
   color: #333;
 }
 
 .domain .des {
   font-size: 1.5rem;
+  padding: 0 1em;
   line-height: 1.9;
   color: #666;
   font-weight: 300;

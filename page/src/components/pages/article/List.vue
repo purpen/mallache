@@ -7,7 +7,7 @@
     </div>
 
     <div class="case-list" v-loading.body="isLoading">
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="anli-elrow">
 
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
@@ -247,7 +247,7 @@ export default {
 
   /* 定义滚动条轨道 内阴影+圆角 */
    ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: #F5F5F5;
   }
@@ -255,7 +255,7 @@ export default {
   /* 定义滑块 内阴影+圆角 */
    ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #c3c3c3;
   }
 }

@@ -47,7 +47,7 @@ export default {
           id: 1,
           title: '传统产业设计再制造',
           cover_url: require('@/assets/images/subject/list_01.jpg'),
-          url: 'http://d3ingo.taihuoniao.com/subject/zj',
+          url: '/subject/zj',
           content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业梦栖工业设计小镇和全省17个省级工业全省17个省级工工业梦栖...'
         },
         {
