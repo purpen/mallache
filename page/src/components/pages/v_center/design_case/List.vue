@@ -132,7 +132,7 @@
 <style scoped>
 
   .design-case-list {
-  
+
   }
   .design-case-list .item {
     height: 240px;

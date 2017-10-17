@@ -337,7 +337,7 @@ export default {
 .banner {
   width: 100%;
   background: url('../../../assets/images/subject/rcip/head@2x.jpg');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
 }
@@ -355,7 +355,7 @@ export default {
 
 .domain .des {
   text-indent: 1em;
-  padding: 0 2em;
+  padding: 0 1em;
   font-size: 1.4rem;
   color: #666;
   font-weight: 300;

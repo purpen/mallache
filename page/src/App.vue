@@ -23,6 +23,9 @@ export default {
     }
   },
   watch: {
+  },
+  created() {
+    this.$store.commit('INIT_PAGE')
   }
 }
 </script>

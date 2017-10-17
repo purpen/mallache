@@ -54,9 +54,7 @@
       <div class="el-menu-item logo">
         <span class="logo">太火鸟&nbsp;SaaS</span>
       </div>
-      <div class="bars" @click="mmenuHide">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-      </div>
+      <div class="bars" @click="mmenuHide"></div>
       <section class="m-Menu" ref="mMenu" @click="mNavClick">
       </section>
       <div class="m-Nav" ref="mNav">
@@ -73,8 +71,11 @@
           <li @click="closeMenu">
             <router-link :to="menu.stuff">灵感</router-link>
           </li>
+          <li @click="closeMenu">
+            <router-link :to="menu.design">设计服务商入驻</router-link>
+          </li>
         </ul>
-        <div class="m-Sign">
+        <div class="m-Sign" ref="mSign">
           <span @click="closeMenu">
             <router-link :to="menu.login">登录</router-link>
           </span>
@@ -101,6 +102,7 @@ export default {
       menu: {
         home: { path: '/home' },
         server: { path: '/server' },
+        design: { path: '/server_design' },
         topic: { path: '/article/list' },
         stuff: { path: '/stuff' },
         apply: { path: '/apply' },
@@ -177,13 +179,15 @@ export default {
     addScroll() {
       // this.$refs.mCover.style.width = '100%'
       this.$refs.mNav.style.marginLeft = 0
+      this.$refs.mSign.style.left = '8px'
       this.$refs.mMenu.style.width = '100%'
       document.body.setAttribute('class', 'disableScroll')
       document.childNodes[1].setAttribute('class', 'disableScroll')
     },
     reScroll() {
-      // this.$refs.mCover.style.width = 0
+      // this.$refs.mCover.style.width = 0 mSign
       this.$refs.mNav.style.marginLeft = '-54vw'
+      this.$refs.mSign.style.left = '-54vw'
       this.$refs.mMenu.style.width = 0
       document.body.removeAttribute('class', 'disableScroll')
       document.childNodes[1].removeAttribute('class', 'disableScroll')

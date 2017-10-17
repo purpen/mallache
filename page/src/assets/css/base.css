@@ -29,6 +29,7 @@ body {
   min-height: 100%;
   position: relative;
   padding-bottom: 296px;
+  overflow-x: hidden
 }
 
 .container {
@@ -259,6 +260,55 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 
+/* server && design */
+
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-contant {
+  width: 80%;
+  text-align: center;
+}
+
+.banner-contant h3 {
+  padding-bottom: 5%
+}
+
+.banner .m-h3 {
+  font-size: 2rem!important;
+}
+
+.banner .m-p {
+  font-size: 1.2rem!important;
+}
+
+
+/* .m-process {
+  margin-top: -20px;
+} */
+
+.m-process .item-process {
+  float: left;
+  width: 33%;
+}
+
+.m-process .item-process img {
+  width: 100%;
+  padding: 5% 30%;
+  margin-bottom: 15px;
+}
+
+.m-process .item-process p {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+
 /**
  * Common Part --- End
  */
@@ -303,6 +353,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .footer .share-box {
+  overflow: hidden;
   width: 160px;
   margin: 0 auto;
 }
@@ -313,7 +364,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 
 /**
- * Footer End
+ * Footer mobile
  */
 
 
@@ -329,10 +380,12 @@ button.is-custom.is-outlined.is-loading:after {
 
 .m-nav-header .bars {
   position: absolute;
-  top: 15px;
-  left: 14px;
-  font-size: 30px;
-  color: #7a7a7a;
+  top: 20px;
+  left: 15px;
+  height: 20px;
+  width: 20px;
+  background: url('../images/icon/menuIcon.png') no-repeat;
+  background-size: contain;
 }
 
 .m-nav-header .m-Menu {
@@ -375,9 +428,10 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .m-Sign {
-  position: absolute;
-  left: 8px;
-  bottom: 15px;
+  transition: all .5s;
+  position: fixed;
+  left: -54vw;
+  bottom: 16px;
 }
 
 .m-Sign a {
@@ -831,14 +885,6 @@ img.avatar {
 }
 
 
-/*subject*/
-
-.domain-row {
-  display: flex;
-  align-items: center
-}
-
-
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1200px) {
@@ -870,10 +916,35 @@ img.avatar {
 
 @media screen and (max-width: 767px) {
   #app {
-    padding-bottom: 739px;
+    padding-bottom: 360px;
   }
   .item_2_box .item2banner {
     margin: 60px 0;
+  }
+  .footer .item {
+    text-align: left
+  }
+  .footer p {
+    margin: 10px 10px 10px 40px;
+    line-height: 1.5;
+  }
+  .footer p.title {
+    font-size: 1.5rem;
+    margin: 2rem 2rem 1rem 4rem;
+  }
+  .footer .share-box {
+    overflow: hidden;
+    width: 160px;
+  }
+  .footer .share-box p {
+    margin-left: 0px;
+    margin-right: 20px
+  }
+  .anli-elrow {
+    padding: 0 15px!important;
+  }
+  .banner-contant {
+    width: 80%;
   }
 }
 

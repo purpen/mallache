@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="5000" :height="calcHeight" class="banner">
+    <el-carousel :interval="5000" :height="calcHeight">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
           <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
@@ -73,9 +73,9 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-        <el-carousel :interval="5000" height="480px">
+        <el-carousel :interval="500000" height="480px">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
-            <el-row :gutter="30">
+            <el-row :gutter="30" class="anli-elrow">
               <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
                 <el-card class="box-card" :body-style="{ padding: '0px' }">
                   <div class="image-box">
@@ -230,8 +230,8 @@ export default {
   font-size: 18px;
   width: 100%;
   margin: 0;
-  background-size: contain;
-  background-position: top center;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   text-align: center;
 }
@@ -273,6 +273,7 @@ export default {
 .item_1_r {
   margin-right: 120px;
 }
+
 
 .item_1_title {
   color: #222;
@@ -331,7 +332,7 @@ export default {
 
 .item {
   text-align: center;
-  padding: 60px 0 60px 0;
+  padding: 60px 0 20px 0;
 }
 
 .avatar-header {
@@ -385,7 +386,7 @@ export default {
 }
 
 .logo-list img {
-  margin: 10px 35px;
+  margin: 10px 20px;
   width: 15%;
 }
 
@@ -437,10 +438,16 @@ export default {
 
   .item_1_r {
     margin-right: 0;
+    padding: 0 18%;
+  }
+
+  .item_1_l img,
+  .item_1_r img {
+    width: 120px;
   }
 
   .logo-list img {
-    margin: 10px 35px;
+    margin: 10px 20px;
     width: 30%;
   }
 }
@@ -448,6 +455,9 @@ export default {
 @media screen and (max-width: 500px) {
   .box-card .content {
     padding-top: 28px;
+  }
+  .item_2 h3 {
+    padding-bottom: 30px;
   }
 }
 </style>

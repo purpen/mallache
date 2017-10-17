@@ -1,17 +1,20 @@
 <template>
   <div class="container">
-    <div class="category-list">
-      <router-link :to="{name: 'articleList'}">最新</router-link>
-      <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
-      <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
+    <div class="nav-list">
+      <div class="category-list" ref="categoryList">
+        <router-link :to="{name: 'articleList'}">最新</router-link>
+        <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
+        <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
+      </div>
     </div>
+
     <div class="case-list" v-loading.body="isLoading">
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="anli-elrow">
 
         <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <a :href="d.url">
+              <a :href="d.url" target="_blank">
                 <img :src="d.cover_url">
               </a>
             </div>
@@ -46,7 +49,7 @@ export default {
           id: 1,
           title: '传统产业设计再制造',
           cover_url: require('@/assets/images/subject/list_01.jpg'),
-          url: 'http://d3ingo.taihuoniao.com/subject/zj',
+          url: '/subject/zj',
           content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业梦栖工业设计小镇和全省17个省级工业全省17个省级工工业梦栖...'
         },
         {
@@ -86,6 +89,8 @@ export default {
       .catch(function(error) {
         self.$message.error(error.message)
       })
+  },
+  mounted() {
   }
 }
 
@@ -99,8 +104,12 @@ export default {
 }
 
 .category-list {
-  margin: 30px auto 20px auto;
+  padding-bottom: 10px;
+  margin: 30px auto 10px auto;
   text-align: center;
+  min-width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 .category-list a {
@@ -116,12 +125,10 @@ export default {
 
 .case-list {
   min-height: 350px;
-  /* 为啥要加这俩 去掉很舒服呀?*/
 }
 
 .item {
-  height: 460px;
-  /* 为啥要加这俩 */
+  /* height: 460px; */
   margin: 10px 0;
 }
 
@@ -130,7 +137,7 @@ export default {
 }
 
 .image-box {
-  height: 350px;
+  /* height: 350px; */
   overflow: hidden;
 }
 
@@ -164,5 +171,26 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+@media screen and ( max-width:480px) {
+  .nav-list {
+    margin-top: 16px;
+    height: 18px;
+    overflow: hidden;
+  }
+  .category-list {
+    margin: 0 0 16px 0;
+    padding: 2px 0 18px 16px;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  .category-list a {
+    margin-right: 0;
+    margin-right: 30px;
+  }
+  .content {
+    padding: 15px;
+  }
 }
 </style>
