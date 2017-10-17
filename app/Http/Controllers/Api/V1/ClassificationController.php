@@ -32,6 +32,7 @@ class ClassificationController extends BaseController
         ]);
         $list = Classification::where('type', $request->input('type'))
             ->where('status', 1)
+            ->orderBy('sort', 'desc')
             ->get();
 
         return $this->response->collection($list, new ClassificationTransformer())->setMeta($this->apiMeta());

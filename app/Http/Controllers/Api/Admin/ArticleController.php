@@ -6,7 +6,6 @@ use App\Http\AdminTransformer\ArticleListTransformer;
 use App\Http\AdminTransformer\ArticleTransformer;
 use App\Models\Article;
 use App\Models\AssetModel;
-use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -286,14 +285,33 @@ class ArticleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @api {delete} /admin/article/delete 文章删除
+     * @apiVersion 1.0.0
+     * @apiName classification delete
+     * @apiGroup AdminArticle
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
      */
-    public function destroy()
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->input('id');
+        if(!$article = Article::where(['id'=> $id, 'status' => 0])->first()){
+            return $this->response->array($this->apiError('文章已发布无法删除', 403));
+        }
+
+        $article->delete();
+
+        return $this->response->array($this->apiSuccess('ok', 200));
     }
 
     /**

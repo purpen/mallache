@@ -2,8 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Article extends BaseModel
 {
+    use SoftDeletes;
+
+    /**
+     * 需要被转换成日期的属性。
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
     protected $table = 'article';
 
     protected $fillable = ['title', 'content', 'classification_id', 'cover_id', 'type', 'topic_url', 'label', 'short_content', 'source_from'];

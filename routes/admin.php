@@ -156,6 +156,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/article/verifyStatus', 'ArticleController@verifyStatus');
         // {put} /admin/article/recommend 文章推荐
         $api->put('/admin/article/recommend', 'ArticleController@recommend');
+        // 删除文章
+        $api->delete('/admin/article/delete','ArticleController@destroy');
 
     });
 
