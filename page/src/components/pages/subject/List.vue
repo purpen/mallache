@@ -1,18 +1,20 @@
 <template>
   <div class="container">
-    <div class="category-list">
-      <router-link :to="{name: 'articleList'}">最新</router-link>
-      <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
-      <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
+    <div class="nav-list">
+      <div class="category-list" ref="categoryList">
+        <router-link :to="{name: 'articleList'}">最新</router-link>
+        <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
+        <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
+      </div>
     </div>
 
     <div class="case-list" v-loading.body="isLoading">
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="anli-elrow">
 
         <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <a :href="d.url">
+              <a :href="d.url" target="_blank">
                 <img :src="d.cover_url">
               </a>
             </div>
@@ -87,6 +89,8 @@ export default {
       .catch(function(error) {
         self.$message.error(error.message)
       })
+  },
+  mounted() {
   }
 }
 
@@ -103,9 +107,9 @@ export default {
   padding-bottom: 10px;
   margin: 30px auto 10px auto;
   text-align: center;
+  min-width: 100%;
   white-space: nowrap;
   overflow-x: auto;
-  min-width: 100%;
 }
 
 .category-list a {
@@ -120,7 +124,7 @@ export default {
 }
 
 .case-list {
-  /* min-height: 350px; */
+  min-height: 350px;
 }
 
 .item {
@@ -169,29 +173,24 @@ export default {
   -webkit-line-clamp: 2;
 }
 
-@media screen and ( max-width:440px) {
+@media screen and ( max-width:480px) {
+  .nav-list {
+    margin-top: 16px;
+    height: 18px;
+    overflow: hidden;
+  }
   .category-list {
-    padding-left: 40px
+    margin: 0 0 16px 0;
+    padding: 2px 0 18px 16px;
+    white-space: nowrap;
+    overflow-x: auto;
   }
-
-   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    background-color: #F5F5F5;
+  .category-list a {
+    margin-right: 0;
+    margin-right: 30px;
   }
-
-  /*定义滚动条轨道 内阴影+圆角*/
-   ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    background-color: #F5F5F5;
-  }
-
-  /*定义滑块 内阴影+圆角*/
-   ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: #c3c3c3;
+  .content {
+    padding: 15px;
   }
 }
 </style>

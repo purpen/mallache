@@ -1,21 +1,23 @@
 <template>
   <div class="content-box">
     <!--
-                                <div>
-                                  <el-row :gutter="12" type="flex" justify="center">
-                                    <el-col :span="5" class="banner-item left">
-                                      <router-link :to="{name: 'server'}">我是需求方</router-link>
-                                    </el-col>
-                                    <el-col :span="5" class="banner-item right">
-                                      <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
-                                    </el-col>
-                                  </el-row>
-                                </div>
-                                -->
+                                                      <div>
+                                                        <el-row :gutter="12" type="flex" justify="center">
+                                                          <el-col :span="5" class="banner-item left">
+                                                            <router-link :to="{name: 'server'}">我是需求方</router-link>
+                                                          </el-col>
+                                                          <el-col :span="5" class="banner-item right">
+                                                            <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
+                                                          </el-col>
+                                                        </el-row>
+                                                      </div>
+                                                      -->
 
     <div class="banner" :style="{height : calcHeight}">
-      <h3 :class="{'m-h3' : BMob}">成为铟果设计服务商</h3>
-      <p :class="{'m-p' : BMob}">洞察市场需求，运用专业设计与技术，提供更好的产品和服务，助力客户成长，帮助企业赢得挑战。</p>
+      <div class="banner-contant">
+        <h3 :class="{'m-h3' : BMob}">成为铟果设计服务商</h3>
+        <p :class="{'m-p' : BMob}">洞察市场需求，运用专业设计与技术，提供更好的产品和服务，助力客户成长，帮助企业赢得挑战。</p>
+      </div>
     </div>
 
     <div class="item item_2">
@@ -181,16 +183,14 @@ export default {
 .banner {
   width: 100%;
   background: url('../../../assets/images/home/service_banner_02.jpg');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
 }
 
 .banner h3 {
-  padding-bottom: 10px;
   font-size: 5rem;
   color: #fff;
-  line-height: 2;
   font-weight: 300;
 }
 
@@ -198,7 +198,6 @@ export default {
   font-size: 3rem;
   color: #fff;
   font-weight: 300;
-  padding: 0 150px;
 }
 
 .item_1_title {
@@ -235,6 +234,7 @@ export default {
 
 .pub-title {
   font-size: 2rem;
+  line-height: 2rem;
   margin: 60px 0 40px 0;
   text-align: center;
 }
@@ -284,7 +284,8 @@ export default {
 
 @media screen and ( max-width:768px) {
   .design-company img {
-    width: 20%
+    width: 20%;
+    margin: 0 2.5% 20px 2.5%;
   }
 }
 </style>

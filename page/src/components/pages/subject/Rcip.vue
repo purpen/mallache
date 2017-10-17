@@ -337,7 +337,7 @@ export default {
 .banner {
   width: 100%;
   background: url('../../../assets/images/subject/rcip/head@2x.jpg');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
 }

@@ -1,8 +1,10 @@
 <template>
   <div class="content-box">
     <div class="banner" :style="{height : calcHeight}">
-      <h3 :class="{'m-h3' : BMob}">把需求交给铟果来解决</h3>
-      <p :class="{'m-p' : BMob}">铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
+      <div class="banner-contant">
+        <h3 :class="{'m-h3' : BMob}">把需求交给铟果来解决</h3>
+        <p :class="{'m-p' : BMob}">铟果聚集100+专业设计服务供应商，依托海量消费大数据，帮助客户洞察先机。 </p>
+      </div>
     </div>
 
     <div class="item item_2">
@@ -146,16 +148,14 @@ export default {
   width: 100%;
   height: 650px;
   background: url('../../../assets/images/home/service_banner.jpg') #fafafa;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
 }
 
 .banner h3 {
-  padding-bottom: 10px;
   font-size: 5rem;
   color: #fff;
-  line-height: 2;
   font-weight: 300;
 }
 
@@ -163,7 +163,6 @@ export default {
   font-size: 3rem;
   color: #fff;
   font-weight: 300;
-  padding: 0 150px;
 }
 
 

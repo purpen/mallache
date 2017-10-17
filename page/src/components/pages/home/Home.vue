@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="5000" :height="calcHeight" class="banner">
+    <el-carousel :interval="5000" :height="calcHeight">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
           <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
@@ -230,8 +230,8 @@ export default {
   font-size: 18px;
   width: 100%;
   margin: 0;
-  background-size: contain;
-  background-position: top center;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   text-align: center;
 }
@@ -332,7 +332,7 @@ export default {
 
 .item {
   text-align: center;
-  padding: 60px 0 60px 0;
+  padding: 60px 0 20px 0;
 }
 
 .avatar-header {
@@ -386,7 +386,7 @@ export default {
 }
 
 .logo-list img {
-  margin: 10px 35px;
+  margin: 10px 20px;
   width: 15%;
 }
 
@@ -447,7 +447,7 @@ export default {
   }
 
   .logo-list img {
-    margin: 10px 35px;
+    margin: 10px 20px;
     width: 30%;
   }
 }
@@ -455,6 +455,9 @@ export default {
 @media screen and (max-width: 500px) {
   .box-card .content {
     padding-top: 28px;
+  }
+  .item_2 h3 {
+    padding-bottom: 30px;
   }
 }
 </style>

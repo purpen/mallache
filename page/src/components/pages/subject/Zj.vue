@@ -346,7 +346,7 @@ export default {
 .banner {
   width: 100%;
   background: url('../../../assets/images/subject/zj/header.jpg');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
 }
