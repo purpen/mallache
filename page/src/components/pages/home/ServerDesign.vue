@@ -1,17 +1,17 @@
 <template>
   <div class="content-box">
     <!--
-                                                      <div>
-                                                        <el-row :gutter="12" type="flex" justify="center">
-                                                          <el-col :span="5" class="banner-item left">
-                                                            <router-link :to="{name: 'server'}">我是需求方</router-link>
-                                                          </el-col>
-                                                          <el-col :span="5" class="banner-item right">
-                                                            <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
-                                                          </el-col>
-                                                        </el-row>
-                                                      </div>
-                                                      -->
+                                                        <div>
+                                                          <el-row :gutter="12" type="flex" justify="center">
+                                                            <el-col :span="5" class="banner-item left">
+                                                              <router-link :to="{name: 'server'}">我是需求方</router-link>
+                                                            </el-col>
+                                                            <el-col :span="5" class="banner-item right">
+                                                              <a href="javascript:void(0);" class="is-active">我是设计服务商</a>
+                                                            </el-col>
+                                                          </el-row>
+                                                        </div>
+                                                        -->
 
     <div class="banner" :style="{height : calcHeight}">
       <div class="banner-contant">
@@ -147,11 +147,9 @@ export default {
   },
   mounted() {
     var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
+    window.addEventListener('resize', () => {
       that.calcHeight = calcImgSize(650, 1440)
-    }
-    this.$store.commit('INIT_PAGE')
+    })
     this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {

@@ -235,11 +235,9 @@ export default {
   },
   mounted() {
     var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
+    window.addEventListener('resize', () => {
       that.calcHeight = calcImgSize(600, 1440)
-    }
-    this.$store.commit('INIT_PAGE')
+    })
     this.calcHeight = calcImgSize(600, 1440)
   },
   computed: {

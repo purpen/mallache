@@ -73,7 +73,7 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-        <el-carousel :interval="500000" height="480px">
+        <el-carousel :interval="500000" height="480px" v-if="!isMob">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30" class="anli-elrow">
               <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
@@ -92,6 +92,29 @@
             </el-row>
           </el-carousel-item>
         </el-carousel>
+
+        <el-carousel :interval="5000" height="480px" v-if="isMob">
+          <div v-for="(d, index) in caseSlideList" :key="index">
+            <el-carousel-item v-for="(k, i) in d" :key="i">
+              <el-row :gutter="30" class="anli-elrow">
+                <el-col :xs="24" :sm="8" :md="8" :lg="8">
+                  <el-card class="box-card" :body-style="{ padding: '0px' }">
+                    <div class="image-box">
+                      <img :src="k.image">
+                    </div>
+                    <div class="content">
+                      <p class="stuff-title">{{ k.title }}</p>
+                      <div class="des">
+                        <p>{{ k.desc }}</p>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+            </el-carousel-item>
+          </div>
+        </el-carousel>
+
       </div>
     </div>
 
@@ -105,7 +128,7 @@
         <img src="../../../assets/images/home/logo_hqjj.jpg" />
       </div>
       <div class="blank40"></div>
-      <h3>合作伙伴</h3>
+      <h3 class="m-partner">合作伙伴</h3>
 
       <div class="logo-list">
         <img src="../../../assets/images/home/1logo.jpg" />
@@ -208,11 +231,9 @@ export default {
   },
   mounted() {
     var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
+    window.addEventListener('resize', () => {
       that.calcHeight = calcImgSize(650, 1440)
-    }
-    this.$store.commit('INIT_PAGE')
+    })
     this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {
@@ -323,7 +344,7 @@ export default {
 
 .item_4 {
   background-color: #FAFAFA;
-  margin-bottom: -50px;
+  margin: 50px 0 -50px 0;
 }
 
 .item_4 h3 {
@@ -383,6 +404,7 @@ export default {
 
 .logo-list {
   text-align: center;
+  margin-bottom: 50px;
 }
 
 .logo-list img {
@@ -430,25 +452,38 @@ export default {
   text-overflow: ellipsis;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
+  .logo-list img {
+    margin: 10px 10px;
+    width: 30%;
+  }
+  .item {
+    padding: 30px 0;
+  }
+  .item h3 {
+    font-size: 2rem;
+    padding-bottom: 30px;
+  }
+  .item_1_title {
+    font-size: 1.8rem
+  }
   .item_1_l {
     margin-left: 0;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
-
   .item_1_r {
     margin-right: 0;
     padding: 0 18%;
   }
-
   .item_1_l img,
   .item_1_r img {
     width: 120px;
   }
-
-  .logo-list img {
-    margin: 10px 20px;
-    width: 30%;
+  .item_2 {
+    margin-top: 0;
+  }
+  .item_2_box .item2banner {
+    margin: 40px 0;
   }
 }
 

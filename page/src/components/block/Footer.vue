@@ -36,7 +36,7 @@
 
       <el-col class="item" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
-        <div class="share-box">
+        <div class="Fshare-box">
           <p class="share">
             <router-link :to="{name: 'test'}" class="">
               <i class="fa fa-weixin fa-2x" aria-hidden="true"></i>

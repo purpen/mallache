@@ -13,13 +13,13 @@
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">
+              <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': !BMob}">
                 <img :src="d.cover.middle">
               </router-link>
             </div>
             <div class="content">
               <p class="title">
-                <router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': !BMob}">{{ d.title }}</router-link>
                 <p>
                   <div class="des">
                     <p>{{ d.short_content }}</p>

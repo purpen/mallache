@@ -352,7 +352,7 @@ button.is-custom.is-outlined.is-loading:after {
   color: #fff;
 }
 
-.footer .share-box {
+.footer .Fshare-box {
   overflow: hidden;
   width: 160px;
   margin: 0 auto;
@@ -918,9 +918,6 @@ img.avatar {
   #app {
     padding-bottom: 360px;
   }
-  .item_2_box .item2banner {
-    margin: 60px 0;
-  }
   .footer .item {
     text-align: left
   }
@@ -930,15 +927,16 @@ img.avatar {
   }
   .footer p.title {
     font-size: 1.5rem;
-    margin: 2rem 2rem 1rem 4rem;
+    margin: 20px 20px 10px 40px;
   }
-  .footer .share-box {
+  .footer .Fshare-box {
     overflow: hidden;
     width: 160px;
+    margin-left: 40px;
   }
-  .footer .share-box p {
+  .footer .Fshare-box p {
     margin-left: 0px;
-    margin-right: 20px
+    margin-right: 12px
   }
   .anli-elrow {
     padding: 0 15px!important;

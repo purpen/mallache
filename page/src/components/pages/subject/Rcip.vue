@@ -303,9 +303,9 @@ export default {
   },
   mounted() {
     var that = this
-    window.onresize = () => {
+    window.addEventListener('resize', () => {
       that.calcHeight = calcImgSize(1520, 2880)
-    }
+    })
     this.calcHeight = calcImgSize(1520, 2880)
   }
 }
