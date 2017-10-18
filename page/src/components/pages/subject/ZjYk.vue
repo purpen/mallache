@@ -7,7 +7,7 @@
     <div class=" container">
 
       <div class="domain">
-        <el-row :gutter="20" class="domain-row">
+        <el-row :gutter="20" class="domain-row anli-elrow">
           <el-col :xs="24" :sm="8" :md="8" :lg="8">
             <a href="javascript:void(0);" @click="playBtn"><img src="../../../assets/images/subject/zj/video_cover.jpg" style="width: 100%;" /></a>
           </el-col>
@@ -45,8 +45,8 @@
           <div class="foo"></div>
         </div>
 
-        <el-row :gutter="15">
-          <el-col :span="6" v-for="(d, index) in startList" :key="index">
+        <el-row :gutter="15" class="anli-elrow">
+          <el-col :xs="24" :sm="6" :md="6" :lg="6" v-for="(d, index) in startList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
               <div style="padding: 14px;">
@@ -69,8 +69,8 @@
           <div class="foo"></div>
         </div>
 
-        <el-row :gutter="20">
-          <el-col :span="12" v-for="(d, index) in qdList" :key="index">
+        <el-row :gutter="20" class="anli-elrow">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in qdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
               <div style="padding: 14px;">
@@ -92,8 +92,8 @@
           <div class="foo"></div>
         </div>
 
-        <el-row :gutter="15">
-          <el-col :span="8" v-for="(d, index) in caseList" :key="index">
+        <el-row :gutter="15" class="anli-elrow">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in caseList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
               <div style="padding: 14px;">
@@ -115,8 +115,8 @@
           <div class="foo"></div>
         </div>
 
-        <el-row :gutter="15">
-          <el-col :span="6" v-for="(d, index) in hdList" :key="index">
+        <el-row :gutter="15" class="anli-elrow">
+          <el-col :xs="24" :sm="6" :md="6" :lg="6" v-for="(d, index) in hdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
             </el-card>
@@ -135,8 +135,8 @@
           <div class="foo"></div>
         </div>
 
-        <el-row :gutter="15">
-          <el-col :span="6" v-for="(d, index) in vList" :key="index">
+        <el-row :gutter="15" class="anli-elrow">
+          <el-col :xs="24" :sm="6" :md="6" :lg="6" v-for="(d, index) in vList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
               <img :src="d.image" class="image">
             </el-card>
@@ -334,9 +334,9 @@ export default {
   mounted() {
     var that = this
     window.addEventListener('resize', () => {
-      that.calcHeight = calcImgSize(600, 1440)
+      that.calcHeight = calcImgSize(650, 1440)
     })
-    this.calcHeight = calcImgSize(600, 1440)
+    this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {
     BMob() {
@@ -350,6 +350,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .container {}
+
+img {
+  vertical-align: top
+}
 
 .banner-item {
   margin: 10px 0;
@@ -380,9 +384,9 @@ export default {
 
 .domain .title {
   font-size: 2.5rem;
+  text-align: center;
   margin-bottom: 15px;
   color: #333;
-  text-align: center
 }
 
 .domain .des {
@@ -421,12 +425,15 @@ export default {
 
 .sub-title {
   display: flex;
+  position: relative;
   height: 38px;
   line-height: 38px;
   margin-bottom: 20px;
 }
 
 .sub-title h3 {
+  position: absolute;
+  left: 68px;
   color: #0F7553;
   font-size: 1.5rem;
 }
@@ -458,8 +465,11 @@ export default {
 
 .sub-title .foo {
   height: 38px;
-  width: 640px;
-  background: url('../../../assets/images/subject/zj/sub_title_foot.png') no-repeat;
+  width: 50%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: url('../../../assets/images/subject/zj/sub_title_foot.png') no-repeat right;
   background-size: cover;
 }
 
@@ -529,5 +539,14 @@ export default {
 
 .bottom p.content.plug {
   padding: 0 18%;
+}
+
+@media screen and (max-width: 767px) {
+  .block_2 .item {
+    height: auto
+  }
+  .domain .des {
+    padding: 0
+  }
 }
 </style>

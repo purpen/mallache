@@ -41,8 +41,16 @@ body {
 }
 
 p {
-  font-size: 14px;
   font-size: 1.4rem;
+}
+
+.markdown-body p {
+  font-size: 1.6rem
+}
+
+.markdown-body img {
+  display: block;
+  margin: 0 auto;
 }
 
 a {
@@ -355,7 +363,7 @@ button.is-custom.is-outlined.is-loading:after {
 .footer .Fshare-box {
   overflow: hidden;
   width: 160px;
-  margin: 0 auto;
+  margin: 2em auto;
 }
 
 .footer p.share {
@@ -943,6 +951,9 @@ img.avatar {
   }
   .banner-contant {
     width: 80%;
+  }
+  .design-case-content .des p img {
+    width: 100%;
   }
 }
 

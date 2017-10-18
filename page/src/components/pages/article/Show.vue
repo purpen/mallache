@@ -3,12 +3,12 @@
     <div class="blank20"></div>
 
     <!--
-        <el-breadcrumb separator="/" class="bread">
-          <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ name: 'articleList' }">铟果说</el-breadcrumb-item>
-          <el-breadcrumb-item>{{ item.title }}</el-breadcrumb-item>
-        </el-breadcrumb>
-        -->
+              <el-breadcrumb separator="/" class="bread">
+                <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ name: 'articleList' }">铟果说</el-breadcrumb-item>
+                <el-breadcrumb-item>{{ item.title }}</el-breadcrumb-item>
+              </el-breadcrumb>
+              -->
 
     <div class="content">
       <div class="title">
@@ -95,7 +95,7 @@ export default {
 
           that.item['content'] = markdown.render(that.item.content)
           that.item['created_at'] = that.item.created_at.date_format().format('yyyy年MM月dd日')
-          console.log(that.item)
+          // console.log(that.item)
 
           that.share.title = that.item.title
           if (that.item.cover) {
@@ -115,13 +115,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="stylus" scoped>
-.content {
-}
-
+<style scoped>
 .article-content {
-  max-width: 800px;
-  padding: 0 10px;
+  max-width: 1180px;
+  padding: 0 15px;
   margin: 0 auto;
 }
 
@@ -139,11 +136,12 @@ export default {
 .content .title p.from {
   line-height: 40px;
   font-size: 1.6rem;
-  color: #a8a8a8;
+  color: #999999;
   height: 40px;
 }
 
-p.title-menu, p.title-menu a {
+p.title-menu,
+p.title-menu a {
   color: #FF5A5F;
   font-size: 1.6rem;
   line-height: 2;

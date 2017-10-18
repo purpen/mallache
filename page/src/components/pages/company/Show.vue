@@ -6,7 +6,7 @@
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />                     
+            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />
             <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
@@ -31,7 +31,7 @@
             <p>邮箱: {{ item.email }}</p>
             <p class="web">网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
           </div>
-        
+
         </div>
       </el-col>
 
@@ -78,7 +78,7 @@
       </el-col>
 
     </el-row>
-    
+
   </div>
 </template>
 
@@ -178,7 +178,7 @@
   }
   .design-case-slide {
     padding: 20px 20px 20px 20px;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
   }
   .design-case-slide .info {
     margin: 10px;
@@ -186,7 +186,7 @@
   }
   .design-case-slide h3 {
     margin: 10px;
-    font-size: 2rem;   
+    font-size: 2rem;
   }
   .design-case-slide .rate {
     padding: 10px;

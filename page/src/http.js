@@ -54,7 +54,9 @@ axiosInstance.interceptors.response.use(
           store.commit(types.USER_SIGNOUT)
           router.replace({
             path: '/login',
-            query: {redirect: router.currentRoute.fullPath}
+            query: {
+              redirect: router.currentRoute.fullPath
+            }
           })
       }
     }

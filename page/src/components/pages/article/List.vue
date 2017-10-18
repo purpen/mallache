@@ -53,12 +53,11 @@ export default {
       isLoading: false,
       query: {
         page: 1,
-        pageSize: 9,
+        pageSize: 1,
         totalCount: 0,
         sort: 1,
         type: 0,
         category_id: 0,
-
         test: null
       },
       test: ''
@@ -89,7 +88,7 @@ export default {
       self.$http.get(api.articleList, { params: { page: self.query.page, per_page: self.query.pageSize, classification_id: self.query.category_id, sort: self.query.sort } })
         .then(function(response) {
           self.isLoading = false
-          self.tableData = []
+          // self.tableData = []
           if (response.data.meta.status_code === 200) {
             self.itemList = response.data.data
             self.query.totalCount = parseInt(response.data.meta.pagination.total)
@@ -103,7 +102,7 @@ export default {
               // self.itemList[i]['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             } // endfor
 
-            // console.log(self.itemList)
+            console.log(self.itemList)
           } else {
             self.$message.error(response.data.meta.message)
           }
@@ -127,13 +126,6 @@ export default {
       .catch(function(error) {
         self.$message.error(error.message)
       })
-  },
-  mounted() {
-    var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
-    }
-    this.$store.commit('INIT_PAGE')
   },
   watch: {
     '$route'(to, from) {
