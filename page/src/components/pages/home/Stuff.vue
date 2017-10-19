@@ -17,11 +17,11 @@
                 <p>{{ d.profile }}</p>
               </div>
 
-              <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank" class="company">
+              <p class="company">
                 <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo" width="30" />
                 <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="30" />
                 <span>{{d.design_company.company_abbreviation}}</span>
-              </router-link>
+              </p>
 
             </div>
           </el-card>
@@ -64,7 +64,7 @@ export default {
         .then(function(response) {
           self.isLoading = false
           if (response.data.meta.status_code === 200) {
-            console.log(response)
+            // console.log(response)
             self.itemList = response.data.data
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages
