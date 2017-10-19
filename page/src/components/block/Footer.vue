@@ -13,9 +13,9 @@
 
       <el-col class="item server" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">服务</p>
-        <!-- <p>
-                <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
-              </p> -->
+        <p v-if="!isMob">
+          <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
+        </p>
         <p>
           <router-link :to="{name: 'serverDesign'}" class="">申请加入</router-link>
         </p>
@@ -70,6 +70,11 @@ export default {
   data() {
     return {
       msg: ''
+    }
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
     }
   }
 }

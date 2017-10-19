@@ -76,35 +76,11 @@
         <el-carousel :interval="5000" height="480px" v-if="!isMob" class="pcCarousel">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30" class="anli-elrow">
-              <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
-                <el-card class="box-card" :body-style="{ padding: '0px' }">
-                  <div class="image-box">
-                    <a :href="k.clickUrl">
-                      <img :src="k.image">
-                    </a>
-                  </div>
-                  <div class="content">
-                    <p class="stuff-title">{{ k.title }}</p>
-                    <div class="des">
-                      <p>{{ k.desc }}</p>
-                    </div>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </el-carousel-item>
-        </el-carousel>
-
-        <el-carousel :interval="5000" height="480px" v-if="isMob" class="pcCarousel MCarousel">
-          <div v-for="(d, index) in caseSlideList" :key="index">
-            <el-carousel-item v-for="(k, i) in d" :key="i">
-              <el-row :gutter="30" class="anli-elrow">
+              <a :href="k.clickUrl" v-for="(k, i) in d" :key="i">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8">
                   <el-card class="box-card" :body-style="{ padding: '0px' }">
                     <div class="image-box">
-                      <a :href="k.clickUrl">
-                        <img :src="k.image">
-                      </a>
+                      <img :src="k.image">
                     </div>
                     <div class="content">
                       <p class="stuff-title">{{ k.title }}</p>
@@ -114,6 +90,32 @@
                     </div>
                   </el-card>
                 </el-col>
+              </a>
+            </el-row>
+          </el-carousel-item>
+        </el-carousel>
+
+        <el-carousel :interval="5000" height="480px" v-if="isMob" class="pcCarousel MCarousel">
+          <div v-for="(d, index) in caseSlideList" :key="index">
+            <el-carousel-item v-for="(k, i) in d" :key="i">
+              <el-row :gutter="30" class="anli-elrow">
+                <a :href="k.clickUrl">
+                  <el-col :xs="24" :sm="8" :md="8" :lg="8">
+                    <el-card class="box-card" :body-style="{ padding: '0px' }">
+                      <div class="image-box">
+                        <a :href="k.clickUrl">
+                          <img :src="k.image">
+                        </a>
+                      </div>
+                      <div class="content">
+                        <p class="stuff-title">{{ k.title }}</p>
+                        <div class="des">
+                          <p>{{ k.desc }}</p>
+                        </div>
+                      </div>
+                    </el-card>
+                  </el-col>
+                </a>
               </el-row>
             </el-carousel-item>
           </div>
