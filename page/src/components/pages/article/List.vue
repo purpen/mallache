@@ -13,13 +13,13 @@
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">
+              <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">
                 <img :src="d.cover.middle">
               </router-link>
             </div>
             <div class="content">
               <p class="title">
-                <router-link :to="{name: 'articleShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">{{ d.title }}</router-link>
                 <p>
                   <div class="des">
                     <p>{{ d.short_content }}</p>
@@ -58,7 +58,6 @@ export default {
         sort: 1,
         type: 0,
         category_id: 0,
-
         test: null
       },
       test: ''
@@ -89,7 +88,7 @@ export default {
       self.$http.get(api.articleList, { params: { page: self.query.page, per_page: self.query.pageSize, classification_id: self.query.category_id, sort: self.query.sort } })
         .then(function(response) {
           self.isLoading = false
-          self.tableData = []
+          // self.tableData = []
           if (response.data.meta.status_code === 200) {
             self.itemList = response.data.data
             self.query.totalCount = parseInt(response.data.meta.pagination.total)
@@ -127,13 +126,6 @@ export default {
       .catch(function(error) {
         self.$message.error(error.message)
       })
-  },
-  mounted() {
-    var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
-    }
-    this.$store.commit('INIT_PAGE')
   },
   watch: {
     '$route'(to, from) {
@@ -177,7 +169,7 @@ export default {
 }
 
 .case-list {
-  min-height: 350px;
+  min-height: 360px;
 }
 
 .item {
@@ -232,6 +224,12 @@ export default {
 
 .pager .pagination {
   text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .image-box {
+    height: auto;
+  }
 }
 
 @media screen and ( max-width:480px) {

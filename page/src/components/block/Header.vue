@@ -229,6 +229,13 @@ export default {
       self.fetchMessageCount()
       self.timeLoadMessage()
     }
+    this.$store.commit('INIT_PAGE')
+  },
+  mounted() {
+    var that = this
+    window.addEventListener('resize', () => {
+      that.$store.commit('INIT_PAGE')
+    })
   },
   destroyed() {
     clearInterval(this.requestMessageTask)

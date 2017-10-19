@@ -41,10 +41,10 @@
         <div class="clear"></div>
       </div>
       <div class="pay-btn">
-        <p><el-button class="is-custom" @click="pay" :loading="isLoadingBtn" type="primary">立即支付</el-button></p>     
+        <p><el-button class="is-custom" @click="pay" :loading="isLoadingBtn" type="primary">立即支付</el-button></p>
       </div>
 
-    
+
     </div>
     <div id="payBlock" style="display:none;"></div>
 
@@ -203,8 +203,8 @@ export default {
   }
   .pay-type .item {
     border: 1px solid #ccc;
-    width: 150px;
-    height: 35px;
+    /* width: 150px;
+    height: 35px; */
     margin: 10px;
     padding: 8px 15px 8px 15px;
   }

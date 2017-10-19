@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div v-if="!BMob">
     <div class="share-box">
-      <span><i class="el-icon-share"></i> 分享：</span>
+      <span>
+        <i class="el-icon-share"></i> 分享：</span>
       <a href="javascript:void(0);" @click="weChat()" id="wechat-share"><img src="../../assets/images/icon/wechat.png" /></a>
       <a href="javascript:void(0);" @click="weibo()" id="sina-share"><img src="../../assets/images/icon/weibo.png" /></a>
       <a href="javascript:void(0);" @click="qZone()" id="qzone-share"><img src="../../assets/images/icon/q_zone.png" /></a>
     </div>
 
-    <el-dialog
-      title="打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮"
-      :visible.sync="dialogVisible"
-      :close-on-click-modal="false">
-        <div style="text-align: center;" id="qrcode">
-        </div>
+    <el-dialog title="打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <div style="text-align: center;" id="qrcode">
+      </div>
       <span slot="footer" class="dialog-footer">
 
       </span>
@@ -38,7 +36,7 @@ export default {
       default: '太火鸟-铟果SaaS'
     }
   },
-  data () {
+  data() {
     return {
       windowName: 'tShare',
       dialogVisible: false,
@@ -57,6 +55,9 @@ export default {
     },
     oSite() {
       return encodeURIComponent(this.site)
+    },
+    BMob() {
+      return this.$store.state.event.isMob
     }
   },
   methods: {
@@ -92,21 +93,23 @@ export default {
       return false
     }
   },
-  mounted () {
+  mounted() {
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-  .share-box {
-    margin: 20px;
-  }
-  .share-box a {
-    margin: 10px 10px;
-  }
-  .share-box a img {
-    width: 5%;
-    vertical-align: middle;
-  }
+.share-box {
+  margin: 20px;
+}
+
+.share-box a {
+  margin: 10px 10px;
+}
+
+.share-box a img {
+  width: 5%;
+  vertical-align: middle;
+}
 </style>

@@ -11,11 +11,11 @@
         </p>
       </el-col>
 
-      <el-col class="item" :xs="12" :sm="6" :md="6" :lg="6">
+      <el-col class="item server" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">服务</p>
-        <p>
-          <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
-        </p>
+        <!-- <p>
+                <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
+              </p> -->
         <p>
           <router-link :to="{name: 'serverDesign'}" class="">申请加入</router-link>
         </p>
@@ -36,7 +36,7 @@
 
       <el-col class="item" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
-        <div class="share-box">
+        <div class="Fshare-box">
           <p class="share">
             <router-link :to="{name: 'test'}" class="">
               <i class="fa fa-weixin fa-2x" aria-hidden="true"></i>
@@ -77,5 +77,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.server {
+  min-height: 114px;
+}
 </style>

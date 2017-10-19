@@ -1,6 +1,5 @@
 <template>
-  <div class="">
-    <div class="blank20"></div>
+  <div>
     <div class="container">
       <div class="top-menu-list">
         <router-link :to="{name: 'item'}" class="item">服务条款</router-link>
@@ -9,13 +8,11 @@
       </div>
     </div>
     <div class="line"></div>
-    <div class="blank40"></div>
-    <div class="container">
+    <div class="container question">
       <el-row :gutter="20">
         <v-menu :currentName="name"></v-menu>
-        <el-col :span="20">
+        <el-col :xs="24" :sm="20" :md="20" :lg="20">
           <div class="h-right-content">
-
             <div class="content-box">
               <div v-show="name === 'auth'">
                 <h3>注册与登录</h3>
@@ -122,7 +119,7 @@
 
               </div>
 
-              <div v-show="name === 'illegal'">
+              <div v-show="name === 'illegal'" class="top19">
                 <p>＊根据国家相关法律法规的规定，互联网平台上不能出现明显违反法律法规的用词，包括但不仅限于危害国家安全与社会治安、暴力、淫秽、色情内容，一经发现，铟果平台有权在告知用户后做删除处理。情节严重者，平台有权追究用户法律责任。</p>
 
                 <h3>违规处罚</h3>
@@ -141,7 +138,7 @@
 
               </div>
 
-              <div v-show="name === 'copyright'">
+              <div v-show="name === 'copyright'" class="top19">
                 <p>铟果平台属于创意设计内容服务平台，通过我们产生的任何创意设计内容的版权和知识产权问题都应按照《中华人民共和国著作权法》规定实施。</p>
                 <p>&nbsp;</p>
                 <p>设计服务供应商需根据合同规定，保证向项目需求方提供的设计商品的原创性。如设计服务供应商向项目需求方提交无原创版权的设计产品，或者可追求其相关法律责任。</p>
@@ -150,14 +147,14 @@
 
               </div>
 
-              <div v-show="name === 'secrecy'">
+              <div v-show="name === 'secrecy'" class="top19">
                 <p>通过铟果平台达成合作的项目需求方与设计服务供应商合同内容设计保密协议的，应严格按照双方协议对项目内容保密。凡在铟果平台进行的设计项目，项目需求方与设计服务供应商有义务在完成项目之前对外界保密，如有泄漏，任意一方可追求泄漏方相关责任。具体处理方法参考“违约管理”。涉嫌泄秘并造成损失的，受损方可按照合同，参考《反不正当竞争法》《劳动合同法》等相关法律追究泄密方相应的法律责任。</p>
                 <p>&nbsp;</p>
                 <p>正在进行中的项目，第三方不会从铟果平台上看到或检索到，请您放心。</p>
 
               </div>
 
-              <div v-show="name === 'feedback'">
+              <div v-show="name === 'feedback'" class="top19">
                 <p>您对铟果平台在功能和服务等方面的任何问题，都可以及时反馈，我们的进步离不开您的支持，感谢您的耐心与信任。</p>
                 <p>&nbsp;</p>
                 <p>如您仍有任何问题，欢迎及时联系我们</p>
@@ -168,7 +165,6 @@
 
             </div>
           </div>
-
         </el-col>
       </el-row>
     </div>
@@ -176,67 +172,79 @@
 </template>
 
 <script>
-  import vMenu from '@/components/pages/home/QuestionMenu'
-  export default {
-    name: 'question',
-    components: {
-      vMenu
-    },
-    data () {
-      return {
-        name: 'auth',
-        test: ''
-      }
-    },
-    methods: {
-    },
-    created: function() {
-      document.body.scrollTop = 0
-      document.documentElement.scrollTop = 0
+import vMenu from '@/components/pages/home/QuestionMenu'
+export default {
+  name: 'question',
+  components: {
+    vMenu
+  },
+  data() {
+    return {
+      name: 'auth',
+      test: ''
+    }
+  },
+  methods: {
+  },
+  created: function() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+    var name = this.$route.query.name
+    if (name) {
+      this.name = name
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      // 对路由变化作出响应...
       var name = this.$route.query.name
       if (name) {
         this.name = name
       }
-    },
-    watch: {
-      '$route' (to, from) {
-        // 对路由变化作出响应...
-        var name = this.$route.query.name
-        if (name) {
-          this.name = name
-        }
-      }
     }
   }
+}
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.container {
+  position: relative;
+}
 
-  .container {
-    min-height: ;
-  }
+.question {
+  margin-top: 30px;
+}
 
-  .line {
-    border-bottom: 1px solid #ccc;
-  }
+.line {
+  border-bottom: 1px solid #ccc;
+}
 
-  .content-box {
-    padding: 0 20px 20px 20px;
-  }
-  .content-box h3 {
-    font-size: 1.8rem;
-    line-height: 2;
-    margin: 10px 0;
-  }
+.content-box {
+  padding: 0 20px 20px 20px;
+}
 
-  .content-box p {
-    line-height: 1.7;
-  }
-  .content-box p img {
-    vertical-align: middle;
-  }
+.content-box h3 {
+  font-size: 1.8rem;
+  line-height: 2;
+  margin: 10px 0;
+}
 
+.content-box p {
+  line-height: 1.7;
+}
 
+.content-box p img {
+  vertical-align: middle;
+}
+.top19 {
+  margin-top: 19px;
+}
+
+@media screen and (max-width: 767px) {
+  .question {
+    margin-top: 0;
+  }
+}
 </style>

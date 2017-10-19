@@ -112,11 +112,9 @@ export default {
   },
   mounted() {
     var that = this
-    window.onresize = () => {
-      that.$store.commit('INIT_PAGE')
+    window.addEventListener('resize', () => {
       that.calcHeight = calcImgSize(650, 1440)
-    }
-    this.$store.commit('INIT_PAGE')
+    })
     this.calcHeight = calcImgSize(650, 1440)
   },
   computed: {
@@ -235,5 +233,14 @@ export default {
   width: 4%;
   height: 30%;
   border-bottom: 1px dashed #979797;
+}
+
+@media screen and (max-width:767px) {
+  .item {
+    padding-top: 40px
+  }
+  .pub-title {
+    margin-top: 40px
+  }
 }
 </style>
