@@ -14,7 +14,7 @@
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
               <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">
-                <img :src="d.cover.middle">
+                <div><img :src="d.cover.middle"></div>
               </router-link>
             </div>
             <div class="content">
@@ -179,6 +179,7 @@ export default {
 
 .item img {
   width: 100%;
+  height: 100%;
 }
 
 .image-box {
