@@ -29,17 +29,17 @@
               <img class="avatar" v-if="item.design_company.logo_url" :src="item.design_company.logo_url" width="100" />
               <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
             </router-link>
-            <h3>{{ item.design_company.company_name }}</h3>
+            <h3>{{ item.design_company.company_abbreviation }}</h3>
             <p class="com-addr">
               <span>{{ item.design_company.province_value }}</span>&nbsp;&nbsp;&nbsp;
               <span>{{ item.design_company.city_value }}</span>
             </p>
           </div>
-          <div class="rate">
+          <!-- <div class="rate">
             <p>信用指数：
               <span>{{ item.design_company.score }}分</span>
             </p>
-          </div>
+          </div> -->
           <div class="cate" v-if="item.design_type_val">
             <p class="c-title">类别</p>
             <p class="tag">
@@ -105,7 +105,7 @@ export default {
           } else {
             that.item.design_company.logo_url = false
           }
-          console.log(that.item)
+          // console.log(that.item)
         }
       })
       .catch(function(error) {
@@ -160,7 +160,7 @@ export default {
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
-  border: 1px solid;
+  border: 1px solid #c8c8c8;
 }
 
 .design-case-slide h3 {

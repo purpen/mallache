@@ -13,13 +13,13 @@
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': !BMob}">
+              <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">
                 <img :src="d.cover.middle">
               </router-link>
             </div>
             <div class="content">
               <p class="title">
-                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': !BMob}">{{ d.title }}</router-link>
+                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">{{ d.title }}</router-link>
                 <p>
                   <div class="des">
                     <p>{{ d.short_content }}</p>
@@ -53,7 +53,7 @@ export default {
       isLoading: false,
       query: {
         page: 1,
-        pageSize: 1,
+        pageSize: 9,
         totalCount: 0,
         sort: 1,
         type: 0,
@@ -102,7 +102,7 @@ export default {
               // self.itemList[i]['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             } // endfor
 
-            console.log(self.itemList)
+            // console.log(self.itemList)
           } else {
             self.$message.error(response.data.meta.message)
           }
@@ -169,7 +169,7 @@ export default {
 }
 
 .case-list {
-  min-height: 350px;
+  min-height: 360px;
 }
 
 .item {
@@ -224,6 +224,12 @@ export default {
 
 .pager .pagination {
   text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .image-box {
+    height: auto;
+  }
 }
 
 @media screen and ( max-width:480px) {

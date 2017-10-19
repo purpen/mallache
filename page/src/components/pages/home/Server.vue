@@ -234,4 +234,13 @@ export default {
   height: 30%;
   border-bottom: 1px dashed #979797;
 }
+
+@media screen and (max-width:767px) {
+  .item {
+    padding-top: 40px
+  }
+  .pub-title {
+    margin-top: 40px
+  }
+}
 </style>

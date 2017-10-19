@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="5000" :height="calcHeight">
+    <el-carousel :interval="500000" :height="calcHeight">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
           <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
@@ -73,7 +73,7 @@
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-        <el-carousel :interval="5000" height="480px" v-if="!isMob">
+        <el-carousel :interval="5000" height="480px" v-if="!isMob" class="pcCarousel">
           <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30" class="anli-elrow">
               <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(k, i) in d" :key="i">
@@ -95,7 +95,7 @@
           </el-carousel-item>
         </el-carousel>
 
-        <el-carousel :interval="5000" height="480px" v-if="isMob">
+        <el-carousel :interval="5000" height="480px" v-if="isMob" class="pcCarousel MCarousel">
           <div v-for="(d, index) in caseSlideList" :key="index">
             <el-carousel-item v-for="(k, i) in d" :key="i">
               <el-row :gutter="30" class="anli-elrow">
@@ -131,7 +131,6 @@
         <img src="../../../assets/images/home/logo_cxgc.jpg" />
         <img src="../../../assets/images/home/logo_hqjj.jpg" />
       </div>
-      <div class="blank40"></div>
       <h3 class="m-partner">合作伙伴</h3>
 
       <div class="logo-list">
@@ -279,6 +278,7 @@ export default {
 .slide .m-h3 {
   font-size: 1.4rem;
   padding: 0;
+  padding-top: 20px;
 }
 
 .slide .m-p {
@@ -346,6 +346,10 @@ export default {
   color: #4B4B4B;
 }
 
+.m-partner {
+  padding-top: 30px;
+}
+
 .item_4 {
   background-color: #FAFAFA;
   margin: 50px 0 -50px 0;
@@ -408,7 +412,7 @@ export default {
 
 .logo-list {
   text-align: center;
-  margin-bottom: 50px;
+  margin: 0;
 }
 
 .logo-list img {
@@ -460,6 +464,11 @@ export default {
   text-overflow: ellipsis;
 }
 
+.el-card:hover {
+  transform: translate3d(0, -3px, 0);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
+}
+
 @media screen and (max-width: 767px) {
   .logo-list img {
     margin: 10px 10px;
@@ -470,7 +479,7 @@ export default {
   }
   .item h3 {
     font-size: 2rem;
-    padding-bottom: 30px;
+    padding: 30px 0;
   }
   .item_1_title {
     font-size: 1.8rem
@@ -485,7 +494,7 @@ export default {
   }
   .item_1_l img,
   .item_1_r img {
-    width: 120px;
+    width: 80px;
   }
   .item_2 {
     margin-top: 0;

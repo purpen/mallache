@@ -693,12 +693,13 @@ a.nav-item:hover {
  */
 
 .top-menu-list {
-  height: 30px;
+  height: 40px;
+  padding: 12.5px 0
 }
 
 .top-menu-list .item {
   float: right;
-  padding: 0 10px;
+  padding: 0 15px;
   font-size: 1.5rem;
 }
 
@@ -741,7 +742,7 @@ a.nav-item:hover {
  */
 
 .menu-list {
-  padding: 0 0 0 0;
+  padding: 0;
 }
 
 .menu-list .item {
@@ -822,7 +823,7 @@ img.avatar {
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
-  border: 1px solid #ccc;
+  border: 1px solid #C8C8C8;
 }
 
 .font-weight {
@@ -893,6 +894,48 @@ img.avatar {
 }
 
 
+/* 为所有卡片增加hover效果 */
+
+.el-card {
+  transition: all ease .3s;
+}
+
+.el-card:hover {
+  transform: translate3d(0, -2px, 0);
+  box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
+}
+
+.pcCarousel .el-carousel__indicators {
+  width: 100%;
+  bottom: 20px;
+}
+
+.MCarousel{
+  overflow-x: visible;
+}
+
+.MCarousel .el-carousel__indicators {
+  bottom: -20px;
+}
+
+.pcCarousel .el-carousel__indicator {
+  padding: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cacaca;
+  margin: 0 8px;
+}
+
+.pcCarousel .el-carousel__button {
+  display: none
+}
+
+.pcCarousel .el-carousel__indicators .is-active {
+  background: #ff6c70!important;
+}
+
+
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1200px) {
@@ -954,6 +997,18 @@ img.avatar {
   }
   .design-case-content .des p img {
     width: 100%;
+  }
+  .item2banner {
+    margin: 40px 0
+  }
+  .top-menu-list {
+    text-align: center
+  }
+  .top-menu-list .item {
+    float: none
+  }
+  .h-right-content .content-box {
+    margin-top: 0;
   }
 }
 

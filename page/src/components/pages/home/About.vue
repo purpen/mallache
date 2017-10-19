@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <div class="blank20"></div>
     <div class="container">
       <div class="top-menu-list">
         <router-link :to="{name: 'contact'}" class="item">联系我们</router-link>
@@ -9,7 +8,8 @@
     </div>
 
     <div class="banner">
-      <h3>铟果的使命 重塑设计尊严</h3>
+      <h3>铟果的使命</h3>
+      <h3>重塑设计尊严</h3>
     </div>
 
     <div class="container">
@@ -37,64 +37,72 @@
 
 <script>
 
-  export default {
-    name: 'about',
-    components: {
-    },
-    data () {
-      return {
-        test: ''
-      }
-    },
-    methods: {
-    },
-    created: function() {
-      document.body.scrollTop = 0
-      document.documentElement.scrollTop = 0
+export default {
+  name: 'about',
+  components: {
+  },
+  data() {
+    return {
+      test: ''
     }
+  },
+  methods: {
+  },
+  created: function() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
   }
+}
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.container {
+  min-height: ;
+}
 
-  .container {
-    min-height: ;
-  }
+.banner {
+  width: 100%;
+  height: 400px;
+  background: url('../../../assets/images/home/about_banner.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+  flex-wrap: wrap;
+  align-content: center
+}
 
-  .banner {
-    width: 100%;
-    height: 400px;
-    background: url('../../../assets/images/home/about_banner.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-  }
+.banner h3 {
+  float: left;
+  font-size: 5rem;
+  color: #fff;
+  line-height: 2;
+  font-weight: 300;
+  margin: 0 7px;
+}
 
-  .banner h3 {
-    padding-top: 150px;
-    padding-bottom: 10px;
-    font-size: 5rem;
-    color: #fff;
-    line-height: 2;
-    font-weight: 300;
-  }
-  .banner p {
-    font-size: 3rem;
-    color: #fff;
-    font-weight: 300;
-    padding: 0 150px;
-  }
+.banner p {
+  font-size: 3rem;
+  color: #fff;
+  font-weight: 300;
+  padding: 0 150px;
+}
 
+.content-box {
+  padding: 20px 120px;
+}
+
+.content-box h3 {
+  font-size: 1.8rem;
+  line-height: 2;
+  margin: 10px 0;
+}
+
+
+@media screen and (max-width: 767px) {
   .content-box {
-    padding: 20px 120px;
+    padding: 20px
   }
-  .content-box h3 {
-    font-size: 1.8rem;
-    line-height: 2;
-    margin: 10px 0;
-  }
-
-
+}
 </style>

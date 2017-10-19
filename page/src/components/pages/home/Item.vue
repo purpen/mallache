@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <div class="blank20"></div>
     <div class="container">
       <div class="top-menu-list">
         <router-link :to="{name: 'item'}" class="item is-active">服务条款</router-link>
@@ -32,7 +31,6 @@
               <p>严肃认真对待您在铟果平台上的账号，保证提供的所欲信息真实、准确，如有变更，及时在系统中更改；</p>
               <p>铟果平台账户的所有内容与信息都与您的权利与义务直接相关，请您妥善保管，勿转借他人；若因黑客行为、第三方恶意攻击、用户的保管疏忽导致用户损失的，平台不承担任何责任；</p>
 
-
               <h3>2.关于平台</h3>
               <p>铟果平台同意按照本协议规定发布的操作规则提供基于互联网以及移动网相关服务（以下称"网络服务"），为获得网络服务，平台所有用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在使用过程中完成全部流程即表示完全接受本协议项下的全部条款。</p>
               <p></p>
@@ -49,7 +47,6 @@
               <p>事先获得用户的明确授权；</p>
               <p>根据有关的法律法规要求或相关政府主管部门的要求；</p>
               <p>为维护平台其他用户、平台自身或社会公众的利益。</p>
-
 
               <h3>5.免责声明</h3>
               <p>在用户遵守平台相关规则的前提下，平台保障用户的隐私和个人信息安全，有网络异常、恶意攻击等不可控情况发生时除外；</p>
@@ -74,45 +71,46 @@
 
 <script>
 
-  export default {
-    name: 'item',
-    components: {
-    },
-    data () {
-      return {
-        test: ''
-      }
-    },
-    methods: {
-    },
-    created: function() {
-      document.body.scrollTop = 0
-      document.documentElement.scrollTop = 0
+export default {
+  name: 'item',
+  components: {
+  },
+  data() {
+    return {
+      test: ''
     }
+  },
+  methods: {
+  },
+  created: function() {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
   }
+}
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .line {
-    border-bottom: 1px solid #ccc;
-  }
+.line {
+  border-bottom: 1px solid #ccc;
+}
 
-  .content-box {
-    padding: 20px;
-  }
-  .content-box h3 {
-    font-size: 1.8rem;
-    line-height: 2;
-    margin: 10px 0;
-  }
+.content-box {
+  padding: 20px;
+}
 
-  .content-box p {
-    line-height: 1.7;
-  }
-  .content-box p img {
-    vertical-align: middle;
-  }
+.content-box h3 {
+  font-size: 1.8rem;
+  line-height: 2;
+  margin: 10px 0;
+}
 
+.content-box p {
+  line-height: 1.7;
+}
+
+.content-box p img {
+  vertical-align: middle;
+}
 </style>

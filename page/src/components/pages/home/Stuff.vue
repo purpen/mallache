@@ -17,9 +17,10 @@
                 <p>{{ d.profile }}</p>
               </div>
 
-              <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">123
-                <!-- <img class="avatar" v-if="d.design_company.logo_url" :src="d.design_company.logo_url" width="100" />
-                                                                                                                <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" /> -->
+              <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank" class="company">
+                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo" width="30" />
+                <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="30" />
+                <span>{{d.design_company.company_abbreviation}}</span>
               </router-link>
 
             </div>
@@ -45,7 +46,7 @@ export default {
       isLoading: false,
       query: {
         page: 1,
-        pageSize: 15,
+        pageSize: 9,
         totalPges: 1,
         totalCount: 0
       },
@@ -100,14 +101,15 @@ export default {
   margin: 10px 0;
 }
 
-.item img {
-  width: 100%;
-  max-height: 360px;
-}
 
 .image-box {
   height: 220px;
   overflow: hidden;
+}
+
+.image-box img {
+  width: 100%;
+  max-height: 360px;
 }
 
 .content {
@@ -115,20 +117,34 @@ export default {
 }
 
 .content a {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 .des {
-  height: 30px;
+  height: 35px;
   margin: 10px 0;
   overflow: hidden;
 }
 
 .des p {
   color: #666;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.3;
   text-overflow: ellipsis;
+}
+
+.company {
+  color: #666;
+  display: block;
+  line-height: 28px;
+}
+
+.company span {
+  font-size: 14px;
+}
+
+.company img {
+  margin-right: 6px;
 }
 
 .pager {
@@ -139,8 +155,13 @@ export default {
   text-align: center;
 }
 
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  .image-box {
+    height: 136px;
+  }
+}
 
-@media screen and (max-width:767px) {
+@media screen and (max-width: 767px) {
   .image-box {
     height: auto;
   }

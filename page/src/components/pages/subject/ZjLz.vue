@@ -411,11 +411,11 @@ img {
 .bottom {
   overflow: hidden;
   height: 570px;
-  background: url('../../../assets/images/subject/zj/bottom.png');
+  background: url('../../../assets/images/subject/zj/bottom.png') center;
   background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
-  margin-bottom: -40px;
+  margin-bottom: -52px;
 }
 
 .bottom .b-title {
@@ -441,6 +441,13 @@ img {
 
 .bottom p.content.plug {
   padding: 0 18%;
+}
+
+@media screen and (max-width: 1199px) {
+  .bottom {
+    height: auto;
+    padding-bottom: 20px;
+  }
 }
 
 @media screen and (max-width: 767px) {

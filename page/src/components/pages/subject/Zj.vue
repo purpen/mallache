@@ -172,7 +172,7 @@
 
     <el-dialog title="视频播放" :visible.sync="dialogVisible" top="5%" :close-on-click-modal="false" size="large">
       <div style="text-align: center;">
-        <video :src="videoUrl" controls="controls" width="960">
+        <video :src="videoUrl" controls="controls">
           您的浏览器不支持 video 标签。
         </video>
       </div>
@@ -483,11 +483,11 @@ img {
 .bottom {
   overflow: hidden;
   height: 570px;
-  background: url('../../../assets/images/subject/zj/bottom.png');
+  background: url('../../../assets/images/subject/zj/bottom.png') center;
   background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
-  margin-bottom: -40px;
+  margin-bottom: -52px;
 }
 
 .bottom .b-title {
@@ -513,6 +513,13 @@ img {
 
 .bottom p.content.plug {
   padding: 0 18%;
+}
+
+@media screen and (max-width: 1199px) {
+  .bottom {
+    height: auto;
+    padding-bottom: 20px;
+  }
 }
 
 @media screen and (max-width: 767px) {
