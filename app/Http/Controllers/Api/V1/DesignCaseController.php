@@ -470,6 +470,13 @@ class DesignCaseController extends BaseController
      *      "design_company":{},
      *      "cover": "",
      *      "cover_id": 2,
+     *      "design_company": {
+     *          "id":1,
+     *          "company_name": "公司名称",
+     *          "company_abbreviation": "公司简称",
+     *          "logo": 1,
+     *          "logo_image": {},    //logo图片
+     *      }
      *  }
      * ],
      *      "meta": {
@@ -532,14 +539,14 @@ class DesignCaseController extends BaseController
         ]);
 
         $asset = AssetModel::find($request->input('asset_id'));
-        if(!$asset){
+        if (!$asset) {
             return $this->response->array($this->apiError("not found asset", 404));
         }
 
         $asset->summary = $request->input("summary");
-        if(!$asset->save()){
+        if (!$asset->save()) {
             return $this->response->array($this->apiError());
-        }else{
+        } else {
             return $this->response->array($this->apiSuccess());
         }
 
