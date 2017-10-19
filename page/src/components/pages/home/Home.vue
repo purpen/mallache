@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="500000" :height="calcHeight">
+    <el-carousel :interval="5000" :height="calcHeight">
       <el-carousel-item v-for="(item,index) in slideList" :key="index">
         <a :href="item.clickUrl">
           <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
