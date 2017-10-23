@@ -9,9 +9,7 @@ html {
   height: 100%;
 }
 
-*,
-*:before,
-*:after {
+*, *:before, *:after {
   box-sizing: inherit;
 }
 
@@ -66,6 +64,16 @@ a.is_active {
   color: #222;
 }
 
+
+/*
+* 替换左右点击图标
+*/
+
+
+/* .el-pagination .btn-next .el-icon,
+.el-pagination .btn-prev .el-icon {
+  display: none
+} */
 
 /**
  * 分页
@@ -217,15 +225,13 @@ button.is-custom.el-button.el-button--default:hover {
   color: #FF5A5F;
 }
 
-button.is-custom:focus,
-.button.is-custom.is-focused {
+button.is-custom:focus, .button.is-custom.is-focused {
   border-color: transparent;
   box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);
   color: #fff;
 }
 
-button.is-custom:active,
-.button.is-custom.is-active {
+button.is-custom:active, .button.is-custom.is-active {
   background-color: #FF4500;
   border-color: transparent;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);
@@ -256,8 +262,7 @@ button.is-custom.is-outlined {
   color: #FF5A5F;
 }
 
-button.is-custom.is-outlined:hover,
-.button.is-custom.is-outlined:focus {
+button.is-custom.is-outlined:hover, .button.is-custom.is-outlined:focus {
   background-color: #FF5A5F;
   border-color: #FF5A5F;
   color: #fff;
@@ -473,8 +478,7 @@ button.is-custom.is-outlined.is-loading:after {
   text-indent: -9999px;
 }
 
-.nav-header .el-menu--horizontal>.el-menu-item.logo:hover,
-.el-menu--horizontal>.el-menu-item.logo.is-active {
+.nav-header .el-menu--horizontal>.el-menu-item.logo:hover, .el-menu--horizontal>.el-menu-item.logo.is-active {
   border: none
 }
 
@@ -482,9 +486,7 @@ button.is-custom.is-outlined.is-loading:after {
   background: #fff;
 }
 
-.nav-header .el-menu-header .el-menu-item,
-.m-nav-header .el-menu-header .el-menu-item,
-.el-menu-header .el-submenu {
+.nav-header .el-menu-header .el-menu-item, .m-nav-header .el-menu-header .el-menu-item, .el-menu-header .el-submenu {
   height: 60px;
   line-height: 60px;
   border-bottom: 3px solid transparent;
@@ -494,24 +496,19 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 0 22px;
 }
 
-.nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title,
-.m-nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title {
+.nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title, .m-nav-header .el-menu--horizontal.el-menu-header .el-submenu .el-submenu__title {
   height: 52px;
   line-height: 52px;
   border-bottom: 3px solid transparent;
 }
 
-.nav-header .el-menu--horizontal>.el-menu-item:hover,
-.el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
-.el-menu--horizontal>.el-submenu:hover .el-submenu__title,
-.el-menu--horizontal>.el-menu-item.is-active {
+.nav-header .el-menu--horizontal>.el-menu-item:hover, .el-menu--horizontal>.el-submenu.is-active .el-submenu__title, .el-menu--horizontal>.el-submenu:hover .el-submenu__title, .el-menu--horizontal>.el-menu-item.is-active {
   border-bottom: 3px solid #FF5A5F;
   color: #FF5A5F;
   background: none;
 }
 
-.nav-header .el-menu-item,
-.el-submenu__title {
+.nav-header .el-menu-item, .el-submenu__title {
   padding: 0 14px;
 }
 
@@ -532,8 +529,7 @@ button.is-custom.is-outlined.is-loading:after {
   white-space: nowrap;
 }
 
-.nav-header .nav-left,
-.nav-right {
+.nav-header .nav-left, .nav-right {
   align-items: stretch;
   flex-basis: 0;
   flex-grow: 1;
@@ -619,8 +615,7 @@ button.is-custom.is-outlined.is-loading:after {
   vertical-align: baseline;
 }
 
-.nav-header .nav-item a:hover,
-a.nav-item:hover {
+.nav-header .nav-item a:hover, a.nav-item:hover {
   color: #363636;
 }
 
@@ -682,8 +677,7 @@ a.nav-item:hover {
   font-size: 1.5rem;
 }
 
-.el-menu-info:hover>.el-submenu .el-submenu__title,
-.el-menu-info:hover .el-submenu .el-submenu__icon-arrow {
+.el-menu-info:hover>.el-submenu .el-submenu__title, .el-menu-info:hover .el-submenu .el-submenu__icon-arrow {
   color: #222;
 }
 
@@ -736,7 +730,8 @@ a.nav-item:hover {
  * vCenter Menu Sub --- End
  */
 
- /* article list */
+
+/* article list */
 
 
 /**
@@ -831,7 +826,6 @@ img.avatar {
 .font-weight {
   font-weight: bold;
 }
-
 
 /**
  * FileList Start
@@ -964,12 +958,18 @@ img.avatar {
   }
 }
 
+
 /* 解决浮动引起的bug */
 
 .anli-elrow {
   display: flex;
   flex-wrap: wrap
 }
+
+.el-row::after, .el-row::before {
+  display: block;
+}
+
 
 /* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
 

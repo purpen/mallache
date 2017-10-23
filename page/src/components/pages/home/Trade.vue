@@ -8,7 +8,8 @@
       </div>
     </div>
     <div class="line"></div>
-    <div class="banner">
+
+    <div class="banner" :style="{height: calcHeight}">
       <h3>选择太火鸟SaaS，交易有保障</h3>
     </div>
 
@@ -38,117 +39,129 @@
 </template>
 
 <script>
+  import { calcImgSize } from 'assets/js/common'
 
-export default {
-  name: 'trade',
-  components: {
-  },
-  data() {
-    return {
-      test: ''
+  export default {
+    name: 'trade',
+    components: {},
+    data() {
+      return {
+        test: '',
+        calcHeight: ''
+      }
+    },
+    methods: {},
+    created: function () {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    },
+    mounted() {
+      let that = this
+      window.addEventListener('resize', () => {
+        that.calcHeight = calcImgSize(400, 1440)
+      })
+      this.calcHeight = calcImgSize(400, 1440)
     }
-  },
-  methods: {
-  },
-  created: function() {
-    document.body.scrollTop = 0
-    document.documentElement.scrollTop = 0
   }
-}
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.container {
-  min-height: ;
-}
-
-.line {
-  border-bottom: 1px solid #ccc;
-}
-
-.banner {
-  width: 100%;
-  height: 450px;
-  background: url('../../../assets/images/home/trade_banner.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  text-align: center;
-}
-
-.banner h3 {
-  padding-bottom: 10px;
-  font-size: 5rem;
-  color: #fff;
-  line-height: 2;
-  font-weight: 300;
-}
-
-.banner p {
-  font-size: 3rem;
-  color: #fff;
-  font-weight: 300;
-  padding: 0 150px;
-}
-
-.content-box {}
-
-.content-box h3 {
-  font-size: 1.8rem;
-  line-height: 2;
-  margin: 10px 0;
-}
-
-.content-box p {
-  line-height: 2;
-}
-
-.content-box p img {
-  vertical-align: middle;
-}
-
-.trade-text {
-
-  text-align: center;
-  padding: 50px;
-}
-
-.trade-text.gray {
-  background: #FAFAFA;
-}
-
-.trade-text h3 {
-  width: 880px;
-  margin: 0 auto;
-  color: #222;
-  font-size: 3rem;
-  font-weight: 500;
-  margin-bottom: 30px;
-}
-
-.trade-text p {
-  width: 880px;
-  margin: 0 auto;
-  color: #666;
-  font-size: 1.8rem;
-  line-height: 2;
-}
-
-.in-foot {
-  margin-bottom: -50px;
-}
-
-
-@media screen and (max-width: 980px) {
-  .trade-text{
-    padding: 10%;
+  .line {
+    border-bottom: 1px solid #ccc;
   }
-  .trade-text h3, .trade-text p {
-    width: 80%;
+
+  .banner {
+    width: 100%;
+    min-height: 180px;
+    background: url('../../../assets/images/home/trade_banner.jpg') no-repeat;
+    background-size: cover;
+    text-align: center;
+    flex-wrap: wrap;
+    align-content: center
   }
-  .banner h3{
-    padding: 5%
+
+  .banner h3 {
+    padding-bottom: 10px;
+    font-size: 5rem;
+    color: #fff;
+    line-height: 2;
+    font-weight: 300;
   }
-}
+
+  .banner p {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 300;
+    padding: 0 150px;
+  }
+
+  .content-box {
+  }
+
+  .content-box h3 {
+    font-size: 1.8rem;
+    line-height: 2;
+    margin: 10px 0;
+  }
+
+  .content-box p {
+    line-height: 2;
+  }
+
+  .content-box p img {
+    vertical-align: middle;
+  }
+
+  .trade-text {
+
+    text-align: center;
+    padding: 50px;
+  }
+
+  .trade-text.gray {
+    background: #FAFAFA;
+  }
+
+  .trade-text h3 {
+    width: 880px;
+    margin: 0 auto;
+    color: #222;
+    font-size: 3rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+
+  .trade-text p {
+    width: 880px;
+    margin: 0 auto;
+    color: #666;
+    font-size: 1.8rem;
+    line-height: 2;
+  }
+
+  .in-foot {
+    margin-bottom: -50px;
+  }
+
+  @media screen and (max-width: 980px) {
+    .trade-text {
+      padding: 10%;
+    }
+
+    .trade-text p {
+      font-size: 1.5rem;
+    }
+
+    .trade-text h3, .trade-text p {
+      width: 80%;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .banner h3 {
+      font-size: 1.7rem;
+    }
+  }
 </style>
