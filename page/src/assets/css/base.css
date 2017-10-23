@@ -736,6 +736,8 @@ a.nav-item:hover {
  * vCenter Menu Sub --- End
  */
 
+ /* article list */
+
 
 /**
  * vCenter LeftMenu
@@ -962,6 +964,12 @@ img.avatar {
   }
 }
 
+/* 解决浮动引起的bug */
+
+.anli-elrow {
+  display: flex;
+  flex-wrap: wrap
+}
 
 /* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
 

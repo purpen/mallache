@@ -117,7 +117,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .article-content {
-  max-width: 1180px;
+  max-width: 880px;
   padding: 0 15px;
   margin: 0 auto;
 }
