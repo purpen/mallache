@@ -2,11 +2,12 @@
   <div class="container">
     <div class="nav-list">
       <div class="category-list">
-        <router-link :to="{name: 'articleList'}" :class="{'active': menuType == 0}">最新</router-link>
+        <router-link :to="{name: 'articleList'}" :class="{'active': menuType == 0}" v-if="cateList.length">最新
+        </router-link>
         <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index"
                      :class="{'active': menuType == d.id}">{{ d.name }}
         </router-link>
-        <router-link :to="{name: 'subjectList'}">专题</router-link>
+        <router-link :to="{name: 'subjectList'}" v-if="cateList.length">专题</router-link>
       </div>
     </div>
     <div class="case-list" v-loading.body="isLoading">
@@ -78,7 +79,8 @@
       },
       handleCurrentChange(val) {
         this.query.page = val
-        this.$router.push({name: this.$route.name, query: {page: val}})
+        this.$router.push({name: this.$route.name, query: {category_id: this.query.category_id, page: val}})
+        console.log(this.$route)
       },
       loadList() {
         const self = this
@@ -113,8 +115,6 @@
                 }
                 // self.itemList[i]['created_at'] = item.created_at.date_format().format('yy-MM-dd')
               } // endfor
-
-              // console.log(self.itemList)
             } else {
               self.$message.error(response.data.meta.message)
             }

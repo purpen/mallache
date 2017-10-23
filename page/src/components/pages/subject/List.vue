@@ -2,9 +2,9 @@
   <div class="container">
     <div class="nav-list">
       <div class="category-list" ref="categoryList">
-        <router-link :to="{name: 'articleList'}">最新</router-link>
+        <router-link :to="{name: 'articleList'}" v-if="cateList.length">最新</router-link>
         <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
-        <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
+        <router-link :to="{name: 'subjectList'}" class="active" v-if="cateList.length">专题</router-link>
       </div>
     </div>
 
