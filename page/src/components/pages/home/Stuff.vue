@@ -22,7 +22,6 @@
                 <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="30" />
                 <span>{{d.design_company.company_abbreviation}}</span>
               </p>
-
             </div>
           </el-card>
         </el-col>
@@ -30,7 +29,7 @@
     </div>
     <div class="blank20"></div>
     <div class="pager">
-      <el-pagination class="pagination" :current-page="query.page" :page-size="query.pageSize" :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange">
+      <el-pagination class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize" :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
   </div>
@@ -80,6 +79,11 @@ export default {
     const self = this
     self.isLoading = true
     this.loadList()
+  },
+  computed: {
+    BMob() {
+      return this.$store.state.event.isMob
+    }
   }
 }
 
