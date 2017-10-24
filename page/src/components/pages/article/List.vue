@@ -17,7 +17,7 @@
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
               <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">
-                <div><img :src="d.cover.middle"></div>
+                <div><img v-lazy="d.cover.middle"></div>
               </router-link>
             </div>
             <div class="content">

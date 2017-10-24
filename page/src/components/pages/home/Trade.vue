@@ -147,7 +147,7 @@
 
   @media screen and (max-width: 980px) {
     .trade-text {
-      padding: 10%;
+      padding: 10% 0;
     }
 
     .trade-text p {
@@ -155,13 +155,14 @@
     }
 
     .trade-text h3, .trade-text p {
-      width: 80%;
+      width: 100%;
+      padding: 0 15px;
     }
   }
 
   @media screen and (max-width: 767px) {
     .banner h3 {
-      font-size: 1.7rem;
+      font-size: 2rem;
     }
   }
 </style>

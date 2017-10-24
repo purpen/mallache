@@ -7,6 +7,7 @@ import store from './store/index'
 import axios from './http'
 import ElementUI from 'element-ui'
 import phenix from '@/assets/js/base'
+import VueLazyload from 'vue-lazyload'
 // 兼容 IE
 import 'babel-polyfill'
 
@@ -18,6 +19,11 @@ import './assets/css/base.css'
 import './assets/css/admin.css'
 
 Vue.use(ElementUI)
+
+// 图片懒加载
+Vue.use(VueLazyload, {
+  loading: require('assets/images/Bitmap.png')
+})
 
 Vue.config.productionTip = false
 
@@ -33,5 +39,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })
