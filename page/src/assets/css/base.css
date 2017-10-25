@@ -41,7 +41,9 @@ body {
 p {
   font-size: 1.4rem;
 }
-
+input {
+  vertical-align: sub;
+}
 .markdown-body p {
   font-size: 1.6rem
 }
@@ -1017,6 +1019,18 @@ img.avatar {
   }
   .h-right-content .content-box {
     margin-top: 0;
+  }
+  .input input {
+    height: 42px;
+  }
+  .input {
+    margin-bottom: 0;
+  }
+  .input .el-form-item {
+    margin-bottom: 0;
+  }
+  .el-form-item__error {
+    position: static;
   }
 }
 
