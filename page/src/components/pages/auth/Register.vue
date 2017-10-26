@@ -68,7 +68,7 @@
       }
     },
     data() {
-      var checkPassword = (rule, value, callback) => {
+      let checkPassword = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'))
         } else if (value !== this.form.password) {
@@ -126,10 +126,10 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            var account = this.$refs.account.value
-            var password = this.$refs.password.value
-            var smsCode = this.$refs.smsCode.value
-            var type = this.form.type
+            let account = this.$refs.account.value
+            let password = this.$refs.password.value
+            let smsCode = this.$refs.smsCode.value
+            let type = this.form.type
             if (!type) {
               that.$message.error('请选择客户或设计公司')
               return false
@@ -140,7 +140,7 @@
             that.$http.post(api.register, {account: account, password: password, type: type, sms_code: smsCode})
               .then(function (response) {
                 if (response.data.meta.status_code === 200) {
-                  var token = response.data.data.token
+                  let token = response.data.data.token
                   // 写入localStorage
                   auth.write_token(token)
                   // ajax拉取用户信息
@@ -202,7 +202,7 @@
         })
       },
       fetchCode() {
-        var account = this.$refs.account.value
+        let account = this.$refs.account.value
         if (account === '') {
           this.$message({
             showClose: true,
@@ -221,7 +221,7 @@
           return
         }
 
-        var url = api.check_account.format(account)
+        let url = api.check_account.format(account)
         // 检测手机号是否存在
         const that = this
         that.$http.get(url, {})

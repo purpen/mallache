@@ -1,15 +1,24 @@
 <template>
   <div class="content-box">
-    <el-carousel :interval="5000" :height="calcHeight">
-      <el-carousel-item v-for="(item,index) in slideList" :key="index">
+    <swiper :options="swiperOption" class="banner">
+      <swiper-slide v-for="(item, index) in slideList" :key="index">
         <a :href="item.clickUrl">
-          <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
+          <div class="slide" ref="slide"
+               :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
             <h3 :class="{'m-h3' : isMob}">{{ item.title }}</h3>
             <p :class="{'m-p' : isMob}">{{ item.desc }}</p>
           </div>
         </a>
-      </el-carousel-item>
-    </el-carousel>
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination">
+      </div>
+      <div class="swiper-button-prev" slot="button-prev">
+        <i class="el-icon-arrow-left"></i>
+      </div>
+      <div class="swiper-button-next" slot="button-next">
+        <i class="el-icon-arrow-right"></i>
+      </div>
+    </swiper>
 
     <div class="container">
       <div class="item_1 item">
@@ -69,12 +78,12 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container anli">
       <div class="item item_3">
         <h3>铟果案例</h3>
 
-        <el-carousel :interval="5000" height="480px" v-if="!isMob" class="pcCarousel">
-          <el-carousel-item v-for="(d, index) in caseSlideList" :key="index">
+        <swiper :options="swiperOption" v-if="!isMob">
+          <swiper-slide v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30">
               <a :href="k.clickUrl" v-for="(k, i) in d" :key="i">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8">
@@ -92,35 +101,44 @@
                 </el-col>
               </a>
             </el-row>
-          </el-carousel-item>
-        </el-carousel>
-
-        <el-carousel :interval="5000" height="480px" v-if="isMob" class="pcCarousel MCarousel">
-          <div v-for="(d, index) in caseSlideList" :key="index">
-            <el-carousel-item v-for="(k, i) in d" :key="i">
-              <el-row :gutter="30" class="anli-elrow">
-                <a :href="k.clickUrl">
-                  <el-col :xs="24" :sm="8" :md="8" :lg="8">
-                    <el-card class="box-card" :body-style="{ padding: '0px' }">
-                      <div class="image-box">
-                        <a :href="k.clickUrl">
-                          <img :src="k.image">
-                        </a>
-                      </div>
-                      <div class="content">
-                        <p class="stuff-title">{{ k.title }}</p>
-                        <div class="des">
-                          <p>{{ k.desc }}</p>
-                        </div>
-                      </div>
-                    </el-card>
-                  </el-col>
-                </a>
-              </el-row>
-            </el-carousel-item>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+          <div class="swiper-button-prev" slot="button-prev">
+            <i class="el-icon-arrow-left"></i>
           </div>
-        </el-carousel>
+          <div class="swiper-button-next" slot="button-next">
+            <i class="el-icon-arrow-right"></i>
+          </div>
+        </swiper>
 
+        <swiper :options="swiperOption" v-if="isMob">
+          <swiper-slide v-for="(k, index) in McaseSlideList" :key="index">
+            <el-row :gutter="30">
+              <a :href="k.clickUrl">
+                <el-col :xs="24" :sm="8" :md="8" :lg="8">
+                  <el-card class="box-card" :body-style="{ padding: '0px' }">
+                    <div class="image-box">
+                      <img :src="k.image">
+                    </div>
+                    <div class="content">
+                      <p class="stuff-title">{{ k.title }}</p>
+                      <div class="des">
+                        <p>{{ k.desc }}</p>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-col>
+              </a>
+            </el-row>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+          <div class="swiper-button-prev" slot="button-prev">
+            <i class="el-icon-arrow-left"></i>
+          </div>
+          <div class="swiper-button-next" slot="button-next">
+            <i class="el-icon-arrow-right"></i>
+          </div>
+        </swiper>
       </div>
     </div>
 
@@ -148,6 +166,7 @@
 
 <script>
   import { calcImgSize } from 'assets/js/common'
+  import 'swiper/dist/css/swiper.css'
   export default {
     name: 'index',
     data() {
@@ -229,13 +248,31 @@
             }
           ]
         ],
-        calcHeight: ''
+        McaseSlideList: [],
+        calcHeight: '',
+        notNextTick: true,
+        swiperOption: {
+          pagination: '.swiper-pagination',
+          paginationClickable: true,
+          loop: true,
+          lazyLoading: true,
+          autoplay: 5000,
+          autoHeight: true,
+          prevButton: '.swiper-button-prev',
+          nextButton: '.swiper-button-next',
+          spaceBetween: 30
+        }
       }
     },
     created() {
+      if (this.caseSlideList.length) {
+        for (let i of this.caseSlideList) {
+          this.McaseSlideList = this.McaseSlideList.concat(i)
+        }
+      }
     },
     mounted() {
-      var that = this
+      let that = this
       window.addEventListener('resize', () => {
         that.calcHeight = calcImgSize(650, 1440)
       })
@@ -466,6 +503,29 @@
   .el-card:hover {
     transform: translate3d(0, -3px, 0);
     box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
+  }
+
+  .anli {
+    overflow: hidden;
+  }
+
+  /* swiper css*/
+  .swiper-container {
+    overflow: visible;
+  }
+
+  .banner > .swiper-pagination-bullets {
+    width: 100%;
+    bottom: 10px !important;
+  }
+
+  .swiper-pagination .swiper-pagination-bullet {
+    margin-right: 8px;
+  }
+
+  .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
+    bottom: -16px;
+    width: 100%;
   }
 
   @media screen and (max-width: 767px) {
