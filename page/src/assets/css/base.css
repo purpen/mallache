@@ -528,8 +528,8 @@ button.is-custom.is-outlined.is-loading:after {
 .nav-header .nav-left {
   display: flex;
   justify-content: flex-start;
-  overflow: hidden;
-  overflow-x: auto;
+  /*overflow: hidden;*/
+  /*overflow-x: auto;*/
   white-space: nowrap;
 }
 
@@ -1036,6 +1036,14 @@ img.avatar {
 
   .el-form-item__error {
     position: static;
+  }
+
+  .nav-header .el-menu-header .el-menu-item, .m-nav-header .el-menu-header .el-menu-item, .el-menu-header .el-submenu {
+    margin: 0 10px
+  }
+
+  .nav-header .nav-right {
+    justify-content: center;
   }
 }
 

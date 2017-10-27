@@ -2,17 +2,18 @@
   <div id="header-layout">
     <div class="container">
       <div class="nav-header" v-if="!this.isMob">
-        <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
-          <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
-          <div class="el-menu-item logo">
-            <span class="logo">太火鸟&nbsp;SaaS</span>
-          </div>
-          <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
-          <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
-          <el-menu-item index="topic" v-bind:route="menu.topic">铟果说</el-menu-item>
-          <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
-        </el-menu>
-
+        <hgroup>
+          <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
+            <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
+            <div class="el-menu-item logo">
+              <span class="logo">太火鸟&nbsp;SaaS</span>
+            </div>
+            <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
+            <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
+            <el-menu-item index="topic" v-bind:route="menu.topic">铟果说</el-menu-item>
+            <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
+          </el-menu>
+        </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
           <div class="server-in-btn">
             <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
@@ -52,6 +53,7 @@
       </div>
     </div>
     <div class="m-nav-header" v-if="this.isMob">
+
       <div class="el-menu-item logo">
         <span class="logo">太火鸟&nbsp;SaaS</span>
       </div>
@@ -196,7 +198,7 @@
         document.childNodes[1].setAttribute('class', 'disableScroll')
       },
       reScroll() {
-        // this.$refs.mCover.style.width = 0 mSign
+        // this.$refs.mCover.style.width = 0
         this.$refs.mNav.style.marginLeft = '-54vw'
         this.$refs.mSign.style.left = '-54vw'
         this.$refs.mMenu.style.width = 0
