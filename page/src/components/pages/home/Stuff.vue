@@ -7,7 +7,8 @@
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" :target="{'_blank' : BMob}">
+              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                           :target="BMob ? '_self' : '_blank'">
                 <img v-lazy="d.cover.middle">
               </router-link>
             </div>

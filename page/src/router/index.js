@@ -209,6 +209,14 @@ const routes = [
     component: require('@/components/pages/auth/Logout')
   },
   {
+    path: '/identity',
+    name: 'identity',
+    meta: {
+      title: '注册'
+    },
+    component: require('@/components/pages/auth/choiceIdentity')
+  },
+  {
     path: '/register',
     name: 'register',
     meta: {
@@ -949,8 +957,7 @@ const routes = [
     path: '*',
     name: '404',
     meta: {
-      title: '找不到此页面',
-      requireAuth: true
+      title: '找不到此页面'
     },
     component: require('components/pages/notfind/notfind') // webpack 设置新的别名 components
   }

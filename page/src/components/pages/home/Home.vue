@@ -86,7 +86,7 @@
           <swiper-slide v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30">
               <a :href="k.clickUrl" v-for="(k, i) in d" :key="i">
-                <el-col :xs="24" :sm="8" :md="8" :lg="8">
+                <el-col :span="8">
                   <el-card class="box-card" :body-style="{ padding: '0px' }">
                     <div class="image-box">
                       <img :src="k.image">
@@ -507,6 +507,10 @@
 
   .anli {
     overflow: hidden;
+  }
+
+  .el-row {
+    padding: 0 10px;
   }
 
   /* swiper css*/

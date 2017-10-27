@@ -2,7 +2,7 @@
   <div class="container">
     <div class="register-box">
       <div class="regisiter-title">
-        <h2>注册铟果</h2>
+        <h2>注册铟果{{identity}}</h2>
       </div>
 
       <div class="register-tab" v-if="!isMob">
@@ -89,7 +89,6 @@
           smsCode: '',
           password: '',
           checkPassword: ''
-
         },
         ruleForm: {
           account: [
@@ -107,15 +106,15 @@
           checkPassword: [
             {validator: checkPassword, trigger: 'blur'}
           ]
-        }
-
+        },
+        identity: ''
       }
     },
     methods: {
       selectUser() {
         this.form.type = 1
-        this.uActive = true
         this.cActive = false
+        this.uActive = true
       },
       selectComputer() {
         this.form.type = 2
@@ -285,7 +284,7 @@
         return this.$store.state.event.isMob
       }
     },
-    mounted: function () {
+    mounted() {
       const self = this
       window.addEventListener('keydown', function (e) {
         if (e.keyCode === 13) {
@@ -293,13 +292,25 @@
         }
       })
     },
-    created: function () {
+    created() {
+      this.form.type = this.$route.params.type
       if (this.$store.state.event.token) {
         this.$message.error('已经登录!')
         this.$router.replace({name: 'home'})
       }
+      if (this.isMob) {
+        if (this.form.type) {
+          if (this.form.type === 1) {
+            this.identity = '客户'
+          } else if (this.form.type === 2) {
+            this.identity = '服务商'
+          }
+        } else {
+          this.$message.error('没有选择用户类型!')
+          this.$router.replace({name: 'identity'})
+        }
+      }
     }
-
   }
 </script>
 
@@ -418,6 +429,10 @@
       text-align: left;
       padding: 0 15px;
       margin-top: 0;
+    }
+
+    .register-tab {
+      margin-bottom: 30px;
     }
   }
 </style>

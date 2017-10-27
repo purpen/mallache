@@ -18,6 +18,7 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
     // 'Access-Control-Allow-Origin': 'http://mc.taihuoniao.com',
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
     'X-Requested-With': 'XMLHttpRequest'

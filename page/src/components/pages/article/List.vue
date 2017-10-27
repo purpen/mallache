@@ -16,14 +16,15 @@
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">
+              <router-link :to="{name: 'articleShow', params: {id: d.id}}"
+                           :target="BMob === true ? '_self' : '_blank'">
                 <div><img v-lazy="d.cover.middle"></div>
               </router-link>
             </div>
             <div class="content">
               <p class="title">
-                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="{'_blank': '!BMob'}">{{ d.title
-                  }}
+                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="BMob ? '_self' : '_blank'">
+                  {{ d.title }}
                 </router-link>
               <p>
                 <div class="des">

@@ -11,6 +11,7 @@ html {
 
 *, *:before, *:after {
   box-sizing: inherit;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
@@ -376,6 +377,11 @@ button.is-custom.is-outlined.is-loading:after {
 /**
  * header
  */
+/*login*/
+/*解决safari 移动端布局中*/
+.login-content input::-webkit-input-placeholder {
+  line-height: 1.3;
+}
 
 .m-nav-header {
   position: relative;
@@ -430,17 +436,19 @@ button.is-custom.is-outlined.is-loading:after {
 
 .m-Sign a {
   color: rgba(255, 255, 255, 0.9);
+  margin: 0 10px;
+}
+
+.m-Sign i {
+  margin-left: 7px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .m-Sign {
   transition: all .5s;
   position: fixed;
   left: -54vw;
-  bottom: 16px;
-}
-
-.m-Sign a {
-  margin: 0 10px;
+  bottom: 30px;
 }
 
 .nav-header {
@@ -448,6 +456,10 @@ button.is-custom.is-outlined.is-loading:after {
   display: flex;
   background: #fff;
   padding-left: 5px;
+}
+
+.m-nav-header {
+  position: relative;
 }
 
 .m-nav-header .logo {

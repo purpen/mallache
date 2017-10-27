@@ -95,7 +95,11 @@
                           auth.clear_prev_url_name()
                           that.$router.replace({name: prevUrlName})
                         } else {
-                          that.$router.replace({name: 'vcenterControl'})
+                          if (that.isMob) {
+                            that.$router.replace({name: 'home'})
+                          } else {
+                            that.$router.replace({name: 'vcenterControl'})
+                          }
                         }
                       } else {
                         auth.logout()
@@ -121,7 +125,6 @@
         })
       }
     },
-    computed: {},
     mounted: function () {
       const self = this
       window.addEventListener('keydown', function (e) {
@@ -140,8 +143,12 @@
         this.$message.error('已经登录!')
         this.$router.replace({name: 'home'})
       }
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
-
   }
 </script>
 
