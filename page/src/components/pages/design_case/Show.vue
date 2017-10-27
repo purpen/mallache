@@ -35,11 +35,11 @@
               <span>{{ item.design_company.city_value }}</span>
             </p>
           </div>
-          <!-- <div class="rate">
+          <div class="rate">
             <p>信用指数：
               <span>{{ item.design_company.score }}分</span>
             </p>
-          </div> -->
+          </div>
           <div class="cate" v-if="item.design_type_val">
             <p class="c-title">类别</p>
             <p class="tag">

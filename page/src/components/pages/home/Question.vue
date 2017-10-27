@@ -222,7 +222,7 @@ export default {
 }
 
 .content-box {
-  padding: 0 20px 20px 20px;
+  padding: 0 15px 20px;
 }
 
 .content-box h3 {

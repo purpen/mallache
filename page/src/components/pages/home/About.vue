@@ -102,7 +102,7 @@
     }
 
     .banner h3 {
-      font-size: 1.7rem;
+      font-size: 2rem;
     }
   }
 </style>

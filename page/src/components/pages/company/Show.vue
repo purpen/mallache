@@ -11,9 +11,9 @@
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
-          <!-- <div class="rate">
+          <div class="rate">
             <p>信用指数：<span>{{ item.score }}分</span></p>
-          </div> -->
+          </div>
 
           <div class="cate">
             <p class="c-title">设计类别</p>

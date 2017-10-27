@@ -9,7 +9,7 @@
       <div class="domain">
         <el-row :gutter="20" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12">
-            <img src="../../../assets/images/subject/rcip/img/RCIP@2x.jpg" style="width: 100%;"/>
+            <img :src="require('assets/images/subject/rcip/img/RCIP@2x.jpg')" style="width: 100%;"/>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12">
             <p class="title">RCIP战略联盟及衍生创新孵化平台</p>
@@ -34,7 +34,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in startList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
               <div style="padding: 14px;">
                 <p class="des">{{ d.position }}</p>
                 <p class="title">{{ d.name }}</p>
@@ -57,7 +57,7 @@
         <el-row :gutter="20" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in qdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -76,7 +76,7 @@
         <el-row :gutter="20" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in qdList2" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -95,7 +95,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="8" v-for="(d, index) in caseList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
               <div style="padding: 14px;">
                 <p class="title">{{ d.title }}</p>
               </div>
@@ -117,7 +117,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="12" :sm="12" :md="8" :lg="6" v-for="(d, index) in djList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -136,7 +136,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="12" :sm="12" :md="8" :lg="6" v-for="(d, index) in hdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -146,7 +146,7 @@
     <div class="bottom">
       <p class="content">
         太火鸟作为擅长孵化与运营的品牌，2017年已经推出全新铟果D³INGO平台，促进线上设计交易与创新产品的发现、孵化，提供针对消费升级趋势的品牌化、产品化咨询及解决方案。如有关设计交易及创新产品业务或相关想法与建议，欢迎邮件联系</p>
-      <p class="content"><img src="../../../assets/images/subject/rcip/Email@2x.png"
+      <p class="content"><img :src="require('assets/images/subject/rcip/Email@2x.png')"
                               style="width: 30px; vertical-align:middle; color:#FE4548"/> mazhe@taihuoniao.com</p>
       <p class="content">让我们一起，以设计为发力点，打造优质创意价值链，让好设计发声，塑造全新产业升级的明天。</p>
       <p class="content">设计再造计划，等待您的参与。</p>
@@ -461,6 +461,12 @@
     padding: 0 18%;
   }
 
+  @media screen and (max-width: 767px) {
+    .domain .title {
+      margin-top: 22px
+    }
+  }
+
   @media screen and (max-width: 600px) {
     .sub-title h3 {
       text-indent: 0;
@@ -474,6 +480,7 @@
       padding: 0 15px;
       margin-bottom: 20px;
     }
+
   }
 
   @media screen and (max-width: 450px) {

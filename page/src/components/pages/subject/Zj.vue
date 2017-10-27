@@ -52,7 +52,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in startList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
               <div style="padding: 14px;">
                 <p class="des">{{ d.position }}</p>
                 <p class="title">{{ d.name }}</p>
@@ -77,7 +77,7 @@
         <el-row :gutter="20" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in qdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
               <div style="padding: 14px;">
                 <p class="des">{{ d.des }}</p>
               </div>
@@ -101,7 +101,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in caseList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
               <div style="padding: 14px;">
                 <p class="des">{{ d.title }}</p>
               </div>
@@ -125,7 +125,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in djList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -146,7 +146,7 @@
         <el-row :gutter="15" class="anli-elrow">
           <el-col :xs="24" :sm="6" :md="6" :lg="6" v-for="(d, index) in hdList" :key="index">
             <el-card :body-style="{ padding: '0px' }" class="item">
-              <img :src="d.image" class="image">
+              <img v-lazy="d.image" class="image">
             </el-card>
           </el-col>
         </el-row>
