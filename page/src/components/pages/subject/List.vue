@@ -1,21 +1,21 @@
 <template>
   <div class="container">
     <div class="nav-list">
-      <div class="category-list" ref="categoryList">
-        <router-link :to="{name: 'articleList'}" v-if="cateList.length">最新</router-link>
+      <div class="category-list" ref="categoryList" v-if="cateList.length">
+        <router-link :to="{name: 'articleList'}">最新</router-link>
         <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index">{{ d.name }}</router-link>
-        <router-link :to="{name: 'subjectList'}" class="active" v-if="cateList.length">专题</router-link>
+        <router-link :to="{name: 'subjectList'}" class="active">专题</router-link>
       </div>
     </div>
 
-    <div class="case-list" v-loading.body="isLoading">
+    <div class="case-list" v-loading.body="isLoading" ref="caseList">
       <el-row :gutter="20" class="anli-elrow">
 
         <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
               <a :href="d.url" target="_blank">
-                <img :src="d.cover_url">
+                <img v-lazy="d.cover_url">
               </a>
             </div>
             <div class="content">
@@ -84,6 +84,7 @@ export default {
       .then(function(response) {
         if (response.data.meta.status_code === 200) {
           self.cateList = response.data.data
+          self.$refs.caseList.style.marginTop = '0'
         }
       })
       .catch(function(error) {
@@ -125,6 +126,7 @@ export default {
 
 .case-list {
   min-height: 350px;
+  margin-top: 66px;
 }
 
 .item {
@@ -186,7 +188,6 @@ export default {
     overflow-x: auto;
   }
   .category-list a {
-    margin-right: 0;
     margin-right: 30px;
   }
   .content {
