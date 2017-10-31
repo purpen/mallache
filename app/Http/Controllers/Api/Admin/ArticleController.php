@@ -283,7 +283,7 @@ class ArticleController extends Controller
         $article->update($data);
 
         if($article){
-            $is_synchro = $request->input('is_synchro') ?? false;
+            $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
             // 同步文章到官网社区
             if($is_synchro) {
                 $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';

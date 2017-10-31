@@ -235,7 +235,7 @@ export default {
             short_content: that.form.short_content,
             label_str: that.form.label_str,
             content: that.form.content,
-            is_synchro: that.isSynchro
+            is_synchro: that.isSynchro === true ? 1 : 0
           }
           if (row.label_str) {
             row.label = row.label_str.split(',')
