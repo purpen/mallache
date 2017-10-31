@@ -283,14 +283,17 @@ class ArticleController extends Controller
         $article->update($data);
 
         if($article){
-            $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
-            $param = array(
-              'id' => 1,
-              'title' => 'bbb',
-              'content' => 'text',
-            );
-            $result = Tools::request($url, $param);
-            dd($result);
+            $is_synchro = $request->input('is_synchro') ?? false;
+            // 同步文章到官网社区
+            if($is_synchro) {
+                $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+                $param = array(
+                  'id' => 1,
+                  'title' => 'bbb',
+                  'content' => 'text',
+                );
+                $result = Tools::request($url, $param);
+            }
         }
 
         return $this->response->array($this->apiSuccess('success', 200, $article));
