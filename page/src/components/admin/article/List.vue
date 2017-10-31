@@ -53,7 +53,7 @@
             <el-table-column width="100" label="操作">
               <template scope="scope">
                 <p>
-                  <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">草稿</a>
+                  <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">取消发布</a>
                   <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发布</a>
                 </p>
                 <p>

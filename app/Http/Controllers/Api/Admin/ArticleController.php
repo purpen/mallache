@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\AssetModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helper\Tools;
 
 class ArticleController extends Controller
 {
@@ -167,7 +168,7 @@ class ArticleController extends Controller
             if ($random = $request->input('random')) {
                 AssetModel::setRandom($article->id, $random);
             }
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiSuccess('success', 200, $article));
         } else {
             return $this->response->array($this->apiError());
         }
@@ -281,7 +282,18 @@ class ArticleController extends Controller
 
         $article->update($data);
 
-        return $this->response->array($this->apiSuccess());
+        if($article){
+            $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+            $param = array(
+              'id' => 1,
+              'title' => 'bbb',
+              'content' => 'text',
+            );
+            $result = Tools::request($url, $param);
+            dd($result);
+        }
+
+        return $this->response->array($this->apiSuccess('success', 200, $article));
     }
 
     /**

@@ -134,6 +134,7 @@
               <el-form-item label="内容" prop="content">
                 <mavon-editor ref="mavonEditor" :ishljs="false" v-model="form.content" id="editor" @imgAdd="$imgAdd" @imgDel="$imgDel" ></mavon-editor>
               </el-form-item>
+              <el-checkbox v-model="isSynchro">同步到官网社区</el-checkbox>
 
               <div class="form-btn fr">
                   <el-button @click="returnList">取消</el-button>
@@ -186,6 +187,7 @@ export default {
       imageUrl: '',
       coverId: '',
       fileList: [],
+      isSynchro: false,
       form: {
         classification_id: '',
         title: '',
@@ -232,7 +234,8 @@ export default {
             topic_url: that.form.topic_url,
             short_content: that.form.short_content,
             label_str: that.form.label_str,
-            content: that.form.content
+            content: that.form.content,
+            is_synchro: that.isSynchro
           }
           if (row.label_str) {
             row.label = row.label_str.split(',')
@@ -254,6 +257,9 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
+              // 同步到官网社区
+              if (that.isSynchro) {
+              }
               that.$router.push({name: 'adminArticleList'})
               return false
             } else {
@@ -418,7 +424,6 @@ export default {
       })
     },
     $imgDel(pos) {
-      alert(11)
       delete this.content_file[pos]
     },
     uploadimg($e) {
