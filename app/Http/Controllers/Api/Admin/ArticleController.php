@@ -168,6 +168,31 @@ class ArticleController extends Controller
             if ($random = $request->input('random')) {
                 AssetModel::setRandom($article->id, $random);
             }
+            $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
+            // 同步文章到官网社区
+            if($is_synchro) {
+                $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+
+                $cover_url = '';
+                if($article->cover_id) {
+                  $asset = AssetModel::find($article->cover_id);
+                  if($asset) {
+                    $cover_url = config('filesystems.disks.qiniu.url') . $asset->path;
+                  }
+                }
+
+                $param = array(
+                  'id' => $article->id,
+                  'title' => $article->title,
+                  'short_content' => $article->short_content,
+                  'content' => $article->content,
+                  'source_from' => $article->source_form,
+                  'tags' => $article->label,
+                  'cover_url' => $cover_url,
+                );
+
+                $result = Tools::request($url, $param);
+            }
             return $this->response->array($this->apiSuccess('success', 200, $article));
         } else {
             return $this->response->array($this->apiError());
@@ -264,7 +289,7 @@ class ArticleController extends Controller
             'type' => 'integer',
             'topic_url' => 'max:100',
             'label' => 'array',
-            'short_content' => 'max:200',
+            'desc' => 'max:200',
             'source_from' => 'max:50',
         ]);
 
@@ -288,9 +313,12 @@ class ArticleController extends Controller
             if($is_synchro) {
                 $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
                 $param = array(
-                  'id' => 1,
-                  'title' => 'bbb',
-                  'content' => 'text',
+                  'id' => $article->id,
+                  'title' => $article->title,
+                  'desc' => $article->short_content,
+                  'content' => $article->content,
+                  'source_from' => $article->source_form,
+                  'tags' => $article->label,
                 );
                 $result = Tools::request($url, $param);
             }
