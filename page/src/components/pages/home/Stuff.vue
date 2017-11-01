@@ -96,6 +96,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  a {
+    color: #222;
+  }
   .container h3 {
     font-size: 2rem;
     margin-bottom: 10px;
@@ -107,7 +110,7 @@
 
   .item {
     /* height: 300px; */
-    margin: 10px 0;
+    margin: 10px auto;
   }
 
   .image-box {

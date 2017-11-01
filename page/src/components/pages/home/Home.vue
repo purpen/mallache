@@ -86,10 +86,10 @@
           <swiper-slide v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30">
               <a :href="k.clickUrl" v-for="(k, i) in d" :key="i">
-                <el-col :span="8">
+                <el-col :span="8" class="home-elrow">
                   <el-card class="box-card" :body-style="{ padding: '0px' }">
                     <div class="image-box">
-                      <img :src="k.image">
+                      <img v-lazy="k.image">
                     </div>
                     <div class="content">
                       <p class="stuff-title">{{ k.title }}</p>
@@ -118,7 +118,7 @@
                 <el-col :xs="24" :sm="8" :md="8" :lg="8">
                   <el-card class="box-card" :body-style="{ padding: '0px' }">
                     <div class="image-box">
-                      <img :src="k.image">
+                      <img v-lazy="k.image">
                     </div>
                     <div class="content">
                       <p class="stuff-title">{{ k.title }}</p>
@@ -146,18 +146,18 @@
       <h3>战略合作</h3>
 
       <div class="logo-list">
-        <img src="../../../assets/images/home/logo_md.jpg"/>
-        <img src="../../../assets/images/home/jdjr_logo.jpg"/>
-        <img src="../../../assets/images/home/logo_cxgc.jpg"/>
-        <img src="../../../assets/images/home/logo_hqjj.jpg"/>
+        <img v-lazy="require('assets/images/home/logo_md.jpg')"/>
+        <img v-lazy="require('assets/images/home/jdjr_logo.jpg')"/>
+        <img v-lazy="require('assets/images/home/logo_cxgc.jpg')"/>
+        <img v-lazy="require('assets/images/home/logo_hqjj.jpg')"/>
       </div>
       <h3 class="m-partner">合作伙伴</h3>
 
       <div class="logo-list">
-        <img src="../../../assets/images/home/1logo.jpg"/>
-        <img src="../../../assets/images/home/2logo.jpg"/>
-        <img src="../../../assets/images/home/3logo.jpg"/>
-        <img src="../../../assets/images/home/4logo.jpg"/>
+        <img v-lazy="require('assets/images/home/1logo.jpg')"/>
+        <img v-lazy="require('assets/images/home/2logo.jpg')"/>
+        <img v-lazy="require('assets/images/home/3logo.jpg')"/>
+        <img v-lazy="require('assets/images/home/4logo.jpg')"/>
       </div>
     </div>
 
@@ -256,11 +256,11 @@
           paginationClickable: true,
           loop: true,
           lazyLoading: true,
-          autoplay: 5000,
+          autoplay: 500000,
           autoHeight: true,
           prevButton: '.swiper-button-prev',
           nextButton: '.swiper-button-next',
-          spaceBetween: 30
+          spaceBetween: 0
         }
       }
     },
@@ -274,9 +274,17 @@
     mounted() {
       let that = this
       window.addEventListener('resize', () => {
-        that.calcHeight = calcImgSize(650, 1440)
+        if (that.isMob) {
+          that.calcHeight = calcImgSize(180, 320)
+        } else {
+          that.calcHeight = calcImgSize(650, 1440)
+        }
       })
-      this.calcHeight = calcImgSize(650, 1440)
+      if (that.isMob) {
+        that.calcHeight = calcImgSize(180, 320)
+      } else {
+        this.calcHeight = calcImgSize(650, 1440)
+      }
     },
     computed: {
       isMob() {
@@ -361,7 +369,6 @@
   }
 
   .item_2 {
-    margin-top: 50px;
     background-color: #FAFAFA;
   }
 
@@ -397,7 +404,7 @@
 
   .item {
     text-align: center;
-    padding: 60px 0 20px 0;
+    padding: 60px 0;
   }
 
   .avatar-header {
@@ -572,6 +579,10 @@
 
     .item_2_box .item2banner {
       margin: 40px 0;
+    }
+
+    .el-row {
+      padding: 0 15px;
     }
   }
 

@@ -52,7 +52,7 @@
 
       </div>
     </div>
-    <div class="m-nav-header" v-if="this.isMob">
+    <div class="m-nav-header" v-if="isMob">
 
       <div class="el-menu-item logo">
         <span class="logo">太火鸟&nbsp;SaaS</span>
@@ -77,18 +77,29 @@
           <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
           </li>
-        </ul>
-        <div class="m-Sign" ref="mSign">
+          <li @click="closeMenu" class="m-Sign">
           <span @click="closeMenu" v-if="!isLogin">
-            <router-link :to="menu.login">登录</router-link>
+            <router-link :to="menu.login" class="Flogin">登录</router-link>
           </span>
-          <span @click="closeMenu" v-if="!isLogin">
+            <span @click="closeMenu" v-if="!isLogin">
             <router-link :to="menu.identity" @click="closeMenu">注册</router-link>
           </span>
-          <span @click="closeMenu" v-if="isLogin">
+            <span @click="closeMenu" v-if="isLogin">
             <i @click="logout">退出</i>
           </span>
-        </div>
+          </li>
+        </ul>
+        <!--<div class="m-Sign" ref="mSign">-->
+        <!--<span @click="closeMenu" v-if="!isLogin">-->
+        <!--<router-link :to="menu.login">登录</router-link>-->
+        <!--</span>-->
+        <!--<span @click="closeMenu" v-if="!isLogin">-->
+        <!--<router-link :to="menu.identity" @click="closeMenu">注册</router-link>-->
+        <!--</span>-->
+        <!--<span @click="closeMenu" v-if="isLogin">-->
+        <!--<i @click="logout">退出</i>-->
+        <!--</span>-->
+        <!--</div>-->
 
       </div>
       <div class="m-Nav-right" v-if="isLogin" @click="mmenuHide">
@@ -192,7 +203,6 @@
       addScroll() {
         // this.$refs.mCover.style.width = '100%'
         this.$refs.mNav.style.marginLeft = 0
-        this.$refs.mSign.style.left = '8px'
         this.$refs.mMenu.style.width = '100%'
         document.body.setAttribute('class', 'disableScroll')
         document.childNodes[1].setAttribute('class', 'disableScroll')
@@ -200,7 +210,6 @@
       reScroll() {
         // this.$refs.mCover.style.width = 0
         this.$refs.mNav.style.marginLeft = '-54vw'
-        this.$refs.mSign.style.left = '-54vw'
         this.$refs.mMenu.style.width = 0
         document.body.removeAttribute('class', 'disableScroll')
         document.childNodes[1].removeAttribute('class', 'disableScroll')
@@ -261,6 +270,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .Flogin {
+    background: #FF5A5F;
+    border-color: #FF5A5F;
+  }
+
   .server-in-btn {
     height: 60px;
     line-height: 60px;

@@ -58,9 +58,22 @@
     mounted() {
       let that = this
       window.addEventListener('resize', () => {
-        that.calcHeight = calcImgSize(400, 1440)
+        if (that.BMob) {
+          that.calcHeight = calcImgSize(180, 320)
+        } else {
+          that.calcHeight = calcImgSize(400, 1440)
+        }
       })
-      this.calcHeight = calcImgSize(400, 1440)
+      if (that.BMob) {
+        that.calcHeight = calcImgSize(180, 320)
+      } else {
+        this.calcHeight = calcImgSize(400, 1440)
+      }
+    },
+    computed: {
+      BMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
 

@@ -136,6 +136,7 @@
     font-size: 2.4rem;
     line-height: 2;
     color: #222;
+    font-weight: 600;
   }
 
   .content .title p.from {
@@ -166,5 +167,8 @@
   .tag-box a img {
     width: 2%;
     vertical-align: middle;
+  }
+  .markdown-body {
+    color: #666;
   }
 </style>

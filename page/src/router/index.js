@@ -159,6 +159,26 @@ const routes = [
     },
     component: require('@/components/pages/subject/Rcip')
   },
+  // 企业招募
+  {
+    path: '/subject/EnterpriseRecruit',
+    name: 'EnterpriseRecruit',
+    meta: {
+      requireAuth: false,
+      title: '企业招募'
+    },
+    component: require('@/components/pages/subject/EnterpriseRecruit')
+  },
+  // 产品招募
+  {
+    path: '/subject/ProductRecruit',
+    name: 'ProductRecruit',
+    meta: {
+      requireAuth: false,
+      title: '产品招募'
+    },
+    component: require('@/components/pages/subject/ProductRecruit')
+  },
 
   // 专题列表
   {
