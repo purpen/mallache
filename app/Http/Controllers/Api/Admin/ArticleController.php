@@ -187,7 +187,7 @@ class ArticleController extends Controller
                   'short_content' => $article->short_content,
                   'content' => $article->content,
                   'source_from' => $article->source_form,
-                  'tags' => $article->label,
+                  'tags' => implode(',', $article->label),
                   'cover_url' => $cover_url,
                 );
 
@@ -302,7 +302,7 @@ class ArticleController extends Controller
             return $v === null ? false : true;
         });
         if ($request->input('label')) {
-            $data['label'] = implode($request->input('label'), ',');
+            $data['label'] = implode(',', $request->input('label'));
         }
 
         $article->update($data);
@@ -318,7 +318,7 @@ class ArticleController extends Controller
                   'desc' => $article->short_content,
                   'content' => $article->content,
                   'source_from' => $article->source_form,
-                  'tags' => $article->label,
+                  'tags' => implode(',', $article->label),
                 );
                 $result = Tools::request($url, $param);
             }
