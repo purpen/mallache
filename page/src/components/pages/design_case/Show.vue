@@ -124,7 +124,7 @@
 
   .design-case-content .title {
     text-align: center;
-    color: #5d6266;
+    color: #222;
     margin: 20px 0 20px 0;
     font-size: 2rem;
   }
@@ -135,7 +135,7 @@
 
   .design-case-content .summary p {
     line-height: 1.6;
-    color: #5d6266;
+    color: #666;
   }
 
   .design-case-content .des {
@@ -147,7 +147,8 @@
   }
 
   .design-case-slide {
-    padding: 20px 20px 20px 20px;
+    padding: 20px;
+    color: #222;
   }
 
   .design-case-slide .info {
@@ -171,7 +172,6 @@
 
   .design-case-slide .com-addr {
     line-height: 2.8rem;
-    color: #101010;
   }
 
   .design-case-slide .rate {

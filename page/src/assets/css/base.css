@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  font-family: 'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+  font-family: "Microsoft Yahei", PingFangSC-Regular, "Helvetica Neue", Helvetica, Arial, sans-serif;
   height: 100%;
 }
 
@@ -122,6 +122,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   content: '';
   display: block;
   clear: both;
+}
+
+.no-select {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .el-form-item__label {
@@ -346,8 +353,16 @@ button.is-custom.is-outlined.is-loading:after {
   line-height: 2;
 }
 
-.footer p a {
+.footer p a, .footer p i {
   color: #999;
+}
+
+.footer p i.weibo:hover {
+  color: rgb(231, 55, 54);
+}
+
+.footer p i.wechat:hover {
+  color: rgb(17, 172, 54);
 }
 
 .footer p a.is-active {
@@ -362,12 +377,10 @@ button.is-custom.is-outlined.is-loading:after {
 
 .footer .Fshare-box {
   overflow: hidden;
-  width: 160px;
+  /*width: 160px;*/
   margin: 2em auto;
-}
-
-.footer p.share {
-  float: left;
+  display: flex;
+  justify-content: center;
 }
 
 /**
@@ -410,7 +423,8 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .m-Nav {
-  font-family: "Lantinghei SC", "Open Sans", Arial, "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", STHeiti, "WenQuanYi Micro Hei", SimSun, sans-serif;
+
+  font-family: "Microsoft Yahei", PingFangSC-Regular, "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 0;
   z-index: 9;
@@ -424,31 +438,33 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .m-Nav li {
-  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1) */
   box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.2);
 }
 
-.m-Nav li a {
+.m-Nav li a, .m-Nav li i {
   display: block;
   padding: 15px 19px;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.m-Sign a {
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0 10px;
+.m-Nav .m-Sign {
+  overflow: hidden;
+  box-shadow: none;
+  padding: 20px 0;
 }
 
-.m-Sign i {
-  margin-left: 7px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.m-Sign {
-  transition: all .5s;
-  position: fixed;
-  left: -54vw;
-  bottom: 30px;
+.m-Sign span a, .m-Sign span i {
+  padding: 0;
+  width: 80%;
+  height: 32px;
+  line-height: 32px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 
 .nav-header {
@@ -929,15 +945,15 @@ img.avatar {
 
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1180px) {
   .container {
-    width: 1200px
+    width: 1180px
   }
 }
 
 /* 设置了浏览器宽度不大于1200px时  显示992px宽度 */
 
-@media screen and (min-width: 992px) and (max-width: 1199px) {
+@media screen and (min-width: 992px) and (max-width: 1179px) {
   .container {
     width: 992px;
   }
@@ -985,12 +1001,12 @@ img.avatar {
 
   .footer .Fshare-box {
     overflow: hidden;
-    width: 160px;
     margin-left: 40px;
+    justify-content: flex-start;
   }
 
   .footer .Fshare-box p {
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 12px
   }
 
@@ -1097,6 +1113,11 @@ img.avatar {
 
 .content .body {
   clear: both;
+}
+
+/*enterprise*/
+#enterprise .el-card__body {
+  padding: 0;
 }
 
 /**

@@ -1,15 +1,14 @@
-export function calcImgSize(width, height) {
-  var oh = width || 1520
-  var ow = height || 2880
-  var nw = document.documentElement.clientWidth
-  var nh = nw / ow * oh
+export function calcImgSize(width = 1520, height = 2880, maxVal = true) {
+  let oh = width
+  let ow = height
+  let nw = document.documentElement.clientWidth
+  let nh = nw / ow * oh
   if (ow !== 0 && oh !== 0) {
-    if (nh > 800) {
+    if (nh > 800 && maxVal) {
       nh = 800
     }
   } else {
-    console.log('width: 0')
-    return false
+    console.log('height:' + height)
   }
   return nh + 'px'
 }

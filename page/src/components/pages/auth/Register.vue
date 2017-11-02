@@ -36,7 +36,7 @@
           </el-form-item>
           <el-form-item label="" prop="checkPassword">
             <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword"
-                      placeholder="重复密码"></el-input>
+                      placeholder="确认密码"></el-input>
           </el-form-item>
           <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">
             注册
@@ -79,7 +79,7 @@
       }
       return {
         isLoadingBtn: false,
-        uActive: true,
+        uActive: false,
         cActive: false,
         time: 0,
         labelPosition: 'top',

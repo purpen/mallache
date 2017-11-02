@@ -71,11 +71,13 @@
   }
 
   input[id = customer]:checked ~ .cover1 > .type {
-    border: 1px solid rgba(255, 90, 95, 0.6);
+    border: 2px solid rgba(255, 90, 95, 0.6);
+    box-shadow: 0 0 5px rgba(10, 10, 10, 0.1);
   }
 
   input[id = business]:checked ~ .cover2 > .type {
-    border: 1px solid rgba(255, 90, 95, 0.6);
+    border: 2px solid rgba(255, 90, 95, 0.6);
+    box-shadow: 0 0 5px rgba(10, 10, 10, 0.1);
   }
 
   input[id = customer]:checked ~ a.cus {
@@ -100,13 +102,14 @@
   .type {
     width: 80%;
     max-width: 300px;
+    min-width: 288px;
     height: 120px;
     margin: 10px auto 20px;
     background: #FFFFFF;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.10);
+    box-shadow: 0 0 5px rgba(10, 10, 10, 0.1);
     border-radius: 10px;
     padding: 0 20px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
   }
 
   .type article, .type p {

@@ -1,13 +1,11 @@
 <template>
   <div class="container">
     <div class="nav-list">
-      <div class="category-list">
-        <router-link :to="{name: 'articleList'}" :class="{'active': menuType == 0}" v-if="cateList.length">最新
+      <div class="category-list" v-if="cateList.length">
+        <router-link :to="{name: 'articleList'}" :class="{'active': menuType == 0}" >最新</router-link>
+        <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index" :class="{'active': menuType == d.id}">{{ d.name }}
         </router-link>
-        <router-link :to="{name: 'articleList', query: {category_id: d.id}}" v-for="(d, index) in cateList" :key="index"
-                     :class="{'active': menuType == d.id}">{{ d.name }}
-        </router-link>
-        <router-link :to="{name: 'subjectList'}" v-if="cateList.length">专题</router-link>
+        <router-link :to="{name: 'subjectList'}">专题</router-link>
       </div>
     </div>
     <div class="case-list" v-loading.body="isLoading">
@@ -17,7 +15,7 @@
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
               <router-link :to="{name: 'articleShow', params: {id: d.id}}"
-                           :target="BMob === true ? '_self' : '_blank'">
+                           :target="BMob ? '_self' : '_blank'">
                 <div><img v-lazy="d.cover.middle"></div>
               </router-link>
             </div>
@@ -34,7 +32,6 @@
     </el-card>
     </el-col>
     </el-row>
-
   </div>
 
   <div class="pager">
@@ -127,6 +124,7 @@
       }
     },
     created: function () {
+      console.log(this.cateList)
       const self = this
       self.loadList()
       // 分类列表
@@ -187,7 +185,7 @@
 
   .item {
     /* height: 330px; */
-    margin: 10px 0;
+    margin: 10px auto;
   }
 
   .item img {
