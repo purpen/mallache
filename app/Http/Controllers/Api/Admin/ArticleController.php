@@ -171,7 +171,7 @@ class ArticleController extends Controller
             $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
             // 同步文章到官网社区
             if($is_synchro) {
-                $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+                $url = config('app.official_api') . 'd3in/synchro_article';
 
                 $cover_url = '';
                 if($article->cover_id) {
@@ -311,7 +311,7 @@ class ArticleController extends Controller
             $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
             // 同步文章到官网社区
             if($is_synchro) {
-                $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+                $url = config('app.official_api') . 'd3in/synchro_article';
 
                 $cover_url = '';
                 if($article->cover_id) {
