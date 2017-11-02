@@ -312,6 +312,15 @@ class ArticleController extends Controller
             // 同步文章到官网社区
             if($is_synchro) {
                 $url = 'http://dev.taihuoniao.com/app/api/d3in/synchro_article';
+
+                $cover_url = '';
+                if($article->cover_id) {
+                  $asset = AssetModel::find($article->cover_id);
+                  if($asset) {
+                    $cover_url = config('filesystems.disks.qiniu.url') . $asset->path;
+                  }
+                }
+
                 $param = array(
                   'id' => $article->id,
                   'title' => $article->title,
@@ -319,6 +328,7 @@ class ArticleController extends Controller
                   'content' => $article->content,
                   'source_from' => $article->source_form,
                   'tags' => implode(',', $article->label),
+                  'cover_url' => $cover_url,
                 );
                 $result = Tools::request($url, $param);
             }
