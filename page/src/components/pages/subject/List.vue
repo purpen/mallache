@@ -48,20 +48,6 @@
         cateList: [],
         itemList: [
           {
-            id: 1,
-            title: '传统产业设计再制造',
-            cover_url: require('@/assets/images/subject/list_01.jpg'),
-            url: '/subject/zj',
-            content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业设计示范基地共同发起，由浙江省工业设计创新服务基地运营公司杭州合创共响工业设计管理有限公司负责执行。'
-          },
-          {
-            id: 4,
-            title: 'RCIP衍生创新峰会',
-            cover_url: require('@/assets/images/subject/list_02.jpg'),
-            url: '/subject/rcip',
-            content: '这是一场IP生态集群的权威路演；也是众多创新设计机构以IP内容结合的发布盛典想要了解更多？'
-          },
-          {
             id: 5,
             title: '产品招募',
             cover_url: require('@/assets/images/subject/list_03.jpg'),
@@ -74,6 +60,20 @@
             cover_url: require('@/assets/images/subject/list_04.jpg'),
             url: '/subject/EnterpriseRecruit',
             content: '铟果D³INGO是太火鸟旗下的创新产品交易与SaaS分发平台，是高效线上设计交易服务平台及中国领先的创新产品策源地，围绕创新产品与设计交易，为相关参与方提供包括创新产品孵化、资金保障、流量支持、运营维护等相关服务与帮助。'
+          },
+          {
+            id: 1,
+            title: '传统产业设计再制造',
+            cover_url: require('@/assets/images/subject/list_01.jpg'),
+            url: '/subject/zj',
+            content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业设计示范基地共同发起，由浙江省工业设计创新服务基地运营公司杭州合创共响工业设计管理有限公司负责执行。'
+          },
+          {
+            id: 4,
+            title: 'RCIP衍生创新峰会',
+            cover_url: require('@/assets/images/subject/list_02.jpg'),
+            url: '/subject/rcip',
+            content: '这是一场IP生态集群的权威路演；也是众多创新设计机构以IP内容结合的发布盛典想要了解更多？'
           }
         ],
         category_id: 0,

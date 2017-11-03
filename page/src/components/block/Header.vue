@@ -102,9 +102,11 @@
         <!--</div>-->
 
       </div>
-      <div class="m-Nav-right" v-if="isLogin" @click="mmenuHide">
-        <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url"/>
-        <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
+      <div class="m-Nav-right" v-if="isLogin">
+        <router-link to="/vcenter/control">
+          <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url"/>
+          <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
+        </router-link>
       </div>
 
     </div>
@@ -281,8 +283,7 @@
 
   #header-layout {
     position: relative;
-    z-index: 999;
-    transform: translateY(0);
+    z-index: 10001;
     animation: slow .4s;
   }
 

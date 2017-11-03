@@ -1,7 +1,9 @@
 <template>
-  <div class="vcenter-menu-sub">
+  <div class="vcenter-menu-sub" v-if="!isMob">
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentSubName === 'modify_pwd' ? true : false}">修改密码</router-link>
+      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentSubName === 'modify_pwd'}">
+        修改密码
+      </router-link>
 
     </div>
   </div>
@@ -18,6 +20,11 @@
     data () {
       return {
         msg: 'This is SubMenu'
+      }
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
       }
     }
   }

@@ -180,6 +180,18 @@
             'image': require('@/assets/images/home/banner1.jpg')
           },
           {
+            'clickUrl': '/subject/ProductRecruit',
+            'title': '',
+            'desc': '',
+            'image': require('@/assets/images/subject/recruit/product/product@2x.jpg')
+          },
+          {
+            'clickUrl': '/subject/EnterpriseRecruit',
+            'title': '',
+            'desc': '',
+            'image': require('@/assets/images/subject/recruit/enterprise/enterprise.jpg')
+          },
+          {
             'clickUrl': '/subject/zj',
             'title': '',
             'desc': '',
@@ -444,13 +456,13 @@
   }
 
   .company-des p {
-    color: 1.2rem;
+    font-size: 1.2rem;
     color: #666;
     line-height: 1.5;
   }
 
   .item_5 h3 {
-    padding-bottom: 0px;
+    padding-bottom: 0;
   }
 
   .logo-list {
