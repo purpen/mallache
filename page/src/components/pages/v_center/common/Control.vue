@@ -1,9 +1,9 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
-    <el-row :gutter="20">
+    <el-row :gutter="20" class="anli-elrow">
       <v-menu></v-menu>
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="content-item-box" v-loading.body="isLoading">
           <div class="item ing" v-for="(d, index) in itemIngList">
             <div class="banner">
@@ -161,6 +161,9 @@
     computed: {
       messageCount() {
         return this.$store.state.event.msgCount
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
     created: function() {
@@ -271,7 +274,7 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
   }
-  
+
   .content-box .item h3 {
     color: #222;
     font-size: 1.6rem;

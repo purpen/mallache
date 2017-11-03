@@ -12,7 +12,7 @@
 
                 <el-form-item label="项目名称" prop="name">
                   <el-input v-model="form.name" placeholder="为您的项目取个简短的名称"></el-input>
-                </el-form-item> 
+                </el-form-item>
 
                 <el-form-item label="项目进展阶段" prop="stage">
                   <el-radio-group v-model.number="form.stage">
@@ -97,10 +97,10 @@
                     <el-button type="primary" size="large" class="is-custom" :loading="isLoadingBtn" @click="submit('ruleForm')">保存并继续</el-button>
                 </div>
                 <div class="clear"></div>
-                
+
               </el-form>
 
-          
+
           </div>
         </el-col>
         <el-col :span="5">
@@ -111,16 +111,16 @@
                 <p class="slide-str error"><img src="../../../assets/images/icon/item_stick_fail.png" width="25" /> 匹配失败</p>
                 <p class="slide-des error">可能出现的原因：</p>
                 <p class="slide-des error">当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
-                <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p> 
-                <p class="slide-des error">选择当前的城市没有对应的设计公司。</p> 
+                <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p>
+                <p class="slide-des error">选择当前的城市没有对应的设计公司。</p>
               </div>
               <div v-else-if="matchCount > 0">
                 <p class="slide-str success"><img src="../../../assets/images/icon/item_stick.png" width="25" /> {{ matchCount }} 家推荐</p>
-                <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
+                <p class="slide-des">根据您在当前页面填写的项目需求详情，SaaS平台会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>
               </div>
               <div v-else>
                 <p class="slide-str">系统推荐中..</p>
-                <p class="slide-des">根据您在当前页面填写的项目需求详情，铟果D³ingo会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>           
+                <p class="slide-des">根据您在当前页面填写的项目需求详情，铟果D³ingo会为您精心筛选，呈现与您的项目需求匹配度最高的设计服务供应商。</p>
               </div>
 
             </div>
@@ -548,11 +548,11 @@
   }
 
   #right_box {
-    background-color: #fff;
     z-index: 9999;
   }
 
   .slider {
+    background-color: #fff;
     border: 1px solid #ccc;
     text-align:center;
     margin-bottom: 20px;

@@ -38,8 +38,8 @@
               <el-menu-item index="" @click="logout">安全退出</el-menu-item>
             </el-submenu>
           </el-menu>
-
         </div>
+
         <div class="nav-right" v-else>
           <div class="server-in-btn">
             <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
@@ -270,6 +270,22 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  @keyframes slow {
+    0% {
+      transform: translateY(-60px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  #header-layout {
+    position: relative;
+    z-index: 999;
+    transform: translateY(0);
+    animation: slow .4s;
+  }
+
   .Flogin {
     background: #FF5A5F;
     border-color: #FF5A5F;

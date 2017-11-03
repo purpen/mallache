@@ -34,14 +34,15 @@
         </p>
       </el-col>
 
-      <el-col class="item" :xs="12" :sm="6" :md="6" :lg="6">
+      <el-col class="item fllow" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
+        <p class="call">电话：4008-798-751</p>
         <div class="Fshare-box">
           <p class="share" @click="clickwx">
-            <i class="fa fa-weixin fa-2x wechat" aria-hidden="true"></i>
+            <i class="wechat"></i>
           </p>
           <p class="share">
-            <i class="fa fa-weibo fa-2x weibo" aria-hidden="true"></i>
+            <i class="weibo"></i>
           </p>
           <!--<p class="share">-->
           <!--<router-link :to="{name: 'test'}" class="">-->
@@ -51,19 +52,20 @@
         </div>
       </el-col>
     </el-row>
-
-    <section class="hidweixin" v-if="iswxhide && !isMob">
-      <div class="hidebox" @click="clickwx"></div>
-      <div class="wxbox">
-        <i class="wxclose" @click="clickwx"></i>
-        <h3>铟果官方微信二维码</h3>
-        <p class="openxw">打开微信，点击右上角的“+”，选择“扫一扫”功能，对准下方二维码即可。</p>
-        <div class="d3INeq">
-          <p class="saoqr">扫码关注我们</p>
-          <p class="qr"></p>
+    <transition name="fade">
+      <section class="hidweixin" v-if="iswxhide && !isMob">
+        <div class="hidebox" @click="clickwx"></div>
+        <div class="wxbox">
+          <i class="wxclose" @click="clickwx"></i>
+          <h3>铟果官方微信二维码</h3>
+          <p class="openxw">打开微信，点击右上角的“+”，选择“扫一扫”功能，对准下方二维码即可。</p>
+          <div class="d3INeq">
+            <p class="saoqr">扫码关注我们</p>
+            <p class="qr"></p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </transition>
   </div>
 </template>
 
@@ -137,6 +139,7 @@
   */
   .hidweixin {
     position: fixed;
+    z-index: 999999;
     top: 0;
     left: 0;
     width: 100vw;
@@ -195,7 +198,7 @@
     white-space: nowrap;
     overflow: hidden;
     font-size: 15px;
-    animation: typing 1.8s steps(6);
+    animation: typing 1.8s steps(6) infinite;
     color: #38408A;
   }
 
@@ -206,5 +209,38 @@
     background: url("../../assets/images/QR01.png") no-repeat;
     background-size: cover;
     animation: caret 2.8s infinite;
+  }
+
+  .footer .fllow {
+    text-align: left;
+    padding-left: 110px;
+  }
+
+  .footer .fllow p {
+    margin-left: 0;
+  }
+  .footer .fllow .title {
+    white-space: nowrap;
+    margin: 40px 20px 10px 0px;
+  }
+
+  .call {
+    color: #999;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s ease;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1055px) {
+    .footer .fllow {
+      padding-left: 60px;
+    }
   }
 </style>

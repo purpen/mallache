@@ -1,55 +1,56 @@
 <template>
 
-  <el-col :span="4" class="left-menu">
+  <el-col :span="isMob ? 24 : 4" class="left-menu">
+    <section class="menuHide">
+      <div class="menu-list" v-if="isCompany()">
+        <router-link :to="{name: 'vcenterControl'}" class="item">
+          控制面板
+        </router-link>
+        <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message'}">
+          消息
+        </router-link>
+        <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item'}">
+          项目订单
+        </router-link>
+        <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
+          作品案例
+        </router-link>
+        <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet'}">
+          我的钱包
+        </router-link>
+        <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile'}">
+          账号设置
+        </router-link>
+        <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd'}">
+          安全设置
+        </router-link>
+      </div>
 
-    <div class="menu-list" v-if="isCompany()">
-      <router-link :to="{name: 'vcenterControl'}" class="item">
-        控制面板
-      </router-link>
-      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
-        消息
-      </router-link>
-      <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true, 'is-active': currentName === 'c_item' ? true : false}">
-        项目订单
-      </router-link>
-      <router-link :to="{name: 'vcenterDesignCaseList'}" class="item">
-        作品案例
-      </router-link>
-      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
-        我的钱包
-      </router-link>
-      <router-link :to="{name: 'vcenterComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
-        账号设置
-      </router-link>
-      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
-        安全设置
-      </router-link>
-    </div>
+      <div class="menu-list" v-else>
+        <router-link :to="{name: 'vcenterControl'}" class="item">
+          控制面板
+        </router-link>
+        <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message'}">
+          消息
+        </router-link>
+        <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item'}">
+          我的项目
+        </router-link>
+        <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet'}">
+          我的钱包
+        </router-link>
+        <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile'}">
+          账号设置
+        </router-link>
+        <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd'}">
+          安全设置
+        </router-link>
+      </div>
 
-    <div class="menu-list" v-else>
-      <router-link :to="{name: 'vcenterControl'}" class="item">
-        控制面板
-      </router-link>
-      <router-link :to="{name: 'vcenterMessageList'}" :class="{'item': true, 'is-active': currentName === 'message' ? true : false}">
-        消息
-      </router-link>
-      <router-link :to="{name: 'vcenterItemList'}" :class="{'item': true, 'is-active': currentName === 'item' ? true : false}">
-        我的项目
-      </router-link>
-      <router-link :to="{name: 'vcenterWalletList'}" :class="{'item': true, 'is-active': currentName === 'wallet' ? true : false}">
-        我的钱包
-      </router-link>
-      <router-link :to="{name: 'vcenterDComputerBase'}" :class="{'item': true, 'is-active': currentName === 'profile' ? true : false}">
-        账号设置
-      </router-link>
-      <router-link :to="{name: 'modifyPwd'}" :class="{'item': true, 'is-active': currentName === 'modify_pwd' ? true : false}">
-        安全设置
-      </router-link>
-    </div>
-
-    <div class="computer-btn" v-if="isCompany()">
-      <el-button @click="redirectCompany">查看公司主页</el-button>
-    </div>
+      <div class="computer-btn" v-if="isCompany()">
+        <el-button @click="redirectCompany">查看公司主页</el-button>
+      </div>
+    </section>
   </el-col>
 </template>
 
@@ -69,7 +70,7 @@ export default {
   // 判断是客户还是设计公司
   methods: {
     isCompany() {
-      var uType = this.$store.state.event.user.type
+      let uType = this.$store.state.event.user.type
       if (uType === 2) {
         return true
       } else {
@@ -77,12 +78,17 @@ export default {
       }
     },
     redirectCompany() {
-      var companyId = this.$store.state.event.user.design_company_id
+      let companyId = this.$store.state.event.user.design_company_id
       if (!companyId || companyId === 0) {
         this.$message.error('请先申请公司认证!')
       } else {
         this.$router.push({name: 'companyShow', params: {id: companyId}})
       }
+    }
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
     }
   }
 }

@@ -77,18 +77,17 @@
 <style scoped>
   .banner {
     width: 100%;
-    background: url('../../../assets/images/subject/recruit/product/MTenterprise.jpg') no-repeat;
+    background: url('../../../assets/images/subject/recruit/product/MTproduct@2x.jpg') no-repeat;
     background-size: cover;
   }
 
   .banner2 {
     width: 100%;
-    background: url('../../../assets/images/subject/recruit/product/product.jpg') no-repeat;
+    background: url('../../../assets/images/subject/recruit/product/product@2x.jpg') no-repeat;
     background-size: cover;
   }
 
   .main {
-    font-family: 'Microsoft YaHei', 'PingFangSC-Regular';
     max-width: 960px;
     padding: 30px 20px;
     margin: 0 auto;

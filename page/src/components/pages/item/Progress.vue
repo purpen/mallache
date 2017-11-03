@@ -112,28 +112,34 @@
     height: 60px;
     margin: 20px 0 20px 0;
     width: 100%;
+    min-width: 860px;
   }
   .progress-box p {
 
   }
   .el-col {
     line-height: 60px;
+    height:60px;
     text-align: center;
     color: #666;
   }
+  .el-col p {
+    height:60px;
+    line-height: 60px;
+  }
   p.first {
     background: url('../../../assets/images/item/step_type_pass.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
   }
   p.first.pass {
     background: url('../../../assets/images/item/step_type_pass.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
     color: #666;
     cursor: pointer;
   }
   p.first.active {
     background: url('../../../assets/images/item/step_type_active.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
     color: #fff;
     cursor: auto;
   }
@@ -142,16 +148,16 @@
   }
   p.base {
     background: url('../../../assets/images/item/step_base.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
   }
   p.base.pass {
     background: url('../../../assets/images/item/step_base_pass.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
     cursor: pointer;
   }
   p.base.active {
     background: url('../../../assets/images/item/step_base_active.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
     color: #fff;
     cursor: auto;
   }
@@ -162,18 +168,23 @@
   }
   p.over {
     background: url('../../../assets/images/item/step_over.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
   }
   p.over.active {
     background: url('../../../assets/images/item/step_over_active.png') no-repeat;
-    background-size: cover;
+    background-size: contain;
     color: #fff;
   }
   p.over {
-  
+
   }
   p.over.active p{
-  
+
   }
 
+  @media screen and (max-width: 1000px) {
+    .el-col p {
+      line-height: 40px;
+    }
+  }
 </style>

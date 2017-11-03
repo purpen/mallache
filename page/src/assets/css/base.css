@@ -353,16 +353,43 @@ button.is-custom.is-outlined.is-loading:after {
   line-height: 2;
 }
 
-.footer p a, .footer p i {
+.footer p a {
   color: #999;
 }
 
-.footer p i.weibo:hover {
-  color: rgb(231, 55, 54);
+.Fshare-box {
+  overflow: hidden;
 }
 
-.footer p i.wechat:hover {
-  color: rgb(17, 172, 54);
+.footer p.share {
+  margin: 0 10px 0 0;
+  float: left;
+}
+
+.wechat {
+  display: block;
+  width: 36px;
+  height: 36px;
+  background: url('../../assets/images/icon/WeChat@2x.png');
+  background-size: contain;
+}
+
+.wechat:hover {
+  background: url('../../assets/images/icon/WeChathover@2x.png');
+  background-size: contain;
+}
+
+.weibo {
+  display: block;
+  width: 36px;
+  height: 36px;
+  background: url('../../assets/images/icon/Weibo@2x.png');
+  background-size: contain;
+}
+
+.weibo:hover {
+  background: url('../../assets/images/icon/Weibohover@2x.png');
+  background-size: contain;
 }
 
 .footer p a.is-active {
@@ -371,16 +398,8 @@ button.is-custom.is-outlined.is-loading:after {
 
 .footer p.title {
   font-size: 1.5rem;
-  margin: 40px 20px 10px 0px;
+  margin: 40px 20px 10px 0;
   color: #fff;
-}
-
-.footer .Fshare-box {
-  overflow: hidden;
-  /*width: 160px;*/
-  margin: 2em auto;
-  display: flex;
-  justify-content: center;
 }
 
 /**
@@ -438,7 +457,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .m-Nav li {
-  box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .m-Nav li a, .m-Nav li i {
@@ -614,7 +633,6 @@ button.is-custom.is-outlined.is-loading:after {
 .nav-header .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -630,7 +648,6 @@ button.is-custom.is-outlined.is-loading:after {
   transition: none 86ms ease-out;
   margin: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
   vertical-align: baseline;
 }
@@ -655,6 +672,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .el-menu-info .el-submenu > .el-menu {
+  z-index: 999;
   top: 60px;
   left: 10px;
   border: 1px solid #ccc;
@@ -664,11 +682,11 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .el-menu-info .el-menu .el-menu-item {
+  z-index: 999;
   display: block;
   cursor: pointer;
   border: none;
   height: auto;
-  border-top: none;
   color: rgba(112, 123, 135, .92);
   line-height: 1em;
   text-transform: none;
@@ -755,6 +773,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .menu-list {
   padding: 0;
+  white-space: nowrap;
 }
 
 .menu-list .item {
@@ -763,15 +782,12 @@ button.is-custom.is-outlined.is-loading:after {
   border: none;
   height: auto;
   text-align: left;
+  font-size: 1.5rem;
   line-height: 1em;
   color: rgba(112, 123, 135, .92);
   text-transform: none;
   font-weight: 400;
   padding: .85rem 1.5rem .85rem 1.5rem !important;
-}
-
-.menu-list .item {
-  font-size: 1.5rem;
 }
 
 .menu-list .item:hover {
@@ -794,6 +810,7 @@ button.is-custom.is-outlined.is-loading:after {
   font-size: 1.2rem;
 }
 
+
 /**
  * vCenter Content
  */
@@ -802,12 +819,12 @@ button.is-custom.is-outlined.is-loading:after {
   margin-top: 20px;
   clear: both;
   border: 1px solid #ccc;
-  padding: 0px 20px 20px 20px;
+  padding: 0 20px 20px 20px;
   min-height: 350px;
 }
 
 .form-title {
-  margin: 20px 0 20px 0px;
+  margin: 20px 0 20px 0;
 }
 
 .form-title span {
@@ -989,6 +1006,10 @@ img.avatar {
     text-align: left
   }
 
+  .footer .fllow {
+    padding-left: 40px !important;
+  }
+
   .footer p {
     margin: 10px 10px 10px 40px;
     line-height: 1.5;
@@ -997,17 +1018,6 @@ img.avatar {
   .footer p.title {
     font-size: 1.5rem;
     margin: 20px 20px 10px 40px;
-  }
-
-  .footer .Fshare-box {
-    overflow: hidden;
-    margin-left: 40px;
-    justify-content: flex-start;
-  }
-
-  .footer .Fshare-box p {
-    margin-left: 0;
-    margin-right: 12px
   }
 
   .anli-elrow {
@@ -1055,12 +1065,34 @@ img.avatar {
   }
 
   .nav-header .el-menu-header .el-menu-item, .m-nav-header .el-menu-header .el-menu-item, .el-menu-header .el-submenu {
-    margin: 0 10px
+    margin: 0 10px;
   }
 
   .nav-header .nav-right {
     justify-content: center;
   }
+  /**
+ * vCenter LeftMenu mobile
+ */
+  .menuHide {
+    height:20px;
+    overflow-y: hidden;
+  }
+  .menu-list {
+    margin-left: -14px;
+    overflow: scroll;
+    padding-bottom: 30px;
+    /*height: 20px;*/
+  }
+
+  .menu-list .item {
+    display: inline;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.7rem;
+    padding: .85rem 1.3rem!important;
+  }
+
 }
 
 /**
