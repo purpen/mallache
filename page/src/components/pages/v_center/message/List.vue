@@ -10,7 +10,7 @@
           <div class="content-box">
 
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)">
-              <div class="banner">
+              <div class="banner2">
                 <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
                 <p class="title">{{ d.title }}</p>
                 <p class="icon">
@@ -181,7 +181,7 @@
   .item p {
     font-size: 1.5rem;
   }
-  .item .banner {
+  .item .banner2 {
     height: 30px;
     line-height: 30px;
   }
