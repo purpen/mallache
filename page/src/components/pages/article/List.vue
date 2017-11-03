@@ -247,13 +247,13 @@
   @media screen and ( max-width: 480px) {
     .nav-list {
       margin-top: 16px;
-      height: 18px;
+      height: 22px;
       overflow: hidden;
     }
 
     .category-list {
       margin: 0 0 16px 0;
-      padding: 2px 0 18px 16px;
+      padding: 2px 0 48px 16px;
       white-space: nowrap;
       overflow-x: auto;
     }

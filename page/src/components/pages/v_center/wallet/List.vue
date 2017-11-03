@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="24" class="anli-elrow">
       <v-menu currentName="wallet"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
 
           <div class="my-wallet" v-loading.body="walletLoading">
@@ -22,7 +22,10 @@
               </div>
             </div>
             <div class="bank-box">
-              <p><router-link :to="{name: 'vcenterBankList'}"><i class="fa fa-credit-card" aria-hidden="true"></i> 银行账户管理</router-link></p>
+              <p>
+                <router-link :to="{name: 'vcenterBankList'}"><i class="fa fa-credit-card" aria-hidden="true"></i> 银行账户管理
+                </router-link>
+              </p>
             </div>
           </div>
 
@@ -56,7 +59,8 @@
                 width="120">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer" @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
+                    <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
+                       @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
                     <span v-if="scope.row.type === 1">+</span>
                     <span v-if="scope.row.type === -1">-</span>
                     <span> {{ scope.row.amount }}</span>
@@ -167,29 +171,36 @@
         self.query.type = this.$route.query.type || 0
 
         self.isLoading = true
-        self.$http.get(api.fundLogList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
-        .then (function(response) {
-          self.isLoading = false
-          self.tableData = []
-          if (response.data.meta.status_code === 200) {
-            self.itemList = response.data.data
-            self.query.totalCount = response.data.meta.pagination.total
-
-            for (var i = 0; i < self.itemList.length; i++) {
-              var item = self.itemList[i]
-              item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
-
-              self.tableData.push(item)
-            } // endfor
-
-            console.log(response.data.data)
+        self.$http.get(api.fundLogList, {
+          params: {
+            page: self.query.page,
+            per_page: self.query.pageSize,
+            sort: self.query.sort,
+            type: self.query.type
           }
         })
-        .catch (function(error) {
-          self.$message.error(error.message)
-          self.isLoading = false
-          return false
-        })
+          .then(function (response) {
+            self.isLoading = false
+            self.tableData = []
+            if (response.data.meta.status_code === 200) {
+              self.itemList = response.data.data
+              self.query.totalCount = response.data.meta.pagination.total
+
+              for (var i = 0; i < self.itemList.length; i++) {
+                var item = self.itemList[i]
+                item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
+
+                self.tableData.push(item)
+              } // endfor
+
+              console.log(response.data.data)
+            }
+          })
+          .catch(function (error) {
+            self.$message.error(error.message)
+            self.isLoading = false
+            return false
+          })
       },
       handleSelectionChange(val) {
         this.multipleSelection = val
@@ -213,25 +224,25 @@
           const self = this
           // 银行卡列表
           self.$http.get(api.bank, {})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              for (var i = 0; i < response.data.data.length; i++) {
-                var item = response.data.data[i]
-                var newItem = {}
-                var number = item.account_number.substr(item.account_number.length - 4)
-                newItem.label = item.bank_val + '[' + number + ']'
-                newItem.value = item.id
-                if (item.default === 1) {
-                  self.bankId = item.id
-                }
-                self.bankOptions.push(newItem)
-              } // endfor
-              console.log(response.data.data)
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-          })
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                for (var i = 0; i < response.data.data.length; i++) {
+                  var item = response.data.data[i]
+                  var newItem = {}
+                  var number = item.account_number.substr(item.account_number.length - 4)
+                  newItem.label = item.bank_val + '[' + number + ']'
+                  newItem.value = item.id
+                  if (item.default === 1) {
+                    self.bankId = item.id
+                  }
+                  self.bankOptions.push(newItem)
+                } // endfor
+                console.log(response.data.data)
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+            })
         }
       },
       allPrice() {
@@ -250,43 +261,46 @@
         }
         self.isLoadingBtn = true
         self.$http.post(api.withdrawCreate, {bank_id: self.bankId, amount: self.withdrawPrice})
-        .then (function(response) {
-          self.isLoadingBtn = false
-          if (response.data.meta.status_code === 200) {
-            self.itemModel = false
-            self.$message.success('操作成功,等待财务打款！')
-          } else {
-            console.log(response.data.meta.message)
-          }
-        })
-        .catch (function(error) {
-          self.isLoadingBtn = false
-          self.$message.error(error.message)
-        })
+          .then(function (response) {
+            self.isLoadingBtn = false
+            if (response.data.meta.status_code === 200) {
+              self.itemModel = false
+              self.$message.success('操作成功,等待财务打款！')
+            } else {
+              console.log(response.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.isLoadingBtn = false
+            self.$message.error(error.message)
+          })
       }
     },
     computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     },
-    created: function() {
+    created: function () {
       const self = this
       // 获取我的钱包
       self.walletLoading = true
       self.$http.get(api.authFundInfo, {})
-      .then (function(response) {
-        self.walletLoading = false
-        if (response.data.meta.status_code === 200) {
-          var wallet = response.data.data
-          if (wallet) {
-            self.wallet = wallet
+        .then(function (response) {
+          self.walletLoading = false
+          if (response.data.meta.status_code === 200) {
+            var wallet = response.data.data
+            if (wallet) {
+              self.wallet = wallet
+            }
+            console.log(self.wallet)
           }
-          console.log(self.wallet)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-        self.walletLoading = false
-        return false
-      })
+        })
+        .catch(function (error) {
+          self.$message.error(error.message)
+          self.walletLoading = false
+          return false
+        })
 
       // 交易记录
       this.loadList()
@@ -305,8 +319,9 @@
 <style scoped>
 
   .content-item-box {
-  
+
   }
+
   .my-wallet {
     background: #FAFAFA;
     height: 190px;
@@ -322,6 +337,7 @@
     margin: 30px 0 15px 30px;
     float: left;
   }
+
   .amount-show p {
     line-height: 2;
   }
@@ -329,10 +345,12 @@
   .price-title {
     color: #333;
   }
+
   .price-text {
     color: #FF5A5F;
     font-size: 2rem;
   }
+
   .price-des {
     font-size: 1.2rem;
     color: #666;
@@ -342,6 +360,7 @@
     float: right;
     margin: 30px;
   }
+
   .amount-btn button {
     padding: 8px 25px;
   }
@@ -351,6 +370,7 @@
     margin: 15px 30px 10px 30px;
     border-top: 1px solid #ccc;
   }
+
   .bank-box p {
     line-height: 3.5;
     color: #222;
@@ -360,6 +380,7 @@
   .item-box {
     margin: 20px 0 0 0;
   }
+
   .item-box h3 {
     font-size: 1.5rem;
     color: #666;
@@ -374,9 +395,11 @@
     line-height: 2;
     color: #222;
   }
+
   .withdraw-input .el-input {
     width: 150px;
   }
+
   .withdraw-input p.withdraw-des {
     border-top: 1px solid #ccc;
     line-height: 2;
@@ -385,7 +408,6 @@
     color: #666;
 
   }
-
 
 
 </style>
