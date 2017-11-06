@@ -17,7 +17,7 @@
             </div>
 
             <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
-            <div class="item ing" v-for="(d, index) in itemIngList">
+            <div class="item ing" v-if="itemIngList.length" v-for="(d, index) in itemIngList">
               <div class="banner">
                 <p>
                   <span>进行中</span>
@@ -42,7 +42,7 @@
             </div>
 
 
-            <el-row :gutter="0" class="item-title-box list-box" v-show="itemList.length > 0">
+            <el-row :gutter="0" class="item-title-box list-box" v-if="itemList.length && !isMob">
               <el-col :span="10">
                 <p>项目名称</p>
               </el-col>
@@ -57,10 +57,10 @@
               </el-col>
             </el-row>
 
-            <div class="item" v-for="(d, index) in itemList">
+            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && !isMob">
 
               <el-row class="banner list-box">
-                <el-col :span="12">
+                <el-col :span="24">
                   <p>{{ d.item.created_at }}</p>
                 </el-col>
               </el-row>
@@ -83,10 +83,12 @@
                     <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
                   </p>
                 </el-col>
+
                 <el-col :span="7">
-                  <p class="status-str" v-if="d.item.show_offer ">有设计服务供应商报价</p>
+                  <p class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</p>
                   <p class="status-str" v-else>{{ d.item.status_value }}</p>
                 </el-col>
+
                 <el-col :span="4">
                   <div class="btn" v-show="d.item.status === -2">
                     <p>
@@ -105,9 +107,9 @@
                       删除项目
                     </el-button>
                   </p>
-
+                  ton class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="prim
                   <p class="btn" v-show="d.item.status === 3">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                    <el-button>
                       选择设计服务供应商
                     </el-button>
                   </p>
@@ -151,12 +153,41 @@
                     </el-button>
                   </p>
                 </el-col>
+
               </el-row>
-
-
             </div>
 
-
+            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && isMob">
+              <div class="banner list-box">
+                <p>{{ d.item.created_at }}</p>
+              </div>
+              <div class="list-body">
+                <p class="list-title Bborder">项目名称</p>
+                <div class="list-content">
+                  <h3 class="c-title">
+                    <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
+                    </router-link>
+                  </h3>
+                  <section class="c-body">
+                    <p>项目预算： {{ d.item.design_cost_value }}</p>
+                    <p>项目周期：{{ d.item.cycle_value }}</p>
+                    <p v-if="d.item.type === 1">
+                      {{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value
+                      }}</p>
+                    <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                    <p>产品功能：{{d.item.product_features}}</p>
+                  </section>
+                  <p class="money-str price-m Bborder">交易金额：
+                    <span v-if="d.item.price !== 0">¥ <b>{{ d.item.price }}</b></span>
+                    <span v-else>暂无</span>
+                  </p>
+                  <p class="price-m Bborder">状态
+                    <span class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</span>
+                    <span class="status-str" v-else>{{ d.item.status_value }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -255,7 +286,7 @@
               } else if (type === 2) {
                 that.itemList = data
               }
-              console.log(data)
+//              console.log(data)
             }
           })
           .catch(function (error) {
@@ -432,6 +463,8 @@
 
   .money-str {
     font-size: 1.5rem;
+    color: #222;
+    overflow: hidden;
   }
 
   .btn {
@@ -455,7 +488,7 @@
   }
 
   .prefect {
-    font-size: 1rem;
+    font-size: 1.5rem;
     color: #666;
     margin-top: 0;
     margin-bottom: -10px;
@@ -469,6 +502,19 @@
 
   .list-box .el-col {
     padding: 10px 20px 10px 20px;
+  }
+
+  .list-body {
+    padding: 11px 15px;
+  }
+
+  .list-title {
+    font-size: 1.5rem;
+    padding-bottom: 11px;
+  }
+
+  .Bborder {
+    border-bottom: 1px solid #E6E6E6;
   }
 
   .el-col p {
@@ -492,8 +538,34 @@
     line-height: 1;
   }
 
+  h3.c-title {
+    font-size: 1.6rem;
+    color: #333;
+    padding: 14px 0;
+  }
+
+  .c-body {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #E6E6E6;
+  }
+
+  .c-body p {
+    color: #222;
+    line-height: 1.4;
+  }
+
   .item-content {
     padding: 10px 0 10px 0;
   }
 
+  .price-m {
+    padding: 14px 0;
+    overflow: hidden;
+  }
+
+  .price-m span {
+    float: right;
+    width: 50%;
+    text-align: right;
+  }
 </style>

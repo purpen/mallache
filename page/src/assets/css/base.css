@@ -133,6 +133,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 .el-form-item__label {
   font-size: 1.6rem;
+  color: #666;
 }
 
 .el-form-item__label:before {

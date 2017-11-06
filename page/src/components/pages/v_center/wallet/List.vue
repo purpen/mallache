@@ -6,8 +6,7 @@
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
-
-          <div class="my-wallet" v-loading.body="walletLoading">
+          <div :class="['my-wallet', isMob ? 'my-wallet-m' : '' ]" v-loading.body="walletLoading">
             <div class="wallet-box">
               <div class="amount-show">
                 <p class="price-title">账户余额（元）</p>
@@ -327,6 +326,10 @@
     height: 190px;
     margin: 0 0 10px 0;
     position: relative;
+  }
+
+  .my-wallet-m {
+    margin-top: 20px;
   }
 
   .wallet-box {

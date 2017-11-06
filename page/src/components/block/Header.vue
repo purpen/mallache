@@ -283,7 +283,7 @@
 
   #header-layout {
     position: relative;
-    z-index: 10001;
+    z-index: 2;
     animation: slow .4s;
   }
 

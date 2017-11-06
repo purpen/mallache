@@ -4,7 +4,7 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu></v-menu>
       <el-col :span="isMob ? 24 : 20">
-        <div class="content-item-box" v-loading.body="isLoading">
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
           <div class="item ing" v-for="(d, index) in itemIngList">
             <div class="banner">
               <p>
@@ -94,12 +94,10 @@
                 <router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link>
               </p>
             </div>
-
           </div>
-
         </div>
 
-        <div class="right-content message">
+        <div class="right-content message" v-if="itemIngList.length">
           <div class="content-box">
             <div class="form-title">
               <span>待处理事项</span>
@@ -202,7 +200,7 @@
       that.$http.get(url, {})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-            console.log(response.data.data)
+//            console.log(response.data.data)
             let item = null
             that.item = item = response.data.data
             let verifyStatus = 0
@@ -340,6 +338,10 @@
 
   .content-item-box {
     margin-top: 10px;
+  }
+
+  .content-item-box-m {
+    margin-top: 20px;
   }
 
   .pub {
