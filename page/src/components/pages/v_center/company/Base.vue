@@ -381,9 +381,9 @@
     computed: {
       // 擅长领域下拉选项
       fieldOptions() {
-        var items = []
-        for (var i = 0; i < typeData.FIELD.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.FIELD.length; i++) {
+          let item = {
             value: typeData.FIELD[i]['id'],
             label: typeData.FIELD[i]['name']
           }
@@ -392,9 +392,9 @@
         return items
       },
       sizeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_SIZE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_SIZE.length; i++) {
+          let item = {
             value: typeData.COMPANY_SIZE[i]['id'],
             label: typeData.COMPANY_SIZE[i]['name']
           }
@@ -434,10 +434,10 @@
         }
       },
       saveBtn(mark, nameArr) {
-        var that = this
-        var row = {}
-        for (var i = 0; i < nameArr.length; i++) {
-          var name = nameArr[i]
+        let that = this
+        let row = {}
+        for (let i = 0; i < nameArr.length; i++) {
+          let name = nameArr[i]
           row[name] = this.form[name]
           if (!row[name]) {
             this.$message.error('请完善您的公司信息！')
@@ -446,7 +446,7 @@
         }
         // 处理网址前缀
         if (mark === 'web' && row['web']) {
-          var urlRegex = /http:\/\/|https:\/\//
+          let urlRegex = /http:\/\/|https:\/\//
           if (!urlRegex.test(that.form.web)) {
             row.web = 'http://' + row['web']
           }
@@ -476,7 +476,7 @@
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
             that.element[mark] = false
-            var item = response.data.data
+            let item = response.data.data
             if (mark === 'address') {
               that.form.province_value = item.province_value
               that.form.city_value = item.city_value
@@ -485,7 +485,7 @@
               that.form.company_size_val = item.company_size_val
             } else if (mark === 'web') {
               that.form.web_p = row.web
-              var urlRegex = /http:\/\/|https:\/\//
+              let urlRegex = /http:\/\/|https:\/\//
               if (urlRegex.test(row.web)) {
                 that.form.web = row.web.replace(urlRegex, '')
               }
@@ -515,7 +515,7 @@
         this.imageUrl = URL.createObjectURL(file.raw)
         this.avatarStr = '点击图像上传Logo，只能上传jpg/gif/png文件，且不超过2M'
         // 查询用户表，更新头像到本地
-        var that = this
+        let that = this
         that.$http.get(api.user, {})
         .then (function(response) {
           if (response.data.meta.status_code === 200) {
@@ -550,7 +550,7 @@
     watch: {
     },
     created: function() {
-      var uType = this.$store.state.event.user.type
+      let uType = this.$store.state.event.user.type
       // 如果是需求方，跳转到相应页面
       if (uType !== 2) {
         this.$router.replace({name: 'vcenterDComputerBase'})
@@ -579,7 +579,7 @@
               }
               // 处理网址前缀
               if (that.form.web) {
-                var urlRegex = /http:\/\/|https:\/\//
+                let urlRegex = /http:\/\/|https:\/\//
                 if (urlRegex.test(that.form.web)) {
                   that.form.web = that.form.web.replace(urlRegex, '')
                 }
@@ -701,7 +701,7 @@
   }
   .tag:hover {
     border: 1px solid #FF5A5F;
-    color: #FF5A5F; 
+    color: #FF5A5F;
   }
   .tag.active {
     border: 1px solid #FF5A5F;

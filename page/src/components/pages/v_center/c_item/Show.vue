@@ -75,15 +75,15 @@
                   <div class="clear"></div>
                   <div class="item-bj" v-if="quotation">
                     <p>项目报价:  <span class="p-price">{{ quotation.price }} 元</span></p>
-                    <p>报价说明:  {{ quotation.summary }}</p>                   
+                    <p>报价说明:  {{ quotation.summary }}</p>
                   </div>
- 
+
                   <div class="btn-quo" v-if="waitTakePrice">
                     <el-button @click="companyRefuseBtn">暂无兴趣</el-button>
-                    <el-button class="is-custom" @click="takingBtn" type="primary">提交报价单</el-button>                      
+                    <el-button class="is-custom" @click="takingBtn" type="primary">提交报价单</el-button>
                   </div>
                   <div class="btn-quo" v-if="quotation && quotation.status === 0">
-                    <el-button class="is-custom" @click="takingBtn" type="primary">修改报价单</el-button>                      
+                    <el-button class="is-custom" @click="takingBtn" type="primary">修改报价单</el-button>
                   </div>
 
                 </div>
@@ -986,7 +986,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  
+
   .content {
   }
   .banner {
@@ -1031,10 +1031,10 @@ export default {
   }
 
   .select-company-item .company-title {
-    width: 350px;
-    height: 160px;
-    float: left;
-    overflow: hidden;
+    /*width: 350px;*/
+    /*height: 160px;*/
+    /*float: left;*/
+    /*overflow: hidden;*/
   }
   .select-company-item .content .img {
     height: 180px;
@@ -1215,7 +1215,7 @@ export default {
     text-align: left;
   }
   .add-stage p {
-  
+
   }
   .add-stage-btn {
     margin-bottom: 20px;

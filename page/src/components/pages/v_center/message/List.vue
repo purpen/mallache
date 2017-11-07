@@ -95,7 +95,7 @@
                 data[i]['is_show'] = false
               }
               self.itemList = data
-              console.log(data)
+//              console.log(data)
             }
           })
           .catch(function (error) {
