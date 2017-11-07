@@ -30,10 +30,10 @@
 
 
                 <el-row class="banner list-box">
-                  <el-col :span="3">
+                  <el-col :span="12">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
-                  <el-col :span="8">
+                  <el-col :span="12">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">职位: {{ d.item.position }}</p>
@@ -68,11 +68,11 @@
                       </div>
                       <div v-else>
                         <div v-show="d.item.status === 5">
-                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>  
+                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>
                           <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
                         </div>
                         <div v-show="d.item.status === 6">
-                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>                       
+                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
                         </div>
 
                       </div>
@@ -272,7 +272,7 @@
 <style scoped>
 
   .content-item-box {
-  
+
   }
   .content-item-box .item {
     border: 1px solid #D2D2D2;

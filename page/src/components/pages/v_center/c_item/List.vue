@@ -29,16 +29,17 @@
             <div class="item" v-for="(d, index) in designItems">
 
                 <el-row class="banner list-box">
-                  <el-col :span="3">
+                  <el-col :span="12">
                     <p>{{ d.item.created_at }}</p>
                   </el-col>
-                  <el-col :span="8">
+                  <el-col :span="12">
                     <el-popover class="contact-popover" trigger="hover" placement="top">
                       <p class="contact">联系人: {{ d.item.contact_name }}</p>
                       <p class="contact">职位: {{ d.item.position }}</p>
                       <p class="contact">电话: {{ d.item.phone }}</p>
                       <p class="contact">邮箱: {{ d.item.email }}</p>
                         <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> {{ d.item.company_name }}</p>
+                      <p>产品功能：{{d.item.product_features}}</p>
                     </el-popover>
                   </el-col>
                 </el-row>
@@ -155,12 +156,12 @@
     methods: {
       // 进入详情
       showView() {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       },
       // 项目报价弹出层
       takingBtn(event) {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.currentIndex = parseInt(event.currentTarget.getAttribute('index'))
         this.currentCost = event.currentTarget.getAttribute('cost')
         this.takingPriceForm.itemId = itemId
@@ -168,11 +169,11 @@
       },
       // 提交项目报价
       takingPriceSubmit(formName) {
-        var self = this
+        let self = this
         self.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               item_demand_id: self.takingPriceForm.itemId,
               price: self.takingPriceForm.price,
               summary: self.takingPriceForm.summary
@@ -183,8 +184,8 @@
               return false
             }
 
-            var apiUrl = api.addQuotation
-            var method = 'post'
+            let apiUrl = api.addQuotation
+            let method = 'post'
 
             self.isTakingLoadingBtn = true
             self.$http({method: method, url: apiUrl, data: row})
@@ -211,15 +212,15 @@
       },
       // 拒绝项目确认框
       companyRefuseBtn(event) {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.currentIndex = parseInt(event.currentTarget.getAttribute('index'))
         this.$refs.refuseItemId.value = itemId
         this.sureRefuseItemDialog = true
       },
       // 确认拒绝项目
       sureRefuseItemSubmit() {
-        var itemId = this.$refs.refuseItemId.value
-        var self = this
+        let itemId = this.$refs.refuseItemId.value
+        let self = this
         this.refuseItemLoadingBtn = true
         self.$http({method: 'get', url: api.companyRefuseItemId.format(itemId), data: {}})
         .then (function(response) {
@@ -246,9 +247,9 @@
     computed: {
     },
     created: function() {
-      var self = this
+      let self = this
       // 如果是用户，跳到设计用户列表
-      var uType = this.$store.state.event.user.type
+      let uType = this.$store.state.event.user.type
       if (uType !== 2) {
         this.isLoading = false
         this.$router.replace({name: 'vcenterItemList'})
@@ -262,10 +263,10 @@
             return false
           }
           self.waitCount = response.data.meta.pagination.total
-          var designItems = response.data.data
-          for (var i = 0; i < designItems.length; i++) {
-            var item = designItems[i]
-            var typeLabel = ''
+          let designItems = response.data.data
+          for (let i = 0; i < designItems.length; i++) {
+            let item = designItems[i]
+            let typeLabel = ''
             if (item.item.type === 1) {
               typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
             } else if (item.item.type === 2) {
@@ -311,7 +312,7 @@
 <style scoped>
 
   .content-item-box {
-  
+
   }
   .content-item-box .item {
     border: 1px solid #D2D2D2;

@@ -4,18 +4,18 @@
     <el-row :gutter="24">
       <v-menu currentName="profile"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
 
-          <div class="content-box" v-loading.body="isLoading">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
 
-            <el-row :gutter="gutter" class="item">
-              <el-col :span="titleSpan" class="title">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m item-mAvatar' : '']">
+              <el-col :span="titleSpan" class="title avatarhead">
                 <p>头像</p>
+                <span v-if="isMob">{{ avatarStr }}</span>
               </el-col>
-              <el-col :span="contentSpan" class="content">
-
+              <el-col :span="isMob ? 12 : 20" class="content avatarcontent">
                 <el-upload
                   class="avatar-uploader"
                   :action="uploadParam.url"
@@ -27,15 +27,12 @@
                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
                   <i v-else class="el-icon-plus
                     avatar-uploader-icon"></i>
-                  <div slot="tip" class="el-upload__tip">{{ avatarStr }}</div>
+                  <div slot="tip" class="el-upload__tip" v-if="!isMob">{{ avatarStr }}</div>
                 </el-upload>
-
-              </el-col>
-              <el-col :span="editSpan" class="edit">
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" class="item">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司简称</p>
               </el-col>
@@ -87,7 +84,7 @@
             </el-row>
             -->
 
-            <el-row :gutter="gutter" class="item">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>地址</p>
               </el-col>
@@ -112,7 +109,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" class="item">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司类型</p>
               </el-col>
@@ -136,7 +133,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" class="item">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司规模</p>
               </el-col>
@@ -160,21 +157,7 @@
               </el-col>
             </el-row>
 
-            <!--
-            <el-row :gutter="gutter" class="item">
-              <el-col :span="titleSpan" class="title">
-                <p>实名认证</p>
-              </el-col>
-              <el-col :span="contentSpan" class="content">
-                <p>{{ form.verify_status_label }}</p>
-              </el-col>
-              <el-col :span="editSpan" class="edit">
-                <a href="javascript:void(0)" title="编辑" @click="goVerify">编辑</a>
-              </el-col>
-            </el-row>
-            -->
-
-            <el-row :gutter="gutter" class="item">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>网址</p>
               </el-col>
@@ -224,9 +207,9 @@
     data () {
       return {
         gutter: 0,
-        titleSpan: 3,
-        contentSpan: 20,
-        editSpan: 1,
+        titleSpan: this.$store.state.event.isMob === true ? 12 : 3,
+        contentSpan: this.$store.state.event.isMob === true ? 24 : 19,
+        editSpan: 2,
         isLoaded: false,
         isLoading: false,
         avatarStr: '点击图像上传Logo，只能上传jpg/gif/png文件，且不超过2M',
@@ -274,9 +257,9 @@
     },
     computed: {
       sizeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_SIZE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_SIZE.length; i++) {
+          let item = {
             value: typeData.COMPANY_SIZE[i]['id'],
             label: typeData.COMPANY_SIZE[i]['name']
           }
@@ -285,15 +268,18 @@
         return items
       },
       propertyOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_PROPERTY_TYPE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_PROPERTY_TYPE.length; i++) {
+          let item = {
             value: typeData.COMPANY_PROPERTY_TYPE[i]['id'],
             label: typeData.COMPANY_PROPERTY_TYPE[i]['name']
           }
           items.push(item)
         }
         return items
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
     methods: {
@@ -304,10 +290,10 @@
         this.element[mark] = true
       },
       saveBtn(mark, nameArr) {
-        var that = this
-        var row = {}
-        for (var i = 0; i < nameArr.length; i++) {
-          var name = nameArr[i]
+        let that = this
+        let row = {}
+        for (let i = 0; i < nameArr.length; i++) {
+          let name = nameArr[i]
           row[name] = this.form[name]
           if (!row[name]) {
             this.$message.error('请完善您的公司信息！')
@@ -316,7 +302,7 @@
         }
         // 处理网址前缀
         if (mark === 'web' && row['company_web']) {
-          var urlRegex = /http:\/\/|https:\/\//
+          let urlRegex = /http:\/\/|https:\/\//
           if (!urlRegex.test(that.form.company_web)) {
             row.company_web = 'http://' + row['company_web']
           }
@@ -326,7 +312,7 @@
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.element[mark] = false
-              var item = response.data.data
+              let item = response.data.data
               if (mark === 'address') {
                 that.form.province_value = item.province_value
                 that.form.city_value = item.city_value
@@ -337,7 +323,7 @@
                 that.form.company_property_value = item.company_property_value
               } else if (mark === 'web') {
                 that.form.web = row.company_web
-                var urlRegex = /http:\/\/|https:\/\//
+                let urlRegex = /http:\/\/|https:\/\//
                 if (urlRegex.test(row.company_web)) {
                   that.form.company_web = row.company_web.replace(urlRegex, '')
                 }
@@ -362,7 +348,7 @@
         this.imageUrl = URL.createObjectURL(file.raw)
         this.avatarStr = '点击图像上传Logo，只能上传jpg/gif/png文件，且不超过2M'
         // 查询用户表，更新头像到本地
-        var that = this
+        let that = this
         that.$http.get(api.user, {})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
@@ -396,7 +382,7 @@
     },
     watch: {},
     created: function () {
-      var uType = this.$store.state.event.user.type
+      let uType = this.$store.state.event.user.type
       // 如果是设计公司，跳到设计公司
       if (uType === 2) {
         this.$router.replace({name: 'vcenterComputerBase'})
@@ -423,7 +409,7 @@
                 that.form.web = that.form.company_web
                 // 处理网址前缀
                 if (that.form.company_web) {
-                  var urlRegex = /http:\/\/|https:\/\//
+                  let urlRegex = /http:\/\/|https:\/\//
                   if (urlRegex.test(that.form.company_web)) {
                     that.form.company_web = that.form.company_web.replace(urlRegex, '')
                   }
@@ -471,6 +457,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .right-content .content-box-m {
+    margin: 0;
+    padding: 0 15px;
+  }
 
   .item {
     margin: 5px 0;
@@ -478,12 +468,34 @@
     border-bottom: 1px solid #ccc;
   }
 
+  .no-border {
+    border: none;
+  }
+
+  .item-m {
+    padding: 0 0 10px 0;
+    margin: 0;
+    position: relative;
+  }
+
   .item .el-col {
     padding: 10px 0 10px 0;
   }
 
+  .item-m .el-col {
+    padding: 0;
+  }
+
   .item .edit {
     padding-left: 10px;
+  }
+
+  .item-m .edit {
+    position: absolute;
+    width: 36px;
+    right: 0;
+    top: 8px;
+    line-height: 21px;
   }
 
   .title p {
@@ -491,9 +503,45 @@
     font-size: 1.5rem;
   }
 
+  .item-m .title p {
+    margin: 8px 0;
+    color: #222;
+    line-height: 21px;
+    font-weight: 400;
+  }
+
+  .item-m .content {
+    border: 1px solid #E6E6E6;
+    padding: 4px 8px;
+  }
+
+  .item-mAvatar {
+    padding-top: 10px;
+  }
+
+  .item-mAvatar .avatarhead p {
+    margin: 0;
+  }
+
+  .item-mAvatar .avatarhead span {
+    font-size: 10px;
+    line-height: 1.1;
+    color: #666;
+  }
+
+  .item-m .avatarcontent {
+    border: none;
+    display: flex;
+    justify-content: center;
+  }
+
   .edit a {
     font-size: 1.3rem;
     color: #0995F8;
+  }
+
+  .item-m .edit a {
+    color: #FF5A5F;
   }
 
   .item p {
@@ -521,11 +569,21 @@
     text-align: center;
     border: 1px dashed #ccc;
   }
+  .item-m .avatar-uploader-icon {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
 
   .avatar {
     width: 100px;
     height: 100px;
     display: block;
+  }
+
+  .item-m .avatar {
+    width: 40px;
+    height: 40px;
   }
 
 </style>

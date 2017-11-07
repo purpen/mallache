@@ -77,6 +77,7 @@
                     }}</p>
                   <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
                   <p>项目周期: {{ d.item.cycle_value }}</p>
+                  <p>产品功能：{{d.item.product_features}}</p>
                 </el-col>
                 <el-col :span="3">
                   <p>
@@ -92,8 +93,8 @@
                 <el-col :span="4">
                   <div class="btn" v-show="d.item.status === -2">
                     <p>
-                      <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small" type="primary">
-                        重新编辑
+                      <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small"
+                                 type="primary">重新编辑
                       </el-button>
                     </p>
                     <p>
@@ -107,9 +108,9 @@
                       删除项目
                     </el-button>
                   </p>
-                  ton class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="prim
+
                   <p class="btn" v-show="d.item.status === 3">
-                    <el-button>
+                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
                       选择设计服务供应商
                     </el-button>
                   </p>
@@ -120,7 +121,6 @@
                     <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
                                v-else>查看设计公司
                     </el-button>
-
                   </p>
 
                   <p class="btn" v-show="d.item.status === 6">
@@ -144,7 +144,8 @@
                     </el-button>
                   </p>
                   <p class="btn" v-show="d.item.status === 18">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">评价
+                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                      评价
                     </el-button>
                   </p>
                   <p class="btn" v-show="d.item.is_view_show">
@@ -153,7 +154,6 @@
                     </el-button>
                   </p>
                 </el-col>
-
               </el-row>
             </div>
 
@@ -185,6 +185,70 @@
                     <span class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</span>
                     <span class="status-str" v-else>{{ d.item.status_value }}</span>
                   </p>
+                  <section>
+                    <div class="btn" v-show="d.item.status === -2">
+                      <p>
+                        <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small"
+                                   type="primary">重新编辑
+                        </el-button>
+                      </p>
+                      <p>
+                        <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
+                                   type="gray">关闭项目
+                        </el-button>
+                      </p>
+                    </div>
+                    <p class="btn" v-show="d.item.status === -1">
+                      <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small" type="primary">
+                        删除项目
+                      </el-button>
+                    </p>
+
+                    <p class="btn" v-show="d.item.status === 3">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                        选择设计服务供应商
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 4">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
+                                 v-if="d.item.show_offer">查看报价
+                      </el-button>
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
+                                 v-else>查看设计公司
+                      </el-button>
+                    </p>
+
+                    <p class="btn" v-show="d.item.status === 6">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                        查看合同
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 7">
+                      <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">
+                        支付项目款
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 8">
+                      <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">
+                        支付项目款
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 15">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                        验收项目
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.status === 18">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                        评价
+                      </el-button>
+                    </p>
+                    <p class="btn" v-show="d.item.is_view_show">
+                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                        查看详情
+                      </el-button>
+                    </p>
+                  </section>
                 </div>
               </div>
             </div>
@@ -465,6 +529,16 @@
     font-size: 1.5rem;
     color: #222;
     overflow: hidden;
+  }
+
+  section .btn {
+    width: 40%;
+    margin: 10px auto 0;
+  }
+
+  section .btn button {
+    width: 100%;
+    line-height: 16px;
   }
 
   .btn {

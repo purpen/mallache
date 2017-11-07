@@ -2,9 +2,9 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu></v-menu>
+      <v-menu currentName="profile"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
@@ -125,10 +125,9 @@
         statusLabel: ''
       }
     },
-    methods: {
-    },
-    created: function() {
-      var uType = this.$store.state.event.user.type
+    methods: {},
+    created: function () {
+      let uType = this.$store.state.event.user.type
       // 如果是设计公司，跳到设计公司
       if (uType === 2) {
         this.$router.replace({name: 'vcenterComputerAccreditation'})
@@ -136,30 +135,35 @@
       }
       const that = this
       that.$http.get(api.demandCompany, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          console.log(response.data.data)
-          if (response.data.data) {
-            that.item = response.data.data
-            that.item.phone = that.item.phone === '0' ? '' : that.item.phone
-            that.companyId = response.data.data.id
-            that.isApply = true
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+//            console.log(response.data.data)
+            if (response.data.data) {
+              that.item = response.data.data
+              that.item.phone = that.item.phone === '0' ? '' : that.item.phone
+              that.companyId = response.data.data.id
+              that.isApply = true
+            } else {
+              that.isReady = true
+            }
           } else {
             that.isReady = true
           }
-        } else {
-          that.isReady = true
-        }
-      })
-      .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
         })
-        console.log(error.message)
-        return false
-      })
+        .catch(function (error) {
+          that.$message({
+            showClose: true,
+            message: error.message,
+            type: 'error'
+          })
+          console.log(error.message)
+          return false
+        })
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
 
@@ -171,27 +175,33 @@
   .rz-box {
     margin-top: 50px;
   }
+
   .rz-title {
     float: left;
   }
-  .rz-title p{
+
+  .rz-title p {
     font-size: 1.8rem;
   }
+
   .success p {
     color: #008000;
   }
+
   .wait p {
     color: #FF4500;
   }
+
   .rejust p {
     color: #FF4500;
   }
+
   .rz-stat {
     float: right;
   }
 
   .company-show {
-  
+
   }
 
   .company-show .item {
