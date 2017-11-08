@@ -2,12 +2,12 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu currentName="profile"></v-menu>
+      <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']">
 
             <div class="form-title">
               <span>企业实名认证</span>
@@ -124,9 +124,8 @@
         statusLabel: ''
       }
     },
-    methods: {
-    },
-    created: function() {
+    methods: {},
+    created: function () {
       var uType = this.$store.state.event.user.type
       // 如果是需求公司，跳到设计公司
       if (uType !== 2) {
@@ -135,29 +134,34 @@
       }
       const that = this
       that.$http.get(api.designCompany, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            that.item = response.data.data
-            that.item.phone = that.item.phone === '0' ? '' : that.item.phone
-            that.companyId = response.data.data.id
-            that.isApply = true
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              that.item = response.data.data
+              that.item.phone = that.item.phone === '0' ? '' : that.item.phone
+              that.companyId = response.data.data.id
+              that.isApply = true
+            } else {
+              that.isReady = true
+            }
           } else {
             that.isReady = true
           }
-        } else {
-          that.isReady = true
-        }
-      })
-      .catch (function(error) {
-        that.$message({
-          showClose: true,
-          message: error.message,
-          type: 'error'
         })
-        console.log(error.message)
-        return false
-      })
+        .catch(function (error) {
+          that.$message({
+            showClose: true,
+            message: error.message,
+            type: 'error'
+          })
+          console.log(error.message)
+          return false
+        })
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
 
@@ -165,31 +169,41 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .right-content .content-box-m {
+    margin: 0;
+    padding: 0 15px;
+  }
 
   .rz-box {
     margin-top: 50px;
   }
+
   .rz-title {
     float: left;
   }
-  .rz-title p{
+
+  .rz-title p {
     font-size: 1.8rem;
   }
+
   .success p {
     color: #008000;
   }
+
   .wait p {
     color: #FF4500;
   }
+
   .rejust p {
     color: #FF4500;
   }
+
   .rz-stat {
     float: right;
   }
 
   .company-show {
-  
+
   }
 
   .company-show .item {

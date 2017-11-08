@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu currentName="modify_pwd"></v-menu>
+      <v-menu currentName="modify_pwd"  :class="[isMob ? 'v-menu' : '']"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
@@ -162,7 +162,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .form-btn {
     width: 100%;
     overflow: hidden;

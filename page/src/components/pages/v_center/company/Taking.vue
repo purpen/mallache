@@ -1,13 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container taking-dialog">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu currentName="profile"></v-menu>
+      <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-loading.body="isLoading">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
 
             <div class="form-title">
               <span>接单设置</span>
@@ -32,7 +32,8 @@
                     <div class="item-title">
                       <span class="sub-type">{{ s.name }}</span>
                     </div>
-                    <v-design-item :pid="d.id" :sid="s.id" :item="items[s.key]" :isLoaded="isLoaded" @submitItem="submitItem" @delItem="delItem"></v-design-item>
+                    <v-design-item :pid="d.id" :sid="s.id" :item="items[s.key]" :isLoaded="isLoaded"
+                                   @submitItem="submitItem" @delItem="delItem"></v-design-item>
                   </div>
 
 
@@ -83,7 +84,7 @@
 
   </div>
 
-  </template>
+</template>
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
@@ -113,8 +114,7 @@
         pName: '',
         itemName: '',
         isLoaded: false,
-        items: {
-        },
+        items: {},
         projectCycleOptions: [{
           value: 1,
           label: '1个月内'
@@ -143,10 +143,10 @@
         },
         ruleForm: {
           project_cycle: [
-            { type: 'number', message: '请选择项目平均周期', trigger: 'change' }
+            {type: 'number', message: '请选择项目平均周期', trigger: 'change'}
           ],
           min_price: [
-            { type: 'number', message: '请选择最低接单价格', trigger: 'change' }
+            {type: 'number', message: '请选择最低接单价格', trigger: 'change'}
           ]
         },
         formLabelWidth: '150px'
@@ -154,26 +154,29 @@
     },
     computed: {
       minPriceOptions() {
-        var arr = []
-        for (var i = 1; i <= 30; i++) {
-          var item = {}
+        let arr = []
+        for (let i = 1; i <= 30; i++) {
+          let item = {}
           item.value = i
           item.label = i + '万'
           arr.push(item)
         }
         return arr
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
     methods: {
       submitItem(event) {
         /**
-        this.current.itemId = parseInt(event.target.getAttribute('item_id'))
-        var sid = this.current.sid = parseInt(event.target.getAttribute('sid'))
-        var pid = this.current.pid = parseInt(event.target.getAttribute('pid'))
-        **/
+         this.current.itemId = parseInt(event.target.getAttribute('item_id'))
+         let sid = this.current.sid = parseInt(event.target.getAttribute('sid'))
+         let pid = this.current.pid = parseInt(event.target.getAttribute('pid'))
+         **/
         this.current.itemId = parseInt(event.itemId)
-        var sid = this.current.sid = parseInt(event.sid)
-        var pid = this.current.pid = parseInt(event.pid)
+        let sid = this.current.sid = parseInt(event.sid)
+        let pid = this.current.pid = parseInt(event.pid)
 
         if (pid === 1) {
           this.pName = '产品设计'
@@ -196,43 +199,43 @@
         this.itemModel = true
       },
       delItem(event) {
-        var itemId = parseInt(event.itemId)
-        var sid = this.current.sid = parseInt(event.sid)
-        var pid = this.current.pid = parseInt(event.pid)
+        let itemId = parseInt(event.itemId)
+        let sid = this.current.sid = parseInt(event.sid)
+        let pid = this.current.pid = parseInt(event.pid)
         const that = this
 
-        var key = 'item_' + pid + '_' + sid
+        let key = 'item_' + pid + '_' + sid
         delete that.items[key]
 
-        var apiUrl = api.designItem.format(itemId)
+        let apiUrl = api.designItem.format(itemId)
         that.$http({method: 'get', url: apiUrl, data: {}})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              that.$message({
+                showClose: true,
+                message: '删除成功!',
+                type: 'success'
+              })
+              let key = 'item_' + pid + '_' + sid
+              delete that.items[key]
+              return false
+            } else {
+              that.$message({
+                showClose: true,
+                message: response.data.meta.message,
+                type: 'error'
+              })
+            }
+          })
+          .catch(function (error) {
             that.$message({
               showClose: true,
-              message: '删除成功!',
-              type: 'success'
-            })
-            var key = 'item_' + pid + '_' + sid
-            delete that.items[key]
-            return false
-          } else {
-            that.$message({
-              showClose: true,
-              message: response.data.meta.message,
+              message: error.message,
               type: 'error'
             })
-          }
-        })
-        .catch (function(error) {
-          that.$message({
-            showClose: true,
-            message: error.message,
-            type: 'error'
+            console.log(error.message)
+            return false
           })
-          console.log(error.message)
-          return false
-        })
       },
       cancelFormVisible() {
         this.itemModel = false
@@ -242,15 +245,15 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               design_type: that.current.sid,
               type: that.current.pid,
               project_cycle: that.form.project_cycle,
               min_price: that.form.min_price
             }
 
-            var apiUrl = null
-            var method = null
+            let apiUrl = null
+            let method = null
 
             if (that.current.itemId === 0) {
               apiUrl = api.SaveDesignItem
@@ -260,72 +263,72 @@
               method = 'put'
             }
             that.$http({method: method, url: apiUrl, data: row})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
+              .then(function (response) {
+                if (response.data.meta.status_code === 200) {
+                  that.$message({
+                    showClose: true,
+                    message: '提交成功!',
+                    type: 'success'
+                  })
+                  that.itemModel = false
+                  return false
+                } else {
+                  that.$message({
+                    showClose: true,
+                    message: response.data.meta.message,
+                    type: 'error'
+                  })
+                }
+              })
+              .catch(function (error) {
                 that.$message({
                   showClose: true,
-                  message: '提交成功!',
-                  type: 'success'
-                })
-                that.itemModel = false
-                return false
-              } else {
-                that.$message({
-                  showClose: true,
-                  message: response.data.meta.message,
+                  message: error.message,
                   type: 'error'
                 })
-              }
-            })
-            .catch (function(error) {
-              that.$message({
-                showClose: true,
-                message: error.message,
-                type: 'error'
+                console.error(error.message)
+                return false
               })
-              console.log(error.message)
-              return false
-            })
 
             return false
           } else {
-            console.log('error submit!!')
+            console.error('error submit!!')
             return false
           }
         })
       }
     },
-    created: function() {
+    created: function () {
       const that = this
       that.isLoading = true
       that.$http.get(api.designItems, {})
-      .then (function(response) {
-        that.isLoading = false
-        if (response.data.meta.status_code === 200) {
-          var data = response.data.data
-          if (Array.isArray(data) && data.length === 0) {
-            that.items['item'] = 'empty'
-          } else {
-            var items = {}
-            for (var i = 0; i < data.length; i++) {
-              var key = 'item_' + data[i].type + '_' + data[i].design_type
-              items[key] = data[i]
-            }
+        .then(function (response) {
+          that.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            let data = response.data.data
+            if (Array.isArray(data) && data.length === 0) {
+              that.items['item'] = 'empty'
+            } else {
+              let items = {}
+              for (let i = 0; i < data.length; i++) {
+                let key = 'item_' + data[i].type + '_' + data[i].design_type
+                items[key] = data[i]
+              }
 
-            // 重新渲染
-            that.$nextTick(function() {
-              that.items = items
-            })
+              // 重新渲染
+              that.$nextTick(function () {
+                that.items = items
+              })
+            }
           }
-        }
-        that.isLoaded = true
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        that.isLoading = false
-        console.log(error.message)
-        return false
-      })
+          that.isLoaded = true
+        })
+        .catch(function (error) {
+          that.$message.error(error.message)
+          that.isLoading = false
+          console.log(error.message)
+          return false
+        })
     }
   }
 
@@ -334,23 +337,33 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .content-box-m {
+    margin: 0;
+    padding: 0 15px;
+  }
+
   .taking-info {
     margin: 0 0 20px 0;
   }
+
   .taking-info p {
     line-height: 2.5;
   }
+
   .rz-title {
     float: left;
     padding: 0 0 20px 0;
   }
+
   .rz-title span {
     font-size: 2.2rem;
     font-weight: 400;
   }
+
   .rz-stat {
     float: right;
   }
+
   .taking-item {
     padding: 0 0 30px 0;
   }
@@ -358,19 +371,24 @@
   .item-list {
     margin: 0 0 10px 0;
   }
+
   .item-name {
     margin: 0 0 10px 0;
   }
+
   .item-title {
     margin: 0 0 10px 0;
   }
+
   .item-title span {
     font-size: 1.8rem;
   }
+
   .taking-info .des {
     color: #666;
     font-size: 1.5rem;
   }
+
   .line {
     margin-top: 20px;
     border-bottom: 1px solid #ccc;

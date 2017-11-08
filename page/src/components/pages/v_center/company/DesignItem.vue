@@ -1,11 +1,21 @@
 <template>
-  <div class="item" v-show="isLoaded">
+  <div :class="['item', (pid === 1 && sid === 3) ? 'no-border' : '']"
+       v-show="isLoaded">
     <p v-if="isShow()">
       <span>{{ cItem.project_cycle_val }}, 最低{{ cItem.min_price }}起</span>
-      <span style="margin-left: 20px;"><a href="javascript:void(0);" @click="submitItem"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span> <span><a href="javascript:void(0);" @click="delItem"><i class="fa fa-trash" aria-hidden="true"></i></a></span>  
+      <span style="margin-left: 20px;"><a href="javascript:void(0);" @click="submitItem"><i
+        class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span> <span><a href="javascript:void(0);"
+                                                                                  @click="delItem"><i
+      class="fa fa-trash" aria-hidden="true"></i></a></span>
     </p>
-    <p v-else><span><a href="javascript:void(0);" @click="submitItem"><i class="fa fa-plus" aria-hidden="true"></i> 添加设置</a></span></p>
-
+    <p v-else>
+      <span>
+        <a href="javascript:void(0);" @click="submitItem">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          添加设置
+        </a>
+      </span>
+    </p>
 
 
     <!--弹框模板-->
@@ -90,10 +100,10 @@
         },
         ruleForm: {
           project_cycle: [
-            { type: 'number', message: '请选择项目平均周期', trigger: 'change' }
+            {type: 'number', message: '请选择项目平均周期', trigger: 'change'}
           ],
           min_price: [
-            { type: 'number', message: '请选择最低接单价格', trigger: 'change' }
+            {type: 'number', message: '请选择最低接单价格', trigger: 'change'}
           ]
         },
         formLabelWidth: '150px'
@@ -111,8 +121,8 @@
         }
       },
       submitItem() {
-        var sid = this.sid
-        var pid = this.pid
+        let sid = this.sid
+        let pid = this.pid
         if (this.cItem) {
           this.itemId = this.cItem.id
           this.form.project_cycle = this.cItem.project_cycle
@@ -150,34 +160,34 @@
 
         const that = this
 
-        var apiUrl = api.designItem.format(that.itemId)
+        let apiUrl = api.designItem.format(that.itemId)
         that.$http({method: 'delete', url: apiUrl, data: {}})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              that.$message({
+                showClose: true,
+                message: '删除成功!',
+                type: 'success'
+              })
+              that.cItem = null
+              return false
+            } else {
+              that.$message({
+                showClose: true,
+                message: response.data.meta.message,
+                type: 'error'
+              })
+            }
+          })
+          .catch(function (error) {
             that.$message({
               showClose: true,
-              message: '删除成功!',
-              type: 'success'
-            })
-            that.cItem = null
-            return false
-          } else {
-            that.$message({
-              showClose: true,
-              message: response.data.meta.message,
+              message: error.message,
               type: 'error'
             })
-          }
-        })
-        .catch (function(error) {
-          that.$message({
-            showClose: true,
-            message: error.message,
-            type: 'error'
+            console.log(error.message)
+            return false
           })
-          console.log(error.message)
-          return false
-        })
       },
       cancelFormVisible() {
         this.itemModel = false
@@ -187,15 +197,15 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               design_type: that.sid,
               type: that.pid,
               project_cycle: that.form.project_cycle,
               min_price: that.form.min_price
             }
 
-            var apiUrl = null
-            var method = null
+            let apiUrl = null
+            let method = null
 
             if (that.itemId === 0) {
               apiUrl = api.saveDesignItem
@@ -205,34 +215,34 @@
               method = 'put'
             }
             that.$http({method: method, url: apiUrl, data: row})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
+              .then(function (response) {
+                if (response.data.meta.status_code === 200) {
+                  that.$message({
+                    showClose: true,
+                    message: '提交成功,等待审核',
+                    type: 'success'
+                  })
+                  that.cItem = response.data.data
+                  that.itemId = that.cItem.id
+                  that.itemModel = false
+                  return false
+                } else {
+                  that.$message({
+                    showClose: true,
+                    message: response.data.meta.message,
+                    type: 'error'
+                  })
+                }
+              })
+              .catch(function (error) {
                 that.$message({
                   showClose: true,
-                  message: '提交成功,等待审核',
-                  type: 'success'
-                })
-                that.cItem = response.data.data
-                that.itemId = that.cItem.id
-                that.itemModel = false
-                return false
-              } else {
-                that.$message({
-                  showClose: true,
-                  message: response.data.meta.message,
+                  message: error.message,
                   type: 'error'
                 })
-              }
-            })
-            .catch (function(error) {
-              that.$message({
-                showClose: true,
-                message: error.message,
-                type: 'error'
+                console.log(error.message)
+                return false
               })
-              console.log(error.message)
-              return false
-            })
 
             return false
           } else {
@@ -244,9 +254,9 @@
     },
     computed: {
       minPriceOptions() {
-        var arr = []
-        for (var i = 1; i <= 30; i++) {
-          var item = {}
+        let arr = []
+        for (let i = 1; i <= 30; i++) {
+          let item = {}
           item.value = i * 10000
           item.label = i + '万'
           arr.push(item)
@@ -258,7 +268,6 @@
     },
     watch: {
       item(d) {
-        console.log(d)
         this.cItem = d
       }
     }
@@ -272,16 +281,17 @@
   .model-title {
     margin: 0 0 20px 0;
   }
+
   .item {
     border-bottom: 1px dotted #ccc;
   }
+
   .item span {
     line-height: 2;
   }
+
   .item p span {
     color: #666;
     font-size: 1.5rem;
   }
-
-
 </style>
