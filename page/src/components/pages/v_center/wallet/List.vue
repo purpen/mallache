@@ -6,22 +6,21 @@
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
-
-          <div class="my-wallet" v-loading.body="walletLoading">
+          <div :class="['my-wallet', isMob ? 'my-wallet-m' : '' ]" v-loading.body="walletLoading">
             <div class="wallet-box">
-              <div class="amount-show">
-                <p class="price-title">账户余额（元）</p>
-                <p class="price-text">¥ {{ wallet.price_total }}</p>
-                <p class="price-des">*已冻结余额 {{ wallet.price_frozen }}元，不可提现</p>
+              <div :class="['amount-show', isMob ? 'amount-show-m' : '']">
+                <p :class="['price-title', isMob ? 'price-title-m' : '']">账户余额（元）</p>
+                <p :class="['price-text', isMob ? 'price-text-m' : '']">¥{{ wallet.price_total }}</p>
+                <p :class="['price-des', isMob ? 'price-des-m' : '']">*已冻结余额 {{ wallet.price_frozen }}元，不可提现</p>
               </div>
-              <div class="amount-btn">
+              <div :class="['amount-btn', isMob ? 'amount-show-m amount-btn-m' : '']">
                 <p>
                   <el-button class="is-custom" @click="withdraw" size="small">提现</el-button>
                   <!--<el-button class="is-custom" type="primary" size="small">充值</el-button>-->
                 </p>
               </div>
             </div>
-            <div class="bank-box">
+            <div :class="['bank-box', isMob ? 'bank-box-m' : '']">
               <p>
                 <router-link :to="{name: 'vcenterBankList'}"><i class="fa fa-credit-card" aria-hidden="true"></i> 银行账户管理
                 </router-link>
@@ -29,34 +28,24 @@
             </div>
           </div>
 
-          <div class="item-box">
+          <div :class="['item-box', isMob ? 'item-box-m' : '']">
             <h3>交易记录</h3>
 
-            <el-table
-              :data="tableData"
-              :border="false"
-              v-loading.body="isLoading"
-              class=""
-              @selection-change="handleSelectionChange"
-              style="width: 100%">
+            <el-table v-if="!isMob"
+                      :data="tableData" :border="false" v-loading.body="isLoading"
+                      @selection-change="handleSelectionChange"
+                      style="width: 100%">
+              <el-table-column prop="number" label="交易单号" width="200">
+              </el-table-column>
+
               <el-table-column
-                prop="number"
-                label="交易单号"
-                width="200">
+                prop="created_at" label="时间" width="130">
               </el-table-column>
               <el-table-column
-                prop="created_at"
-                label="时间"
-                width="130">
+                prop="transaction_type_value" label="交易类型" width="120">
               </el-table-column>
               <el-table-column
-                prop="transaction_type_value"
-                label="交易类型"
-                width="120">
-              </el-table-column>
-              <el-table-column
-                label="收入/支出"
-                width="120">
+                label="收入/支出" width="120">
                 <template scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
@@ -73,7 +62,17 @@
                 min-width="400">
               </el-table-column>
             </el-table>
-
+            <section v-loading.body="isLoading" v-if="isMob">
+              <div class="transaction-record" v-for="(ele, index) in tableData"
+                   @selection-change="handleSelectionChange">
+                <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
+                <p>时间：<span>{{ele.created_at}}</span></p>
+                <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
+                <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
+                  v-if="ele.type === -1">-</span></p>
+                <p class="no-border">备注：<span>{{ele.summary}}</span></p>
+              </div>
+            </section>
             <el-pagination
               class="pagination"
               @current-change="handleCurrentChange"
@@ -86,16 +85,15 @@
           </div>
 
         </div>
-
       </el-col>
     </el-row>
 
     <!--弹框模板-->
-    <el-dialog :title="itemModelTitle" v-model="itemModel">
+    <el-dialog :title="itemModelTitle" v-model="itemModel" class="withdraw">
 
       <div class="withdraw-input">
         <p class="withdraw-title">选择银行卡</p>
-        <el-select v-model.number="bankId" placeholder="选择银行卡银行卡">
+        <el-select v-model.number="bankId" placeholder="选择银行卡">
           <el-option
             v-for="(item, index) in bankOptions"
             :label="item.label"
@@ -186,14 +184,14 @@
               self.itemList = response.data.data
               self.query.totalCount = response.data.meta.pagination.total
 
-              for (var i = 0; i < self.itemList.length; i++) {
-                var item = self.itemList[i]
+              for (let i = 0; i < self.itemList.length; i++) {
+                let item = self.itemList[i]
                 item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
 
                 self.tableData.push(item)
               } // endfor
 
-              console.log(response.data.data)
+//              console.log(self.tableData)
             }
           })
           .catch(function (error) {
@@ -226,10 +224,10 @@
           self.$http.get(api.bank, {})
             .then(function (response) {
               if (response.data.meta.status_code === 200) {
-                for (var i = 0; i < response.data.data.length; i++) {
-                  var item = response.data.data[i]
-                  var newItem = {}
-                  var number = item.account_number.substr(item.account_number.length - 4)
+                for (let i = 0; i < response.data.data.length; i++) {
+                  let item = response.data.data[i]
+                  let newItem = {}
+                  let number = item.account_number.substr(item.account_number.length - 4)
                   newItem.label = item.bank_val + '[' + number + ']'
                   newItem.value = item.id
                   if (item.default === 1) {
@@ -237,7 +235,7 @@
                   }
                   self.bankOptions.push(newItem)
                 } // endfor
-                console.log(response.data.data)
+//                console.log(response.data.data)
               }
             })
             .catch(function (error) {
@@ -267,7 +265,7 @@
               self.itemModel = false
               self.$message.success('操作成功,等待财务打款！')
             } else {
-              console.log(response.data.meta.message)
+//              console.log(response.data.meta.message)
             }
           })
           .catch(function (error) {
@@ -289,11 +287,11 @@
         .then(function (response) {
           self.walletLoading = false
           if (response.data.meta.status_code === 200) {
-            var wallet = response.data.data
+            let wallet = response.data.data
             if (wallet) {
               self.wallet = wallet
             }
-            console.log(self.wallet)
+//            console.log(self.wallet)
           }
         })
         .catch(function (error) {
@@ -329,6 +327,12 @@
     position: relative;
   }
 
+  .my-wallet-m {
+    border: 1px solid #e6e6e6;
+    height: auto;
+    margin-top: 20px;
+  }
+
   .wallet-box {
 
   }
@@ -336,6 +340,15 @@
   .amount-show {
     margin: 30px 0 15px 30px;
     float: left;
+  }
+
+  .amount-show-m {
+    float: none !important;
+    margin: 0
+  }
+
+  .amount-show-m p {
+    text-align: center;
   }
 
   .amount-show p {
@@ -346,9 +359,21 @@
     color: #333;
   }
 
+  .price-title-m {
+    padding-top: 11px;
+    font-size: 15px !important;
+    line-height: 22px;
+  }
+
   .price-text {
     color: #FF5A5F;
     font-size: 2rem;
+  }
+
+  .price-text-m {
+    font-size: 2.8rem;
+    line-height: 1 !important;
+    margin: 20px 0;
   }
 
   .price-des {
@@ -356,13 +381,31 @@
     color: #666;
   }
 
+  .price-des-m {
+    font-size: 1.4rem;
+  }
+
   .amount-btn {
     float: right;
     margin: 30px;
   }
 
+  .amount-btn-m {
+    margin: 0;
+
+  }
+
+  .amount-btn-m p {
+    text-align: center;
+  }
+
   .amount-btn button {
     padding: 8px 25px;
+  }
+
+  .amount-btn-m button {
+    margin-top: 20px;
+    width: 40%;
   }
 
   .bank-box {
@@ -371,20 +414,40 @@
     border-top: 1px solid #ccc;
   }
 
+  .bank-box-m {
+    text-align: center;
+    border-top: none;
+  }
+
   .bank-box p {
     line-height: 3.5;
     color: #222;
     font-size: 1.3rem;
   }
 
+  .bank-box-m a i {
+    margin-right: 8px;
+  }
+
   .item-box {
     margin: 20px 0 0 0;
+  }
+
+  .item-box-m {
+    margin: 0;
   }
 
   .item-box h3 {
     font-size: 1.5rem;
     color: #666;
     line-height: 2;
+  }
+
+  .item-box-m h3 {
+    padding: 5px 0 15px;
+    text-align: center;
+    color: #222;
+    line-height: 1;
   }
 
   .withdraw-input {
@@ -409,5 +472,33 @@
 
   }
 
+  .transaction-record {
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+  }
 
+  .transaction-record p {
+    line-height: 30px;
+    font-size: 15px;
+    overflow: hidden;
+    padding: 6px 2px;
+    border-bottom: 1px solid rgba(216, 216, 216, 0.5);
+  }
+
+  .transaction-record p span {
+    color: #666;
+    float: right;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -30px;
+  }
+
+  .transaction-record .no-border {
+    border: none;
+  }
 </style>

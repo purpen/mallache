@@ -61,7 +61,7 @@
                   <div class="content">
                     <div class="img">
                       <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">
-                        <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50" />                     
+                        <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50" />
                         <img class="avatar" v-else src="../../../../assets/images/avatar_100.png" width="50" />
                       </router-link>
                     </div>
@@ -83,7 +83,7 @@
                   <p class="send-company-des">项目需求详情将发送给已选中的设计服务供应商</p>
                 </div>
               </el-collapse-item>
-            </el-collapse>         
+            </el-collapse>
           </div>
 
           <div class="select-item-box" v-if="statusLabel.trueCompany">
@@ -115,12 +115,12 @@
                   <div class="clear"></div>
                   <div class="item-bj" v-if="d.quotation">
                     <p>项目报价:  <span class="p-price">{{ d.quotation.price }} 元</span></p>
-                    <p>报价说明:  {{ d.quotation.summary }}</p>                   
+                    <p>报价说明:  {{ d.quotation.summary }}</p>
                   </div>
- 
+
                   <div class="btn" v-if="d.item_status === 0 && d.design_company_status === 2">
                     <el-button @click="refuseCompanyBtn" :index="index" :company_id="d.design_company.id">拒绝此单</el-button>
-                    <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button>                      
+                    <el-button class="is-custom" @click="greeCompanyBtn" :index="index" :company_id="d.design_company.id" type="primary">确认合作</el-button>
                   </div>
 
                 </div>
@@ -157,7 +157,7 @@
                   <div class="clear"></div>
                   <div class="item-bj">
                     <p>项目报价:  <span class="p-price">{{ cooperateCompany.quotation.price }} 元</span></p>
-                    <p>报价说明:  {{ cooperateCompany.quotation.summary }}</p>                   
+                    <p>报价说明:  {{ cooperateCompany.quotation.summary }}</p>
                   </div>
 
                 </div>
@@ -217,7 +217,7 @@
                 </div>
                 <div class="manage-item add-stage" v-else>
                   <div class="manage-item" v-if="stages.length === 0">
-                    <p class="wait-begin">等待设计公司提交资料</p>                 
+                    <p class="wait-begin">等待设计公司提交资料</p>
                   </div>
                   <div v-else>
                     <div class="stage-item" v-for="(d, index) in stages">
@@ -310,7 +310,7 @@
             </el-collapse>
           </div>
 
-        
+
         </div>
 
       </el-col>
@@ -989,7 +989,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  
+
   .content {
   }
   .banner {
@@ -1034,10 +1034,10 @@ export default {
   }
 
   .select-company-item .company-title {
-    width: 350px;
-    height: 160px;
-    float: left;
-    overflow: hidden;
+    /*width: 350px;*/
+    /*height: 160px;*/
+    /*float: left;*/
+    /*overflow: hidden;*/
   }
   .select-company-item .content .img {
     height: 180px;
@@ -1210,7 +1210,7 @@ export default {
     text-align: left;
   }
   .add-stage p {
-  
+
   }
   .finish-item-btn {
     margin-top: 30px;
@@ -1285,11 +1285,11 @@ export default {
     padding: 10px 50px;
   }
   .evaluate-report .ev-c-ava {
-  
+
   }
   .evaluate-report .ev-c-name {
     line-height: 2;
-  
+
   }
 
   .evaluate-result {

@@ -1,12 +1,12 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
-    <el-row :gutter="24">
+    <el-row :gutter="24" class="anli-elrow">
       <v-menu currentName="wallet"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
 
-        <div class="right-content">
+        <div :class="['right-content', isMob ? 'right-content-m' : '']">
 
           <el-breadcrumb separator="/" class="bread">
             <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
@@ -15,38 +15,38 @@
           </el-breadcrumb>
 
           <div class="item-list" v-loading.body="isLoading">
-              <el-row :gutter="15">
+            <el-row :gutter="15">
 
-                <el-col :span="8" v-for="(d, index) in itemList" :key="index">
-                  <div class="item">
-                    <div class="item-title">
-                      <p>{{ d.bank_val }}</p>
+              <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
+                <div class="item">
+                  <div class="item-title">
+                    <p>{{ d.bank_val }}</p>
+                  </div>
+                  <div class="item-content">
+                    <div class="number">
+                      <p>**** **** **** {{ d.m_number }}</p>
                     </div>
-                    <div class="item-content">
-                      <div class="number">
-                        <p>**** **** **** {{ d.m_number }}</p>
-                      </div>
-                      <div class="option">
-                        <a href="javascript:void(0);" @click="edit" :item_id="d.id" :index="index">编辑</a>
-                        <a href="javascript:void(0);" @click="del" :item_id="d.id" :index="index">删除</a>
-                      </div>
-                      <div class="clear default" v-if="d.default === 1">
-                        <p><i class="fa fa-check-circle-o" aria-hidden="true"></i> 默认银行账户</p>
-                      </div>
+                    <div class="option">
+                      <a href="javascript:void(0);" @click="edit" :item_id="d.id" :index="index">编辑</a>
+                      <a href="javascript:void(0);" @click="del" :item_id="d.id" :index="index">删除</a>
+                    </div>
+                    <div class="clear default" v-if="d.default === 1">
+                      <p><i class="fa fa-check-circle-o" aria-hidden="true"></i> 默认银行账户</p>
                     </div>
                   </div>
-                </el-col>
+                </div>
+              </el-col>
 
-                <el-col :span="8">
-                  <div class="item add">
-                    <a href="javascript:void(0);" @click="add">
-                      <p class="add-icon"><i class="el-icon-plus avatar-uploader-icon"></i></p>
-                      <p class="add-des">添加银行卡</p>
-                    </a>
-                  </div>
-                </el-col>
+              <el-col :xs="24" :sm="8" :md="8" :lg="8">
+                <div class="item add">
+                  <a href="javascript:void(0);" @click="add">
+                    <p class="add-icon"><i class="el-icon-plus avatar-uploader-icon"></i></p>
+                    <p class="add-des">添加银行卡</p>
+                  </a>
+                </div>
+              </el-col>
 
-              </el-row>
+            </el-row>
           </div>
         </div>
 
@@ -54,11 +54,11 @@
     </el-row>
 
     <!--弹框模板-->
-    <el-dialog :title="itemModelTitle" v-model="itemModel">
+    <el-dialog :title="itemModelTitle" v-model="itemModel" class="bank-dialog">
 
       <el-form :model="form" label-position="top" :rules="ruleForm" ref="ruleForm">
         <el-form-item label="开户人姓名" prop="account_name" label-width="200px">
-          <el-input type="text" v-model="form.account_name" auto-complete="off" ></el-input>
+          <el-input type="text" v-model="form.account_name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="开户银行" prop="account_bank_id" label-width="150px">
           <el-select v-model.number="form.account_bank_id" placeholder="请选择银行">
@@ -71,14 +71,15 @@
           </el-select>
         </el-form-item>
 
-        <region-picker :isEmpty="false" :isFirstProp="isFirst" :provinceProp="province" :titleProp="cityTitle" :cityProp="city" :districtProp="district" :twoSelect="true" @onchange="change"></region-picker>
+        <region-picker :isEmpty="false" :isFirstProp="isFirst" :provinceProp="province" :titleProp="cityTitle"
+                       :cityProp="city" :districtProp="district" :twoSelect="true" @onchange="change"></region-picker>
 
         <el-form-item label="支行名称" prop="branch_name" label-width="200px">
-          <el-input type="text" v-model="form.branch_name" auto-complete="off" ></el-input>
+          <el-input type="text" v-model="form.branch_name" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="银行账号" prop="account_number" label-width="200px">
-          <el-input type="text" v-model="form.account_number" auto-complete="off" ></el-input>
+          <el-input type="text" v-model="form.account_number" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="设为默认账户" prop="account_number" label-width="200px">
@@ -153,16 +154,16 @@
         },
         ruleForm: {
           account_name: [
-            { required: true, message: '请添写开户人姓名', trigger: 'blur' }
+            {required: true, message: '请添写开户人姓名', trigger: 'blur'}
           ],
           account_bank_id: [
-            { type: 'number', required: true, message: '请选择银行', trigger: 'change' }
+            {type: 'number', required: true, message: '请选择银行', trigger: 'change'}
           ],
           branch_name: [
-            { required: true, message: '请添写开户行信息', trigger: 'blur' }
+            {required: true, message: '请添写开户行信息', trigger: 'blur'}
           ],
           account_number: [
-            { required: true, message: '请添写银行账号', trigger: 'blur' }
+            {required: true, message: '请添写银行账号', trigger: 'blur'}
           ]
         },
         userId: this.$store.state.event.user.id
@@ -173,24 +174,24 @@
         const self = this
         self.isLoading = true
         self.$http.get(api.bank, {})
-        .then (function(response) {
-          self.isLoading = false
-          if (response.data.meta.status_code === 200) {
-            self.itemList = response.data.data
+          .then(function (response) {
+            self.isLoading = false
+            if (response.data.meta.status_code === 200) {
+              self.itemList = response.data.data
 
-            for (var i = 0; i < self.itemList.length; i++) {
-              var item = self.itemList[i]
-              self.itemList[i]['m_number'] = item.account_number.substr(item.account_number.length - 4)
-            } // endfor
+              for (var i = 0; i < self.itemList.length; i++) {
+                var item = self.itemList[i]
+                self.itemList[i]['m_number'] = item.account_number.substr(item.account_number.length - 4)
+              } // endfor
 
-            console.log(response.data.data)
-          }
-        })
-        .catch (function(error) {
-          self.$message.error(error.message)
-          self.isLoading = false
-          return false
-        })
+              console.log(response.data.data)
+            }
+          })
+          .catch(function (error) {
+            self.$message.error(error.message)
+            self.isLoading = false
+            return false
+          })
       },
       add() {
         this.current = {}
@@ -204,7 +205,7 @@
         this.itemModelTitle = '添加银行卡'
         this.itemModel = true
         const self = this
-        setTimeout(function() {
+        setTimeout(function () {
           self.isFirst = true
           self.province = ''
           self.city = ''
@@ -224,7 +225,7 @@
         }
 
         const self = this
-        setTimeout(function() {
+        setTimeout(function () {
           self.isFirst = true
           self.province = self.form.province
           self.city = self.form.city
@@ -241,18 +242,18 @@
         self.sureDialogLoadingBtn = true
         if (self.current.type === 1) {
           self.$http.put(api.bankUnStatus, {id: self.current.id})
-          .then (function(response) {
-            self.sureDialogLoadingBtn = false
-            if (response.data.meta.status_code === 200) {
-              self.$message.success('操作成功！')
-              self.sureDialog = false
-              self.itemList.splice(self.current.index, 1)
-            }
-          })
-          .catch (function(error) {
-            self.$message.error(error.message)
-            self.sureDialogLoadingBtn = false
-          })
+            .then(function (response) {
+              self.sureDialogLoadingBtn = false
+              if (response.data.meta.status_code === 200) {
+                self.$message.success('操作成功！')
+                self.sureDialog = false
+                self.itemList.splice(self.current.index, 1)
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+              self.sureDialogLoadingBtn = false
+            })
         }
       },
       submit(formName) {
@@ -291,33 +292,33 @@
             }
             that.isLoadingBtn = true
             that.$http({method: method, url: apiUrl, data: row})
-            .then (function(response) {
-              that.isLoadingBtn = false
-              if (response.data.meta.status_code === 200) {
-                that.$message.success('提交成功!')
-                that.itemModel = false
-                var item = response.data.data
-                item['default'] = parseInt(item.default)
-                item['m_number'] = item.account_number.substr(item.account_number.length - 4)
-                if (!that.current.id) {
-                  that.itemList.unshift(item)
+              .then(function (response) {
+                that.isLoadingBtn = false
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success('提交成功!')
+                  that.itemModel = false
+                  var item = response.data.data
+                  item['default'] = parseInt(item.default)
+                  item['m_number'] = item.account_number.substr(item.account_number.length - 4)
+                  if (!that.current.id) {
+                    that.itemList.unshift(item)
+                  } else {
+                    that.itemList[that.current.index] = item
+                  }
                 } else {
-                  that.itemList[that.current.index] = item
+                  that.$message.error(response.data.meta.message)
                 }
-              } else {
-                that.$message.error(response.data.meta.message)
-              }
-            })
-            .catch (function(error) {
-              that.$message.error(error.message)
-              that.isLoadingBtn = false
-              console.log(error.message)
-            })
+              })
+              .catch(function (error) {
+                that.$message.error(error.message)
+                that.isLoadingBtn = false
+                console.log(error.message)
+              })
           } else {
           }
         })
       },
-      change: function(obj) {
+      change: function (obj) {
         this.province = obj.province
         this.city = obj.city
         this.district = obj.district
@@ -334,9 +335,12 @@
           items.push(item)
         }
         return items
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
-    created: function() {
+    created: function () {
       this.loadList()
     },
     watch: {
@@ -351,6 +355,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .right-content-m {
+    margin-top: 20px;
+  }
 
   .bread {
     margin-bottom: 10px;
@@ -374,6 +382,7 @@
     background-color: #F3F3F3;
     padding: 5px 15px;
   }
+
   .item-title p {
     line-height: 2;
     font-size: 1.5rem;
@@ -387,6 +396,7 @@
   .item-content .number {
     float: left;
   }
+
   .item-content .number p {
     font-size: 1.5rem;
     color: #333;
@@ -395,6 +405,7 @@
   .item-content .option {
     float: right;
   }
+
   .item-content .option a {
     color: #FF5A5F;
   }
@@ -402,6 +413,7 @@
   .default {
     margin: 60px 0 20px 0;
   }
+
   .default p {
     font-size: 1.2rem;
     color: #666;
@@ -417,9 +429,9 @@
     font-size: 3rem;
     color: #666;
   }
+
   .add .add-des {
     line-height: 2;
     color: #666;
   }
-
 </style>

@@ -133,6 +133,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 .el-form-item__label {
   font-size: 1.6rem;
+  color: #666;
 }
 
 .el-form-item__label:before {
@@ -749,12 +750,13 @@ button.is-custom.is-outlined.is-loading:after {
 
 .vcenter-menu-sub {
   height: 25px;
-  line-height: 14px;
+  line-height: 24px;
   border-bottom: 1px solid #ccc;
 }
 
 .vcenter-menu-sub-list {
   overflow: hidden;
+  float: left;
 }
 
 .vcenter-menu-sub-list .item {
@@ -767,7 +769,6 @@ button.is-custom.is-outlined.is-loading:after {
 .vcenter-menu-sub-list .item.is-active {
   color: #222;
   border-bottom: 1px solid #222;
-  padding-bottom: 10px;
 }
 
 /**
@@ -1119,9 +1120,10 @@ img.avatar {
     padding: 10px 5px;
   }
 
-  /**
- * vCenter Content
- */
+  /*bank 弹出层*/
+  .bank-dialog .el-dialog--small, .withdraw .el-dialog--small {
+    width: 90%;
+  }
 }
 
 /**

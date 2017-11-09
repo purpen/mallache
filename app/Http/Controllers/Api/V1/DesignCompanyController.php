@@ -118,7 +118,7 @@ class DesignCompanyController extends BaseController
             'phone'  => 'nullable',
             'email'  => 'nullable|email',
             'company_size'  => 'nullable|integer',
-            'branch_office'  => 'nullable|integer',
+            'branch_office'  => 'nullable|integer|max:125',
             'position' => 'nullable',
 //            'item_quantity'  => 'nullable|integer',
             'web'  => 'nullable|max:50',

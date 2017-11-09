@@ -170,5 +170,6 @@
   }
   .markdown-body {
     color: #666;
+    line-height: 22.5px;
   }
 </style>
