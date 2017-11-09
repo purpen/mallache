@@ -2,7 +2,7 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <el-row :gutter="20" class="anli-elrow">
-      <v-menu></v-menu>
+      <v-menu currentName="control"></v-menu>
       <el-col :span="isMob ? 24 : 20">
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
           <div class="item ing" v-for="(d, index) in itemIngList">

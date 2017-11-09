@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu :class="[isMob ? 'v-menu' : '']"></v-menu>
+      <v-menu :class="[isMob ? 'v-menu' : '']" currentName="design_case"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">

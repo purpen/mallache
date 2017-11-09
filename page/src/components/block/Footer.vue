@@ -13,7 +13,7 @@
 
       <el-col class="item server" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">服务</p>
-        <p v-if="!isMob">
+        <p>
           <router-link :to="{name: 'itemSubmitOne'}" class="">发布需求</router-link>
         </p>
         <p>
@@ -36,7 +36,7 @@
 
       <el-col class="item fllow" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
-        <p class="call">电话：4008-798-751</p>
+        <p class="call clearfix"><span>电话：</span><span>4008-798-751</span></p>
         <div class="Fshare-box">
           <p class="share" @click="clickwx">
             <i class="wechat"></i>
@@ -98,7 +98,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   @keyframes typing {
     0% {
       width: 0
@@ -122,7 +121,6 @@
     100% {
       transform: scale(1);
     }
-
   }
 
   .foot-main {
@@ -135,8 +133,9 @@
   }
 
   /*
-  pc端增加微信二维码
-  */
+    pc端增加微信二维码
+    */
+
   .hidweixin {
     position: fixed;
     z-index: 999999;
@@ -219,9 +218,10 @@
   .footer .fllow p {
     margin-left: 0;
   }
+
   .footer .fllow .title {
     white-space: nowrap;
-    margin: 40px 20px 10px 0px;
+    margin: 40px 20px 10px 0;
   }
 
   .call {
@@ -230,17 +230,29 @@
     white-space: nowrap;
   }
 
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: all .3s ease;
   }
 
-  .fade-enter, .fade-leave-to {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 
   @media screen and (min-width: 768px) and (max-width: 1055px) {
     .footer .fllow {
-      padding-left: 60px;
+      padding-left: 56px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .footer .fllow .title {
+      margin: 20px 20px 10px 0;
+    }
+
+    .call span {
+      float: left;
     }
   }
 </style>

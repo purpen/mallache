@@ -6,8 +6,8 @@
       <el-col :span="6">
         <div class="design-case-slide">
           <div class="info">
-            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />
-            <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
+            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100"/>
+            <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100"/>
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
@@ -17,18 +17,22 @@
 
           <div class="cate">
             <p class="c-title">设计类别</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag></p>
+            <p class="tag">
+              <el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag>
+            </p>
           </div>
           <div class="cate">
             <p class="c-title">擅长领域</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag></p>
+            <p class="tag">
+              <el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag>
+            </p>
           </div>
           <div class="cate">
             <p class="c-title">联系方式</p>
             <p>地址: {{ item.address }}</p>
             <p>联系人: {{ item.contact_name }}</p>
-            <p>电话: {{ item.phone }}</p>
-            <p>邮箱: {{ item.email }}</p>
+            <p v-if="item.phone">电话: {{ item.phone }}</p>
+            <p v-if="item.email">邮箱: {{ item.email }}</p>
             <p class="web">网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
           </div>
 
@@ -52,7 +56,9 @@
                       </router-link>
                     </div>
                     <div class="content">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title
+                        }}
+                      </router-link>
                     </div>
                   </el-card>
                 </el-col>
@@ -107,40 +113,40 @@
         }
       }
     },
-    created: function() {
+    created: function () {
       var id = this.$route.params.id
       const self = this
       self.isFullLoading = true
       self.$http.get(api.designCompanyId.format(id), {})
-      .then (function(response) {
-        self.isFullLoading = false
-        if (response.data.meta.status_code === 200) {
-          self.item = response.data.data
-          console.log(self.item)
-          if (self.item.logo_image) {
-            self.item.logo_url = self.item.logo_image.logo
-          } else {
-            self.item.logo_url = false
-          }
-
-          self.isLoading = true
-          self.$http.get(api.designCaseCompanyId.format(id), {})
-          .then (function(response) {
-            self.isLoading = false
-            if (response.data.meta.status_code === 200) {
-              self.designCases = response.data.data
+        .then(function (response) {
+          self.isFullLoading = false
+          if (response.data.meta.status_code === 200) {
+            self.item = response.data.data
+//          console.log(self.item)
+            if (self.item.logo_image) {
+              self.item.logo_url = self.item.logo_image.logo
+            } else {
+              self.item.logo_url = false
             }
-          })
-          .catch (function(error) {
-            self.isLoading = false
-            self.$message.error(error.message)
-          })
-        }
-      })
-      .catch (function(error) {
-        self.isFullLoading = false
-        self.$message.error(error.message)
-      })
+
+            self.isLoading = true
+            self.$http.get(api.designCaseCompanyId.format(id), {})
+              .then(function (response) {
+                self.isLoading = false
+                if (response.data.meta.status_code === 200) {
+                  self.designCases = response.data.data
+                }
+              })
+              .catch(function (error) {
+                self.isLoading = false
+                self.$message.error(error.message)
+              })
+          }
+        })
+        .catch(function (error) {
+          self.isFullLoading = false
+          self.$message.error(error.message)
+        })
     }
   }
 </script>
@@ -151,63 +157,78 @@
     padding: 20px 40px 20px 40px;
     border: 1px solid #ccc;
   }
+
   .design-case-content .title {
     text-align: center;
     color: #5d6266;
     margin: 20px 0 20px 0;
     font-size: 2rem;
   }
+
   .design-case-content h2 {
     text-align: center;
     font-size: 1.8rem;
     color: #333;
     margin: 20px;
   }
+
   .design-case-content .summary {
     margin: 0 0 20px 0;
   }
+
   .design-case-content .summary p {
     line-height: 1.6;
     color: #5d6266;
   }
+
   .design-case-content .des {
   }
+
   .design-case-content .des p {
     line-height: 1.6;
     text-align: center;
   }
+
   .design-case-slide {
     padding: 20px 20px 20px 20px;
     border: 1px solid #ccc;
   }
+
   .design-case-slide .info {
     margin: 10px;
     text-align: center;
   }
+
   .design-case-slide h3 {
     margin: 10px;
     font-size: 2rem;
   }
+
   .design-case-slide .rate {
     padding: 10px;
     text-align: center;
-    border-top: 1px solid rgba(224,224,224,.46);
+    border-top: 1px solid rgba(224, 224, 224, .46);
   }
+
   .design-case-slide .cate {
     line-height: 2;
     margin-top: 20px;
   }
+
   .cate p {
     color: #666;
   }
+
   .cate p.c-title {
     text-align: left;
     font-size: 1.6rem;
     color: #333;
   }
+
   .cate p.tag span {
     margin: 5px;
   }
+
   .design-case-slide .prize {
     margin-top: 20px;
   }
@@ -216,10 +237,10 @@
     word-wrap: break-word;
   }
 
-
   .design-case-list {
     min-height: 350px;
   }
+
   .design-case-list .item {
     height: 190px;
   }
@@ -240,6 +261,7 @@
   .content {
     padding: 10px;
   }
+
   .content a {
     font-size: 1.5rem;
   }

@@ -37,11 +37,11 @@
                 </div>
 
                 <!--
-                <p>所属行业</p>
-                <div class="category-box">
-                  <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
-                </div>
-                -->
+                  <p>所属行业</p>
+                  <div class="category-box">
+                    <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
+                  </div>
+                  -->
 
               </div>
 
@@ -105,7 +105,7 @@
     components: {
       vProgress
     },
-    data () {
+    data() {
       return {
         itemId: '',
         isLoadingBtn: false,
@@ -169,9 +169,19 @@
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
               if (response.data.data.item.type === 1) {
-                that.$router.push({name: 'itemSubmitThree', params: {id: response.data.data.item.id}})
+                that.$router.push({
+                  name: 'itemSubmitThree',
+                  params: {
+                    id: response.data.data.item.id
+                  }
+                })
               } else if (response.data.data.item.type === 2) {
-                that.$router.push({name: 'itemSubmitUIThree', params: {id: response.data.data.item.id}})
+                that.$router.push({
+                  name: 'itemSubmitUIThree',
+                  params: {
+                    id: response.data.data.item.id
+                  }
+                })
               }
               return false
             } else {
@@ -256,8 +266,7 @@
         return typeData.COMPANY_TYPE[index].industry
       }
     },
-    mounted: function () {
-    },
+    mounted: function () {},
     created: function () {
       const that = this
       var id = this.$route.params.id
@@ -276,17 +285,23 @@
             } else {
               that.$message.error(response.data.meta.message)
               console.log(response.data.meta.message)
-              that.$router.push({name: 'home'})
+              that.$router.push({
+                name: 'home'
+              })
               return false
             }
           })
           .catch(function (error) {
             that.$message.error(error.message)
-            that.$router.push({name: 'home'})
+            that.$router.push({
+              name: 'home'
+            })
           })
       } else {
         that.$message.error('缺少请求参数！')
-        that.$router.push({name: 'home'})
+        that.$router.push({
+          name: 'home'
+        })
       }
     },
     watch: {}
@@ -295,7 +310,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .content {
     border: 1px solid #ccc;
   }
@@ -336,7 +350,6 @@
 
   .type-content {
     padding: 20px 20px 50px 20px;
-
   }
 
   .type-content p {
@@ -394,7 +407,6 @@
   }
 
   .slide-img img {
-
   }
 
   .slide-str {
@@ -415,10 +427,9 @@
     line-height: 30px;
   }
 
-  .slide-fade-enter, .slide-fade-leave-active {
+  .slide-fade-enter,
+  .slide-fade-leave-active {
     opacity: 0;
     transform: translateX(-300px);
   }
-
-
 </style>

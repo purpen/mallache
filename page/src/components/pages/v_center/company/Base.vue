@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu currentName="profile"  :class="[isMob ? 'v-menu' : '']"></v-menu>
+      <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
@@ -719,7 +719,7 @@
   .item-m .avatarcontent {
     border: none;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .edit a {
