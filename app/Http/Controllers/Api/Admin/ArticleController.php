@@ -189,6 +189,7 @@ class ArticleController extends Controller
                   'source_from' => $article->source_form,
                   'tags' => implode(',', $article->label),
                   'cover_url' => $cover_url,
+                  'user_id' => $article->user_id,
                 );
 
                 $result = Tools::request($url, $param);
@@ -329,6 +330,7 @@ class ArticleController extends Controller
                   'source_from' => $article->source_form,
                   'tags' => implode(',', $article->label),
                   'cover_url' => $cover_url,
+                  'user_id' => $article->user_id,
                 );
                 $result = Tools::request($url, $param);
             }
