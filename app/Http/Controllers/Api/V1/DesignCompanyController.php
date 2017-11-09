@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\DesignCompanyOtherIndexOpenTransformer;
 use App\Http\Transformer\DesignCompanyOtherIndexTransformer;
 use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\DesignCompanyTransformer;
@@ -282,20 +283,31 @@ class DesignCompanyController extends BaseController
         if(!$design){
             return $this->response->array($this->apiError('没有找到' , 404));
         }
-        if(!$design->isRead($this->auth_user_id , $id)){
-            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
 
+        // 此参数用来判断是否返回设计公司的联系方式
+        $is_phone = true;
+        if(($this->auth_user_id == null) || !$design->isRead($this->auth_user_id , $id)){
+//            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
+            $is_phone = false;
         }
 
         $items = DesignItemModel::where('user_id', $design->user_id)->get();
 
 
+        $design_type_val = [];
         foreach ($items as $item)
         {
             $design_type_val[] = $item->design_type_val;
-            $design->design_type_val = $design_type_val;
         }
-        return $this->response->item($design, new DesignCompanyOtherIndexTransformer())->setMeta($this->apiMeta());
+        $design->design_type_val = $design_type_val;
+
+        if($is_phone){
+            return $this->response->item($design, new DesignCompanyOtherIndexTransformer())->setMeta($this->apiMeta());
+        }else{
+            return $this->response->item($design, new DesignCompanyOtherIndexOpenTransformer())->setMeta($this->apiMeta());
+        }
+
+
     }
 
     /**
