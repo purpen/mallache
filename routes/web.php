@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
 Route::group(['namespace' => 'Web'], function () {
     Route::post('/jdCallbackUrl', 'JdCallBackController@callUrl');
