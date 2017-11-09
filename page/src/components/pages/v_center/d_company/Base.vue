@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu currentName="profile"></v-menu>
+      <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
@@ -526,7 +526,7 @@
   .item-mAvatar .avatarhead span {
     font-size: 10px;
     line-height: 1.1;
-    color: #666;
+    color: #8391a5;
   }
 
   .item-m .avatarcontent {
@@ -569,6 +569,7 @@
     text-align: center;
     border: 1px dashed #ccc;
   }
+
   .item-m .avatar-uploader-icon {
     width: 40px;
     height: 40px;

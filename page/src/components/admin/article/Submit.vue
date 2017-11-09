@@ -26,7 +26,7 @@
                 <el-col :span="12">
                   <el-form-item label="标题" prop="title">
                     <el-input v-model="form.title" placeholder=""></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -34,7 +34,7 @@
                 <el-col :span="6">
                   <el-form-item label="文章来源" prop="source_from">
                     <el-input v-model="form.source_from" placeholder=""></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -51,7 +51,7 @@
                 <el-col :span="16">
                   <el-form-item label="专题地址" prop="topic_url">
                     <el-input v-model="form.topic_url" placeholder=""></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -69,11 +69,11 @@
                   <el-form-item label="标签" prop="label_str">
                     <el-input v-model="form.label_str" placeholder="多个标签用','分隔"></el-input>
                     <div class="description">*多个标签用','分隔,每个标签不超过7个字符，尽量避免使用特殊字符。</div>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-              <el-row :gutter="0">
+              <el-row >
                 <el-col :span="24">
                   <el-form-item label="上传封面图" prop="">
                     <el-upload
@@ -102,7 +102,7 @@
                             </div>
                             <div class="content">
                               <p>{{ d.name }}</p>
-  
+
                               <div class="opt">
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
                                   <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset"><i class="fa fa-times" aria-hidden="true"></i></a>

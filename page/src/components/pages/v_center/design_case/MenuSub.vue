@@ -1,5 +1,5 @@
 <template>
-  <div class="vcenter-menu-sub">
+  <div class="vcenter-menu-sub" v-if="!isMob">
     <div class="vcenter-menu-sub-list">
       <router-link :to="{name: 'vcenterDesignCaseList'}" exact class="item">全部</router-link>
     </div>
@@ -16,6 +16,11 @@
       return {
         msg: 'This is Home'
       }
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
 
@@ -26,5 +31,4 @@
   .item.add {
     font-size: 1.3rem;
   }
-
 </style>

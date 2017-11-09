@@ -1,6 +1,6 @@
 <template>
 
-    <el-row class="progress-box" :gutter="0" type="flex" justify="center">
+    <el-row class="progress-box"  type="flex" justify="center">
       <el-col :span="5">
         <p id="p0" class="first" @click="redirect" step="1">1.选择设计类型</p>
       </el-col>

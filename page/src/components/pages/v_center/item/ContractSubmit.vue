@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-row :gutter="0">
+    <el-row >
       <v-menu></v-menu>
 
       <el-col :span="24">

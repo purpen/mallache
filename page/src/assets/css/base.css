@@ -31,6 +31,11 @@ body {
   overflow-x: hidden
 }
 
+.el-input-group--append {
+  padding-left: 14px;
+  min-width: 110px;
+}
+
 .container {
   margin: 0 auto;
 }
@@ -129,6 +134,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.no-border {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
 }
 
 .el-form-item__label {
@@ -821,6 +833,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .MmenuHide {
+  width: 100vw;
   height: 20px;
   overflow-y: hidden;
   margin-left: -14px;
@@ -998,6 +1011,19 @@ img.avatar {
   background: #ff6c70 !important;
 }
 
+.v-menu {
+  margin-left: 15px;
+}
+
+/*单选按钮*/
+.el-radio-button__inner {
+  float: left;
+  white-space: normal;
+  line-height: 1;
+  border-left: 1px solid #bfcbd9;
+  margin: -1px 0 0 -1px;
+}
+
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1180px) {
@@ -1121,7 +1147,7 @@ img.avatar {
   }
 
   /*bank 弹出层*/
-  .bank-dialog .el-dialog--small, .withdraw .el-dialog--small {
+  .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small {
     width: 90%;
   }
 }

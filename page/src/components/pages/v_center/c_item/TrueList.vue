@@ -1,100 +1,115 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
-    <el-row :gutter="24" type="flex" justify="center">
-      <v-menu currentName="c_item"></v-menu>
 
-      <el-col :span="20">
-        <div class="right-content">
-          <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
+    <v-menu currentName="c_item" class="c_item"></v-menu>
 
-          <div class="loading" v-loading.body="isLoading"></div>
-          <div class="content-item-box" v-show="!isLoading">
+    <el-col :span="isMob ? 24 : 20">
+      <div class="right-content">
+        <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
-              <el-row :gutter="0" class="item-title-box list-box" v-show="designItems.length > 0">
-                <el-col :span="10">
-                  <p>项目名称</p>
-                </el-col>
-                <el-col :span="3">
-                  <p>交易金额</p>
-                </el-col>
-                <el-col :span="7">
-                  <p>状态</p>
-                </el-col>
-                <el-col :span="4">
-                  <p>操作</p>
-                </el-col>
-              </el-row>
+        <div class="loading" v-loading.body="isLoading"></div>
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-            <div class="item" v-for="(d, index) in designItems">
+          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length > 0">
+            <el-col :span="10">
+              <p>项目名称</p>
+            </el-col>
+            <el-col :span="3">
+              <p>交易金额</p>
+            </el-col>
+            <el-col :span="7">
+              <p>状态</p>
+            </el-col>
+            <el-col :span="4">
+              <p>操作</p>
+            </el-col>
+          </el-row>
 
-
-                <el-row class="banner list-box">
-                  <el-col :span="12">
-                    <p>{{ d.item.created_at }}</p>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-popover class="contact-popover" trigger="hover" placement="top">
-                      <p class="contact">联系人: {{ d.item.contact_name }}</p>
-                      <p class="contact">职位: {{ d.item.position }}</p>
-                      <p class="contact">电话: {{ d.item.phone }}</p>
-                      <p class="contact">邮箱: {{ d.item.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i> {{ d.item.company_name }}</p>
-                    </el-popover>
-                  </el-col>
-                </el-row>
-
-                <el-row class="item-content list-box">
-                  <el-col :span="10" class="item-title">
-                    <p class="c-title">
-                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
-                    </p>
-                    <p>项目预算: {{ d.item.design_cost_value }}</p>
-                    <p>设计类别: {{ d.item.type_label }}</p>
-                    <p>项目周期: {{ d.item.cycle_value }}</p>
-                  </el-col>
-                  <el-col :span="3">
+          <div class="item" v-for="(d, index) in designItems">
+            <el-row class="banner list-box">
+              <el-col :span="12">
+                <p>{{ d.item.created_at }}</p>
+              </el-col>
+              <el-col :span="12">
+                <el-popover class="contact-popover" trigger="hover" placement="top">
+                  <p class="contact">联系人: {{ d.item.contact_name }}</p>
+                  <p class="contact">职位: {{ d.item.position }}</p>
+                  <p class="contact">电话: {{ d.item.phone }}</p>
+                  <p class="contact">邮箱: {{ d.item.email }}</p>
+                  <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i>
+                    {{ d.item.company_name }}</p>
+                </el-popover>
+              </el-col>
+            </el-row>
+            <el-row :class="['item-content','list-box', isMob ? 'item-content-m' : '']">
+              <el-col :span="isMob ? 24 : 10" class="item-title">
+                <p class="c-title">
+                  <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}</router-link>
+                </p>
+                <p>项目预算: {{ d.item.design_cost_value }}</p>
+                <p>设计类别: {{ d.item.type_label }}</p>
+                <p>项目周期: {{ d.item.cycle_value }}</p>
+              </el-col>
+              <el-col :span="isMob ? 24 : 3">
+                <p>
+                  <span v-if="d.item.price !== 0" class="money-str"><i v-if="isMob">价格：</i>¥ <b>{{ d.item.price
+                    }}</b></span>
+                </p>
+              </el-col>
+              <el-col :span="isMob ? 24 : 7">
+                <p :class="['status-str','clearfix', isMob ? 'status-str-m' : '']"><i
+                  v-if="isMob">状态：</i><span>{{ d.item.design_status_value }}</span></p>
+              </el-col>
+              <el-col :span="isMob ? 24 : 4" :class="[isMob ? 'btnGroup' : '']">
+                <div class="btn clearfix">
+                  <div v-if="d.is_contract === 0" class="clearfix">
                     <p>
-                      <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
+                      <el-button class="is-custom" @click="contractBtn" :index="index" size="small" :item_id="d.item.id"
+                                 type="primary">编辑在线合同
+                      </el-button>
                     </p>
-                  </el-col>
-                  <el-col :span="7">
-                    <p class="status-str">{{ d.item.design_status_value }}</p>
-                  </el-col>
-                  <el-col :span="4">
-                    <div class="btn">
-                      <div v-if="d.is_contract === 0">
-                        <p><el-button class="is-custom" @click="contractBtn" :index="index" size="small" :item_id="d.item.id" type="primary">编辑在线合同</el-button></p>
-                      </div>
-                      <div v-else>
-                        <div v-show="d.item.status === 5">
-                          <p><el-button class="is-custom" size="small" @click="contractSendBtn" :index="index" :item_id="d.item.id" type="primary">发送合同</el-button></p>
-                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
-                        </div>
-                        <div v-show="d.item.status === 6">
-                          <p><el-button class="is-custom" size="small" @click="contractBtn" :index="index" :item_id="d.item.id" type="primary">修改合同</el-button></p>
-                        </div>
-
-                      </div>
-                      <p class="btn" v-show="d.item.status === 9">
-                        <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id" type="primary">确认开始</el-button>
+                  </div>
+                  <div v-else class="clearfix">
+                    <div v-if="d.item.status === 5" class="clearfix">z
+                      <p>
+                        <el-button class="is-custom" size="small" @click="contractSendBtn" :index="index"
+                                   :item_id="d.item.id" type="primary">发送合同
+                        </el-button>
                       </p>
-                      <p class="btn" v-show="d.item.is_show_view">
-                        <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id" type="primary">查看详情</el-button>
+                      <p>
+                        <el-button class="is-custom" size="small" @click="contractBtn" :index="index"
+                                   :item_id="d.item.id" type="primary">修改合同
+                        </el-button>
                       </p>
-
-
                     </div>
-                  </el-col>
-                </el-row>
+                    <div v-if="d.item.status === 6" class="clearfix">
+                      <p>
+                        <el-button class="is-custom" size="small" @click="contractBtn" :index="index"
+                                   :item_id="d.item.id" type="primary">修改合同
+                        </el-button>
+                      </p>
+                    </div>
 
-            </div>
-
+                  </div>
+                  <p class="btn" v-if="d.item.status === 9">
+                    <el-button class="is-custom" size="small" @click="sureBeginBtn" :index="index" :item_id="d.item.id"
+                               type="primary">确认开始
+                    </el-button>
+                  </p>
+                  <p v-if="d.item.is_show_view">
+                    <el-button class="is-custom" size="small" @click="showView" :index="index" :item_id="d.item.id"
+                               type="primary">查看详情
+                    </el-button>
+                  </p>
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </div>
+      </div>
 
-      </el-col>
-    </el-row>
+    </el-col>
 
     <el-dialog
       title="提示"
@@ -102,14 +117,13 @@
       size="tiny">
       <span>{{ sureDialogMessage }}</span>
       <span slot="footer" class="dialog-footer">
-        <input type="hidden" ref="currentItemId" />
-        <input type="hidden" ref="currentIndex" />
-        <input type="hidden" ref="currentType" />
+        <input type="hidden" ref="currentItemId"/>
+        <input type="hidden" ref="currentIndex"/>
+        <input type="hidden" ref="currentType"/>
         <el-button @click="sureDialog = false">取 消</el-button>
         <el-button type="primary" :loading="sureDialogLoadingBtn" @click="sureDialogSubmit">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -140,7 +154,7 @@
     methods: {
       // 新增／编辑合同
       contractBtn(event) {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterContractSubmit', params: {item_id: itemId}})
       },
       // 发送合同
@@ -152,117 +166,120 @@
       },
       // 确认执行对话框
       sureDialogSubmit() {
-        var itemId = parseInt(this.$refs.currentItemId.value)
-        var index = parseInt(this.$refs.currentIndex.value)
-        var type = parseInt(this.$refs.currentType.value)
+        let itemId = parseInt(this.$refs.currentItemId.value)
+        let index = parseInt(this.$refs.currentIndex.value)
+        let type = parseInt(this.$refs.currentType.value)
 
-        var self = this
+        let self = this
         this.sureDialogLoadingBtn = true
         if (type === 1) {
           self.$http({method: 'post', url: api.sendContract, data: {item_demand_id: itemId}})
-          .then (function(response) {
-            self.sureDialogLoadingBtn = false
-            self.sureDialog = false
+            .then(function (response) {
+              self.sureDialogLoadingBtn = false
+              self.sureDialog = false
+              if (response.data.meta.status_code === 200) {
+                self.designItems[index].item.status = 6
+                self.designItems[index].item.design_status_value = '等待客户确认合同'
+                self.$message.success('提交成功！')
+              } else {
+                self.$message.error(response.data.meta.message)
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+            })
+        }
+      },
+      // 确认开始项目
+      sureBeginBtn(event) {
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let index = parseInt(event.currentTarget.getAttribute('index'))
+
+        let self = this
+        self.$http({method: 'post', url: api.designItemStartId.format(itemId), data: {}})
+          .then(function (response) {
             if (response.data.meta.status_code === 200) {
-              self.designItems[index].item.status = 6
-              self.designItems[index].item.design_status_value = '等待客户确认合同'
+              self.designItems[index].item.status = 11
+              self.designItems[index].item.design_status_value = '项目进行中'
               self.$message.success('提交成功！')
             } else {
               self.$message.error(response.data.meta.message)
             }
           })
-          .catch (function(error) {
+          .catch(function (error) {
             self.$message.error(error.message)
           })
-        }
-      },
-      // 确认开始项目
-      sureBeginBtn(event) {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
-        var index = parseInt(event.currentTarget.getAttribute('index'))
-
-        var self = this
-        self.$http({method: 'post', url: api.designItemStartId.format(itemId), data: {}})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-            self.designItems[index].item.status = 11
-            self.designItems[index].item.design_status_value = '项目进行中'
-            self.$message.success('提交成功！')
-          } else {
-            self.$message.error(response.data.meta.message)
-          }
-        })
-        .catch (function(error) {
-          self.$message.error(error.message)
-        })
       },
       // 进入详情
       showView() {
-        var itemId = parseInt(event.currentTarget.getAttribute('item_id'))
+        let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       }
     },
     computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     },
-    created: function() {
-      var self = this
+    created: function () {
+      let self = this
       self.$http.get(api.designCooperationLists, {})
-      .then (function(response) {
-        self.isLoading = false
-        if (response.data.meta.status_code === 200) {
-          if (!response.data.data) {
-            return false
+        .then(function (response) {
+          self.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            if (!response.data.data) {
+              return false
+            }
+            self.ingCount = response.data.meta.pagination.total
+            let designItems = response.data.data
+            for (let i = 0; i < designItems.length; i++) {
+              let item = designItems[i]
+              let typeLabel = ''
+              if (item.item.type === 1) {
+                typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+              } else if (item.item.type === 2) {
+                typeLabel = item.item.type_value + '/' + item.item.design_type_value
+              }
+              let showPrice = false
+              let showView = false
+              let status = item.item.status
+              if (item.item.status >= 5) showPrice = true
+              if (status === 7 || status === 8 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
+                showView = true
+              }
+              designItems[i].item.show_price = showPrice
+              designItems[i].item.is_show_view = showView
+              designItems[i].item.type_label = typeLabel
+              designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
+            } // endfor
+            self.designItems = designItems
+          } else {
+            self.$message.error(response.data.meta.message)
           }
-          self.ingCount = response.data.meta.pagination.total
-          var designItems = response.data.data
-          for (var i = 0; i < designItems.length; i++) {
-            var item = designItems[i]
-            var typeLabel = ''
-            if (item.item.type === 1) {
-              typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
-            } else if (item.item.type === 2) {
-              typeLabel = item.item.type_value + '/' + item.item.design_type_value
-            }
-            var showPrice = false
-            var showView = false
-            var status = item.item.status
-            if (item.item.status >= 5) showPrice = true
-            if (status === 7 || status === 8 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
-              showView = true
-            }
-            designItems[i].item.show_price = showPrice
-            designItems[i].item.is_show_view = showView
-            designItems[i].item.type_label = typeLabel
-            designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
-          } // endfor
-          self.designItems = designItems
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
 
-        console.log(response.data)
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-        return false
-      })
+          console.log(response.data)
+        })
+        .catch(function (error) {
+          self.$message.error(error.message)
+          return false
+        })
 
       // 获取待合同项目数
       self.$http.get(api.designItemList, {})
-      .then (function(response) {
-        self.isLoading = false
-        if (response.data.meta.status_code === 200) {
-          if (!response.data.data) {
-            return false
+        .then(function (response) {
+          self.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            if (!response.data.data) {
+              return false
+            }
+            self.waitCount = response.data.meta.pagination.total
+          } else {
+            self.$message.error(response.data.meta.message)
           }
-          self.waitCount = response.data.meta.pagination.total
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-      })
+        })
+        .catch(function (error) {
+          self.$message.error(error.message)
+        })
     }
   }
 
@@ -270,14 +287,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  .content-item-box {
-
+  .content-item-box-m {
+    margin: 15px 15px 0;
   }
+
   .content-item-box .item {
     border: 1px solid #D2D2D2;
-    margin: 0 0px 20px 0;
+    margin: 0 0 20px 0;
   }
+
   .banner {
     line-height: 25px;
     border-bottom: 1px solid #ccc;
@@ -287,6 +305,7 @@
   .banner .contact-user {
     color: #222;
   }
+
   .content {
     border-bottom: 1px solid #ccc;
     height: 120px;
@@ -297,6 +316,7 @@
     color: #333;
     padding: 15px 10px 15px 10px;
   }
+
   .opt {
     height: 30px;
   }
@@ -304,15 +324,49 @@
   .money-str {
     font-size: 1.5rem;
   }
+
+  .money-str i {
+    font-size: 1.4rem;
+  }
+
+  .btnGroup {
+    display: flex;
+    margin: 10px 0;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .btnGroup .btn {
+    width: 40%;
+  }
+
+  .btnGroup .btn div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+  }
+
+  .btnGroup p {
+    width: 100%;
+  }
+
+  .btnGroup p button {
+    width: 100%;
+  }
+
   .btn {
     font-size: 1rem;
   }
+
   .btn a {
     color: #666;
   }
+
   .btn a.b-blue {
     color: #00AC84;
   }
+
   .btn a.b-red {
     color: #FF5A5F;
   }
@@ -331,17 +385,37 @@
     margin-top: 20px;
     border: 1px solid #ccc;
   }
+
   .list-box .el-col {
     padding: 10px 20px 10px 20px;
   }
+
   .el-col p {
   }
 
   .status-str {
-    color: #FF5A5F;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     line-height: 1.3;
   }
+
+  .status-str-m {
+    margin-top: 10px;
+    padding: 10px 0;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  .status-str span {
+    font-size: 1.2rem;
+    color: #FF5A5F;
+  }
+
+  .status-str-m span {
+    float: right;
+    width: 40%;
+    text-align: right;
+  }
+
   .item-title p {
     font-size: 1.2rem;
     line-height: 1.8;
@@ -350,12 +424,34 @@
   p.c-title {
     font-size: 1.6rem;
     color: #333;
-    padding: 0px 5px 10px 0;
+    padding: 0 5px 10px 0;
     line-height: 1;
   }
+
   .item-content {
     padding: 10px 0 10px 0;
   }
 
+  .item-content-m {
+    padding: 0
+  }
 
+  .item-content-m .el-col {
+    padding: 0 10px;
+  }
+
+  .item-content-m .item-title p.c-title {
+    padding: 11px 0 8px;
+    font-size: 1.5rem;
+    line-height: 1
+  }
+
+  .item-content-m .item-title p {
+    font-size: 1.4rem;
+    line-height: 1.4;
+  }
+
+  .c_item {
+    padding-left: 15px;
+  }
 </style>
