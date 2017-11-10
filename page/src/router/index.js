@@ -65,7 +65,8 @@ const routes = [
     path: '/stuff',
     name: 'stuff',
     meta: {
-      title: '灵感'
+      title: '灵感',
+      requireAuth: false
     },
     component: require('@/components/pages/home/Stuff')
   },
@@ -401,7 +402,7 @@ const routes = [
     name: 'userShow',
     meta: {
       title: '个人主页',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/user/Show')
   },
@@ -423,7 +424,7 @@ const routes = [
     name: 'companyShow',
     meta: {
       title: '公司主页',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/company/Show')
   },
