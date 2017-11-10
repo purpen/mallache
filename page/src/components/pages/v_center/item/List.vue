@@ -8,7 +8,6 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
-
             <div class="pub">
               <router-link :to="{name: 'itemSubmitOne'}">
                 <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目
@@ -33,8 +32,8 @@
                   <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
                   <p>
                     <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
-                               :item_type="d.item.type" @click="editItem" size="" type="primary"><i
-                      class="el-icon-edit"> </i> 完善项目
+                               :item_type="d.item.type" @click="editItem" size="" type="primary">
+                      <i class="el-icon-edit"> </i> 完善项目
                     </el-button>
                   </p>
                 </div>
@@ -42,7 +41,7 @@
             </div>
 
 
-            <el-row  class="item-title-box list-box" v-if="itemList.length && !isMob">
+            <el-row class="item-title-box list-box" v-if="itemList.length && !isMob">
               <el-col :span="10">
                 <p>项目名称</p>
               </el-col>
@@ -65,7 +64,7 @@
                 </el-col>
               </el-row>
 
-              <el-row  class="item-content list-box">
+              <el-row class="item-content list-box">
                 <el-col :span="10" class="item-title">
                   <p class="c-title">
                     <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}

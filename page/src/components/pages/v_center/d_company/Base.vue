@@ -37,7 +37,7 @@
                 <p>公司简称</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
-                <el-input v-if="element.company_abbreviation" v-model="form.company_abbreviation" style="width: 300px;"
+                <el-input v-if="element.company_abbreviation" v-model="form.company_abbreviation"
                           placeholder="如: 太火鸟"></el-input>
                 <p v-else>{{ form.company_abbreviation }}</p>
               </el-col>
@@ -425,8 +425,6 @@
                 } else if (that.form.verify_status === 2) {
                   that.form.verify_status_label = '认证失败'
                 }
-
-                console.log(that.form)
               })
             }
           }

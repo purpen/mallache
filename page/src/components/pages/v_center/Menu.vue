@@ -2,7 +2,7 @@
 
   <el-col :span="isMob ? 24 : 4" class="left-menu">
     <section :class="['menuHide', isMob ? 'MmenuHide' : '']">
-      <div :class="['menu-list', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isMob && isCompany">
+      <div :class="['menu-list', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
         <a @click="alick" :to="'/vcenter/control'" :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
@@ -30,7 +30,7 @@
            :class="{'item': true, 'is-active': currentName === 'modify_pwd'}">
           安全设置
         </a>
-        <a :class="{'item': true, 'is-active': currentName === 'company'}" @click="redirectCompany">
+        <a :class="{'item': true, 'is-active': currentName === 'company'}" @click="redirectCompany" v-if="isMob">
           查看公司主页
         </a>
       </div>
@@ -104,8 +104,7 @@
       }
     },
     mounted() {
-      this.$refs.Mmenulist.scrollLeft = this.$store.state.event.MenuIndex - 13
-      console.log(this.currentName)
+      this.$refs.Mmenulist.scrollLeft = this.$store.state.event.MenuIndex - document.documentElement.clientWidth / 2 + 38
     }
   }
 
