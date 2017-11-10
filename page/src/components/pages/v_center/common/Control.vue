@@ -2,7 +2,7 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <el-row :gutter="20" class="anli-elrow">
-      <v-menu></v-menu>
+      <v-menu currentName="control"></v-menu>
       <el-col :span="isMob ? 24 : 20">
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
           <div class="item ing" v-for="(d, index) in itemIngList">
@@ -38,7 +38,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
 
-            <div class="item" v-show="item.design_info_status === 0">
+            <div class="item clearfix" v-show="item.design_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
               <p class="item-btn">
@@ -46,15 +46,17 @@
               </p>
             </div>
 
-            <div class="item" v-show="item.design_verify_status !== 1">
+            <div class="item clearfix" v-show="item.design_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
-                <router-link :to="{name: 'vcenterComputerAccreditation'}">{{ item.verify_label }}</router-link>
+                <router-link :to="{name: 'vcenterComputerAccreditation'}" class="certified-status">{{ item.verify_label
+                  }}
+                </router-link>
               </p>
             </div>
 
-            <div class="item" v-show="item.design_item_status === 0">
+            <div class="item clearfix" v-show="item.design_item_status === 0">
               <h3>公司接单设置</h3>
               <p class="item-title">设计项目接单价格</p>
               <p class="item-btn">
@@ -79,7 +81,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台发布需求前，请先完善以下信息并完成公司认证，便于系统精准匹配设计服务供应商。</p>
 
-            <div class="item" v-show="item.demand_info_status === 0">
+            <div class="item clearfix" v-show="item.demand_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息</p>
               <p class="item-btn">
@@ -293,9 +295,9 @@
   }
 
   .content-box .item {
-    height: 60px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
+    padding-bottom: 10px;
   }
 
   .content-box .item h3 {
@@ -320,6 +322,9 @@
 
   .content-box .item .item-btn a {
     color: #FE3824;
+    border: 1px solid #fe3824;
+    border-radius: 5px;
+    padding: 4px 10px;
   }
 
   .no-line {

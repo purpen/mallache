@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu :class="[isMob ? 'v-menu' : '']"></v-menu>
+      <v-menu :class="[isMob ? 'v-menu' : '']" currentName="design_case"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
@@ -15,7 +15,7 @@
             <div class="design-case-list" v-loading.body="isLoading">
 
               <el-row :gutter="10">
-                <el-col :span="isMob ? 24 : 8" v-for="(d, index) in designCases" :key="index">
+                <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
                     <div class="image-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"

@@ -8,9 +8,9 @@ import {
 } from './mutation-types.js'
 
 // 判断是否登录
-var isLoggedIn = function () {
+let isLoggedIn = function () {
   // TODO 此处可以写异步请求，到后台一直比较Token
-  var token = localStorage.getItem('token')
+  let token = localStorage.getItem('token')
   if (token) {
     return JSON.parse(token)
   } else {
@@ -18,9 +18,9 @@ var isLoggedIn = function () {
   }
 }
 
-var userInfo = function () {
+let userInfo = function () {
   // TODO 用户从Store获取
-  var user = localStorage.getItem('user')
+  let user = localStorage.getItem('user')
   if (user) {
     return JSON.parse(user)
   } else {
@@ -28,8 +28,8 @@ var userInfo = function () {
   }
 }
 
-var prevUrlName = function () {
-  var urlName = localStorage.getItem('prev_url_name')
+let prevUrlName = function () {
+  let urlName = localStorage.getItem('prev_url_name')
   if (urlName) {
     return urlName
   } else {
@@ -38,8 +38,8 @@ var prevUrlName = function () {
 }
 
 // 消息数量
-var msgCount = function () {
-  var messageCount = localStorage.getItem('msgCount')
+let msgCount = function () {
+  let messageCount = localStorage.getItem('msgCount')
   if (messageCount) {
     return messageCount
   } else {
@@ -63,15 +63,16 @@ const state = {
     title: '' // 标题
   },
   pmdHeight: '0px', // 页面大图高度
-  isMob: false
+  isMob: false,
+  MenuIndex: 0
 }
 
-var IsMobile = function () {
-  var sUserAgent = navigator.userAgent
-  var mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
-  var ismob = 0
+let IsMobile = function () {
+  let sUserAgent = navigator.userAgent
+  let mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
+  let ismob = 0
 
-  for (var i = 0; i < mobileAgents.length; i++) {
+  for (let i = 0; i < mobileAgents.length; i++) {
     if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
       ismob = 1
       break
@@ -123,6 +124,9 @@ const mutations = {
     } else {
       state.isMob = false
     }
+  },
+  MENU_BAR(state, index) {
+    state.MenuIndex = index
   }
 }
 

@@ -3,39 +3,46 @@
     <div class="blank20"></div>
     <el-row :gutter="10">
 
-      <el-col :span="6">
+      <el-col :xs="24" :sm="6" :md="6" :lg="6">
         <div class="design-case-slide">
           <div class="info">
-            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100" />
-            <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100" />
+            <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100"/>
+            <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100"/>
             <h3>{{ item.company_name }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
+
           <div class="rate">
             <p>信用指数：<span>{{ item.score }}分</span></p>
           </div>
 
           <div class="cate">
             <p class="c-title">设计类别</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag></p>
+            <p class="tag">
+              <el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag>
+            </p>
           </div>
+
           <div class="cate">
             <p class="c-title">擅长领域</p>
-            <p class="tag"><el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag></p>
+            <p class="tag">
+              <el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag>
+            </p>
           </div>
+
           <div class="cate">
             <p class="c-title">联系方式</p>
             <p>地址: {{ item.address }}</p>
             <p>联系人: {{ item.contact_name }}</p>
-            <p>电话: {{ item.phone }}</p>
-            <p>邮箱: {{ item.email }}</p>
-            <p class="web">网址: <a :href="item.web" target="_blank">{{ item.web }}</a></p>
+            <p v-if="item.phone">电话: {{ item.phone }}</p>
+            <p v-if="item.email">邮箱: {{ item.email }}</p>
+            <p class="web">网址: <a :href="item.web" :target="isMob ? '_self' : '_blank'">{{ item.web }}</a></p>
           </div>
 
         </div>
       </el-col>
 
-      <el-col :span="18">
+      <el-col :xs="24" :sm="18" :md="18" :lg="18">
         <div class="design-case-content">
           <div class="">
             <h2>作品案例</h2>
@@ -43,24 +50,24 @@
             <div class="design-case-list" v-loading.body="isLoading">
 
               <el-row :gutter="10">
-
-                <el-col :span="8" v-for="(d, index) in designCases" :key="index">
+                <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
                     <div class="image-box">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                                   :target="isMob ? '_self' : '_blank'">
                         <img :src="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}</router-link>
+                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                                   :target="isMob ? '_self' : '_blank'">{{ d.title }}
+                      </router-link>
                     </div>
                   </el-card>
                 </el-col>
-
               </el-row>
 
             </div>
-
           </div>
           <div class="summary">
             <h2>公司简介</h2>
@@ -107,40 +114,45 @@
         }
       }
     },
-    created: function() {
-      var id = this.$route.params.id
+    created: function () {
+      let id = this.$route.params.id
       const self = this
       self.isFullLoading = true
       self.$http.get(api.designCompanyId.format(id), {})
-      .then (function(response) {
-        self.isFullLoading = false
-        if (response.data.meta.status_code === 200) {
-          self.item = response.data.data
-          console.log(self.item)
-          if (self.item.logo_image) {
-            self.item.logo_url = self.item.logo_image.logo
-          } else {
-            self.item.logo_url = false
-          }
-
-          self.isLoading = true
-          self.$http.get(api.designCaseCompanyId.format(id), {})
-          .then (function(response) {
-            self.isLoading = false
-            if (response.data.meta.status_code === 200) {
-              self.designCases = response.data.data
+        .then(function (response) {
+          self.isFullLoading = false
+          if (response.data.meta.status_code === 200) {
+            self.item = response.data.data
+//          console.log(self.item)
+            if (self.item.logo_image) {
+              self.item.logo_url = self.item.logo_image.logo
+            } else {
+              self.item.logo_url = false
             }
-          })
-          .catch (function(error) {
-            self.isLoading = false
-            self.$message.error(error.message)
-          })
-        }
-      })
-      .catch (function(error) {
-        self.isFullLoading = false
-        self.$message.error(error.message)
-      })
+
+            self.isLoading = true
+            self.$http.get(api.designCaseCompanyId.format(id), {})
+              .then(function (response) {
+                self.isLoading = false
+                if (response.data.meta.status_code === 200) {
+                  self.designCases = response.data.data
+                }
+              })
+              .catch(function (error) {
+                self.isLoading = false
+                self.$message.error(error.message)
+              })
+          }
+        })
+        .catch(function (error) {
+          self.isFullLoading = false
+          self.$message.error(error.message)
+        })
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
 </script>
@@ -151,77 +163,84 @@
     padding: 20px 40px 20px 40px;
     border: 1px solid #ccc;
   }
+
   .design-case-content .title {
     text-align: center;
     color: #5d6266;
     margin: 20px 0 20px 0;
     font-size: 2rem;
   }
+
   .design-case-content h2 {
     text-align: center;
     font-size: 1.8rem;
     color: #333;
     margin: 20px;
   }
+
   .design-case-content .summary {
     margin: 0 0 20px 0;
   }
+
   .design-case-content .summary p {
     line-height: 1.6;
     color: #5d6266;
   }
+
   .design-case-content .des {
   }
+
   .design-case-content .des p {
     line-height: 1.6;
     text-align: center;
   }
+
   .design-case-slide {
     padding: 20px 20px 20px 20px;
     border: 1px solid #ccc;
   }
+
   .design-case-slide .info {
     margin: 10px;
     text-align: center;
   }
+
   .design-case-slide h3 {
     margin: 10px;
     font-size: 2rem;
   }
+
   .design-case-slide .rate {
     padding: 10px;
     text-align: center;
-    border-top: 1px solid rgba(224,224,224,.46);
+    border-top: 1px solid rgba(224, 224, 224, .46);
   }
+
   .design-case-slide .cate {
     line-height: 2;
     margin-top: 20px;
   }
+
   .cate p {
     color: #666;
   }
+
   .cate p.c-title {
     text-align: left;
     font-size: 1.6rem;
     color: #333;
   }
+
   .cate p.tag span {
     margin: 5px;
   }
+
   .design-case-slide .prize {
     margin-top: 20px;
   }
 
   p.web {
     word-wrap: break-word;
-  }
-
-
-  .design-case-list {
-    min-height: 350px;
-  }
-  .design-case-list .item {
-    height: 190px;
   }
 
   .item {
@@ -232,16 +251,21 @@
     width: 100%;
   }
 
-  .image-box {
-    height: 150px;
-    overflow: hidden;
-  }
-
   .content {
     padding: 10px;
   }
+
   .content a {
     font-size: 1.5rem;
   }
 
+  @media screen and (max-width: 767px) {
+    .design-case-slide {
+      border: none;
+    }
+
+    .design-case-content {
+      border: none;
+    }
+  }
 </style>
