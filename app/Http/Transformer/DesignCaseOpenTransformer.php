@@ -5,7 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\DesignCaseModel;
 use League\Fractal\TransformerAbstract;
 
-class DesignCaseTransformer extends TransformerAbstract
+class DesignCaseOpenTransformer extends TransformerAbstract
 {
     /*
         id	            int(10)	        否		ID
@@ -78,8 +78,8 @@ class DesignCaseTransformer extends TransformerAbstract
             'address' => strval($DesignCompany->address),
             'contact_name' => strval($DesignCompany->contact_name),
             'position' => strval($DesignCompany->position),
-            'phone' => strval($DesignCompany->phone),
-            'email' => strval($DesignCompany->email),
+            'phone' => '',
+            'email' => '',
             'company_size' => intval($DesignCompany->company_size),
             'company_size_val' => $DesignCompany->company_size_val,
             'branch_office' => intval($DesignCompany->branch_office),

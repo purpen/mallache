@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignCaseListsTransformer;
+use App\Http\Transformer\DesignCaseOpenTransformer;
 use App\Http\Transformer\DesignCaseTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignCaseModel;
@@ -244,14 +245,22 @@ class DesignCaseController extends BaseController
 
         //判断是否有有权限查看案例详情
         $design_company = new DesignCompanyModel();
-        if (!$designCase->open && !$design_company->isRead($this->auth_user_id, $designCase->design_company_id)) {
-            return $this->response->array($this->apiError('无权限', 403));
+        // 此参数用来判断是否返回设计公司的联系方式
+        $is_phone = true;
+        if (($this->auth_user_id == null) || !$design_company->isRead($this->auth_user_id, $designCase->design_company_id)) {
+            $is_phone = false;
         }
 
         if (!$designCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+
+        if($is_phone){
+            return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+        }else{
+            return $this->response->item($designCase, new DesignCaseOpenTransformer())->setMeta($this->apiMeta());
+        }
+
     }
 
     /**
@@ -418,10 +427,10 @@ class DesignCaseController extends BaseController
     public function lists($design_company_id)
     {
         $design = DesignCompanyModel::find($design_company_id);
-        if (!$design->isRead($this->auth_user_id, $design_company_id)) {
-            return $this->response->array($this->apiSuccess('没有权限访问', 403));
-
-        }
+//        if (!$design->isRead($this->auth_user_id, $design_company_id)) {
+//            return $this->response->array($this->apiSuccess('没有权限访问', 403));
+//
+//        }
         if (!$design) {
             return $this->response->array($this->apiError('not found!', 404));
         }
