@@ -1,5 +1,5 @@
 <?php
-namespace Lib\YunPianSdk\Lib;
+namespace Lib\YunPianSdk\lib;
 
 use Lib\YunPianSdk\Yunpian;
 
