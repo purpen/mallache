@@ -34,7 +34,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .vcenter-menu-sub-m {
     padding: 15px 0 0;
     height: auto;

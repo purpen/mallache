@@ -8,7 +8,6 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
-
             <div class="pub">
               <router-link :to="{name: 'itemSubmitOne'}">
                 <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目
@@ -33,8 +32,8 @@
                   <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
                   <p>
                     <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
-                               :item_type="d.item.type" @click="editItem" size="" type="primary"><i
-                      class="el-icon-edit"> </i> 完善项目
+                               :item_type="d.item.type" @click="editItem" size="" type="primary">
+                      <i class="el-icon-edit"> </i> 完善项目
                     </el-button>
                   </p>
                 </div>
@@ -42,7 +41,7 @@
             </div>
 
 
-            <el-row :gutter="0" class="item-title-box list-box" v-if="itemList.length && !isMob">
+            <el-row class="item-title-box list-box" v-if="itemList.length && !isMob">
               <el-col :span="10">
                 <p>项目名称</p>
               </el-col>
@@ -65,7 +64,7 @@
                 </el-col>
               </el-row>
 
-              <el-row :gutter="0" class="item-content list-box">
+              <el-row class="item-content list-box">
                 <el-col :span="10" class="item-title">
                   <p class="c-title">
                     <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
@@ -162,12 +161,11 @@
                 <p>{{ d.item.created_at }}</p>
               </div>
               <div class="list-body">
-                <p class="list-title Bborder">项目名称</p>
+                <p class="list-title Bborder">
+                  <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
+                  </router-link>
+                </p>
                 <div class="list-content">
-                  <h3 class="c-title">
-                    <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
-                    </router-link>
-                  </h3>
                   <section class="c-body">
                     <p>项目预算： {{ d.item.design_cost_value }}</p>
                     <p>项目周期：{{ d.item.cycle_value }}</p>
@@ -582,18 +580,6 @@
     padding: 11px 15px;
   }
 
-  .list-title {
-    font-size: 1.5rem;
-    padding-bottom: 11px;
-  }
-
-  .Bborder {
-    border-bottom: 1px solid #E6E6E6;
-  }
-
-  .el-col p {
-  }
-
   .status-str {
     color: #FF5A5F;
     font-size: 1.2rem;
@@ -619,8 +605,7 @@
   }
 
   .c-body {
-    padding-bottom: 22px;
-    border-bottom: 1px solid #E6E6E6;
+    padding-bottom: 16px;
   }
 
   .c-body p {
@@ -642,4 +627,15 @@
     width: 50%;
     text-align: right;
   }
+
+  .Bborder {
+    border-bottom: 1px solid #E6E6E6
+  }
+
+  .list-title {
+    font-size: 1.5rem;
+    padding-bottom: 8px;
+    border-bottom: none;
+  }
+
 </style>

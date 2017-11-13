@@ -2,9 +2,16 @@
   <div class="container">
 
     <v-progress :typeStep="true" :itemId="form.id" :step="form.stage_status"></v-progress>
-    <el-row :gutter="24" type="flex" justify="center">
-
-      <el-col :span="19">
+    <el-row :gutter="24">
+      <el-col :span="24" v-if="isMob">
+        <div id="right_box">
+          <div class="slider info">
+            <p class="slide-des slide-info" style="">关于设计类型</p>
+            <p class="slide-des">根据您的项目需求，选择相应的设计服务类别，这里只能单选。</p>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="isMob ? 24 : 19">
         <div class="content">
 
           <div class="item">
@@ -25,23 +32,25 @@
                 <p>设计类别</p>
                 <div class="category-box">
                   <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index"
-                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions">{{ d.name }}
+                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions"
+                             size="small">{{ d.name
+                    }}
                   </el-button>
                 </div>
 
-                <p>产品类别</p>
+                <p class="classify">产品类别</p>
                 <div class="category-box">
                   <el-button :class="{ 'tag': true, active: d.id === form.field ? true : false }" :key="index"
-                             @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions">{{ d.name }}
+                             @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions" size="small">{{ d.name }}
                   </el-button>
                 </div>
 
                 <!--
-                <p>所属行业</p>
-                <div class="category-box">
-                  <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
-                </div>
-                -->
+                  <p>所属行业</p>
+                  <div class="category-box">
+                    <el-button :class="{ 'tag': true, active: d.id === form.industry ? true : false }" :key="index" @click="industryBtn(d.id)" v-for="(d, index) in industryOptions">{{ d.name }}</el-button>
+                  </div>
+                  -->
 
               </div>
 
@@ -66,7 +75,8 @@
                 <p>设计类别</p>
                 <div class="category-box">
                   <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index"
-                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions">{{ d.name }}
+                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions" size="small">{{ d.name
+                    }}
                   </el-button>
                 </div>
 
@@ -83,11 +93,11 @@
 
         </div>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="5" v-if="!isMob">
         <div id="right_box">
           <div class="slider info">
             <p>提示</p>
-            <p class="slide-des" style="margin-bottom: -10px;">关于设计类型：</p>
+            <p class="slide-des slide-info" style="">关于设计类型：</p>
             <p class="slide-des">根据您的项目需求，选择相应的设计服务类别，这里只能单选。</p>
           </div>
         </div>
@@ -105,7 +115,7 @@
     components: {
       vProgress
     },
-    data () {
+    data() {
       return {
         itemId: '',
         isLoadingBtn: false,
@@ -169,9 +179,19 @@
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
               if (response.data.data.item.type === 1) {
-                that.$router.push({name: 'itemSubmitThree', params: {id: response.data.data.item.id}})
+                that.$router.push({
+                  name: 'itemSubmitThree',
+                  params: {
+                    id: response.data.data.item.id
+                  }
+                })
               } else if (response.data.data.item.type === 2) {
-                that.$router.push({name: 'itemSubmitUIThree', params: {id: response.data.data.item.id}})
+                that.$router.push({
+                  name: 'itemSubmitUIThree',
+                  params: {
+                    id: response.data.data.item.id
+                  }
+                })
               }
               return false
             } else {
@@ -254,10 +274,12 @@
         }
 
         return typeData.COMPANY_TYPE[index].industry
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
-    mounted: function () {
-    },
+    mounted: function () {},
     created: function () {
       const that = this
       var id = this.$route.params.id
@@ -272,21 +294,27 @@
               that.form.design_type = row.design_type
               that.form.field = row.field
               that.form.stage_status = row.stage_status
-              console.log(response.data.data)
+//              console.log(response.data.data)
             } else {
               that.$message.error(response.data.meta.message)
               console.log(response.data.meta.message)
-              that.$router.push({name: 'home'})
+              that.$router.push({
+                name: 'home'
+              })
               return false
             }
           })
           .catch(function (error) {
             that.$message.error(error.message)
-            that.$router.push({name: 'home'})
+            that.$router.push({
+              name: 'home'
+            })
           })
       } else {
         that.$message.error('缺少请求参数！')
-        that.$router.push({name: 'home'})
+        that.$router.push({
+          name: 'home'
+        })
       }
     },
     watch: {}
@@ -295,7 +323,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .content {
     border: 1px solid #ccc;
   }
@@ -336,7 +363,6 @@
 
   .type-content {
     padding: 20px 20px 50px 20px;
-
   }
 
   .type-content p {
@@ -361,12 +387,12 @@
 
   .slider {
     border: 1px solid #ccc;
-    height: 250px;
+    /*height: 250px;*/
     text-align: center;
   }
 
   .slider.info {
-    height: 300px;
+    /*height: 300px;*/
     text-align: left;
   }
 
@@ -386,15 +412,11 @@
     text-align: right;
   }
 
-  .submit-btn button {
-  }
-
   .slide-img {
     padding-top: 20px;
   }
 
   .slide-img img {
-
   }
 
   .slide-str {
@@ -405,7 +427,7 @@
     vertical-align: middle;
   }
 
-  .slide-des {
+  .slider.info p.slide-des {
     color: #666;
     line-height: 1.5;
     font-size: 1rem;
@@ -415,10 +437,65 @@
     line-height: 30px;
   }
 
-  .slide-fade-enter, .slide-fade-leave-active {
+  .slide-fade-enter,
+  .slide-fade-leave-active {
     opacity: 0;
     transform: translateX(-300px);
   }
 
+  @media screen and (max-width: 767px) {
+    .slider.info {
+      padding-top: 10px;
+      text-align: center;
+    }
 
+    .slider.info p {
+      margin: 0 15px;
+    }
+
+    .content, .slider {
+      border: none;
+    }
+
+    .content {
+      padding: 0 15px;
+    }
+
+    .item_banner {
+      margin-top: 10px;
+      border: 1px solid #D2D2D2;
+    }
+
+    .banner-title {
+      margin-left: 0;
+    }
+
+    .submit-btn {
+      text-align: center;
+      border-top: none;
+      margin: 0;
+    }
+
+    .submit-btn button {
+      width: 100%;
+      height: 30px;
+      padding: 0;
+      line-height: 30px;
+    }
+
+    .type-content {
+      padding: 15px 10px;
+      border: 1px solid #D2D2D2;
+      border-top: none;
+    }
+
+    .classify {
+      padding-top: 10px;
+    }
+
+    .type-content p {
+      margin-top: 0;
+    }
+
+  }
 </style>

@@ -166,7 +166,6 @@
 
 <script>
   import { calcImgSize } from 'assets/js/common'
-  import 'swiper/dist/css/swiper.css'
   export default {
     name: 'index',
     data() {

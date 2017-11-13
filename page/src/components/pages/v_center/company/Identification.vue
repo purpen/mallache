@@ -4,20 +4,22 @@
     <el-row :gutter="20">
       <v-menu currentName="profile"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub currentSubName="identification"></v-menu-sub>
-          <div class="content-box" v-loading.body="isLoading">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
+
             <div class="form-title">
               <span>企业实名认证</span>
             </div>
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="企业名称" prop="company_name">
-                    <el-input v-model="form.company_name" name="company_name" ref="company_name" placeholder="请输入完整的公司名称"></el-input>
-                  </el-form-item>           
+                    <el-input v-model="form.company_name" name="company_name" ref="company_name"
+                              placeholder="请输入完整的公司名称"></el-input>
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -33,15 +35,15 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="统一社会信用代码" prop="registration_number">
                     <el-input v-model="form.registration_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="公司法人营业执照" prop="">
                     <el-upload
                       class=""
@@ -62,10 +64,10 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="法人姓名" prop="legal_person">
                     <el-input v-model="form.legal_person" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -81,15 +83,15 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="证件号码" prop="document_number">
                     <el-input v-model="form.document_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 16 : 12">
                   <el-form-item label="法人证件" prop="">
                     <el-upload
                       class=""
@@ -110,22 +112,22 @@
               </el-row>
 
               <el-row :gutter="10">
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="职位" prop="position">
                     <el-input v-model="form.position" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="手机" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
                   </el-form-item>
@@ -133,14 +135,16 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
-                  <el-checkbox v-model="agreement" disabled><a href="javascript:void(0);" @click="agreementBtn">已阅读并同意《铟果SaaS协议》</a></el-checkbox>
+                <el-col :span="isMob ? 16 : 12">
+                  <el-checkbox v-model="agreement" disabled><a href="javascript:void(0);" @click="agreementBtn">已阅读并同意《铟果SaaS协议》</a>
+                  </el-checkbox>
                 </el-col>
               </el-row>
 
-              <div class="form-btn">
-                  <el-button @click="returnBase">返回</el-button>
-                  <el-button :loading="isLoadingBtn" class="is-custom" type="primary" @click="submit('ruleForm')">提交审核</el-button>
+              <div :class="['form-btn', isMob ? 'form-btn-m' : '']">
+                <el-button @click="returnBase">返回</el-button>
+                <el-button :loading="isLoadingBtn" class="is-custom" type="primary" @click="submit('ruleForm')">提交审核
+                </el-button>
               </div>
               <div class="clear"></div>
             </el-form>
@@ -165,10 +169,12 @@
           <p class="a-title">第一条 相关定义及解释</p>
           <p>1.关于铟果</p>
           <p>铟果，太火鸟旗下基于大数据和智能匹配技术的创意交易平台，以京东金融为支持方，2017年正式开始运营，致力重新定义创新，为制造企业和设计服务供应商服务。</p>
-          <p>铟果平台同意按照本协议规定发布的操作规则提供基于互联网以及移动网相关服务（以下称"网络服务"），为获得网络服务，平台所有用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在使用过程中完成全部流程即表示完全接受本协议项下的全部条款以及公示于铟果开放平台的各项规则。</p>
+          <p>
+            铟果平台同意按照本协议规定发布的操作规则提供基于互联网以及移动网相关服务（以下称"网络服务"），为获得网络服务，平台所有用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在使用过程中完成全部流程即表示完全接受本协议项下的全部条款以及公示于铟果开放平台的各项规则。</p>
           <p>平台有权根据具体需要修订服务条款或各类规则，届时会以系统通知的形式告知所有用户。</p>
           <p>&nbsp;</p>
-          <p>在铟果平台注册、发布、承接设计项目的用户，必须是可以代表企业的完全民事行为能力人或法人。用户享有万千民事行为能力人或法人的权利，也要遵守相关的义务，遵守平台规则与相关的法律法规。用户需对平台上的所有操作负法律责任。</p>
+          <p>
+            在铟果平台注册、发布、承接设计项目的用户，必须是可以代表企业的完全民事行为能力人或法人。用户享有万千民事行为能力人或法人的权利，也要遵守相关的义务，遵守平台规则与相关的法律法规。用户需对平台上的所有操作负法律责任。</p>
           <p>平台所有用户应遵循的原则包括但不仅限于以下条款</p>
           <p>遵守中国有关的法律和法规；</p>
           <p>遵守所有与网络服务有关的网络协议、规定和程序；</p>
@@ -202,24 +208,33 @@
           <p>2.甲方对乙方在使用“铟果平台”过程中遇到的问题及提出的建议和意见积极予以回复，可依乙方需求对其使用“铟果平台”提供合理的指导和培训。</p>
           <p>3.乙方同意甲方根据乙方营业执照所载明的经营范围及乙方申请经营的经营类目，核实及调整乙方在“铟果平台”经营的具体商品的种类、数量和类目范围。</p>
           <p>4.乙方同意并自愿遵守甲方根据国家相关法律法规、政策及平台运营情况，对公示于“铟果平台”的规则、流程、收费标准等进行更新、调整。</p>
-          <p>5.乙方同意甲方对乙方提供的相关资质文件及各类信息资料进行审核。甲方审核为形式审核，审核通过并不代表甲方对审核内容的真实性、合法性、准确性、及时性的确认，乙方仍须对其提交的资料的真实性、合法性、准确性、及时性等承担相应的法律责任。</p>
-          <p>6.甲方有权对乙方的注册信息、上传的相关数据信息、在“铟果平台”发布的其他信息及交易行为进行监督检查，对发现的违法违规信息及其相关内容，乙方同意甲方不经通知立即删除，对发现的其他问题或疑问有权向乙方发出询问及要求改正的通知，乙方应在接到通知后立即做出说明或改正。对乙方前述不当行为，甲方有权追究其违约、侵权责任并/或解除本协议。</p>
+          <p>
+            5.乙方同意甲方对乙方提供的相关资质文件及各类信息资料进行审核。甲方审核为形式审核，审核通过并不代表甲方对审核内容的真实性、合法性、准确性、及时性的确认，乙方仍须对其提交的资料的真实性、合法性、准确性、及时性等承担相应的法律责任。</p>
+          <p>
+            6.甲方有权对乙方的注册信息、上传的相关数据信息、在“铟果平台”发布的其他信息及交易行为进行监督检查，对发现的违法违规信息及其相关内容，乙方同意甲方不经通知立即删除，对发现的其他问题或疑问有权向乙方发出询问及要求改正的通知，乙方应在接到通知后立即做出说明或改正。对乙方前述不当行为，甲方有权追究其违约、侵权责任并/或解除本协议。</p>
           <p>7.乙方多次违规或者有严重违约、违规情形的，甲方有权对其在铟果平台上的任何操作并要求相应赔偿直至终止本协议等措施，上述措施不足以补偿甲方损失的，甲方有权继续向乙方追偿。</p>
           <p>8.甲方有权要求乙方提供与乙方设计服务相关的信息，在指定的时限内予以回复或给出相应方案，对乙方未及时解决的需求方咨询及投诉，甲方有权对乙方采取相应处理措施。</p>
-          <p>9.如因乙方提供的设计服务问题引发项目需求方对甲方及/或“铟果平台”的诉讼，乙方应承担因客户诉讼而产生的全部法律责任，如因此而给甲方及/或“铟果平台”造成损失的，甲方有权要求乙方赔偿甲方及“铟果平台”的全部损失。</p>
+          <p>
+            9.如因乙方提供的设计服务问题引发项目需求方对甲方及/或“铟果平台”的诉讼，乙方应承担因客户诉讼而产生的全部法律责任，如因此而给甲方及/或“铟果平台”造成损失的，甲方有权要求乙方赔偿甲方及“铟果平台”的全部损失。</p>
           <p>10.乙方同意“铟果平台”根据业务调整情况将本协议项下的权利和义务部分或全部转移给甲方关联公司，但须提前5日通知乙方。</p>
           <p>&nbsp;</p>
           <p class="a-title">第四条 违约责任</p>
-          <p>1.乙方向甲方提供虚假、失效的证明文件或其他相关证明，在“铟果平台”发布错误、虚假、违法及不良信息或进行其他违反本协议约定的行为，给甲方及/或“铟果平台”造成任何损失的（损失包括但不限于诉讼费、律师费、赔偿、补偿、行政机关处罚、差旅费等），乙方同意甲方自乙方缴纳的保证金及未结算货款中直接予以扣除，本协议另有约定的除外。 </p>
-          <p>2.乙方不论采取何种方式将甲方用户吸引到甲方平台以外的平台或场所进行交易或绕开甲方指定付款方式进行交易的，以及非法获取“铟果平台”系统数据、利用“铟果平台”谋取不正当利益或从事非法活动的，甲方有权扣除乙方全部保证金作为违约金，并保留向乙方继续追究违约责任的权利。</p>
-          <p>3.乙方发生违反本协议及铟果平台规则的情形时，甲方除有权按照本条约定要求乙方承担违约责任外，还有权按照“铟果平台”相关管理规则采取相应处罚措施，包括但不仅限于暂时关闭乙方后台管理账户、暂缓支付未结算款项、终止合作等措施。</p>
+          <p>
+            1.乙方向甲方提供虚假、失效的证明文件或其他相关证明，在“铟果平台”发布错误、虚假、违法及不良信息或进行其他违反本协议约定的行为，给甲方及/或“铟果平台”造成任何损失的（损失包括但不限于诉讼费、律师费、赔偿、补偿、行政机关处罚、差旅费等），乙方同意甲方自乙方缴纳的保证金及未结算货款中直接予以扣除，本协议另有约定的除外。 </p>
+          <p>
+            2.乙方不论采取何种方式将甲方用户吸引到甲方平台以外的平台或场所进行交易或绕开甲方指定付款方式进行交易的，以及非法获取“铟果平台”系统数据、利用“铟果平台”谋取不正当利益或从事非法活动的，甲方有权扣除乙方全部保证金作为违约金，并保留向乙方继续追究违约责任的权利。</p>
+          <p>
+            3.乙方发生违反本协议及铟果平台规则的情形时，甲方除有权按照本条约定要求乙方承担违约责任外，还有权按照“铟果平台”相关管理规则采取相应处罚措施，包括但不仅限于暂时关闭乙方后台管理账户、暂缓支付未结算款项、终止合作等措施。</p>
           <p>&nbsp;</p>
           <p class="a-title">第五条 有限责任及免责</p>
-          <p>1.不论在何种情况下，甲方均不对由于电力、网络、电脑、通讯或其他系统的故障、罢工（含内部罢工或劳工骚乱）、劳动争议、暴乱、起义、骚乱、生产力或生产资料不足、火灾、洪水、风暴、爆炸、战争、政府行为等不可抗力，国际、国内法院的命令或第三方的不作为而造成的不能服务或延迟服务承担责任。</p>
+          <p>
+            1.不论在何种情况下，甲方均不对由于电力、网络、电脑、通讯或其他系统的故障、罢工（含内部罢工或劳工骚乱）、劳动争议、暴乱、起义、骚乱、生产力或生产资料不足、火灾、洪水、风暴、爆炸、战争、政府行为等不可抗力，国际、国内法院的命令或第三方的不作为而造成的不能服务或延迟服务承担责任。</p>
           <p>2.本协议项下服务将按“现状”和按“可得到”的状态提供，甲方在此明确声明对服务不作任何明示或暗示的保证，包括但不限于对服务的可适用性、没有错误或疏漏、持续性、准确性、可靠性、适用于某一特定用途。</p>
           <p>3.使用“铟果平台”服务下载或者获取任何资料的行为均出于乙方的独立判断，并由其自行承担因此而可能产生的风险和责任。</p>
-          <p>4.法律地位声明：甲方为向乙方及甲方其他用户进行网上交易活动提供交易平台的平台服务提供商，并非乙方与通过“铟果平台”购买乙方商品的甲方其他用户之间交易行为的参与方，甲方不对乙方及参与交易的甲方其他用户的任何口头、书面陈述或承诺，发布的信息及交易行为的真实性、合法性、准确性、及时性、有效性等作任何明示或暗示的保证，亦不承担任何法律责任。若因乙方与参与交易的甲方其他用户之间的交易行为引起的任何法律纠纷，包括但不限于投诉、起诉、举报及税赋等，均由参与交易的双方解决，与甲方及/或“铟果平台”无关。但，乙方怠于履行义务时，甲方有权介入乙方与甲方其他用户间的争议，依据一般人的认知程度对该争议进行判断和处置，乙方应当予以执行。</p>
-          <p>5.不可抗力处理：如本协议履行期间，甲乙双方任何一方遭受不可抗力，均应在遭受不可抗力后尽快通知对方，并于通知之日起15日内提供相关证明文件，不可抗力持续达到三十日的，任一方有权经通知对方提前终止本协议。因不可抗力原因而导致本协议中止、终止的，双方均不须向对方承担违约责任。</p>
+          <p>
+            4.法律地位声明：甲方为向乙方及甲方其他用户进行网上交易活动提供交易平台的平台服务提供商，并非乙方与通过“铟果平台”购买乙方商品的甲方其他用户之间交易行为的参与方，甲方不对乙方及参与交易的甲方其他用户的任何口头、书面陈述或承诺，发布的信息及交易行为的真实性、合法性、准确性、及时性、有效性等作任何明示或暗示的保证，亦不承担任何法律责任。若因乙方与参与交易的甲方其他用户之间的交易行为引起的任何法律纠纷，包括但不限于投诉、起诉、举报及税赋等，均由参与交易的双方解决，与甲方及/或“铟果平台”无关。但，乙方怠于履行义务时，甲方有权介入乙方与甲方其他用户间的争议，依据一般人的认知程度对该争议进行判断和处置，乙方应当予以执行。</p>
+          <p>
+            5.不可抗力处理：如本协议履行期间，甲乙双方任何一方遭受不可抗力，均应在遭受不可抗力后尽快通知对方，并于通知之日起15日内提供相关证明文件，不可抗力持续达到三十日的，任一方有权经通知对方提前终止本协议。因不可抗力原因而导致本协议中止、终止的，双方均不须向对方承担违约责任。</p>
           <p>&nbsp;</p>
           <p class="a-title">第六条 其他</p>
           <p>1.协议有效期：本协议自双方签署后成立，持续对缔约双方有效。</p>
@@ -254,12 +269,12 @@
       vMenuSub
     },
     data () {
-      var checkNumber = (rule, value, callback) => {
+      let checkNumber = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请添写公司注册号!'))
         }
         setTimeout(() => {
-          var len = value.toString().length
+          let len = value.toString().length
           if (len === 15 || len === 18) {
             callback()
           } else {
@@ -304,36 +319,36 @@
 
         ruleForm: {
           company_name: [
-            { required: true, message: '请添写公司全称', trigger: 'blur' }
+            {required: true, message: '请添写公司全称', trigger: 'blur'}
           ],
           company_type: [
-            { type: 'number', required: true, message: '请选择证件类型', trigger: 'change' }
+            {type: 'number', required: true, message: '请选择证件类型', trigger: 'change'}
           ],
           registration_number: [
-            { validator: checkNumber, trigger: 'blur' }
+            {validator: checkNumber, trigger: 'blur'}
           ],
           legal_person: [
-            { required: true, message: '请添写法人真实姓名', trigger: 'blur' }
+            {required: true, message: '请添写法人真实姓名', trigger: 'blur'}
           ],
           document_number: [
-            { required: true, message: '请添写法人证件号码', trigger: 'blur' },
-            { max: 20, min: 4, message: '证件号码格式不正确', trigger: 'blur' }
+            {required: true, message: '请添写法人证件号码', trigger: 'blur'},
+            {max: 20, min: 4, message: '证件号码格式不正确', trigger: 'blur'}
           ],
           document_type: [
-            { type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change' }
+            {type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change'}
           ],
           contact_name: [
-            { required: true, message: '请添写联系人', trigger: 'blur' }
+            {required: true, message: '请添写联系人', trigger: 'blur'}
           ],
           phone: [
-            { required: true, message: '请添写联系电话', trigger: 'blur' }
+            {required: true, message: '请添写联系电话', trigger: 'blur'}
           ],
           email: [
-            { required: true, message: '请添写联系人邮箱', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+            {required: true, message: '请添写联系人邮箱', trigger: 'blur'},
+            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur'}
           ],
           position: [
-            { required: true, message: '请添写联系人职位', trigger: 'blur' }
+            {required: true, message: '请添写联系人职位', trigger: 'blur'}
           ]
         }
       }
@@ -348,7 +363,7 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               registration_number: that.form.registration_number,
               company_name: that.form.company_name,
               company_type: that.form.company_type,
@@ -369,20 +384,20 @@
             }
             that.isLoadingBtn = true
             that.$http({method: 'POST', url: api.designCompany, data: row})
-            .then (function(response) {
-              that.isLoadingBtn = false
-              if (response.data.meta.status_code === 200) {
-                that.$message.success('提交成功,等待审核')
-                that.$router.push({name: 'vcenterComputerAccreditation'})
+              .then(function (response) {
+                that.isLoadingBtn = false
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success('提交成功,等待审核')
+                  that.$router.push({name: 'vcenterComputerAccreditation'})
+                  return false
+                } else {
+                  that.$message.error(response.data.meta.message)
+                }
+              })
+              .catch(function (error) {
+                that.$message.error(error.message)
                 return false
-              } else {
-                that.$message.error(response.data.meta.message)
-              }
-            })
-            .catch (function(error) {
-              that.$message.error(error.message)
-              return false
-            })
+              })
           } else {
             return false
           }
@@ -396,21 +411,21 @@
         if (file === null) {
           return false
         }
-        var assetId = file.response.asset_id
+        let assetId = file.response.asset_id
         const that = this
         that.$http.delete(api.asset.format(assetId), {})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-          } else {
-            that.$message.error(response.data.meta.message)
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+            } else {
+              that.$message.error(response.data.meta.message)
+              return false
+            }
+          })
+          .catch(function (error) {
+            that.$message.error(error.message)
+            console.log(error.message)
             return false
-          }
-        })
-        .catch (function(error) {
-          that.$message.error(error.message)
-          console.log(error.message)
-          return false
-        })
+          })
       },
       // 同意协议弹层
       agreementBtn () {
@@ -469,9 +484,9 @@
     },
     computed: {
       documentTypeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.DOCUMENT_TYPE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.DOCUMENT_TYPE.length; i++) {
+          let item = {
             value: typeData.DOCUMENT_TYPE[i]['id'],
             label: typeData.DOCUMENT_TYPE[i]['name']
           }
@@ -480,21 +495,23 @@
         return items
       },
       certificateTypeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_CERTIFICATE_TYPE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_CERTIFICATE_TYPE.length; i++) {
+          let item = {
             value: typeData.COMPANY_CERTIFICATE_TYPE[i]['id'],
             label: typeData.COMPANY_CERTIFICATE_TYPE[i]['name']
           }
           items.push(item)
         }
         return items
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
-    watch: {
-    },
-    created: function() {
-      var uType = this.$store.state.event.user.type
+    watch: {},
+    created: function () {
+      let uType = this.$store.state.event.user.type
       // 如果非设计公司，跳到相应页面
       if (uType !== 2) {
         this.$router.replace({name: 'vcenterDComputerIdentification'})
@@ -503,80 +520,80 @@
       const that = this
       that.isLoading = true
       that.$http.get(api.designCompany, {})
-      .then (function(response) {
-        that.isLoading = false
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            // 重新渲染
-            that.$nextTick(function() {
-              that.form = response.data.data
-              that.form.registration_number = that.form.registration_number
-              that.form.company_type = that.form.company_type === 0 ? '' : that.form.company_type
-              that.form.document_type = that.form.document_type === 0 ? '' : that.form.document_type
-              that.companyId = response.data.data.id
-              that.uploadParam['x:target_id'] = response.data.data.id
+        .then(function (response) {
+          that.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              // 重新渲染
+              that.$nextTick(function () {
+                that.form = response.data.data
+                that.form.registration_number = that.form.registration_number
+                that.form.company_type = that.form.company_type === 0 ? '' : that.form.company_type
+                that.form.document_type = that.form.document_type === 0 ? '' : that.form.document_type
+                that.companyId = response.data.data.id
+                that.uploadParam['x:target_id'] = response.data.data.id
 
-              if (response.data.data.logo_image) {
-                that.imageUrl = response.data.data.logo_image.small
-              }
-              // 法人营业执照
-              if (response.data.data.license_image) {
-                var files = []
-                for (var i = 0; i < response.data.data.license_image.length; i++) {
-                  if (i > 5) {
-                    break
-                  }
-                  var obj = response.data.data.license_image[i]
-                  var item = {}
-                  item['response'] = {}
-                  item['name'] = obj['name']
-                  item['url'] = obj['small']
-                  item['response']['asset_id'] = obj['id']
-                  files.push(item)
+                if (response.data.data.logo_image) {
+                  that.imageUrl = response.data.data.logo_image.small
                 }
-                that.fileList = files
-              }
-              // 法人证件
-              if (response.data.data.document_image) {
-                var personFiles = []
-                for (var j = 0; j < response.data.data.document_image.length; j++) {
-                  if (j > 5) {
-                    break
+                // 法人营业执照
+                if (response.data.data.license_image) {
+                  let files = []
+                  for (let i = 0; i < response.data.data.license_image.length; i++) {
+                    if (i > 5) {
+                      break
+                    }
+                    let obj = response.data.data.license_image[i]
+                    let item = {}
+                    item['response'] = {}
+                    item['name'] = obj['name']
+                    item['url'] = obj['small']
+                    item['response']['asset_id'] = obj['id']
+                    files.push(item)
                   }
-                  var pObj = response.data.data.document_image[j]
-                  var personItem = {}
-                  personItem['response'] = {}
-                  personItem['name'] = pObj['name']
-                  personItem['url'] = pObj['small']
-                  personItem['response']['asset_id'] = pObj['id']
-                  personFiles.push(personItem)
+                  that.fileList = files
                 }
-                that.filePersonList = personFiles
-              }
-            })
+                // 法人证件
+                if (response.data.data.document_image) {
+                  let personFiles = []
+                  for (let j = 0; j < response.data.data.document_image.length; j++) {
+                    if (j > 5) {
+                      break
+                    }
+                    let pObj = response.data.data.document_image[j]
+                    let personItem = {}
+                    personItem['response'] = {}
+                    personItem['name'] = pObj['name']
+                    personItem['url'] = pObj['small']
+                    personItem['response']['asset_id'] = pObj['id']
+                    personFiles.push(personItem)
+                  }
+                  that.filePersonList = personFiles
+                }
+              })
+            }
           }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        that.isLoading = false
-        return false
-      })
+        })
+        .catch(function (error) {
+          that.$message.error(error.message)
+          that.isLoading = false
+          return false
+        })
 
       that.$http.get(api.upToken, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            that.uploadParam['token'] = response.data.data.upToken
-            that.uploadParam['x:random'] = response.data.data.random
-            that.uploadParam.url = response.data.data.upload_url
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              that.uploadParam['token'] = response.data.data.upToken
+              that.uploadParam['x:random'] = response.data.data.random
+              that.uploadParam.url = response.data.data.upload_url
+            }
           }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        return false
-      })
+        })
+        .catch(function (error) {
+          that.$message.error(error.message)
+          return false
+        })
     }
   }
 
@@ -588,27 +605,36 @@
   .form-btn {
     float: right;
   }
+
   .form-btn button {
     width: 120px;
+  }
+
+  .form-btn-m {
+    margin-top: 20px;
   }
 
   .diage-footer {
     text-align: center;
   }
+
   .diage-footer button {
     padding: 10px 30px;
   }
 
   .agree-content {
-  
+
   }
+
   .agree-content h3 {
-  
+
   }
+
   .agree-content p {
     line-height: 1.5;
     font-size: 1.2rem;
   }
+
   .agree-content .a-title {
     font-size: 1.3rem;
     line-height: 2;

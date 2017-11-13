@@ -1,23 +1,25 @@
 <template>
-
-    <el-row class="progress-box" :gutter="0" type="flex" justify="center">
-      <el-col :span="5">
-        <p id="p0" class="first" @click="redirect" step="1">1.选择设计类型</p>
-      </el-col>
-      <el-col :span="5">
-        <p id="p1" class="base" @click="redirect" step="2">2.填写项目需求</p>
-      </el-col>
-      <el-col :span="5">
-        <p id="p2" class="base" @click="redirect" step="3">3.填写公司信息</p>
-      </el-col>
-      <el-col :span="5">
-        <p id="p3" class="base" @click="redirect" step="4">4.项目需求预览</p>
-      </el-col>
-      <el-col :span="5">
-        <p id="p4" class="over" @click="redirect" step="5">5.推荐设计公司</p>
-      </el-col>
-    </el-row>
-
+  <section class="hid no-select">
+    <section class="cover" ref="cover">
+      <el-row class="progress-box" type="flex" justify="center">
+        <el-col :span="5">
+          <p id="p0" class="first" @click="redirect" step="1">1.选择设计类型</p>
+        </el-col>
+        <el-col :span="5">
+          <p id="p1" class="base" @click="redirect" step="2">2.填写项目需求</p>
+        </el-col>
+        <el-col :span="5">
+          <p id="p2" class="base" @click="redirect" step="3">3.填写公司信息</p>
+        </el-col>
+        <el-col :span="5">
+          <p id="p3" class="base" @click="redirect" step="4">4.项目需求预览</p>
+        </el-col>
+        <el-col :span="5">
+          <p id="p4" class="over" @click="redirect" step="5">5.推荐设计公司</p>
+        </el-col>
+      </el-row>
+    </section>
+  </section>
 </template>
 
 <script>
@@ -43,10 +45,11 @@
     },
     methods: {
       redirect(event) {
+        this.$store.commit('MENU_BAR', event.target.offsetLeft)
         if (event.currentTarget.classList.contains('active') || !event.currentTarget.classList.contains('pass')) {
           return false
         }
-        var step = parseInt(event.currentTarget.getAttribute('step'))
+        let step = parseInt(event.currentTarget.getAttribute('step'))
         if (step === 1) {
           this.$router.push({name: 'itemSubmitTwo', params: {id: this.itemId}})
         } else if (step === 2) {
@@ -58,9 +61,10 @@
         }
       }
     },
-    mounted: function() {
+    mounted: function () {
+      this.$refs.cover.scrollLeft = this.$store.state.event.MenuIndex - 65
     },
-    created: function() {
+    created: function () {
     },
     watch: {
       step(d) {
@@ -114,77 +118,115 @@
     width: 100%;
     min-width: 860px;
   }
+
   .progress-box p {
 
   }
+
   .el-col {
     line-height: 60px;
-    height:60px;
+    height: 60px;
     text-align: center;
     color: #666;
   }
+
   .el-col p {
-    height:60px;
+    height: 60px;
     line-height: 60px;
   }
+
   p.first {
     background: url('../../../assets/images/item/step_type_pass.png') no-repeat;
     background-size: contain;
   }
+
   p.first.pass {
     background: url('../../../assets/images/item/step_type_pass.png') no-repeat;
     background-size: contain;
     color: #666;
     cursor: pointer;
   }
+
   p.first.active {
     background: url('../../../assets/images/item/step_type_active.png') no-repeat;
     background-size: contain;
     color: #fff;
     cursor: auto;
   }
-  p.first p{
+
+  p.first p {
     color: #00AC84;
   }
+
   p.base {
     background: url('../../../assets/images/item/step_base.png') no-repeat;
     background-size: contain;
   }
+
   p.base.pass {
     background: url('../../../assets/images/item/step_base_pass.png') no-repeat;
     background-size: contain;
     cursor: pointer;
   }
+
   p.base.active {
     background: url('../../../assets/images/item/step_base_active.png') no-repeat;
     background-size: contain;
     color: #fff;
     cursor: auto;
   }
-  p.base.active p{
+
+  p.base.active p {
     color: #00AC84;
   }
+
   .active p {
   }
+
   p.over {
     background: url('../../../assets/images/item/step_over.png') no-repeat;
     background-size: contain;
   }
+
   p.over.active {
     background: url('../../../assets/images/item/step_over_active.png') no-repeat;
     background-size: contain;
     color: #fff;
   }
+
   p.over {
 
   }
-  p.over.active p{
 
+  p.over.active p {
+
+  }
+
+  @media screen and (max-width: 1179px) {
+    .progress-box {
+      margin-bottom: 6px;
+    }
   }
 
   @media screen and (max-width: 1000px) {
     .el-col p {
       line-height: 40px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .progress-box {
+      margin: 20px 0 0 15px;
+    }
+
+    .hid {
+      height: 64px;
+      overflow-y: hidden;
+    }
+
+    .cover {
+      overflow-x: scroll;
+      cursor: grab;
     }
   }
 </style>

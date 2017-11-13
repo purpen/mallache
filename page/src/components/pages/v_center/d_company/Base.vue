@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu currentName="profile"></v-menu>
+      <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
@@ -37,7 +37,7 @@
                 <p>公司简称</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
-                <el-input v-if="element.company_abbreviation" v-model="form.company_abbreviation" style="width: 300px;"
+                <el-input v-if="element.company_abbreviation" v-model="form.company_abbreviation"
                           placeholder="如: 太火鸟"></el-input>
                 <p v-else>{{ form.company_abbreviation }}</p>
               </el-col>
@@ -425,8 +425,6 @@
                 } else if (that.form.verify_status === 2) {
                   that.form.verify_status_label = '认证失败'
                 }
-
-                console.log(that.form)
               })
             }
           }
@@ -526,7 +524,7 @@
   .item-mAvatar .avatarhead span {
     font-size: 10px;
     line-height: 1.1;
-    color: #666;
+    color: #8391a5;
   }
 
   .item-m .avatarcontent {
@@ -569,6 +567,7 @@
     text-align: center;
     border: 1px dashed #ccc;
   }
+
   .item-m .avatar-uploader-icon {
     width: 40px;
     height: 40px;

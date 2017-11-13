@@ -213,6 +213,7 @@
       },
       // 提现弹出框
       withdraw() {
+        this.wallet.price = 10000000
         if (this.wallet.price <= 0) {
           this.$message.error('没有可提现余额!')
           return false
