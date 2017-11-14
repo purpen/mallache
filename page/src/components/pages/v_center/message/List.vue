@@ -34,6 +34,8 @@
           </el-pagination>
 
         </div>
+        <div class="empty" v-else></div>
+        <p v-if="!itemList.length" class="noMsg">您还没收到任何消息～</p>
       </el-col>
     </el-row>
   </div>
@@ -250,5 +252,18 @@
   .pagination {
     display: flex;
     justify-content: center;
+  }
+
+  .empty {
+    width: 122px;
+    height: 113px;
+    margin: 100px auto 0;
+    background: url("../../../../assets/images/item/Group5.png");
+    background-size: contain;
+  }
+
+  .noMsg {
+    text-align: center;
+    color: #969696;
   }
 </style>
