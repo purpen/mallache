@@ -28,7 +28,7 @@
             </div>
           </div>
 
-          <div :class="['item-box', isMob ? 'item-box-m' : '']">
+          <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
             <h3>交易记录</h3>
 
             <el-table v-if="!isMob"

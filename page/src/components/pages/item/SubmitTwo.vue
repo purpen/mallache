@@ -178,6 +178,7 @@
             that.isLoadingBtn = false
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
+              sessionStorage.setItem('position', 172)
               if (response.data.data.item.type === 1) {
                 that.$router.push({
                   name: 'itemSubmitThree',
@@ -478,9 +479,9 @@
 
     .submit-btn button {
       width: 100%;
-      height: 30px;
+      height: 40px;
       padding: 0;
-      line-height: 30px;
+      line-height: 40px;
     }
 
     .type-content {

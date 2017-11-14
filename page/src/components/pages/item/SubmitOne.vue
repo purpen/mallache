@@ -218,6 +218,11 @@
     color: #666;
   }
 
+  .pub-btn .advance {
+    color: #FF6C70;
+    font-size: 1.5rem
+  }
+
   .pub-btn .money {
     font-size: 2.5rem;
     color: #FF5A5F;
@@ -300,11 +305,6 @@
 
     .pub-btn .des {
       color: #666
-    }
-
-    .pub-btn .advance {
-      color: #FF6C70;
-      font-size: 1.5rem
     }
 
     .pub-btn .advance span {

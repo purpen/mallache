@@ -511,6 +511,7 @@
   .item-m .content {
     border: 1px solid #E6E6E6;
     padding: 4px 8px;
+    min-height: 30px;
   }
 
   .item-mAvatar {

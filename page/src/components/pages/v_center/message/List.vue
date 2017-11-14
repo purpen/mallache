@@ -5,7 +5,7 @@
       <v-menu currentName="message"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
-        <div class="right-content">
+        <div class="right-content" v-if="itemList.length">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
 
@@ -185,6 +185,7 @@
     padding: 10px 20px 10px;
     cursor: pointer;
     min-height: 30px;
+    line-height: 30px
   }
 
   .content-box .item:hover {
@@ -192,7 +193,7 @@
   }
 
   .item p {
-    font-size: 1.5rem;
+    line-height: 30px
   }
 
   .item .banner2 {

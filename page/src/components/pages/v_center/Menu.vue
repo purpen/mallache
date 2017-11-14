@@ -91,7 +91,7 @@
         }
       },
       alick(e) {
-        this.$store.commit('MENU_BAR', e.target.offsetLeft)
+        sessionStorage.setItem('MENU_BAR', e.target.offsetLeft)
         this.$router.push(e.target.getAttribute('to'))
       }
     },
@@ -104,7 +104,9 @@
       }
     },
     mounted() {
-      this.$refs.Mmenulist.scrollLeft = this.$store.state.event.MenuIndex - document.documentElement.clientWidth / 2 + 38
+      let menu = sessionStorage.getItem('MENU_BAR')
+
+      this.$refs.Mmenulist.scrollLeft = menu - document.documentElement.clientWidth / 2 + 38
     }
   }
 

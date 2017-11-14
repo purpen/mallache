@@ -1,5 +1,5 @@
 <template>
-  <el-col :span="6">
+  <el-col :span="isMob ? 24 : 6">
     <div class="progress">
 
       <div class="process-item">
@@ -37,25 +37,30 @@
 </template>
 
 <script>
-export default {
-  name: 'item_progress',
-  props: {
-    progressButt: {
-      default: 0
+  export default {
+    name: 'item_progress',
+    props: {
+      progressButt: {
+        default: 0
+      },
+      progressContract: {
+        default: -1
+      },
+      progressItem: {
+        default: -1
+      }
     },
-    progressContract: {
-      default: -1
+    data () {
+      return {
+        msg: ''
+      }
     },
-    progressItem: {
-      default: -1
-    }
-  },
-  data () {
-    return {
-      msg: ''
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -63,6 +68,7 @@ export default {
   .process-item {
     margin: 0 0 30px 0;
   }
+
   .process-item p {
     line-height: 2;
     font-size: 1.7rem;

@@ -52,7 +52,7 @@
                 <p>项目周期: {{ d.item.cycle_value }}</p>
               </el-col>
               <el-col :span="isMob ? 24 : 3">
-                <p>
+                <p style="white-space: nowrap">
                   <span v-if="d.item.price !== 0" class="money-str"><i v-if="isMob">价格：</i>¥ <b>{{ d.item.price
                     }}</b></span>
                 </p>
@@ -413,7 +413,6 @@
   .status-str-m span {
     float: right;
     width: 40%;
-    text-align: right;
   }
 
   .item-title p {

@@ -44,6 +44,16 @@
         </el-row>
       </article>
       <p class="mail">咨询详情请联系 <a href="mailto:mazhe@taihuoniao.com">mazhe@taihuoniao.com</a></p>
+      <div class="submit">
+        <a class="no-select" @click="intoReg">立即入驻</a>
+      </div>
+      <h3 class="D3title"><i class="D3iLeft"></i><b>已入驻设计公司</b><i class="D3iRight"></i></h3>
+      <section class="img-list clearfix">
+        <div v-for="(ele, index) in imgList">
+          <img :src="require(`assets/images/company_logo/${index + 1}@3x.png`)" :alt="ele" :key="index"/>
+          <span>{{ele}}</span>
+        </div>
+      </section>
     </div>
     <div class="recruitFoot" v-if="!isMob"></div>
     <div class="recruitFoot2" v-else></div>
@@ -63,6 +73,11 @@
           '设计公司入驻铟果D³INGO能够：高效对接优质设计项目，解决创新产品的资金、营销难题',
           '项目需求方入驻铟果D³INGO能够：以最直观、有效的方式找到心仪的设计服务供应商，加快创新产品设计、升级进程',
           '我们同时也广泛招募优质供应链，打造真正的创新产品策源地'
+        ],
+        imgList: [
+          '飞鱼设计', '飞鱼设计', '汉度工业设计', '华新意创工业设计', 'Design Affair', '威曼设计', '威曼设计', '瑞德设计',
+          '源骏设计', '广州大业设计', '杨明洁 Yang', '北京智加问道', '青岛图灵设计', '上品设计', '浪尖设计', '杭州领跑者设计',
+          '北京品物设计', '北京品物设计', '北京木马设计', '上海木马设计', '凸凹设计'
         ]
       }
     },
@@ -84,6 +99,11 @@
     computed: {
       isMob() {
         return this.$store.state.event.isMob
+      }
+    },
+    methods: {
+      intoReg() {
+        this.$router.push({name: 'register', params: {type: 2}})
       }
     }
   }
@@ -209,5 +229,74 @@
     background: url('../../../assets/images/subject/recruit/enterprise/foot.png') no-repeat center;
     background-size: cover;
     margin-bottom: -52px;
+  }
+
+  .submit {
+    text-align: center;
+  }
+
+  .submit a {
+    letter-spacing: 2px;
+    display: block;
+    width: 200px;
+    height: 42px;
+    margin: 12px auto 0;
+    background: url("../../../assets/images/subject/recruit/product/Button.png") no-repeat;
+    background-size: contain;
+    font-size: 16px;
+    color: #fff;
+    line-height: 38px;
+  }
+
+  .submit a:hover {
+    background: url("../../../assets/images/subject/recruit/product/Buttonhover.png") no-repeat;
+    background-size: contain;
+  }
+
+  .submit a:active {
+    color: #932bef;
+    line-height: 42px;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+    background: url("../../../assets/images/subject/recruit/product/Buttonactive.png") no-repeat;
+    background-size: contain;
+  }
+
+  .img-list {
+    padding-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .img-list div {
+    font-family: "PingFangSC-Light" !important;
+    font-weight: 100;
+    width: 14%;
+    margin: 10px 1%;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .img-list img {
+    width: 100%;
+    /*height: 50px;*/
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(10, 10, 10, .1);
+    border-radius: 25px;
+  }
+
+  @media screen and (max-width: 767px) {
+    .img-list div {
+      width: 29%;
+      margin: 10px 2%;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .img-list div {
+      margin: 10px 4px;
+    }
+
   }
 </style>

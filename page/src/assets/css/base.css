@@ -36,6 +36,10 @@ body {
   min-width: 110px;
 }
 
+.register-content .el-input-group--append {
+  padding-left: 0;
+}
+
 .container {
   margin: 0 auto;
 }
@@ -1160,6 +1164,29 @@ img.avatar {
   /*bank 弹出层*/
   .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small {
     width: 90%;
+  }
+
+  .fullwidth .el-form-item__content {
+    display: flex;
+  }
+
+  /*下拉框宽度*/
+  .el-select {
+    flex: 1;
+    margin-bottom: 8px;
+  }
+
+  /*ui设计选择框*/
+  .el-radio {
+    margin: 0 8px 4px 0;
+  }
+
+  .el-radio + .el-radio {
+    margin-left: 0;
+  }
+
+  .el-checkbox + .el-checkbox {
+    margin: 0 8px 8px 0;
   }
 }
 
