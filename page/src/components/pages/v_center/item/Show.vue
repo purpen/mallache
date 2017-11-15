@@ -122,7 +122,7 @@
                              width="40"/>
                         <img class="avatar fl" v-else :src="require('assets/images/avatar_100.png')" width="40"/>
                       </router-link>
-                      <p class="p-title fl">
+                      <p class="p-title minititle fl">
                         <router-link :to="{name: 'companyShow', params: {id: d.design_company.id}}" target="_blank">
                           {{ d.design_company.company_name }}
                         </router-link>
@@ -186,7 +186,7 @@
                              :src="cooperateCompany.design_company.logo_url" width="40"/>
                         <img class="avatar fl" v-else :src="require('assets/images/avatar_100.png')" width="40"/>
                       </router-link>
-                      <p class="p-title fl">
+                      <p class="p-title minititle fl">
                         <router-link :to="{name: 'companyShow', params: {id: cooperateCompany.design_company.id}}"
                                      target="_blank">{{ cooperateCompany.design_company.company_name }}
                         </router-link>
@@ -230,7 +230,7 @@
           <div class="select-item-box" v-if="statusLabel.contract">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
-                <div class="contract-item">
+                <div class="contract-item clearfix">
                   <div class="contract-left">
                     <img :src="require('assets/images/icon/pdf2x.png')" width="30"/>
                     <div class="contract-content">
@@ -238,7 +238,7 @@
                       <p class="contract-des">{{ contract.created_at }}</p>
                     </div>
                   </div>
-                  <div class="contract-right">
+                  <div class="contract-right minileft">
                     <p v-show="contract.status === 1">
                       <router-link :to="{name: 'vcenterContractDown', params: {unique_id: contract.unique_id}}"
                                    target="_blank"><i class="fa fa-download" aria-hidden="true"></i> 下载
@@ -1063,8 +1063,6 @@
             }]
 
             self.tableData = tab.concat(itemTab)
-
-            console.log(self.tableData)
           }
         })
         .catch(function (error) {
@@ -1521,5 +1519,23 @@
       border-top: none;
     }
   }
+
+  @media screen and (max-width: 350px) {
+    .item-logo .minititle {
+      max-width: 138px;
+      line-height: 1.5;
+    }
+
+    .contract-item {
+      height: auto;
+    }
+
+    .minileft p {
+      margin-left: 0;
+      margin-right: 16px;
+    }
+  }
+
+
 </style>
 

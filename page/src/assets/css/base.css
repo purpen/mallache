@@ -1162,7 +1162,7 @@ img.avatar {
   }
 
   /*bank 弹出层*/
-  .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small {
+  .el-dialog--small, .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small {
     width: 90%;
   }
 

@@ -183,6 +183,7 @@
   }
 
   .content-box .item {
+    position: relative;
     border-bottom: 1px solid #ccc;
     padding: 10px 20px 10px;
     cursor: pointer;
@@ -276,5 +277,17 @@
     animation: easeIn 3s;
     text-align: center;
     color: #969696;
+  }
+
+  @media screen and (max-width: 350px) {
+    .content-box .item {
+      padding: 10px 15px;
+    }
+
+    .item p.icon {
+      float: none;
+      position: absolute;
+      right: 15px;
+    }
   }
 </style>

@@ -73,7 +73,7 @@
               <el-collapse-item title="报价管理" name="4" class="partnersDesign">
                 <div class="quotation-item">
 
-                  <div class="item-logo">
+                  <div class="item-logo clearfix">
                     <div class="fl">
                       <p class="p-title fl">
                         {{ item.company_name }}
@@ -124,7 +124,7 @@
           <div class="select-item-box" v-if="statusLabel.contract">
             <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
-                <div class="contract-item" v-if="contract">
+                <div class="contract-item clearfix" v-if="contract">
                   <div class="contract-left">
                     <img src="../../../../assets/images/icon/pdf2x.png" width="30"/>
                     <div class="contract-content">
@@ -916,8 +916,7 @@
                       logoUrl = self.company.logo_image.logo
                     }
                     self.company.logo_url = logoUrl
-                    console.log('bbb')
-                    console.log(self.company)
+//                    console.log(self.company)
                   }
                 })
                 .catch(function (error) {
@@ -967,8 +966,8 @@
                       self.sureFinishBtn = true
                     }
                     self.stages = items
-                    console.log('aa')
-                    console.log(self.stages)
+//                    console.log('aa')
+//                    console.log(self.stages)
                   }
                 })
                 .catch(function (error) {
@@ -1024,8 +1023,6 @@
             }]
 
             self.tableData = tab.concat(itemTab)
-
-            console.log(self.tableData)
           }
         })
         .catch(function (error) {
@@ -1472,6 +1469,22 @@
 
     .contract-item {
       border-top: none;
+    }
+  }
+
+  @media screen and (max-width: 350px) {
+    .item-logo .minititle {
+      max-width: 138px;
+      line-height: 1.5;
+    }
+
+    .contract-item {
+      height: auto;
+    }
+
+    .minileft p {
+      margin-left: 0;
+      margin-right: 16px;
     }
   }
 
