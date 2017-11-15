@@ -4,17 +4,20 @@
     <el-row :gutter="24">
       <v-menu currentName="order"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
             <div class="main">
               <div class="status">
                 <p class="main-status">订单状态: <span>{{ item.status_value }}</span></p>
-                <p class="main-des" v-if="item.pay_type === 5 && item.status === 0">请于 {{ item.expire_at }} 前完成支付，逾期会关闭交易</p>
+                <p class="main-des" v-if="item.pay_type === 5 && item.status === 0">请于 {{ item.expire_at
+                  }} 前完成支付，逾期会关闭交易</p>
               </div>
               <div class="operation">
-                <p v-if="item.status === 0"><el-button class="is-custom" @click="rePay">更改支付方式</el-button></p>
+                <p v-if="item.status === 0">
+                  <el-button class="is-custom" @click="rePay">更改支付方式</el-button>
+                </p>
                 <!--<p><el-button >取消订单</el-button></p>-->
               </div>
             </div>
@@ -52,114 +55,130 @@
 </template>
 
 <script>
-import api from '@/api/api'
-import vMenu from '@/components/pages/v_center/Menu'
-import vMenuSub from '@/components/pages/v_center/order/MenuSub'
+  import api from '@/api/api'
+  import vMenu from '@/components/pages/v_center/Menu'
+  import vMenuSub from '@/components/pages/v_center/order/MenuSub'
 
-export default {
-  name: 'vcenter_order_show',
-  components: {
-    vMenu,
-    vMenuSub
-  },
-  data () {
-    return {
-      item: {},
-      itemUid: '',
-      msg: ''
-    }
-  },
-  methods: {
-    // 更改支付方式
-    rePay() {
-      this.$router.push({name: 'itemPayFund', params: {item_id: this.item.item_id}})
-    }
-  },
-  computed: {
-  },
-  created: function() {
-    const self = this
-    var itemUid = this.$route.params.id
-    if (itemUid) {
-      self.itemUid = itemUid
-      self.$http.get(api.orderId.format(itemUid), {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.item = response.data.data
-          var createdAt = self.item.created_at
-          var createdFormat = createdAt.date_format()
-          self.item.created_at = createdFormat.format('yyyy-MM-dd hh:mm')
-          var expire = new Date((createdFormat / 1000 + 86400 * 3) * 1000)
-          self.item.expire_at = expire.format('yyyy-MM-dd hh:mm')
-          console.log(response.data.data)
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-      })
-    } else {
-      self.$message.error('缺少请求参数!')
-      self.$router.push({name: 'home'})
+  export default {
+    name: 'vcenter_order_show',
+    components: {
+      vMenu,
+      vMenuSub
+    },
+    data () {
+      return {
+        item: {},
+        itemUid: '',
+        msg: ''
+      }
+    },
+    methods: {
+      // 更改支付方式
+      rePay() {
+        this.$router.push({name: 'itemPayFund', params: {item_id: this.item.item_id}})
+      }
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
+    },
+    created: function () {
+      const self = this
+      let itemUid = this.$route.params.id
+      if (itemUid) {
+        self.itemUid = itemUid
+        self.$http.get(api.orderId.format(itemUid), {})
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              self.item = response.data.data
+              let createdAt = self.item.created_at
+              let createdFormat = createdAt.date_format()
+              self.item.created_at = createdFormat.format('yyyy-MM-dd hh:mm')
+              let expire = new Date((createdFormat / 1000 + 86400 * 3) * 1000)
+              self.item.expire_at = expire.format('yyyy-MM-dd hh:mm')
+              console.log(response.data.data)
+            } else {
+              self.$message.error(response.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.$message.error(error.message)
+          })
+      } else {
+        self.$message.error('缺少请求参数!')
+        self.$router.push({name: 'home'})
+      }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  
+
   .content {
   }
+
   .content-box {
     height: 100%;
     border: 1px solid #ccc;
     padding: 20px;
   }
+
   .main {
     padding: 20px 0 20px 0;
   }
+
   .main p {
     line-height: 2;
   }
+
   .main .status {
     float: left;
   }
+
   .main .operation {
     float: right;
   }
+
   .main-status {
     font-size: 2rem;
     color: #222;
     font-weight: 400;
   }
+
   .main-status span {
     color: #FF5A5F;
   }
+
   .main-des {
     color: #666;
     font-size: 1rem;
   }
+
   .operation p {
     line-height: 50px;
   }
+
   .operation p button {
     width: 120px;
   }
 
   .detail {
-  
+
   }
+
   .detail p {
     line-height: 2.5;
   }
+
   .detail-banner {
     font-size: 1.8rem;
     line-height: 2;
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
   }
+
   .outline-pay {
     margin-top: 20px;
   }
@@ -167,11 +186,22 @@ export default {
   .server {
     margin-top: 50px;
   }
+
   .server p {
     color: #999;
     font-size: 1.8rem;
     line-height: 2;
   }
 
+  @media screen and (max-width: 767px) {
+    .right-content .content-box {
+      border: none;
+      margin-top: 0;
+    }
+
+    .main {
+      padding-bottom: 0;
+    }
+  }
 </style>
 

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <div class="blank20"></div>
     <div class="payment">
       <div class="title-item">
         <h3>支付项目资金</h3>
@@ -8,15 +7,15 @@
       </div>
       <div class="order-item">
         <p class="banner">订单详情</p>
-        <p>订单内容:&nbsp;&nbsp; {{ item.item_name }}</p>
-        <p>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额:&nbsp;&nbsp; ¥ {{ item.amount }}</p>
-        <p>订单编号:&nbsp;&nbsp; {{ item.uid }}</p>
+        <p><span>订单内容:&nbsp;&nbsp; </span>{{ item.item_name }}</p>
+        <p><span>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额:&nbsp;&nbsp; </span>¥ {{ item.amount }}</p>
+        <p><span>订单编号:&nbsp;&nbsp; </span>{{ item.uid }}</p>
       </div>
       <div class="pay-item">
         <p class="banner">选择支付方式</p>
 
         <div class="pay-type">
-          <ul>
+          <ul v-if="!isMob">
             <li>
               <label>
                 <div :class="{'item': true, active: payType === 1 ? true : false}" @click="checkedPayBtn(1)">
@@ -25,16 +24,14 @@
                 </div>
               </label>
             </li>
-            <!--
-            <li>
-              <label>
-                <div :class="{'item': true, active: payType === 2 ? true : false}" @click="checkedPayBtn(2)">
-                  <img src="../../../assets/images/icon/union1.png" />
-                  <img class="pay-active" src="../../../assets/images/icon/pay_checked.png" />
-                </div>
-              </label>
-            </li>
-            -->
+            <!--<li>-->
+            <!--<label>-->
+            <!--<div :class="{'item': true, active: payType === 2 ? true : false}" @click="checkedPayBtn(2)">-->
+            <!--<img src="../../../assets/images/icon/union1.png"/>-->
+            <!--<img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>-->
+            <!--</div>-->
+            <!--</label>-->
+            <!--</li>-->
             <li>
               <label>
                 <div :class="{'item': true, active: payType === 5 ? true : false}"
@@ -44,8 +41,13 @@
                 </div>
               </label>
             </li>
-
           </ul>
+
+          <el-radio-group v-model="payType" class="choicePay" v-if="isMob">
+            <el-radio :label="1" class="choiceList clearfix zfb">支付宝支付</el-radio>
+            <el-radio :label="5" class="choiceList clearfix dg">对公转账</el-radio>
+          </el-radio-group>
+
           <div class="clear"></div>
         </div>
 
@@ -79,12 +81,12 @@
     },
     methods: {
       pay() {
-        var payType = this.payType
+        let payType = this.payType
         if (!payType) {
           this.$message.error('请选择支付方式')
           return false
         }
-        var url = null
+        let url = null
         switch (payType) {
           case 1:
             url = api.secondAlipayId.format(this.item.id)
@@ -102,7 +104,7 @@
         }
 
         // 请求支付
-        var self = this
+        let self = this
         self.$http.get(url, {})
           .then(function (response) {
             self.isFirst = true
@@ -131,7 +133,7 @@
     },
     created: function () {
       const self = this
-      var itemId = this.$route.params.item_id
+      let itemId = this.$route.params.item_id
       if (itemId) {
         self.itemId = itemId
         self.$http.get(api.endPayOrderItemId.format(itemId), {})
@@ -156,26 +158,26 @@
         self.$message.error('缺少请求参数!')
         self.$router.push({name: 'home'})
       }
+    },
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      }
     }
-
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .payment {
-    border: 1px solid #ccc;
     width: 900px;
+    border: 1px solid #ccc;
     margin: 30px auto 30px auto;
     padding: 20px 20px 20px 20px;
   }
 
   .payment p {
     color: #333;
-  }
-
-  .title-item {
-
   }
 
   .title-item h3 {
@@ -266,5 +268,99 @@
     left: 0;
   }
 
+  @media screen and (max-width: 899px) {
+    .payment {
+      width: auto;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .title-item {
+      margin: 0;
+      padding: 20px 15px 0;
+      background: #fafafa;
+      text-align: center;
+      border-bottom: 0.5px solid #d2d2d2;
+    }
+
+    .title-item h3 {
+      font-size: 1.5rem;
+      color: #222;
+      font-weight: 600;
+    }
+
+    .title-item p {
+      font-size: 1.4rem;
+      line-height: 1.2;
+      color: #999;
+      padding: 20px 15px;
+      margin: 0;
+    }
+
+    .order-item p.banner, .pay-item p.banner {
+      font-weight: 400;
+      text-align: left;
+      display: block;
+      color: #666;
+      font-size: 1.5rem;
+      border-bottom: .5px solid #d2d2d2;
+      padding: 5px 0;
+    }
+
+    .order-item {
+      padding: 0 15px;
+      border-bottom: .5px solid #d2d2d2;
+    }
+
+    .order-item p {
+      margin: 5px 0;
+    }
+
+    .order-item p span {
+      color: #666;
+    }
+
+    .pay-item {
+      border-top: .5px solid #d2d2d2;
+      padding-left: 15px;
+    }
+
+    .pay-item p.banner {
+      margin: 0;
+    }
+
+    .pay-type .item {
+      margin-left: 0;
+      margin-right: 15px;
+    }
+
+    .pay-type {
+      height: auto;
+    }
+
+    .choicePay {
+      width: 100%;
+    }
+
+    .choicePay .choiceList {
+      text-indent: 45px;
+      display: block;
+      width: 100%;
+      padding: 12px 0;
+      border-bottom: 0.5px solid #d2d2d2;
+      line-height: 24px;
+    }
+
+    .zfb {
+      background: url("../../../assets/images/icon/zfb_icon.png") no-repeat left center;
+      background-size: 30px;
+    }
+
+    .dg {
+      background: url("../../../assets/images/icon/TA.png") no-repeat left center;
+      background-size: 30px;
+    }
+  }
 
 </style>

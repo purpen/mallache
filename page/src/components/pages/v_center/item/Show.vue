@@ -14,7 +14,7 @@
 
       <el-col :span="isMob ? 24 : 18">
         <div class="content">
-          <div class="banner">
+          <div :class="[{'banner-m' : isMob}, 'banner']">
             <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="100"/>
             <h1>{{ item.name }}</h1>
             <p>{{ item.status_value }}</p>
@@ -26,10 +26,10 @@
 
                 <div class="base_info">
                   <el-table
+                    v-if="!isMob"
                     :data="tableData"
                     border
-                    :show-header="false"
-                    style="width: 100%">
+                    :show-header="false">
                     <el-table-column
                       prop="name"
                       width="180">
@@ -46,6 +46,22 @@
                       </template>
                     </el-table-column>
                   </el-table>
+
+                  <section v-if="isMob">
+                    <div class="project-check">
+                      <ul>
+                        <li v-for="(ele, index) in tableData" :key="index" class="clearfix">
+                          <span class="fl">{{ele.name}}</span>
+                          <i v-if="!ele.image" class="fr">{{ele.title}}</i>
+                          <div v-if="ele.name === '相关附件'" class="fr">
+                            <p v-for="(d, index) in ele.image" :key="index">
+                              <a :href="d.file" target="_blank">{{ d.name }}</a>
+                            </p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </section>
                 </div>
 
               </el-collapse-item>
@@ -96,8 +112,8 @@
 
           <div class="select-item-box" v-if="statusLabel.trueCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="已选择的设计公司" name="4">
-                <div class="offer-company-item" v-for="(d, index) in offerCompany" :key="index">
+              <el-collapse-item title="已选择的设计公司" name="4" class="partnersDesign">
+                <div class="offer-company-item clearfix" v-for="(d, index) in offerCompany" :key="index">
 
                   <div class="item-logo">
                     <div class="fl">
@@ -112,16 +128,29 @@
                         </router-link>
                       </p>
                       <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top"
-                                  v-if="d.design_company_status === 2">
+                                  v-if="d.design_company_status === 2 && !isMob">
+                        <!--v-if="d.design_company_status === 2 && !isMob">-->
                         <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
                         <p class="contact">职位: {{ d.design_company.position }}</p>
                         <p class="contact">电话: {{ d.design_company.phone }}</p>
                         <p class="contact">邮箱: {{ d.design_company.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone"
-                                                                                 aria-hidden="true"></i> 联系我们</p>
+                        <p slot="reference" class="name-wrapper contact-user">
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                          联系我们</p>
+                      </el-popover>
+
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top"
+                                  v-if="d.design_company_status === 2 && isMob">
+                        <!--v-if="d.design_company_status === 2 && !isMob">-->
+                        <p class="contact">联系人: {{ d.design_company.contact_name }}</p>
+                        <p class="contact">职位: {{ d.design_company.position }}</p>
+                        <p class="contact">电话: {{ d.design_company.phone }}</p>
+                        <p class="contact">邮箱: {{ d.design_company.email }}</p>
+                        <p slot="reference" class="name-wrapper2 contact-user">
+                          和我联系</p>
                       </el-popover>
                     </div>
-                    <div class="fr item-stick-des">
+                    <div :class="[isMob ? 'fl' : 'fr', 'item-stick-des']">
                       <p>{{ d.status_value }}</p>
                     </div>
                   </div>
@@ -138,7 +167,6 @@
                                :company_id="d.design_company.id" type="primary">确认合作
                     </el-button>
                   </div>
-
                 </div>
 
               </el-collapse-item>
@@ -147,8 +175,8 @@
 
           <div class="select-item-box" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="合作的设计公司" name="5">
-                <div class="offer-company-item" v-if="cooperateCompany">
+              <el-collapse-item title="合作的设计公司" name="5" class="partnersDesign">
+                <div class="offer-company-item clearfix" v-if="cooperateCompany">
 
                   <div class="item-logo">
                     <div class="fl">
@@ -163,13 +191,25 @@
                                      target="_blank">{{ cooperateCompany.design_company.company_name }}
                         </router-link>
                       </p>
-                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top">
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="!isMob">
                         <p class="contact">联系人: {{ cooperateCompany.design_company.contact_name }}</p>
                         <p class="contact">职位: {{ cooperateCompany.design_company.position }}</p>
                         <p class="contact">电话: {{ cooperateCompany.design_company.phone }}</p>
                         <p class="contact">邮箱: {{ cooperateCompany.design_company.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone"
-                                                                                 aria-hidden="true"></i> 联系我们</p>
+                        <p slot="reference" class="name-wrapper contact-user">
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                          联系我们
+                        </p>
+                      </el-popover>
+
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="isMob">
+                        <p class="contact">联系人: {{ cooperateCompany.design_company.contact_name }}</p>
+                        <p class="contact">职位: {{ cooperateCompany.design_company.position }}</p>
+                        <p class="contact">电话: {{ cooperateCompany.design_company.phone }}</p>
+                        <p class="contact">邮箱: {{ cooperateCompany.design_company.email }}</p>
+                        <p slot="reference" class="name-wrapper2 contact-user">
+                          和我联系
+                        </p>
                       </el-popover>
                     </div>
                     <div class="fr item-stick-des">
@@ -1024,7 +1064,7 @@
 
             self.tableData = tab.concat(itemTab)
 
-            // console.log(self.item)
+            console.log(self.tableData)
           }
         })
         .catch(function (error) {
@@ -1144,6 +1184,7 @@
   }
 
   .offer-company-item {
+    position: relative;
     padding: 10px 0 0 0;
     border: 1px solid #ccc;
     margin: 20px 0 20px 0;
@@ -1206,7 +1247,7 @@
     height: 60px;
     margin: 15px 0 10px 0;
     padding: 10px 0 5px 0;
-    border-top: 1px solid #ccc;
+    /*border-top: 1px solid #ccc;*/
     border-bottom: 1px solid #ccc;
   }
 
@@ -1332,6 +1373,17 @@
     line-height: 40px;
   }
 
+  .contact-us .name-wrapper2 {
+    position: absolute;
+    top: 2px;
+    right: 15px;
+    border: 1px solid #D2D2D2;
+    border-radius: 4px;
+    line-height: 20px;
+    float: right;
+    padding: 6px;
+  }
+
   p.contact {
     line-height: 1.5;
     font-size: 1.3rem;
@@ -1413,6 +1465,61 @@
     padding: 10px 0;
   }
 
+  .banner-m {
+    background: #fafafa;
+    border: none;
+    margin: 10px 15px;
+  }
 
+  section ul li:last-child {
+    border-bottom: none;
+  }
+
+  section ul li {
+    line-height: 40px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  section ul li span {
+    font-size: 15px;
+    color: #222;
+  }
+
+  section ul li i, section ul li a {
+    font-size: 15px;
+    color: #707070;
+    max-width: 50%;
+  }
+
+  @media screen and (max-width: 767px) {
+    .bread {
+      margin-left: 15px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .select-item-box {
+      margin: 20px 15px;
+    }
+
+    .offer-company-item {
+      padding: 0;
+      border: none;
+      margin: 0;
+    }
+
+    .item-stick-des {
+      width: 100%;
+    }
+
+    .item-stick-des p {
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .contract-item {
+      border-top: none;
+    }
+  }
 </style>
 

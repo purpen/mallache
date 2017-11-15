@@ -14,22 +14,22 @@
 
       <el-col :span="isMob ? 24 : 18">
         <div class="content">
-          <div class="banner">
+          <div :class="[{'banner-m' : isMob}, 'banner']">
             <img v-show="statusIconUrl" class="" :src="statusIconUrl" width="100"/>
             <h1>{{ item.name }}</h1>
             <p>{{ item.design_status_value }}</p>
           </div>
 
           <div class="select-item-box">
-            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目详情" name="1">
 
                 <div class="base_info">
                   <el-table
+                    v-if="!isMob"
                     :data="tableData"
                     border
-                    :show-header="false"
-                    style="width: 100%">
+                    :show-header="false">
                     <el-table-column
                       prop="name"
                       width="180">
@@ -46,6 +46,22 @@
                       </template>
                     </el-table-column>
                   </el-table>
+
+                  <section v-if="isMob">
+                    <div class="project-check">
+                      <ul>
+                        <li v-for="(ele, index) in tableData" :key="index" class="clearfix">
+                          <span class="fl">{{ele.name}}</span>
+                          <i v-if="!ele.image" class="fr">{{ele.title}}</i>
+                          <div v-if="ele.name === '相关附件'" class="fr">
+                            <p v-for="(d, index) in ele.image" :key="index">
+                              <a :href="d.file" target="_blank">{{ d.name }}</a>
+                            </p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </section>
                 </div>
 
               </el-collapse-item>
@@ -53,8 +69,8 @@
           </div>
 
           <div class="select-item-box">
-            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
-              <el-collapse-item title="报价管理" name="4">
+            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+              <el-collapse-item title="报价管理" name="4" class="partnersDesign">
                 <div class="quotation-item">
 
                   <div class="item-logo">
@@ -62,13 +78,23 @@
                       <p class="p-title fl">
                         {{ item.company_name }}
                       </p>
-                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top">
+
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="!isMob">
                         <p class="contact">联系人: {{ item.contact_name }}</p>
                         <p class="contact">职位: {{ item.position }}</p>
                         <p class="contact">电话: {{ item.phone }}</p>
                         <p class="contact">邮箱: {{ item.email }}</p>
                         <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone"
                                                                                  aria-hidden="true"></i> 联系我们</p>
+                      </el-popover>
+
+                      <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="isMob">
+                        <p class="contact">联系人: {{ item.contact_name }}</p>
+                        <p class="contact">职位: {{ item.position }}</p>
+                        <p class="contact">电话: {{ item.phone }}</p>
+                        <p class="contact">邮箱: {{ item.email }}</p>
+                        <p slot="reference" class="name-wrapper2 contact-user">和我联系
+                        </p>
                       </el-popover>
                     </div>
                     <div class="fr item-stick-des" v-if="quotation && quotation.status === 0">
@@ -96,7 +122,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.contract">
-            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
                 <div class="contract-item" v-if="contract">
                   <div class="contract-left">
@@ -139,7 +165,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.amount">
-            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="托管项目资金" name="9">
                 <div class="capital-item" v-if="statusLabel.isPay">
                   <p>项目资金</p>
@@ -161,7 +187,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.manage">
-            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目管理" name="11">
                 <div class="manage-item" v-if="item.status === 9">
                   <p class="wait-begin">
@@ -239,7 +265,7 @@
         </div>
 
         <div class="select-item-box" v-if="statusLabel.evaluate">
-          <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+          <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
             <el-collapse-item title="评价" name="12">
 
               <div class="evaluate-result" v-if="item.status === 22">
@@ -999,7 +1025,7 @@
 
             self.tableData = tab.concat(itemTab)
 
-            console.log(self.item)
+            console.log(self.tableData)
           }
         })
         .catch(function (error) {
@@ -1126,6 +1152,7 @@
   }
 
   .quotation-item {
+    position: relative;
     border: 1px solid #ccc;
     margin: 20px 0 20px 0;
   }
@@ -1324,6 +1351,17 @@
     line-height: 50px;
   }
 
+  .contact-us .name-wrapper2 {
+    position: absolute;
+    top: 2px;
+    right: 15px;
+    border: 1px solid #D2D2D2;
+    border-radius: 4px;
+    line-height: 20px;
+    float: right;
+    padding: 6px;
+  }
+
   p.contact {
     line-height: 1.5;
     font-size: 1.3rem;
@@ -1378,6 +1416,63 @@
 
   .eva-content .ev-c-content {
     padding: 10px 0;
+  }
+
+  .banner-m {
+    background: #fafafa;
+    border: none;
+    margin: 10px 15px;
+  }
+
+  section ul li:last-child {
+    border-bottom: none;
+  }
+
+  section ul li {
+    line-height: 40px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  section ul li span {
+    font-size: 15px;
+    color: #222;
+  }
+
+  section ul li i, section ul li a {
+    font-size: 15px;
+    color: #707070;
+    max-width: 50%;
+  }
+
+  @media screen and (max-width: 767px) {
+    .bread {
+      margin-left: 15px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .select-item-box {
+      margin: 20px 15px;
+    }
+
+    .quotation-item {
+      padding: 0;
+      border: none;
+      margin: 0;
+    }
+
+    .item-stick-des {
+      width: 100%;
+    }
+
+    .item-stick-des p {
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .contract-item {
+      border-top: none;
+    }
   }
 
 </style>

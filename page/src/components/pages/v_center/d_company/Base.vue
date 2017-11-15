@@ -531,7 +531,7 @@
   .item-m .avatarcontent {
     border: none;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .edit a {

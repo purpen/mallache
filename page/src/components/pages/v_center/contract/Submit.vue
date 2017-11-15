@@ -592,8 +592,6 @@
   .rightmenu {
     margin-bottom: 18px;
   }
-  .content-box {
-  }
 
   .right-content {
     margin-top: -20px;
@@ -664,5 +662,9 @@
     cursor: pointer;
   }
 
-
+  @media screen and (max-width: 767px) {
+    .right-content .content-box {
+      border: none;
+    }
+  }
 </style>

@@ -179,7 +179,7 @@
 <style scoped>
 
   .right-content .content-box {
-    padding: 0 0 0 0;
+    padding: 0;
   }
 
   .content-box .item {
@@ -254,15 +254,26 @@
     justify-content: center;
   }
 
+  @keyframes easeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   .empty {
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
+    animation: easeIn 3s;
     background: url("../../../../assets/images/item/Group5.png");
     background-size: contain;
   }
 
   .noMsg {
+    animation: easeIn 3s;
     text-align: center;
     color: #969696;
   }

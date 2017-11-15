@@ -474,6 +474,15 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  @keyframes easeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   .content-item-box {
     min-height: 500px;
     margin-top: 20px;
@@ -507,6 +516,10 @@
 
   .content {
     border-bottom: 1px solid #ccc;
+  }
+
+  .item {
+    animation: easeIn 3s;
   }
 
   .item.ing p {
