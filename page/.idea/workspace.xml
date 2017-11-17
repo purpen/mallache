@@ -2,22 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9921bb58-247a-45a1-a89c-b3945b6dc953" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/page.iml" afterPath="$PROJECT_DIR$/.idea/page.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/assets/css/base.css" afterPath="$PROJECT_DIR$/src/assets/css/base.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/item/PayFund.vue" afterPath="$PROJECT_DIR$/src/components/pages/item/PayFund.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/item/SubmitOne.vue" afterPath="$PROJECT_DIR$/src/components/pages/item/SubmitOne.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/bank/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/bank/List.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/c_item/MenuSub.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/c_item/MenuSub.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/c_item/Show.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/c_item/Show.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/contract/Submit.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/contract/Submit.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/d_company/MenuSub.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/d_company/MenuSub.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/design_case/Submit.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/design_case/Submit.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/item/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/item/List.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/item/Show.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/item/Show.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/wallet/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/wallet/List.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/pages/v_center/message/List.vue" afterPath="$PROJECT_DIR$/src/components/pages/v_center/message/List.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -38,45 +28,57 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SubmitUIThree.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/pages/item/SubmitUIThree.vue">
+      <file leaf-file-name="List.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/item/List.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="665">
-              <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Submit.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/design_case/Submit.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="646" column="25" lean-forward="true" selection-start-line="646" selection-start-column="25" selection-end-line="646" selection-end-column="25" />
+            <state relative-caret-position="448">
+              <caret line="343" column="43" lean-forward="true" selection-start-line="343" selection-start-column="43" selection-end-line="343" selection-end-column="43" />
               <folding>
-                <element signature="e#4379#4385#0" expanded="true" />
-                <element signature="e#4385#4391#0" expanded="true" />
-                <element signature="e#4391#4397#0" expanded="true" />
+                <element signature="n#div#3;n#div#0;n#div#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#div#4;n#div#0;n#div#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Show.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/Show.vue">
+      <file leaf-file-name="List.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="666">
-              <caret line="1443" column="40" lean-forward="true" selection-start-line="1443" selection-start-column="40" selection-end-line="1443" selection-end-column="40" />
+            <state relative-caret-position="209">
+              <caret line="11" column="83" lean-forward="false" selection-start-line="11" selection-start-column="72" selection-end-line="11" selection-end-column="83" />
+              <folding>
+                <element signature="n#el-row#0;n#div#1;n#div#0;n#el-col#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="List.vue" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/message/List.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="780">
+              <caret line="244" column="21" lean-forward="true" selection-start-line="244" selection-start-column="21" selection-end-line="244" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="base.css" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/assets/css/base.css">
+      <file leaf-file-name="TrueList.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="1204" column="0" lean-forward="true" selection-start-line="1204" selection-start-column="0" selection-end-line="1204" selection-end-column="0" />
+            <state relative-caret-position="562">
+              <caret line="263" column="11" lean-forward="false" selection-start-line="263" selection-start-column="11" selection-end-line="263" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="List.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -93,14 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.stage-asset-box</find>
-      <find>.stage-asset-box</find>
-      <find>is-custom</find>
-      <find>about</find>
-      <find>c_item</find>
-      <find>.c_item</find>
-      <find>767</find>
-      <find>profile</find>
       <find>/menu-list</find>
       <find>menu-list</find>
       <find>active</find>
@@ -123,6 +117,14 @@
       <find>.stage-asset-box</find>
       <find>stage-asset-box</find>
       <find>.el-step__title.is-success</find>
+      <find>empty</find>
+      <find>itemList.length</find>
+      <find>.length</find>
+      <find>itemList</find>
+      <find>v-for</find>
+      <find>designItems</find>
+      <find>isEmpty</find>
+      <find>console.log</find>
     </findStrings>
     <replaceStrings>
       <replace>v-lazy</replace>
@@ -156,7 +158,6 @@
       <list>
         <option value="$PROJECT_DIR$/src/components/pages/home/Home.vue" />
         <option value="$PROJECT_DIR$/src/components/block/Footer.vue" />
-        <option value="$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/account/ModifyPwd.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/company/Show.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/company/MenuSub.vue" />
@@ -187,24 +188,25 @@
         <option value="$PROJECT_DIR$/src/components/pages/v_center/order/Show.vue" />
         <option value="$PROJECT_DIR$/src/components/block/ItemProgress.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/contract/View.vue" />
-        <option value="$PROJECT_DIR$/src/components/pages/v_center/message/List.vue" />
         <option value="$PROJECT_DIR$/../../kingfisher/web-page/.gitignore" />
         <option value="$PROJECT_DIR$/../../kingfisher/web-page/src/components/page/home/Home.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/d_company/MenuSub.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/item/PayFund.vue" />
-        <option value="$PROJECT_DIR$/src/components/pages/v_center/item/List.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/wallet/List.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/bank/List.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/item/Show.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/item/SubmitOne.vue" />
-        <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue" />
-        <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/MenuSub.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/Menu.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/contract/Submit.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/design_case/Submit.vue" />
         <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/Show.vue" />
         <option value="$PROJECT_DIR$/src/assets/css/base.css" />
+        <option value="$PROJECT_DIR$/src/components/pages/v_center/item/List.vue" />
+        <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue" />
+        <option value="$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue" />
+        <option value="$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue" />
+        <option value="$PROJECT_DIR$/src/components/pages/v_center/message/List.vue" />
       </list>
     </option>
   </component>
@@ -403,41 +405,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="order" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="v_center" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="item" />
+              <option name="myItemId" value="message" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -472,108 +440,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="design_case" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="v_center" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="d_company" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="v_center" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="contract" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="page" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="v_center" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="c_item" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -803,12 +669,12 @@
       <workItem from="1510802172908" duration="2475000" />
       <workItem from="1510812470205" duration="2214000" />
       <workItem from="1510826213256" duration="1319000" />
-      <workItem from="1510879751871" duration="18456000" />
+      <workItem from="1510879751871" duration="21013000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="457987000" />
+    <option name="totallyTimeSpent" value="460544000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -821,9 +687,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-8" width="1096" height="1906" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30092594" sideWeight="0.5217391" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30092594" sideWeight="0.5217391" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23188406" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3281337" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980502" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -905,18 +770,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="19" />
+      <option name="time" value="20" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build/webpack.dev.conf.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1292">
@@ -963,13 +821,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
           <caret line="198" column="52" lean-forward="false" selection-start-line="198" selection-start-column="46" selection-end-line="198" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/message/List.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1483">
-          <caret line="283" column="24" lean-forward="false" selection-start-line="283" selection-start-column="24" selection-end-line="283" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -1152,14 +1003,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/item/List.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="647" column="10" lean-forward="false" selection-start-line="647" selection-start-column="3" selection-end-line="647" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/item/Show.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1141">
@@ -1184,14 +1027,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="409" column="19" lean-forward="true" selection-start-line="409" selection-start-column="19" selection-end-line="409" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/bank/List.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="753">
@@ -1205,16 +1040,6 @@
         <state relative-caret-position="285">
           <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="657">
-          <caret line="270" column="51" lean-forward="true" selection-start-line="270" selection-start-column="51" selection-end-line="270" selection-end-column="51" />
-          <folding>
-            <element signature="e#5662#5714#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1279,9 +1104,9 @@
         <state relative-caret-position="677">
           <caret line="646" column="25" lean-forward="true" selection-start-line="646" selection-start-column="25" selection-end-line="646" selection-end-column="25" />
           <folding>
-            <element signature="e#4379#4385#0" expanded="true" />
-            <element signature="e#4385#4391#0" expanded="true" />
-            <element signature="e#4391#4397#0" expanded="true" />
+            <element signature="e#4379#4385#0" expanded="false" />
+            <element signature="e#4385#4391#0" expanded="false" />
+            <element signature="e#4391#4397#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1296,8 +1121,54 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/css/base.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="1204" column="0" lean-forward="true" selection-start-line="1204" selection-start-column="0" selection-end-line="1204" selection-end-column="0" />
+        <state relative-caret-position="847">
+          <caret line="1241" column="20" lean-forward="true" selection-start-line="1241" selection-start-column="20" selection-end-line="1241" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/TrueList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="562">
+          <caret line="263" column="11" lean-forward="false" selection-start-line="263" selection-start-column="11" selection-end-line="263" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/c_item/List.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="83" lean-forward="false" selection-start-line="11" selection-start-column="72" selection-end-line="11" selection-end-column="83" />
+          <folding>
+            <element signature="n#el-row#0;n#div#1;n#div#0;n#el-col#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/item/List.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="343" column="43" lean-forward="true" selection-start-line="343" selection-start-column="43" selection-end-line="343" selection-end-column="43" />
+          <folding>
+            <element signature="n#div#3;n#div#0;n#div#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#div#4;n#div#0;n#div#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/design_case/List.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/v_center/message/List.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="244" column="21" lean-forward="true" selection-start-line="244" selection-start-column="21" selection-end-line="244" selection-end-column="21" />
           <folding />
         </state>
       </provider>

@@ -11,7 +11,7 @@
         <div class="loading" v-loading.body="isLoading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length > 0">
+          <el-row v-if="!isMob" class="item-title-box list-box" v-show="!isEmpty">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
@@ -148,7 +148,8 @@
         designItems: [],
         waitCount: 0,
         ingCount: 0,
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -253,11 +254,14 @@
               designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor
             self.designItems = designItems
+            if (self.designItems.length) {
+              self.isEmpty = false
+            } else {
+              self.isEmpty = true
+            }
           } else {
             self.$message.error(response.data.meta.message)
           }
-
-          console.log(response.data)
         })
         .catch(function (error) {
           self.$message.error(error.message)

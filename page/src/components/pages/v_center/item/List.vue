@@ -56,7 +56,7 @@
               </el-col>
             </el-row>
 
-            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && !isMob">
+            <div class="item" v-for="(d, index) in itemList" v-if="!isEmpty && !isMob">
 
               <el-row class="banner list-box">
                 <el-col :span="24">
@@ -156,7 +156,7 @@
               </el-row>
             </div>
 
-            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && isMob">
+            <div class="item" v-for="(d, index) in itemList" v-if="!isEmpty && isMob">
               <div class="banner list-box">
                 <p>{{ d.item.created_at }}</p>
               </div>
@@ -296,7 +296,8 @@
         itemList: [],
         itemIngList: [],
         pagination: {},
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -349,6 +350,11 @@
                 console.log(that.itemIngList)
               } else if (type === 2) {
                 that.itemList = data
+                if (that.itemList.length) {
+                  that.isEmpty = false
+                } else {
+                  that.isEmpty = true
+                }
               }
 //              console.log(data)
             }

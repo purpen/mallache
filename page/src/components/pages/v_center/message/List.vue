@@ -34,8 +34,8 @@
           </el-pagination>
 
         </div>
-        <div class="empty" v-else></div>
-        <p v-if="!itemList.length" class="noMsg">您还没收到任何消息～</p>
+        <div class="empty" v-if="!isEmpty"></div>
+        <p v-if="!isEmpty" class="noMsg">您还没收到任何消息～</p>
       </el-col>
     </el-row>
   </div>
@@ -64,10 +64,10 @@
           totalCount: 0,
           sort: 1,
           type: 0,
-
           test: null
         },
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: false
       }
     },
     methods: {
@@ -97,6 +97,11 @@
                 data[i]['is_show'] = false
               }
               self.itemList = data
+              if (self.itemList.length) {
+                self.isEmpty = true
+              } else {
+                self.isEmpty = false
+              }
 //              console.log(data)
             }
           })
@@ -255,26 +260,15 @@
     justify-content: center;
   }
 
-  @keyframes easeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   .empty {
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    animation: easeIn 3s;
     background: url("../../../../assets/images/item/Group5.png");
     background-size: contain;
   }
 
   .noMsg {
-    animation: easeIn 3s;
     text-align: center;
     color: #969696;
   }

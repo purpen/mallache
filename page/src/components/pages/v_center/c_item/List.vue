@@ -9,7 +9,7 @@
         <div class="loading" v-loading.body="isLoading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length > 0">
+          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
