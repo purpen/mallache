@@ -856,10 +856,6 @@ button.is-custom.is-outlined.is-loading:after {
   padding: .85rem 1.3rem !important;
 }
 
-.Mmenulist .item {
-  color: rgba(112, 123, 135, .92) !important;
-}
-
 /**
  * vCenter Content
  */
@@ -1256,6 +1252,14 @@ img.avatar {
 
   .el-step__main {
     padding-top: 16px;
+  }
+
+  .menu-list .item:hover {
+    color: rgba(112, 123, 135, .92)
+  }
+
+  .menu-list .item.is-active:hover {
+    color: #222;
   }
 
   /*767 end*/

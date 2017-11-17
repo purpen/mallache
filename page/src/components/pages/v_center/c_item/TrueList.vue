@@ -26,7 +26,7 @@
             </el-col>
           </el-row>
 
-          <div class="item" v-for="(d, index) in designItems">
+          <div class="item" v-for="(d, index) in designItems" v-show="!isEmpty">
             <el-row class="banner list-box">
               <el-col :span="12">
                 <p>{{ d.item.created_at }}</p>

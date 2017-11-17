@@ -16,7 +16,7 @@
             </div>
 
             <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
-            <div class="item ing" v-if="itemIngList.length" v-for="(d, index) in itemIngList">
+            <div class="item ing" v-show="!isEmpty" v-for="(d, index) in itemIngList">
               <div class="banner">
                 <p>
                   <span>进行中</span>
@@ -41,7 +41,7 @@
             </div>
 
 
-            <el-row class="item-title-box list-box" v-if="itemList.length && !isMob">
+            <el-row class="item-title-box list-box" v-show="!isEmpty && !isMob">
               <el-col :span="10">
                 <p>项目名称</p>
               </el-col>
@@ -56,7 +56,7 @@
               </el-col>
             </el-row>
 
-            <div class="item" v-for="(d, index) in itemList" v-if="!isEmpty && !isMob">
+            <div class="item" v-for="(d, index) in itemList" v-show="!isEmpty && !isMob">
 
               <el-row class="banner list-box">
                 <el-col :span="24">
@@ -156,7 +156,7 @@
               </el-row>
             </div>
 
-            <div class="item" v-for="(d, index) in itemList" v-if="!isEmpty && isMob">
+            <div class="item" v-for="(d, index) in itemList" v-show="!isEmpty && isMob">
               <div class="banner list-box">
                 <p>{{ d.item.created_at }}</p>
               </div>
@@ -347,7 +347,6 @@
               } // endfor
               if (type === 1) {
                 that.itemIngList = data
-                console.log(that.itemIngList)
               } else if (type === 2) {
                 that.itemList = data
                 if (that.itemList.length) {
