@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container clearfix">
     <div class="blank20"></div>
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20">
@@ -431,6 +431,7 @@
   }
 
   .status-str-m {
+    font-size: 1.5rem;
     margin-top: 10px;
     padding: 10px 0;
     border-top: 1px solid #e6e6e6;

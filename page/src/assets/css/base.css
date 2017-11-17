@@ -856,6 +856,10 @@ button.is-custom.is-outlined.is-loading:after {
   padding: .85rem 1.3rem !important;
 }
 
+.Mmenulist .item {
+  color: rgba(112, 123, 135, .92) !important;
+}
+
 /**
  * vCenter Content
  */
@@ -1171,9 +1175,14 @@ img.avatar {
   }
 
   /*下拉框宽度*/
+  .el-form-item__content .el-select:last-child {
+    margin-right: 0
+  }
+
   .el-select {
     flex: 1;
     margin-bottom: 8px;
+    margin-right: 5px;
   }
 
   /*ui设计选择框*/
@@ -1232,6 +1241,33 @@ img.avatar {
   .choiceList .el-radio__label {
     font-size: 15px;
   }
+
+  .el-step__icon {
+    line-height: 26px
+  }
+
+  .withdraw {
+    font-size: 15px;
+  }
+
+  .c_item {
+    padding-left: 15px;
+  }
+
+  .el-step__main {
+    padding-top: 16px;
+  }
+
+  /*767 end*/
+}
+
+.el-step__title.is-success {
+  color: #00AC84
+}
+
+.el-step__head.is-text.is-success {
+  background: #00AC84;
+  border-color: #00AC84;
 }
 
 /**

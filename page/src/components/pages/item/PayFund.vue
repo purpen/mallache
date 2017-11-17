@@ -12,51 +12,53 @@
         <p><span>订单编号:&nbsp;&nbsp; </span>{{ item.uid }}</p>
       </div>
       <div class="pay-item">
-        <p class="banner">选择支付方式</p>
+        <div class="clearfix payItem-m">
+          <p class="banner">选择支付方式</p>
+          <div class="pay-type">
+            <ul v-if="!isMob">
+              <li>
+                <label>
+                  <div :class="{'item': true, active: payType === 1 ? true : false}" @click="checkedPayBtn(1)">
+                    <img src="../../../assets/images/icon/alipay.png"/>
+                    <img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>
+                  </div>
+                </label>
+              </li>
+              <!--<li>-->
+              <!--<label>-->
+              <!--<div :class="{'item': true, active: payType === 2 ? true : false}" @click="checkedPayBtn(2)">-->
+              <!--<img src="../../../assets/images/icon/union1.png"/>-->
+              <!--<img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>-->
+              <!--</div>-->
+              <!--</label>-->
+              <!--</li>-->
+              <li>
+                <label>
+                  <div :class="{'item': true, active: payType === 5 ? true : false}"
+                       @click="checkedPayBtn(5)">
+                    <p>对公转账</p>
+                    <img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>
+                  </div>
+                </label>
+              </li>
+            </ul>
 
-        <div class="pay-type">
-          <ul v-if="!isMob">
-            <li>
-              <label>
-                <div :class="{'item': true, active: payType === 1 ? true : false}" @click="checkedPayBtn(1)">
-                  <img src="../../../assets/images/icon/alipay.png"/>
-                  <img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>
-                </div>
-              </label>
-            </li>
-            <!--<li>-->
-            <!--<label>-->
-            <!--<div :class="{'item': true, active: payType === 2 ? true : false}" @click="checkedPayBtn(2)">-->
-            <!--<img src="../../../assets/images/icon/union1.png"/>-->
-            <!--<img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>-->
-            <!--</div>-->
-            <!--</label>-->
-            <!--</li>-->
-            <li>
-              <label>
-                <div :class="{'item': true, active: payType === 5 ? true : false}"
-                     @click="checkedPayBtn(5)">
-                  <p>对公转账</p>
-                  <img class="pay-active" src="../../../assets/images/icon/pay_checked.png"/>
-                </div>
-              </label>
-            </li>
-          </ul>
+            <el-radio-group v-model="payType" class="choicePay" v-if="isMob">
+              <el-radio :label="1" class="choiceList clearfix zfb">支付宝支付</el-radio>
+              <el-radio :label="5" class="choiceList clearfix dg">对公转账</el-radio>
+            </el-radio-group>
 
-          <el-radio-group v-model="payType" class="choicePay" v-if="isMob">
-            <el-radio :label="1" class="choiceList clearfix zfb">支付宝支付</el-radio>
-            <el-radio :label="5" class="choiceList clearfix dg">对公转账</el-radio>
-          </el-radio-group>
-
-          <div class="clear"></div>
+            <div class="clear"></div>
+          </div>
         </div>
 
-        <div class="pay-box">
-          <p>
+        <div class="pay-box clearfix">
+          <p v-if="isMob" class="total-price-m">总计：<span>¥ {{ item.amount }}</span></p>
+          <p :class="{'btn' : isMob}">
             <el-button class="is-custom" @click="pay" type="primary">立即支付</el-button>
           </p>
-          <p class="total-price">¥ {{ item.amount }}</p>
-          <p class="total-txt">总计: </p>
+          <p v-if="!isMob" class="total-price">¥ {{ item.amount }}</p>
+          <p v-if="!isMob" class="total-txt">总计：</p>
         </div>
         <div class="clear"></div>
 
@@ -257,6 +259,20 @@
     font-size: 2rem;
   }
 
+  .total-price-m {
+    width: 100%;
+    color: #FF5A5F;
+    text-align: center;
+    line-height: 2.4;
+    font-size: 1.5rem;
+    padding: 6px;
+  }
+
+  .total-price-m span {
+    margin-left: 10px;
+    color: #FF5A5F;
+  }
+
   p.total-txt {
     line-height: 40px;
   }
@@ -309,8 +325,10 @@
     }
 
     .order-item {
+      overflow: hidden;
       padding: 0 15px;
       border-bottom: .5px solid #d2d2d2;
+      background: #fff;
     }
 
     .order-item p {
@@ -352,6 +370,10 @@
       line-height: 24px;
     }
 
+    .choicePay .choiceList:last-child {
+      border-bottom: none
+    }
+
     .zfb {
       background: url("../../../assets/images/icon/zfb_icon.png") no-repeat left center;
       background-size: 30px;
@@ -363,4 +385,36 @@
     }
   }
 
+  .btn {
+    width: calc(100% - 15px);
+    margin-right: 15px;
+  }
+
+  .btn button {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 767px) {
+    .payment {
+      background: #fafafa;
+    }
+
+    .pay-box {
+      margin-top: 0;
+    }
+
+    .pay-item {
+      border-top: none;
+      margin-bottom: -50px;
+      padding-bottom: 50px;
+    }
+
+    .payItem-m {
+      background: #fff;
+      margin-left: -15px;
+      padding-left: 15px;
+      border-top: 0.5px solid #d2d2d2;
+      border-bottom: 0.5px solid #d2d2d2;
+    }
+  }
 </style>

@@ -251,6 +251,7 @@
               </div>
             </div>
           </div>
+
         </div>
 
       </el-col>
@@ -345,6 +346,7 @@
               } // endfor
               if (type === 1) {
                 that.itemIngList = data
+                console.log(that.itemIngList)
               } else if (type === 2) {
                 that.itemList = data
               }
@@ -514,9 +516,9 @@
     background: #FAFAFA;
   }
 
-  .content {
-    border-bottom: 1px solid #ccc;
-  }
+  /*.content {*/
+  /*border-bottom: 1px solid #ccc;*/
+  /*}*/
 
   .item {
     animation: easeIn 3s;
@@ -619,6 +621,7 @@
 
   .c-body {
     padding-bottom: 16px;
+    border-bottom: 1px solid #E6E6E6
   }
 
   .c-body p {
@@ -631,6 +634,7 @@
   }
 
   .price-m {
+    font-size: 15px;
     padding: 14px 0;
     overflow: hidden;
   }
@@ -646,9 +650,11 @@
   }
 
   .list-title {
-    font-size: 1.5rem;
     padding-bottom: 8px;
     border-bottom: none;
+    font-size: 1.7rem;
+    line-height: 1.5;
+    font-weight: 600;
   }
 
 </style>

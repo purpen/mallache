@@ -229,7 +229,7 @@
                         <span v-if="d.confirm === 1">完成</span>
                       </p>
                     </div>
-                    <div class="stage-asset-box clear" v-for="(asset, asset_index) in d.item_stage_image">
+                    <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image">
                       <div class="contract-left">
                         <img src="../../../../assets/images/icon/pdf2x.png" width="30"/>
                         <div class="contract-content">
@@ -1390,7 +1390,7 @@
   }
 
   .stage-asset-box {
-    padding: 10px 0 10px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #ccc;
   }
 
@@ -1469,6 +1469,10 @@
 
     .contract-item {
       border-top: none;
+    }
+
+    .stage-asset-box {
+      padding: 10px 0;
     }
   }
 

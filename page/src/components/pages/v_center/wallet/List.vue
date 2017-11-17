@@ -15,7 +15,7 @@
               </div>
               <div :class="['amount-btn', isMob ? 'amount-show-m amount-btn-m' : '']">
                 <p>
-                  <el-button class="is-custom" @click="withdraw" size="small">提现</el-button>
+                  <el-button class="is-custom withdraw" @click="withdraw" size="small">提现</el-button>
                   <!--<el-button class="is-custom" type="primary" size="small">充值</el-button>-->
                 </p>
               </div>

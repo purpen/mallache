@@ -304,11 +304,16 @@
     }
 
     .pub-btn .des {
-      color: #666
+      color: #666;
+      line-height: 1.5;
     }
 
     .pub-btn .advance span {
       display: block;
+    }
+
+    .pub-title.about span {
+      line-height: 2;
     }
   }
 </style>

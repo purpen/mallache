@@ -449,8 +449,4 @@
     font-size: 1.4rem;
     line-height: 1.4;
   }
-
-  .c_item {
-    padding-left: 15px;
-  }
 </style>

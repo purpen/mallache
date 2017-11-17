@@ -1518,6 +1518,10 @@
     .contract-item {
       border-top: none;
     }
+
+    .stage-asset-box {
+      padding: 10px 0;
+    }
   }
 
   @media screen and (max-width: 350px) {

@@ -84,7 +84,7 @@
               <div class="blank20"></div>
 
               <el-row>
-                <el-col :span="6">
+                <el-col :span="isMob ? 12 : 6">
                   <el-form-item prop="sort">
                     <el-select v-model.number="form.sort" placeholder="设置项目阶段" size="small">
                       <el-option
@@ -96,7 +96,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4" style="line-height: 40px;">
+                <el-col :span="isMob ? 12 : 4" style="line-height: 40px;">
                   <el-button class="is-custom" @click="genStageInput" size="small">{{ stateMsg }}</el-button>
                 </el-col>
               </el-row>
@@ -598,7 +598,7 @@
   }
 
   .content-box form {
-    padding: 10px 50px 10px 50px;
+    padding: 10px 50px
   }
 
   .content-box h2 {
@@ -665,6 +665,10 @@
   @media screen and (max-width: 767px) {
     .right-content .content-box {
       border: none;
+    }
+
+    .content-box form {
+      padding: 0
     }
   }
 </style>
