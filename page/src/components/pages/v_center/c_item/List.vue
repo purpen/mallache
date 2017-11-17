@@ -3,7 +3,7 @@
     <div class="blank20"></div>
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20">
-      <div class="right-content">
+      <div class="right-content" v-if="!isEmpty">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
         <div class="loading" v-loading.body="isLoading"></div>
@@ -166,7 +166,8 @@
             {required: true, message: '请添写报价说明', trigger: 'blur'}
           ]
         },
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -295,6 +296,11 @@
               designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor
             self.designItems = designItems
+            if (self.designItems.length) {
+              self.isEmpty = false
+            } else {
+              self.isEmpty = true
+            }
           } else {
             self.$message.error(response.data.meta.message)
           }

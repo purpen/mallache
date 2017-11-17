@@ -5,13 +5,13 @@
     <v-menu currentName="c_item" class="c_item"></v-menu>
 
     <el-col :span="isMob ? 24 : 20">
-      <div class="right-content">
+      <div class="right-content" v-if="!isEmpty">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
         <div class="loading" v-loading.body="isLoading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box" v-show="!isEmpty">
+          <el-row v-if="!isMob" class="item-title-box list-box">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
@@ -26,7 +26,7 @@
             </el-col>
           </el-row>
 
-          <div class="item" v-for="(d, index) in designItems" v-show="!isEmpty">
+          <div class="item" v-for="(d, index) in designItems">
             <el-row class="banner list-box">
               <el-col :span="12">
                 <p>{{ d.item.created_at }}</p>
