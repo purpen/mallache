@@ -15,7 +15,7 @@
               </div>
               <div :class="['amount-btn', isMob ? 'amount-show-m amount-btn-m' : '']">
                 <p>
-                  <el-button class="is-custom" @click="withdraw" size="small">提现</el-button>
+                  <el-button class="is-custom withdraw" @click="withdraw" size="small">提现</el-button>
                   <!--<el-button class="is-custom" type="primary" size="small">充值</el-button>-->
                 </p>
               </div>
@@ -28,7 +28,7 @@
             </div>
           </div>
 
-          <div :class="['item-box', isMob ? 'item-box-m' : '']">
+          <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
             <h3>交易记录</h3>
 
             <el-table v-if="!isMob"

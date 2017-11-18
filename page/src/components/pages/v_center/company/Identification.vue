@@ -15,7 +15,7 @@
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="企业名称" prop="company_name">
                     <el-input v-model="form.company_name" name="company_name" ref="company_name"
                               placeholder="请输入完整的公司名称"></el-input>
@@ -23,7 +23,7 @@
                 </el-col>
               </el-row>
 
-              <el-form-item label="证件类型" prop="company_type">
+              <el-form-item label="证件类型" prop="company_type" class="fullwidth">
                 <el-select v-model.number="form.company_type" style="width: 350px;" placeholder="请选择证件类型">
                   <el-option
                     v-for="(d, index) in certificateTypeOptions"
@@ -35,7 +35,7 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="统一社会信用代码" prop="registration_number">
                     <el-input v-model="form.registration_number" placeholder=""></el-input>
                   </el-form-item>
@@ -43,7 +43,7 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="公司法人营业执照" prop="">
                     <el-upload
                       class=""
@@ -64,14 +64,14 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="法人姓名" prop="legal_person">
                     <el-input v-model="form.legal_person" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
 
-              <el-form-item label="证件类型" prop="document_type">
+              <el-form-item label="证件类型" prop="document_type" class="fullwidth">
                 <el-select v-model.number="form.document_type" placeholder="请选择证件类型">
                   <el-option
                     v-for="(d, index) in documentTypeOptions"
@@ -83,7 +83,7 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="证件号码" prop="document_number">
                     <el-input v-model="form.document_number" placeholder=""></el-input>
                   </el-form-item>
@@ -91,7 +91,7 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="法人证件" prop="">
                     <el-upload
                       class=""
@@ -135,7 +135,7 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 16 : 12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-checkbox v-model="agreement" disabled><a href="javascript:void(0);" @click="agreementBtn">已阅读并同意《铟果SaaS协议》</a>
                   </el-checkbox>
                 </el-col>

@@ -63,8 +63,7 @@ const state = {
     title: '' // 标题
   },
   pmdHeight: '0px', // 页面大图高度
-  isMob: false,
-  MenuIndex: 0
+  isMob: false
 }
 
 let IsMobile = function () {
@@ -124,9 +123,6 @@ const mutations = {
     } else {
       state.isMob = false
     }
-  },
-  MENU_BAR(state, index) {
-    state.MenuIndex = index
   }
 }
 

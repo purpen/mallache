@@ -291,9 +291,13 @@
           self.submit('ruleForm')
         }
       })
+      console.log(this.form.type)
     },
     created() {
       this.form.type = this.$route.params.type
+      if (this.form.type === 2) {
+        this.cActive = true
+      }
       if (this.$store.state.event.token) {
         this.$message.error('已经登录!')
         this.$router.replace({name: 'home'})

@@ -45,7 +45,7 @@
     },
     methods: {
       redirect(event) {
-        this.$store.commit('MENU_BAR', event.target.offsetLeft)
+        sessionStorage.setItem('position', event.target.offsetLeft)
         if (event.currentTarget.classList.contains('active') || !event.currentTarget.classList.contains('pass')) {
           return false
         }
@@ -62,7 +62,9 @@
       }
     },
     mounted: function () {
-      this.$refs.cover.scrollLeft = this.$store.state.event.MenuIndex - 65
+      let MenuIndex = sessionStorage.getItem('position')
+
+      this.$refs.cover.scrollLeft = MenuIndex - 65
     },
     created: function () {
     },

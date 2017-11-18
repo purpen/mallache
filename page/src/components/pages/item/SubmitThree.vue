@@ -19,8 +19,9 @@
                           placeholder="详细描述下产品的主要功能，以便于设计服务商了解项目的产品需求。"></el-input>
               </el-form-item>
 
-              <el-form-item label="项目周期" prop="cycle">
-                <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany">
+              <el-form-item label="项目周期" prop="cycle" class="fullwidth">
+                <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany"
+                >
                   <el-option
                     v-for="item in cycleOptions"
                     :label="item.label"
@@ -30,7 +31,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="设计费用预算" prop="design_cost">
+              <el-form-item label="设计费用预算" prop="design_cost" class="fullwidth">
                 <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
                   <el-option
                     v-for="item in costOptions"
@@ -41,7 +42,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="所属行业" prop="industry">
+              <el-form-item label="所属行业" prop="industry" class="fullwidth">
                 <el-select v-model.number="form.industry" placeholder="请选择行业">
                   <el-option
                     v-for="item in industryOptions"
@@ -54,13 +55,13 @@
 
               <region-picker :isEmpty="true" :provinceProp="province" :titleProp="cityTitle" :cityProp="city"
                              :districtProp="district" :twoSelect="true" :isFirstProp="isFirst"
-                             @onchange="change"></region-picker>
+                             @onchange="change" class="fullwidth"></region-picker>
 
               <el-row :gutter="24">
-                <el-col :span="isMob ? 24 : 12">
+                <el-col :xs="24" :sm="12" :md="12" :lg="12">
                   <el-form-item label="上传附件及相关参考资料" prop="">
                     <el-upload
-                      class="upload-demo"
+                      class="upload-demo clearfix"
                       :action="uploadUrl"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
@@ -269,6 +270,7 @@
               .then(function (response) {
                 if (response.data.meta.status_code === 200) {
                   that.$message.success('提交成功！')
+                  sessionStorage.setItem('position', 344)
                   that.$router.push({name: 'itemSubmitFour', params: {id: response.data.data.item.id}})
                   return false
                 } else {
@@ -370,6 +372,7 @@
         }
       },
       returnBtn() {
+        sessionStorage.setItem('position', 0)
         this.$router.push({name: 'itemSubmitTwo', params: {id: this.itemId}})
       }
     },
@@ -624,6 +627,10 @@
   }
 
   @media screen and (max-width: 767px) {
+    .content {
+      border: none;
+    }
+
     .slider {
       padding-bottom: 20px;
     }

@@ -64,7 +64,7 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.design_case_status === 0">
+            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
@@ -89,7 +89,7 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.demand_verify_status !== 1">
+            <div class="item no-line clearfix" v-show="item.demand_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
@@ -298,6 +298,10 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
     padding-bottom: 10px;
+  }
+
+  .content-box .item:last-child {
+    border-bottom: none;
   }
 
   .content-box .item h3 {
