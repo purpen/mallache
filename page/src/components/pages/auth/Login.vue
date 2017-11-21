@@ -219,6 +219,12 @@
     color: #666;
   }
 
+  #passwd {
+    width: 16px;
+    height: 16px;
+    vertical-align: sub;
+  }
+
   @media screen and (max-width: 767px) {
     .login-box {
       width: auto;
@@ -242,11 +248,6 @@
     .opt {
       margin-top: -10px;
       overflow: hidden;
-    }
-
-    #passwd {
-      width: 16px;
-      height: 16px;
     }
 
     .reg {

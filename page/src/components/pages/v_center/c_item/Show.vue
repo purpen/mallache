@@ -21,7 +21,7 @@
           </div>
 
           <div class="select-item-box">
-            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目详情" name="1">
 
                 <div class="base_info">
@@ -53,7 +53,7 @@
                         <li v-for="(ele, index) in tableData" :key="index" class="clearfix">
                           <span class="fl">{{ele.name}}</span>
                           <i v-if="!ele.image" class="fr">{{ele.title}}</i>
-                          <div v-if="ele.name === '相关附件'" class="fr">
+                          <div v-if="ele.name === '相关附件'" class="">
                             <p v-for="(d, index) in ele.image" :key="index">
                               <a :href="d.file" target="_blank">{{ d.name }}</a>
                             </p>
@@ -69,7 +69,7 @@
           </div>
 
           <div class="select-item-box">
-            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="报价管理" name="4" class="partnersDesign">
                 <div class="quotation-item">
 
@@ -122,7 +122,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.contract">
-            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
                 <div class="contract-item clearfix" v-if="contract">
                   <div class="contract-left">
@@ -165,7 +165,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.amount">
-            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="托管项目资金" name="9">
                 <div class="capital-item" v-if="statusLabel.isPay">
                   <p>项目资金</p>
@@ -187,7 +187,7 @@
           </div>
 
           <div class="select-item-box" v-if="statusLabel.manage">
-            <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+            <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目管理" name="11">
                 <div class="manage-item" v-if="item.status === 9">
                   <p class="wait-begin">
@@ -199,35 +199,40 @@
                 <div class="manage-item add-stage" v-else>
 
                   <div class="stage-item" v-for="(d, index) in stages">
-                    <div class="stage-title">
-                      <h3>第{{ d.no }}阶段: {{ d.title }}</h3>
-                      <p v-if="d.confirm === 0">
-                        <el-upload
-                          class=""
-                          :action="uploadUrl"
-                          :on-change="handleChange"
-                          :on-progress="stageUploadProgress"
-                          :on-preview="handlePreview"
-                          :file-list="[]"
-                          :data="uploadParam"
-                          :show-file-list="false"
-                          :on-error="uploadStageError"
-                          :on-success="uploadStageSuccess"
-                          :before-upload="beforeStageUpload"
-                          list-type="text">
-                          <el-button size="small" class="is-custom" :id="'upload_btn_' + index" @click="uplaodStageBtn"
-                                     :stage_id="d.id" :index="index" type="primary">{{ stageUploadBtnMsg }}
+                    <div class="stage-title clearfix">
+                      <h3 class="clearfix">第{{ d.no }}阶段: {{ d.title }}</h3>
+                      <span style="color: #999" v-if="isMob && d.confirm !== 1">附件格式只限上传JPG／PNG／PDF文件</span>
+                      <div class="btnGroup clearfix">
+
+                        <p v-if="d.confirm === 0" class="flex-1">
+                          <el-upload
+                            class=""
+                            :action="uploadUrl"
+                            :on-change="handleChange"
+                            :on-progress="stageUploadProgress"
+                            :on-preview="handlePreview"
+                            :file-list="[]"
+                            :data="uploadParam"
+                            :show-file-list="false"
+                            :on-error="uploadStageError"
+                            :on-success="uploadStageSuccess"
+                            :before-upload="beforeStageUpload"
+                            list-type="text">
+                            <el-button size="small" class="is-custom upload_btn" :id="'upload_btn_' + index"
+                                       @click="uplaodStageBtn"
+                                       :stage_id="d.id" :index="index" type="primary">{{ stageUploadBtnMsg }}
+                            </el-button>
+                          </el-upload>
+                        </p>
+                        <p v-if="d.status === 0" class="flex-1">
+                          <el-button type="primary" @click="stageSendBtn" size="small" :stage_id="d.id" :index="index"
+                                     class="is-custom">发送
                           </el-button>
-                        </el-upload>
-                      </p>
-                      <p v-if="d.status === 0">
-                        <el-button type="primary" @click="stageSendBtn" size="small" :stage_id="d.id" :index="index"
-                                   class="is-custom">发送
-                        </el-button>
-                      </p>
-                      <p v-else>
-                        <span v-if="d.confirm === 1">完成</span>
-                      </p>
+                        </p>
+                        <p v-else class="finish">
+                          <span v-if="d.confirm === 1">完成</span>
+                        </p>
+                      </div>
                     </div>
                     <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image">
                       <div class="contract-left">
@@ -265,7 +270,7 @@
         </div>
 
         <div class="select-item-box" v-if="statusLabel.evaluate">
-          <el-collapse accordion v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
+          <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
             <el-collapse-item title="评价" name="12">
 
               <div class="evaluate-result" v-if="item.status === 22">
@@ -361,7 +366,6 @@
         takingPriceDialog: false,
         isTakingLoadingBtn: false,
         sureFinishBtn: false,
-        stageUploadBtnMsg: '上传附件(格式: jpg/png/pdf)',
         evaluate: {
           score: 0,
           content: ''
@@ -692,7 +696,11 @@
       },
       uploadStageSuccess(response, file, fileList) {
         let index = this.currentStageIndex
-        document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
+        if (this.isMob) {
+          document.getElementById('upload_btn_' + index).innerText = '上传附件'
+        } else {
+          document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
+        }
         let row = {
           id: response.asset_id,
           name: response.name,
@@ -703,7 +711,11 @@
       },
       uploadStageError(err, file, fileList) {
         let index = this.currentStageIndex
-        document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
+        if (this.isMob) {
+          document.getElementById('upload_btn_' + index).innerText = '上传附件'
+        } else {
+          document.getElementById('upload_btn_' + index).innerText = '上传附件(格式: jpg/png/pdf)'
+        }
         this.$message.error(err)
       },
       handlePreview(file) {
@@ -723,6 +735,13 @@
       },
       isMob() {
         return this.$store.state.event.isMob
+      },
+      stageUploadBtnMsg() {
+        if (!this.isMob) {
+          return '上传附件(格式: jpg/png/pdf)'
+        } else {
+          return '上传附件'
+        }
       }
     },
     created: function () {
@@ -928,6 +947,7 @@
             if (self.statusLabel.stage) {
               self.$http.get(api.itemStageDesignCompanyLists, {params: {item_id: self.item.id}})
                 .then(function (response) {
+                  console.log(response)
                   if (response.data.meta.status_code === 200) {
                     let items = response.data.data
                     let isAllPass = true
@@ -967,7 +987,7 @@
                     }
                     self.stages = items
 //                    console.log('aa')
-//                    console.log(self.stages)
+                    console.log(self.stages)
                   }
                 })
                 .catch(function (error) {
@@ -1220,7 +1240,7 @@
   }
 
   .contract-item {
-    height: 60px;
+    /*height: 60px;*/
     margin: 20px 0 10px 0;
     padding: 10px 0 5px 0;
     border-top: 1px solid #ccc;
@@ -1246,9 +1266,13 @@
   }
 
   .contract-content p {
+    max-width: 300px;
     font-size: 1rem;
     color: #666;
     line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .contract-des {
@@ -1319,10 +1343,6 @@
     text-align: left;
   }
 
-  .add-stage p {
-
-  }
-
   .add-stage-btn {
     margin-bottom: 20px;
   }
@@ -1374,8 +1394,7 @@
   }
 
   .stage-title {
-    height: 40px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 0.5px solid #D2D2D2;
   }
 
   .stage-item .stage-title h3 {
@@ -1473,6 +1492,37 @@
 
     .stage-asset-box {
       padding: 10px 0;
+    }
+
+    .eva-content p.ev-c-content {
+      padding: 0;
+    }
+
+    .stage-item .stage-title h3 {
+      float: none;
+    }
+
+    .btnGroup {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btnGroup .flex-1 {
+      flex: 1;
+      margin: 8px 4px 16px;
+    }
+
+    button.is-custom.el-button.el-button--primary.upload_btn {
+      color: #FF5A5F;
+      background: #fff;
+      border-color: #FF5A5F;
+    }
+
+    .stage-title .finish {
+      position: absolute;
+      right: 0;
+      top: -28px;
     }
   }
 

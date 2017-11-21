@@ -71,7 +71,7 @@
                     </p>
                   </div>
                   <div v-else class="clearfix">
-                    <div v-if="d.item.status === 5" class="clearfix">z
+                    <div v-if="d.item.status === 5" class="clearfix">
                       <p>
                         <el-button class="is-custom" size="small" @click="contractSendBtn" :index="index"
                                    :item_id="d.item.id" type="primary">发送合同

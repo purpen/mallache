@@ -186,6 +186,12 @@
     font-size: 1.2rem;
   }
 
+  @media screen and (max-width: 767px) {
+    .opt a {
+      font-size: 1.4rem;
+    }
+  }
+
   .add {
     text-align: center;
   }
