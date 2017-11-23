@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
         Commands\CalculationWeight::class,
         //删除过期的支付订单
         Commands\DropPayOrder::class,
+
+        // 批量生成设计公司用户
+        Commands\createUsers::class,
     ];
 
     /**
