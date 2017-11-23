@@ -20,7 +20,7 @@
             <p>{{ item.status_value }}</p>
           </div>
 
-          <div class="select-item-box">
+          <div class="select-item-box clearfix">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目详情" name="1">
 
@@ -69,11 +69,11 @@
           </div>
 
 
-          <div class="select-item-box" v-if="statusLabel.selectCompany">
+          <div class="select-item-box clearfix" v-if="statusLabel.selectCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择系统推荐的设计公司" name="3">
 
-                <div class="select-company-item" v-for="(d, index) in stickCompany" :key="index">
+                <div class="select-company-item clearfix" v-for="(d, index) in stickCompany" :key="index">
                   <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
                     <div class="img">
@@ -83,12 +83,12 @@
                       </router-link>
                     </div>
                     <div class="company-title">
-                      <h3>
+                      <h3 class="company-name">
                         <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name
                           }}
                         </router-link>
                       </h3>
-                      <p><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
+                      <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
                       <p class="des"><span>类型: </span>{{ d.item_type_label }}</p>
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
@@ -100,7 +100,7 @@
                   </div>
                 </div>
                 <div class="clear"></div>
-                <div class="pub-btn" v-if="item.status === 3">
+                <div class="pub-btn clearfix" v-if="item.status === 3">
                   <el-button class="is-custom" @click="stickCompanySubmit" :loading="isLoadingBtn"
                              :disabled="this.stickCompanyIds.length <= 0" type="primary">发送项目需求
                   </el-button>
@@ -110,7 +110,7 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.trueCompany">
+          <div class="select-item-box clearfix" v-if="statusLabel.trueCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="已选择的设计公司" name="4" class="partnersDesign">
                 <div class="offer-company-item clearfix" v-for="(d, index) in offerCompany" :key="index">
@@ -173,7 +173,7 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.cooperateCompany">
+          <div class="select-item-box clearfix" v-if="statusLabel.cooperateCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合作的设计公司" name="5" class="partnersDesign">
                 <div class="offer-company-item clearfix" v-if="cooperateCompany">
@@ -227,7 +227,7 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.contract">
+          <div class="select-item-box clearfix" v-if="statusLabel.contract">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="合同管理" name="6">
                 <div class="contract-item clearfix">
@@ -256,17 +256,17 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.amount">
+          <div class="select-item-box clearfix" v-if="statusLabel.amount">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="托管项目资金" name="9">
-                <div class="capital-item" v-if="statusLabel.isPay">
+                <div class="capital-item clearfix" v-if="statusLabel.isPay">
                   <p>项目资金</p>
                   <p class="capital-money">¥ {{ item.price }}</p>
                   <p class="pay-btn">
                     <span>项目资金已拖管</span>
                   </p>
                 </div>
-                <div class="capital-item" v-else>
+                <div class="capital-item clearfix" v-else>
                   <p>项目资金</p>
                   <p class="capital-money">¥ {{ item.price }}</p>
                   <p class="pay-btn">
@@ -280,19 +280,19 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.manage">
+          <div class="select-item-box clearfix" v-if="statusLabel.manage">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="项目管理" name="11">
-                <div class="manage-item" v-if="item.status === 9">
+                <div class="manage-item clearfix" v-if="item.status === 9">
                   <p class="wait-begin">等待设计公司开始项目</p>
                 </div>
-                <div class="manage-item add-stage" v-else>
+                <div class="manage-item add-stage clearfix" v-else>
                   <div class="manage-item" v-if="stages.length === 0">
                     <p class="wait-begin">等待设计公司提交资料</p>
                   </div>
-                  <div v-else>
-                    <div class="stage-item" v-for="(d, index) in stages">
-                      <div class="stage-title">
+                  <div class="clearfix" v-else>
+                    <div class="stage-item clearfix" v-for="(d, index) in stages">
+                      <div class="stage-title clearfix">
                         <h3>第{{ d.no }}阶段: {{ d.title }}</h3>
 
                         <p v-if="d.confirm === 0">
@@ -304,7 +304,7 @@
                           <span v-if="d.confirm === 1">已确认</span>
                         </p>
                       </div>
-                      <div class="stage-asset-box clear" v-for="(asset, asset_index) in d.item_stage_image">
+                      <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image">
                         <div class="contract-left">
                           <img :src="require('assets/images/icon/pdf2x.png')" width="30"/>
                           <div class="contract-content">
@@ -321,7 +321,7 @@
                     </div>
                   </div>
 
-                  <p class="finish-item-btn" v-if="item.status === 15">
+                  <p class="finish-item-btn clearfix" v-if="item.status === 15">
                     <el-button type="primary" class="is-custom" :loading="sendStageLoadingBtn" @click="sureItemBtn">
                       项目确认完成
                     </el-button>
@@ -332,10 +332,10 @@
             </el-collapse>
           </div>
 
-          <div class="select-item-box" v-if="statusLabel.evaluate">
+          <div class="select-item-box clearfix" v-if="statusLabel.evaluate">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="评价" name="12" v-if="cooperateCompany">
-                <div class="evaluate-report" v-if="item.status === 18">
+                <div class="evaluate-report clearfix" v-if="item.status === 18">
                   <p class="ev-c-ava">
                     <img class="avatar" v-if="cooperateCompany.design_company.logo_url"
                          :src="cooperateCompany.design_company.logo_url" width="60"/>
@@ -365,7 +365,7 @@
                   </p>
                 </div>
 
-                <div class="evaluate-result" v-if="item.status === 22">
+                <div class="evaluate-result clearfix" v-if="item.status === 22">
                   <p class="ev-c-ava fl">
                     <img class="avatar" v-if="cooperateCompany.design_company.logo_url"
                          :src="cooperateCompany.design_company.logo_url" width="50"/>
@@ -1115,14 +1115,14 @@
   }
 
   .select-company-item {
-    height: 200px;
+    /*height: 200px;*/
     margin-bottom: 10px;
     border: 1px solid #ccc;
   }
 
   .select-company-item .check-box {
     margin: 10px;
-    line-height: 160px;
+    line-height: 220px;
     float: left;
   }
 
@@ -1134,7 +1134,7 @@
   }
 
   .select-company-item .content .img {
-    height: 180px;
+    /*height: 180px;*/
     display: block;
     margin: 10px;
     float: left;
@@ -1161,7 +1161,7 @@
   }
 
   .select-company-item .case-box {
-    height: 100px;
+    /*height: 100px;*/
     margin: 10px;
     float: left;
     padding-top: 45px;
@@ -1522,6 +1522,23 @@
     .stage-asset-box {
       padding: 10px 0;
     }
+    .select-company-item .check-box {
+      line-height: 1;
+    }
+    .select-company-item .case-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding-top: 0
+    }
+    .select-company-item .content .img {
+      float: none;
+      display: flex;
+      justify-content: center;
+    }
+    .select-company-item .company-title  .company-name, .select-company-item .company-title  .company-addr{
+      text-align: center;
+    }
   }
 
   @media screen and (max-width: 350px) {
@@ -1542,4 +1559,3 @@
 
 
 </style>
-
