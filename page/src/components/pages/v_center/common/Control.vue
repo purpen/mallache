@@ -39,7 +39,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
 
-            <div class="item" v-show="item.design_info_status === 0">
+            <div class="item clearfix" v-show="item.design_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
               <p class="item-btn">
@@ -47,7 +47,7 @@
               </p>
             </div>
 
-            <div class="item" v-show="item.design_verify_status !== 1">
+            <div class="item clearfix" v-show="item.design_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
@@ -55,7 +55,7 @@
               </p>
             </div>
 
-            <div class="item" v-show="item.design_item_status === 0">
+            <div class="item clearfix" v-show="item.design_item_status === 0">
               <h3>公司接单设置</h3>
               <p class="item-title">设计项目接单价格</p>
               <p class="item-btn">
@@ -63,7 +63,7 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.design_case_status === 0">
+            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
