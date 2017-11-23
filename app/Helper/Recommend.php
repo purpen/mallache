@@ -132,7 +132,7 @@ class Recommend
         $design_id = 32;
 
         if((int)$user_id === (int)$this->item->user_id){
-            $this->item->recommend =  $this->item->item->recommend . "," . $design_id;
+            $this->item->recommend =  $this->item->recommend . "," . $design_id;
             $this->item->save();
         }
     }
