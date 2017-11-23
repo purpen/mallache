@@ -83,12 +83,12 @@
                       </router-link>
                     </div>
                     <div class="company-title">
-                      <h3>
+                      <h3 class="company-name">
                         <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name
                           }}
                         </router-link>
                       </h3>
-                      <p><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
+                      <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
                       <p class="des"><span>类型: </span>{{ d.item_type_label }}</p>
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
@@ -1134,7 +1134,7 @@
   }
 
   .select-company-item .content .img {
-    height: 180px;
+    /*height: 180px;*/
     display: block;
     margin: 10px;
     float: left;
@@ -1521,6 +1521,23 @@
 
     .stage-asset-box {
       padding: 10px 0;
+    }
+    .select-company-item .check-box {
+      line-height: 1;
+    }
+    .select-company-item .case-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding-top: 0
+    }
+    .select-company-item .content .img {
+      float: none;
+      display: flex;
+      justify-content: center;
+    }
+    .select-company-item .company-title  .company-name, .select-company-item .company-title  .company-addr{
+      text-align: center;
     }
   }
 
