@@ -79,7 +79,9 @@
           </div>
           <div class="summary">
             <h2>荣誉奖项</h2>
-            <p v-html="item.awards"></p>
+            <p>
+              <pre v-html="item.awards"></pre>
+            </p>
           </div>
         </div>
       </el-col>
