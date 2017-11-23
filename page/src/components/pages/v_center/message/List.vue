@@ -246,7 +246,7 @@
     border-radius: 50%;
     width: 7px;
     height: 7px;
-    margin-top: 7px;
+    margin-top: 11px;
     margin-left: -13px;
     position: absolute;;
   }
