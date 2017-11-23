@@ -62,6 +62,9 @@ class Recommend
 
                 $this->item->save();
 
+                // 特殊用户处理
+                $this->PSTestAction();
+
                 //触发项目状态变更事件
                 event(new ItemStatusEvent($this->item));
             }
