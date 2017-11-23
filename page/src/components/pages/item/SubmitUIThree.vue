@@ -464,8 +464,8 @@
             that.isFirst = true
             if (response.data.meta.status_code === 200) {
               let row = response.data.data.item
-              console.log('aaaa')
-              console.log(row)
+//              console.log('aaaa')
+//              console.log(row)
               if (row.type === 1) {
                 that.$router.replace({name: 'itemSubmitThree', params: {id: row.id}})
               }

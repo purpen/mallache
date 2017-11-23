@@ -4,7 +4,7 @@
     <el-row :gutter="24" class="anli-elrow">
       <v-menu class="rightmenu"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" class="stages-day">
         <div class="right-content">
           <div class="content-box">
             <h2>{{ itemName }}项目合同</h2>
@@ -13,12 +13,12 @@
               <p class="title">基本信息</p>
               <p class="sub-title">甲方（客户）</p>
               <el-row :gutter="10">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="demand_company_name">
                     <el-input v-model="form.demand_company_name" placeholder="公司名称" size="small"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="demand_company_legal_person">
                     <el-input v-model="form.demand_company_legal_person" placeholder="联系人" size="small"></el-input>
                   </el-form-item>
@@ -26,12 +26,12 @@
               </el-row>
 
               <el-row :gutter="10">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="demand_company_phone">
                     <el-input v-model="form.demand_company_phone" placeholder="电话" size="small"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="demand_company_address">
                     <el-input v-model="form.demand_company_address" placeholder="地址" size="small"></el-input>
                   </el-form-item>
@@ -40,12 +40,12 @@
 
               <p class="sub-title">乙方（服务商）</p>
               <el-row :gutter="10">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="design_company_name">
                     <el-input v-model="form.design_company_name" placeholder="公司名称" size="small"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="design_company_legal_person">
                     <el-input v-model="form.design_company_legal_person" placeholder="联系人" size="small"></el-input>
                   </el-form-item>
@@ -53,12 +53,12 @@
               </el-row>
 
               <el-row :gutter="10">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="design_company_phone">
                     <el-input v-model="form.design_company_phone" placeholder="电话" size="small"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="" prop="design_company_address">
                     <el-input v-model="form.design_company_address" placeholder="地址" size="small"></el-input>
                   </el-form-item>
@@ -73,18 +73,20 @@
               -->
 
               <p class="title">项目交付内容、工作周期及付款支付</p>
-              <p>项目总金额(¥):  <input class="bottom-border" type="text" disabled v-model="form.total" style="width:50px;"/>
-                ; 首付款(¥): <input class="bottom-border" type="text" disabled :value="form.first_payment"
-                                 style="width:50px;"/>(首付款占比总项目额度的40%); 阶段金额(¥): <input class="bottom-border"
-                                                                                        type="text" disabled
-                                                                                        :value="form.stage_money"
-                                                                                        style="width:50px;"/>(阶段金额占比总项目额度的50%); 尾款(¥): <input
-                  class="bottom-border" type="text" disabled v-model="form.warranty_money" style="width:50px;"/>(尾款占比总项目额度的10%)
+              <p>项目总金额(¥):
+                <input class="bottom-border" type="text" disabled v-model="form.total" style="width:50px;"/>
+                ; 首付款(¥):
+                <input class="bottom-border" type="text" disabled :value="form.first_payment" style="width:50px;"/>
+                (首付款占比总项目额度的40%); 阶段金额(¥):
+                <input class="bottom-border" type="text" disabled :value="form.stage_money" style="width:50px;"/>
+                (阶段金额占比总项目额度的50%); 尾款(¥):
+                <input class="bottom-border" type="text" disabled v-model="form.warranty_money" style="width:50px;"/>
+                (尾款占比总项目额度的10%)
               </p>
               <div class="blank20"></div>
 
               <el-row>
-                <el-col :span="isMob ? 12 : 6">
+                <el-col :span="isMob ? 16 : 6">
                   <el-form-item prop="sort">
                     <el-select v-model.number="form.sort" placeholder="设置项目阶段" size="small">
                       <el-option
@@ -96,7 +98,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="isMob ? 12 : 4" style="line-height: 40px;">
+                <el-col :span="isMob ? 6 : 4" :offset="2" style="line-height: 40px;">
                   <el-button class="is-custom" @click="genStageInput" size="small">{{ stateMsg }}</el-button>
                 </el-col>
               </el-row>
@@ -107,7 +109,7 @@
                 <input type="hidden" v-model.number="form.stages[index].sort"/>
 
                 <el-row :gutter="6">
-                  <el-col :span="8">
+                  <el-col :span="isMob ? 24 : 8">
                     <el-form-item
                       :prop="'stages.' + index + '.title'"
                       :rules="{
@@ -117,7 +119,7 @@
                       <el-input v-model="form.stages[index].title" placeholder="阶段标题" size="small"></el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="4">
+                  <el-col :span="isMob ? 24 : 4">
                     <el-form-item
                       :prop="'stages.' + index + '.time'"
                       :rules="{
@@ -133,7 +135,7 @@
 
                 <el-row :gutter="10">
 
-                  <el-col :span="4">
+                  <el-col :span="isMob ? 12 : 4">
                     <el-form-item
                       :prop="'stages.' + index + '.percentage'"
                       :rules="{
@@ -147,7 +149,7 @@
                       </el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="4">
+                  <el-col :span="isMob ? 12 : 4">
                     <el-form-item
                       :prop="'stages.' + index + '.amount'"
                       :rules="{
@@ -163,7 +165,7 @@
                 </el-row>
 
                 <el-row :gutter="10" v-for="(s, i) in d.content" :key="i">
-                  <el-col :span="12">
+                  <el-col :span="isMob ? 24 : 12">
                     <el-form-item
                       :prop="'stages.' + index + '.content.' + i + ''"
                       :rules="{
@@ -354,7 +356,6 @@
             let row = that.form
             row.item_demand_id = that.itemId
             row.title = that.itemName
-
             if (!row.sort) {
               that.$message.error('请至少添加一项项目阶段!')
               return false
@@ -394,8 +395,6 @@
               that.$message.error('阶段金额总和不正确！')
               return false
             }
-            console.log(row)
-
             let apiUrl = null
             let method = null
 
@@ -500,7 +499,7 @@
         }
       }
     },
-    created: function () {
+    created () {
       let that = this
       let id = this.$route.params.item_id
       if (id) {
@@ -524,7 +523,8 @@
                         contract.total = parseFloat(contract.total)
                         contract.warranty_money = parseFloat(contract.warranty_money)
                         contract.first_payment = parseFloat(contract.first_payment)
-                        contract.stage_money = (contract.total - (contract.warranty_money + contract.first_payment)).toFixed(2)
+                        contract.stage_money =
+                          (contract.total - (contract.warranty_money + contract.first_payment)).toFixed(2)
                         that.form = contract
                         if (that.form.item_stage && that.form.item_stage.length > 0) {
                           for (let i = 0; i < that.form.item_stage.length; i++) {
@@ -540,7 +540,7 @@
                           }
                         }
                       }
-                      console.log(response.data.data)
+//                      console.log(response.data.data)
                     }
                   })
               } else {  // 合同首次创建，从项目表调用基础信息
@@ -549,6 +549,7 @@
                   .then(function (response) {
                     if (response.data.meta.status_code === 200) {
                       let company = response.data.data
+//                      console.log(response)
                       if (company) {
                         that.form.demand_company_name = item.item.company_name
                         that.form.demand_company_address = item.item.address
@@ -557,8 +558,8 @@
                         that.form.total = parseFloat(item.item.price)
                         that.form.warranty_money = parseFloat(item.item.warranty_money)
                         that.form.first_payment = parseFloat(item.item.first_payment)
-                        that.form.stage_money = (that.form.total - (that.form.warranty_money + that.form.first_payment)).toFixed(2)
-
+                        that.form.stage_money =
+                          (that.form.total - (that.form.warranty_money + that.form.first_payment)).toFixed(2)
                         that.form.design_company_name = company.company_name
                         that.form.design_company_address = company.address
                         that.form.design_company_legal_person = company.contact_name
@@ -571,7 +572,7 @@
                     return false
                   })
               }
-              console.log(response.data.data)
+//              console.log(response.data.data)
             }
           })
           .catch(function (error) {

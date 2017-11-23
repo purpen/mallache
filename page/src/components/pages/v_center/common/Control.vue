@@ -21,8 +21,9 @@
                 <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
                 <p>
                   <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
-                             :item_type="d.item.type" @click="editItem" size="" type="primary"><i
-                    class="el-icon-edit"> </i> 完善项目
+                             :item_type="d.item.type" @click="editItem" size="" type="primary">
+                    <i class="el-icon-edit"></i>
+                    完善项目
                   </el-button>
                 </p>
               </div>
@@ -38,7 +39,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
 
-            <div class="item clearfix" v-show="item.design_info_status === 0">
+            <div class="item" v-show="item.design_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
               <p class="item-btn">
@@ -46,17 +47,15 @@
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_verify_status !== 1">
+            <div class="item" v-show="item.design_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
-                <router-link :to="{name: 'vcenterComputerAccreditation'}" class="certified-status">{{ item.verify_label
-                  }}
-                </router-link>
+                <router-link :to="{name: 'vcenterComputerAccreditation'}">{{ item.verify_label }}</router-link>
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_item_status === 0">
+            <div class="item" v-show="item.design_item_status === 0">
               <h3>公司接单设置</h3>
               <p class="item-title">设计项目接单价格</p>
               <p class="item-btn">
@@ -64,7 +63,7 @@
               </p>
             </div>
 
-            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
+            <div class="item no-line" v-show="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
@@ -81,7 +80,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台发布需求前，请先完善以下信息并完成公司认证，便于系统精准匹配设计服务供应商。</p>
 
-            <div class="item clearfix" v-show="item.demand_info_status === 0">
+            <div class="item" v-show="item.demand_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息</p>
               <p class="item-btn">
@@ -89,17 +88,19 @@
               </p>
             </div>
 
-            <div class="item no-line clearfix" v-show="item.demand_verify_status !== 1">
+            <div class="item no-line" v-show="item.demand_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
                 <router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link>
               </p>
             </div>
+
           </div>
+
         </div>
 
-        <div class="right-content message" v-if="itemIngList.length">
+        <div class="right-content message">
           <div class="content-box">
             <div class="form-title">
               <span>待处理事项</span>
@@ -202,7 +203,6 @@
       that.$http.get(url, {})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-//            console.log(response.data.data)
             let item = null
             that.item = item = response.data.data
             let verifyStatus = 0
@@ -278,7 +278,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .right-content .content-box {
     margin-top: 0;
     min-height: 200px;
@@ -469,5 +468,4 @@
       font-size: 1.4rem;
     }
   }
-
 </style>
