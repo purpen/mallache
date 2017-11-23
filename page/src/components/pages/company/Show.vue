@@ -8,7 +8,7 @@
           <div class="info">
             <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100"/>
             <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100"/>
-            <h3>{{ item.company_name }}</h3>
+            <h3>{{ item.company_abbreviation }}</h3>
             <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
           </div>
 
@@ -79,7 +79,7 @@
           </div>
           <div class="summary">
             <h2>荣誉奖项</h2>
-            <p>{{ item.awards }}</p>
+            <p v-html="item.awards"></p>
           </div>
         </div>
       </el-col>
@@ -123,7 +123,7 @@
           self.isFullLoading = false
           if (response.data.meta.status_code === 200) {
             self.item = response.data.data
-//          console.log(self.item)
+            console.log(self.item)
             if (self.item.logo_image) {
               self.item.logo_url = self.item.logo_image.logo
             } else {
