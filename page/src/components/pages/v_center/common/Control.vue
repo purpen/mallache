@@ -80,7 +80,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台发布需求前，请先完善以下信息并完成公司认证，便于系统精准匹配设计服务供应商。</p>
 
-            <div class="item" v-show="item.demand_info_status === 0">
+            <div class="item clearfix" v-show="item.demand_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息</p>
               <p class="item-btn">
@@ -88,7 +88,7 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.demand_verify_status !== 1">
+            <div class="item clearfix no-line" v-show="item.demand_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
@@ -101,16 +101,16 @@
         </div>
 
         <div class="right-content message">
-          <div class="content-box">
+          <div class="content-box clearfix">
             <div class="form-title">
               <span>待处理事项</span>
             </div>
-            <p class="alert-title" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
+            <p class="alert-title clearfix" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
             <div class="message-btn" v-if="messageCount === 0">
               <img src="../../../../assets/images/icon/control_icon.png"/>
               <p>当前无待处理事项</p>
             </div>
-            <div class="message-btn" v-else>
+            <div class="message-btn clearfix" v-else>
               <router-link :to="{name: 'home'}">
                 <el-button class="is-custom">返回首页</el-button>
               </router-link> &nbsp;&nbsp;
