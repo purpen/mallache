@@ -74,7 +74,7 @@
               <el-collapse-item title="选择系统推荐的设计公司" name="3">
 
                 <div class="select-company-item clearfix" v-for="(d, index) in stickCompany" :key="index">
-                  <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
+                  <el-checkbox :class="['check-box',{'height220': d.cases.length}]" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
                     <div class="img">
                       <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">
@@ -89,8 +89,8 @@
                         </router-link>
                       </h3>
                       <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
-                      <p class="des" v-if="d.item_type"><span>类型: </span>{{ d.item_type_label }}</p>
-                      <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
+                      <p class="des company-padding" v-if="d.item_type"><span>类型: </span>{{ d.item_type_label }}</p>
+                      <p class="des company-padding"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank"
@@ -977,7 +977,7 @@ export default {
             self.$http
               .get(api.recommendListId.format(self.item.id), {})
               .then(function(stickCompanyResponse) {
-                // console.log(stickCompanyResponse)
+                console.log(stickCompanyResponse)
                 if (stickCompanyResponse.data.meta.status_code === 200) {
                   self.stickCompany = stickCompanyResponse.data.data
                   for (let i = 0; i < self.stickCompany.length; i++) {
@@ -1180,8 +1180,12 @@ export default {
 
 .select-company-item .check-box {
   margin: 10px;
-  line-height: 220px;
+  line-height: 150px;
   float: left;
+}
+
+.select-company-item .check-box.height220 {
+  line-height: 220px;
 }
 
 .select-company-item .company-title {
@@ -1213,7 +1217,9 @@ export default {
   font-size: 1.2rem;
   font-weight: bold;
 }
-
+.select-company-item .content p.company-padding {
+  padding-left: 109px;
+}
 .company-title {
   margin: 10px;
 }
@@ -1223,6 +1229,7 @@ export default {
   margin: 10px;
   float: left;
   padding-top: 45px;
+  padding-left: 56px;
   overflow: hidden;
 }
 
@@ -1578,7 +1585,7 @@ section ul li a {
   .stage-asset-box {
     padding: 10px 0;
   }
-  .select-company-item .check-box {
+  .select-company-item .check-box .select-company-item .check-box.height220 {
     line-height: 1;
   }
   .select-company-item .case-box {
@@ -1595,6 +1602,12 @@ section ul li a {
   .select-company-item .company-title .company-name,
   .select-company-item .company-title .company-addr {
     text-align: center;
+  }
+  .select-company-item .content p.company-padding {
+    padding-left: 47px;
+  }
+  .select-company-item .case-box {
+    padding-left: 0;
   }
 }
 

@@ -19,3 +19,6 @@ page/package-lock.json
 *.swn
 /public/apidoc
 /apidoc.json
+*.xml
+/page/.idea
+*.jsbeautifyrc
