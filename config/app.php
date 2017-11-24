@@ -234,4 +234,7 @@ return [
 
     ],
 
+    // 与官网对接接口
+    'official_api' => env('OFFICIAL_API', 'http://dev.taihuoniao.com/app/api/'),
+
 ];

@@ -1,10 +1,10 @@
 <?php
 namespace Lib\YunPianSdk;
 
-use Lib\YunPianSdk\Lib\FlowOperator;
-use Lib\YunPianSdk\Lib\SmsOperator;
-use Lib\YunPianSdk\Lib\UserOperator;
-use Lib\YunPianSdk\Lib\VoiceOperator;
+use Lib\YunPianSdk\lib\FlowOperator;
+use Lib\YunPianSdk\lib\SmsOperator;
+use Lib\YunPianSdk\lib\UserOperator;
+use Lib\YunPianSdk\lib\VoiceOperator;
 
 
 /**
@@ -94,7 +94,7 @@ class Yunpian
      *
      * @param array $mobile
      * @param array $text
-     * @return Lib\Result
+     * @return lib\Result
      */
     public function sendManySms(array $mobile, array $text){
 

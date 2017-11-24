@@ -89,7 +89,7 @@
                         </router-link>
                       </h3>
                       <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
-                      <p class="des"><span>类型: </span>{{ d.item_type_label }}</p>
+                      <p class="des" v-if="d.item_type"><span>类型: </span>{{ d.item_type_label }}</p>
                       <p class="des"><span>优势: </span>{{ d.professional_advantage }}</p>
                     </div>
                     <div class="case-box">

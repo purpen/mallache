@@ -6,9 +6,9 @@ use App\Http\AdminTransformer\ArticleListTransformer;
 use App\Http\AdminTransformer\ArticleTransformer;
 use App\Models\Article;
 use App\Models\AssetModel;
-use function foo\func;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Helper\Tools;
 
 class ArticleController extends Controller
 {
@@ -168,7 +168,33 @@ class ArticleController extends Controller
             if ($random = $request->input('random')) {
                 AssetModel::setRandom($article->id, $random);
             }
-            return $this->response->array($this->apiSuccess());
+            $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
+            // 同步文章到官网社区
+            if($is_synchro) {
+                $url = config('app.official_api') . 'd3in/synchro_article';
+
+                $cover_url = '';
+                if($article->cover_id) {
+                  $asset = AssetModel::find($article->cover_id);
+                  if($asset) {
+                    $cover_url = config('filesystems.disks.qiniu.url') . $asset->path;
+                  }
+                }
+
+                $param = array(
+                  'id' => $article->id,
+                  'title' => $article->title,
+                  'short_content' => $article->short_content,
+                  'content' => $article->content,
+                  'source_from' => $article->source_form,
+                  'tags' => implode(',', $article->label),
+                  'cover_url' => $cover_url,
+                  'user_id' => $article->user_id,
+                );
+
+                $result = Tools::request($url, $param);
+            }
+            return $this->response->array($this->apiSuccess('success', 200, $article));
         } else {
             return $this->response->array($this->apiError());
         }
@@ -264,7 +290,7 @@ class ArticleController extends Controller
             'type' => 'integer',
             'topic_url' => 'max:100',
             'label' => 'array',
-            'short_content' => 'max:200',
+            'desc' => 'max:200',
             'source_from' => 'max:50',
         ]);
 
@@ -277,23 +303,70 @@ class ArticleController extends Controller
             return $v === null ? false : true;
         });
         if ($request->input('label')) {
-            $data['label'] = implode($request->input('label'), ',');
+            $data['label'] = implode(',', $request->input('label'));
         }
 
         $article->update($data);
 
-        return $this->response->array($this->apiSuccess());
+        if($article){
+            $is_synchro = $request->input('is_synchro') ? (int)$request->input('is_synchro') : 0;
+            // 同步文章到官网社区
+            if($is_synchro) {
+                $url = config('app.official_api') . 'd3in/synchro_article';
+
+                $cover_url = '';
+                if($article->cover_id) {
+                  $asset = AssetModel::find($article->cover_id);
+                  if($asset) {
+                    $cover_url = config('filesystems.disks.qiniu.url') . $asset->path;
+                  }
+                }
+
+                $param = array(
+                  'id' => $article->id,
+                  'title' => $article->title,
+                  'desc' => $article->short_content,
+                  'content' => $article->content,
+                  'source_from' => $article->source_form,
+                  'tags' => implode(',', $article->label),
+                  'cover_url' => $cover_url,
+                  'user_id' => $article->user_id,
+                );
+                $result = Tools::request($url, $param);
+            }
+        }
+
+        return $this->response->array($this->apiSuccess('success', 200, $article));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @api {delete} /admin/article/delete 文章删除
+     * @apiVersion 1.0.0
+     * @apiName classification delete
+     * @apiGroup AdminArticle
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
      */
-    public function destroy()
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->input('id');
+        if(!$article = Article::where(['id'=> $id, 'status' => 0])->first()){
+            return $this->response->array($this->apiError('文章已发布无法删除', 403));
+        }
+
+        $article->delete();
+
+        return $this->response->array($this->apiSuccess('ok', 200));
     }
 
     /**

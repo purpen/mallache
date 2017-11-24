@@ -43,7 +43,11 @@ class Recommend
 
             //判断是否匹配到设计公司
             if (empty($design)) {
-                $this->itemFail();
+                // 临时处理 永不匹配失败
+                $this->failAction();
+
+                // 原处理
+//                $this->itemFail();
             } else {
                 $recommend = implode(',', $design);
                 $this->item->recommend = $recommend;
@@ -58,12 +62,19 @@ class Recommend
 
                 $this->item->save();
 
+                // 特殊用户处理
+                $this->PSTestAction();
+
                 //触发项目状态变更事件
                 event(new ItemStatusEvent($this->item));
             }
 
         } else {
-            $this->itemFail();
+            // 临时处理 永不匹配失败
+            $this->failAction();
+
+            // 原处理
+//            $this->itemFail();
         }
 
         //注销变量
@@ -81,8 +92,49 @@ class Recommend
         }
 
         $this->item->save();
+
+        // 特殊用户处理
+        $this->PSTestAction();
+
         //触发项目状态变更事件
         event(new ItemStatusEvent($this->item));
+    }
+
+    // 匹配失败后随机匹配2个设计公司
+    protected function failAction()
+    {
+        $design_id_arr = DesignCompanyModel::select('id')->where(['status' => 1, 'verify_status' => 1])
+            ->get()
+            ->pluck('id')->all();
+
+        $design_id_arr = array_rand($design_id_arr, 2);
+
+        $recommend = implode(',', $design_id_arr);
+        $this->item->recommend = $recommend;
+        $this->item->status = 3;   //已匹配设计公司
+        $this->item->save();
+
+        // 特殊用户处理
+        $this->PSTestAction();
+
+        //触发项目状态变更事件
+        event(new ItemStatusEvent($this->item));
+
+    }
+
+    // 未测试账号默认匹配固定设计公司
+    protected function PSTestAction()
+    {
+        // 特定需求公司user_id
+        $user_id = 66;
+
+        // 设计公司ID
+        $design_id = 32;
+
+        if((int)$user_id === (int)$this->item->user_id){
+            $this->item->recommend =  $this->item->recommend . "," . $design_id;
+            $this->item->save();
+        }
     }
 
 

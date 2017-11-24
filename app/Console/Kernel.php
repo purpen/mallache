@@ -15,6 +15,11 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //计算设计公司权重值命令
         Commands\CalculationWeight::class,
+        //删除过期的支付订单
+        Commands\DropPayOrder::class,
+
+        // 批量生成设计公司用户
+        Commands\createUsers::class,
     ];
 
     /**
@@ -27,6 +32,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('Weighted:calculation')->everyFiveMinutes();
+
+        $schedule->command('payOrder:drop')->everyFiveMinutes();
     }
 
     /**

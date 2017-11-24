@@ -1,6 +1,6 @@
 <?php
 
-namespace Lib\YunPianSdk\Lib;
+namespace Lib\YunPianSdk\lib;
 
 /**
  * Use: 加密工具类

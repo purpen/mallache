@@ -90,6 +90,8 @@ return [
         '/admin/article/verifyStatus',
         // 文章推荐
         '/admin/article/recommend',
+        // 文章删除
+        '/admin/article/delete',
 
 
 
@@ -177,6 +179,8 @@ return [
         '/admin/article/verifyStatus',
         // 文章推荐
         '/admin/article/recommend',
+        // 文章删除
+        '/admin/article/delete',
     ],
 
     /**
@@ -223,5 +227,7 @@ return [
         '/admin/article/verifyStatus',
         // 文章推荐
         '/admin/article/recommend',
+        // 文章删除
+        '/admin/article/delete',
     ],
 ];

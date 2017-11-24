@@ -52,7 +52,9 @@ class ClassificationController extends BaseController
             $query->where('type', $type);
         }
 
-        $list = $query->paginate($per_page);
+        $list = $query
+            ->orderBy('sort', 'desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($list, new ClassificationTransformer)->setMeta($this->apiMeta());
     }
@@ -76,6 +78,7 @@ class ClassificationController extends BaseController
      * @apiParam {integer} type *类型：1.文章；
      * @apiParam {string} name *分类名称
      * @apiParam {string} content 描述
+     * @apiParam {int} sort 排序权重
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -93,6 +96,7 @@ class ClassificationController extends BaseController
             'type' => 'required|integer',
             'name' => 'required|max:50',
             'content' => 'max:500',
+            'sort' => 'integer',
         ]);
 
         $all = $request->all();
@@ -137,6 +141,7 @@ class ClassificationController extends BaseController
      *      "data": {
      *      'name': name,     //
      *      'content': content,
+     *      'sort': 23,    // 排序权重
      *      }
      * }
      */
@@ -153,6 +158,7 @@ class ClassificationController extends BaseController
                 'type' => $classification->type,
                 'name' => $classification->name,
                 'content' => $classification->content,
+                'sort' => $classification->sort,
             ];
             return $this->response->array($this->apiSuccess('Success', 200, $data));
         }
@@ -168,6 +174,7 @@ class ClassificationController extends BaseController
      * @apiParam {integer} id
      * @apiParam {string} name 分类名称
      * @apiParam {string} content 描述
+     * @apiParam {int} sort 排序权重
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -185,6 +192,7 @@ class ClassificationController extends BaseController
             'id' => 'required|integer',
             'name' => 'max:50',
             'content' => 'max:500',
+            'sort' => 'integer',
         ]);
 
         $data = $request->only(['name', 'content']);

@@ -5,7 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\DesignCaseModel;
 use League\Fractal\TransformerAbstract;
 
-class DesignCaseListsTransformer extends TransformerAbstract
+class DesignCaseOpenTransformer extends TransformerAbstract
 {
     /*
         id	            int(10)	        否		ID
@@ -27,7 +27,6 @@ class DesignCaseListsTransformer extends TransformerAbstract
         other_prize	    varchar(30)	    是		其他奖项
     */
 
-    // 设计公司案例列表
     public function transform(DesignCaseModel $designCase)
     {
         return [
@@ -55,53 +54,52 @@ class DesignCaseListsTransformer extends TransformerAbstract
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
-            'design_company' => $this->designCompany($designCase)
+            'design_company' => $this->designCompany($designCase),
         ];
     }
-
 
     protected function designCompany(DesignCaseModel $designCase)
     {
         $DesignCompany = $designCase->DesignCompany;
         return [
             'id' => intval($DesignCompany->id),
-//            'user_id' => intval($DesignCompany->user_id),
-//            'company_type' => intval($DesignCompany->company_type),
-//            'company_type_val' => $DesignCompany->company_type_val,
+            'user_id' => intval($DesignCompany->user_id),
+            'company_type' => intval($DesignCompany->company_type),
+            'company_type_val' => $DesignCompany->company_type_val,
             'company_name' => strval($DesignCompany->company_name),
             'company_abbreviation' => strval($DesignCompany->company_abbreviation),
-//            'registration_number' => strval($DesignCompany->registration_number),
-//            'province' => intval($DesignCompany->province),
-//            'city' => intval($DesignCompany->city),
-//            'area' => intval($DesignCompany->area),
-//            'province_value' => $DesignCompany->company_province_value,
-//            'city_value' => $DesignCompany->company_city_value,
-//            'area_value' => $DesignCompany->company_area_value,
-//            'address' => strval($DesignCompany->address),
-//            'contact_name' => strval($DesignCompany->contact_name),
-//            'position' => strval($DesignCompany->position),
-//            'phone' => strval($DesignCompany->phone),
-//            'email' => strval($DesignCompany->email),
-//            'company_size' => intval($DesignCompany->company_size),
-//            'company_size_val' => $DesignCompany->company_size_val,
-//            'branch_office' => intval($DesignCompany->branch_office),
-//            'good_field' => $DesignCompany->good_field,
-//            'web' => strval($DesignCompany->web),
-//            'company_profile' => strval($DesignCompany->company_profile),
-//            'design_type_value' => $DesignCompany->design_type_value,
-//            'establishment_time' => strval($DesignCompany->establishment_time),
-//            'professional_advantage' => strval($DesignCompany->professional_advantage),
-//            'awards' => strval($DesignCompany->awards),
-//            'score' => intval($DesignCompany->score),
-//            'status' => intval($DesignCompany->status),
-//            'is_recommend' => intval($DesignCompany->is_recommend),
-//            'verify_status' => intval($DesignCompany->verify_status),
+            'registration_number' => strval($DesignCompany->registration_number),
+            'province' => intval($DesignCompany->province),
+            'city' => intval($DesignCompany->city),
+            'area' => intval($DesignCompany->area),
+            'province_value' => $DesignCompany->company_province_value,
+            'city_value' => $DesignCompany->company_city_value,
+            'area_value' => $DesignCompany->company_area_value,
+            'address' => strval($DesignCompany->address),
+            'contact_name' => strval($DesignCompany->contact_name),
+            'position' => strval($DesignCompany->position),
+            'phone' => '',
+            'email' => '',
+            'company_size' => intval($DesignCompany->company_size),
+            'company_size_val' => $DesignCompany->company_size_val,
+            'branch_office' => intval($DesignCompany->branch_office),
+            'good_field' => $DesignCompany->good_field,
+            'web' => strval($DesignCompany->web),
+            'company_profile' => strval($DesignCompany->company_profile),
+            'design_type_value' => $DesignCompany->design_type_value,
+            'establishment_time' => strval($DesignCompany->establishment_time),
+            'professional_advantage' => strval($DesignCompany->professional_advantage),
+            'awards' => strval($DesignCompany->awards),
+            'score' => intval($DesignCompany->score),
+            'status' => intval($DesignCompany->status),
+            'is_recommend' => intval($DesignCompany->is_recommend),
+            'verify_status' => intval($DesignCompany->verify_status),
             'logo' => $DesignCompany->logo,
             'logo_image' => $DesignCompany->logo_image,
-//            'license_image' => $DesignCompany->license_image,
-//            'unique_id' => strval($DesignCompany->unique_id),
-//            'created_at' => $DesignCompany->created_at,
-//            'city_arr' => $DesignCompany->city_arr,
+            'license_image' => $DesignCompany->license_image,
+            'unique_id' => strval($DesignCompany->unique_id),
+            'created_at' => $DesignCompany->created_at,
+            'city_arr' => $DesignCompany->city_arr,
 //            'legal_person' => strval($DesignCompany->legal_person),
 //            'document_type' => intval($DesignCompany->document_type),
 //            'document_type_val' => $DesignCompany->document_type_val,
@@ -110,5 +108,4 @@ class DesignCaseListsTransformer extends TransformerAbstract
 //            'open' => $DesignCompany->open,
         ];
     }
-
 }

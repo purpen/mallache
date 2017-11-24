@@ -55,6 +55,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/designCase/openLists', 'DesignCaseController@openLists');
     // 公司案例ID查看详情
     $api->get('/designCase/{case_id}', 'DesignCaseController@show');
+    //公司ID查看设计公司信息
+    $api->get('/designCompany/otherIndex/{id}', ['as' => 'designCompany.otherIndex', 'uses' => 'DesignCompanyController@otherIndex']);
+    //设计公司案例
+    $api->get('/designCase/designCompany/{design_company_id}', 'DesignCaseController@lists');
 
     /**
      * 栏目位
@@ -206,10 +210,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designCompany', ['as' => 'designCompany.show', 'uses' => 'DesignCompanyController@show']);
         $api->put('/designCompany', ['as' => 'designCompany.update', 'uses' => 'DesignCompanyController@update']);
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
-        $api->get('/designCompany/otherIndex/{id}', ['as' => 'designCompany.otherIndex', 'uses' => 'DesignCompanyController@otherIndex']);
 
-        //设计公司案例
-        $api->get('/designCase/designCompany/{design_company_id}', 'DesignCaseController@lists');
+
+
         // 设计案例图片添加描述
         $api->put('/designCase/imageSummary', 'DesignCaseController@imageSummary');
         $api->resource('/designCase', 'DesignCaseController');

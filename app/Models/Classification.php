@@ -5,7 +5,7 @@ class Classification extends BaseModel
 {
     protected $table = 'classification';
 
-    protected $fillable = ['type', 'name', 'content'];
+    protected $fillable = ['type', 'name', 'content','sort'];
 
     /**
      * 一对多相对关联文章表article
