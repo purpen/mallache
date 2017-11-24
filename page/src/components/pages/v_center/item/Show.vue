@@ -977,7 +977,7 @@ export default {
             self.$http
               .get(api.recommendListId.format(self.item.id), {})
               .then(function(stickCompanyResponse) {
-                console.log(stickCompanyResponse)
+                // console.log(stickCompanyResponse)
                 if (stickCompanyResponse.data.meta.status_code === 200) {
                   self.stickCompany = stickCompanyResponse.data.data
                   for (let i = 0; i < self.stickCompany.length; i++) {
@@ -988,9 +988,7 @@ export default {
                       self.stickCompany[i].logo_url = false
                     }
                     if (item.item_type) {
-                      self.stickCompany[
-                        i
-                      ].item_type_label = item.item_type.join('／')
+                      self.stickCompany[i].item_type_label = item.item_type.join('／')
                     }
                     let cases = []
                     if (item.design_case && item.design_case.length > 0) {
