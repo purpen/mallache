@@ -8,3 +8,4 @@ yarn-error.log
 *.swp
 *.iml
 *.xml
+.jsbeautifyrc

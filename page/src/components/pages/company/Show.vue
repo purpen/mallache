@@ -80,194 +80,195 @@
           <div class="summary">
             <h2>荣誉奖项</h2>
             <p>
-              <pre v-html="item.awards"></pre>
+              <pre v-html="item.awards" style="white-space:normal"></pre>
             </p>
           </div>
         </div>
       </el-col>
-
     </el-row>
 
   </div>
 </template>
 
 <script>
-  import api from '@/api/api'
-  import '@/assets/js/format'
-  export default {
-    name: 'company_show',
-    isLoading: false,
-    data () {
-      return {
-        item: {},
-        isLoading: false,
-        isFullLoading: false,
-        designCases: [],
-        rateValue: 3.5,
-        msg: ''
-      }
-    },
-    methods: {
-      hasImg(d) {
-        if (!d) {
-          return false
-        } else {
-          return true
-        }
-      }
-    },
-    created: function () {
-      let id = this.$route.params.id
-      const self = this
-      self.isFullLoading = true
-      self.$http.get(api.designCompanyId.format(id), {})
-        .then(function (response) {
-          self.isFullLoading = false
-          if (response.data.meta.status_code === 200) {
-            self.item = response.data.data
-            console.log(self.item)
-            if (self.item.logo_image) {
-              self.item.logo_url = self.item.logo_image.logo
-            } else {
-              self.item.logo_url = false
-            }
-
-            self.isLoading = true
-            self.$http.get(api.designCaseCompanyId.format(id), {})
-              .then(function (response) {
-                self.isLoading = false
-                if (response.data.meta.status_code === 200) {
-                  self.designCases = response.data.data
-                }
-              })
-              .catch(function (error) {
-                self.isLoading = false
-                self.$message.error(error.message)
-              })
-          }
-        })
-        .catch(function (error) {
-          self.isFullLoading = false
-          self.$message.error(error.message)
-        })
-    },
-    computed: {
-      isMob() {
-        return this.$store.state.event.isMob
+import api from '@/api/api'
+import '@/assets/js/format'
+export default {
+  name: 'company_show',
+  isLoading: false,
+  data() {
+    return {
+      item: {},
+      isLoading: false,
+      isFullLoading: false,
+      designCases: [],
+      rateValue: 3.5,
+      msg: ''
+    }
+  },
+  methods: {
+    hasImg(d) {
+      if (!d) {
+        return false
+      } else {
+        return true
       }
     }
+  },
+  created: function() {
+    let id = this.$route.params.id
+    const self = this
+    self.isFullLoading = true
+    self.$http
+      .get(api.designCompanyId.format(id), {})
+      .then(function(response) {
+        self.isFullLoading = false
+        if (response.data.meta.status_code === 200) {
+          self.item = response.data.data
+          console.log(self.item)
+          if (self.item.logo_image) {
+            self.item.logo_url = self.item.logo_image.logo
+          } else {
+            self.item.logo_url = false
+          }
+
+          self.isLoading = true
+          self.$http
+            .get(api.designCaseCompanyId.format(id), {})
+            .then(function(response) {
+              self.isLoading = false
+              if (response.data.meta.status_code === 200) {
+                self.designCases = response.data.data
+              }
+            })
+            .catch(function(error) {
+              self.isLoading = false
+              self.$message.error(error.message)
+            })
+        }
+      })
+      .catch(function(error) {
+        self.isFullLoading = false
+        self.$message.error(error.message)
+      })
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
+    }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-  .design-case-content {
-    padding: 20px 40px 20px 40px;
-    border: 1px solid #ccc;
-  }
+.design-case-content {
+  padding: 20px 40px 20px 40px;
+  border: 1px solid #ccc;
+}
 
-  .design-case-content .title {
-    text-align: center;
-    color: #5d6266;
-    margin: 20px 0 20px 0;
-    font-size: 2rem;
-  }
+.design-case-content .title {
+  text-align: center;
+  color: #5d6266;
+  margin: 20px 0 20px 0;
+  font-size: 2rem;
+}
 
-  .design-case-content h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    color: #333;
-    margin: 20px;
-  }
+.design-case-content h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #333;
+  margin: 20px;
+}
 
-  .design-case-content .summary {
-    margin: 0 0 20px 0;
-  }
+.design-case-content .summary {
+  margin: 0 0 20px 0;
+}
 
-  .design-case-content .summary p {
-    line-height: 1.6;
-    color: #5d6266;
-  }
+.design-case-content .summary p {
+  line-height: 1.6;
+  color: #5d6266;
+}
 
-  .design-case-content .des {
-  }
+.design-case-content .des {
+}
 
-  .design-case-content .des p {
-    line-height: 1.6;
-    text-align: center;
-  }
+.design-case-content .des p {
+  line-height: 1.6;
+  text-align: center;
+}
 
+.design-case-slide {
+  padding: 20px 20px 20px 20px;
+  border: 1px solid #ccc;
+}
+
+.design-case-slide .info {
+  margin: 10px;
+  text-align: center;
+}
+
+.design-case-slide h3 {
+  margin: 10px;
+  font-size: 2rem;
+}
+
+.design-case-slide .rate {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid rgba(224, 224, 224, 0.46);
+}
+
+.design-case-slide .cate {
+  line-height: 2;
+  margin-top: 20px;
+}
+
+.cate p {
+  color: #666;
+}
+
+.cate p.c-title {
+  text-align: left;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+.cate p.tag span {
+  margin: 5px;
+}
+
+.design-case-slide .prize {
+  margin-top: 20px;
+}
+
+p.web {
+  word-wrap: break-word;
+}
+
+.item {
+  margin: 5px 0;
+}
+
+.item img {
+  width: 100%;
+}
+
+.content {
+  padding: 10px;
+}
+
+.content a {
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 767px) {
   .design-case-slide {
-    padding: 20px 20px 20px 20px;
-    border: 1px solid #ccc;
+    border: none;
   }
 
-  .design-case-slide .info {
-    margin: 10px;
-    text-align: center;
+  .design-case-content {
+    border: none;
   }
-
-  .design-case-slide h3 {
-    margin: 10px;
-    font-size: 2rem;
-  }
-
-  .design-case-slide .rate {
-    padding: 10px;
-    text-align: center;
-    border-top: 1px solid rgba(224, 224, 224, .46);
-  }
-
-  .design-case-slide .cate {
-    line-height: 2;
-    margin-top: 20px;
-  }
-
-  .cate p {
-    color: #666;
-  }
-
-  .cate p.c-title {
-    text-align: left;
-    font-size: 1.6rem;
-    color: #333;
-  }
-
-  .cate p.tag span {
-    margin: 5px;
-  }
-
-  .design-case-slide .prize {
-    margin-top: 20px;
-  }
-
-  p.web {
-    word-wrap: break-word;
-  }
-
-  .item {
-    margin: 5px 0;
-  }
-
-  .item img {
-    width: 100%;
-  }
-
-  .content {
-    padding: 10px;
-  }
-
-  .content a {
-    font-size: 1.5rem;
-  }
-
-  @media screen and (max-width: 767px) {
-    .design-case-slide {
-      border: none;
-    }
-
-    .design-case-content {
-      border: none;
-    }
-  }
+}
 </style>
