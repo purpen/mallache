@@ -281,11 +281,13 @@ class DemandCompanyController extends BaseController
         if($validator->fails()){
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+
         foreach($all as $k => $v){
-            if(empty($v))
+            if(empty($v) && $v !== 0 && $v !== "0")
                 unset($all[$k]);
         }
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+
         $demand->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());

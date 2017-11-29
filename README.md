@@ -96,3 +96,6 @@ git@github.com:purpen/mallache.git
 
  ###### 计算设计公司加权分数score
  php artisan Weighted:calculation
+ 
+ ###### 批量生成设计公司账号
+ php artisan user:create --count=10
