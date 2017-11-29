@@ -454,7 +454,9 @@
           let name = nameArr[i]
           row[name] = this.form[name]
           if (!row[name]) {
-            if (mark === 'branch') {
+            if (name === 'area') {
+              row['area'] = 0
+            } else if (mark === 'branch') {
               continue
             } else {
               this.$message.error('请完善您的公司信息！')

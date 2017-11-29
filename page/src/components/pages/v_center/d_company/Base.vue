@@ -295,9 +295,14 @@
         for (let i = 0; i < nameArr.length; i++) {
           let name = nameArr[i]
           row[name] = this.form[name]
+
           if (!row[name]) {
-            this.$message.error('请完善您的公司信息！')
-            return false
+            if (name === 'area') {
+              row['area'] = 0
+            } else {
+              this.$message.error('请完善您的公司信息！')
+              return false
+            }
           }
         }
         // 处理网址前缀
@@ -308,6 +313,7 @@
           }
         }
 
+        console.log(row)
         that.$http({method: 'POST', url: api.demandCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
