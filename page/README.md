@@ -24,7 +24,7 @@ npm run build --report
 > Vuex: https://vuex.vuejs.org/zh-cn/
 > axios: https://github.com/mzabriskie/axios
 > Toast: https://github.com/ktsn/vuex-toast
-> 图片沦播: https://github.com/surmon-china/vue-awesome-swiper
+> 图片轮播: https://github.com/surmon-china/vue-awesome-swiper
 > 城市联动: https://github.com/QingWei-Li/vue-region-picker
 > pdf生成: https://github.com/bpampuch/pdfmake
 
