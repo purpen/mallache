@@ -173,7 +173,7 @@ export default {
       slideList: [
         {
           clickUrl: 'javascript:void(0);',
-          title: '铟果D³ingo产品创新SaaS平台',
+          title: '铟果D³INGO产品创新SaaS平台',
           desc: '用设计重塑品质生活',
           image: require('@/assets/images/home/banner1.jpg')
         },
