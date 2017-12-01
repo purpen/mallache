@@ -279,7 +279,7 @@ class AdminDesignCompanyController extends Controller
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2]) ? $request->input('type_verify_status') : null;
+        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2]) ? (int)$request->input('type_verify_status') : null;
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
         $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : null;
 
@@ -288,6 +288,19 @@ class AdminDesignCompanyController extends Controller
             $query->where('status', $type_status);
         }
         if($type_verify_status !== null){
+            switch($type_verify_status){
+                case -1:
+                    $type_verify_status = 0;
+                    break;
+                case 0:
+                    $type_verify_status = -1;
+                    break;
+                case 1:
+                    $type_verify_status = 1;
+                    break;
+                default:
+                    $type_verify_status = -1;
+            }
             $query->where('verify_status', $type_verify_status);
         }
 
