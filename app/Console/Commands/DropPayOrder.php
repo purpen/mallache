@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\PayOrder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class DropPayOrder extends Command
 {
@@ -50,6 +51,7 @@ class DropPayOrder extends Command
             $obj->save();
         }
 
+        Log::info('执行清除过期支付订单任务');
         echo "清除完毕";
     }
 }
