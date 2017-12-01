@@ -49,28 +49,28 @@
         itemList: [
           {
             id: 5,
-            title: '产品招募',
+            title: '轻创新⋅设计造物-再设计⋅消费升级创新产品征集',
             cover_url: require('@/assets/images/subject/list_03.jpg'),
             url: '/subject/ProductRecruit',
             content: '2017年初，太火鸟与投资方罗莱生活、海泉基金、京东金融、麦顿资本、泰德资本以及创新工场、真格基金等战略合作方共同发起了名为 “智见未来-太火鸟AesTech联合加速计划”，希望能够将太火鸟在产品孵化方面的前瞻性与各资本方及平台、渠道方在创新产品研发、孵化、营销环节的势能最大限度发挥出来，促进设计相关产业发展，改善设计生态，惠及大众。'
           },
           {
             id: 6,
-            title: '企业招募',
+            title: '轻创新⋅设计造物-邀请加入铟果D³INGO活动招募',
             cover_url: require('@/assets/images/subject/list_04.jpg'),
             url: '/subject/EnterpriseRecruit',
             content: '铟果D³INGO是太火鸟旗下的创新产品交易与SaaS分发平台，是高效线上设计交易服务平台及中国领先的创新产品策源地，围绕创新产品与设计交易，为相关参与方提供包括创新产品孵化、资金保障、流量支持、运营维护等相关服务与帮助。'
           },
           {
             id: 1,
-            title: '传统产业设计再制造',
+            title: '浙江“传统产业设计再造”计划线上对接专区',
             cover_url: require('@/assets/images/subject/list_01.jpg'),
             url: '/subject/zj',
             content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业设计示范基地共同发起，由浙江省工业设计创新服务基地运营公司杭州合创共响工业设计管理有限公司负责执行。'
           },
           {
             id: 4,
-            title: 'RCIP衍生创新峰会',
+            title: 'RCIP衍生创新峰会暨年度新品发布会',
             cover_url: require('@/assets/images/subject/list_02.jpg'),
             url: '/subject/rcip',
             content: '这是一场IP生态集群的权威路演；也是众多创新设计机构以IP内容结合的发布盛典想要了解更多？'
