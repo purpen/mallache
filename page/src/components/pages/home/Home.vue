@@ -144,7 +144,7 @@
     <div class="item item_4">
       <h3>战略合作</h3>
 
-      <div class="logo-list">
+      <div class="logo-list clearfix">
         <img v-lazy="require('assets/images/home/logo_md.jpg')"/>
         <img v-lazy="require('assets/images/home/jdjr_logo.jpg')"/>
         <img v-lazy="require('assets/images/home/logo_cxgc.jpg')"/>
@@ -152,11 +152,12 @@
       </div>
       <h3 class="m-partner">合作伙伴</h3>
 
-      <div class="logo-list">
+      <div class="logo-list clearfix">
         <img v-lazy="require('assets/images/home/1logo.jpg')"/>
         <img v-lazy="require('assets/images/home/2logo.jpg')"/>
         <img v-lazy="require('assets/images/home/3logo.jpg')"/>
         <img v-lazy="require('assets/images/home/4logo.jpg')"/>
+        <img v-lazy="require('assets/images/home/5logo.png')"/>
       </div>
     </div>
 
@@ -475,11 +476,13 @@ export default {
 .logo-list {
   text-align: center;
   margin: 0;
+  padding: 0 15px;
 }
 
 .logo-list img {
   margin: 10px 20px;
   width: 15%;
+  height: auto;
 }
 
 .box-card {
@@ -562,9 +565,16 @@ export default {
 }
 
 @media screen and (max-width: 767px) {
+  .logo-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   .logo-list img {
-    margin: 10px 10px;
-    width: 30%;
+    float: left;
+    margin: 2%;
+    width: 46%;
   }
 
   .item {
