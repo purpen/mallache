@@ -1,0 +1,282 @@
+<?php
+
+namespace App\Http\Controllers\Api\Admin;
+
+use App\Http\AdminTransformer\DateOfAwardTransformer;
+use App\Models\DateOfAward;
+use Dingo\Api\Exception\StoreResourceFailedException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class DateOfAwardController extends BaseController
+{
+    /**
+     * @api {post} /admin/dateOfAward/store 添加日期奖项
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward store
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {integer} type 状态 1.设计大赛；2.节日；3.展会；4.事件
+     * @apiParam {string} name 名称
+     * @apiParam {string} start_time 开始时间
+     * @apiParam {string} end_time 结束时间
+     * @apiParam {string} summary 描述
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function store(Request $request)
+    {
+        $rules = [
+            'type' => 'required|integer',
+            'name' => 'required|max:30',
+            'summary' => 'required|max:500',
+            'start_time' => 'required',
+            'end_time' => 'required',
+
+        ];
+
+        $all = $request->all();
+        $validator = Validator::make($all, $rules);
+
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if (!$dateOfAward = DateOfAward::create($all)) {
+            return $this->response->array($this->apiError('添加失败', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+
+
+    }
+
+    /**
+     * @api {get} /admin/dateOfAward 日期奖项详情
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward dateOfAward
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {integer} id 日期奖项id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 1,
+                "type": 1,
+                "type_value": "设计大赛",
+                "name": "设计大奖",
+                "summary": "设计大奖",
+                "start_time": "2017-11-01",
+                "end_time": "2017-11-30"
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     *
+     */
+    public function dateOfAward(Request $request)
+    {
+        $id = $request->input('id');
+
+        $dateOfAward = DateOfAward::find($id);
+        if (!$dateOfAward) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        return $this->response->item($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {put} /admin/dateOfAward/update 更改日期奖项
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward update
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {integer} id 项目奖项id
+     * @apiParam {integer} type 状态 1.设计大赛；2.节日；3.展会；4.事件
+     * @apiParam {string} name 名称
+     * @apiParam {string} start_time 开始时间
+     * @apiParam {string} end_time 结束时间
+     * @apiParam {string} summary 描述
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function update(Request $request)
+    {
+        $dateOfAward = DateOfAward::find($request->input('id'));
+        if (!$dateOfAward) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        $rules = [
+            'type' => 'required|integer',
+            'name' => 'required|max:30',
+            'summary' => 'required|max:500',
+            'start_time' => 'required',
+            'end_time' => 'required',
+
+        ];
+
+        $all = $request->all();
+        $validator = Validator::make($all, $rules);
+
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if (!$dateOfAward->update($all)) {
+            return $this->response->array($this->apiError('更新失败', 500));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /admin/dateOfAward/week 日期奖项周
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward week
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 1,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "设计奖",
+                    "summary": "描述",
+                    "start_time": "2017-12-10",
+                    "end_time": "2017-12-02"
+                },
+                {
+                    "id": 2,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "2test",
+                    "summary": "2test",
+                    "start_time": "2017-12-09",
+                    "end_time": "2017-12-22"
+                }
+            ],
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function week()
+    {
+        //当前日期
+        $sdefaultDate = date("Y-m-d");
+        //$first =1 表示每周星期一为开始日期 0表示每周日为开始日期
+        $first=1;
+        //获取当前周的第几天 周日是 0 周一到周六是 1 - 6
+        $w=date('w',strtotime($sdefaultDate));
+        //获取本周开始日期，如果$w是0，则表示周日，减去 6 天
+        $week_start=date('Y-m-d',strtotime("$sdefaultDate -".($w ? $w - $first : 6).' days'));
+        //本周结束日期
+        $week_end=date('Y-m-d',strtotime("$week_start +6 days"));
+
+        $dateOfAward = DateOfAward::whereBetween('start_time' , [$week_start , $week_end])->orderBy('start_time','asc')->get();
+        return $this->response->collection($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /admin/dateOfAward/month 日期奖项月
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward month
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 1,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "设计奖",
+                    "summary": "描述",
+                    "start_time": "2017-12-10",
+                    "end_time": "2017-12-02"
+                },
+                {
+                    "id": 2,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "2test",
+                    "summary": "2test",
+                    "start_time": "2017-12-09",
+                    "end_time": "2017-12-22"
+                }
+            ],
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function month()
+    {
+        //月初
+        $firstday = date('Y-m-01', strtotime(date("Y-m-d")));
+        //月末
+        $lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
+
+        $dateOfAward = DateOfAward::whereBetween('start_time' , [$firstday , $lastday])->orderBy('start_time','asc')->get();
+        return $this->response->collection($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {delete} /admin/dateOfAward/delete 删除日期奖项
+     * @apiVersion 1.0.0
+     * @apiName DateOfAward delete
+     * @apiGroup DateOfAward
+     *
+     * @apiParam {integer} id 日期奖项ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function delete(Request $request)
+    {
+        $id = (int)$request->input('id');
+
+        if(!DateOfAward::destroy($id)){
+            return $this->response->array($this->apiError('删除失败', 412));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+}
+

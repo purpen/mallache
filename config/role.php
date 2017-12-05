@@ -93,8 +93,18 @@ return [
         // 文章删除
         '/admin/article/delete',
 
-
-
+        //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
+        '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
+        //日期奖项周
+        '/admin/dateOfAward/week',
+        //日期奖项月
+        '/admin/dateOfAward/month',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
     ],
 
     /**
@@ -181,6 +191,19 @@ return [
         '/admin/article/recommend',
         // 文章删除
         '/admin/article/delete',
+
+        //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
+        '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
+        //日期奖项周
+        '/admin/dateOfAward/week',
+        //日期奖项月
+        '/admin/dateOfAward/month',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
     ],
 
     /**
