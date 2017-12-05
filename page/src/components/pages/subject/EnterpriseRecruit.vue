@@ -13,7 +13,7 @@
       <article>
         <h3 class="D3title"><i class="D3iLeft"></i><b>招募对象详细要</b>求<i class="D3iRight"></i></h3>
         <el-row :gutter="20">
-          <el-col :offset="6" :xs="24" :sm="12" :md="12" :lg="12">
+          <el-col :offset="isMob ? 0 :6" :xs="24" :sm="12" :md="12" :lg="12">
             <el-card>
               <div class="el_header el_headerLeft">
                 设计公司
