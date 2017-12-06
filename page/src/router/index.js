@@ -211,7 +211,9 @@ const routes = [
       requireAuth: false
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/article/Show'], resolve) }
+    component: (resolve) => {
+      require(['@/components/pages/article/Show'], resolve)
+    }
   },
   {
     path: '/login',
@@ -754,7 +756,8 @@ const routes = [
     path: '/vcenter/modify_pwd',
     name: 'modifyPwd',
     meta: {
-      title: '修改密码'
+      title: '修改密码',
+      requireAuth: true
     },
     component: require('@/components/pages/v_center/account/ModifyPwd')
   },
