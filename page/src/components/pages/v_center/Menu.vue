@@ -1,8 +1,8 @@
 <template>
-
   <el-col :span="isMob ? 24 : 4" class="left-menu">
     <section :class="['menuHide', isMob ? 'MmenuHide' : '']">
-      <div :class="['menu-list', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
+      <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
+        <span v-if="!isMob">个人中心</span>
         <a @click="alick" :to="'/vcenter/control'" :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
@@ -35,7 +35,7 @@
         </a>
       </div>
 
-      <div :class="['menu-list', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-else>
+      <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-else>
         <a @click="alick" :to="'/vcenter/control'" :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
@@ -63,6 +63,21 @@
 
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
+      </div>
+      <div class="menu-list">
+        <span v-if="!isMob">工具</span>
+        <a @click="alick" class="item">
+          常用网站
+        </a>
+        <a @click="alick" class="item">
+          图片素材
+        </a>
+        <a @click="alick" class="item">
+          趋势/报告
+        </a>
+        <a @click="alick" class="item">
+          展览
+        </a>
       </div>
     </section>
   </el-col>
@@ -114,5 +129,21 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .menu-list span {
+    display: block;
+    padding: .85rem 1.5rem;
+    font-size: 1.5rem;
+    color: #666;
+    position: relative;
+    text-indent: 12px;
+  }
 
+  .menu-list span::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 4px;
+    height: 15px;
+    background: #D2D2D2;
+  }
 </style>

@@ -156,6 +156,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   display: none;
 }
 
+.modify-content .el-form-item__content {
+  margin-bottom: 20px;
+}
+
 .el-form-item__content {
   line-height: 10px;
   margin-bottom: 10px;
@@ -525,7 +529,7 @@ button.is-custom.is-outlined.is-loading:after {
   text-indent: -9999em;
 }
 
-.nav-header .el-menu--horizontal>.el-menu-item.logo {
+.nav-header .el-menu--horizontal > .el-menu-item.logo {
   width: 40px;
   height: 60px;
   transition: none;
@@ -536,7 +540,7 @@ button.is-custom.is-outlined.is-loading:after {
   text-indent: -9999px;
 }
 
-.nav-header .el-menu--horizontal>.el-menu-item.logo:hover, .el-menu--horizontal>.el-menu-item.logo.is-active {
+.nav-header .el-menu--horizontal > .el-menu-item.logo:hover, .el-menu--horizontal > .el-menu-item.logo.is-active {
   border: none
 }
 
@@ -560,7 +564,7 @@ button.is-custom.is-outlined.is-loading:after {
   border-bottom: 3px solid transparent;
 }
 
-.nav-header .el-menu--horizontal>.el-menu-item:hover, .el-menu--horizontal>.el-submenu.is-active .el-submenu__title, .el-menu--horizontal>.el-submenu:hover .el-submenu__title, .el-menu--horizontal>.el-menu-item.is-active {
+.nav-header .el-menu--horizontal > .el-menu-item:hover, .el-menu--horizontal > .el-submenu.is-active .el-submenu__title, .el-menu--horizontal > .el-submenu:hover .el-submenu__title, .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom: 3px solid #FF5A5F;
   color: #FF5A5F;
   background: none;
@@ -681,7 +685,7 @@ button.is-custom.is-outlined.is-loading:after {
   margin-top: -3px;
 }
 
-.el-menu-info.el-menu--horizontal>.el-submenu .el-submenu__title {
+.el-menu-info.el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 60px;
   line-height: 60px;
   border: none;
@@ -690,7 +694,7 @@ button.is-custom.is-outlined.is-loading:after {
   padding: 0 14px;
 }
 
-.el-menu-info .el-submenu>.el-menu {
+.el-menu-info .el-submenu > .el-menu {
   z-index: 999;
   top: 60px;
   left: 10px;
@@ -734,7 +738,7 @@ button.is-custom.is-outlined.is-loading:after {
   font-size: 1.5rem;
 }
 
-.el-menu-info:hover>.el-submenu .el-submenu__title, .el-menu-info:hover .el-submenu .el-submenu__icon-arrow {
+.el-menu-info:hover > .el-submenu .el-submenu__title, .el-menu-info:hover .el-submenu .el-submenu__icon-arrow {
   color: #222;
 }
 
@@ -831,7 +835,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .computer-btn {
-  margin-top: 30px;
+  margin: 15px 0 20px;
   text-align: left;
 }
 
@@ -1034,7 +1038,7 @@ img.avatar {
 
 /*按钮左边距*/
 
-.el-button+.el-button {
+.el-button + .el-button {
   margin-left: 0;
   margin-right: 8px;
 }
@@ -1066,6 +1070,7 @@ img.avatar {
   .container {
     width: 768px;
   }
+
   .anli-elrow {
     padding: 0 15px !important;
   }
@@ -1082,162 +1087,215 @@ img.avatar {
   display: block;
 }
 
+/*查看公司主页按钮*/
+.computer-btn .companyBtn:hover, .computer-btn .companyBtn:focus {
+  background-color: #fff;
+  border-color: #FF4500;
+  color: #FF4500;
+}
+
 /* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
 
 @media screen and (max-width: 767px) {
   #app {
     padding-bottom: 360px;
   }
+
   .footer .item {
     text-align: left
   }
+
   .footer .fllow {
     padding-left: 40px !important;
   }
+
   .footer p {
     margin: 10px 10px 10px 40px;
     line-height: 1.5;
   }
+
   .footer p.title {
     font-size: 1.5rem;
     margin: 20px 20px 10px 40px;
   }
+
   .anli-elrow {
     padding: 0 15px !important;
   }
+
   .banner-contant {
     width: 80%;
   }
+
   .design-case-content .des p img {
     width: 100%;
   }
+
   .item2banner {
     margin: 40px 0
   }
+
   .top-menu-list {
     text-align: center
   }
+
   .top-menu-list .item {
     float: none
   }
+
   .h-right-content .content-box {
     margin-top: 0;
   }
+
   .input input {
     height: 42px;
   }
+
   .input {
     margin-bottom: 0;
   }
+
   .input .el-form-item {
     margin-bottom: 0;
   }
+
   .el-form-item__error {
     position: static;
   }
+
   .nav-header .el-menu-header .el-menu-item, .m-nav-header .el-menu-header .el-menu-item, .el-menu-header .el-submenu {
     margin: 0 10px;
   }
+
   .nav-header .nav-right {
     justify-content: center;
     padding-right: 15px;
   }
+
   /*查看公司主页按钮*/
   .companyBtn {
     padding: 10px 5px;
+    border: 1px solid #D2D2D2;
   }
+
   /*bank 弹出层*/
   .el-dialog--small, .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small, .el-dialog--tiny {
     width: 90%;
   }
+
   .fullwidth .el-form-item__content {
     display: flex;
   }
+
   /*下拉框宽度*/
   .el-form-item__content .el-select:last-child {
     margin-right: 0
   }
+
   .el-select {
     flex: 1;
     margin-bottom: 8px;
     margin-right: 5px;
   }
+
   /*ui设计选择框*/
   .el-radio {
     margin: 0 8px 4px 0;
   }
-  .el-radio+.el-radio {
+
+  .el-radio + .el-radio {
     margin-left: 0;
   }
-  .el-checkbox+.el-checkbox {
+
+  .el-checkbox + .el-checkbox {
     margin: 0 8px 8px 0;
   }
+
   .el-step__title {
     font-size: 12px;
     line-height: 1.5;
   }
+
   .select-item-box .el-collapse-item__header {
     background: #fafafa;
     overflow: hidden;
   }
+
   .select-item-box .el-collapse-item__wrap {
     background: #fff;
   }
+
   .select-item-box .el-collapse-item__header__arrow {
     float: right;
     margin-right: 15px;
     line-height: 42px;
   }
+
   .partnersDesign .el-collapse-item__content {
     padding: 10px 0;
   }
+
   .choiceList .el-radio__input {
     float: right;
   }
+
   .choiceList .el-radio__input .el-radio__inner {
     width: 22px;
     height: 22px;
     margin-right: 15px;
   }
+
   .choiceList .el-radio__input.is-checked .el-radio__inner {
     background: #FF5A5F;
     border-color: #FF5A5F;
   }
+
   .choiceList .el-radio__label {
     font-size: 15px;
   }
+
   .el-step__head {
     width: 20px;
     height: 20px;
   }
+
   .el-step__line.is-horizontal {
     top: 10px;
     left: 20px;
   }
+
   .el-step__icon {
     line-height: 18px
   }
+
   .el-step__icon i {
     display: none;
   }
+
   .withdraw {
     font-size: 15px;
   }
+
   .c_item {
     padding-left: 15px;
   }
+
   .el-step__main {
     padding-top: 16px;
   }
+
   .menu-list .item:hover {
     color: rgba(112, 123, 135, .92)
   }
+
   .menu-list .item.is-active:hover {
     color: #222;
   }
+
   .is-custom, .btnGroup .el-upload {
     width: 100%
   }
+
   /*767 end*/
 }
 
