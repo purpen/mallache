@@ -14,7 +14,6 @@ page/config/dev.env.js
 page/config/index.js
 page/config/prod.env.js
 page/package-lock.json
-page/dist
 *.swp
 *.swo
 *.swn
