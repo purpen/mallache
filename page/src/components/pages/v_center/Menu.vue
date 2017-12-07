@@ -66,7 +66,8 @@
       </div>
       <div class="menu-list">
         <span v-if="!isMob">工具</span>
-        <a @click="alick" class="item">
+        <a @click="alick" :to="'/vcenter/usefulSites'"
+           :class="{'item': true, 'is-active': currentName === 'usefulSites'}">
           常用网站
         </a>
         <a @click="alick" class="item">
@@ -75,7 +76,8 @@
         <a @click="alick" class="item">
           趋势/报告
         </a>
-        <a @click="alick" class="item">
+        <a @click="alick" :to="'/vcenter/exhibition'"
+           :class="{'item': true, 'is-active': currentName === 'exhibition'}">
           展览
         </a>
       </div>

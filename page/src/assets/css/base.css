@@ -1048,6 +1048,169 @@ img.avatar {
   margin-right: 8px;
 }
 
+/*日历*/
+button {
+  outline: none;
+}
+
+.fc-head {
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  background: #ff5a6099;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+}
+
+.fc th {
+  text-align: left !important;
+  text-indent: 16px;
+}
+
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-list-heading td {
+  border-color: #ff5a6099;
+}
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+  float: left !important;
+}
+
+.fc td.fc-today {
+  position: relative
+}
+
+td.fc-day.fc-widget-content.fc-wed.fc-today::before {
+  content: "今";
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: #FF5D62;
+  border-radius: 50%;
+  font-size: 15px;
+  text-align: center;
+  color: #fff;
+}
+
+.fc button {
+  padding: 0;
+  margin: 0
+}
+
+.fc .fc-state-default {
+  padding: 0;
+  background: #fff;
+  border: 1px solid #979797;
+  box-shadow: none;
+  height: 22px;
+}
+
+.fc .fc-prev-button,
+.fc .fc-next-button {
+  border-radius: 50% !important;
+  width: 22px;
+  line-height: 1;
+  color: #979797
+}
+
+.fc .fc-prev-button:hover,
+.fc .fc-next-button:hover,
+.fc .fc-today-button:hover {
+  color: #FF5D62;
+  border-color: #FF5D62;
+}
+
+.fc .fc-prev-button:active,
+.fc .fc-next-button:active,
+.fc .fc-today-button:active {
+  color: #fff;
+  background-color: #FFACAF;
+  border-color: #FF5D62;
+}
+
+.fc .fc-today-button {
+  margin: 0 12px !important;
+  border-radius: 10px;
+  padding: 0 8px;
+  color: #999;
+  height: 24px;
+  line-height: 24px;
+}
+
+.fc-icon-left-single-arrow:after,
+.fc-icon-right-single-arrow:after {
+  font-weight: normal !important;
+  font-size: 26px !important;
+}
+
+.fc-icon-left-single-arrow:after {
+  left: 1px;
+}
+
+.fc-icon-right-single-arrow:after {
+  right: 4px;
+}
+
+.fc-toolbar {
+  text-align: left;
+}
+
+.fc-center {
+  padding-left: 12px;
+}
+
+.fc-toolbar h2 {
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.fc-toolbar.fc-header-toolbar {
+  margin: 20px 0;
+}
+
+.fc .fc-month-button,
+.fc .fc-basicWeek-button {
+  height: 28px;
+  line-height: 28px;
+  padding: 0 12px;
+  color: #FF5A5F
+}
+
+.fc .fc-button-group .fc-state-active {
+  background: #FFACAF;
+  color: #fff
+}
+
+.fc-event {
+  border-radius: 14px !important;
+  height: 28px;
+  line-height: 28px !important;
+  text-indent: 15px;
+}
+
+@media screen and (max-width: 767px) {
+  .fc th {
+    text-align: center;
+    text-indent: 0
+  }
+
+  .fc-event {
+    text-indent: 0
+  }
+}
+
+/*日历 end*/
+
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1180px) {
