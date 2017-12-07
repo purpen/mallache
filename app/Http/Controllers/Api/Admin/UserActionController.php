@@ -175,7 +175,7 @@ class UserActionController extends BaseController
      * @apiGroup AdminUser
      *
      * @apiParam {integer} id 用户ID
-     * @apiParam {int} kind: 1.默认；2.员工；3.--； 
+     * @apiParam {integer} kind: 1.默认；2.员工；3.--； 
      * @apiParam {string} realname  真实姓名
      * @apiParam {string} position  职位
      * @apiParam {string} token
@@ -209,7 +209,10 @@ class UserActionController extends BaseController
         if(!$user = User::find($id)){
             return $this->response->array($this->apiError('not found', 404));
         }
-        if(!$user->update($params)){
+        foreach ($params as $k=>$v) {
+            if ($v) $user->$k = $v;
+        }
+        if(!$user->update()){
             return $this->response->array($this->apiError('保存失败！', 500));
         }else{
             return $this->response->array($this->apiSuccess());
