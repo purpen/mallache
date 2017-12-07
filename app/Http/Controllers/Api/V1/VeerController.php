@@ -25,10 +25,9 @@ class VeerController extends BaseController
      */
     public function lists(Request $request)
     {
-//        $keyword = $request->input('keyword');
+        $keyword = $request->input('keyword');
         $page = $request->input('page') ? $request->input('page') : 1;
         $nums = $request->input('nums') ? $request->input('nums') : 10;
-        $keyword = '设计';
         $client_id = config('veer.client_id');
         $access_token = Redis::get('access_token');
         $authorization = 'Bearer '.$access_token;
