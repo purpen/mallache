@@ -174,7 +174,7 @@ class UserActionController extends BaseController
      * @apiName user edit
      * @apiGroup AdminUser
      *
-     * @apiParam {integer} user_id 用户ID
+     * @apiParam {integer} id 用户ID
      * @apiParam {int} kind: 1.默认；2.员工；3.--； 
      * @apiParam {string} realname  真实姓名
      * @apiParam {string} position  职位
@@ -193,7 +193,7 @@ class UserActionController extends BaseController
         $id = $request->input('id') ? (int)$request->input('id') : 0;
 
         if (empty($id)) {
-            return $this->response->array($this->apiError('收货地址不存在！', 500));
+            return $this->response->array($this->apiError('用户ID不存在！', 500));
         }
 
         // 验证规则

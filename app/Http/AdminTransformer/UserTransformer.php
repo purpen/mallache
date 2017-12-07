@@ -8,6 +8,6 @@ class UserTransformer extends TransformerAbstract
 {
     public function transform(User $user)
     {
-        return $user;
+        return $user->toArray();
     }
 }
