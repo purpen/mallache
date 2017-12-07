@@ -103,7 +103,7 @@
                     <a href="javascript:void(0);" @click="setRoleBtn(scope.$index, scope.row)">权限设置</a>
                   </p>
                   <p>
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
+                    <router-link :to="{name: 'adminUserSubmit', query: {id: scope.row.id}}">编辑</router-link>
                     <!--<a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>-->
                   </p>
                 </template>
