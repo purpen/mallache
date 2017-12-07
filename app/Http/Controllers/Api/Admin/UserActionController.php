@@ -45,6 +45,9 @@ class UserActionController extends BaseController
      *          "design_company_id": 1,
      *          "role_id": 1    // role_id 角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
      *          "type": 1  //1.需求公司；2.设计公司
+     *          "realname": "马哲",   // 真实姓名
+     *          "position": "所属职位", // 程序员
+     *          "kind": 1,  用户类型：1.普通；2.员工；3.--
     }
      *   }
      */
@@ -75,6 +78,52 @@ class UserActionController extends BaseController
         $lists = $user->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($lists,new UserTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /admin/user/show 用户详情
+     * @apiVersion 1.0.0
+     * @apiName user show
+     * @apiGroup AdminUser
+     *
+     * @apiParam {string} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     * "data": {
+     *          "id": 1,
+     *          "account": "18629493221",
+     *          "username": "",
+     *          "email": null,
+     *          "phone": "18629493221",
+     *          "status": 0, //状态：；-1：禁用；0.激活;
+     *          "item_sum": 0, //项目数量
+     *          "price_total": "0.00", //总金额
+     *          "price_frozen": "0.00", //冻结金额
+     *          "image": "",
+     *          "design_company_id": 1,
+     *          "role_id": 1    // role_id 角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
+     *          "type": 1  //1.需求公司；2.设计公司
+     *          "realname": "马哲",   // 真实姓名
+     *          "position": "所属职位", // 程序员
+     *          "kind": 1,  用户类型：1.普通；2.员工；3.--
+     * }
+     * }
+     */
+    public function show(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+        ]);
+
+        $user = User::find($request->input('id'));
+        if (!$user) {
+            return $this->response->array($this->apiSuccess('not found', 404));
+        }
+
+        return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -114,6 +163,54 @@ class UserActionController extends BaseController
         $user->role_id = $payload['role_id'];
         if(!$user->save()){
             return $this->response->array($this->apiError());
+        }else{
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
+    /**
+     * @api {post} /admin/user/edit 修改用户基本信息
+     * @apiVersion 1.0.0
+     * @apiName user edit
+     * @apiGroup AdminUser
+     *
+     * @apiParam {integer} user_id 用户ID
+     * @apiParam {int} kind: 1.默认；2.员工；3.--； 
+     * @apiParam {string} realname  真实姓名
+     * @apiParam {string} position  职位
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function edit(Request $request)
+    {
+        $id = $request->input('id') ? (int)$request->input('id') : 0;
+
+        if (empty($id)) {
+            return $this->response->array($this->apiError('收货地址不存在！', 500));
+        }
+
+        // 验证规则
+        $rules = [
+            'kind' => ['required', 'integer'],
+        ];
+        $params = $request->only('realname', 'position', 'kind');
+        $validator = Validator::make($params, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if(!$user = User::find($id)){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        if(!$user->update($params)){
+            return $this->response->array($this->apiError('保存失败！', 500));
         }else{
             return $this->response->array($this->apiSuccess());
         }

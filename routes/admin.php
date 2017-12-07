@@ -83,6 +83,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //用户列表
         $api->get('/admin/user/lists', 'UserActionController@lists');
+        //用户详情
+        $api->get('/admin/user/show', 'UserActionController@show');
+        //修改用户基本信息
+        $api->post('/admin/user/edit', 'UserActionController@edit');
         //修改用户角色
         $api->post('/admin/user/changeRole', 'UserActionController@changeRole');
         //修改用户状态
