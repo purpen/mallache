@@ -685,6 +685,18 @@ const ARTICLE_TYPE = [
   }
 ]
 
+// 用户属性
+const USER_KIND = [
+  {
+    id: 1,
+    name: '默认'
+  },
+  {
+    id: 2,
+    name: '鸟人'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -704,6 +716,7 @@ module.exports = {
   COLUMN_TYPE,
   CATEGORY_TYPE,
   ARTICLE_TYPE,
+  USER_KIND,
 
   TEST
 }

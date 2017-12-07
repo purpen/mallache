@@ -55,24 +55,24 @@ class Tools
      * @param int $target_id 目标ID
      * @return bool 返回值
      */
-    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null)
-    {
-        $message = Message::create([
-            'user_id' => $user_id,
-            'title' => $title,
-            'content' => $message,
-            'type' => $type,
-            'target_id' => $target_id
-        ]);
-
-        if ($message) {
-            //新消息数量加1
-            $this->addMessageQuantity($user_id);
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null)
+//    {
+//        $message = Message::create([
+//            'user_id' => $user_id,
+//            'title' => $title,
+//            'content' => $message,
+//            'type' => $type,
+//            'target_id' => $target_id
+//        ]);
+//
+//        if ($message) {
+//            //新消息数量加1
+//            $this->addMessageQuantity($user_id);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     /**
      * 添加新消息数量

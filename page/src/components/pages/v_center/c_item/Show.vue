@@ -302,11 +302,13 @@
     <el-dialog title="提交项目报价" v-model="takingPriceDialog">
       <el-form label-position="top" :model="takingPriceForm" :rules="takingPriceRuleForm" ref="takingPriceRuleForm">
         <el-form-item label="项目报价" prop="price" label-width="200px">
-          <el-input type="text" v-model.number="takingPriceForm.price" :placeholder="item.design_cost_value"
-                    auto-complete="off"></el-input>
+          <el-input type="text" v-model="takingPriceForm.price" :placeholder="item.design_cost_value" @blur="changePriceStyle(2)" @focus="changePriceStyle(1)" auto-complete="off">
+            <template slot="prepend">¥</template>
+          </el-input>
+          <div class="description red">* 实际报价单位为‘元’,如1万,请添写10000</div>
         </el-form-item>
         <el-form-item label="报价说明" prop="summary" label-width="80px">
-          <el-input type="textarea" v-model="takingPriceForm.summary" :autosize="{ minRows: 2, maxRows: 8}"
+          <el-input type="textarea" v-model="takingPriceForm.summary" :autosize="{ minRows: 5, maxRows: 8}"
                     auto-complete="off"></el-input>
         </el-form-item>
         <div class="taking-price-btn">
@@ -387,12 +389,13 @@
         takingPriceForm: {
           id: '',
           itemId: '',
+          o_price: '',
           price: '',
           summary: ''
         },
         takingPriceRuleForm: {
           price: [
-            {required: true, type: 'number', message: '请添写报价金额,必须为整数', trigger: 'blur'}
+            {required: true, message: '请添写报价金额,必须为整数', trigger: 'blur'}
           ],
           summary: [
             {required: true, message: '请添写报价说明', trigger: 'blur'}
@@ -418,6 +421,14 @@
       }
     },
     methods: {
+      changePriceStyle(evt) {
+        if (evt === 1) {
+          this.takingPriceForm.price = this.takingPriceForm.o_price
+        } else if (evt === 2) {
+          this.takingPriceForm.o_price = this.takingPriceForm.price
+          this.takingPriceForm.price = parseInt(this.takingPriceForm.price).toLocaleString('en-US')
+        }
+      },
       selectCompanyboxChange() {
       },
       // 提交项目报价
@@ -428,7 +439,7 @@
           if (valid) {
             let row = {
               item_demand_id: self.item.id,
-              price: self.takingPriceForm.price,
+              price: self.takingPriceForm.o_price,
               summary: self.takingPriceForm.summary
             }
 
@@ -776,7 +787,8 @@
             // console.log(self.quotation)
             if (self.quotation) {
               self.takingPriceForm.id = self.quotation.id
-              self.takingPriceForm.price = self.quotation.price
+              self.takingPriceForm.price = parseInt(self.quotation.price).toLocaleString('en-US')
+              self.takingPriceForm.o_price = self.quotation.price
               self.takingPriceForm.summary = self.quotation.summary
             }
             // 是否显示提交报价单按钮
@@ -1072,6 +1084,10 @@
 <style scoped>
 
   .content {
+  }
+
+  .red {
+    color: red;
   }
 
   .banner {

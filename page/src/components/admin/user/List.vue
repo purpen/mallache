@@ -48,6 +48,15 @@
                 <template scope="scope">
                   <p>账户: {{ scope.row.account }}</p>
                   <p>昵称: {{ scope.row.username }}</p>
+                  <p v-if="scope.row.realname">真实姓名: {{ scope.row.realname }} [{{ scope.row.position }}]</p>
+                </template>
+            </el-table-column>
+            <el-table-column
+              width="60"
+              label="属性">
+                <template scope="scope">
+                  <p v-if="scope.row.kind === 2">鸟人</p>
+                  <p v-else>默认</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -93,12 +102,10 @@
                   <p>
                     <a href="javascript:void(0);" @click="setRoleBtn(scope.$index, scope.row)">权限设置</a>
                   </p>
-                  <!--
                   <p>
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
+                    <router-link :to="{name: 'adminUserSubmit', query: {id: scope.row.id}}">编辑</router-link>
+                    <!--<a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>-->
                   </p>
-                  -->
                 </template>
             </el-table-column>
           </el-table>

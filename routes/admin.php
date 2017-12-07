@@ -83,6 +83,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //用户列表
         $api->get('/admin/user/lists', 'UserActionController@lists');
+        //用户详情
+        $api->get('/admin/user/show', 'UserActionController@show');
+        //修改用户基本信息
+        $api->post('/admin/user/edit', 'UserActionController@edit');
         //修改用户角色
         $api->post('/admin/user/changeRole', 'UserActionController@changeRole');
         //修改用户状态
@@ -159,6 +163,21 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 删除文章
         $api->delete('/admin/article/delete','ArticleController@destroy');
 
+        /**
+         * 日期奖项
+         */
+        // 添加
+        $api->post('/admin/dateOfAward/store', 'DateOfAwardController@store');
+        // 日期奖项详情
+        $api->get('/admin/dateOfAward', 'DateOfAwardController@dateOfAward');
+        // 更改日期奖项
+        $api->put('/admin/dateOfAward/update', 'DateOfAwardController@update');
+        // 日期奖项周
+        $api->get('/admin/dateOfAward/week', 'DateOfAwardController@week');
+        // 日期奖项月
+        $api->get('/admin/dateOfAward/month', 'DateOfAwardController@month');
+        // 日期奖项删除
+        $api->delete('/admin/dateOfAward/delete', 'DateOfAwardController@delete');
     });
 
 });

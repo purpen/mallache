@@ -140,6 +140,8 @@ export default {
 
   // 用户管理
   adminUserLists: '/admin/user/lists', // GET 用户列表
+  adminUser: '/admin/user/show', // GET 用户详情
+  adminUserEdit: '/admin/user/edit', // POST 修改用户信息
   adminUserSetStatus: '/admin/user/changeStatus', // POST 修改用户状态
   adminUserSetRole: '/admin/user/changeRole', // POST 修改用户角色
 

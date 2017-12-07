@@ -20,6 +20,10 @@ class Kernel extends ConsoleKernel
 
         // 批量生成设计公司用户
         Commands\createUsers::class,
+
+        //更改veer的token
+        Commands\UpdateVeerToken::class,
+
     ];
 
     /**
@@ -35,6 +39,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('Weighted:calculation')->everyFiveMinutes();
 
         $schedule->command('payOrder:drop')->everyFiveMinutes();
+
+        $schedule->command('Update:token')->everyFiveMinutes();
     }
 
     /**

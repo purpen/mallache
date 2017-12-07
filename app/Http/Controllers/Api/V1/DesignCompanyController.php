@@ -399,6 +399,8 @@ class DesignCompanyController extends BaseController
             'company_name'  => 'nullable|max:50',
             'company_abbreviation'  => 'nullable|max:50',
             'province'  => 'nullable|integer',
+            'city' => 'integer',
+            'area' => 'integer',
             'address'  => 'nullable|max:50',
             'contact_name'  => 'nullable|max:20',
             'phone'  => 'nullable',

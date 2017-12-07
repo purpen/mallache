@@ -39,6 +39,10 @@ return [
          */
         //用户列表
         '/admin/user/lists',
+        //用户详情
+        '/admin/user/show',
+        //用户编辑
+        '/admin/user/edit',
         //修改用户角色
         '/admin/user/changeRole',
         //修改用户状态
@@ -93,8 +97,18 @@ return [
         // 文章删除
         '/admin/article/delete',
 
-
-
+        //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
+        '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
+        //日期奖项周
+        '/admin/dateOfAward/week',
+        //日期奖项月
+        '/admin/dateOfAward/month',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
     ],
 
     /**
@@ -103,6 +117,10 @@ return [
     'admin_plus' => [
         //用户列表
         '/admin/user/lists',
+        //用户详情
+        '/admin/user/show',
+        //用户编辑
+        '/admin/user/edit',
         //修改用户状态
         '/admin/user/changeStatus',
 
@@ -181,6 +199,19 @@ return [
         '/admin/article/recommend',
         // 文章删除
         '/admin/article/delete',
+
+        //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
+        '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
+        //日期奖项周
+        '/admin/dateOfAward/week',
+        //日期奖项月
+        '/admin/dateOfAward/month',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
     ],
 
     /**

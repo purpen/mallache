@@ -942,6 +942,16 @@ const routes = [
     },
     component: require ('@/components/admin/user/List')
   },
+  // 用户编辑
+  {
+    path: '/admin/user/submit',
+    name: 'adminUserSubmit',
+    meta: {
+      title: '用户编辑',
+      requireAuth: true
+    },
+    component: require('@/components/admin/user/Submit')
+  },
   // 分类列表
   {
     path: '/admin/category/list',
