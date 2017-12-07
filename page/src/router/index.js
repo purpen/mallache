@@ -6,12 +6,12 @@ import {
   calcImgSize
 } from 'assets/js/common'
 
-Vue.use(VueRouter)
+Vue.use (VueRouter)
 
 // 页面刷新时，重新赋值token
-if (window.localStorage.getItem('token')) {
+if (window.localStorage.getItem ('token')) {
   // console.log(window.localStorage.getItem('token'))
-  store.commit(types.USER_SIGNIN, JSON.parse(window.localStorage.getItem('token')))
+  store.commit (types.USER_SIGNIN, JSON.parse (window.localStorage.getItem ('token')))
 }
 
 const routes = [
@@ -27,7 +27,7 @@ const routes = [
     meta: {
       title: '首页'
     },
-    component: require('@/components/pages/home/Home')
+    component: require ('@/components/pages/home/Home')
   },
   {
     path: '/test',
@@ -35,7 +35,7 @@ const routes = [
     meta: {
       title: '首页'
     },
-    component: require('@/components/pages/home/Home')
+    component: require ('@/components/pages/home/Home')
   },
   {
     path: '/about',
@@ -43,7 +43,7 @@ const routes = [
     meta: {
       title: '关于'
     },
-    component: require('@/components/pages/home/About')
+    component: require ('@/components/pages/home/About')
   },
   {
     path: '/server',
@@ -51,7 +51,7 @@ const routes = [
     meta: {
       title: '服务'
     },
-    component: require('@/components/pages/home/Server')
+    component: require ('@/components/pages/home/Server')
   },
   {
     path: '/server_design',
@@ -59,7 +59,7 @@ const routes = [
     meta: {
       title: '服务-设计公司'
     },
-    component: require('@/components/pages/home/ServerDesign')
+    component: require ('@/components/pages/home/ServerDesign')
   },
   {
     path: '/stuff',
@@ -68,7 +68,7 @@ const routes = [
       title: '灵感',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Stuff')
+    component: require ('@/components/pages/home/Stuff')
   },
   // 联系我们
   {
@@ -78,7 +78,7 @@ const routes = [
       title: '联系我们',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Contact')
+    component: require ('@/components/pages/home/Contact')
   },
   // 服务条款
   {
@@ -88,7 +88,7 @@ const routes = [
       title: '服务条款',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Item')
+    component: require ('@/components/pages/home/Item')
   },
   // 常见问题
   {
@@ -98,7 +98,7 @@ const routes = [
       title: '常见问题',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Question')
+    component: require ('@/components/pages/home/Question')
   },
   // 交易保障
   {
@@ -108,7 +108,7 @@ const routes = [
       title: '交易保障',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Trade')
+    component: require ('@/components/pages/home/Trade')
   },
   {
     path: '/apply',
@@ -117,7 +117,7 @@ const routes = [
       title: '申请入驻',
       requireAuth: true
     },
-    component: require('@/components/pages/home/Apply')
+    component: require ('@/components/pages/home/Apply')
   },
   // #### 专题页 ######
   // 浙江设计再造--台州黄岩
@@ -128,7 +128,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require('@/components/pages/subject/Zj')
+    component: require ('@/components/pages/subject/Zj')
   },
   // 浙江设计再造--杭州良渚
   {
@@ -138,7 +138,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require('@/components/pages/subject/ZjLz')
+    component: require ('@/components/pages/subject/ZjLz')
   },
   // 浙江设计再造--金华永康
   {
@@ -148,7 +148,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require('@/components/pages/subject/ZjYk')
+    component: require ('@/components/pages/subject/ZjYk')
   },
   // RCIP衍生创新峰会
   {
@@ -158,7 +158,26 @@ const routes = [
       requireAuth: false,
       title: 'RCIP衍生创新峰会'
     },
-    component: require('@/components/pages/subject/Rcip')
+    component: require ('@/components/pages/subject/Rcip')
+  },
+  // 羽泉的礼物
+  {
+    path: '/subject/YuQuanGifts',
+    name: 'YuQuanGifts',
+    meta: {
+      requireAuth: false,
+      title: '羽泉的礼物'
+    },
+    component: require ('@/components/pages/subject/YuQuanGifts')
+  },
+  {
+    path: '/subject/YuQuanGifts/uploads',
+    name: 'uploads',
+    meta: {
+      requireAuth: false,
+      title: '上传作品'
+    },
+    component: require ('@/components/pages/subject/uploadWork/uploadwork')
   },
   // 企业招募
   {
@@ -168,7 +187,7 @@ const routes = [
       requireAuth: false,
       title: '企业招募'
     },
-    component: require('@/components/pages/subject/EnterpriseRecruit')
+    component: require ('@/components/pages/subject/EnterpriseRecruit')
   },
   // 产品招募
   {
@@ -178,7 +197,7 @@ const routes = [
       requireAuth: false,
       title: '产品招募'
     },
-    component: require('@/components/pages/subject/ProductRecruit')
+    component: require ('@/components/pages/subject/ProductRecruit')
   },
 
   // 专题列表
@@ -189,7 +208,7 @@ const routes = [
       title: '专题列表',
       requireAuth: false
     },
-    component: require('@/components/pages/subject/List')
+    component: require ('@/components/pages/subject/List')
   },
 
   // 文章列表
@@ -200,7 +219,7 @@ const routes = [
       title: '文章列表',
       requireAuth: false
     },
-    component: require('@/components/pages/article/List')
+    component: require ('@/components/pages/article/List')
   },
   // 文章详情
   {
@@ -212,7 +231,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require(['@/components/pages/article/Show'], resolve)
+      require (['@/components/pages/article/Show'], resolve)
     }
   },
   {
@@ -221,7 +240,7 @@ const routes = [
     meta: {
       title: '登录'
     },
-    component: require('@/components/pages/auth/Login')
+    component: require ('@/components/pages/auth/Login')
   },
   {
     path: '/logout',
@@ -229,7 +248,7 @@ const routes = [
     meta: {
       title: '登出'
     },
-    component: require('@/components/pages/auth/Logout')
+    component: require ('@/components/pages/auth/Logout')
   },
   {
     path: '/identity',
@@ -237,7 +256,7 @@ const routes = [
     meta: {
       title: '注册'
     },
-    component: require('@/components/pages/auth/choiceIdentity')
+    component: require ('@/components/pages/auth/choiceIdentity')
   },
   {
     path: '/register',
@@ -245,7 +264,7 @@ const routes = [
     meta: {
       title: '注册'
     },
-    component: require('@/components/pages/auth/Register')
+    component: require ('@/components/pages/auth/Register')
   },
   // 找回密码
   {
@@ -254,7 +273,7 @@ const routes = [
     meta: {
       title: '找回密码'
     },
-    component: require('@/components/pages/auth/Forget')
+    component: require ('@/components/pages/auth/Forget')
   },
 
   // 发布需求(第一步) 支付
@@ -265,7 +284,7 @@ const routes = [
       title: '发布需求',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitOne')
+    component: require ('@/components/pages/item/SubmitOne')
   },
 
   // 发布需求(第二步) 选择领域
@@ -276,7 +295,7 @@ const routes = [
       title: '选择类型',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitTwo')
+    component: require ('@/components/pages/item/SubmitTwo')
   },
 
   // 发布需求(第三步) 添写基本信息(产品设计)
@@ -287,7 +306,7 @@ const routes = [
       title: '基本信息',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitThree')
+    component: require ('@/components/pages/item/SubmitThree')
   },
 
   // 发布需求(第三步) 添写基本信息(UI设计)
@@ -298,7 +317,7 @@ const routes = [
       title: '基本信息',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitUIThree')
+    component: require ('@/components/pages/item/SubmitUIThree')
   },
 
   // 发布需求(第四步) 添写公司信息
@@ -309,7 +328,7 @@ const routes = [
       title: '补全公司信息',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitFour')
+    component: require ('@/components/pages/item/SubmitFour')
   },
 
   // 发布需求(第五步) 检查并发布
@@ -320,7 +339,7 @@ const routes = [
       title: '检查并发布',
       requireAuth: true
     },
-    component: require('@/components/pages/item/SubmitFive')
+    component: require ('@/components/pages/item/SubmitFive')
   },
 
   // 发布需求(第五步) 检查并发布
@@ -331,7 +350,7 @@ const routes = [
       title: '发布',
       requireAuth: true
     },
-    component: require('@/components/pages/item/Publish')
+    component: require ('@/components/pages/item/Publish')
   },
 
   // 支付99预付款
@@ -344,7 +363,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require(['@/components/pages/item/Payment'], resolve)
+      require (['@/components/pages/item/Payment'], resolve)
     }
   },
   // 支付宝回调
@@ -355,7 +374,7 @@ const routes = [
       title: '支付宝-支付结果',
       requireAuth: false
     },
-    component: require('@/components/pages/pay/AlipayCallback')
+    component: require ('@/components/pages/pay/AlipayCallback')
   },
   // 京东回调
   {
@@ -365,7 +384,7 @@ const routes = [
       title: '京东-支付结果',
       requireAuth: false
     },
-    component: require('@/components/pages/pay/JdCallback')
+    component: require ('@/components/pages/pay/JdCallback')
   },
   // 微信回调
   {
@@ -375,7 +394,7 @@ const routes = [
       title: '微信-支付结果',
       requireAuth: true
     },
-    component: require('@/components/pages/pay/wxCallback')
+    component: require ('@/components/pages/pay/wxCallback')
   },
   // 支付项目资金
   {
@@ -385,7 +404,7 @@ const routes = [
       title: '支付项目资金',
       requireAuth: true
     },
-    component: require('@/components/pages/item/PayFund')
+    component: require ('@/components/pages/item/PayFund')
   },
   // 自定义输出页面
   {
@@ -395,7 +414,7 @@ const routes = [
       title: '',
       requireAuth: false
     },
-    component: require('@/components/block/Blank')
+    component: require ('@/components/block/Blank')
   },
 
   // 个人主页
@@ -406,7 +425,7 @@ const routes = [
       title: '个人主页',
       requireAuth: false
     },
-    component: require('@/components/pages/user/Show')
+    component: require ('@/components/pages/user/Show')
   },
 
   // 控制面板
@@ -417,7 +436,7 @@ const routes = [
       title: '控制面板',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/common/Control')
+    component: require ('@/components/pages/v_center/common/Control')
   },
 
   // 公司主页
@@ -428,7 +447,7 @@ const routes = [
       title: '公司主页',
       requireAuth: false
     },
-    component: require('@/components/pages/company/Show')
+    component: require ('@/components/pages/company/Show')
   },
 
   // 公司基本设置(remove)
@@ -439,7 +458,7 @@ const routes = [
       title: '完善公司信息',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Profile')
+    component: require ('@/components/pages/v_center/company/Profile')
   },
   // 公司基本设置
   {
@@ -449,7 +468,7 @@ const routes = [
       title: '公司基本设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Base')
+    component: require ('@/components/pages/v_center/company/Base')
   },
   // 公司接单设置
   {
@@ -459,7 +478,7 @@ const routes = [
       title: '接单设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Taking')
+    component: require ('@/components/pages/v_center/company/Taking')
   },
   // 公司认证
   {
@@ -469,7 +488,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Accreditation')
+    component: require ('@/components/pages/v_center/company/Accreditation')
   },
   // 公司认证-编辑
   {
@@ -479,7 +498,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Identification')
+    component: require ('@/components/pages/v_center/company/Identification')
   },
   // 公司认证-编辑
   {
@@ -489,7 +508,7 @@ const routes = [
       title: '日历',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/exhibition/exhibition')
+    component: require ('@/components/pages/v_center/exhibition/exhibition')
   },
   // 项目动态
   {
@@ -499,7 +518,7 @@ const routes = [
       title: '项目动态',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/item/List')
+    component: require ('@/components/pages/v_center/item/List')
   },
   // 订单列表
   {
@@ -509,7 +528,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/order/List')
+    component: require ('@/components/pages/v_center/order/List')
   },
   // 订单详情
   {
@@ -519,7 +538,7 @@ const routes = [
       title: '订单详情',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/order/Show')
+    component: require ('@/components/pages/v_center/order/Show')
   },
   // 消息列表
   {
@@ -529,7 +548,7 @@ const routes = [
       title: '消息列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/message/List')
+    component: require ('@/components/pages/v_center/message/List')
   },
   // 作品列表
   {
@@ -539,7 +558,7 @@ const routes = [
       title: '作品列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/design_case/List')
+    component: require ('@/components/pages/v_center/design_case/List')
   },
   // 作品详情
   {
@@ -549,7 +568,7 @@ const routes = [
       title: '作品详情',
       requireAuth: false
     },
-    component: require('@/components/pages/design_case/Show')
+    component: require ('@/components/pages/design_case/Show')
   },
   // 添加作品
   {
@@ -559,7 +578,7 @@ const routes = [
       title: '添加作品',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/design_case/Submit')
+    component: require ('@/components/pages/v_center/design_case/Submit')
   },
   // 编辑作品
   {
@@ -569,7 +588,7 @@ const routes = [
       title: '编辑作品',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/design_case/Submit')
+    component: require ('@/components/pages/v_center/design_case/Submit')
   },
   // 我的项目列表(需求方)
   {
@@ -579,7 +598,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/item/List')
+    component: require ('@/components/pages/v_center/item/List')
   },
   // 项目详情--需求方
   {
@@ -589,7 +608,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/item/Show')
+    component: require ('@/components/pages/v_center/item/Show')
   },
   // 项目详情--公司方
   {
@@ -599,7 +618,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/c_item/Show')
+    component: require ('@/components/pages/v_center/c_item/Show')
   },
 
   // 我的项目列表(设计公司) -- 待合作
@@ -610,7 +629,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/c_item/List')
+    component: require ('@/components/pages/v_center/c_item/List')
   },
   // 我的项目列表(设计公司) -- 已合作
   {
@@ -620,7 +639,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/c_item/TrueList')
+    component: require ('@/components/pages/v_center/c_item/TrueList')
   },
   // 在线合同预览
   {
@@ -632,7 +651,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require(['@/components/pages/v_center/contract/View'], resolve)
+      require (['@/components/pages/v_center/contract/View'], resolve)
     }
   },
   // 在线合同编辑
@@ -643,7 +662,7 @@ const routes = [
       title: '在线合同编辑',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/contract/Submit')
+    component: require ('@/components/pages/v_center/contract/Submit')
   },
   // 合同下载
   {
@@ -655,7 +674,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require(['@/components/pages/v_center/contract/Down'], resolve)
+      require (['@/components/pages/v_center/contract/Down'], resolve)
     }
   },
   // 基本设置
@@ -666,7 +685,7 @@ const routes = [
       title: '设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/company/Profile')
+    component: require ('@/components/pages/v_center/company/Profile')
   },
   {
     path: '/remind',
@@ -675,7 +694,7 @@ const routes = [
       title: '提醒',
       requireAuth: true
     },
-    component: require('@/components/pages/home/Apply')
+    component: require ('@/components/pages/home/Apply')
   },
   // 添加阶段
   {
@@ -685,7 +704,7 @@ const routes = [
       title: '添加阶段',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/stage/Submit')
+    component: require ('@/components/pages/v_center/stage/Submit')
   },
   // 编辑阶段
   {
@@ -695,7 +714,7 @@ const routes = [
       title: '编辑阶段',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/stage/Submit')
+    component: require ('@/components/pages/v_center/stage/Submit')
   },
   // 预览阶段
   {
@@ -705,7 +724,7 @@ const routes = [
       title: '预览阶段',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/stage/Show')
+    component: require ('@/components/pages/v_center/stage/Show')
   },
 
   // 需求方公司设置
@@ -717,7 +736,7 @@ const routes = [
       title: '公司基本设置',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/d_company/Base')
+    component: require ('@/components/pages/v_center/d_company/Base')
   },
   // 公司认证
   {
@@ -727,7 +746,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/d_company/Accreditation')
+    component: require ('@/components/pages/v_center/d_company/Accreditation')
   },
   // 公司认证 -- 编辑
   {
@@ -737,7 +756,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/d_company/Identification')
+    component: require ('@/components/pages/v_center/d_company/Identification')
   },
   // 我的钱包列表
   {
@@ -747,7 +766,7 @@ const routes = [
       title: '我的钱包',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/wallet/List')
+    component: require ('@/components/pages/v_center/wallet/List')
   },
   // 我的银行卡列表
   {
@@ -757,7 +776,7 @@ const routes = [
       title: '我的银行卡',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/bank/List')
+    component: require ('@/components/pages/v_center/bank/List')
   },
 
   // ### 安全设置 #####
@@ -769,7 +788,7 @@ const routes = [
       title: '修改密码',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/account/ModifyPwd')
+    component: require ('@/components/pages/v_center/account/ModifyPwd')
   },
 
   // ###### 后台管理 ##########
@@ -781,7 +800,7 @@ const routes = [
       title: '控制台',
       requireAuth: true
     },
-    component: require('@/components/admin/DashBoard')
+    component: require ('@/components/admin/DashBoard')
   },
   // 添加栏目
   {
@@ -791,7 +810,7 @@ const routes = [
       title: '添加栏目',
       requireAuth: true
     },
-    component: require('@/components/admin/column/Submit')
+    component: require ('@/components/admin/column/Submit')
   },
   // 编辑栏目
   {
@@ -801,7 +820,7 @@ const routes = [
       title: '编辑栏目',
       requireAuth: true
     },
-    component: require('@/components/admin/column/Submit')
+    component: require ('@/components/admin/column/Submit')
   },
   // 栏目列表
   {
@@ -811,7 +830,7 @@ const routes = [
       title: '栏目列表',
       requireAuth: true
     },
-    component: require('@/components/admin/column/List')
+    component: require ('@/components/admin/column/List')
   },
   // 项目列表
   {
@@ -821,7 +840,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require('@/components/admin/item/List')
+    component: require ('@/components/admin/item/List')
   },
   // 项目详情
   {
@@ -831,7 +850,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require('@/components/admin/item/Show')
+    component: require ('@/components/admin/item/Show')
   },
   // 项目匹配公司
   {
@@ -841,7 +860,7 @@ const routes = [
       title: '项目匹配',
       requireAuth: true
     },
-    component: require('@/components/admin/item/Match')
+    component: require ('@/components/admin/item/Match')
   },
   // 订单列表
   {
@@ -851,7 +870,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require('@/components/admin/order/List')
+    component: require ('@/components/admin/order/List')
   },
   // 提现列表
   {
@@ -861,7 +880,7 @@ const routes = [
       title: '提现列表',
       requireAuth: true
     },
-    component: require('@/components/admin/with_draw/List')
+    component: require ('@/components/admin/with_draw/List')
   },
   // 设计公司列表
   {
@@ -871,7 +890,7 @@ const routes = [
       title: '设计公司列表',
       requireAuth: true
     },
-    component: require('@/components/admin/company/List')
+    component: require ('@/components/admin/company/List')
   },
   // 设计公司详情
   {
@@ -881,7 +900,7 @@ const routes = [
       title: '设计公司详情',
       requireAuth: true
     },
-    component: require('@/components/admin/company/Show')
+    component: require ('@/components/admin/company/Show')
   },
   // 需求公司列表
   {
@@ -891,7 +910,7 @@ const routes = [
       title: '需求公司列表',
       requireAuth: true
     },
-    component: require('@/components/admin/demand_company/List')
+    component: require ('@/components/admin/demand_company/List')
   },
   // 需求公司详情
   {
@@ -901,7 +920,7 @@ const routes = [
       title: '需求公司详情',
       requireAuth: true
     },
-    component: require('@/components/admin/demand_company/Show')
+    component: require ('@/components/admin/demand_company/Show')
   },
   // 案例列表
   {
@@ -911,7 +930,7 @@ const routes = [
       title: '案例列表',
       requireAuth: true
     },
-    component: require('@/components/admin/design_case/List')
+    component: require ('@/components/admin/design_case/List')
   },
   // 用户列表
   {
@@ -921,7 +940,7 @@ const routes = [
       title: '用户列表',
       requireAuth: true
     },
-    component: require('@/components/admin/user/List')
+    component: require ('@/components/admin/user/List')
   },
   // 分类列表
   {
@@ -931,7 +950,7 @@ const routes = [
       title: '分类列表',
       requireAuth: true
     },
-    component: require('@/components/admin/category/List')
+    component: require ('@/components/admin/category/List')
   },
   // 编辑分类
   {
@@ -941,7 +960,7 @@ const routes = [
       title: '分类编辑',
       requireAuth: true
     },
-    component: require('@/components/admin/category/Submit')
+    component: require ('@/components/admin/category/Submit')
   },
   // 分类详情
   {
@@ -951,7 +970,7 @@ const routes = [
       title: '分类详情',
       requireAuth: true
     },
-    component: require('@/components/admin/category/Show')
+    component: require ('@/components/admin/category/Show')
   },
   // 文章列表
   {
@@ -961,7 +980,7 @@ const routes = [
       title: '文章列表',
       requireAuth: true
     },
-    component: require('@/components/admin/article/List')
+    component: require ('@/components/admin/article/List')
   },
   // 编辑文章
   {
@@ -973,7 +992,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require(['@/components/admin/article/Submit'], resolve)
+      require (['@/components/admin/article/Submit'], resolve)
     }
   },
   // 文章详情
@@ -984,7 +1003,7 @@ const routes = [
       title: '文章详情',
       requireAuth: true
     },
-    component: require('@/components/admin/category/Show')
+    component: require ('@/components/admin/category/Show')
   },
   // 404
   {
@@ -993,17 +1012,17 @@ const routes = [
     meta: {
       title: '找不到此页面'
     },
-    component: require('components/pages/notfind/notfind') // webpack 设置新的别名 components
+    component: require ('components/pages/notfind/notfind') // webpack 设置新的别名 components
   }
 ]
 
-const router = new VueRouter({
+const router = new VueRouter ({
   mode: 'history',
   linkActiveClass: 'is-active', // 这是链接激活时的class
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach ((to, from, next) => {
   if (to.meta.title) {
     if (to.meta.title === '首页') {
       document.title = '铟果-中国领先的产品创新SaaS平台'
@@ -1013,22 +1032,22 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = '铟果-中国领先的产品创新SaaS平台'
   }
-  if (to.matched.some(r => r.meta.requireAuth)) {
+  if (to.matched.some (r => r.meta.requireAuth)) {
     if (store.state.event.token) {
-      next()
+      next ()
     } else {
-      store.commit(types.PREV_URL_NAME, to.name)
-      next({
+      store.commit (types.PREV_URL_NAME, to.name)
+      next ({
         name: 'login'
       })
     }
   } else {
-    next()
+    next ()
   }
 })
 
-router.afterEach((to, from) => {
-  calcImgSize()
+router.afterEach ((to, from) => {
+  calcImgSize ()
 })
 
 export default router

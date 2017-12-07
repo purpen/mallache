@@ -48,30 +48,37 @@
         cateList: [],
         itemList: [
           {
+            id: 7,
+            title: '羽泉二十周年巡回演唱会-IP衍生品招募',
+            cover_url: require ('@/assets/images/subject/list_05.jpg'),
+            url: '/subject/YuQuanGifts',
+            content: '2017年底，内地知名唱作组合羽泉与京东金融结成战略合作伙伴，双方在组合成立20周年巡回演唱会期间，将以羽泉组合这一明星IP为核心，衍生系列创意创新活动，内容涵盖广泛产品，活动名称为“羽泉的礼物”。'
+          },
+          {
             id: 5,
             title: '轻创新⋅设计造物-再设计⋅消费升级创新产品征集',
-            cover_url: require('@/assets/images/subject/list_03.jpg'),
+            cover_url: require ('@/assets/images/subject/list_03.jpg'),
             url: '/subject/ProductRecruit',
             content: '2017年初，太火鸟与投资方罗莱生活、海泉基金、京东金融、麦顿资本、泰德资本以及创新工场、真格基金等战略合作方共同发起了名为 “智见未来-太火鸟AesTech联合加速计划”，希望能够将太火鸟在产品孵化方面的前瞻性与各资本方及平台、渠道方在创新产品研发、孵化、营销环节的势能最大限度发挥出来，促进设计相关产业发展，改善设计生态，惠及大众。'
           },
           {
             id: 6,
             title: '轻创新⋅设计造物-邀请加入铟果D³INGO活动招募',
-            cover_url: require('@/assets/images/subject/list_04.jpg'),
+            cover_url: require ('@/assets/images/subject/list_04.jpg'),
             url: '/subject/EnterpriseRecruit',
             content: '铟果D³INGO是太火鸟旗下的创新产品交易与SaaS分发平台，是高效线上设计交易服务平台及中国领先的创新产品策源地，围绕创新产品与设计交易，为相关参与方提供包括创新产品孵化、资金保障、流量支持、运营维护等相关服务与帮助。'
           },
           {
             id: 1,
             title: '浙江“传统产业设计再造”计划线上对接专区',
-            cover_url: require('@/assets/images/subject/list_01.jpg'),
+            cover_url: require ('@/assets/images/subject/list_01.jpg'),
             url: '/subject/zj',
             content: '浙江“传统产业设计再造”计划由浙江省工业设计协会联合相关高校、梦栖工业设计小镇和全省17个省级工业设计示范基地共同发起，由浙江省工业设计创新服务基地运营公司杭州合创共响工业设计管理有限公司负责执行。'
           },
           {
             id: 4,
             title: 'RCIP衍生创新峰会暨年度新品发布会',
-            cover_url: require('@/assets/images/subject/list_02.jpg'),
+            cover_url: require ('@/assets/images/subject/list_02.jpg'),
             url: '/subject/rcip',
             content: '这是一场IP生态集群的权威路演；也是众多创新设计机构以IP内容结合的发布盛典想要了解更多？'
           }
@@ -95,15 +102,15 @@
     created: function () {
       const self = this
       // 分类列表
-      self.$http.get(api.categoryList, {params: {page: 1, per_page: 4, type: 1, sort: 1}})
-        .then(function (response) {
+      self.$http.get (api.categoryList, {params: {page: 1, per_page: 4, type: 1, sort: 1}})
+        .then (function (response) {
           if (response.data.meta.status_code === 200) {
             self.cateList = response.data.data
             self.$refs.caseList.style.marginTop = '0'
           }
         })
-        .catch(function (error) {
-          self.$message.error(error.message)
+        .catch (function (error) {
+          self.$message.error (error.message)
         })
     },
     computed: {
@@ -120,7 +127,7 @@
   .container h3 {
     font-size: 2rem;
     margin-bottom: 10px;
-  }
+    }
 
   .category-list {
     padding-bottom: 10px;
@@ -129,61 +136,61 @@
     min-width: 100%;
     white-space: nowrap;
     overflow-x: auto;
-  }
+    }
 
   .category-list a {
     font-size: 1.6rem;
     margin-right: 40px;
-    color: #666;
-  }
+    color: #666666;
+    }
 
   .category-list a:hover,
   .category-list a.active {
     color: #FF5A5F;
-  }
+    }
 
   .case-list {
     min-height: 350px;
     margin-top: 66px;
-  }
+    }
 
   .item {
     /* height: 460px; */
     margin: 10px auto;
-  }
+    }
 
   .item img {
     width: 100%;
-  }
+    }
 
   .image-box {
     /* height: 350px; */
     overflow: hidden;
-  }
+    }
 
   .content {
     padding: 20px;
-  }
+    }
 
   .content p.title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
+    }
 
   .content a {
-    color: #222;
+    color: #222222;
     font-size: 1.8rem;
-  }
+    }
 
   .des {
     height: 40px;
     margin: 10px auto;
     overflow: hidden;
-  }
+    }
 
   .des p {
-    color: #666;
+    color: #666666;
     font-size: 1.4rem;
     line-height: 1.5;
     overflow: hidden;
@@ -191,28 +198,28 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-  }
+    }
 
   @media screen and ( max-width: 480px) {
     .nav-list {
       margin-top: 16px;
       height: 18px;
       overflow: hidden;
-    }
+      }
 
     .category-list {
       margin: 0 auto 16px;
       padding: 2px 0 18px 16px;
       white-space: nowrap;
       overflow-x: auto;
-    }
+      }
 
     .category-list a {
       margin-right: 30px;
-    }
+      }
 
     .content {
       padding: 15px;
+      }
     }
-  }
 </style>

@@ -200,10 +200,8 @@
               </div>
               <div class="clear"></div>
             </el-form>
-
           </div>
         </div>
-
       </el-col>
     </el-row>
   </div>
@@ -289,10 +287,10 @@
       submit(formName) {
         const that = this
         if (!that.coverId) {
-          that.$message.error('必须设置一张封面图!')
+          that.$message.error ('必须设置一张封面图!')
           return false
         }
-        that.$refs[formName].validate((valid) => {
+        that.$refs[formName].validate ((valid) => {
           // 验证通过，提交
           if (valid) {
             let row = {
@@ -309,13 +307,13 @@
               profile: that.form.profile
             }
             row.cover_id = that.coverId
-            row.prize_time = row.prize_time.format('yyyy-MM-dd')
+            row.prize_time = row.prize_time.format ('yyyy-MM-dd')
             let apiUrl = null
             let method = null
 
             if (that.itemId) {
               method = 'put'
-              apiUrl = api.designCaseId.format(that.itemId)
+              apiUrl = api.designCaseId.format (that.itemId)
             } else {
               method = 'post'
               apiUrl = api.designCase
@@ -324,32 +322,32 @@
               }
             }
             that.isLoadingBtn = true
-            that.$http({method: method, url: apiUrl, data: row})
-              .then(function (response) {
+            that.$http ({method: method, url: apiUrl, data: row})
+              .then (function (response) {
                 if (response.data.meta.status_code === 200) {
-                  that.$message.success('提交成功！')
-                  that.$router.push({name: 'vcenterDesignCaseList'})
+                  that.$message.success ('提交成功！')
+                  that.$router.push ({name: 'vcenterDesignCaseList'})
                   return false
                 } else {
-                  that.$message.error(response.data.meta.message)
+                  that.$message.error (response.data.meta.message)
                   that.isLoadingBtn = false
                 }
               })
-              .catch(function (error) {
-                that.$message.error(error.message)
+              .catch (function (error) {
+                that.$message.error (error.message)
                 that.isLoadingBtn = false
-                console.log(error.message)
+                console.log (error.message)
                 return false
               })
             return false
           } else {
-            console.log('error submit!!')
+            console.log ('error submit!!')
             return false
           }
         })
       },
       returnList() {
-        this.$router.push({name: 'vcenterDesignCaseList'})
+        this.$router.push ({name: 'vcenterDesignCaseList'})
       },
       typeChange(d) {
         if (d === 1) {
@@ -371,53 +369,53 @@
       },
       // 删除附件
       delAsset(event) {
-        let id = event.currentTarget.getAttribute('item_id')
-        let index = event.currentTarget.getAttribute('index')
+        let id = event.currentTarget.getAttribute ('item_id')
+        let index = event.currentTarget.getAttribute ('index')
 
         const self = this
-        self.$http.delete(api.asset.format(id), {})
-          .then(function (response) {
+        self.$http.delete (api.asset.format (id), {})
+          .then (function (response) {
             if (response.data.meta.status_code === 200) {
-              self.fileList.splice(index, 1)
+              self.fileList.splice (index, 1)
             } else {
-              self.$message.error(response.data.meta.message)
+              self.$message.error (response.data.meta.message)
             }
           })
-          .catch(function (error) {
-            self.$message.error(error.message)
+          .catch (function (error) {
+            self.$message.error (error.message)
           })
       },
       // 编辑附件
       editAssetBtn(event) {
         // let id = event.currentTarget.getAttribute('item_id')
-        let index = event.currentTarget.getAttribute('index')
+        let index = event.currentTarget.getAttribute ('index')
         this.fileList[index].edit = true
       },
       // 保存附件描述
       saveAssetSummary(event) {
-        let id = event.currentTarget.getAttribute('item_id')
-        let index = event.currentTarget.getAttribute('index')
+        let id = event.currentTarget.getAttribute ('item_id')
+        let index = event.currentTarget.getAttribute ('index')
         let summary = this.fileList[index].summary
         if (summary === '' || summary === null) {
-          this.$message.error('描述信息不能为空!')
+          this.$message.error ('描述信息不能为空!')
           return false
         }
         const self = this
-        self.$http.put(api.updateImageSummary, {asset_id: id, summary: summary})
-          .then(function (response) {
+        self.$http.put (api.updateImageSummary, {asset_id: id, summary: summary})
+          .then (function (response) {
             if (response.data.meta.status_code === 200) {
               self.fileList[index].edit = false
             } else {
-              self.$message.error(response.data.meta.message)
+              self.$message.error (response.data.meta.message)
             }
           })
-          .catch(function (error) {
-            self.$message.error(error.message)
+          .catch (function (error) {
+            self.$message.error (error.message)
           })
       },
       // 设置封面图
       setCoverBtn (event) {
-        let id = event.currentTarget.getAttribute('item_id')
+        let id = event.currentTarget.getAttribute ('item_id')
         // let index = event.currentTarget.getAttribute('index')
         this.coverId = id
       },
@@ -428,15 +426,15 @@
 
         let assetId = file.response.asset_id
         const that = this
-        that.$http.delete(api.asset.format(assetId), {})
-          .then(function (response) {
+        that.$http.delete (api.asset.format (assetId), {})
+          .then (function (response) {
             if (response.data.meta.status_code === 200) {
             } else {
-              that.$message.error(response.data.meta.message)
+              that.$message.error (response.data.meta.message)
             }
           })
-          .catch(function (error) {
-            that.$message.error(error.message)
+          .catch (function (error) {
+            that.$message.error (error.message)
           })
       },
       handlePreview(file) {
@@ -445,16 +443,16 @@
       },
       uploadError(err, file, fileList) {
         this.uploadMsg = '上传失败'
-        this.$message({
+        this.$message ({
           showClose: true,
           message: '文件上传失败!',
           type: 'error'
         })
-        console.log(err)
+        console.log (err)
       },
       uploadProgress(event, file, fileList) {
         this.uploadMsg = '上传中...'
-        console.log(event)
+        console.log (event)
       },
       uploadSuccess(response, file, fileList) {
         this.uploadMsg = '只能上传jpg/png文件，且不超过5M'
@@ -468,19 +466,19 @@
             asset_id: add.response.asset_id
           }
         }
-        this.fileList.push(item)
+        this.fileList.push (item)
 //        console.log(this.fileList)
       },
       beforeUpload(file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png']
         const isLt5M = file.size / 1024 / 1024 < 5
 
-        if (arr.indexOf(file.type) === -1) {
-          this.$message.error('上传文件格式不正确!')
+        if (arr.indexOf (file.type) === -1) {
+          this.$message.error ('上传文件格式不正确!')
           return false
         }
         if (!isLt5M) {
-          this.$message.error('上传文件大小不能超过 5MB!')
+          this.$message.error ('上传文件大小不能超过 5MB!')
           return false
         }
       }
@@ -493,7 +491,7 @@
             value: typeData.COMPANY_TYPE[i]['id'],
             label: typeData.COMPANY_TYPE[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -510,7 +508,7 @@
             value: typeData.COMPANY_TYPE[index].designType[i]['id'],
             label: typeData.COMPANY_TYPE[index].designType[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -527,7 +525,7 @@
             value: typeData.COMPANY_TYPE[index].field[i]['id'],
             label: typeData.COMPANY_TYPE[index].field[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -544,7 +542,7 @@
             value: typeData.COMPANY_TYPE[index].industry[i]['id'],
             label: typeData.COMPANY_TYPE[index].industry[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -555,7 +553,7 @@
             value: typeData.DESIGN_CASE_PRICE_OPTIONS[i]['id'],
             label: typeData.DESIGN_CASE_PRICE_OPTIONS[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -566,7 +564,7 @@
             value: typeData.DESIGN_CASE_SALE_OPTIONS[i]['id'],
             label: typeData.DESIGN_CASE_SALE_OPTIONS[i]['name']
           }
-          items.push(item)
+          items.push (item)
         }
         return items
       },
@@ -589,8 +587,8 @@
       if (id) {
         that.itemId = id
         that.uploadParam['x:target_id'] = id
-        that.$http.get(api.designCaseId.format(id), {})
-          .then(function (response) {
+        that.$http.get (api.designCaseId.format (id), {})
+          .then (function (response) {
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
               if (that.form.cover_id) {
@@ -613,7 +611,7 @@
                   item['summary'] = obj['summary']
                   item['response']['asset_id'] = obj['id']
                   item['edit'] = false
-                  files.push(item)
+                  files.push (item)
                 }
                 that.fileList = files
               }
@@ -621,8 +619,8 @@
 //              console.log(that.fileList)
             }
           })
-          .catch(function (error) {
-            that.$message.error(error.message)
+          .catch (function (error) {
+            that.$message.error (error.message)
             return false
           })
       } else {
@@ -630,8 +628,8 @@
       }
 
       // 获取图片token
-      that.$http.get(api.upToken, {})
-        .then(function (response) {
+      that.$http.get (api.upToken, {})
+        .then (function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
               that.uploadParam['token'] = response.data.data.upToken
@@ -640,13 +638,13 @@
             }
           }
         })
-        .catch(function (error) {
-          that.$message({
+        .catch (function (error) {
+          that.$message ({
             showClose: true,
             message: error.message,
             type: 'error'
           })
-          console.log(error.message)
+          console.log (error.message)
           return false
         })
     }
@@ -659,45 +657,45 @@
 
   .form-btn {
     float: right;
-  }
+    }
 
   .form-btn button {
     width: 120px;
-  }
+    }
 
   .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
+    border: 1px dashed #D9D9D9;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-  }
+    }
 
   .avatar-uploader .el-upload:hover {
-    border-color: #20a0ff;
-  }
+    border-color: #20A0FF;
+    }
 
   .avatar-uploader-icon {
     font-size: 28px;
-    color: #8c939d;
+    color: #8C939D;
     width: 178px;
     height: 178px;
     line-height: 178px;
     text-align: center;
-  }
+    }
 
   .avatar {
     width: 178px;
     height: 178px;
     display: block;
-  }
+    }
 
   @media screen and (max-width: 767px) {
     .right-content .content-box {
       border: none;
-      border-top: 1px solid #d9d9d9;
+      border-top: 1px solid #D9D9D9;
+
+      }
 
     }
-
-  }
 </style>

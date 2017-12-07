@@ -1,10 +1,10 @@
 /**
-import axios from 'axios';
+ import axios from 'axios';
 
-// 使用代理
-// const HOST = process.env.API_ROOT;
-const HOST = '/api/';
-export function fetch(url) {
+ // 使用代理
+ // const HOST = process.env.API_ROOT;
+ const HOST = '/api/';
+ export function fetch(url) {
   return new Promise((resolve, reject) => {
     axios.get(HOST + url)
       .then(response => {
@@ -12,7 +12,7 @@ export function fetch(url) {
       })
   })
 }
-**/
+ **/
 
 export default {
   login: '/auth/login', // 登录
@@ -105,6 +105,10 @@ export default {
   designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
   designCaseOpenLists: '/designCase/openLists', // GET 案例列表
 
+  // 添加作品
+  work: 'works',
+  workid: 'works/{0}',
+
   // 设计公司
   designCompanyId: 'designCompany/otherIndex/{0}', // 根据标识查看公司详情
   designCompany: '/designCompany', // POST 保存 /PUT 更新 / GET 设计公司基本资料
@@ -186,6 +190,5 @@ export default {
   adminArticleList: '/admin/article/list', // GET 列表
   adminArticle: '/admin/article', // GET 详情 | POST 添加 | PUT 更新
   adminArticleChangeStatus: '/admin/article/verifyStatus', // PUT 更新状态
-
   test: '/'  // End
 }

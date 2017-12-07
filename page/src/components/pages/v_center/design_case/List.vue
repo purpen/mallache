@@ -29,8 +29,12 @@
                         }}
                       </router-link>
                       <div class="opt">
-                        <a href="javascript:void(0);" :item_id="d.id" :index="index" @click="delItem">删除</a>
-                        <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
+                        <a href="javascript:void(0);" :item_id="d.id" :isGifts="d.isGifts" :index="index"
+                           @click="delItem">删除</a>
+                        <router-link v-if="d.isGifts" :to="{name: 'uploads', params: {id: d.id}}">
+                          编辑
+                        </router-link>
+                        <router-link v-else :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
                           编辑
                         </router-link>
                       </div>
@@ -82,32 +86,78 @@
         }
       },
       delItem(event) {
-        let id = event.currentTarget.getAttribute('item_id')
-        let index = event.currentTarget.getAttribute('index')
-        this.$confirm('是否执行此操作?', '提示', {
+        let id = event.currentTarget.getAttribute ('item_id')
+        let isGifts = event.currentTarget.getAttribute ('isGifts')
+        this.$confirm ('是否执行此操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
+        }).then (() => {
           const that = this
-          that.$http.delete(api.designCaseId.format(id), {})
-            .then(function (response) {
-              if (response.data.meta.status_code === 200) {
-                that.designCases.splice(index, 1)
-                that.$message.success('删除成功!')
-              }
-            })
-            .catch(function (error) {
-              that.$message.error(error.message)
-              console.log(error.message)
-              return false
-            })
-        }).catch(() => {
+          if (isGifts) {
+            that.$http.delete (api.workid.format (id), {})
+              .then (function (response) {
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success ('删除成功!')
+                  that.getDesignCase ()
+                }
+              })
+              .catch (function (error) {
+                that.$message.error (error.message)
+                console.log (error.message)
+                return false
+              })
+          } else {
+            that.$http.delete (api.designCaseId.format (id), {})
+              .then (function (response) {
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success ('删除成功!')
+                  that.getDesignCase ()
+                }
+              })
+              .catch (function (error) {
+                that.$message.error (error.message)
+                console.log (error.message)
+                return false
+              })
+          }
+        }).catch (() => {
         })
       },
       // 添加作品案例
       add() {
-        this.$router.push({name: 'vcenterDesignCaseAdd'})
+        this.$router.push ({name: 'vcenterDesignCaseAdd'})
+      },
+      getDesignCase () {
+        const that = this
+        that.isLoading = true
+        that.$http.get (api.designCase, {})
+          .then (function (response) {
+            that.isLoading = false
+            if (response.data.meta.status_code === 200) {
+              that.designCases = response.data.data
+              that.getDesignCase2 ()
+            }
+          })
+          .catch (function (error) {
+            that.$message.error (error.message)
+            that.isLoading = false
+          })
+      },
+      getDesignCase2 () {
+        const that = this
+        that.$http.get (api.work)
+          .then ((res) => {
+            if (res.data.meta.status_code === 200) {
+              for (let i of res.data.data) {
+                i.isGifts = true
+              }
+              that.designCases = that.designCases.concat (res.data.data)
+            }
+          })
+          .catch ((err) => {
+            console.error (err)
+          })
       }
     },
     computed: {
@@ -117,20 +167,7 @@
     },
     watch: {},
     created: function () {
-      const that = this
-      that.isLoading = true
-      that.$http.get(api.designCase, {})
-        .then(function (response) {
-          that.isLoading = false
-          if (response.data.meta.status_code === 200) {
-            that.designCases = response.data.data
-//            console.log(response.data.data)
-          }
-        })
-        .catch(function (error) {
-          that.$message.error(error.message)
-          that.isLoading = false
-        })
+      this.getDesignCase ()
     }
   }
 
@@ -140,59 +177,59 @@
 <style scoped>
 
   .right-content .content-box-m {
-    border-top: 1px solid #e6e6e6;
+    border-top: 1px solid #E6E6E6;
     margin: 14px 0 0 0;
     padding: 0 15px;
-  }
+    }
 
   .content-box-m .form-title {
     margin: 10px 0 6px;
-  }
+    }
 
   .design-case-list {
-  }
+    }
 
   .design-case-list .item {
     height: 240px;
-  }
+    }
 
   .item {
     margin: 5px 0;
-  }
+    }
 
   .item img {
     width: 100%;
-  }
+    }
 
   .image-box {
     height: 180px;
     overflow: hidden;
-  }
+    }
 
   .content {
     padding: 10px;
-  }
+    }
 
   .content a {
     font-size: 1.5rem;
-  }
+    }
 
   .opt {
     margin: 10px 0 0 0;
     text-align: right;
-  }
+    }
 
   .opt a {
     font-size: 1.2rem;
-  }
+    }
 
   @media screen and (max-width: 767px) {
     .opt a {
       font-size: 1.4rem;
+      }
     }
-  }
 
   .add {
     text-align: center;
-  }
+    }
 </style>

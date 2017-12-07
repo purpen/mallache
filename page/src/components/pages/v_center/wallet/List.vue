@@ -164,12 +164,12 @@
     methods: {
       loadList() {
         const self = this
-        self.query.page = parseInt(this.$route.query.page || 1)
+        self.query.page = parseInt (this.$route.query.page || 1)
         self.query.sort = this.$route.query.sort || 1
         self.query.type = this.$route.query.type || 0
 
         self.isLoading = true
-        self.$http.get(api.fundLogList, {
+        self.$http.get (api.fundLogList, {
           params: {
             page: self.query.page,
             per_page: self.query.pageSize,
@@ -177,7 +177,7 @@
             type: self.query.type
           }
         })
-          .then(function (response) {
+          .then (function (response) {
             self.isLoading = false
             self.tableData = []
             if (response.data.meta.status_code === 200) {
@@ -186,16 +186,16 @@
 
               for (let i = 0; i < self.itemList.length; i++) {
                 let item = self.itemList[i]
-                item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
+                item['created_at'] = item.created_at.date_format ().format ('yy-MM-dd hh:mm')
 
-                self.tableData.push(item)
+                self.tableData.push (item)
               } // endfor
 
 //              console.log(self.tableData)
             }
           })
-          .catch(function (error) {
-            self.$message.error(error.message)
+          .catch (function (error) {
+            self.$message.error (error.message)
             self.isLoading = false
             return false
           })
@@ -205,42 +205,42 @@
       },
       handleSizeChange(val) {
         this.query.pageSize = val
-        this.loadList()
+        this.loadList ()
       },
       handleCurrentChange(val) {
         this.query.page = val
-        this.$router.push({name: this.$route.name, query: {page: val}})
+        this.$router.push ({name: this.$route.name, query: {page: val}})
       },
       // 提现弹出框
       withdraw() {
         this.wallet.price = 10000000
         if (this.wallet.price <= 0) {
-          this.$message.error('没有可提现余额!')
+          this.$message.error ('没有可提现余额!')
           return false
         }
         this.itemModel = true
         if (this.bankOptions.length === 0) {
           const self = this
           // 银行卡列表
-          self.$http.get(api.bank, {})
-            .then(function (response) {
+          self.$http.get (api.bank, {})
+            .then (function (response) {
               if (response.data.meta.status_code === 200) {
                 for (let i = 0; i < response.data.data.length; i++) {
                   let item = response.data.data[i]
                   let newItem = {}
-                  let number = item.account_number.substr(item.account_number.length - 4)
+                  let number = item.account_number.substr (item.account_number.length - 4)
                   newItem.label = item.bank_val + '[' + number + ']'
                   newItem.value = item.id
                   if (item.default === 1) {
                     self.bankId = item.id
                   }
-                  self.bankOptions.push(newItem)
+                  self.bankOptions.push (newItem)
                 } // endfor
 //                console.log(response.data.data)
               }
             })
-            .catch(function (error) {
-              self.$message.error(error.message)
+            .catch (function (error) {
+              self.$message.error (error.message)
             })
         }
       },
@@ -251,27 +251,27 @@
       withdrawSubmit() {
         const self = this
         if (self.withdrawPrice <= 0) {
-          self.$message.error('请输入正确的金额!')
+          self.$message.error ('请输入正确的金额!')
           return
         }
         if (self.withdrawPrice > self.wallet.price) {
-          self.$message.error('提现金额超出范围!')
+          self.$message.error ('提现金额超出范围!')
           return
         }
         self.isLoadingBtn = true
-        self.$http.post(api.withdrawCreate, {bank_id: self.bankId, amount: self.withdrawPrice})
-          .then(function (response) {
+        self.$http.post (api.withdrawCreate, {bank_id: self.bankId, amount: self.withdrawPrice})
+          .then (function (response) {
             self.isLoadingBtn = false
             if (response.data.meta.status_code === 200) {
               self.itemModel = false
-              self.$message.success('操作成功,等待财务打款！')
+              self.$message.success ('操作成功,等待财务打款！')
             } else {
 //              console.log(response.data.meta.message)
             }
           })
-          .catch(function (error) {
+          .catch (function (error) {
             self.isLoadingBtn = false
-            self.$message.error(error.message)
+            self.$message.error (error.message)
           })
       }
     },
@@ -284,8 +284,8 @@
       const self = this
       // 获取我的钱包
       self.walletLoading = true
-      self.$http.get(api.authFundInfo, {})
-        .then(function (response) {
+      self.$http.get (api.authFundInfo, {})
+        .then (function (response) {
           self.walletLoading = false
           if (response.data.meta.status_code === 200) {
             let wallet = response.data.data
@@ -295,19 +295,19 @@
 //            console.log(self.wallet)
           }
         })
-        .catch(function (error) {
-          self.$message.error(error.message)
+        .catch (function (error) {
+          self.$message.error (error.message)
           self.walletLoading = false
           return false
         })
 
       // 交易记录
-      this.loadList()
+      this.loadList ()
     },
     watch: {
       '$route' (to, from) {
         // 对路由变化作出响应...
-        this.loadList()
+        this.loadList ()
       }
     }
   }
