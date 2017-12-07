@@ -1,26 +1,42 @@
 <template>
-  <h1 v-html="message">
-  </h1>
+  <div class="nofind">
+    <h1 v-html="message">
+    </h1>
+    <h2>{{msg}}</h2>
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'notfind',
-  data() {
-    return {
-      message: '404 not find'
+  export default {
+    name: 'notfind',
+    data() {
+      return {
+        message: 'HTTP 404……',
+        msg: '可能这个页面已经飞走了'
+      }
     }
   }
-}
 </script>
 
 <style scoped>
-h1 {
-  color: #e03030;
-  font-size: 48px;
-  text-align: center;
-  height: 100%;
-  padding-top: 10%;
-}
+  .nofind {
+    width: 300px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  h1 {
+    color: #666;
+    font-size: 48px;
+    height: 100%;
+    padding-top: 30%;
+  }
+
+  h2 {
+    color: #999;
+    font-size: 20px;
+    text-align: center;
+    line-height: 2;
+  }
 </style>
 

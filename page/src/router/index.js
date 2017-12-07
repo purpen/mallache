@@ -481,6 +481,16 @@ const routes = [
     },
     component: require('@/components/pages/v_center/company/Identification')
   },
+  // 公司认证-编辑
+  {
+    path: '/vcenter/exhibition',
+    name: 'vcenterExhibition',
+    meta: {
+      title: '日历',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/exhibition/exhibition')
+  },
   // 项目动态
   {
     path: '/vcenter/remind/list',

@@ -9,6 +9,7 @@ import ElementUI from 'element-ui'
 import phenix from '@/assets/js/base'
 import VueLazyload from 'vue-lazyload'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import FullCalendar from 'vue-full-calendar'
 
 // 兼容 IE
 import 'babel-polyfill'
@@ -20,14 +21,15 @@ import './assets/css/reset.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/base.css'
 import './assets/css/admin.css'
+import 'fullcalendar/dist/fullcalendar.css'
 
+window.jQuery = window.$ = require('jquery')
 Vue.use(ElementUI)
-
 // 图片懒加载
 Vue.use(VueLazyload, {
   loading: require('assets/images/Bitmap.png')
 })
-
+Vue.use(FullCalendar)
 Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
