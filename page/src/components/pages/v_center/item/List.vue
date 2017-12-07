@@ -16,174 +16,82 @@
             </div>
 
             <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
-            <div class="item ing" v-if="itemIngList.length" v-for="(d, index) in itemIngList">
-              <div class="banner">
-                <p>
-                  <span>进行中</span>
-                </p>
-              </div>
-              <div class="content">
-                <div class="pre">
-                  <p class="c-title-pro">{{ d.item.name }}</p>
-                  <p class="progress-line">
-                    <el-progress :text-inside="true" :show-text="false" :stroke-width="18" :percentage="d.item.progress"
-                                 status="exception"></el-progress>
-                  </p>
-                  <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
+
+            <div v-if="!isEmpty">
+              <div class="item ing" v-for="(d, index) in itemIngList">
+                <div class="banner">
                   <p>
-                    <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
-                               :item_type="d.item.type" @click="editItem" size="" type="primary">
-                      <i class="el-icon-edit"> </i> 完善项目
-                    </el-button>
+                    <span>进行中</span>
                   </p>
                 </div>
-              </div>
-            </div>
-
-
-            <el-row class="item-title-box list-box" v-if="itemList.length && !isMob">
-              <el-col :span="10">
-                <p>项目名称</p>
-              </el-col>
-              <el-col :span="3">
-                <p>交易金额</p>
-              </el-col>
-              <el-col :span="7">
-                <p>状态</p>
-              </el-col>
-              <el-col :span="4">
-                <p>操作</p>
-              </el-col>
-            </el-row>
-
-            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && !isMob">
-
-              <el-row class="banner list-box">
-                <el-col :span="24">
-                  <p>{{ d.item.created_at }}</p>
-                </el-col>
-              </el-row>
-
-              <el-row class="item-content list-box">
-                <el-col :span="10" class="item-title">
-                  <p class="c-title">
-                    <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
-                    </router-link>
-                  </p>
-                  <p>项目预算: {{ d.item.design_cost_value }}</p>
-                  <p v-if="d.item.type === 1">
-                    {{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value
-                    }}</p>
-                  <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
-                  <p>项目周期: {{ d.item.cycle_value }}</p>
-                  <p>产品功能：{{d.item.product_features}}</p>
-                </el-col>
-                <el-col :span="3">
-                  <p>
-                    <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
-                  </p>
-                </el-col>
-
-                <el-col :span="7">
-                  <p class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</p>
-                  <p class="status-str" v-else>{{ d.item.status_value }}</p>
-                </el-col>
-
-                <el-col :span="4">
-                  <div class="btn" v-show="d.item.status === -2">
-                    <p>
-                      <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small"
-                                 type="primary">重新编辑
-                      </el-button>
+                <div class="content">
+                  <div class="pre">
+                    <p class="c-title-pro">{{ d.item.name }}</p>
+                    <p class="progress-line">
+                      <el-progress :text-inside="true" :show-text="false" :stroke-width="18"
+                                   :percentage="d.item.progress"
+                                   status="exception"></el-progress>
                     </p>
+                    <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
                     <p>
-                      <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
-                                 type="gray">关闭项目
+                      <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
+                                 :item_type="d.item.type" @click="editItem" size="" type="primary">
+                        <i class="el-icon-edit"> </i> 完善项目
                       </el-button>
                     </p>
                   </div>
-                  <p class="btn" v-show="d.item.status === -1">
-                    <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small" type="primary">
-                      删除项目
-                    </el-button>
-                  </p>
+                </div>
+              </div>
 
-                  <p class="btn" v-show="d.item.status === 3">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                      选择设计服务供应商
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 4">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
-                               v-if="d.item.show_offer">查看报价
-                    </el-button>
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
-                               v-else>查看设计公司
-                    </el-button>
-                  </p>
-
-                  <p class="btn" v-show="d.item.status === 6">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                      查看合同
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 7">
-                    <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">
-                      支付项目款
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 8">
-                    <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small" type="primary">
-                      支付项目款
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 15">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                      验收项目
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.status === 18">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                      评价
-                    </el-button>
-                  </p>
-                  <p class="btn" v-show="d.item.is_view_show">
-                    <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                      查看详情
-                    </el-button>
-                  </p>
+              <el-row class="item-title-box list-box" v-if="!isMob">
+                <el-col :span="10">
+                  <p>项目名称</p>
+                </el-col>
+                <el-col :span="3">
+                  <p>交易金额</p>
+                </el-col>
+                <el-col :span="7">
+                  <p>状态</p>
+                </el-col>
+                <el-col :span="4">
+                  <p>操作</p>
                 </el-col>
               </el-row>
-            </div>
 
-            <div class="item" v-for="(d, index) in itemList" v-if="itemList.length && isMob">
-              <div class="banner list-box">
-                <p>{{ d.item.created_at }}</p>
-              </div>
-              <div class="list-body">
-                <p class="list-title Bborder">
-                  <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
-                  </router-link>
-                </p>
-                <div class="list-content">
-                  <section class="c-body">
-                    <p>项目预算： {{ d.item.design_cost_value }}</p>
-                    <p>项目周期：{{ d.item.cycle_value }}</p>
+              <div class="item" v-for="(d, index) in itemList" v-if="!isMob">
+
+                <el-row class="banner list-box">
+                  <el-col :span="24">
+                    <p>{{ d.item.created_at }}</p>
+                  </el-col>
+                </el-row>
+
+                <el-row class="item-content list-box">
+                  <el-col :span="10" class="item-title">
+                    <p class="c-title">
+                      <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
+                      </router-link>
+                    </p>
+                    <p>项目预算: {{ d.item.design_cost_value }}</p>
                     <p v-if="d.item.type === 1">
                       {{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value
                       }}</p>
                     <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                    <p>项目周期: {{ d.item.cycle_value }}</p>
                     <p>产品功能：{{d.item.product_features}}</p>
-                  </section>
-                  <p class="money-str price-m Bborder">交易金额：
-                    <span v-if="d.item.price !== 0">¥ <b>{{ d.item.price }}</b></span>
-                    <span v-else>暂无</span>
-                  </p>
-                  <p class="price-m Bborder">状态
-                    <span class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</span>
-                    <span class="status-str" v-else>{{ d.item.status_value }}</span>
-                  </p>
-                  <section>
+                  </el-col>
+                  <el-col :span="3">
+                    <p>
+                      <span v-show="d.item.price !== 0" class="money-str">¥ <b>{{ d.item.price }}</b></span>
+                    </p>
+                  </el-col>
+
+                  <el-col :span="7">
+                    <p class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</p>
+                    <p class="status-str" v-else>{{ d.item.status_value }}</p>
+                  </el-col>
+
+                  <el-col :span="4">
                     <div class="btn" v-show="d.item.status === -2">
                       <p>
                         <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small"
@@ -246,11 +154,110 @@
                         查看详情
                       </el-button>
                     </p>
-                  </section>
+                  </el-col>
+                </el-row>
+              </div>
+
+              <div class="item" v-for="(d, index) in itemList" v-if="isMob">
+                <div class="banner list-box">
+                  <p>{{ d.item.created_at }}</p>
+                </div>
+                <div class="list-body">
+                  <p class="list-title Bborder">
+                    <router-link :to="{name: 'vcenterItemShow', params: {id: d.item.id}}">{{ d.item.name }}
+                    </router-link>
+                  </p>
+                  <div class="list-content">
+                    <section class="c-body">
+                      <p>项目预算： {{ d.item.design_cost_value }}</p>
+                      <p>项目周期：{{ d.item.cycle_value }}</p>
+                      <p v-if="d.item.type === 1">
+                        {{ d.item.type_value + '/' + d.item.design_type_value + '/' + d.item.field_value + '/' + d.item.industry_value
+                        }}</p>
+                      <p v-if="d.item.type === 2">{{ d.item.type_value + '/' + d.item.design_type_value }}</p>
+                      <p>产品功能：{{d.item.product_features}}</p>
+                    </section>
+                    <p class="money-str price-m Bborder">交易金额：
+                      <span v-if="d.item.price !== 0">¥ <b>{{ d.item.price }}</b></span>
+                      <span v-else>暂无</span>
+                    </p>
+                    <p class="price-m Bborder">状态
+                      <span class="status-str" v-if="d.item.show_offer">有设计服务供应商报价</span>
+                      <span class="status-str" v-else>{{ d.item.status_value }}</span>
+                    </p>
+                    <section>
+                      <div class="btn" v-show="d.item.status === -2">
+                        <p>
+                          <el-button class="is-custom" @click="restartBtn" :item_id="d.item.id" size="small"
+                                     type="primary">重新编辑
+                          </el-button>
+                        </p>
+                        <p>
+                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
+                                     type="gray">关闭项目
+                          </el-button>
+                        </p>
+                      </div>
+                      <p class="btn" v-show="d.item.status === -1">
+                        <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small"
+                                   type="primary">
+                          删除项目
+                        </el-button>
+                      </p>
+
+                      <p class="btn" v-show="d.item.status === 3">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          选择设计服务供应商
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.status === 4">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
+                                   v-if="d.item.show_offer">查看报价
+                        </el-button>
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
+                                   v-else>查看设计公司
+                        </el-button>
+                      </p>
+
+                      <p class="btn" v-show="d.item.status === 6">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          查看合同
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.status === 7">
+                        <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small"
+                                   type="primary">
+                          支付项目款
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.status === 8">
+                        <el-button class="is-custom" @click="secondPay" :item_id="d.item.id" size="small"
+                                   type="primary">
+                          支付项目款
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.status === 15">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          验收项目
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.status === 18">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          评价
+                        </el-button>
+                      </p>
+                      <p class="btn" v-show="d.item.is_view_show">
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          查看详情
+                        </el-button>
+                      </p>
+                    </section>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
       </el-col>
@@ -295,7 +302,8 @@
         itemList: [],
         itemIngList: [],
         pagination: {},
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -311,6 +319,7 @@
             that.isLoading = false
             if (response.data.meta.status_code === 200) {
               if (!response.data.data) {
+                console.log(that)
                 return false
               }
               let data = response.data.data
@@ -347,6 +356,11 @@
                 that.itemIngList = data
               } else if (type === 2) {
                 that.itemList = data
+              }
+              if (that.itemList.length || that.itemIngList.length) {
+                that.isEmpty = false
+              } else {
+                that.isEmpty = true
               }
 //              console.log(data)
             }
@@ -473,7 +487,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .content-item-box {
     min-height: 500px;
     margin-top: 20px;
@@ -505,9 +518,9 @@
     background: #FAFAFA;
   }
 
-  .content {
-    border-bottom: 1px solid #ccc;
-  }
+  /*.content {*/
+  /*border-bottom: 1px solid #ccc;*/
+  /*}*/
 
   .item.ing p {
     padding: 10px;
@@ -606,6 +619,7 @@
 
   .c-body {
     padding-bottom: 16px;
+    border-bottom: 1px solid #E6E6E6
   }
 
   .c-body p {
@@ -618,6 +632,7 @@
   }
 
   .price-m {
+    font-size: 15px;
     padding: 14px 0;
     overflow: hidden;
   }
@@ -633,9 +648,11 @@
   }
 
   .list-title {
-    font-size: 1.5rem;
     padding-bottom: 8px;
     border-bottom: none;
+    font-size: 1.7rem;
+    line-height: 1.5;
+    font-weight: 600;
   }
 
 </style>

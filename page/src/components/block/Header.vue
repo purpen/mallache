@@ -103,10 +103,10 @@
 
       </div>
       <div class="m-Nav-right" v-if="isLogin">
-        <router-link to="/vcenter/control">
+        <a @click="addPosition">
           <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url"/>
           <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
-        </router-link>
+        </a>
       </div>
 
     </div>
@@ -215,6 +215,10 @@
         this.$refs.mMenu.style.width = 0
         document.body.removeAttribute('class', 'disableScroll')
         document.childNodes[1].removeAttribute('class', 'disableScroll')
+      },
+      addPosition() {
+        sessionStorage.setItem('MENU_BAR', 11)
+        this.$router.push({name: 'vcenterControl'})
       }
     },
     computed: {
@@ -316,4 +320,3 @@
     height: 30px;
   }
 </style>
-

@@ -42,7 +42,7 @@
   .vcenter-menu-sub-list-m {
     float: none;
     margin-bottom: -1px;
-    border-top: 1px solid;
+    border-top: 1px solid #ccc;
     display: flex;
     justify-content: space-around;
   }

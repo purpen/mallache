@@ -226,4 +226,9 @@
     font-size: 1.5rem;
   }
 
+  @media screen and (max-width: 767px) {
+    .right-content .content-box {
+      border: none;
+    }
+  }
 </style>

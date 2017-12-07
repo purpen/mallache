@@ -372,6 +372,10 @@
     margin: 0 0 10px 0;
   }
 
+  .item-list .item-name:last-child .item {
+    border-bottom: none;
+  }
+
   .item-name {
     margin: 0 0 10px 0;
   }

@@ -8,7 +8,7 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']">
-            <div class="form-title">
+            <div class="form-title" v-if="designCases.length">
               <span>全部作品案例</span>
             </div>
 
@@ -184,6 +184,12 @@
 
   .opt a {
     font-size: 1.2rem;
+  }
+
+  @media screen and (max-width: 767px) {
+    .opt a {
+      font-size: 1.4rem;
+    }
   }
 
   .add {

@@ -84,7 +84,7 @@
                 </el-col>
               </el-row>
 
-              <el-form-item label="获得奖项" prop="">
+              <el-form-item label="获得奖项" prop="" class="fullwidth">
                 <el-date-picker
                   v-model="form.prize_time"
                   type="month"
@@ -692,5 +692,12 @@
     display: block;
   }
 
+  @media screen and (max-width: 767px) {
+    .right-content .content-box {
+      border: none;
+      border-top: 1px solid #d9d9d9;
 
+    }
+
+  }
 </style>

@@ -1,15 +1,15 @@
 <template>
-  <div class="container">
+  <div class="container clearfix">
     <div class="blank20"></div>
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20">
-      <div class="right-content">
+      <div class="right-content" v-if="!isEmpty">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
         <div class="loading" v-loading.body="isLoading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length > 0">
+          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
@@ -166,7 +166,8 @@
             {required: true, message: '请添写报价说明', trigger: 'blur'}
           ]
         },
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -295,6 +296,11 @@
               designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor
             self.designItems = designItems
+            if (self.designItems.length) {
+              self.isEmpty = false
+            } else {
+              self.isEmpty = true
+            }
           } else {
             self.$message.error(response.data.meta.message)
           }
@@ -431,6 +437,7 @@
   }
 
   .status-str-m {
+    font-size: 1.5rem;
     margin-top: 10px;
     padding: 10px 0;
     border-top: 1px solid #e6e6e6;

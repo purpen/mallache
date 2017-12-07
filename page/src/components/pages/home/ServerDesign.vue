@@ -301,5 +301,13 @@
     .pub-title {
       margin-top: 40px
     }
+
+    .banner h3 {
+      font-size: 3rem;
+    }
+
+    .banner p {
+      font-size: 2rem;
+    }
   }
 </style>

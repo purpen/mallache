@@ -5,13 +5,13 @@
     <v-menu currentName="c_item" class="c_item"></v-menu>
 
     <el-col :span="isMob ? 24 : 20">
-      <div class="right-content">
+      <div class="right-content" v-if="!isEmpty">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
         <div class="loading" v-loading.body="isLoading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length > 0">
+          <el-row v-if="!isMob" class="item-title-box list-box">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
@@ -52,7 +52,7 @@
                 <p>项目周期: {{ d.item.cycle_value }}</p>
               </el-col>
               <el-col :span="isMob ? 24 : 3">
-                <p>
+                <p style="white-space: nowrap">
                   <span v-if="d.item.price !== 0" class="money-str"><i v-if="isMob">价格：</i>¥ <b>{{ d.item.price
                     }}</b></span>
                 </p>
@@ -71,7 +71,7 @@
                     </p>
                   </div>
                   <div v-else class="clearfix">
-                    <div v-if="d.item.status === 5" class="clearfix">z
+                    <div v-if="d.item.status === 5" class="clearfix">
                       <p>
                         <el-button class="is-custom" size="small" @click="contractSendBtn" :index="index"
                                    :item_id="d.item.id" type="primary">发送合同
@@ -148,7 +148,8 @@
         designItems: [],
         waitCount: 0,
         ingCount: 0,
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: true
       }
     },
     methods: {
@@ -253,11 +254,14 @@
               designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
             } // endfor
             self.designItems = designItems
+            if (self.designItems.length) {
+              self.isEmpty = false
+            } else {
+              self.isEmpty = true
+            }
           } else {
             self.$message.error(response.data.meta.message)
           }
-
-          console.log(response.data)
         })
         .catch(function (error) {
           self.$message.error(error.message)
@@ -413,7 +417,6 @@
   .status-str-m span {
     float: right;
     width: 40%;
-    text-align: right;
   }
 
   .item-title p {
@@ -449,9 +452,5 @@
   .item-content-m .item-title p {
     font-size: 1.4rem;
     line-height: 1.4;
-  }
-
-  .c_item {
-    padding-left: 15px;
   }
 </style>

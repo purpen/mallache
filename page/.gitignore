@@ -1,8 +1,0 @@
-.DS_Store
-.idea
-node_modules/
-dist/
-config/
-npm-debug.log
-yarn-error.log
-*.swp

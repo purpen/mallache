@@ -21,8 +21,9 @@
                 <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
                 <p>
                   <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
-                             :item_type="d.item.type" @click="editItem" size="" type="primary"><i
-                    class="el-icon-edit"> </i> 完善项目
+                             :item_type="d.item.type" @click="editItem" size="" type="primary">
+                    <i class="el-icon-edit"></i>
+                    完善项目
                   </el-button>
                 </p>
               </div>
@@ -50,9 +51,7 @@
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
-                <router-link :to="{name: 'vcenterComputerAccreditation'}" class="certified-status">{{ item.verify_label
-                  }}
-                </router-link>
+                <router-link :to="{name: 'vcenterComputerAccreditation'}">{{ item.verify_label }}</router-link>
               </p>
             </div>
 
@@ -64,7 +63,7 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.design_case_status === 0">
+            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
@@ -89,27 +88,29 @@
               </p>
             </div>
 
-            <div class="item no-line" v-show="item.demand_verify_status !== 1">
+            <div class="item clearfix no-line" v-show="item.demand_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
                 <router-link :to="{name: 'vcenterComputerAccreditation'}">未认证</router-link>
               </p>
             </div>
+
           </div>
+
         </div>
 
-        <div class="right-content message" v-if="itemIngList.length">
-          <div class="content-box">
+        <div class="right-content message">
+          <div class="content-box clearfix">
             <div class="form-title">
               <span>待处理事项</span>
             </div>
-            <p class="alert-title" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
+            <p class="alert-title clearfix" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
             <div class="message-btn" v-if="messageCount === 0">
               <img src="../../../../assets/images/icon/control_icon.png"/>
               <p>当前无待处理事项</p>
             </div>
-            <div class="message-btn" v-else>
+            <div class="message-btn clearfix" v-else>
               <router-link :to="{name: 'home'}">
                 <el-button class="is-custom">返回首页</el-button>
               </router-link> &nbsp;&nbsp;
@@ -202,7 +203,6 @@
       that.$http.get(url, {})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-//            console.log(response.data.data)
             let item = null
             that.item = item = response.data.data
             let verifyStatus = 0
@@ -278,7 +278,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .right-content .content-box {
     margin-top: 0;
     min-height: 200px;
@@ -298,6 +297,10 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
     padding-bottom: 10px;
+  }
+
+  .content-box .item:last-child {
+    border-bottom: none;
   }
 
   .content-box .item h3 {
@@ -465,5 +468,4 @@
       font-size: 1.4rem;
     }
   }
-
 </style>

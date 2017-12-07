@@ -10,6 +10,7 @@ Homestead.yaml
 .env
 .DS_Store
 page/node_modules
+page/dist
 page/config/dev.env.js
 page/config/index.js
 page/config/prod.env.js
@@ -19,3 +20,6 @@ page/package-lock.json
 *.swn
 /public/apidoc
 /apidoc.json
+*.xml
+/page/.idea
+*.jsbeautifyrc

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-row >
+    <el-row>
       <v-menu></v-menu>
 
       <el-col :span="24">
@@ -43,7 +43,7 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               type: that.form.type,
               design_type: that.form.design_type,
               field: that.form.field,
@@ -57,8 +57,8 @@
               profile: that.form.profile
             }
             row.prize_time = row.prize_time.format('yyyy-MM-dd')
-            var apiUrl = null
-            var method = null
+            let apiUrl = null
+            let method = null
 
             if (that.itemId) {
               method = 'put'
@@ -71,20 +71,20 @@
               }
             }
             that.$http({method: method, url: apiUrl, data: row})
-            .then (function(response) {
-              if (response.data.meta.status_code === 200) {
-                that.$message.success('提交成功！')
-                that.$router.push({name: 'vcenterDesignCaseList'})
+              .then(function (response) {
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success('提交成功！')
+                  that.$router.push({name: 'vcenterDesignCaseList'})
+                  return false
+                } else {
+                  that.$message.error(response.data.meta.message)
+                }
+              })
+              .catch(function (error) {
+                that.$message.error(error.message)
+                console.log(error.message)
                 return false
-              } else {
-                that.$message.error(response.data.meta.message)
-              }
-            })
-            .catch (function(error) {
-              that.$message.error(error.message)
-              console.log(error.message)
-              return false
-            })
+              })
 
             return false
           } else {
@@ -94,51 +94,49 @@
         })
       }
     },
-    computed: {
-    },
-    watch: {
-    },
-    created: function() {
+    computed: {},
+    watch: {},
+    created: function () {
       const that = this
-      var id = this.$route.params.id
+      let id = this.$route.params.id
       if (id) {
         that.itemId = id
         that.uploadParam['x:target_id'] = id
         that.$http.get(api.designCaseId.format(id), {})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-            that.form = response.data.data
-            if (response.data.data.sales_volume === 0) {
-              that.form.mass_production = 0
-            } else {
-              that.form.mass_production = 1
-            }
-            if (response.data.data.case_image) {
-              var files = []
-              for (var i = 0; i < response.data.data.case_image.length; i++) {
-                var obj = response.data.data.case_image[i]
-                var item = {}
-                item['response'] = {}
-                item['name'] = obj['name']
-                item['url'] = obj['small']
-                item['response']['asset_id'] = obj['id']
-                files.push(item)
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              that.form = response.data.data
+              if (response.data.data.sales_volume === 0) {
+                that.form.mass_production = 0
+              } else {
+                that.form.mass_production = 1
               }
-              that.fileList = files
-            }
+              if (response.data.data.case_image) {
+                let files = []
+                for (let i = 0; i < response.data.data.case_image.length; i++) {
+                  let obj = response.data.data.case_image[i]
+                  let item = {}
+                  item['response'] = {}
+                  item['name'] = obj['name']
+                  item['url'] = obj['small']
+                  item['response']['asset_id'] = obj['id']
+                  files.push(item)
+                }
+                that.fileList = files
+              }
 
-            console.log(response.data.data)
-          }
-        })
-        .catch (function(error) {
-          that.$message({
-            showClose: true,
-            message: error.message,
-            type: 'error'
+              console.log(response.data.data)
+            }
           })
-          console.log(error.message)
-          return false
-        })
+          .catch(function (error) {
+            that.$message({
+              showClose: true,
+              message: error.message,
+              type: 'error'
+            })
+            console.log(error.message)
+            return false
+          })
       } else {
         that.itemId = null
       }
@@ -153,6 +151,7 @@
   .form-btn {
     float: right;
   }
+
   .form-btn button {
     width: 120px;
   }
@@ -164,9 +163,11 @@
     position: relative;
     overflow: hidden;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #20a0ff;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -175,6 +176,7 @@
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;

@@ -5,7 +5,7 @@
       <v-menu currentName="message"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
-        <div class="right-content">
+        <div class="right-content" v-if="itemList.length">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
 
@@ -34,6 +34,8 @@
           </el-pagination>
 
         </div>
+        <div class="empty" v-if="!isEmpty"></div>
+        <p v-if="!isEmpty" class="noMsg">您还没收到任何消息～</p>
       </el-col>
     </el-row>
   </div>
@@ -62,10 +64,10 @@
           totalCount: 0,
           sort: 1,
           type: 0,
-
           test: null
         },
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        isEmpty: false
       }
     },
     methods: {
@@ -95,6 +97,11 @@
                 data[i]['is_show'] = false
               }
               self.itemList = data
+              if (self.itemList.length) {
+                self.isEmpty = true
+              } else {
+                self.isEmpty = false
+              }
 //              console.log(data)
             }
           })
@@ -177,14 +184,16 @@
 <style scoped>
 
   .right-content .content-box {
-    padding: 0 0 0 0;
+    padding: 0;
   }
 
   .content-box .item {
+    position: relative;
     border-bottom: 1px solid #ccc;
     padding: 10px 20px 10px;
     cursor: pointer;
     min-height: 30px;
+    line-height: 30px
   }
 
   .content-box .item:hover {
@@ -192,7 +201,7 @@
   }
 
   .item p {
-    font-size: 1.5rem;
+    line-height: 30px
   }
 
   .item .banner2 {
@@ -237,7 +246,7 @@
     border-radius: 50%;
     width: 7px;
     height: 7px;
-    margin-top: 7px;
+    margin-top: 11px;
     margin-left: -13px;
     position: absolute;;
   }
@@ -249,5 +258,30 @@
   .pagination {
     display: flex;
     justify-content: center;
+  }
+
+  .empty {
+    width: 122px;
+    height: 113px;
+    margin: 100px auto 0;
+    background: url("../../../../assets/images/item/Group5.png");
+    background-size: contain;
+  }
+
+  .noMsg {
+    text-align: center;
+    color: #969696;
+  }
+
+  @media screen and (max-width: 350px) {
+    .content-box .item {
+      padding: 10px 15px;
+    }
+
+    .item p.icon {
+      float: none;
+      position: absolute;
+      right: 15px;
+    }
   }
 </style>

@@ -4,24 +4,25 @@
     <el-row :gutter="24">
       <v-menu currentName="profile"></v-menu>
 
-      <el-col :span="20">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub currentSubName="identification"></v-menu-sub>
-          <div class="content-box" v-loading.body="isLoading">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
             <div class="form-title">
               <span>企业实名认证</span>
             </div>
             <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="企业名称" prop="company_name">
-                    <el-input v-model="form.company_name" name="company_name" ref="company_name" placeholder="请输入完整的公司名称"></el-input>
-                  </el-form-item>           
+                    <el-input v-model="form.company_name" name="company_name" ref="company_name"
+                              placeholder="请输入完整的公司名称"></el-input>
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-              <el-form-item label="证件类型" prop="company_type">
+              <el-form-item label="证件类型" prop="company_type" class="fullwidth">
                 <el-select v-model.number="form.company_type" style="width: 350px;" placeholder="请选择证件类型">
                   <el-option
                     v-for="(d, index) in certificateTypeOptions"
@@ -33,15 +34,15 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="统一社会信用代码" prop="registration_number">
                     <el-input v-model="form.registration_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="公司法人营业执照" prop="">
                     <el-upload
                       class=""
@@ -62,14 +63,14 @@
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="法人姓名" prop="legal_person">
                     <el-input v-model="form.legal_person" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
-              <el-form-item label="证件类型" prop="document_type">
+              <el-form-item label="证件类型" prop="document_type" class="fullwidth">
                 <el-select v-model.number="form.document_type" placeholder="请选择证件类型">
                   <el-option
                     v-for="(d, index) in documentTypeOptions"
@@ -81,15 +82,15 @@
               </el-form-item>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="证件号码" prop="document_number">
                     <el-input v-model="form.document_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
               <el-row :gutter="24">
-                <el-col :span="12">
+                <el-col :span="isMob ? 24 : 12">
                   <el-form-item label="法人证件" prop="">
                     <el-upload
                       class=""
@@ -110,22 +111,22 @@
               </el-row>
 
               <el-row :gutter="10">
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="职位" prop="position">
                     <el-input v-model="form.position" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="手机" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
                   </el-form-item>
@@ -134,8 +135,9 @@
 
 
               <div class="form-btn">
-                  <el-button @click="returnBase">返回</el-button>
-                  <el-button :loading="isLoadingBtn" class="is-custom" type="primary" @click="submit('ruleForm')">提交审核</el-button>
+                <el-button @click="returnBase">返回</el-button>
+                <el-button :loading="isLoadingBtn" class="is-custom" type="primary" @click="submit('ruleForm')">提交审核
+                </el-button>
               </div>
               <div class="clear"></div>
             </el-form>
@@ -163,12 +165,12 @@
       vMenuSub
     },
     data () {
-      var checkNumber = (rule, value, callback) => {
+      let checkNumber = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请添写公司注册号!'))
         }
         setTimeout(() => {
-          var len = value.toString().length
+          let len = value.toString().length
           if (len === 15 || len === 18) {
             callback()
           } else {
@@ -211,36 +213,36 @@
 
         ruleForm: {
           company_name: [
-            { required: true, message: '请添写公司全称', trigger: 'blur' }
+            {required: true, message: '请添写公司全称', trigger: 'blur'}
           ],
           company_type: [
-            { type: 'number', required: true, message: '请添写公司全称', trigger: 'change' }
+            {type: 'number', required: true, message: '请添写公司全称', trigger: 'change'}
           ],
           registration_number: [
-            { validator: checkNumber, trigger: 'blur' }
+            {validator: checkNumber, trigger: 'blur'}
           ],
           legal_person: [
-            { required: true, message: '请添写法人真实姓名', trigger: 'blur' }
+            {required: true, message: '请添写法人真实姓名', trigger: 'blur'}
           ],
           document_number: [
-            { required: true, message: '请添写法人证件号码', trigger: 'blur' },
-            { max: 20, min: 4, message: '证件号码格式不正确', trigger: 'blur' }
+            {required: true, message: '请添写法人证件号码', trigger: 'blur'},
+            {max: 20, min: 4, message: '证件号码格式不正确', trigger: 'blur'}
           ],
           document_type: [
-            { type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change' }
+            {type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change'}
           ],
           contact_name: [
-            { required: true, message: '请添写联系人', trigger: 'blur' }
+            {required: true, message: '请添写联系人', trigger: 'blur'}
           ],
           phone: [
-            { required: true, message: '请添写联系电话', trigger: 'blur' }
+            {required: true, message: '请添写联系电话', trigger: 'blur'}
           ],
           email: [
-            { required: true, message: '请添写联系人邮箱', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+            {required: true, message: '请添写联系人邮箱', trigger: 'blur'},
+            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur'}
           ],
           position: [
-            { required: true, message: '请添写联系人职位', trigger: 'blur' }
+            {required: true, message: '请添写联系人职位', trigger: 'blur'}
           ]
         }
       }
@@ -251,7 +253,7 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
-            var row = {
+            let row = {
               registration_number: that.form.registration_number,
               company_name: that.form.company_name,
               company_type: that.form.company_type,
@@ -272,20 +274,20 @@
             }
             that.isLoadingBtn = true
             that.$http({method: 'POST', url: api.demandCompany, data: row})
-            .then (function(response) {
-              that.isLoadingBtn = false
-              if (response.data.meta.status_code === 200) {
-                that.$message.success('提交成功,等待审核')
-                that.$router.push({name: 'vcenterDCompanyAccreditation'})
+              .then(function (response) {
+                that.isLoadingBtn = false
+                if (response.data.meta.status_code === 200) {
+                  that.$message.success('提交成功,等待审核')
+                  that.$router.push({name: 'vcenterDCompanyAccreditation'})
+                  return false
+                } else {
+                  that.$message.error(response.data.meta.message)
+                }
+              })
+              .catch(function (error) {
+                that.$message.error(error.message)
                 return false
-              } else {
-                that.$message.error(response.data.meta.message)
-              }
-            })
-            .catch (function(error) {
-              that.$message.error(error.message)
-              return false
-            })
+              })
           } else {
             return false
           }
@@ -299,21 +301,21 @@
         if (file === null) {
           return false
         }
-        var assetId = file.response.asset_id
+        let assetId = file.response.asset_id
         const that = this
         that.$http.delete(api.asset.format(assetId), {})
-        .then (function(response) {
-          if (response.data.meta.status_code === 200) {
-          } else {
-            that.$message.error(response.data.meta.message)
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+            } else {
+              that.$message.error(response.data.meta.message)
+              return false
+            }
+          })
+          .catch(function (error) {
+            that.$message.error(error.message)
+            console.log(error.message)
             return false
-          }
-        })
-        .catch (function(error) {
-          that.$message.error(error.message)
-          console.log(error.message)
-          return false
-        })
+          })
       },
       handlePreview(file) {
         console.log(file)
@@ -363,9 +365,9 @@
     },
     computed: {
       documentTypeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.DOCUMENT_TYPE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.DOCUMENT_TYPE.length; i++) {
+          let item = {
             value: typeData.DOCUMENT_TYPE[i]['id'],
             label: typeData.DOCUMENT_TYPE[i]['name']
           }
@@ -374,21 +376,23 @@
         return items
       },
       certificateTypeOptions() {
-        var items = []
-        for (var i = 0; i < typeData.COMPANY_CERTIFICATE_TYPE.length; i++) {
-          var item = {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_CERTIFICATE_TYPE.length; i++) {
+          let item = {
             value: typeData.COMPANY_CERTIFICATE_TYPE[i]['id'],
             label: typeData.COMPANY_CERTIFICATE_TYPE[i]['name']
           }
           items.push(item)
         }
         return items
+      },
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
-    watch: {
-    },
-    created: function() {
-      var uType = this.$store.state.event.user.type
+    watch: {},
+    created: function () {
+      let uType = this.$store.state.event.user.type
       // 如果非设计公司，跳到相应页面
       if (uType === 2) {
         this.$router.replace({name: 'vcenterComputerIdentification'})
@@ -397,80 +401,80 @@
       const that = this
       that.isLoading = true
       that.$http.get(api.demandCompany, {})
-      .then (function(response) {
-        that.isLoading = false
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            // 重新渲染
-            that.$nextTick(function() {
-              that.form = response.data.data
-              that.form.registration_number = that.form.registration_number
-              that.form.company_type = that.form.company_type === 0 ? '' : that.form.company_type
-              that.form.document_type = that.form.document_type === 0 ? '' : that.form.document_type
-              that.companyId = response.data.data.id
-              that.uploadParam['x:target_id'] = response.data.data.id
+        .then(function (response) {
+          that.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              // 重新渲染
+              that.$nextTick(function () {
+                that.form = response.data.data
+                that.form.registration_number = that.form.registration_number
+                that.form.company_type = that.form.company_type === 0 ? '' : that.form.company_type
+                that.form.document_type = that.form.document_type === 0 ? '' : that.form.document_type
+                that.companyId = response.data.data.id
+                that.uploadParam['x:target_id'] = response.data.data.id
 
-              if (response.data.data.logo_image) {
-                that.imageUrl = response.data.data.logo_image.small
-              }
-              // 法人营业执照
-              if (response.data.data.license_image) {
-                var files = []
-                for (var i = 0; i < response.data.data.license_image.length; i++) {
-                  if (i > 5) {
-                    break
-                  }
-                  var obj = response.data.data.license_image[i]
-                  var item = {}
-                  item['response'] = {}
-                  item['name'] = obj['name']
-                  item['url'] = obj['small']
-                  item['response']['asset_id'] = obj['id']
-                  files.push(item)
+                if (response.data.data.logo_image) {
+                  that.imageUrl = response.data.data.logo_image.small
                 }
-                that.fileList = files
-              }
-              // 法人证件
-              if (response.data.data.document_image) {
-                var personFiles = []
-                for (var j = 0; j < response.data.data.document_image.length; j++) {
-                  if (j > 5) {
-                    break
+                // 法人营业执照
+                if (response.data.data.license_image) {
+                  let files = []
+                  for (let i = 0; i < response.data.data.license_image.length; i++) {
+                    if (i > 5) {
+                      break
+                    }
+                    let obj = response.data.data.license_image[i]
+                    let item = {}
+                    item['response'] = {}
+                    item['name'] = obj['name']
+                    item['url'] = obj['small']
+                    item['response']['asset_id'] = obj['id']
+                    files.push(item)
                   }
-                  var pObj = response.data.data.document_image[j]
-                  var personItem = {}
-                  personItem['response'] = {}
-                  personItem['name'] = pObj['name']
-                  personItem['url'] = pObj['small']
-                  personItem['response']['asset_id'] = pObj['id']
-                  personFiles.push(personItem)
+                  that.fileList = files
                 }
-                that.filePersonList = personFiles
-              }
-            })
+                // 法人证件
+                if (response.data.data.document_image) {
+                  let personFiles = []
+                  for (let j = 0; j < response.data.data.document_image.length; j++) {
+                    if (j > 5) {
+                      break
+                    }
+                    let pObj = response.data.data.document_image[j]
+                    let personItem = {}
+                    personItem['response'] = {}
+                    personItem['name'] = pObj['name']
+                    personItem['url'] = pObj['small']
+                    personItem['response']['asset_id'] = pObj['id']
+                    personFiles.push(personItem)
+                  }
+                  that.filePersonList = personFiles
+                }
+              })
+            }
           }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        that.isLoading = false
-        return false
-      })
+        })
+        .catch(function (error) {
+          that.$message.error(error.message)
+          that.isLoading = false
+          return false
+        })
 
       that.$http.get(api.upToken, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            that.uploadParam['token'] = response.data.data.upToken
-            that.uploadParam['x:random'] = response.data.data.random
-            that.uploadParam.url = response.data.data.upload_url
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              that.uploadParam['token'] = response.data.data.upToken
+              that.uploadParam['x:random'] = response.data.data.random
+              that.uploadParam.url = response.data.data.upload_url
+            }
           }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        return false
-      })
+        })
+        .catch(function (error) {
+          that.$message.error(error.message)
+          return false
+        })
     }
   }
 
@@ -478,10 +482,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .right-content .content-box-m {
+    margin: 0;
+    padding: 0 15px;
+  }
 
   .form-btn {
     float: right;
   }
+
   .form-btn button {
     width: 120px;
   }

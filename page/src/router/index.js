@@ -211,7 +211,9 @@ const routes = [
       requireAuth: false
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/pages/article/Show'], resolve) }
+    component: (resolve) => {
+      require(['@/components/pages/article/Show'], resolve)
+    }
   },
   {
     path: '/login',
@@ -478,6 +480,16 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/pages/v_center/company/Identification')
+  },
+  // 公司认证-编辑
+  {
+    path: '/vcenter/exhibition',
+    name: 'vcenterExhibition',
+    meta: {
+      title: '日历',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/exhibition/exhibition')
   },
   // 项目动态
   {
@@ -754,7 +766,8 @@ const routes = [
     path: '/vcenter/modify_pwd',
     name: 'modifyPwd',
     meta: {
-      title: '修改密码'
+      title: '修改密码',
+      requireAuth: true
     },
     component: require('@/components/pages/v_center/account/ModifyPwd')
   },

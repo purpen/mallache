@@ -434,4 +434,14 @@
     line-height: 2;
     color: #666;
   }
+
+  @media screen and (max-width: 767px) {
+    .item-content .number p {
+      font-size: 1.7rem;
+    }
+
+    .item-content .option a {
+      font-size: 1.5rem;
+    }
+  }
 </style>
