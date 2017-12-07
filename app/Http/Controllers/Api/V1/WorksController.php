@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class WorksController extends BaseController
 {
     /**
-     * @api {get} /works  当前用户所属作品
+     * @api {get} /works  用户作品列表
      * @apiVersion 1.0.0
      * @apiName works index
      * @apiGroup works
@@ -31,6 +31,7 @@ class WorksController extends BaseController
      *      "id": 23,
      *      "user_id": 12,
      *      "company_id": 22,
+     *      "match_id": 33,   // 所属大赛ID
      *      "tags": [],   // 标签
      *      "title": "杯子",
      *      "summary":  "备注",   // 备注
@@ -69,7 +70,7 @@ class WorksController extends BaseController
     }
 
     /**
-     * @api {post} /works 保存作品
+     * @api {post} /works 创建
      * @apiVersion 1.0.0
      * @apiName  works store
      * @apiGroup works
@@ -89,6 +90,7 @@ class WorksController extends BaseController
      *      "company_id": 22,
      *      "tags": [],   // 标签
      *      "title": "杯子",
+     *      "match_id": 12,   // 所属大赛ID
      *      "summary":  "备注",   // 备注
      *      "images": [],   // 图片列表
      *      "type": 1,  // 类型：1.默认；
@@ -111,6 +113,7 @@ class WorksController extends BaseController
             'title' => 'required|max:50',
             'content' => 'max:1000',
             'cover_id' => 'required|integer',
+            'match_id' => 'required|integer',
             'type' => 'integer'
         ];
         $messages = [
@@ -118,6 +121,8 @@ class WorksController extends BaseController
             'title.max' => '最多50字符',
             'content.max' => '内容最多1000字符',
             'type.integer' => '类型必须为整型',
+            'match_id.required' => '请选择一个大赛',
+            'match_id.integer' => '大赛ID为整型',
             'cover_id.required' => '请设置一张封面图',
             'cover_id.integer' => '封面ID为整型',
         ];
@@ -126,10 +131,12 @@ class WorksController extends BaseController
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $published = $request->input('published') ? (int)$request->input('published') : 1;
         $cover_id = $request->input('cover_id') ? (int)$request->input('cover_id') : null;
+        $match_id = $request->input('match_id') ? (int)$request->input('match_id') : null;
 
         $params = array(
             'title' => $request->input('title'),
             'content' => $request->input('content'),
+            'match_id' => $match_id,
             'user_id' => $this->auth_user_id,
             'type' => $type,
             'published' => $published,
@@ -159,7 +166,7 @@ class WorksController extends BaseController
     }
 
     /**
-     * @api {get} /works/{id}  作品详情
+     * @api {get} /works/{id}  详情
      * @apiVersion 1.0.0
      * @apiName works show
      * @apiGroup works
@@ -172,6 +179,7 @@ class WorksController extends BaseController
      *      "id": 23,
      *      "user_id": 12,
      *      "company_id": 22,
+     *      "match_id": 22,   // 所属大赛
      *      "tags": [],   // 标签
      *      "title": "杯子",
      *      "summary":  "备注",   // 备注
@@ -222,7 +230,7 @@ class WorksController extends BaseController
     }
 
     /**
-     * @api {put} /works/12 更新
+     * @api {put} /works/{id} 更新
      * @apiVersion 1.0.0
      * @apiName works update
      * @apiGroup works
@@ -240,6 +248,7 @@ class WorksController extends BaseController
      *      "id": 23,
      *      "user_id": 12,
      *      "company_id": 22,
+     *      "match_id": 33,   // 所属大赛ID
      *      "tags": [],   // 标签
      *      "title": "杯子",
      *      "summary":  "备注",   // 备注
@@ -264,6 +273,7 @@ class WorksController extends BaseController
             'title' => 'required|max:50',
             'content' => 'max:1000',
             'cover_id' => 'required|integer',
+            'match_id' => 'required|integer',
             'type' => 'integer'
         ];
         $messages = [
@@ -271,6 +281,8 @@ class WorksController extends BaseController
             'title.max' => '最多50字符',
             'content.max' => '内容最多1000字符',
             'type.integer' => '类型必须为整型',
+            'match_id.required' => '请选择一个大赛',
+            'match_id.integer' => '大赛ID为整型',
             'cover_id.required' => '请设置一张封面图',
             'cover_id.integer' => '封面ID为整型',
         ];
@@ -278,11 +290,13 @@ class WorksController extends BaseController
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $published = $request->input('published') ? (int)$request->input('published') : 1;
         $cover_id = $request->input('cover_id') ? (int)$request->input('cover_id') : null;
+        $match_id = $request->input('match_id') ? (int)$request->input('match_id') : null;
 
         $params = array(
             'title' => $request->input('title'),
             'content' => $request->input('content'),
             'user_id' => $this->auth_user_id,
+            'match_id' => $match_id,
             'type' => $type,
             'published' => $published,
             'status' => 1,
@@ -312,7 +326,7 @@ class WorksController extends BaseController
     }
 
     /**
-     * @api {delete} /works/3 删除
+     * @api {delete} /works/{id} 删除
      * @apiVersion 1.0.0
      * @apiName works delete
      * @apiGroup works
