@@ -99,3 +99,6 @@ git@github.com:purpen/mallache.git
  
  ###### 批量生成设计公司账号
  php artisan user:create --count=10
+ 
+ ###### 更新veerToken
+ php artisan Update:token

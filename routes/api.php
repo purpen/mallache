@@ -296,9 +296,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         // 公司作品详情
         $api->get('/works/{id}', 'WorksController@show');
-        // 设计公司大赛作品
+        // 公司大赛作品
         $api->resource('/works', 'WorksController');
 
+        /**
+         * veer图片列表
+         */
+        $api->get('/veerImage/list', 'VeerController@lists');
 
     });
 });

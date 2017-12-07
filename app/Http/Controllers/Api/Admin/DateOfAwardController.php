@@ -6,6 +6,8 @@ use App\Http\AdminTransformer\DateOfAwardTransformer;
 use App\Models\DateOfAward;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class DateOfAwardController extends BaseController
@@ -13,8 +15,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {post} /admin/dateOfAward/store 添加日期奖项
      * @apiVersion 1.0.0
-     * @apiName DateOfAward store
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward store
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {integer} type 状态 1.设计大赛；2.节日；3.展会；4.事件
      * @apiParam {string} name 名称
@@ -61,8 +63,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {get} /admin/dateOfAward 日期奖项详情
      * @apiVersion 1.0.0
-     * @apiName DateOfAward dateOfAward
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward dateOfAward
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {integer} id 日期奖项id
      * @apiParam {string} token
@@ -101,8 +103,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {put} /admin/dateOfAward/update 更改日期奖项
      * @apiVersion 1.0.0
-     * @apiName DateOfAward update
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward update
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {integer} id 项目奖项id
      * @apiParam {integer} type 状态 1.设计大赛；2.节日；3.展会；4.事件
@@ -152,8 +154,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {get} /admin/dateOfAward/week 日期奖项周
      * @apiVersion 1.0.0
-     * @apiName DateOfAward week
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward week
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {string} token token
      *
@@ -205,8 +207,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {get} /admin/dateOfAward/month 日期奖项月
      * @apiVersion 1.0.0
-     * @apiName DateOfAward month
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward month
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {string} token token
      *
@@ -252,8 +254,8 @@ class DateOfAwardController extends BaseController
     /**
      * @api {delete} /admin/dateOfAward/delete 删除日期奖项
      * @apiVersion 1.0.0
-     * @apiName DateOfAward delete
-     * @apiGroup DateOfAward
+     * @apiName AdminDateOfAward delete
+     * @apiGroup AdminDateOfAward
      *
      * @apiParam {integer} id 日期奖项ID
      * @apiParam {string} token
