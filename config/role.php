@@ -39,6 +39,10 @@ return [
          */
         //用户列表
         '/admin/user/lists',
+        //用户详情
+        '/admin/user/show',
+        //用户编辑
+        '/admin/user/edit',
         //修改用户角色
         '/admin/user/changeRole',
         //修改用户状态
@@ -113,6 +117,10 @@ return [
     'admin_plus' => [
         //用户列表
         '/admin/user/lists',
+        //用户详情
+        '/admin/user/show',
+        //用户编辑
+        '/admin/user/edit',
         //修改用户状态
         '/admin/user/changeStatus',
 

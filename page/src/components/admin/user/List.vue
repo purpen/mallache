@@ -55,7 +55,7 @@
               width="60"
               label="属性">
                 <template scope="scope">
-                  <p v-if="scope.row.kind === 1">员工</p>
+                  <p v-if="scope.row.kind === 2">鸟人</p>
                   <p v-else>默认</p>
                 </template>
             </el-table-column>
