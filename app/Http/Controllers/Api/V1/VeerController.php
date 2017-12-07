@@ -21,7 +21,42 @@ class VeerController extends BaseController
      * @apiParam {integer} page 第几页.最小1.最大1000
      * @apiParam {integer} nums 每页数量.最大100.默认10
      * @apiParam {string} token
-
+     *
+     * @apiSuccessExample 成功响应:
+    {
+        "meta": {
+            "message": "Success",
+            "status_code": 200,
+            "pagination": {
+                "total": 7048258,
+                "count": "1",
+                "per_page": "1",
+                "current_page": "1",
+                "total_pages": 7048258,
+                "links": {
+                    "next": "http://sa.taihuoniao.com/veerImage/list?page=2&keyword=女人"
+                }
+            }
+        },
+        "data": [
+            {
+                "id": 49783171,
+                "res_id": "149783171",
+                "title": "Morning jogging", //图片名称
+                "caption": "Morning jogging",
+                "width": 6048,  //宽
+                "height": 4032, // 高
+                "brandid": 10374,
+                "veer_url": "http://www.veer.com/photo/149783171?utm_source=d3ingo&utm_medium=api&chid=0", //图片链接
+                "license_type": "rf",
+                "asset_format": "jpg",
+                "graphical_style": 1,
+                "online_time": "2017-08-09 05:36:51",
+                "small_url": "http://photo.static.api.vcg.com/creative/vcg/176/new/0df3e692c38546abb4615f0afbce8057.jpg", //缩略图
+                "preview_url": "http://photo.static.api.vcg.com/creative/vcg/veer/612/veer-149783171.jpg" //原图
+            }
+        ]
+    }
      */
     public function lists(Request $request)
     {
