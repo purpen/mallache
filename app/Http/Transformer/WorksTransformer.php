@@ -44,7 +44,7 @@ class WorksTransformer extends TransformerAbstract
         ];
     }
 
-    protected function company(WorksModel $works)
+    protected function company(Works $works)
     {
         $company = $works->company;
         return [

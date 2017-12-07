@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Transformer\WorksListsTransformer;
+use App\Http\Transformer\WorksListTransformer;
 use App\Http\Transformer\WorksTransformer;
 use App\Models\AssetModel;
 use App\Models\Works;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class WorksController extends BaseController
 {
     /**
-     * @api {get} /works  公司个人中心查看所属作品
+     * @api {get} /works  当前用户所属作品
      * @apiVersion 1.0.0
      * @apiName works index
      * @apiGroup works
@@ -143,7 +143,7 @@ class WorksController extends BaseController
         }
 
 
-        $design_company = Works::where('user_id', $this->auth_user_id)->first();
+        $design_company = DesignCompanyModel::where('user_id', $this->auth_user_id)->first();
         if ($design_company) $params['company_id'] = $design_company->id;
 
         try {
