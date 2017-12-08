@@ -23,14 +23,14 @@
                       </router-link>
                     </div>
                     <div class="content">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                      <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">{{ d.title
                         }}
                       </router-link>
                       <div class="opt">
                         <a href="javascript:void(0);" :item_id="d.id" :index="index"
                            @click="delItem">删除</a>
-                        <router-link :to="{name: 'vcenterMatchCaseList', params: {id: d.id}}">
+                        <router-link :to="{name: 'vcenterMatchCaseSubmit', params: {id: d.id}}">
                           编辑
                         </router-link>
                       </div>
@@ -102,7 +102,7 @@
       },
       // 添加作品案例
       add() {
-        this.$router.push ({name: 'vcenterMatchCaseList'})
+        this.$router.push ({name: 'vcenterMatchCaseSubmit'})
       },
       getDesignCase () {
         const that = this

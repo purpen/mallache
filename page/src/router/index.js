@@ -172,7 +172,7 @@ const routes = [
   },
   {
     path: '/v_center/match_case/submit',
-    name: 'vcenterMatchCaseList',
+    name: 'vcenterMatchCaseSubmit',
     meta: {
       requireAuth: true,
       title: '上传作品'
@@ -563,7 +563,7 @@ const routes = [
   // 参赛作品
   {
     path: '/vcenter/match_case',
-    name: 'vcenterMatchCase',
+    name: 'vcenterMatchCaseList',
     meta: {
       title: '参赛作品',
       requireAuth: true

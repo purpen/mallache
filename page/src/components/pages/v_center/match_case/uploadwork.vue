@@ -152,7 +152,7 @@
               .then ((res) => {
                 if (res.data.meta.status_code === 200) {
                   that.$message.success ('提交成功！')
-                  that.$router.push ({name: 'vcenterMatchCase'})
+                  that.$router.push ({name: 'vcenterMatchCaseList'})
                   return false
                 } else {
                   that.$message.error (res.data.meta.message)

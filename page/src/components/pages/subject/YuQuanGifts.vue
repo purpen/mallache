@@ -67,7 +67,7 @@
               type: 'error'
             })
           } else {
-            this.$router.push ({name: 'vcenterMatchCaseList'})
+            this.$router.push ({name: 'vcenterMatchCaseSubmit'})
           }
         } else {
           this.$message ({
