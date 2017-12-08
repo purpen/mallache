@@ -9,10 +9,10 @@
             <h1>{{ item.title }}</h1>
           </div>
           <div class="summary">
-            <p>{{ item.profile }}</p>
+            <p>{{ item.content }}</p>
           </div>
           <div class="des">
-            <p v-for="(d, index) in item.case_image" :key="index">
+            <p v-for="(d, index) in item.images" :key="index">
               <img :src="d.big" :alt="d.name" :title="d.name" />
               <slot>
             <p class="img-des">{{ d.summary }}</p>
@@ -25,7 +25,7 @@
       <el-col :xs="24" :sm="6" :md="6" :lg="6">
         <div class="design-case-slide">
           <div class="info">
-            <router-link :to="{name: 'companyShow', params: {id: item.company_id}}" target="_blank">
+            <router-link v-if="item.company_id" :to="{name: 'companyShow', params: {id: item.company_id}}" target="_blank">
               <img class="avatar" v-if="item.company.logo_url" :src="item.company.logo_url" width="100" />
               <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100" />
             </router-link>
