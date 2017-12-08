@@ -67,7 +67,7 @@
               type: 'error'
             })
           } else {
-            this.$router.push ({name: 'uploads'})
+            this.$router.push ({name: 'vcenterMatchCaseList'})
           }
         } else {
           this.$message ({

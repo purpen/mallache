@@ -171,8 +171,8 @@ const routes = [
     component: require ('@/components/pages/subject/YuQuanGifts')
   },
   {
-    path: '/v_center/YuQuanGifts/uploads',
-    name: 'uploads',
+    path: '/v_center/match_case/submit',
+    name: 'vcenterMatchCaseList',
     meta: {
       requireAuth: true,
       title: '上传作品'
