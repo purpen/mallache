@@ -322,8 +322,6 @@
                 }
                 that.fileList = files
               }
-
-//              console.log(that.fileList)
             }
           })
           .catch (function (error) {

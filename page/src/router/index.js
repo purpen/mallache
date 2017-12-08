@@ -174,7 +174,7 @@ const routes = [
     path: '/v_center/YuQuanGifts/uploads',
     name: 'uploads',
     meta: {
-      requireAuth: false,
+      requireAuth: true,
       title: '上传作品'
     },
     component: require ('@/components/pages/v_center/match_case/uploadwork')
