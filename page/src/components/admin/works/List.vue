@@ -31,14 +31,14 @@
             </el-table-column>
             <el-table-column
               label="封面"
-              width="80">
+              width="70">
                 <template scope="scope">
                   <p><img :src="scope.row.cover_url" width="50" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="内容"
-              min-width="250">
+              min-width="200">
                 <template scope="scope">
                   <p>标题: <router-link :to="{name: 'adminWorksShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
                 </template>
