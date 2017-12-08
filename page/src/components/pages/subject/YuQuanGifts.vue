@@ -34,6 +34,8 @@
 </template>
 <script>
   import { calcImgSize } from 'assets/js/common'
+  import store from '@/store/index'
+  import * as types from '@/store/mutation-types'
   export default {
     name: 'YuQuanGifts',
     data () {
@@ -63,18 +65,15 @@
           if (!this.isCompany) {
             this.$message ({
               showClose: true,
-              message: '此活动只允许设计公司参与',
+              message: '此活动只允许设计服务商参与',
               type: 'error'
             })
           } else {
             this.$router.push ({name: 'vcenterMatchCaseSubmit'})
           }
         } else {
-          this.$message ({
-            showClose: true,
-            message: '请使用设计服务商的账号登录',
-            type: 'error'
-          })
+          store.commit (types.PREV_URL_NAME, 'YuQuanGifts')
+          this.$router.push ({name: 'login', params: {url: 'yq'}})
         }
       }
     },
