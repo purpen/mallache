@@ -53,7 +53,7 @@ class WorksController extends BaseController
     public function index()
     {
         $user_id = intval($this->auth_user_id);
-        $works = Works::where('user_id', $user_id)->get();
+        $works = Works::where('user_id', $user_id)->orderBy('id', 'desc')->get();
 
         return $this->response->collection($works, new WorksListTransformer())->setMeta($this->apiMeta());
 
@@ -318,7 +318,7 @@ class WorksController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         //$designCase = DesignCaseModel::where('id', intval($id))->first();
-        $works->update($all);
+        $works->update($params);
         if (!$works) {
             return $this->response->array($this->apiError());
         }
