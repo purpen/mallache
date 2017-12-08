@@ -26,7 +26,7 @@
         <div class="design-case-slide">
           <div class="info">
             <router-link :to="{name: 'companyShow', params: {id: item.company_id}}" target="_blank">
-              <img class="avatar" v-if="item.company.logo_image.logo" :src="item.company.logo_image.logo" width="100" />
+              <img class="avatar" v-if="item.company.logo_url" :src="item.company.logo_url" width="100" />
               <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100" />
             </router-link>
             <h3>{{ item.company.company_abbreviation }}</h3>
