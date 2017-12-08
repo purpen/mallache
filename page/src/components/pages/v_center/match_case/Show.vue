@@ -97,7 +97,6 @@
       that.isFullLoading = true
       that.$http.get (api.workid.format (id), {})
         .then (function (response) {
-          console.log (response)
           that.isFullLoading = false
           if (response.data.meta.status_code === 200) {
             that.item = response.data.data

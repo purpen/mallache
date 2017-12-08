@@ -200,5 +200,7 @@ export default {
   adminWorksPublished: '/admin/works/published', // PUT 发布
   adminWorksDelete: '/admin/works/delete', // DELETE 删除
 
+  // veer图片列表
+
   test: '/'  // End
 }
