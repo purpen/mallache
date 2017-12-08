@@ -85,7 +85,7 @@
       return {
         isFullLoading: false,
         item: {
-          design_company: ''
+          company: ''
         },
         rateValue: 3.5,
         msg: 'This is About!!!'
@@ -101,10 +101,10 @@
           that.isFullLoading = false
           if (response.data.meta.status_code === 200) {
             that.item = response.data.data
-            if (that.item.design_company.logo_image) {
-              that.item.design_company.logo_url = that.item.design_company.logo_image.logo
+            if (that.item.company.logo_image) {
+              that.item.company.logo_url = that.item.company.logo_image.logo
             } else {
-              that.item.design_company.logo_url = false
+              that.item.company.logo_url = false
             }
             document.title = that.item.title + '-铟果'
           }

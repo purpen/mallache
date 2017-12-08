@@ -41,11 +41,13 @@
               </el-row>
 
             </div>
+            <!--
             <div class="add blank20">
               <el-button class="is-custom" @click="add" type="primary">
                 <i class="el-icon-plus"></i> 添加作品案例
               </el-button>
             </div>
+            -->
           </div>
         </div>
 

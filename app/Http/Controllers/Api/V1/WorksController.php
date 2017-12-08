@@ -53,7 +53,7 @@ class WorksController extends BaseController
     public function index()
     {
         $user_id = intval($this->auth_user_id);
-        $works = Works::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+        $works = Works::where(['user_id'=>$user_id, 'published'=>1, 'status'=>1])->orderBy('id', 'desc')->get();
 
         return $this->response->collection($works, new WorksListTransformer())->setMeta($this->apiMeta());
 
