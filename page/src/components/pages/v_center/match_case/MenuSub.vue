@@ -1,7 +1,7 @@
 <template>
   <div class="vcenter-menu-sub" v-if="!isMob">
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterMatchCaseList'}" exact class="item">全部</router-link>
+      <router-link :to="{name: 'vcenterMatchCase'}" exact class="item">全部</router-link>
     </div>
   </div>
 </template>
@@ -27,5 +27,5 @@
 <style scoped>
   .item.add {
     font-size: 1.3rem;
-  }
+    }
 </style>
