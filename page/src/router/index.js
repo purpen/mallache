@@ -1033,7 +1033,27 @@ const routes = [
       title: '文章详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/category/Show')
+    component: require ('@/components/admin/article/Show')
+  },
+  // 作品列表
+  {
+    path: '/admin/works/list',
+    name: 'adminWorksList',
+    meta: {
+      title: '作品列表',
+      requireAuth: true
+    },
+    component: require ('@/components/admin/works/List')
+  },
+  // 作品详情
+  {
+    path: '/admin/works/show/:id',
+    name: 'adminWorksShow',
+    meta: {
+      title: '作品详情',
+      requireAuth: true
+    },
+    component: require ('@/components/admin/works/Show')
   },
   // 404
   {

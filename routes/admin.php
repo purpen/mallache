@@ -178,6 +178,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/dateOfAward/month', 'DateOfAwardController@month');
         // 日期奖项删除
         $api->delete('/admin/dateOfAward/delete', 'DateOfAwardController@delete');
+
+        /**
+         * 大赛作品
+         */
+        // 列表
+        $api->get('/admin/works/list', 'WorksController@index');
+        // 添加
+        $api->post('/admin/works', 'WorksController@store');
+        // 详情
+        $api->get('/admin/works', 'WorksController@show');
+        // {put} /admin/works 更新
+        $api->put('/admin/works', 'WorksController@update');
+        // {put} /admin/works/verifyStatus 审核
+        $api->put('/admin/works/verifyStatus', 'WorksController@verifyStatus');
+        // {put} /admin/works/recommend 发布
+        $api->put('/admin/works/published', 'WorksController@published');
+        // 删除文章
+        $api->delete('/admin/works/delete','WorksController@destroy');
     });
 
 });

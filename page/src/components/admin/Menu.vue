@@ -35,6 +35,7 @@
           <template slot="title"><i class="fa fa-window-maximize" aria-hidden="true"></i> 内容管理</template>
             <el-menu-item index="columnList" :route="{name: 'adminColumnList'}">栏目列表</el-menu-item>
             <el-menu-item index="articleList" :route="{name: 'adminArticleList'}">文章列表</el-menu-item>
+            <el-menu-item index="worksList" :route="{name: 'adminWorksList'}">作品列表</el-menu-item>
         </el-submenu>
         <el-submenu index="18">
           <template slot="title"><i class="fa fa-cogs"></i> 系统管理</template>

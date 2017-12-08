@@ -260,5 +260,16 @@ return [
         '/admin/article/recommend',
         // 文章删除
         '/admin/article/delete',
+
+        // 大赛作品
+        '/admin/works/list',
+        // 作品详情
+        '/admin/works',
+        // 作品禁用
+        '/admin/works/verifyStatus',
+        // 作品推荐
+        '/admin/works/published',
+        // 作品删除
+        '/admin/works/delete',
     ],
 ];

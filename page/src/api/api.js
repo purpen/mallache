@@ -192,5 +192,12 @@ export default {
   adminArticleList: '/admin/article/list', // GET 列表
   adminArticle: '/admin/article', // GET 详情 | POST 添加 | PUT 更新
   adminArticleChangeStatus: '/admin/article/verifyStatus', // PUT 更新状态
+
+  // 大赛作品管理
+  adminWorksList: '/admin/works/list', // GET 列表
+  adminWorks: '/admin/works', // GET 详情 | POST 添加 | PUT 更新
+  adminWorksStatus: '/admin/works/verifyStatus', // PUT 更新状态
+  adminWorksPublished: '/admin/works/published', // PUT 更新发布
+
   test: '/'  // End
 }
