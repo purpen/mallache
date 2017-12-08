@@ -192,7 +192,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/works', 'WorksController@update');
         // {put} /admin/works/verifyStatus 审核
         $api->put('/admin/works/verifyStatus', 'WorksController@verifyStatus');
-        // {put} /admin/works/recommend 发布
+        // {put} /admin/works/published 发布
         $api->put('/admin/works/published', 'WorksController@published');
         // 删除文章
         $api->delete('/admin/works/delete','WorksController@destroy');

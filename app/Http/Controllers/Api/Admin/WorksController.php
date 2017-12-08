@@ -289,7 +289,7 @@ class WorksController extends Controller
     }
 
     /**
-     * @api {put} /admin/works/recommend 发布
+     * @api {put} /admin/works/published 发布
      * @apiVersion 1.0.0
      * @apiName works publish
      * @apiGroup AdminWorks
@@ -314,7 +314,7 @@ class WorksController extends Controller
             'published' => 'required|integer',
         ]);
 
-        $article = Article::find($request->input('id'));
+        $works = Works::find($request->input('id'));
         if (!$works) {
             return $this->response->array($this->apiSuccess('not found', 404));
         }
