@@ -1,7 +1,7 @@
 <template>
   <div class="yuquan">
     <div :class="[isMob ? 'banner2': 'banner']" :style="{height : calcHeight}">
-      <router-link :to="{name:'uploads'}" class="add-work">上传作品</router-link>
+      <a @click="upload" class="add-work">上传作品</a>
     </div>
     <div class="giftbody">
       <h2><span class="icon">羽泉的礼物创新产品征集</span></h2>
@@ -57,9 +57,39 @@
         this.calcHeight = calcImgSize (1040, 2880)
       }
     },
+    methods: {
+      upload () {
+        if (this.isLogin) {
+          if (!this.isCompany) {
+            this.$message ({
+              showClose: true,
+              message: '此活动只允许设计公司参与',
+              type: 'error'
+            })
+          } else {
+            this.$router.push ({name: 'uploads'})
+          }
+        } else {
+          this.$message ({
+            showClose: true,
+            message: '请使用设计服务商的账号登录',
+            type: 'error'
+          })
+        }
+      }
+    },
     computed: {
       isMob() {
         return this.$store.state.event.isMob
+      },
+      isLogin: {
+        get() {
+          return this.$store.state.event.token
+        },
+        set() {}
+      },
+      isCompany() {
+        return this.$store.state.event.user.type === 2
       }
     }
   }
