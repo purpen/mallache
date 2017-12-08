@@ -90,12 +90,10 @@
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
-                  <!--
                   <p>
-                    <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
+                    <!--<a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>-->
+                    <a href="javascript:void(0);" @click="removeBtn(scope.$index, scope.row)">删除</a>
                   </p>
-                  -->
                 </template>
             </el-table-column>
           </el-table>
@@ -115,6 +113,17 @@
       </el-col>
     </el-row>
 
+    <el-dialog
+      title="提示"
+      v-model="sureDialog"
+      size="tiny">
+      <span>确认执行此操作?</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="sureDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="dialogLoadingBtn" @click="sureDialogSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
 
   </div>
 </template>
@@ -133,6 +142,10 @@ export default {
       itemList: [],
       tableData: [],
       isLoading: false,
+      sureDialog: false,
+      dialogLoadingBtn: false,
+      currentDialogIndex: '',
+      currentDialogId: '',
       query: {
         page: 1,
         pageSize: 50,
@@ -163,7 +176,7 @@ export default {
       self.$http.put(api.adminWorksPublished, {id: id, published: evt})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          self.itemList[index].open = evt
+          self.itemList[index].published = evt
           self.$message.success('操作成功')
         } else {
           self.$message.error(response.meta.message)
@@ -189,6 +202,31 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
         console.log(error.message)
+      })
+    },
+    // 删除弹层
+    removeBtn (index, obj) {
+      this.sureDialog = true
+      this.currentDialogIndex = index
+      this.currentDialogId = obj.id
+    },
+    // 确认删除操作
+    sureDialogSubmit () {
+      var self = this
+      self.dialogLoadingBtn = true
+      self.$http.delete(api.adminWorksDelete, {params: {id: self.currentDialogId}})
+      .then (function(response) {
+        self.dialogLoadingBtn = false
+        if (response.data.meta.status_code === 200) {
+          self.tableData.splice(self.currentDialogIndex, 1)
+          self.sureDialog = false
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.dialogLoadingBtn = false
       })
     },
     loadList() {
