@@ -8,8 +8,8 @@
           <el-input v-model="form.title" class="title"></el-input>
         </el-form-item>
 
-        <el-form-item label="作品介绍" prop="summary" class="color222">
-          <el-input type="textarea" :rows="rows" v-model="form.summary" class="summary"></el-input>
+        <el-form-item label="作品介绍" prop="content" class="color222">
+          <el-input type="textarea" :rows="rows" v-model="form.content" class="content"></el-input>
         </el-form-item>
 
         <p class="upload-pic">上传图片</p>
@@ -107,14 +107,14 @@
         },
         form: {
           title: '',
-          summary: '',
+          content: '',
           cover_id: ''
         },
         rules: {
           title: [
             {required: true, message: '请添写作品标题', trigger: 'blur'}
           ],
-          summary: [
+          content: [
             {required: true, message: '请添写作品介绍', trigger: 'blur'}
           ]
         }
@@ -131,7 +131,7 @@
           if (valid) {
             let row = {
               title: that.form.title,
-              content: that.form.summary,
+              content: that.form.content,
               match_id: 1,
               cover_id: that.coverId
             }
@@ -139,18 +139,20 @@
             let method = null
             if (that.itemId) {
               method = 'put'
-              apiUrl = api.work.format (that.itemId)
+              apiUrl = api.workid.format (that.itemId)
             } else {
               method = 'post'
               apiUrl = api.work
+              if (that.uploadParam['x:random']) {
+                row['random'] = that.uploadParam['x:random']
+              }
             }
             that.isLoadingBtn = true
-
             that.$http ({method: method, url: apiUrl, data: row})
               .then ((res) => {
                 if (res.data.meta.status_code === 200) {
                   that.$message.success ('提交成功！')
-                  that.$router.push ({name: 'vcenterDesignCaseList'})
+                  that.$router.push ({name: 'vcenterMatchCase'})
                   return false
                 } else {
                   that.$message.error (res.data.meta.message)
@@ -283,6 +285,15 @@
       }
     },
     created () {
+      if (!this.isCompany) {
+        this.$router.push ({name: 'home'})
+        this.$message ({
+          showClose: true,
+          message: '此活动只允许设计公司参与',
+          type: 'warning'
+        })
+        return
+      }
       const that = this
       let id = this.$route.params.id
       if (id) {
@@ -290,7 +301,6 @@
         that.uploadParam['x:target_id'] = id
         that.$http.get (api.workid.format (id), {})
           .then (function (response) {
-            console.log (response)
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
               if (that.form.cover_id) {
@@ -327,6 +337,7 @@
       // 获取图片token
       that.$http.get (api.upToken, {})
         .then (function (response) {
+//          console.log (response)
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
               that.uploadParam['token'] = response.data.data.upToken
@@ -348,6 +359,9 @@
     computed: {
       isMob() {
         return this.$store.state.event.isMob
+      },
+      isCompany() {
+        return this.$store.state.event.user.type === 2
       }
     }
   }
@@ -423,6 +437,10 @@
   @media screen and (max-width: 767px) {
     .upload, .buttons {
       border: none
+      }
+
+    .upload-demo {
+      width: 100%;
       }
     }
 </style>

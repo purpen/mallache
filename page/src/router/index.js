@@ -171,13 +171,13 @@ const routes = [
     component: require ('@/components/pages/subject/YuQuanGifts')
   },
   {
-    path: '/subject/YuQuanGifts/uploads',
+    path: '/v_center/YuQuanGifts/uploads',
     name: 'uploads',
     meta: {
       requireAuth: false,
       title: '上传作品'
     },
-    component: require ('@/components/pages/subject/uploadWork/uploadwork')
+    component: require ('@/components/pages/v_center/match_case/uploadwork')
   },
   // 企业招募
   {
@@ -560,15 +560,35 @@ const routes = [
     },
     component: require ('@/components/pages/v_center/design_case/List')
   },
+  // 参赛作品
+  {
+    path: '/vcenter/match_case',
+    name: 'vcenterMatchCase',
+    meta: {
+      title: '参赛作品',
+      requireAuth: true
+    },
+    component: require ('@/components/pages/v_center/match_case/match_case')
+  },
   // 作品详情
   {
     path: '/design_case/show/:id',
     name: 'vcenterDesignCaseShow',
     meta: {
       title: '作品详情',
-      requireAuth: false
+      requireAuth: true
     },
     component: require ('@/components/pages/design_case/Show')
+  },
+  // 参赛作品详情
+  {
+    path: '/match_case/show/:id',
+    name: 'vcenterMatchCaseShow',
+    meta: {
+      title: '参赛作品详情',
+      requireAuth: true
+    },
+    component: require ('@/components/pages/v_center/match_case/Show')
   },
   // 添加作品
   {
@@ -950,7 +970,7 @@ const routes = [
       title: '用户编辑',
       requireAuth: true
     },
-    component: require('@/components/admin/user/Submit')
+    component: require ('@/components/admin/user/Submit')
   },
   // 分类列表
   {

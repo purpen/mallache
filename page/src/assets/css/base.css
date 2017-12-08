@@ -1483,6 +1483,10 @@ td.fc-day.fc-widget-content.fc-wed.fc-today::before {
     text-indent: 0
     }
 
+  .upload .el-upload--picture-card {
+    width: 100%;
+    }
+
   /*767 end*/
   }
 
