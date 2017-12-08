@@ -44,6 +44,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+              prop="match_id"
+              label="大赛ID"
+              width="60">
+            </el-table-column>
+            <el-table-column
               label="创建人">
                 <template scope="scope">
                   <p>
