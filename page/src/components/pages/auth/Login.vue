@@ -141,9 +141,8 @@ export default {
     this.type = this.$route.params.type
     if (this.$route.params.url === 'yq') {
       this.$message({
-        showClose: true,
         message: '请使用设计服务商的账号登录',
-        type: 'error'
+        type: 'info'
       })
     } else {
       if (prevUrlName) {

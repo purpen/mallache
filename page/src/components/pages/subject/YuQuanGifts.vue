@@ -117,21 +117,21 @@ export default {
   width: 180px;
   height: 45px;
   margin: auto;
-  background: url('../../../assets/images/subject/gifts/upload@2x.png')
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') left
     no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 
 .add-work:hover {
-  background: url('../../../assets/images/subject/gifts/uploadhover@2x.png')
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') center
     no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 
 .add-work:active {
-  background: url('../../../assets/images/subject/gifts/uploadclick@2x.png')
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') right
     no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 
 .giftbody {
