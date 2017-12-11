@@ -41,140 +41,144 @@
 </template>
 
 <script>
-  import api from '@/api/api'
-  export default {
-    name: 'design_case_list',
-    data() {
-      return {
-        itemList: [],
-        isLoading: false,
-        query: {
-          page: 1,
-          pageSize: 9,
-          totalPges: 1,
-          totalCount: 0
-        },
-        test: ''
-      }
-    },
-    methods: {
-      handleCurrentChange(page) {
-        this.query.page = page
-        this.loadList()
+import api from '@/api/api'
+export default {
+  name: 'design_case_list',
+  data() {
+    return {
+      itemList: [],
+      isLoading: false,
+      query: {
+        page: 1,
+        pageSize: 9,
+        totalPges: 1,
+        totalCount: 0
       },
-      loadList() {
-        const self = this
-        self.$http.get(api.designCaseOpenLists, {params: {page: self.query.page, per_page: self.query.pageSize}})
-          .then(function (response) {
-            self.isLoading = false
-            if (response.data.meta.status_code === 200) {
-              // console.log(response)
-              self.itemList = response.data.data
-              self.query.totalCount = response.data.meta.pagination.total
-              self.query.totalPges = response.data.meta.total_pages
-            }
-          })
-          .catch(function (error) {
-            self.isLoading = false
-            self.$message.error(error.message)
-          })
-      }
-    },
-    created: function () {
-      const self = this
-      self.isLoading = true
+      test: ''
+    }
+  },
+  methods: {
+    handleCurrentChange(page) {
+      this.query.page = page
       this.loadList()
     },
-    computed: {
-      BMob() {
-        return this.$store.state.event.isMob
-      }
+    loadList() {
+      const self = this
+      self.$http
+        .get(api.designCaseOpenLists, {
+          params: { page: self.query.page, per_page: self.query.pageSize }
+        })
+        .then(function(response) {
+          self.isLoading = false
+          if (response.data.meta.status_code === 200) {
+            // console.log(response)
+            self.itemList = response.data.data
+            self.query.totalCount = response.data.meta.pagination.total
+            self.query.totalPges = response.data.meta.total_pages
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch(function(error) {
+          self.isLoading = false
+          self.$message.error(error.message)
+        })
+    }
+  },
+  created: function() {
+    const self = this
+    self.isLoading = true
+    this.loadList()
+  },
+  computed: {
+    BMob() {
+      return this.$store.state.event.isMob
     }
   }
-
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  a {
-    color: #222;
-  }
-  .container h3 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
+a {
+  color: #222;
+}
+.container h3 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
 
-  .case-list {
-    min-height: 350px;
-  }
+.case-list {
+  min-height: 350px;
+}
 
-  .item {
-    /* height: 300px; */
-    margin: 10px auto;
-  }
+.item {
+  /* height: 300px; */
+  margin: 10px auto;
+}
 
+.image-box {
+  height: 220px;
+  overflow: hidden;
+}
+
+.image-box img {
+  width: 100%;
+  max-height: 360px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.content a {
+  font-size: 1.6rem;
+}
+
+.des {
+  height: 35px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.des p {
+  color: #666;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+}
+
+.company {
+  color: #666;
+  display: block;
+  line-height: 28px;
+}
+
+.company span {
+  font-size: 14px;
+}
+
+.company img {
+  margin-right: 6px;
+}
+
+.pager {
+  margin: 0 auto;
+}
+
+.pager .pagination {
+  text-align: center;
+}
+
+@media screen and (max-width: 1199px) and (min-width: 768px) {
   .image-box {
-    height: 220px;
-    overflow: hidden;
+    height: 136px;
   }
+}
 
-  .image-box img {
-    width: 100%;
-    max-height: 360px;
+@media screen and (max-width: 767px) {
+  .image-box {
+    height: auto;
   }
-
-  .content {
-    padding: 20px;
-  }
-
-  .content a {
-    font-size: 1.6rem;
-  }
-
-  .des {
-    height: 35px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .des p {
-    color: #666;
-    font-size: 1.4rem;
-    line-height: 1.3;
-    text-overflow: ellipsis;
-  }
-
-  .company {
-    color: #666;
-    display: block;
-    line-height: 28px;
-  }
-
-  .company span {
-    font-size: 14px;
-  }
-
-  .company img {
-    margin-right: 6px;
-  }
-
-  .pager {
-    margin: 0 auto;
-  }
-
-  .pager .pagination {
-    text-align: center;
-  }
-
-  @media screen and (max-width: 1199px) and (min-width: 768px) {
-    .image-box {
-      height: 136px;
-    }
-  }
-
-  @media screen and (max-width: 767px) {
-    .image-box {
-      height: auto;
-    }
-  }
+}
 </style>
