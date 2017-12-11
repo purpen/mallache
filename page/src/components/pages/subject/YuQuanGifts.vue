@@ -64,7 +64,6 @@ export default {
       if (this.isLogin) {
         if (!this.isCompany) {
           this.$message({
-            showClose: true,
             message: '此活动只允许设计服务商参与',
             type: 'error'
           })
