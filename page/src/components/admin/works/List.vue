@@ -40,7 +40,7 @@
               label="内容"
               min-width="200">
                 <template scope="scope">
-                  <p>标题: <router-link :to="{name: 'adminWorksShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
+                  <p>标题: <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
                 </template>
             </el-table-column>
             <el-table-column
