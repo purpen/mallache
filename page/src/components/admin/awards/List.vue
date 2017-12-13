@@ -214,7 +214,7 @@ export default {
     sureDialogSubmit () {
       var self = this
       self.dialogLoadingBtn = true
-      self.$http.delete(api.adminAwardsDelete, {params: {id: self.currentDialogId}})
+      self.$http.delete(api.adminAwards, {params: {id: self.currentDialogId}})
       .then (function(response) {
         self.dialogLoadingBtn = false
         if (response.data.meta.status_code === 200) {

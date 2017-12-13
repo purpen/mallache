@@ -202,7 +202,7 @@ export default {
 
   // 日历管理
   adminAwardsList: '/admin/dateOfAward/list', // GET 列表
-  adminAwards: '/admin/dateOfAward/store', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminAwards: '/admin/dateOfAward', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminAwardsChangeStatus: '/admin/dateOfAward/changeStatus', // PUT 更新状态
 
   // veer图片列表

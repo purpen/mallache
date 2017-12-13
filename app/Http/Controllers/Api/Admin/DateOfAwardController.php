@@ -118,7 +118,7 @@ class DateOfAwardController extends BaseController
     public function store(Request $request)
     {
         $rules = [
-            'evt' => 'required|integer',
+            'type' => 'required|integer',
             'name' => 'required|max:30',
             'summary' => 'required|max:500',
             'start_time' => 'required',
