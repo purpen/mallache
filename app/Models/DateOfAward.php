@@ -17,6 +17,11 @@ class DateOfAward extends BaseModel
         'summary',
         'type',
         'name',
+        'kind',
+        'evt',
+        'url',
+        'content',
+        'user_id'
 
     ];
 

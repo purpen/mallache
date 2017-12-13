@@ -697,6 +697,46 @@ const USER_KIND = [
   }
 ]
 
+// 日历类别
+const AWARDS_TYPE = [
+  {
+    id: 1,
+    name: '设计大赛'
+  },
+  {
+    id: 2,
+    name: '节日'
+  },
+  {
+    id: 3,
+    name: '展会'
+  },
+  {
+    id: 4,
+    name: '事件'
+  }
+]
+
+// 日历属性
+const AWARDS_EVT = [
+  {
+    id: 1,
+    name: '颜色1'
+  },
+  {
+    id: 2,
+    name: '颜色2'
+  },
+  {
+    id: 3,
+    name: '颜色3'
+  },
+  {
+    id: 4,
+    name: '颜色4'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -717,6 +757,8 @@ module.exports = {
   CATEGORY_TYPE,
   ARTICLE_TYPE,
   USER_KIND,
+  AWARDS_TYPE,
+  AWARDS_EVT,
 
   TEST
 }

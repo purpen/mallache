@@ -166,18 +166,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         /**
          * 日期奖项
          */
+        // 列表
+        $api->get('/admin/dateOfAward/list', 'DateOfAwardController@index');
         // 添加
-        $api->post('/admin/dateOfAward/store', 'DateOfAwardController@store');
+        $api->post('/admin/dateOfAward', 'DateOfAwardController@store');
         // 日期奖项详情
-        $api->get('/admin/dateOfAward', 'DateOfAwardController@dateOfAward');
+        $api->get('/admin/dateOfAward', 'DateOfAwardController@show');
         // 更改日期奖项
-        $api->put('/admin/dateOfAward/update', 'DateOfAwardController@update');
+        $api->put('/admin/dateOfAward', 'DateOfAwardController@update');
         // 日期奖项周
         $api->get('/admin/dateOfAward/week', 'DateOfAwardController@week');
         // 日期奖项月
         $api->get('/admin/dateOfAward/month', 'DateOfAwardController@month');
         // 日期奖项删除
-        $api->delete('/admin/dateOfAward/delete', 'DateOfAwardController@delete');
+        $api->delete('/admin/dateOfAward', 'DateOfAwardController@delete');
+        // {put} /admin/dateOfAward/verifyStatus 状态变更
+        $api->put('/admin/dateOfAward/changeStatus', 'DateOfAwardController@changeStatus');
 
         /**
          * 大赛作品

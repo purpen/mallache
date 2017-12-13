@@ -12,8 +12,89 @@ use Illuminate\Support\Facades\Validator;
 
 class DateOfAwardController extends BaseController
 {
+
     /**
-     * @api {post} /admin/dateOfAward/store 添加日期奖项
+     * @api {get} /admin/dateOfAward/list 日历列表
+     * @apiVersion 1.0.0
+     * @apiName AdminDateOfAward index
+     * @apiGroup AdminDateOfAward
+     *
+     * @apiParam {integer} status 状态 -1.禁用；0.全部；1.启用；
+     * @apiParam {integer} type 分类
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 1,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "设计奖",
+                    "summary": "描述",
+                    "start_time": "2017-12-10",
+                    "end_time": "2017-12-02"
+                },
+                {
+                    "id": 2,
+                    "type": 2,
+                    "type_value": "节日",
+                    "name": "2test",
+                    "summary": "2test",
+                    "start_time": "2017-12-09",
+                    "end_time": "2017-12-22"
+                }
+            ],
+            "meta": {
+              "message": "Success",
+              "status_code": 200,
+              "pagination": {
+                "total": 2,
+                "count": 2,
+                "per_page": 10,
+                "current_page": 1,
+                "total_pages": 1,
+                "links": []
+            }
+        }
+     */
+    public function index(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->input('type') ? (int)$request->input('type') : 0;
+        $status = $request->input('status') ? (int)$request->input('status') : 0;
+        $kind = $request->input('kind') ? (int)$request->input('kind') : 0;
+
+        switch ($status) {
+            case -1:
+                $status = 0;
+                break;
+            case 0:
+                $status = null;
+                break;
+            case 1:
+                $status = 1;
+                break;
+            default:
+                $status = 1;
+        }
+
+        $query = array();
+        if ($type) $query['type'] = $type;
+        if ($status) $query['status'] = $status;
+
+        $lists = DateOfAward::where($query)
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+
+        return $this->response->paginator($lists, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {post} /admin/dateOfAward 添加日期奖项
      * @apiVersion 1.0.0
      * @apiName AdminDateOfAward store
      * @apiGroup AdminDateOfAward
@@ -23,6 +104,7 @@ class DateOfAwardController extends BaseController
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} end_time 结束时间
      * @apiParam {string} summary 描述
+     * @apiParam {string} url 地址
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -36,7 +118,7 @@ class DateOfAwardController extends BaseController
     public function store(Request $request)
     {
         $rules = [
-            'type' => 'required|integer',
+            'evt' => 'required|integer',
             'name' => 'required|max:30',
             'summary' => 'required|max:500',
             'start_time' => 'required',
@@ -44,20 +126,28 @@ class DateOfAwardController extends BaseController
 
         ];
 
-        $all = $request->all();
-        $validator = Validator::make($all, $rules);
+        $user_id = $this->auth_user_id;
+        $params = array(
+            'name' => $request->input('name'),
+            'summary' => $request->input('summary'),
+            'user_id' => $user_id,
+            'type' => $request->input('type'),
+            'url' => $request->input('url'),
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+        );
+
+        $validator = Validator::make($params, $rules);
 
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        if (!$dateOfAward = DateOfAward::create($all)) {
+        if (!$dateOfAward = DateOfAward::create($params)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
 
         return $this->response->array($this->apiSuccess());
-
-
     }
 
     /**
@@ -87,7 +177,7 @@ class DateOfAwardController extends BaseController
         }
      *
      */
-    public function dateOfAward(Request $request)
+    public function show(Request $request)
     {
         $id = $request->input('id');
 
@@ -101,7 +191,7 @@ class DateOfAwardController extends BaseController
 
 
     /**
-     * @api {put} /admin/dateOfAward/update 更改日期奖项
+     * @api {put} /admin/dateOfAward 更改日期奖项
      * @apiVersion 1.0.0
      * @apiName AdminDateOfAward update
      * @apiGroup AdminDateOfAward
@@ -124,10 +214,6 @@ class DateOfAwardController extends BaseController
      */
     public function update(Request $request)
     {
-        $dateOfAward = DateOfAward::find($request->input('id'));
-        if (!$dateOfAward) {
-            return $this->response->array($this->apiError('not found', 404));
-        }
         $rules = [
             'type' => 'required|integer',
             'name' => 'required|max:30',
@@ -137,14 +223,27 @@ class DateOfAwardController extends BaseController
 
         ];
 
-        $all = $request->all();
-        $validator = Validator::make($all, $rules);
+        $params = array(
+            'name' => $request->input('name'),
+            'summary' => $request->input('summary'),
+            'type' => $request->input('type'),
+            'url' => $request->input('url'),
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+        );
+
+        $validator = Validator::make($params, $rules);
 
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        if (!$dateOfAward->update($all)) {
+        $dateOfAward = DateOfAward::find($request->input('id'));
+        if (!$dateOfAward) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if (!$dateOfAward->update($params)) {
             return $this->response->array($this->apiError('更新失败', 500));
         }
 
@@ -252,7 +351,7 @@ class DateOfAwardController extends BaseController
     }
 
     /**
-     * @api {delete} /admin/dateOfAward/delete 删除日期奖项
+     * @api {delete} /admin/dateOfAward 删除日期奖项
      * @apiVersion 1.0.0
      * @apiName AdminDateOfAward delete
      * @apiGroup AdminDateOfAward
@@ -278,6 +377,47 @@ class DateOfAwardController extends BaseController
         }
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /admin/dateOfAward/changeStatus 变更状态
+     * @apiVersion 1.0.0
+     * @apiName AdminDateOfAward changeStatus
+     * @apiGroup AdminDateOfAward
+     *
+     * @apiParam {integer} id ID
+     * @apiParam {integer} status 状态 0.禁用；1.启用；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function changeStatus(Request $request)
+    {
+        $id = $request->input("id");
+        $status = $request->input("status");
+
+        $award = DateOfAward::find($id);
+        if (!$award) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($status) {
+            $award->status = 1;
+        } else {
+            $award->status = 0;
+        }
+        if (!$award->save()) {
+            return $this->response->array($this->apiError('Error', 500));
+        } else {
+            return $this->response->array($this->apiSuccess());
+        }
     }
 
 }
