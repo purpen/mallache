@@ -45,6 +45,8 @@
                     <el-date-picker
                       v-model="form.start_time"
                       type="date"
+                      value-format="yyyy-MM-dd"
+                      @change="formatStartDate"
                       placeholder="选择日期">
                     </el-date-picker>
                   </el-form-item>           
@@ -54,9 +56,11 @@
                     <el-date-picker
                       v-model="form.end_time"
                       type="date"
+                      value-format="yyyy-MM-dd"
+                      @change="formatEndDate"
                       placeholder="选择日期">
                     </el-date-picker>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -143,7 +147,8 @@ export default {
             start_time: that.form.start_time,
             end_time: that.form.end_time,
             summary: that.form.summary,
-            url: that.form.url
+            url: that.form.url,
+            content: ''
           }
           var method = null
 
@@ -180,6 +185,12 @@ export default {
     },
     returnList() {
       this.$router.push({name: 'adminAwardsList'})
+    },
+    formatStartDate(val) {
+      this.form.start_time = val
+    },
+    formatEndDate(val) {
+      this.form.end_time = val
     }
   },
   computed: {

@@ -199,7 +199,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // {put} /admin/works/published 发布
         $api->put('/admin/works/published', 'WorksController@published');
         // 删除文章
-        $api->delete('/admin/works/delete','WorksController@destroy');
+        $api->delete('/admin/works','WorksController@destroy');
     });
 
 });
