@@ -99,8 +99,6 @@ return [
 
         //日期奖项
         '/admin/dateOfAward',
-        //日期奖项更改
-        '/admin/dateOfAward/update',
         //日期奖项周
         '/admin/dateOfAward/week',
         //日期奖项月
@@ -214,8 +212,6 @@ return [
 
         //日期奖项
         '/admin/dateOfAward',
-        //日期奖项更改
-        '/admin/dateOfAward/update',
         //日期奖项周
         '/admin/dateOfAward/week',
         //日期奖项月
@@ -284,8 +280,6 @@ return [
 
         //日期奖项
         '/admin/dateOfAward',
-        //日期奖项更改
-        '/admin/dateOfAward/update',
         //日期奖项周
         '/admin/dateOfAward/week',
         //日期奖项月
