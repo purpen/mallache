@@ -45,7 +45,7 @@
             <el-table-column
               prop="user_id"
               label="创建人"
-              width="100">
+              width="60">
             </el-table-column>
             <el-table-column
               label="开始/结束时间"
@@ -54,6 +54,11 @@
                   <p>{{ scope.row.start_time }}</p>
                   <p>{{ scope.row.end_time }}</p>
                 </template>
+            </el-table-column>
+            <el-table-column
+              prop="created_at"
+              label="创建时间"
+              width="100">
             </el-table-column>
             <el-table-column
               label="状态"
@@ -70,6 +75,7 @@
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                    {{ scope.row.status }}
                   </p>
                   <p>
                     <router-link :to="{name: 'adminAwardsSubmit', query: {id: scope.row.id}}">编辑</router-link>
@@ -153,7 +159,7 @@ export default {
     },
     setStatus(index, item, evt) {
       var id = item.id
-      var url = api.adminCategoryChangeStatus
+      var url = api.adminAwardsChangeStatus
       var self = this
       self.$http.put(url, {id: id, status: evt})
       .then (function(response) {
@@ -190,7 +196,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            // item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+            item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             self.tableData.push(item)
           } // endfor
 

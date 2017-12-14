@@ -21,6 +21,8 @@ class DateOfAwardTransformer extends TransformerAbstract
             'summary' => $dateOfAward->summary,
             'start_time' => $dateOfAward->start_time,
             'end_time' => $dateOfAward->end_time,
+            'status' => $dateOfAward->status,
+            'created_at' => $dateOfAward->created_at,
         ];
     }
 }

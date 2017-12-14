@@ -401,19 +401,15 @@ class DateOfAwardController extends BaseController
      */
     public function changeStatus(Request $request)
     {
-        $id = $request->input("id");
-        $status = $request->input("status");
+        $id = $request->input('id');
+        $status = $request->input('status') ? (int)$request->input('status') : 0;
 
         $award = DateOfAward::find($id);
         if (!$award) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if ($status) {
-            $award->status = 1;
-        } else {
-            $award->status = 0;
-        }
+        $award->status = $status;
         if (!$award->save()) {
             return $this->response->array($this->apiError('Error', 500));
         } else {
