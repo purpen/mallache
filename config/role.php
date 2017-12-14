@@ -104,9 +104,9 @@ return [
         //日期奖项月
         '/admin/dateOfAward/month',
         // 更改状态
-        'admin/dateOfAward/changeStatus',
+        '/admin/dateOfAward/changeStatus',
         // 列表
-        'admin/dateOfAward/list',
+        '/admin/dateOfAward/list',
 
 
         // 大赛作品
@@ -217,9 +217,9 @@ return [
         //日期奖项月
         '/admin/dateOfAward/month',
         // 更改状态
-        'admin/dateOfAward/changeStatus',
+        '/admin/dateOfAward/changeStatus',
         // 列表
-        'admin/dateOfAward/list',
+        '/admin/dateOfAward/list',
 
         // 大赛作品
         '/admin/works/list',
@@ -285,9 +285,9 @@ return [
         //日期奖项月
         '/admin/dateOfAward/month',
         // 更改状态
-        'admin/dateOfAward/changeStatus',
+        '/admin/dateOfAward/changeStatus',
         // 列表
-        'admin/dateOfAward/list',
+        '/admin/dateOfAward/list',
 
         // 大赛作品
         '/admin/works/list',
