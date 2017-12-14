@@ -135,7 +135,6 @@ class DateOfAwardController extends BaseController
             'url' => $request->input('url'),
             'start_time' => $request->input('start_time'),
             'end_time' => $request->input('end_time'),
-            'content' => $request->input('content'),
         );
 
         $validator = Validator::make($params, $rules);

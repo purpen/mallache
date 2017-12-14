@@ -147,8 +147,7 @@ export default {
             start_time: that.form.start_time,
             end_time: that.form.end_time,
             summary: that.form.summary,
-            url: that.form.url,
-            content: ''
+            url: that.form.url
           }
           var method = null
 

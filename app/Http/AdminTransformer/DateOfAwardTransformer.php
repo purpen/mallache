@@ -17,6 +17,7 @@ class DateOfAwardTransformer extends TransformerAbstract
             'kind' => $dateOfAward->kind,
             'url' => $dateOfAward->url,
             'name' => $dateOfAward->name,
+            'user_id' => $dateOfAward->user_id,
             'summary' => $dateOfAward->summary,
             'start_time' => $dateOfAward->start_time,
             'end_time' => $dateOfAward->end_time,
