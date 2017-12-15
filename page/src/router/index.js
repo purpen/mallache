@@ -6,12 +6,12 @@ import {
   calcImgSize
 } from 'assets/js/common'
 
-Vue.use (VueRouter)
+Vue.use(VueRouter)
 
 // 页面刷新时，重新赋值token
-if (window.localStorage.getItem ('token')) {
+if (window.localStorage.getItem('token')) {
   // console.log(window.localStorage.getItem('token'))
-  store.commit (types.USER_SIGNIN, JSON.parse (window.localStorage.getItem ('token')))
+  store.commit(types.USER_SIGNIN, JSON.parse(window.localStorage.getItem('token')))
 }
 
 const routes = [
@@ -27,7 +27,7 @@ const routes = [
     meta: {
       title: '首页'
     },
-    component: require ('@/components/pages/home/Home')
+    component: resolve => require(['@/components/pages/home/Home'], resolve)
   },
   {
     path: '/test',
@@ -35,7 +35,7 @@ const routes = [
     meta: {
       title: '首页'
     },
-    component: require ('@/components/pages/home/Home')
+    component: resolve => require(['@/components/pages/home/Home'], resolve)
   },
   {
     path: '/about',
@@ -43,7 +43,7 @@ const routes = [
     meta: {
       title: '关于'
     },
-    component: require ('@/components/pages/home/About')
+    component: resolve => require(['@/components/pages/home/About'], resolve)
   },
   {
     path: '/server',
@@ -51,7 +51,7 @@ const routes = [
     meta: {
       title: '服务'
     },
-    component: require ('@/components/pages/home/Server')
+    component: resolve => require(['@/components/pages/home/Server'], resolve)
   },
   {
     path: '/server_design',
@@ -59,7 +59,7 @@ const routes = [
     meta: {
       title: '服务-设计公司'
     },
-    component: require ('@/components/pages/home/ServerDesign')
+    component: resolve => require(['@/components/pages/home/ServerDesign'], resolve)
   },
   {
     path: '/stuff',
@@ -68,7 +68,7 @@ const routes = [
       title: '灵感',
       requireAuth: false
     },
-    component: require ('@/components/pages/home/Stuff')
+    component: resolve => require(['@/components/pages/home/Stuff'], resolve)
   },
   // 联系我们
   {
@@ -78,7 +78,7 @@ const routes = [
       title: '联系我们',
       requireAuth: false
     },
-    component: require ('@/components/pages/home/Contact')
+    component: resolve => require(['@/components/pages/home/Contact'], resolve)
   },
   // 服务条款
   {
@@ -88,7 +88,7 @@ const routes = [
       title: '服务条款',
       requireAuth: false
     },
-    component: require ('@/components/pages/home/Item')
+    component: resolve => require(['@/components/pages/home/Item'], resolve)
   },
   // 常见问题
   {
@@ -98,7 +98,7 @@ const routes = [
       title: '常见问题',
       requireAuth: false
     },
-    component: require ('@/components/pages/home/Question')
+    component: resolve => require(['@/components/pages/home/Question'], resolve)
   },
   // 交易保障
   {
@@ -108,7 +108,7 @@ const routes = [
       title: '交易保障',
       requireAuth: false
     },
-    component: require ('@/components/pages/home/Trade')
+    component: resolve => require(['@/components/pages/home/Trade'], resolve)
   },
   {
     path: '/apply',
@@ -117,7 +117,7 @@ const routes = [
       title: '申请入驻',
       requireAuth: true
     },
-    component: require ('@/components/pages/home/Apply')
+    component: resolve => require(['@/components/pages/home/Apply'], resolve)
   },
   // #### 专题页 ######
   // 浙江设计再造--台州黄岩
@@ -128,7 +128,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require ('@/components/pages/subject/Zj')
+    component: resolve => require(['@/components/pages/subject/Zj'], resolve)
   },
   // 浙江设计再造--杭州良渚
   {
@@ -138,7 +138,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require ('@/components/pages/subject/ZjLz')
+    component: resolve => require(['@/components/pages/subject/ZjLz'], resolve)
   },
   // 浙江设计再造--金华永康
   {
@@ -148,7 +148,7 @@ const routes = [
       requireAuth: false,
       title: '浙江“传统产业设计再造”对接会'
     },
-    component: require ('@/components/pages/subject/ZjYk')
+    component: resolve => require(['@/components/pages/subject/ZjYk'], resolve)
   },
   // RCIP衍生创新峰会
   {
@@ -158,7 +158,7 @@ const routes = [
       requireAuth: false,
       title: 'RCIP衍生创新峰会'
     },
-    component: require ('@/components/pages/subject/Rcip')
+    component: resolve => require(['@/components/pages/subject/Rcip'], resolve)
   },
   // 羽泉的礼物
   {
@@ -168,7 +168,7 @@ const routes = [
       requireAuth: false,
       title: '羽泉的礼物'
     },
-    component: require ('@/components/pages/subject/YuQuanGifts')
+    component: resolve => require(['@/components/pages/subject/YuQuanGifts'], resolve)
   },
   {
     path: '/v_center/match_case/submit',
@@ -177,7 +177,7 @@ const routes = [
       requireAuth: true,
       title: '上传作品'
     },
-    component: require ('@/components/pages/v_center/match_case/uploadwork')
+    component: resolve => require(['@/components/pages/v_center/match_case/uploadwork'], resolve)
   },
   // 企业招募
   {
@@ -187,7 +187,7 @@ const routes = [
       requireAuth: false,
       title: '企业招募'
     },
-    component: require ('@/components/pages/subject/EnterpriseRecruit')
+    component: resolve => require(['@/components/pages/subject/EnterpriseRecruit'], resolve)
   },
   // 产品招募
   {
@@ -197,7 +197,7 @@ const routes = [
       requireAuth: false,
       title: '产品招募'
     },
-    component: require ('@/components/pages/subject/ProductRecruit')
+    component: resolve => require(['@/components/pages/subject/ProductRecruit'], resolve)
   },
 
   // 专题列表
@@ -208,7 +208,7 @@ const routes = [
       title: '专题列表',
       requireAuth: false
     },
-    component: require ('@/components/pages/subject/List')
+    component: resolve => require(['@/components/pages/subject/List'], resolve)
   },
 
   // 文章列表
@@ -219,7 +219,7 @@ const routes = [
       title: '文章列表',
       requireAuth: false
     },
-    component: require ('@/components/pages/article/List')
+    component: resolve => require(['@/components/pages/article/List'], resolve)
   },
   // 文章详情
   {
@@ -231,7 +231,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require (['@/components/pages/article/Show'], resolve)
+      require(['@/components/pages/article/Show'], resolve)
     }
   },
   {
@@ -240,7 +240,7 @@ const routes = [
     meta: {
       title: '登录'
     },
-    component: require ('@/components/pages/auth/Login')
+    component: resolve => require(['@/components/pages/auth/Login'], resolve)
   },
   {
     path: '/logout',
@@ -248,7 +248,7 @@ const routes = [
     meta: {
       title: '登出'
     },
-    component: require ('@/components/pages/auth/Logout')
+    component: resolve => require(['@/components/pages/auth/Logout'], resolve)
   },
   {
     path: '/identity',
@@ -256,7 +256,7 @@ const routes = [
     meta: {
       title: '注册'
     },
-    component: require ('@/components/pages/auth/choiceIdentity')
+    component: resolve => require(['@/components/pages/auth/choiceIdentity'], resolve)
   },
   {
     path: '/register',
@@ -264,7 +264,7 @@ const routes = [
     meta: {
       title: '注册'
     },
-    component: require ('@/components/pages/auth/Register')
+    component: resolve => require(['@/components/pages/auth/Register'], resolve)
   },
   // 找回密码
   {
@@ -273,7 +273,7 @@ const routes = [
     meta: {
       title: '找回密码'
     },
-    component: require ('@/components/pages/auth/Forget')
+    component: resolve => require(['@/components/pages/auth/Forget'], resolve)
   },
 
   // 发布需求(第一步) 支付
@@ -284,7 +284,7 @@ const routes = [
       title: '发布需求',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitOne')
+    component: resolve => require(['@/components/pages/item/SubmitOne'], resolve)
   },
 
   // 发布需求(第二步) 选择领域
@@ -295,7 +295,7 @@ const routes = [
       title: '选择类型',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitTwo')
+    component: resolve => require(['@/components/pages/item/SubmitTwo'], resolve)
   },
 
   // 发布需求(第三步) 添写基本信息(产品设计)
@@ -306,7 +306,7 @@ const routes = [
       title: '基本信息',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitThree')
+    component: resolve => require(['@/components/pages/item/SubmitThree'], resolve)
   },
 
   // 发布需求(第三步) 添写基本信息(UI设计)
@@ -317,7 +317,7 @@ const routes = [
       title: '基本信息',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitUIThree')
+    component: resolve => require(['@/components/pages/item/SubmitUIThree'], resolve)
   },
 
   // 发布需求(第四步) 添写公司信息
@@ -328,7 +328,7 @@ const routes = [
       title: '补全公司信息',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitFour')
+    component: resolve => require(['@/components/pages/item/SubmitFour'], resolve)
   },
 
   // 发布需求(第五步) 检查并发布
@@ -339,7 +339,7 @@ const routes = [
       title: '检查并发布',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/SubmitFive')
+    component: resolve => require(['@/components/pages/item/SubmitFive'], resolve)
   },
 
   // 发布需求(第五步) 检查并发布
@@ -350,7 +350,7 @@ const routes = [
       title: '发布',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/Publish')
+    component: resolve => require(['@/components/pages/item/Publish'], resolve)
   },
 
   // 支付99预付款
@@ -363,7 +363,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require (['@/components/pages/item/Payment'], resolve)
+      require(['@/components/pages/item/Payment'], resolve)
     }
   },
   // 支付宝回调
@@ -374,7 +374,7 @@ const routes = [
       title: '支付宝-支付结果',
       requireAuth: false
     },
-    component: require ('@/components/pages/pay/AlipayCallback')
+    component: resolve => require(['@/components/pages/pay/AlipayCallback'], resolve)
   },
   // 京东回调
   {
@@ -384,7 +384,7 @@ const routes = [
       title: '京东-支付结果',
       requireAuth: false
     },
-    component: require ('@/components/pages/pay/JdCallback')
+    component: resolve => require(['@/components/pages/pay/JdCallback'], resolve)
   },
   // 微信回调
   {
@@ -394,7 +394,7 @@ const routes = [
       title: '微信-支付结果',
       requireAuth: true
     },
-    component: require ('@/components/pages/pay/wxCallback')
+    component: resolve => require(['@/components/pages/pay/wxCallback'], resolve)
   },
   // 支付项目资金
   {
@@ -404,7 +404,7 @@ const routes = [
       title: '支付项目资金',
       requireAuth: true
     },
-    component: require ('@/components/pages/item/PayFund')
+    component: resolve => require(['@/components/pages/item/PayFund'], resolve)
   },
   // 自定义输出页面
   {
@@ -414,7 +414,7 @@ const routes = [
       title: '',
       requireAuth: false
     },
-    component: require ('@/components/block/Blank')
+    component: resolve => require(['@/components/block/Blank'], resolve)
   },
 
   // 个人主页
@@ -425,7 +425,7 @@ const routes = [
       title: '个人主页',
       requireAuth: false
     },
-    component: require ('@/components/pages/user/Show')
+    component: resolve => require(['@/components/pages/user/Show'], resolve)
   },
 
   // 控制面板
@@ -436,7 +436,7 @@ const routes = [
       title: '控制面板',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/common/Control')
+    component: resolve => require(['@/components/pages/v_center/common/Control'], resolve)
   },
 
   // 公司主页
@@ -447,7 +447,7 @@ const routes = [
       title: '公司主页',
       requireAuth: false
     },
-    component: require ('@/components/pages/company/Show')
+    component: resolve => require(['@/components/pages/company/Show'], resolve)
   },
 
   // 公司基本设置(remove)
@@ -458,7 +458,7 @@ const routes = [
       title: '完善公司信息',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Profile')
+    component: resolve => require(['@/components/pages/v_center/company/Profile'], resolve)
   },
   // 公司基本设置
   {
@@ -468,7 +468,7 @@ const routes = [
       title: '公司基本设置',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Base')
+    component: resolve => require(['@/components/pages/v_center/company/Base'], resolve)
   },
   // 公司接单设置
   {
@@ -478,7 +478,7 @@ const routes = [
       title: '接单设置',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Taking')
+    component: resolve => require(['@/components/pages/v_center/company/Taking'], resolve)
   },
   // 公司认证
   {
@@ -488,7 +488,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Accreditation')
+    component: resolve => require(['@/components/pages/v_center/company/Accreditation'], resolve)
   },
   // 公司认证-编辑
   {
@@ -498,7 +498,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Identification')
+    component: resolve => require(['@/components/pages/v_center/company/Identification'], resolve)
   },
   // 公司认证-编辑
   {
@@ -506,9 +506,9 @@ const routes = [
     name: 'vcenterExhibition',
     meta: {
       title: '日历',
-      requireAuth: true
+      requireAuth: false
     },
-    component: require ('@/components/pages/v_center/exhibition/exhibition')
+    component: resolve => require(['@/components/pages/v_center/exhibition/exhibition'], resolve)
   },
   // 项目动态
   {
@@ -518,7 +518,7 @@ const routes = [
       title: '项目动态',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/item/List')
+    component: resolve => require(['@/components/pages/v_center/item/List'], resolve)
   },
   // 订单列表
   {
@@ -528,7 +528,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/order/List')
+    component: resolve => require(['@/components/pages/v_center/order/List'], resolve)
   },
   // 订单详情
   {
@@ -538,7 +538,7 @@ const routes = [
       title: '订单详情',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/order/Show')
+    component: resolve => require(['@/components/pages/v_center/order/Show'], resolve)
   },
   // 消息列表
   {
@@ -548,7 +548,7 @@ const routes = [
       title: '消息列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/message/List')
+    component: resolve => require(['@/components/pages/v_center/message/List'], resolve)
   },
   // 作品列表
   {
@@ -558,7 +558,7 @@ const routes = [
       title: '作品列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/design_case/List')
+    component: resolve => require(['@/components/pages/v_center/design_case/List'], resolve)
   },
   // 参赛作品
   {
@@ -568,7 +568,7 @@ const routes = [
       title: '参赛作品',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/match_case/match_case')
+    component: resolve => require(['@/components/pages/v_center/match_case/match_case'], resolve)
   },
   // 作品详情
   {
@@ -578,7 +578,7 @@ const routes = [
       title: '作品详情',
       requireAuth: true
     },
-    component: require ('@/components/pages/design_case/Show')
+    component: resolve => require(['@/components/pages/design_case/Show'], resolve)
   },
   // 参赛作品详情
   {
@@ -588,7 +588,7 @@ const routes = [
       title: '参赛作品详情',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/match_case/Show')
+    component: resolve => require(['@/components/pages/v_center/match_case/Show'], resolve)
   },
   // 添加作品
   {
@@ -598,7 +598,7 @@ const routes = [
       title: '添加作品',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/design_case/Submit')
+    component: resolve => require(['@/components/pages/v_center/design_case/Submit'], resolve)
   },
   // 编辑作品
   {
@@ -608,7 +608,7 @@ const routes = [
       title: '编辑作品',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/design_case/Submit')
+    component: resolve => require(['@/components/pages/v_center/design_case/Submit'], resolve)
   },
   // 我的项目列表(需求方)
   {
@@ -618,7 +618,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/item/List')
+    component: resolve => require(['@/components/pages/v_center/item/List'], resolve)
   },
   // 项目详情--需求方
   {
@@ -628,7 +628,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/item/Show')
+    component: resolve => require(['@/components/pages/v_center/item/Show'], resolve)
   },
   // 项目详情--公司方
   {
@@ -638,7 +638,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/c_item/Show')
+    component: resolve => require(['@/components/pages/v_center/c_item/Show'], resolve)
   },
 
   // 我的项目列表(设计公司) -- 待合作
@@ -649,7 +649,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/c_item/List')
+    component: resolve => require(['@/components/pages/v_center/c_item/List'], resolve)
   },
   // 我的项目列表(设计公司) -- 已合作
   {
@@ -659,7 +659,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/c_item/TrueList')
+    component: resolve => require(['@/components/pages/v_center/c_item/TrueList'], resolve)
   },
   // 在线合同预览
   {
@@ -671,7 +671,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require (['@/components/pages/v_center/contract/View'], resolve)
+      require(['@/components/pages/v_center/contract/View'], resolve)
     }
   },
   // 在线合同编辑
@@ -682,7 +682,7 @@ const routes = [
       title: '在线合同编辑',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/contract/Submit')
+    component: resolve => require(['@/components/pages/v_center/contract/Submit'], resolve)
   },
   // 合同下载
   {
@@ -694,7 +694,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require (['@/components/pages/v_center/contract/Down'], resolve)
+      require(['@/components/pages/v_center/contract/Down'], resolve)
     }
   },
   // 基本设置
@@ -705,7 +705,7 @@ const routes = [
       title: '设置',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/company/Profile')
+    component: resolve => require(['@/components/pages/v_center/company/Profile'], resolve)
   },
   {
     path: '/remind',
@@ -714,7 +714,7 @@ const routes = [
       title: '提醒',
       requireAuth: true
     },
-    component: require ('@/components/pages/home/Apply')
+    component: resolve => require(['@/components/pages/home/Apply'], resolve)
   },
   // 添加阶段
   {
@@ -724,7 +724,7 @@ const routes = [
       title: '添加阶段',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/stage/Submit')
+    component: resolve => require(['@/components/pages/v_center/stage/Submit'], resolve)
   },
   // 编辑阶段
   {
@@ -734,7 +734,7 @@ const routes = [
       title: '编辑阶段',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/stage/Submit')
+    component: resolve => require(['@/components/pages/v_center/stage/Submit'], resolve)
   },
   // 预览阶段
   {
@@ -744,7 +744,7 @@ const routes = [
       title: '预览阶段',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/stage/Show')
+    component: resolve => require(['@/components/pages/v_center/stage/Show'], resolve)
   },
 
   // 需求方公司设置
@@ -756,7 +756,7 @@ const routes = [
       title: '公司基本设置',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/d_company/Base')
+    component: resolve => require(['@/components/pages/v_center/d_company/Base'], resolve)
   },
   // 公司认证
   {
@@ -766,7 +766,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/d_company/Accreditation')
+    component: resolve => require(['@/components/pages/v_center/d_company/Accreditation'], resolve)
   },
   // 公司认证 -- 编辑
   {
@@ -776,7 +776,7 @@ const routes = [
       title: '公司认证',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/d_company/Identification')
+    component: resolve => require(['@/components/pages/v_center/d_company/Identification'], resolve)
   },
   // 我的钱包列表
   {
@@ -786,7 +786,7 @@ const routes = [
       title: '我的钱包',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/wallet/List')
+    component: resolve => require(['@/components/pages/v_center/wallet/List'], resolve)
   },
   // 我的银行卡列表
   {
@@ -796,7 +796,7 @@ const routes = [
       title: '我的银行卡',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/bank/List')
+    component: resolve => require(['@/components/pages/v_center/bank/List'], resolve)
   },
 
   // ### 安全设置 #####
@@ -808,7 +808,7 @@ const routes = [
       title: '修改密码',
       requireAuth: true
     },
-    component: require ('@/components/pages/v_center/account/ModifyPwd')
+    component: resolve => require(['@/components/pages/v_center/account/ModifyPwd'], resolve)
   },
 
   // ###### 后台管理 ##########
@@ -820,7 +820,7 @@ const routes = [
       title: '控制台',
       requireAuth: true
     },
-    component: require ('@/components/admin/DashBoard')
+    component: resolve => require(['@/components/admin/DashBoard'], resolve)
   },
   // 添加栏目
   {
@@ -830,7 +830,7 @@ const routes = [
       title: '添加栏目',
       requireAuth: true
     },
-    component: require ('@/components/admin/column/Submit')
+    component: resolve => require(['@/components/admin/column/Submit'], resolve)
   },
   // 编辑栏目
   {
@@ -840,7 +840,7 @@ const routes = [
       title: '编辑栏目',
       requireAuth: true
     },
-    component: require ('@/components/admin/column/Submit')
+    component: resolve => require(['@/components/admin/column/Submit'], resolve)
   },
   // 栏目列表
   {
@@ -850,7 +850,7 @@ const routes = [
       title: '栏目列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/column/List')
+    component: resolve => require(['@/components/admin/column/List'], resolve)
   },
   // 项目列表
   {
@@ -860,7 +860,7 @@ const routes = [
       title: '项目列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/item/List')
+    component: resolve => require(['@/components/admin/item/List'], resolve)
   },
   // 项目详情
   {
@@ -870,7 +870,7 @@ const routes = [
       title: '项目详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/item/Show')
+    component: resolve => require(['@/components/admin/item/Show'], resolve)
   },
   // 项目匹配公司
   {
@@ -880,7 +880,7 @@ const routes = [
       title: '项目匹配',
       requireAuth: true
     },
-    component: require ('@/components/admin/item/Match')
+    component: resolve => require(['@/components/admin/item/Match'], resolve)
   },
   // 订单列表
   {
@@ -890,7 +890,7 @@ const routes = [
       title: '订单列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/order/List')
+    component: resolve => require(['@/components/admin/order/List'], resolve)
   },
   // 提现列表
   {
@@ -900,7 +900,7 @@ const routes = [
       title: '提现列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/with_draw/List')
+    component: resolve => require(['@/components/admin/with_draw/List'], resolve)
   },
   // 设计公司列表
   {
@@ -910,7 +910,7 @@ const routes = [
       title: '设计公司列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/company/List')
+    component: resolve => require(['@/components/admin/company/List'], resolve)
   },
   // 设计公司详情
   {
@@ -920,7 +920,7 @@ const routes = [
       title: '设计公司详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/company/Show')
+    component: resolve => require(['@/components/admin/company/Show'], resolve)
   },
   // 需求公司列表
   {
@@ -930,7 +930,7 @@ const routes = [
       title: '需求公司列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/demand_company/List')
+    component: resolve => require(['@/components/admin/demand_company/List'], resolve)
   },
   // 需求公司详情
   {
@@ -940,7 +940,7 @@ const routes = [
       title: '需求公司详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/demand_company/Show')
+    component: resolve => require(['@/components/admin/demand_company/Show'], resolve)
   },
   // 案例列表
   {
@@ -950,7 +950,7 @@ const routes = [
       title: '案例列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/design_case/List')
+    component: resolve => require(['@/components/admin/design_case/List'], resolve)
   },
   // 用户列表
   {
@@ -960,7 +960,7 @@ const routes = [
       title: '用户列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/user/List')
+    component: resolve => require(['@/components/admin/user/List'], resolve)
   },
   // 用户编辑
   {
@@ -970,7 +970,7 @@ const routes = [
       title: '用户编辑',
       requireAuth: true
     },
-    component: require ('@/components/admin/user/Submit')
+    component: resolve => require(['@/components/admin/user/Submit'], resolve)
   },
   // 分类列表
   {
@@ -980,7 +980,7 @@ const routes = [
       title: '分类列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/category/List')
+    component: resolve => require(['@/components/admin/category/List'], resolve)
   },
   // 编辑分类
   {
@@ -990,7 +990,7 @@ const routes = [
       title: '分类编辑',
       requireAuth: true
     },
-    component: require ('@/components/admin/category/Submit')
+    component: resolve => require(['@/components/admin/category/Submit'], resolve)
   },
   // 分类详情
   {
@@ -1000,7 +1000,7 @@ const routes = [
       title: '分类详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/category/Show')
+    component: resolve => require(['@/components/admin/category/Show'], resolve)
   },
   // 文章列表
   {
@@ -1010,7 +1010,7 @@ const routes = [
       title: '文章列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/article/List')
+    component: resolve => require(['@/components/admin/article/List'], resolve)
   },
   // 编辑文章
   {
@@ -1022,7 +1022,7 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => {
-      require (['@/components/admin/article/Submit'], resolve)
+      require(['@/components/admin/article/Submit'], resolve)
     }
   },
   // 文章详情
@@ -1033,7 +1033,7 @@ const routes = [
       title: '文章详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/article/Show')
+    component: resolve => require(['@/components/admin/article/Show'], resolve)
   },
   // 作品列表
   {
@@ -1043,7 +1043,7 @@ const routes = [
       title: '作品列表',
       requireAuth: true
     },
-    component: require ('@/components/admin/works/List')
+    component: resolve => require(['@/components/admin/works/List'], resolve)
   },
   // 作品详情
   {
@@ -1053,7 +1053,7 @@ const routes = [
       title: '作品详情',
       requireAuth: true
     },
-    component: require ('@/components/admin/works/Show')
+    component: resolve => require(['@/components/admin/works/Show'], resolve)
   },
   // 日历列表
   {
@@ -1082,17 +1082,17 @@ const routes = [
     meta: {
       title: '找不到此页面'
     },
-    component: require ('components/pages/notfind/notfind') // webpack 设置新的别名 components
+    component: resolve => require(['components/pages/notfind/notfind'], resolve) // webpack 设置新的别名 components
   }
 ]
 
-const router = new VueRouter ({
+const router = new VueRouter({
   mode: 'history',
   linkActiveClass: 'is-active', // 这是链接激活时的class
   routes
 })
 
-router.beforeEach ((to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     if (to.meta.title === '首页') {
       document.title = '铟果-中国领先的产品创新SaaS平台'
@@ -1102,22 +1102,22 @@ router.beforeEach ((to, from, next) => {
   } else {
     document.title = '铟果-中国领先的产品创新SaaS平台'
   }
-  if (to.matched.some (r => r.meta.requireAuth)) {
+  if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.event.token) {
-      next ()
+      next()
     } else {
-      store.commit (types.PREV_URL_NAME, to.name)
-      next ({
+      store.commit(types.PREV_URL_NAME, to.name)
+      next({
         name: 'login'
       })
     }
   } else {
-    next ()
+    next()
   }
 })
 
-router.afterEach ((to, from) => {
-  calcImgSize ()
+router.afterEach((to, from) => {
+  calcImgSize()
 })
 
 export default router

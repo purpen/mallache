@@ -6,6 +6,7 @@
   import defaultsDeep from 'lodash.defaultsdeep'
   import 'fullcalendar'
   import $ from 'jquery'
+
   export default {
     props: {
       events: {
@@ -79,6 +80,11 @@
           return {}
         }
       }
+    },
+    data () {
+      return {}
+    },
+    created () {
     },
     computed: {
       defaultConfig() {

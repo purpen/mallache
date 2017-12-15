@@ -204,6 +204,8 @@ export default {
   adminAwardsList: '/admin/dateOfAward/list', // GET 列表
   adminAwards: '/admin/dateOfAward', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminAwardsChangeStatus: '/admin/dateOfAward/changeStatus', // PUT 更新状态
+  dateOfAwardWeek: '/admin/dateOfAward/week',
+  dateOfAwardMonth: '/admin/dateOfAward/month',
 
   // veer图片列表
   veerImage: '/veerImage/list',

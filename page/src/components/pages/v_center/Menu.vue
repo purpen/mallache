@@ -68,16 +68,16 @@
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
-      <div class="menu-list" v-if="false">
+      <div class="menu-list" v-if="true">
         <span v-if="!isMob">工具</span>
-        <a @click="alick" :to="'/vcenter/usefulSites'"
+        <a v-if="false" @click="alick" :to="'/vcenter/usefulSites'"
            :class="{'item': true, 'is-active': currentName === 'usefulSites'}">
           常用网站
         </a>
-        <a @click="alick" class="item">
+        <a v-if="false" @click="alick" class="item">
           图片素材
         </a>
-        <a @click="alick" class="item">
+        <a v-if="false" @click="alick" class="item">
           趋势/报告
         </a>
         <a @click="alick" :to="'/vcenter/exhibition'"
@@ -106,14 +106,14 @@
       redirectCompany(e) {
         let companyId = this.$store.state.event.user.design_company_id
         if (!companyId || companyId === 0) {
-          this.$message.error ('请先申请公司认证!')
+          this.$message.error('请先申请公司认证!')
         } else {
-          this.$router.push ({name: 'companyShow', params: {id: companyId}})
+          this.$router.push({name: 'companyShow', params: {id: companyId}})
         }
       },
       alick(e) {
-        sessionStorage.setItem ('MENU_BAR', e.target.offsetLeft)
-        this.$router.push (e.target.getAttribute ('to'))
+        sessionStorage.setItem('MENU_BAR', e.target.offsetLeft)
+        this.$router.push(e.target.getAttribute('to'))
       }
     },
     computed: {
@@ -125,7 +125,7 @@
       }
     },
     mounted() {
-      let menu = sessionStorage.getItem ('MENU_BAR')
+      let menu = sessionStorage.getItem('MENU_BAR')
 
       this.$refs.Mmenulist.scrollLeft = menu - document.documentElement.clientWidth / 2 + 38
     }
@@ -142,7 +142,7 @@
     color: #666666;
     position: relative;
     text-indent: 12px;
-    }
+  }
 
   .menu-list span::before {
     content: "";
@@ -151,5 +151,5 @@
     width: 4px;
     height: 15px;
     background: #D2D2D2;
-    }
+  }
 </style>
