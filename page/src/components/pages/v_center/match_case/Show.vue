@@ -9,11 +9,11 @@
             <h1>{{ item.title }}</h1>
           </div>
           <div class="summary">
-            <p>{{ item.profile }}</p>
+            <p>{{ item.content }}</p>
           </div>
           <div class="des">
-            <p v-for="(d, index) in item.case_image" :key="index">
-              <img :src="d.big" :alt="d.name" :title="d.name"/>
+            <p v-for="(d, index) in item.images" :key="index">
+              <img :src="d.big" :alt="d.name" :title="d.name" />
               <slot>
             <p class="img-des">{{ d.summary }}</p>
             </slot>
@@ -25,19 +25,19 @@
       <el-col :xs="24" :sm="6" :md="6" :lg="6">
         <div class="design-case-slide">
           <div class="info">
-            <router-link :to="{name: 'companyShow', params: {id: item.design_company.id}}" target="_blank">
-              <img class="avatar" v-if="item.design_company.logo_url" :src="item.design_company.logo_url" width="100"/>
-              <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100"/>
+            <router-link v-if="item.company_id" :to="{name: 'companyShow', params: {id: item.company_id}}" target="_blank">
+              <img class="avatar" v-if="item.company.logo_url" :src="item.company.logo_url" width="100" />
+              <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100" />
             </router-link>
-            <h3>{{ item.design_company.company_abbreviation }}</h3>
+            <h3>{{ item.company.company_abbreviation }}</h3>
             <p class="com-addr">
-              <span>{{ item.design_company.province_value }}</span>&nbsp;&nbsp;&nbsp;
-              <span>{{ item.design_company.city_value }}</span>
+              <span>{{ item.company.province_value }}</span>&nbsp;&nbsp;&nbsp;
+              <span>{{ item.company.city_value }}</span>
             </p>
           </div>
           <div class="rate">
             <p>信用指数：
-              <span>{{ item.design_company.score }}分</span>
+              <span>{{ item.company.score }}分</span>
             </p>
           </div>
           <div class="cate" v-if="item.design_type_val">
@@ -80,12 +80,12 @@
 import api from '@/api/api'
 import '@/assets/js/format'
 export default {
-  name: 'design_case_show',
+  name: 'match_case_show',
   data() {
     return {
       isFullLoading: false,
       item: {
-        design_company: ''
+        company: ''
       },
       rateValue: 3.5,
       msg: 'This is About!!!'
@@ -96,16 +96,15 @@ export default {
     const that = this
     that.isFullLoading = true
     that.$http
-      .get(api.designCaseId.format(id), {})
+      .get(api.workid.format(id), {})
       .then(function(response) {
         that.isFullLoading = false
         if (response.data.meta.status_code === 200) {
           that.item = response.data.data
-          if (that.item.design_company.logo_image) {
-            that.item.design_company.logo_url =
-              that.item.design_company.logo_image.logo
+          if (that.item.company.logo_image) {
+            that.item.company.logo_url = that.item.company.logo_image.logo
           } else {
-            that.item.design_company.logo_url = false
+            that.item.company.logo_url = false
           }
           document.title = that.item.title + '-铟果'
         } else {
@@ -123,13 +122,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 .design-case-content {
-  padding: 20px 20px 20px 20px;
+  padding: 20px;
 }
 
 .design-case-content .title {
   text-align: center;
-  color: #222;
-  margin: 20px 0 20px 0;
+  color: #222222;
+  margin: 20px 0;
   font-size: 2rem;
 }
 
@@ -139,7 +138,7 @@ export default {
 
 .design-case-content .summary p {
   line-height: 1.6;
-  color: #666;
+  color: #666666;
 }
 
 .design-case-content .des {
@@ -152,7 +151,7 @@ export default {
 
 .design-case-slide {
   padding: 20px;
-  color: #222;
+  color: #222222;
 }
 
 .design-case-slide .info {
@@ -165,7 +164,7 @@ export default {
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
-  border: 1px solid #c8c8c8;
+  border: 1px solid #C8C8C8;
 }
 
 .design-case-slide h3 {
@@ -188,7 +187,7 @@ export default {
 }
 
 .cate p {
-  color: #666;
+  color: #666666;
 }
 
 .cate p.c-title {

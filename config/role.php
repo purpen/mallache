@@ -110,6 +110,7 @@ return [
         //日期奖项删除
         '/admin/dateOfAward/delete',
 
+<<<<<<< HEAD
         // 保存趋势报告
         '/admin/trendReports/store',
         // 更新趋势报告
@@ -120,6 +121,18 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+=======
+        // 大赛作品
+        '/admin/works/list',
+        // 作品详情
+        '/admin/works',
+        // 作品禁用
+        '/admin/works/verifyStatus',
+        // 作品推荐
+        '/admin/works/published',
+        // 作品删除
+        '/admin/works/delete',
+>>>>>>> origin/lzh
     ],
 
     /**
@@ -224,6 +237,7 @@ return [
         //日期奖项删除
         '/admin/dateOfAward/delete',
 
+<<<<<<< HEAD
         // 保存趋势报告
         '/admin/trendReports/store',
         // 更新趋势报告
@@ -234,6 +248,16 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+=======
+        // 大赛作品
+        '/admin/works/list',
+        // 作品详情
+        '/admin/works',
+        // 作品禁用
+        '/admin/works/verifyStatus',
+        // 作品推荐
+        '/admin/works/published',
+>>>>>>> origin/lzh
     ],
 
     /**
@@ -283,6 +307,7 @@ return [
         // 文章删除
         '/admin/article/delete',
 
+<<<<<<< HEAD
         //日期奖项
         '/admin/dateOfAward/store',
         //日期奖项详情
@@ -306,5 +331,15 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+=======
+        // 大赛作品
+        '/admin/works/list',
+        // 作品详情
+        '/admin/works',
+        // 作品禁用
+        '/admin/works/verifyStatus',
+        // 作品推荐
+        '/admin/works/published',
+>>>>>>> origin/lzh
     ],
 ];

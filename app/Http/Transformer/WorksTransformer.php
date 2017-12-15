@@ -41,6 +41,7 @@ class WorksTransformer extends TransformerAbstract
             'published' => intval($works->published),
             'status' => intval($works->status),
             'company' => $this->company($works),
+            'created_at' => $works->created_at,
         ];
     }
 

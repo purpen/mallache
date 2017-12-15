@@ -115,208 +115,211 @@
 </template>
 
 <script>
-  import auth from '@/helper/auth'
-  import api from '@/api/api'
-  import { MSG_COUNT } from '@/store/mutation-types'
-  export default {
-    name: 'header',
-    data() {
-      return {
-        // menuactive: this.$route.path.split('/')[1],
-        requestMessageTask: null,
-        menu: {
-          home: {path: '/home'},
-          server: {path: '/server'},
-          design: {path: '/server_design'},
-          topic: {path: '/article/list'},
-          stuff: {path: '/stuff'},
-          apply: {path: '/apply'},
-          login: {path: '/login'},
-          register: {path: '/register'},
-          identity: {path: '/identity'}
-        },
-        menuHide: true
-      }
-    },
-    watch: {
-      '$route'(to, from) {
-        // 对路由变化作出响应...
-        // this.navdefact()
-      }
-    },
-    methods: {
-      navdefact() {
-        // 设置router函数跳转
-        this.menuactive = this.$route.path.split('/')[1]
+import auth from '@/helper/auth'
+import api from '@/api/api'
+import { MSG_COUNT } from '@/store/mutation-types'
+export default {
+  name: 'header',
+  data() {
+    return {
+      // menuactive: this.$route.path.split('/')[1],
+      requestMessageTask: null,
+      menu: {
+        home: { path: '/home' },
+        server: { path: '/server' },
+        design: { path: '/server_design' },
+        topic: { path: '/article/list' },
+        stuff: { path: '/stuff' },
+        apply: { path: '/apply' },
+        login: { path: '/login' },
+        register: { path: '/register' },
+        identity: { path: '/identity' }
       },
-      logout() {
-        auth.logout()
-        this.isLogin = false
-        this.$message({
-          showClose: true,
-          message: '登出成功!',
-          type: 'success'
-        })
-        clearInterval(this.requestMessageTask)
-        this.$router.replace('/home')
-      },
-      toServer() {
-        this.$router.push({name: 'serverDesign'})
-      },
-      // 请求消息数量
-      fetchMessageCount() {
-        const self = this
-        this.$http.get(api.messageGetMessageQuantity, {})
-          .then(function (response) {
-            if (response.data.meta.status_code === 200) {
-              let messageCount = parseInt(response.data.data.quantity)
-              // 写入localStorage
-              self.$store.commit(MSG_COUNT, messageCount)
-            }
-          })
-      },
-      // 定时加载消息数量
-      timeLoadMessage() {
-        const self = this
-        // 定时请求消息数量
-        self.requestMessageTask = setInterval(function () {
-          self.fetchMessageCount()
-        }, 30000)
-      },
-      // 移动端菜单显示/隐藏
-      mmenuHide() {
-        this.menuHide = !this.menuHide
-        if (this.menuHide) {
-          this.reScroll()
-        } else {
-          this.addScroll()
-        }
-      },
-      // 点击超链接关闭菜单
-      closeMenu(e) {
-        e.stopPropagation()
-        this.menuHide = !this.menuHide
-        this.reScroll()
-      },
-      // 点击其他地方关闭菜单
-      mNavClick(e) {
-        this.closeMenu(e)
-      },
-      addScroll() {
-        // this.$refs.mCover.style.width = '100%'
-        this.$refs.mNav.style.marginLeft = 0
-        this.$refs.mMenu.style.width = '100%'
-        document.body.setAttribute('class', 'disableScroll')
-        document.childNodes[1].setAttribute('class', 'disableScroll')
-      },
-      reScroll() {
-        // this.$refs.mCover.style.width = 0
-        this.$refs.mNav.style.marginLeft = '-54vw'
-        this.$refs.mMenu.style.width = 0
-        document.body.removeAttribute('class', 'disableScroll')
-        document.childNodes[1].removeAttribute('class', 'disableScroll')
-      },
-      addPosition() {
-        sessionStorage.setItem('MENU_BAR', 11)
-        this.$router.push({name: 'vcenterControl'})
-      }
-    },
-    computed: {
-      isMob() {
-        return this.$store.state.event.isMob
-      },
-      isLogin: {
-        get() {
-          return this.$store.state.event.token
-        },
-        set() {}
-      },
-      eventUser() {
-        let user = this.$store.state.event.user
-        if (user.avatar) {
-          user.logo_url = user.avatar.logo
-        } else {
-          user.logo_url = null
-        }
-        return user
-      },
-      isAdmin() {
-        return this.$store.state.event.user.role_id
-      },
-      menuactive() {
-        let menu = this.$route.path.split('/')[1]
-        if (menu === 'article' || menu === 'subject') {
-          return 'topic'
-        }
-        return menu
-      },
-      messageCount() {
-        return this.$store.state.event.msgCount
-      }
-    },
-    created: function () {
-      const self = this
-      if (self.isLogin) {
-        self.fetchMessageCount()
-        self.timeLoadMessage()
-      }
-      this.$store.commit('INIT_PAGE')
-    },
-    mounted() {
-      let that = this
-      window.addEventListener('resize', () => {
-        that.$store.commit('INIT_PAGE')
-      })
-    },
-    destroyed() {
-      clearInterval(this.requestMessageTask)
+      menuHide: true
     }
+  },
+  watch: {
+    $route(to, from) {
+      // 对路由变化作出响应...
+      // this.navdefact()
+    }
+  },
+  methods: {
+    navdefact() {
+      // 设置router函数跳转
+      this.menuactive = this.$route.path.split('/')[1]
+    },
+    logout() {
+      auth.logout()
+      this.isLogin = false
+      this.$message({
+        showClose: true,
+        message: '登出成功!',
+        type: 'success'
+      })
+      clearInterval(this.requestMessageTask)
+      this.$router.replace('/home')
+    },
+    toServer() {
+      this.$router.push({ name: 'serverDesign' })
+    },
+    // 请求消息数量
+    fetchMessageCount() {
+      const self = this
+      this.$http
+        .get(api.messageGetMessageQuantity, {})
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            let messageCount = parseInt(response.data.data.quantity)
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, messageCount)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+    },
+    // 定时加载消息数量
+    timeLoadMessage() {
+      const self = this
+      // 定时请求消息数量
+      self.requestMessageTask = setInterval(function() {
+        self.fetchMessageCount()
+      }, 30000)
+    },
+    // 移动端菜单显示/隐藏
+    mmenuHide() {
+      this.menuHide = !this.menuHide
+      if (this.menuHide) {
+        this.reScroll()
+      } else {
+        this.addScroll()
+      }
+    },
+    // 点击超链接关闭菜单
+    closeMenu(e) {
+      e.stopPropagation()
+      this.menuHide = !this.menuHide
+      this.reScroll()
+    },
+    // 点击其他地方关闭菜单
+    mNavClick(e) {
+      this.closeMenu(e)
+    },
+    addScroll() {
+      // this.$refs.mCover.style.width = '100%'
+      this.$refs.mNav.style.marginLeft = 0
+      this.$refs.mMenu.style.width = '100%'
+      document.body.setAttribute('class', 'disableScroll')
+      document.childNodes[1].setAttribute('class', 'disableScroll')
+    },
+    reScroll() {
+      // this.$refs.mCover.style.width = 0
+      this.$refs.mNav.style.marginLeft = '-54vw'
+      this.$refs.mMenu.style.width = 0
+      document.body.removeAttribute('class', 'disableScroll')
+      document.childNodes[1].removeAttribute('class', 'disableScroll')
+    },
+    addPosition() {
+      sessionStorage.setItem('MENU_BAR', 11)
+      this.$router.push({ name: 'vcenterControl' })
+    }
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
+    },
+    isLogin: {
+      get() {
+        return this.$store.state.event.token
+      },
+      set() {}
+    },
+    eventUser() {
+      let user = this.$store.state.event.user
+      if (user.avatar) {
+        user.logo_url = user.avatar.logo
+      } else {
+        user.logo_url = null
+      }
+      return user
+    },
+    isAdmin() {
+      return this.$store.state.event.user.role_id
+    },
+    menuactive() {
+      let menu = this.$route.path.split('/')[1]
+      if (menu === 'article' || menu === 'subject') {
+        return 'topic'
+      }
+      return menu
+    },
+    messageCount() {
+      return this.$store.state.event.msgCount
+    }
+  },
+  created: function() {
+    const self = this
+    if (self.isLogin) {
+      self.fetchMessageCount()
+      self.timeLoadMessage()
+    }
+    this.$store.commit('INIT_PAGE')
+  },
+  mounted() {
+    let that = this
+    window.addEventListener('resize', () => {
+      that.$store.commit('INIT_PAGE')
+    })
+  },
+  destroyed() {
+    clearInterval(this.requestMessageTask)
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @keyframes slow {
-    0% {
-      transform: translateY(-60px);
-    }
-    100% {
-      transform: translateY(0px);
-    }
+@keyframes slow {
+  0% {
+    transform: translateY(-60px);
   }
+  100% {
+    transform: translateY(0px);
+  }
+}
 
-  #header-layout {
-    position: relative;
-    z-index: 2;
-    animation: slow .4s;
-  }
+#header-layout {
+  position: relative;
+  z-index: 2;
+  animation: slow 0.4s;
+}
 
-  .Flogin {
-    background: #FF5A5F;
-    border-color: #FF5A5F;
-  }
+.Flogin {
+  background: #ff5a5f;
+  border-color: #ff5a5f;
+}
 
-  .server-in-btn {
-    height: 60px;
-    line-height: 60px;
-    margin-right: 20px;
-  }
+.server-in-btn {
+  height: 60px;
+  line-height: 60px;
+  margin-right: 20px;
+}
 
-  .more {
-    width: 1200px;
-    height: 60px;
-    background: #FF4500;
-    position: fixed;
-  }
+.more {
+  width: 1200px;
+  height: 60px;
+  background: #ff4500;
+  position: fixed;
+}
 
-  .m-Nav-right {
-    position: absolute;
-    top: 15px;
-    right: 12px;
-  }
+.m-Nav-right {
+  position: absolute;
+  top: 15px;
+  right: 12px;
+}
 
-  .m-Nav-right .avatar {
-    width: 30px;
-    height: 30px;
-  }
+.m-Nav-right .avatar {
+  width: 30px;
+  height: 30px;
+}
 </style>

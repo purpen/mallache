@@ -165,7 +165,7 @@ export default {
     vMenu,
     mavonEditor
   },
-  data () {
+  data() {
     return {
       menuType: 0,
       itemMode: '添加文章',
@@ -175,15 +175,14 @@ export default {
       content_file: [],
       uploadUrl: '',
       uploadParam: {
-        'token': '',
+        token: '',
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
         'x:target_id': '',
         'x:type': 0
       },
       uploadMsg: '只能上传jpg/png文件，且不超过5M',
-      pickerOptions: {
-      },
+      pickerOptions: {},
       imageUrl: '',
       coverId: '',
       fileList: [],
@@ -203,15 +202,9 @@ export default {
         classification_id: [
           { type: 'number', message: '请选择分类', trigger: 'change' }
         ],
-        title: [
-          { required: true, message: '请添写标题', trigger: 'blur' }
-        ],
-        type: [
-          { type: 'number', message: '请选择类型', trigger: 'change' }
-        ],
-        content: [
-          { required: true, message: '请添写内容', trigger: 'blur' }
-        ]
+        title: [{ required: true, message: '请添写标题', trigger: 'blur' }],
+        type: [{ type: 'number', message: '请选择类型', trigger: 'change' }],
+        content: [{ required: true, message: '请添写内容', trigger: 'blur' }]
       },
       msg: ''
     }
@@ -223,7 +216,7 @@ export default {
         that.$message.error('请设置一张封面图')
         return false
       }
-      that.$refs[formName].validate((valid) => {
+      that.$refs[formName].validate(valid => {
         // 验证通过，提交
         if (valid) {
           var row = {
@@ -253,25 +246,26 @@ export default {
             }
           }
           that.isLoadingBtn = true
-          that.$http({method: method, url: api.adminArticle, data: row})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              that.$message.success('提交成功！')
-              // 同步到官网社区
-              if (that.isSynchro) {
+          that
+            .$http({ method: method, url: api.adminArticle, data: row })
+            .then(function(response) {
+              if (response.data.meta.status_code === 200) {
+                that.$message.success('提交成功！')
+                // 同步到官网社区
+                if (that.isSynchro) {
+                }
+                that.$router.push({ name: 'adminArticleList' })
+                return false
+              } else {
+                that.$message.error(response.data.meta.message)
+                that.isLoadingBtn = false
               }
-              that.$router.push({name: 'adminArticleList'})
-              return false
-            } else {
-              that.$message.error(response.data.meta.message)
+            })
+            .catch(function(error) {
+              that.$message.error(error.message)
               that.isLoadingBtn = false
-            }
-          })
-          .catch (function(error) {
-            that.$message.error(error.message)
-            that.isLoadingBtn = false
-            return false
-          })
+              return false
+            })
           return false
         } else {
           console.log('error submit!!')
@@ -280,7 +274,7 @@ export default {
       })
     },
     returnList() {
-      this.$router.push({name: 'adminArticleList'})
+      this.$router.push({ name: 'adminArticleList' })
     },
     // 删除附件
     delAsset(event) {
@@ -288,17 +282,18 @@ export default {
       var index = event.currentTarget.getAttribute('index')
 
       const self = this
-      self.$http.delete(api.asset.format(id), {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.fileList.splice(index, 1)
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-      })
+      self.$http
+        .delete(api.asset.format(id), {})
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.fileList.splice(index, 1)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch(function(error) {
+          self.$message.error(error.message)
+        })
     },
     // 编辑附件
     editAssetBtn(event) {
@@ -316,20 +311,21 @@ export default {
         return false
       }
       const self = this
-      self.$http.put(api.updateImageSummary, {asset_id: id, summary: summary})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.fileList[index].edit = false
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-      })
+      self.$http
+        .put(api.updateImageSummary, { asset_id: id, summary: summary })
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            self.fileList[index].edit = false
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        })
+        .catch(function(error) {
+          self.$message.error(error.message)
+        })
     },
     // 设置封面图
-    setCoverBtn (event) {
+    setCoverBtn(event) {
       var id = event.currentTarget.getAttribute('item_id')
       // var index = event.currentTarget.getAttribute('index')
       this.coverId = id
@@ -341,21 +337,20 @@ export default {
 
       var assetId = file.response.asset_id
       const that = this
-      that.$http.delete(api.asset.format(assetId), {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-        } else {
-          that.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-      })
+      that.$http
+        .delete(api.asset.format(assetId), {})
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+          } else {
+            that.$message.error(response.data.meta.message)
+          }
+        })
+        .catch(function(error) {
+          that.$message.error(error.message)
+        })
     },
-    handlePreview(file) {
-    },
-    handleChange(value) {
-    },
+    handlePreview(file) {},
+    handleChange(value) {},
     uploadError(err, file, fileList) {
       this.uploadMsg = '上传失败'
       this.$message.error('文件上传失败!')
@@ -404,24 +399,25 @@ export default {
         formdata.append(key, that.uploadParam[key])
       }
       console.log(formdata)
-      axios.post(that.uploadUrl, formdata, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      .then(function(response) {
-        if (response.data.success === 1) {
-          // that.$refs.mavonEditor.$imgUpdateByFilename(pos, './aaa')
-          that.$refs.mavonEditor.$img2Url(pos, response.data.big)
-        } else {
-          that.$message.error('上传失败！')
-        }
-        console.log(response)
-      })
-      .catch(function(error) {
-        that.$message.error(error)
-        console.log(error)
-      })
+      axios
+        .post(that.uploadUrl, formdata, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(function(response) {
+          if (response.data.success === 1) {
+            // that.$refs.mavonEditor.$imgUpdateByFilename(pos, './aaa')
+            that.$refs.mavonEditor.$img2Url(pos, response.data.big)
+          } else {
+            that.$message.error('上传失败！')
+          }
+          console.log(response)
+        })
+        .catch(function(error) {
+          that.$message.error(error)
+          console.log(error)
+        })
     },
     $imgDel(pos) {
       delete this.content_file[pos]
@@ -434,16 +430,17 @@ export default {
         formdata.append(_img, this.img_file[_img])
       }
       // headers: { 'Content-Type': 'multipart/form-data' }
-      this.$http.post(api.categoryList, formdata)
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
+      this.$http
+        .post(api.categoryList, formdata)
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+            }
           }
-        }
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
     }
   },
   computed: {
@@ -466,78 +463,85 @@ export default {
       that.itemMode = '编辑文章'
       that.itemId = id
       that.uploadParam['x:target_id'] = id
-      that.$http.get(api.adminArticle, {params: {id: id}})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          that.form = response.data.data
-          if (that.form.cover_id) {
-            that.coverId = that.form.cover_id
-          }
-          that.form.label_str = ''
-          if (that.form.label) {
-            that.form.label_str = that.form.label.join(',')
-          }
-          console.log(that.form)
+      that.$http
+        .get(api.adminArticle, { params: { id: id } })
+        .then(function(response) {
+          if (response.data.meta.status_code === 200) {
+            that.form = response.data.data
+            if (that.form.cover_id) {
+              that.coverId = that.form.cover_id
+            }
+            that.form.label_str = ''
+            if (that.form.label) {
+              that.form.label_str = that.form.label.join(',')
+            }
+            console.log(that.form)
 
-          if (response.data.data.cover) {
-            var files = []
-            var obj = response.data.data.cover
-            var item = {}
-            item['response'] = {}
-            item['id'] = obj['id']
-            item['name'] = obj['name']
-            item['url'] = obj['middle']
-            item['summary'] = obj['summary']
-            item['response']['asset_id'] = obj['id']
-            item['edit'] = false
-            files.push(item)
-            that.fileList = files
+            if (response.data.data.cover) {
+              var files = []
+              var obj = response.data.data.cover
+              var item = {}
+              item['response'] = {}
+              item['id'] = obj['id']
+              item['name'] = obj['name']
+              item['url'] = obj['middle']
+              item['summary'] = obj['summary']
+              item['response']['asset_id'] = obj['id']
+              item['edit'] = false
+              files.push(item)
+              that.fileList = files
+            }
+          } else {
+            that.$message.error(response.data.meta.message)
           }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        return false
-      })
+        })
+        .catch(function(error) {
+          that.$message.error(error.message)
+          return false
+        })
     } else {
       that.itemId = null
     }
 
     // 获取分类列表
-    that.$http.get(api.categoryList, {params: {type: 1}})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        if (response.data.data) {
-          for (var i = 0; i < response.data.data.length; i++) {
-            var row = {}
-            row.value = response.data.data[i].id
-            row.label = response.data.data[i].name
-            that.categoryOptions.push(row)
+    that.$http
+      .get(api.categoryList, { params: { type: 1 } })
+      .then(function(response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            for (var i = 0; i < response.data.data.length; i++) {
+              var row = {}
+              row.value = response.data.data[i].id
+              row.label = response.data.data[i].name
+              that.categoryOptions.push(row)
+            }
           }
         }
-      }
-    })
-    .catch (function(error) {
-      that.$message.error(error.message)
-    })
+      })
+      .catch(function(error) {
+        that.$message.error(error.message)
+      })
 
     // 获取图片token
-    that.$http.get(api.upToken, {})
-    .then (function(response) {
-      if (response.data.meta.status_code === 200) {
-        if (response.data.data) {
-          that.uploadParam['token'] = response.data.data.upToken
-          that.uploadParam['x:random'] = response.data.data.random
-          that.uploadUrl = response.data.data.upload_url
+    that.$http
+      .get(api.upToken, {})
+      .then(function(response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            that.uploadParam['token'] = response.data.data.upToken
+            that.uploadParam['x:random'] = response.data.data.random
+            that.uploadUrl = response.data.data.upload_url
+          }
+        } else {
+          that.$message.error(response.data.meta.message)
         }
-      }
-    })
-    .catch (function(error) {
-      that.$message.error(error.message)
-    })
+      })
+      .catch(function(error) {
+        that.$message.error(error.message)
+      })
   },
   watch: {
-    '$route' (to, from) {
+    $route(to, from) {
       // 对路由变化作出响应...
     }
   }
@@ -546,15 +550,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.set-role-name {
+  margin-bottom: 20px;
+}
 
-  .set-role-name {
-    margin-bottom: 20px;
-  }
-
-  #editor {
-    margin: auto;
-    width: 100%;
-    height: 580px;
-  }
-
+#editor {
+  margin: auto;
+  width: 100%;
+  height: 580px;
+}
 </style>

@@ -2,36 +2,35 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu :class="[isMob ? 'v-menu' : '']" currentName="design_case"></v-menu>
+      <v-menu :class="[isMob ? 'v-menu' : '']" currentName="match_case"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']">
             <div class="form-title" v-if="designCases.length">
-              <span>全部作品案例</span>
+              <span>参赛作品案例</span>
             </div>
 
             <div class="design-case-list" v-loading.body="isLoading">
-
               <el-row :gutter="10">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
                     <div class="image-box">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                      <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">
                         <img :src="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+                      <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">{{ d.title
                         }}
                       </router-link>
                       <div class="opt">
                         <a href="javascript:void(0);" :item_id="d.id" :index="index"
                            @click="delItem">删除</a>
-                        <router-link :to="{name: 'vcenterDesignCaseEdit', params: {id: d.id}}">
+                        <router-link :to="{name: 'vcenterMatchCaseSubmit', params: {id: d.id}}">
                           编辑
                         </router-link>
                       </div>
@@ -42,11 +41,7 @@
               </el-row>
 
             </div>
-            <div class="add blank20">
-              <el-button class="is-custom" @click="add" type="primary">
-                <i class="el-icon-plus"></i> 添加作品案例
-              </el-button>
-            </div>
+
           </div>
         </div>
 
@@ -57,7 +52,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
-  import vMenuSub from '@/components/pages/v_center/design_case/MenuSub'
+  import vMenuSub from '@/components/pages/v_center/match_case/MenuSub'
   import api from '@/api/api'
   import '@/assets/js/format'
 
@@ -90,7 +85,7 @@
           type: 'warning'
         }).then (() => {
           const that = this
-          that.$http.delete (api.designCaseId.format (id), {})
+          that.$http.delete (api.workid.format (id), {})
             .then (function (response) {
               if (response.data.meta.status_code === 200) {
                 that.$message.success ('删除成功!')
@@ -107,21 +102,23 @@
       },
       // 添加作品案例
       add() {
-        this.$router.push ({name: 'vcenterDesignCaseAdd'})
+        this.$router.push ({name: 'vcenterMatchCaseSubmit'})
       },
       getDesignCase () {
         const that = this
         that.isLoading = true
-        that.$http.get (api.designCase, {})
-          .then (function (response) {
+        that.$http.get (api.work)
+          .then ((res) => {
             that.isLoading = false
-            if (response.data.meta.status_code === 200) {
-              that.designCases = response.data.data
+            if (res.data.meta.status_code === 200) {
+              that.designCases = res.data.data
+            } else {
+              that.$message.error (res.data.meta.message)
             }
           })
-          .catch (function (error) {
-            that.$message.error (error.message)
+          .catch ((err) => {
             that.isLoading = false
+            console.error (err)
           })
       }
     },

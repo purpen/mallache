@@ -1,7 +1,7 @@
 <template>
   <div class="yuquan">
     <div :class="[isMob ? 'banner2': 'banner']" :style="{height : calcHeight}">
-      <router-link :to="{name:'uploads'}" class="add-work">上传作品</router-link>
+      <a @click="upload" class="add-work">上传作品</a>
     </div>
     <div class="giftbody">
       <h2><span class="icon">羽泉的礼物创新产品征集</span></h2>
@@ -33,169 +33,205 @@
   </div>
 </template>
 <script>
-  import { calcImgSize } from 'assets/js/common'
-  export default {
-    name: 'YuQuanGifts',
-    data () {
-      return {
-        calcHeight: '',
-        imgList: 4
-      }
-    },
-    mounted() {
-      let that = this
-      window.addEventListener ('resize', () => {
-        if (that.isMob) {
-          that.calcHeight = calcImgSize (840, 750, false)
-        } else {
-          that.calcHeight = calcImgSize (1040, 2880)
-        }
-      })
-      if (this.isMob) {
-        this.calcHeight = calcImgSize (840, 750, false)
+import { calcImgSize } from 'assets/js/common'
+import store from '@/store/index'
+import * as types from '@/store/mutation-types'
+export default {
+  name: 'YuQuanGifts',
+  data() {
+    return {
+      calcHeight: '',
+      imgList: 4
+    }
+  },
+  mounted() {
+    let that = this
+    window.addEventListener('resize', () => {
+      if (that.isMob) {
+        that.calcHeight = calcImgSize(840, 750, false)
       } else {
-        this.calcHeight = calcImgSize (1040, 2880)
+        that.calcHeight = calcImgSize(1040, 2880)
       }
+    })
+    if (this.isMob) {
+      this.calcHeight = calcImgSize(840, 750, false)
+    } else {
+      this.calcHeight = calcImgSize(1040, 2880)
+    }
+  },
+  methods: {
+    upload() {
+      if (this.isLogin) {
+        if (!this.isCompany) {
+          this.$message({
+            message: '此活动只允许设计服务商参与',
+            type: 'error'
+          })
+        } else {
+          this.$router.push({ name: 'vcenterMatchCaseSubmit' })
+        }
+      } else {
+        store.commit(types.PREV_URL_NAME, 'YuQuanGifts')
+        this.$router.push({ name: 'login', params: { url: 'yq', type: 2 } })
+      }
+    }
+  },
+  computed: {
+    isMob() {
+      return this.$store.state.event.isMob
     },
-    computed: {
-      isMob() {
-        return this.$store.state.event.isMob
-      }
+    isLogin: {
+      get() {
+        return this.$store.state.event.token
+      },
+      set() {}
+    },
+    isCompany() {
+      return this.$store.state.event.user.type === 2
     }
   }
+}
 </script>
 <style scoped>
-  .banner {
-    background: url('../../../assets/images/subject/gifts/HeadBanner@2x.jpg') no-repeat center;
-    background-size: cover;
-    position: relative;
-    }
+.banner {
+  background: url('../../../assets/images/subject/gifts/HeadBanner@2x.jpg')
+    no-repeat center;
+  background-size: cover;
+  position: relative;
+}
 
-  .banner2 {
-    background: url('../../../assets/images/subject/gifts/MBanner.jpg') no-repeat center;
-    background-size: cover;
-    position: relative;
-    }
+.banner2 {
+  background: url('../../../assets/images/subject/gifts/MBanner.jpg') no-repeat
+    center;
+  background-size: cover;
+  position: relative;
+}
 
-  .add-work {
-    text-indent: -9999rem;
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    width: 180px;
-    height: 45px;
-    margin: auto;
-    background: url('../../../assets/images/subject/gifts/upload@2x.png') no-repeat;
-    background-size: contain;
-    }
+.add-work {
+  text-indent: -9999rem;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  width: 180px;
+  height: 45px;
+  margin: auto;
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') left
+    no-repeat;
+  background-size: cover;
+}
 
-  .add-work:hover {
-    background: url('../../../assets/images/subject/gifts/uploadhover@2x.png') no-repeat;
-    background-size: contain;
-    }
+.add-work:hover {
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') center
+    no-repeat;
+  background-size: cover;
+}
 
-  .add-work:active {
-    background: url('../../../assets/images/subject/gifts/uploadclick@2x.png') no-repeat;
-    background-size: contain;
-    }
+.add-work:active {
+  background: url('../../../assets/images/subject/gifts/upload@2x.png') right
+    no-repeat;
+  background-size: cover;
+}
 
-  .giftbody {
-    max-width: 920px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 0 15px 60px;
-    }
+.giftbody {
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 15px 60px;
+}
 
-  .giftbody h2 {
-    font-size: 18px;
-    color: #A47339;
-    padding: 60px 0 30px;
-    }
+.giftbody h2 {
+  font-size: 18px;
+  color: #a47339;
+  padding: 60px 0 30px;
+}
 
-  .giftbody p {
-    color: #222222;
-    font-size: 14px;
-    line-height: 26px;
-    }
+.giftbody p {
+  color: #222222;
+  font-size: 14px;
+  line-height: 26px;
+}
 
-  .padding26 {
-    padding-bottom: 26px;
-    }
+.padding26 {
+  padding-bottom: 26px;
+}
 
-  .img-list {
-    padding-bottom: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    }
+.img-list {
+  padding-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
+.img-list div {
+  width: 14%;
+  margin: 10px 1%;
+}
+
+.img-list img {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 10px rgba(10, 10, 10, 0.1);
+  border-radius: 50px;
+}
+
+.explain {
+  font-size: 14px;
+  background: #a47339;
+  opacity: 0.7;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 15px;
+}
+
+.explain i {
+  padding: 0 4px;
+}
+
+.giftfoot {
+  height: 158px;
+  background: url('../../../assets/images/subject/gifts/bottom@2x.png')
+    no-repeat center;
+  -webkit-background-size: cover;
+  background-size: cover;
+  margin-bottom: -52px;
+}
+
+.icon {
+  position: relative;
+}
+
+.icon:before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: url('../../../assets/images/subject/gifts/decorate@2x.png')
+    no-repeat;
+  -webkit-background-size: contain;
+  background-size: contain;
+}
+
+.icon:after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: url('../../../assets/images/subject/gifts/decorate@2x.png')
+    no-repeat;
+  -webkit-background-size: contain;
+  background-size: contain;
+}
+
+@media screen and (max-width: 767px) {
   .img-list div {
-    width: 14%;
-    margin: 10px 1%;
-    }
-
-  .img-list img {
-    width: 100%;
-    height: 50px;
-    margin-bottom: 10px;
-    box-shadow: 0 0 10px rgba(10, 10, 10, 0.1);
-    border-radius: 50px;
-    }
-
-  .explain {
-    font-size: 14px;
-    background: #A47339;
-    opacity: 0.7;
-    color: #FFFFFF;
-    padding: 4px 8px;
-    border-radius: 15px;
-    }
-
-  .explain i {
-    padding: 0 4px;
-    }
-
-  .giftfoot {
-    height: 158px;
-    background: url("../../../assets/images/subject/gifts/bottom@2x.png") no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-    margin-bottom: -52px;
-    }
-
-  .icon {
-    position: relative;
-    }
-
-  .icon:before {
-    content: "";
-    position: absolute;
-    left: -30px;
-    top: 0;
-    width: 20px;
-    height: 20px;
-    background: url('../../../assets/images/subject/gifts/decorate@2x.png') no-repeat;
-    -webkit-background-size: contain;
-    background-size: contain;
-    }
-
-  .icon:after {
-    content: "";
-    position: absolute;
-    right: -30px;
-    top: 0;
-    width: 20px;
-    height: 20px;
-    background: url('../../../assets/images/subject/gifts/decorate@2x.png') no-repeat;
-    -webkit-background-size: contain;
-    background-size: contain;
-    }
-
-  @media screen and (max-width: 767px) {
-    .img-list div {
-      width: 36%;
-      margin: 10px 2%;
-      }
-    }
+    width: 36%;
+    margin: 10px 2%;
+  }
+}
 </style>

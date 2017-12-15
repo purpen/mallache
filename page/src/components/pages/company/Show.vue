@@ -139,12 +139,16 @@ export default {
               self.isLoading = false
               if (response.data.meta.status_code === 200) {
                 self.designCases = response.data.data
+              } else {
+                self.$message.error(response.data.meta.message)
               }
             })
             .catch(function(error) {
               self.isLoading = false
               self.$message.error(error.message)
             })
+        } else {
+          self.$message.error(response.data.meta.message)
         }
       })
       .catch(function(error) {
