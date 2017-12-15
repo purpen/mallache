@@ -179,7 +179,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 日期奖项删除
         $api->delete('/admin/dateOfAward/delete', 'DateOfAwardController@delete');
 
-<<<<<<< HEAD
+
 
         /**
          * 趋势报告
@@ -194,7 +194,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/trendReports/lists', 'TrendReportsController@lists');
         // 栏目文章删除
         $api->delete('/admin/trendReports/delete', 'TrendReportsController@delete');
-=======
+
         /**
          * 大赛作品
          */
@@ -212,7 +212,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/works/published', 'WorksController@published');
         // 删除文章
         $api->delete('/admin/works/delete','WorksController@destroy');
->>>>>>> origin/lzh
+
     });
 
 });
