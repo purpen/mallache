@@ -194,16 +194,16 @@ export default {
   adminArticleChangeStatus: '/admin/article/verifyStatus', // PUT 更新状态
 
   // 大赛作品管理
-  adminWorksList: '/admin/worgitks/list', // GET 列表
+  adminWorksList: '/admin/works/list', // GET 列表
   adminWorks: '/admin/works', // GET 详情 | POST 添加 | PUT 更新
   adminWorksStatus: '/admin/works/verifyStatus', // PUT 更新状态
   adminWorksPublished: '/admin/works/published', // PUT 发布
   adminWorksDelete: '/admin/works/delete', // DELETE 删除
 
   // 日历管理
-  dateOfAward: '/admin/dateOfAward',
-  dateOfAwardList: '/admin/dateOfAward/list',
-  dateOfAwardChange: '/admin/dateOfAward/changeStatus',
+  adminAwardsList: '/admin/dateOfAward/list', // GET 列表
+  adminAwards: '/admin/dateOfAward', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminAwardsChangeStatus: '/admin/dateOfAward/changeStatus', // PUT 更新状态
   dateOfAwardWeek: '/admin/dateOfAward/week',
   dateOfAwardMonth: '/admin/dateOfAward/month',
 

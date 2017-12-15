@@ -202,6 +202,13 @@ class WorksController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
+        if ($works->published == 0) {
+            return $this->response->array($this->apiError('该作品未发布！', 404));
+        }
+        if ($works->status == 0) {
+            return $this->response->array($this->apiError('该作品已禁用！', 404));
+        }
+
         //判断是否有有权限查看案例详情
         $design_company = new DesignCompanyModel();
         // 此参数用来判断是否返回设计公司的联系方式

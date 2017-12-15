@@ -1055,6 +1055,26 @@ const routes = [
     },
     component: resolve => require(['@/components/admin/works/Show'], resolve)
   },
+  // 日历列表
+  {
+    path: '/admin/awards/list',
+    name: 'adminAwardsList',
+    meta: {
+      title: '日历列表',
+      requireAuth: true
+    },
+    component: require ('@/components/admin/awards/List')
+  },
+  // 编辑日历
+  {
+    path: '/admin/awards/submit',
+    name: 'adminAwardsSubmit',
+    meta: {
+      title: '日历编辑',
+      requireAuth: true
+    },
+    component: require ('@/components/admin/awards/Submit')
+  },
   // 404
   {
     path: '*',
