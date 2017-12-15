@@ -109,6 +109,17 @@ return [
         '/admin/dateOfAward/month',
         //日期奖项删除
         '/admin/dateOfAward/delete',
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
     ],
 
     /**
@@ -212,6 +223,17 @@ return [
         '/admin/dateOfAward/month',
         //日期奖项删除
         '/admin/dateOfAward/delete',
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
     ],
 
     /**
@@ -260,5 +282,29 @@ return [
         '/admin/article/recommend',
         // 文章删除
         '/admin/article/delete',
+
+        //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
+        '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
+        //日期奖项周
+        '/admin/dateOfAward/week',
+        //日期奖项月
+        '/admin/dateOfAward/month',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
     ],
 ];
