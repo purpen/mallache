@@ -506,7 +506,7 @@ const routes = [
     name: 'vcenterExhibition',
     meta: {
       title: '日历',
-      requireAuth: true
+      requireAuth: false
     },
     component: resolve => require(['@/components/pages/v_center/exhibition/exhibition'], resolve)
   },

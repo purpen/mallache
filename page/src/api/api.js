@@ -200,6 +200,13 @@ export default {
   adminWorksPublished: '/admin/works/published', // PUT 发布
   adminWorksDelete: '/admin/works/delete', // DELETE 删除
 
+  // 日历管理
+  dateOfAward: '/admin/dateOfAward',
+  dateOfAwardList: '/admin/dateOfAward/list',
+  dateOfAwardChange: '/admin/dateOfAward/changeStatus',
+  dateOfAwardWeek: '/admin/dateOfAward/week',
+  dateOfAwardMonth: '/admin/dateOfAward/month',
+
   // veer图片列表
   veerImage: '/veerImage/list',
   test: '/'  // End
