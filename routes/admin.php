@@ -179,8 +179,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 日期奖项删除
         $api->delete('/admin/dateOfAward/delete', 'DateOfAwardController@delete');
 
-
-
         /**
          * 趋势报告
          */

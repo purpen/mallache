@@ -16,6 +16,7 @@ class AdminTrendReportsTransformer extends TransformerAbstract
             'image' => $trendReports->image,
             'created_at' => $trendReports->created_at,
             'verify_status' => $trendReports->verify_status,
+
         ];
     }
 }
