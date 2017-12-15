@@ -109,6 +109,18 @@ return [
         '/admin/dateOfAward/list',
 
 
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
+
         // 大赛作品
         '/admin/works/list',
         // 作品详情
@@ -119,6 +131,7 @@ return [
         '/admin/works/published',
         // 作品删除
         '/admin/works/delete',
+
     ],
 
     /**
@@ -221,6 +234,18 @@ return [
         // 列表
         '/admin/dateOfAward/list',
 
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
+
         // 大赛作品
         '/admin/works/list',
         // 作品详情
@@ -229,6 +254,7 @@ return [
         '/admin/works/verifyStatus',
         // 作品推荐
         '/admin/works/published',
+
     ],
 
     /**
@@ -279,7 +305,11 @@ return [
         '/admin/article/delete',
 
         //日期奖项
+        '/admin/dateOfAward/store',
+        //日期奖项详情
         '/admin/dateOfAward',
+        //日期奖项更改
+        '/admin/dateOfAward/update',
         //日期奖项周
         '/admin/dateOfAward/week',
         //日期奖项月
@@ -288,6 +318,19 @@ return [
         '/admin/dateOfAward/changeStatus',
         // 列表
         '/admin/dateOfAward/list',
+        //日期奖项删除
+        '/admin/dateOfAward/delete',
+
+        // 保存趋势报告
+        '/admin/trendReports/store',
+        // 更新趋势报告
+        '/admin/trendReports/update',
+        // 趋势报告详情
+        '/admin/trendReports',
+        // 趋势报告列表
+        '/admin/trendReports/lists',
+        // 栏目文章删除
+        '/admin/trendReports/delete',
 
         // 大赛作品
         '/admin/works/list',
@@ -297,5 +340,6 @@ return [
         '/admin/works/verifyStatus',
         // 作品推荐
         '/admin/works/published',
+
     ],
 ];

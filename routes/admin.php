@@ -184,6 +184,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/dateOfAward/changeStatus', 'DateOfAwardController@changeStatus');
 
         /**
+         * 趋势报告
+         */
+        // 保存趋势报告
+        $api->post('/admin/trendReports/store', 'TrendReportsController@store');
+        // 更新趋势报告
+        $api->put('/admin/trendReports/update', 'TrendReportsController@update');
+        // 趋势报告详情
+        $api->get('/admin/trendReports', 'TrendReportsController@show');
+        // 趋势报告列表
+        $api->get('/admin/trendReports/lists', 'TrendReportsController@lists');
+        // 栏目文章删除
+        $api->delete('/admin/trendReports/delete', 'TrendReportsController@delete');
+
+        /**
          * 大赛作品
          */
         // 列表

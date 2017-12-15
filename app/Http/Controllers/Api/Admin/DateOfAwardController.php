@@ -310,6 +310,7 @@ class DateOfAwardController extends BaseController
      * @apiName AdminDateOfAward month
      * @apiGroup AdminDateOfAward
      *
+     * @apiParam {string} yearMonth 年月 //2017-01
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -340,12 +341,13 @@ class DateOfAwardController extends BaseController
             }
         }
      */
-    public function month()
+    public function month(Request $request)
     {
+        $yearMonth = $request->input('yearMonth') ? $request->input('yearMonth') : date('Y-m');
         //月初
-        $firstday = date('Y-m-01', strtotime(date("Y-m-d")));
+        $firstday = date($yearMonth.'-01', strtotime(date("Y-m-d")));
         //月末
-        $lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
+        $lastday = date($yearMonth.'-d', strtotime("$firstday +1 month -1 day"));
 
         $dateOfAward = DateOfAward::whereBetween('start_time' , [$firstday , $lastday])->orderBy('start_time','asc')->get();
         return $this->response->collection($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
