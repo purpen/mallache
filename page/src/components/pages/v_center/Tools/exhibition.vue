@@ -14,7 +14,7 @@
 <script>
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
-  import vCalendar from '@/components/pages/v_center/calendar/calendar'
+  import vCalendar from '@/components/pages/v_center/Tools/calendar/calendar'
   export default {
     name: 'exhibition',
     components: {
