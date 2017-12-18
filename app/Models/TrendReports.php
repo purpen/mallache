@@ -16,7 +16,7 @@ class TrendReports extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title', 'hits' ,'cover_id'];
+    protected $fillable = ['title', 'hits' ,'cover_id' , 'status' , 'pdf_id' , 'summary'];
 
     /**
      * 趋势报告
