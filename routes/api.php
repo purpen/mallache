@@ -304,5 +304,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         $api->get('/veerImage/list', 'VeerController@lists');
 
+        /**
+         * 日历列表详情
+         */
+        //日历详情
+        $api->get('/dateOfAward', 'DateOfAwardController@show');
+        //日历周
+        $api->get('/dateOfAward/week', 'DateOfAwardController@week');
+        //日历月
+        $api->get('/dateOfAward/month', 'DateOfAwardController@month');
+
     });
 });
