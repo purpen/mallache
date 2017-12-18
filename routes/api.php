@@ -314,5 +314,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //日历月
         $api->get('/dateOfAward/month', 'DateOfAwardController@month');
 
+        /**
+         * 趋势报告
+         */
+        //趋势报告列表
+        $api->get('/trendReports/lists', 'TrendReportsController@lists');
+        //趋势报告详情
+        $api->get('/trendReports', 'TrendReportsController@show');
+
     });
 });

@@ -216,6 +216,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/trendReports/lists', 'TrendReportsController@lists');
         // 栏目文章删除
         $api->delete('/admin/trendReports/delete', 'TrendReportsController@delete');
+        //启用禁用
+        $api->put('/admin/trendReports/verifyStatus', 'TrendReportsController@verifyStatus');
+
     });
 
 });

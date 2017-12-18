@@ -120,6 +120,9 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+        //启用禁用
+        '/admin/trendReports/verifyStatus',
+
 
         // 大赛作品
         '/admin/works/list',
@@ -245,6 +248,8 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+        //启用禁用
+        '/admin/trendReports/verifyStatus',
 
         // 大赛作品
         '/admin/works/list',
@@ -331,6 +336,9 @@ return [
         '/admin/trendReports/lists',
         // 栏目文章删除
         '/admin/trendReports/delete',
+        //启用禁用
+        '/admin/trendReports/verifyStatus',
+
 
         // 大赛作品
         '/admin/works/list',

@@ -23,6 +23,7 @@ class TrendReportsController extends BaseController
      *
      * @apiParam {string} title 趋势报告标题
      * @apiParam {integer} cover_id 封面图ID
+     * @apiParam {integer} pdf_id pdf文件ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -39,6 +40,7 @@ class TrendReportsController extends BaseController
         $rules = [
             'title' => 'required|max:100',
             'cover_id' => 'integer',
+            'pdf_id' => 'integer',
         ];
 
         $all = $request->all();
@@ -123,7 +125,6 @@ class TrendReportsController extends BaseController
      *          "title": "这是第一篇",
      *          "cover_id": 1,
      *          "image": []
-     *          "verify_status": 1 //只有等于1的情况下，才能下载
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -133,20 +134,9 @@ class TrendReportsController extends BaseController
      */
     public function show(Request $request)
     {
-        //
-        $type = $this->auth_user->type;
-        if($type == 1){
-            $design_company = DesignCompanyModel::where('id' , $this->auth_user->design_company_id)->first();
-            $verify_status = $design_company->verify_status;
-        }else{
-            $demand_company = DemandCompany::where('id' , $this->auth_user->demand_company_id)->first();
-            $verify_status = $demand_company->verify_status;
-
-        }
         $id = $request->input('id');
 
         $trendReports = TrendReports::find($id);
-        $trendReports->verify_status = $verify_status;
         if (!$trendReports) {
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -206,6 +196,48 @@ class TrendReportsController extends BaseController
     {
         $id = (int)$request->input('id');
         TrendReports::destroy($id);
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {put} /admin/trendReports/verifyStatus 启用/禁用
+     * @apiVersion 1.0.0
+     * @apiName trendReports verifyStatus
+     * @apiGroup AdminTrendReports
+     *
+     * @apiParam {integer} id
+     * @apiParam {integer} status 状态 0.禁用 1.启用
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function verifyStatus(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'status' => 'required|integer',
+        ]);
+
+        $works = TrendReports::find($request->input('id'));
+        if (!$works) {
+            return $this->response->array($this->apiSuccess('not found', 404));
+        }
+
+        if ($request->input('status')) {
+            $works->status = 1;
+        } else {
+            $works->status = 0;
+        }
+        $works->save();
 
         return $this->response->array($this->apiSuccess());
     }
