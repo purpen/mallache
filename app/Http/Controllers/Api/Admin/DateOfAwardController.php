@@ -186,7 +186,7 @@ class DateOfAwardController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
     }
 
 
