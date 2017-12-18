@@ -23,7 +23,6 @@ import './assets/css/base.css'
 import './assets/css/admin.css'
 import 'fullcalendar/dist/fullcalendar.css'
 
-window.jQuery = window.$ = require('jquery')
 Vue.use(ElementUI)
 // 图片懒加载
 Vue.use(VueLazyload, {
