@@ -3,37 +3,15 @@
 </template>
 
 <script>
+  import { FullCalendar } from 'vue-full-calendar'
   import defaultsDeep from 'lodash.defaultsdeep'
-  import 'fullcalendar'
   import $ from 'jquery'
 
   export default {
     props: {
       events: {
-        default() {
-          return [
-            {
-              title: 'event1',
-              start: '2017-12-01',
-              backgroundColor: '#FF9650',
-              borderColor: '#FF9650'
-            },
-            {
-              title: 'event2',
-              start: '2017-12-05',
-              end: '2017-12-12',
-              backgroundColor: '#FF6E73',
-              borderColor: '#FF6E73'
-            },
-            {
-              title: 'event3',
-              start: '2017-12-09T12:30:00',
-              allDay: false,
-              backgroundColor: '#FF6E73',
-              borderColor: '#FF6E73'
-            }
-          ]
-        }
+        type: Array,
+        required: true
       },
       eventSources: {
         default() {
@@ -86,6 +64,9 @@
     },
     created () {
     },
+    components: {
+      FullCalendar
+    },
     computed: {
       defaultConfig() {
         const self = this
@@ -136,30 +117,38 @@
           dayNamesShort: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           events: this.events,
           eventSources: this.eventSources,
-          eventRender(...args) {
+          eventRender (...args) {
             if (this.sync) {
               self.events = cal.fullCalendar('clientEvents')
             }
             self.$emit('event-render', ...args)
           },
-          eventDestroy(event) {
+          eventDestroy (event) {
             if (this.sync) {
               self.events = cal.fullCalendar('clientEvents')
             }
           },
-          eventClick(...args) {
-            console.log('ev')
-            self.$emit('event-selected', ...args)
+          eventClick (e) {
+            self.$emit('event-selected', e)
           },
-          eventDrop(...args) {
+          eventDrop (...args) {
             self.$emit('event-drop', ...args)
           },
-          eventResize(...args) {
+          eventResize (...args) {
             self.$emit('event-resize', ...args)
           },
-          dayClick(...args) {
-            console.log('dayClick')
-            self.$emit('day-click', ...args)
+          dayClick (e) {
+            self.$emit('day-click', e)
+          },
+          eventMouseover (e) {
+            for (let i = 0; i < cal.fullCalendar('clientEvents').length; i++) {
+              if (cal.fullCalendar('clientEvents')[i]._id === e._id) {
+                self.$emit('env-mouse-over', i, cal.fullCalendar('clientEvents')[i].backgroundColor)
+              }
+            }
+          },
+          eventMouseout (e) {
+            //            self.$emit('env-mouse-out')
           },
           select(start, end, jsEvent, view, resource) {
             self.$emit('event-created', {
