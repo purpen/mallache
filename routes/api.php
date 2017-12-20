@@ -322,5 +322,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //趋势报告详情
         $api->get('/trendReports', 'TrendReportsController@show');
 
+
+        /**
+         * 常用网站
+         */
+        // 常用网站详情
+        $api->get('/commonlyUsedUrls', 'CommonlyUsedUrlController@show');
+        // 常用网站列表
+        $api->get('/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
+
     });
 });

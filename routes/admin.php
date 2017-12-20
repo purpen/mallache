@@ -219,6 +219,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //启用禁用
         $api->put('/admin/trendReports/verifyStatus', 'TrendReportsController@verifyStatus');
 
+        /**
+         * 常用网站
+         */
+        // 保存常用网站
+        $api->post('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@store');
+        // 更新常用网站
+        $api->put('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@update');
+        // 常用网站详情
+        $api->get('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@show');
+        // 常用网站列表
+        $api->get('/admin/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
+        // 常用网站删除
+        $api->delete('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@delete');
+        //启用禁用
+        $api->put('/admin/commonlyUsedUrls/verifyStatus', 'CommonlyUsedUrlController@verifyStatus');
+
     });
 
 });
