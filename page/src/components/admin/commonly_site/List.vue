@@ -34,9 +34,9 @@
             </el-table-column>
             <el-table-column
               label="封面"
-              width="80">
+              width="90">
                 <template scope="scope">
-                  <p><img :src="scope.row.cover_url" width="50" /></p>
+                  <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -55,7 +55,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-              width="80"
+              width="60"
               label="状态">
                 <template scope="scope">
                   <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>

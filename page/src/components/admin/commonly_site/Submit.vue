@@ -77,17 +77,7 @@
                             </div>
                             <div class="content">
                               <p>{{ d.name }}</p>
-                              <div class="summary-edit" v-if="d.edit">
-                                <textarea v-model="d.summary">{{ d.summary }}</textarea>
-                              </div>
-                              <div class="summary" v-else>
-                                <p v-if="d.summary">{{ d.summary }}</p>
-                                <p class="image-no-summary" v-else>暂无描述信息</p>
-                              </div>
-                              <div class="opt" v-if="d.edit">
-                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="saveAssetSummary">保存</a>
-                              </div>
-                              <div class="opt" v-else>
+                              <div class="opt">
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
                                   <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </el-tooltip>
@@ -349,20 +339,16 @@ export default {
             that.coverId = that.form.cover_id
           }
 
-          if (response.data.data.image) {
+          if (response.data.data.cover) {
             var files = []
-            for (var i = 0; i < response.data.data.image.length; i++) {
-              var obj = response.data.data.image[i]
-              var item = {}
-              item['response'] = {}
-              item['id'] = obj['id']
-              item['name'] = obj['name']
-              item['url'] = obj['middle']
-              item['summary'] = obj['summary']
-              item['response']['asset_id'] = obj['id']
-              item['edit'] = false
-              files.push(item)
-            }
+            var obj = response.data.data.cover
+            var item = {}
+            item['response'] = {}
+            item['id'] = obj['id']
+            item['name'] = obj['name']
+            item['url'] = obj['middle']
+            item['response']['asset_id'] = obj['id']
+            files.push(item)
             that.fileList = files
           }
         }
