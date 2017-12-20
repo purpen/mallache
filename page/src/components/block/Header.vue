@@ -290,7 +290,7 @@ export default {
 
 #header-layout {
   position: relative;
-  z-index: 2;
+  z-index: 999;
   animation: slow 0.4s;
 }
 

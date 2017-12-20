@@ -74,10 +74,12 @@
            :class="{'item': true, 'is-active': currentName === 'usefulSites'}">
           常用网站
         </a>
-        <a v-if="false" @click="alick" class="item">
+        <a @click="alick" class="item" :to="'/vcenter/veerImage'"
+           :class="{'item': true, 'is-active': currentName === 'veerImage'}">
           图片素材
         </a>
-        <a v-if="false" @click="alick" class="item">
+        <a @click="alick" :to="'/vcenter/trendReport'"
+           :class="{'item': true, 'is-active': currentName === 'trendReport'}">
           趋势/报告
         </a>
         <a @click="alick" :to="'/vcenter/exhibition'"

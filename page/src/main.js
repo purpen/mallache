@@ -9,7 +9,6 @@ import ElementUI from 'element-ui'
 import phenix from '@/assets/js/base'
 import VueLazyload from 'vue-lazyload'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-import FullCalendar from 'vue-full-calendar'
 
 // 兼容 IE
 import 'babel-polyfill'
@@ -28,7 +27,6 @@ Vue.use(ElementUI)
 Vue.use(VueLazyload, {
   loading: require('assets/images/Bitmap.png')
 })
-Vue.use(FullCalendar)
 Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
