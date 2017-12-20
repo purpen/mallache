@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 class TrendReportsController extends BaseController
 {
     /**
-     * @api {post} /admin/trendReports/store 添加趋势报告
+     * @api {post} /admin/trendReports 添加趋势报告
      * @apiVersion 1.0.0
      * @apiName trendReports trendReportsStore
      * @apiGroup AdminTrendReports
@@ -24,6 +24,8 @@ class TrendReportsController extends BaseController
      * @apiParam {string} title 趋势报告标题
      * @apiParam {integer} cover_id 封面图ID
      * @apiParam {integer} pdf_id pdf文件ID
+     * @apiParam {array} tag 标签
+     * @apiParam {string} summary 描述
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -39,6 +41,7 @@ class TrendReportsController extends BaseController
     {
         $rules = [
             'title' => 'required|max:100',
+            'tag' => 'required',
             'cover_id' => 'integer',
             'pdf_id' => 'integer',
         ];
@@ -50,8 +53,15 @@ class TrendReportsController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $all['url'] = $request->input('url') ?? '';
         $all['status'] = 0;
+        $tags = $request->input('tag') ? $request->input('tag') : [];
+        if(!empty($tags)){
+            $all['tag'] = implode(',' , $tags);
+        }else{
+            $all['tag'] = '';
+        }
+        $all['user_id'] = $this->auth_user_id;
+        $all['summary'] = $request->input('summary') ? $request->input('summary') : '';
         if (!$trendReports = TrendReports::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
@@ -65,13 +75,17 @@ class TrendReportsController extends BaseController
     }
 
     /**
-     * @api {put} /admin/trendReports/update 更新趋势报告
+     * @api {put} /admin/trendReports 更新趋势报告
      * @apiVersion 1.0.0
      * @apiName trendReports trendReportsUpdate
      * @apiGroup AdminTrendReports
      *
      * @apiParam {integer} id 趋势报告ID
      * @apiParam {string} title 趋势报告标题
+     * @apiParam {integer} cover_id 封面图ID
+     * @apiParam {integer} pdf_id pdf文件ID
+     * @apiParam {array} tag 标签
+     * @apiParam {string} summary 描述
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -88,6 +102,8 @@ class TrendReportsController extends BaseController
         $rules = [
             'title' => 'required|max:100',
             'cover_id' => 'integer',
+            'pdf_id' => 'integer',
+            'tag' => 'required',
         ];
 
         $all = $request->all();
@@ -96,6 +112,13 @@ class TrendReportsController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+        $tags = $request->input('tag') ? $request->input('tag') : [];
+        if(!empty($tags)){
+            $all['tag'] = implode(',' , $tags);
+        }else{
+            $all['tag'] = '';
+        }
+        $all['summary'] = $request->input('summary') ? $request->input('summary') : '';
 
         $trendReports = TrendReports::find($request->input('id'));
         if (!$trendReports) {
@@ -175,7 +198,7 @@ class TrendReportsController extends BaseController
     }
 
     /**
-     * @api {delete} /admin/trendReports/delete 趋势报告删除
+     * @api {delete} /admin/trendReports 趋势报告删除
      * @apiVersion 1.0.0
      * @apiName trendReports delete
      * @apiGroup AdminTrendReports
