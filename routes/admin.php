@@ -183,19 +183,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // {put} /admin/dateOfAward/verifyStatus 状态变更
         $api->put('/admin/dateOfAward/changeStatus', 'DateOfAwardController@changeStatus');
 
-        /**
-         * 趋势报告
-         */
-        // 保存趋势报告
-        $api->post('/admin/trendReports/store', 'TrendReportsController@store');
-        // 更新趋势报告
-        $api->put('/admin/trendReports/update', 'TrendReportsController@update');
-        // 趋势报告详情
-        $api->get('/admin/trendReports', 'TrendReportsController@show');
-        // 趋势报告列表
-        $api->get('/admin/trendReports/lists', 'TrendReportsController@lists');
-        // 栏目文章删除
-        $api->delete('/admin/trendReports/delete', 'TrendReportsController@delete');
 
         /**
          * 大赛作品
@@ -214,6 +201,40 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/works/published', 'WorksController@published');
         // 删除文章
         $api->delete('/admin/works','WorksController@destroy');
+
+
+        /**
+         * 趋势报告
+         */
+        // 保存趋势报告
+        $api->post('/admin/trendReports', 'TrendReportsController@store');
+        // 更新趋势报告
+        $api->put('/admin/trendReports', 'TrendReportsController@update');
+        // 趋势报告详情
+        $api->get('/admin/trendReports', 'TrendReportsController@show');
+        // 趋势报告列表
+        $api->get('/admin/trendReports/lists', 'TrendReportsController@lists');
+        // 栏目文章删除
+        $api->delete('/admin/trendReports', 'TrendReportsController@delete');
+        //启用禁用
+        $api->put('/admin/trendReports/verifyStatus', 'TrendReportsController@verifyStatus');
+
+        /**
+         * 常用网站
+         */
+        // 保存常用网站
+        $api->post('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@store');
+        // 更新常用网站
+        $api->put('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@update');
+        // 常用网站详情
+        $api->get('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@show');
+        // 常用网站列表
+        $api->get('/admin/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
+        // 常用网站删除
+        $api->delete('/admin/commonlyUsedUrls', 'CommonlyUsedUrlController@delete');
+        //启用禁用
+        $api->put('/admin/commonlyUsedUrls/verifyStatus', 'CommonlyUsedUrlController@verifyStatus');
+
     });
 
 });
