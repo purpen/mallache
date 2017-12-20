@@ -127,6 +127,16 @@ return [
         // 作品删除
         '/admin/works/delete',
 
+
+
+        // 常用网站详情
+        '/admin/commonlyUsedUrls',
+        // 常用网站列表
+        '/admin/commonlyUsedUrls/list',
+        // 常用网站删除
+        '/admin/commonlyUsedUrls/delete',
+        //启用禁用
+        '/admin/commonlyUsedUrls/verifyStatus',
     ],
 
     /**
@@ -248,6 +258,15 @@ return [
         // 作品推荐
         '/admin/works/published',
 
+
+        // 常用网站详情
+        '/admin/commonlyUsedUrls',
+        // 常用网站列表
+        '/admin/commonlyUsedUrls/list',
+        // 常用网站删除
+        '/admin/commonlyUsedUrls/delete',
+        //启用禁用
+        '/admin/commonlyUsedUrls/verifyStatus',
     ],
 
     /**
@@ -326,6 +345,16 @@ return [
         '/admin/works/verifyStatus',
         // 作品推荐
         '/admin/works/published',
+
+
+        // 常用网站详情
+        '/admin/commonlyUsedUrls',
+        // 常用网站列表
+        '/admin/commonlyUsedUrls/list',
+        // 常用网站删除
+        '/admin/commonlyUsedUrls/delete',
+        //启用禁用
+        '/admin/commonlyUsedUrls/verifyStatus',
 
     ],
 ];
