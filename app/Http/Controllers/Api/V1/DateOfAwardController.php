@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Transformer\DateOfAwardListsTransformer;
 use App\Http\Transformer\DateOfAwardTransformer;
 use App\Models\DateOfAward;
 use Illuminate\Http\Request;
@@ -47,8 +46,7 @@ class DateOfAwardController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->collection($dateOfAwards, new DateOfAwardTransformer())->setMeta($this->apiMeta());
-
+        return $this->response->item($dateOfAwards, new DateOfAwardTransformer())->setMeta($this->apiMeta());
     }
 
     /**

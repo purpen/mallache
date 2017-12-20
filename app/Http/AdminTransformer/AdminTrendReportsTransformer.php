@@ -18,6 +18,7 @@ class AdminTrendReportsTransformer extends TransformerAbstract
             'pdf_id' => $trendReports->pdf_id,
             'status' => $trendReports->status,
             'summary' => $trendReports->summary,
+            'hits' => $trendReports->hits,
 
         ];
     }

@@ -54,6 +54,8 @@ class TrendReportsController extends BaseController
         $id = $request->input('id');
 
         $trendReports = TrendReports::find($id);
+        $trendReports->hits += 1;
+        $trendReports->save();
         $trendReports->verify_status = $verify_status;
         if (!$trendReports) {
             return $this->response->array($this->apiError('not found', 404));
