@@ -737,6 +737,34 @@ const AWARDS_EVT = [
   }
 ]
 
+// 常用风站类型
+const COMMONLY_SITE_TYPE = [
+  {
+    id: 1,
+    name: '设计资讯'
+  },
+  {
+    id: 2,
+    name: '创意灵感'
+  },
+  {
+    id: 3,
+    name: '众筹'
+  },
+  {
+    id: 4,
+    name: '商业咨询'
+  },
+  {
+    id: 5,
+    name: '设计奖项'
+  },
+  {
+    id: 0,
+    name: '其它'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -759,6 +787,7 @@ module.exports = {
   USER_KIND,
   AWARDS_TYPE,
   AWARDS_EVT,
+  COMMONLY_SITE_TYPE,
 
   TEST
 }

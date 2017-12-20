@@ -207,6 +207,16 @@ export default {
   dateOfAwardWeek: '/admin/dateOfAward/week', // GET 周历
   dateOfAwardMonth: '/admin/dateOfAward/month', // GET 月历
 
+  // 趋势/报告管理
+  adminTrendReportList: '/admin/trendReports/lists',  // GET 列表
+  adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
+
+  // 常用网站管理
+  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
+  adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminCommonlySiteSetStatus: '/admin/commonlyUsedUrls/verifyStatus', // PUT 更改状态
+
   // veer图片列表
   veerImage: '/veerImage/list',
 

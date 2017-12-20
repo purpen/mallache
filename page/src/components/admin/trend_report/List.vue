@@ -2,14 +2,17 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="userList"></v-menu>
+      <v-menu selectedName="trendReportList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminTrendReportList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+          </div>
+          <div class="fr">
+            <router-link :to="{name: 'adminTrendReportAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
           </div>
         </div>
 
@@ -30,54 +33,33 @@
               width="60">
             </el-table-column>
             <el-table-column
-              label="Logo"
-              width="80">
+              label="封面"
+              width="90">
                 <template scope="scope">
-                  <p><img :src="scope.row.logo_url" width="50" /></p>
+                  <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
-              label="用户信息"
+              prop="title"
+              label="标题"
               min-width="180">
-                <template scope="scope">
-                  <p>账户: {{ scope.row.account }}</p>
-                  <p>昵称: {{ scope.row.username }}</p>
-                  <p v-if="scope.row.realname">真实姓名: {{ scope.row.realname }} [{{ scope.row.position }}]</p>
-                </template>
+            </el-table-column>
+            <el-table-column
+              prop="user_id"
+              label="创建人ID"
+              min-width="40">
+            </el-table-column>
+            <el-table-column
+              prop="hits"
+              label="浏览量"
+              min-width="30">
             </el-table-column>
             <el-table-column
               width="60"
-              label="属性">
-                <template scope="scope">
-                  <p v-if="scope.row.kind === 2">鸟人</p>
-                  <p v-else>默认</p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              width="80"
-              label="类型">
-                <template scope="scope">
-                  <p v-if="scope.row.type === 2">设计公司</p>
-                  <p v-else>用户</p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              width="80"
-              label="权限">
-                <template scope="scope">
-                  <p v-if="scope.row.role_id === 0">用户</p>
-                  <p v-else-if="scope.row.role_id === 10">观察员</p>
-                  <p v-else-if="scope.row.role_id === 15">管理员</p>
-                  <p v-else-if="scope.row.role_id === 20">超级管理员</p>
-                  <p v-else>--</p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              width="80"
               label="状态">
                 <template scope="scope">
-                  <p v-if="scope.row.status === -1"><el-tag type="gray">禁用</el-tag></p>
-                  <p v-else><el-tag type="success">正常</el-tag></p>
+                  <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
+                  <p v-else><el-tag type="success">启用</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -90,15 +72,12 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-if="scope.row.status === 0" @click="setStatus(scope.$index, scope.row, -1)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 0)">启用</a>
+                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
                   <p>
-                    <a href="javascript:void(0);" @click="setRoleBtn(scope.$index, scope.row)">权限设置</a>
-                  </p>
-                  <p>
-                    <router-link :to="{name: 'adminUserSubmit', query: {id: scope.row.id}}">编辑</router-link>
-                    <!--<a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>-->
+                    <router-link :to="{name: 'adminTrendReportEdit', params: {id: scope.row.id}}">编辑</router-link>
+                    <a href="javascript:void(0)" @click="removeBtn(scope.$index, scope.row)">删除</a>
                   </p>
                 </template>
             </el-table-column>
@@ -119,23 +98,15 @@
       </el-col>
     </el-row>
 
-    <input type="hidden" ref="roleUserId" />
-    <input type="hidden" ref="roleIndex" />
-    <el-dialog title="设置权限" v-model="setRoleDialog">
-      <div class="set-role-name">
-        <p>账户：{{ currentAccount }}</p>
-      </div>
-      <div>
-        <el-radio-group v-model.number="roleId">
-          <el-radio :label="0">用户</el-radio>
-          <el-radio :label="10">观察员</el-radio>
-          <el-radio :label="15">管理员</el-radio>
-        </el-radio-group>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="setRoleDialog = false">取 消</el-button>
-        <el-button type="primary" @click="setRole">确 定</el-button>
-      </div>
+    <el-dialog
+      title="提示"
+      v-model="sureDialog"
+      size="tiny">
+      <span>确认执行此操作?</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="sureDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="dialogLoadingBtn" @click="sureDialogSubmit">确 定</el-button>
+      </span>
     </el-dialog>
 
   </div>
@@ -145,7 +116,7 @@
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 export default {
-  name: 'admin_user_list',
+  name: 'admin_trend_report_list',
   components: {
     vMenu
   },
@@ -158,13 +129,17 @@ export default {
       setRoleDialog: false,
       currentAccount: '',
       roleId: 0,
+      sureDialog: false,
+      dialogLoadingBtn: false,
+      currentDialogIndex: '',
+      currentDialogId: '',
       query: {
         page: 1,
         pageSize: 10,
         totalCount: 0,
         sort: 1,
         type: 0,
-
+        status: 0,
         test: null
       },
       msg: ''
@@ -182,40 +157,39 @@ export default {
       this.query.page = val
       this.$router.push({name: this.$route.name, query: {page: val}})
     },
-    setRoleBtn(index, item) {
-      this.$refs.roleIndex.value = index
-      this.$refs.roleUserId.value = item.id
-      this.currentAccount = item.account
-      this.roleId = item.role_id
-      this.setRoleDialog = true
+    // 删除弹层
+    removeBtn (index, obj) {
+      this.sureDialog = true
+      this.currentDialogIndex = index
+      this.currentDialogId = obj.id
     },
-    setRole() {
-      var userId = parseInt(this.$refs.roleUserId.value)
-      var index = parseInt(this.$refs.roleIndex.value)
+    // 确认删除操作
+    sureDialogSubmit () {
       var self = this
-      self.$http.post(api.adminUserSetRole, {user_id: userId, role_id: self.roleId})
+      self.dialogLoadingBtn = true
+      self.$http.delete(api.adminTrendReport, {params: {id: self.currentDialogId}})
       .then (function(response) {
-        self.setRoleDialog = false
+        self.dialogLoadingBtn = false
         if (response.data.meta.status_code === 200) {
-          self.itemList[index].role_id = self.roleId
-          self.$message.success('操作成功')
+          self.tableData.splice(self.currentDialogIndex, 1)
+          self.sureDialog = false
         } else {
-          self.$message.error(response.meta.message)
+          self.$message.error(response.data.meta.message)
         }
       })
       .catch (function(error) {
-        self.setRoleDialog = false
         self.$message.error(error.message)
+        self.dialogLoadingBtn = false
       })
     },
+    // 状态设置
     setStatus(index, item, evt) {
       var id = item.id
-      var url = api.adminUserSetStatus
       var self = this
-      self.$http.post(url, {user_id: id, status: evt})
+      self.$http.put(api.adminTrendReprotSetStatus, {id: id, status: evt})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
-          self.itemList[index].status = evt
+          self.tableData[index].status = evt
           self.$message.success('操作成功')
         } else {
           self.$message.error(response.meta.message)
@@ -223,19 +197,21 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
+        console.log(error.message)
       })
     },
     loadList() {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
-      self.query.sort = this.$route.query.sort || 1
+      self.query.sort = this.$route.query.sort || 0
       self.query.type = this.$route.query.type || 0
+      self.query.status = this.$route.query.status || 0
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
       self.isLoading = true
-      self.$http.get(api.adminUserLists, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      self.$http.get(api.adminTrendReportList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, status: self.query.status}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
@@ -245,13 +221,14 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.logo_url = ''
-            if (item.logo_image) {
-              item.logo_url = item.logo_image.logo
+            item.cover_url = ''
+            if (item.cover) {
+              item.cover_url = item.cover.logo
             }
             item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             self.tableData.push(item)
           } // endfor
+          console.log(self.tableData)
         } else {
           self.$message.error(response.data.meta.message)
         }

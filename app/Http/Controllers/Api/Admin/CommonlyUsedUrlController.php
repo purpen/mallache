@@ -114,6 +114,7 @@ class CommonlyUsedUrlController extends BaseController
         $rules = [
             'type' => 'required|integer',
             'title' => 'required|max:30',
+            'cover_id' => 'integer',
             'summary' => 'max:100',
             'url' => 'required|max:100',
 
@@ -125,6 +126,7 @@ class CommonlyUsedUrlController extends BaseController
             'summary' => $request->input('summary') ? $request->input('summary') : '',
             'user_id' => $user_id,
             'type' => $request->input('type'),
+            'cover_id' => $request->input('cover_id'),
             'url' => $request->input('url'),
         );
 

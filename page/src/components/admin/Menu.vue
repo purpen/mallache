@@ -37,6 +37,8 @@
             <el-menu-item index="articleList" :route="{name: 'adminArticleList'}">文章列表</el-menu-item>
             <el-menu-item index="worksList" :route="{name: 'adminWorksList'}">作品列表</el-menu-item>
             <el-menu-item index="awardsList" :route="{name: 'adminAwardsList'}">日历列表</el-menu-item>
+            <el-menu-item index="trendReportList" :route="{name: 'adminTrendReportList'}">趋势/报告列表</el-menu-item>
+            <el-menu-item index="commonlySiteList" :route="{name: 'adminCommonlySiteList'}">常用网站列表</el-menu-item>
         </el-submenu>
         <el-submenu index="18">
           <template slot="title"><i class="fa fa-cogs"></i> 系统管理</template>
