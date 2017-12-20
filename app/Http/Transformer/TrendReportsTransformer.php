@@ -13,6 +13,7 @@ class TrendReportsTransformer extends TransformerAbstract
             'id' => $trendReports->id,
             'title' => $trendReports->title,
             'cover_id' => $trendReports->cover_id,
+            'cover' => $trendReports->cover,
             'image' => $trendReports->image,
             'created_at' => $trendReports->created_at,
             'verify_status' => $trendReports->verify_status,
@@ -20,6 +21,8 @@ class TrendReportsTransformer extends TransformerAbstract
             'status' => $trendReports->status,
             'summary' => $trendReports->summary,
             'hits' => $trendReports->hits,
+            'tag' => $trendReports->tag ? explode(',' , $trendReports->tag) : [],
+            'user_id' => $trendReports->user_id,
         ];
     }
 }
