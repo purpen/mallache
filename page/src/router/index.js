@@ -1096,6 +1096,36 @@ const routes = [
     },
     component: require('@/components/admin/awards/Submit')
   },
+  // 添加趋势报告
+  {
+    path: '/admin/trend_report/add',
+    name: 'adminTrendReportAdd',
+    meta: {
+      title: '添加趋势报告',
+      requireAuth: true
+    },
+    component: require('@/components/admin/trend_report/Submit')
+  },
+  // 编辑趋势报告
+  {
+    path: '/admin/trend_report/edit/:id',
+    name: 'adminTrendReportEdit',
+    meta: {
+      title: '编辑趋势报告',
+      requireAuth: true
+    },
+    component: require('@/components/admin/trend_report/Submit')
+  },
+  // 趋势报告列表
+  {
+    path: '/admin/trend_report/list',
+    name: 'adminTrendReportList',
+    meta: {
+      title: '栏目列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/trend_report/List')
+  },
   // 404
   {
     path: '*',
