@@ -212,6 +212,11 @@ export default {
   adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
 
+  // 常用网站管理
+  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
+  adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminCommonlySiteSetStatus: '/admin/commonlyUsedUrls/verifyStatus', // PUT 更改状态
+
   // veer图片列表
   veerImage: '/veerImage/list',
 

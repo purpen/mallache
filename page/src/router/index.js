@@ -1121,10 +1121,40 @@ const routes = [
     path: '/admin/trend_report/list',
     name: 'adminTrendReportList',
     meta: {
-      title: '栏目列表',
+      title: '趋势报告列表',
       requireAuth: true
     },
     component: require('@/components/admin/trend_report/List')
+  },
+  // 添加常用网站
+  {
+    path: '/admin/commonly_site/add',
+    name: 'adminCommonlySiteAdd',
+    meta: {
+      title: '添加常用网站',
+      requireAuth: true
+    },
+    component: require('@/components/admin/commonly_site/Submit')
+  },
+  // 编辑常用网站
+  {
+    path: '/admin/commonly_site/edit/:id',
+    name: 'adminCommonlySiteEdit',
+    meta: {
+      title: '编辑常用网站',
+      requireAuth: true
+    },
+    component: require('@/components/admin/commonly_site/Submit')
+  },
+  // 常用网站列表
+  {
+    path: '/admin/commonly_site/list',
+    name: 'adminCommonlySiteList',
+    meta: {
+      title: '常用网站列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/commonly_site/List')
   },
   // 404
   {
