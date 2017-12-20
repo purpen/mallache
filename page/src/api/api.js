@@ -207,6 +207,14 @@ export default {
   dateOfAwardWeek: '/admin/dateOfAward/week',
   dateOfAwardMonth: '/admin/dateOfAward/month',
 
+  // 趋势/报告管理
+  adminTrendReportList: '/admin/trendReports/lists',  // GET 列表
+  adminTrendReport: '/admin/trendReports', // GET 详情
+  adminTrendReportAdd: '/admin/trendReports/store', // POST 添加
+  adminTrendReportUpdate: '/admin/trendReports/update', // PUT 更新
+  adminTrendReportDelete: '/admin/trendReports/delete', // DELETE 删除
+  adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
+
   // veer图片列表
   veerImage: '/veerImage/list',
   test: '/'  // End
