@@ -221,6 +221,7 @@ export default {
   adminAwardCaseList: '/admin/awardCase/list', // GET 列表
   adminAwardCase: '/admin/awardCase', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用／禁用
+  adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用／禁用
 
   // veer图片列表
   veerImage: '/veerImage/list',

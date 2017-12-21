@@ -143,6 +143,8 @@ return [
         '/admin/awardCase/list',
         //启用禁用
         '/admin/awardCase/changeStatus',
+        //推荐/取消
+        '/admin/awardCase/changeRecommended',
     ],
 
     /**
@@ -281,6 +283,8 @@ return [
         '/admin/awardCase/list',
         //启用禁用
         '/admin/awardCase/changeStatus',
+        //推荐/取消
+        '/admin/awardCase/changeRecommended',
     ],
 
     /**
@@ -377,6 +381,8 @@ return [
         '/admin/awardCase/list',
         //启用禁用
         '/admin/awardCase/changeStatus',
+        //推荐/取消
+        '/admin/awardCase/changeRecommended',
 
     ],
 ];

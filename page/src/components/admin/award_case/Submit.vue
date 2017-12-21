@@ -406,10 +406,10 @@ export default {
             that.coverId = that.form.cover_id
           }
 
-          if (response.data.data.image) {
+          if (response.data.data.images) {
             var files = []
-            for (var i = 0; i < response.data.data.image.length; i++) {
-              var obj = response.data.data.image[i]
+            for (var i = 0; i < response.data.data.images.length; i++) {
+              var obj = response.data.data.images[i]
               var item = {}
               item['response'] = {}
               item['id'] = obj['id']

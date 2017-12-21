@@ -250,6 +250,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/awardCase/list', 'AwardCaseController@lists');
         //启用禁用
         $api->put('/admin/awardCase/changeStatus', 'AwardCaseController@changeStatus');
+        //推荐/取消推荐
+        $api->put('/admin/awardCase/changeRecommended', 'AwardCaseController@changeRecommended');
 
     });
 

@@ -234,17 +234,59 @@ class AwardCaseController extends BaseController
         $id = $request->input("id");
         $status = $request->input("status");
 
-        $AwardCase = AwardCase::find($id);
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         if ($status) {
-            $AwardCase->status = 1;
+            $awardCase->status = 1;
         } else {
-            $AwardCase->status = 0;
+            $awardCase->status = 0;
         }
-        if (!$AwardCase->save()) {
+        if (!$awardCase->save()) {
+            return $this->response->array($this->apiError('Error', 500));
+        } else {
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
+    /**
+     * @api {put} /admin/awardCase/changeRecommended 奖项案例推荐操作
+     * @apiVersion 1.0.0
+     * @apiName awardCase awardCaseChangeRecommended
+     * @apiGroup AdminAwardCase
+     *
+     * @apiParam {integer} id ID
+     * @apiParam {integer} evt 推荐： 0.取消推荐；1.推荐；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function changeRecommended(Request $request)
+    {
+        $id = $request->input("id");
+        $evt = $request->input("evt");
+
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($evt) {
+            $awardCase->recommended = 1;
+            $awardCase->recommended_on = time();
+        } else {
+            $awardCase->recommended = 0;
+        }
+        if (!$awardCase->save()) {
             return $this->response->array($this->apiError('Error', 500));
         } else {
             return $this->response->array($this->apiSuccess());
