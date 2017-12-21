@@ -1,18 +1,42 @@
 <template>
   <div class="calendar">
-    <div class="header clearfix">
-      <span class="fl"></span>
+    <div class="header clearfix" ref="header">
+      <div class="fl fc-button-group">
+        <button type="button" @click="prev"
+                class="fc-prev-button fc-button fc-state-default fc-corner-left fc-state-hover">
+          <span
+            class="fc-icon fc-icon-left-single-arrow"></span>
+        </button>
+        <button type="button" @click="todays"
+                :class="['fc-today-button', 'fc-button', 'fc-state-default']" :disabled="isToday">今天
+        </button>
+        <button type="button" @click="next"
+                class="fc-next-button fc-button fc-state-default fc-corner-right">
+          <span
+            class="fc-icon fc-icon-right-single-arrow"></span>
+        </button>
+      </div>
       {{eventMsg.month}}
-      <span class="fr"></span>
+      <div class="fr fc-button-group">
+        <button type="button" @click="changeView('month')"
+                :class="['fc-month-button','fc-button', 'fc-state-default', 'fc-corner-left',
+                view === 'month' ? 'fc-state-active' : '']">
+          月
+        </button>
+        <button type="button" @click="changeView('basicWeek')"
+                :class="['fc-basicWeek-button','fc-button', 'fc-state-default', 'fc-corner-right',
+                view === 'basicWeek' ? 'fc-state-active' : '']">
+          周
+        </button>
+      </div>
     </div>
     <full-calendar ref="calendar"
                    @event-selected="eventSelected"
-                   @event-created="eventCreated"
                    :header="header"
                    :events="events"
                    :config="config"
     ></full-calendar>
-    <div class="info" v-show="hideinfo" ref="info">
+    <div id="info" class="info" v-show="hideinfo" ref="info">
       <div class="title" ref="title">
         <i class="close" @click="hideInfo"></i>
         <p ref="title_ico">{{eventMsg.title}}</p>
@@ -40,6 +64,8 @@
     data () {
       const self = this
       return {
+        isToday: true,
+        view: 'month',
         bg: '',
         hideinfo: false,
         eventMsg: {
@@ -50,11 +76,6 @@
           tips: ''
         },
         eventSources: [],
-        //        header: {
-        //          left: 'prev,today,next,',
-        //          center: 'title',
-        //          right: 'month,basicWeek'
-        //        },
         header: {
           left: '',
           center: '',
@@ -112,6 +133,7 @@
             let infoHeight = $(self.$refs.info).height()
             let top = jq.pageY - 50
             let left = jq.pageX - 100
+
             if (jq.pageX - 100 < 0) {
               left = 20
             }
@@ -124,6 +146,9 @@
             self.hideinfo = true
             self.$refs.info.style.top = top + 'px'
             self.$refs.info.style.left = left + 'px'
+            if (docWidth < 700) {
+              $('html,body').animate({scrollTop: $('.calendar').height()}, 'slow')
+            }
             self.eventMsg.title = event.title
             self.eventMsg.summary = event.summary
             self.eventMsg.tips = event.type_value
@@ -162,15 +187,6 @@
             self.hideinfo = false
             self.$emit('day-click', e)
           }
-          //          eventMouseover(event) {
-          //            self.bg = event.backgroundColor
-          //            event.backgroundColor = 'black'
-          //            self.$refs.calendar.fireMethod('updateEvents', event)
-          //          },
-          //          eventMouseout (event) {
-          //            event.backgroundColor = self.bg
-          //            self.$refs.calendar.fireMethod('updateEvent', event)
-          //          }
         }
       }
     },
@@ -180,26 +196,39 @@
       FullCalendar
     },
     computed: {
-      defaultConfig() {
-        const self = this
-        return {
-          select(start, end, jsEvent, view, resource) {
-            self.$emit('event-created', {
-              start,
-              end,
-              allDay: !start.hasTime() && !end.hasTime(),
-              view,
-              resource
-            })
-          }
-        }
+      isMob() {
+        return this.$store.state.event.isMob
       }
     },
-    mounted() {},
+    mounted() {
+      this.getView()
+      window.addEventListener('resize', () => {
+        this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
+      })
+      this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
+    },
     methods: {
-      prevs (e) {
-        console.log(this.$refs.calendar)
+      prev (e) {
+        this.isToday = false
         this.$refs.calendar.fireMethod('prev')
+        this.getView()
+      },
+      next (e) {
+        this.isToday = false
+        this.$refs.calendar.fireMethod('next')
+        this.getView()
+      },
+      todays (e) {
+        this.isToday = true
+        this.$refs.calendar.fireMethod('today')
+        this.getView()
+      },
+      changeView (method) {
+        this.view = method
+        this.$refs.calendar.fireMethod('changeView', method)
+      },
+      getView () {
+        this.eventMsg.month = this.$refs.calendar.fireMethod('getView').title
       },
       fireMethod(...options) {
         return $(this.$el).fullCalendar(...options)
@@ -224,7 +253,7 @@
         this.$refs.tips.style.backgroundSize = '15px'
       },
       eventCreated (...e) {
-        console.log(e)
+        //        console.log(e)
       }
     },
     beforeDestroy () {
@@ -243,7 +272,80 @@
     top: 16px;
     width: 100%;
     height: 30px;
-    background: #6663;
+    line-height: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .header .fr {
+    margin-top: -4px;
+  }
+
+  .fc-button-group {
+    display: flex;
+    justify-content: center;
+    width: auto;
+  }
+
+  .fc-button-group .fc-state-default {
+    padding: 0;
+    background: #FFFFFF;
+    border: 1px solid #979797;
+    box-shadow: none;
+    height: 22px;
+  }
+
+  .fc-button-group .fc-prev-button,
+  .fc-button-group .fc-next-button {
+    background: #FFFFFF;
+    border-radius: 50% !important;
+    width: 22px;
+    line-height: 1;
+    color: #979797
+  }
+
+  .fc-button-group .fc-prev-button:hover,
+  .fc-button-group .fc-next-button:hover,
+  .fc-button-group .fc-today-button:hover {
+    color: #FF5D62;
+    border-color: #FF5D62;
+  }
+
+  .fc-button-group .fc-prev-button:active,
+  .fc-button-group .fc-next-button:active,
+  .fc-button-group .fc-today-button:active {
+    color: #FFFFFF;
+    background-color: #FFACAF;
+    border-color: #FF5D62;
+  }
+
+  .fc-button-group .fc-today-button {
+    margin: 0 4px !important;
+    border-radius: 10px;
+    padding: 0 8px;
+    color: #999999;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .fc-button-group .fc-month-button,
+  .fc-button-group .fc-basicWeek-button {
+    margin-left: -1px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 12px;
+    color: #FF5A5F
+  }
+
+  .fc-button-group .fc-state-active {
+    background: #FFACAF;
+    color: #FFFFFF;
+    border-color: #FF5A5F;
+  }
+
+  .fc-button-group .fc-basicWeek-button.fc-state-default {
+    border-color: #FF5A5F;
   }
 
   .info {
@@ -318,6 +420,24 @@
   .tips {
     background: url('../../../../../assets/images/tools/calendar/Label-green@2x.png') no-repeat left;
     background-size: 15px;
+  }
+
+  @media screen and (max-width: 700px) {
+    .info {
+      position: static;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .header {
+      position: absolute;
+      top: 36px;
+      width: 100%;
+      height: 30px;
+    }
   }
 </style>
 
