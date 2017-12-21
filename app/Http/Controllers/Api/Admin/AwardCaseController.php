@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 
-use App\Http\AdminTransformer\AdminAwardCaseListTransformer;
-use App\Http\AdminTransformer\AdminAwardCaseTransformer;
+use App\Http\AdminTransformer\AwardCaseListTransformer;
+use App\Http\AdminTransformer\AwardCaseTransformer;
 use App\Models\AssetModel;
 use App\Models\AwardCase;
 use Dingo\Api\Exception\StoreResourceFailedException;
