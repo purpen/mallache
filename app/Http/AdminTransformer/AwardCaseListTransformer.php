@@ -7,7 +7,7 @@ use League\Fractal\TransformerAbstract;
 
 class AwardCaseListTransformer extends TransformerAbstract
 {
-    public function transform(AwardCase $column)
+    public function transform(AwardCase $awardCase)
     {
         return [
             'id' => $awardCase->id,

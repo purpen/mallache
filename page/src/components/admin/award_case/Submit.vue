@@ -23,10 +23,10 @@
             <el-form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
 
-              <el-form-item label="设计类型" prop="type">
-                <el-radio-group v-model.number="form.type">
+              <el-form-item label="所属奖项" prop="category_id">
+                <el-radio-group v-model.number="form.category_id">
                   <el-radio-button
-                    v-for="item in typeOptions"
+                    v-for="item in categoryOptions"
                     :key="item.index"
                     :label="item.value">{{ item.label }}</el-radio-button>
                 </el-radio-group>
@@ -44,6 +44,19 @@
                 <el-col :span="12">
                   <el-form-item label="链接" prop="url">
                     <el-input v-model="form.url" placeholder=""></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row :gutter="12">
+                <el-col :span="6">
+                  <el-form-item label="奖项级别" prop="grade">
+                    <el-input v-model="form.grade" placeholder=""></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="获奖时间" prop="time_at">
+                    <el-input v-model="form.time_at" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -109,7 +122,16 @@
                 </el-col>
               </el-row>
 
-              <el-form-item label="描述" prop="content">
+              <el-form-item label="简述" prop="summary">
+                <el-input
+                  type="textarea"
+                  :rows="5"
+                  placeholder="请输入简述"
+                  v-model="form.summary">
+                </el-input>
+              </el-form-item>
+
+              <el-form-item label="内容" prop="content">
                 <el-input
                   type="textarea"
                   :rows="10"
@@ -155,7 +177,7 @@ export default {
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
         'x:target_id': '',
-        'x:type': 12
+        'x:type': 25
       },
       uploadMsg: '只能上传jpg/png文件，且不超过5M',
       pickerOptions: {
@@ -164,23 +186,24 @@ export default {
       coverId: '',
       fileList: [],
       form: {
-        type: '',
+        category_id: '',
+        grade: '',
+        time_at: '',
+        'summary': '',
         title: '',
         content: '',
+        cover_id: '',
         url: ''
       },
       ruleForm: {
-        type: [
-          { type: 'number', message: '请选择类型', trigger: 'change' }
+        category_id: [
+          { type: 'number', message: '请选择所属奖项', trigger: 'change' }
         ],
         title: [
           { required: true, message: '请添写标题', trigger: 'blur' }
         ],
-        url: [
-          { required: true, message: '链接不能为空', trigger: 'blur' }
-        ],
-        content: [
-          { required: true, message: '请添写内容', trigger: 'blur' }
+        time_at: [
+          { required: true, message: '请添写获奖时间', trigger: 'blur' }
         ]
       },
       msg: ''
@@ -197,8 +220,11 @@ export default {
         // 验证通过，提交
         if (valid) {
           var row = {
-            type: that.form.type,
+            category_id: that.form.category_id,
             title: that.form.title,
+            summary: that.form.summary,
+            grade: that.form.grade,
+            time_at: that.form.time_at,
             content: that.form.content,
             url: that.form.url
           }
@@ -219,7 +245,7 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminColumnList'})
+              that.$router.push({name: 'adminAwardCaseList'})
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -353,12 +379,12 @@ export default {
     }
   },
   computed: {
-    typeOptions() {
+    categoryOptions() {
       var items = []
-      for (var i = 0; i < typeData.COLUMN_TYPE.length; i++) {
+      for (var i = 0; i < typeData.AWARD_CASE_CATEGORY.length; i++) {
         var item = {
-          value: typeData.COLUMN_TYPE[i]['id'],
-          label: typeData.COLUMN_TYPE[i]['name']
+          value: typeData.AWARD_CASE_CATEGORY[i]['id'],
+          label: typeData.AWARD_CASE_CATEGORY[i]['name']
         }
         items.push(item)
       }
