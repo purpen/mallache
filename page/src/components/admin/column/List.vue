@@ -55,6 +55,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+              prop="user_id"
+              label="用户ID"
+              width="60">
+            </el-table-column>
+            <el-table-column
               width="80"
               label="状态">
                 <template scope="scope">

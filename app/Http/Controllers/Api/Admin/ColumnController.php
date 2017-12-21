@@ -56,6 +56,7 @@ class ColumnController extends BaseController
 
         $all['url'] = $request->input('url') ?? '';
         $all['status'] = 0;
+        $all['user_id'] = $this->auth_user_id;
         if (!$column = Column::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }

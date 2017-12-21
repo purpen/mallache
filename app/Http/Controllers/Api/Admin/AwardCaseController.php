@@ -54,7 +54,7 @@ class AwardCaseController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
+        $all['user_id'] = $this->auth_user_id;
         if (!$AwardCase = AwardCase::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }

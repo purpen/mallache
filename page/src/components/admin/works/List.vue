@@ -49,7 +49,8 @@
               width="60">
             </el-table-column>
             <el-table-column
-              label="创建人">
+              width="60"
+              label="用户ID">
                 <template scope="scope">
                   <p>
                     {{ scope.row.user_id }}

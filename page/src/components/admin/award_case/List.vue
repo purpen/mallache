@@ -41,14 +41,14 @@
             </el-table-column>
             <el-table-column
               label="产品信息"
-              min-width="180">
+              min-width="160">
                 <template scope="scope">
                   <p>标题: {{ scope.row.title }}</p>
                   <p>链接: {{ scope.row.url }}</p>
                 </template>
             </el-table-column>
             <el-table-column
-              width="150"
+              min-width="150"
               label="奖项信息">
                 <template scope="scope">
                   <p>奖项: {{ scope.row.category_value }}</p>
@@ -56,7 +56,12 @@
                   <p>获奖时间: {{ scope.row.time_at }}</p>
                 </template>
             </el-table-column>
-           <el-table-column
+            <el-table-column
+              prop="user_id"
+              label="用户ID"
+              min-width="50">
+            </el-table-column>
+            <el-table-column
               width="60"
               label="推荐">
                 <template scope="scope">
