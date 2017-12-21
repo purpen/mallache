@@ -32,7 +32,7 @@ class AwardCase extends BaseModel
         $category_id = $this->category_id;
         $awardCase = config('constant.awardCase_category');
         if (array_key_exists($category_id, $awardCase)) {
-            return $awardCase[$category_value];
+            return $awardCase[$category_id];
         }
 
         return null;
