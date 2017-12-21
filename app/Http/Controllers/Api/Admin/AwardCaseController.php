@@ -55,12 +55,12 @@ class AwardCaseController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $all['user_id'] = $this->auth_user_id;
-        if (!$AwardCase = AwardCase::create($all)) {
+        if (!$awardCase = AwardCase::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
 
         if($random = $request->input('random')){
-            AssetModel::setRandom($AwardCase->id, $random);
+            AssetModel::setRandom($awardCase->id, $random);
         }
 
         return $this->response->array($this->apiSuccess());
@@ -110,12 +110,12 @@ class AwardCaseController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $AwardCase = AwardCase::find($request->input('id'));
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($request->input('id'));
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if (!$AwardCase = $AwardCase->update($all)) {
+        if (!$awardCase = $awardCase->update($all)) {
             return $this->response->array($this->apiError('更新失败', 500));
         }
 
@@ -162,12 +162,12 @@ class AwardCaseController extends BaseController
     {
         $id = $request->input('id');
 
-        $AwardCase = AwardCase::find($id);
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($AwardCase, new AwardCaseTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($awardCase, new AwardCaseTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -176,7 +176,8 @@ class AwardCaseController extends BaseController
      * @apiName awardCase awardCaseList
      * @apiGroup AdminAwardCase
      *
-     * @apiParam {integer} type 类型；
+     * @apiParam {integer} type 类型: 0.全部；；
+     * @apiParam {integer} category_id 奖项类型: 0.全部；
      * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数

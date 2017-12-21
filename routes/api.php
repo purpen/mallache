@@ -82,6 +82,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/article', 'ArticleController@edit');
 
     /**
+     * 奖项案例
+     */
+    // 保存
+    $api->post('/awardCase', 'AwardCaseController@store');
+    // 详情
+    $api->get('/awardCase', 'AwardCaseController@show');
+    // 列表
+    $api->get('/awardCase/list', 'AwardCaseController@lists');
+
+    /**
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api){

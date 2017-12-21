@@ -122,6 +122,33 @@
                 </el-col>
               </el-row>
 
+              <el-row v-if="form.images_url">
+                <el-col :span="24">
+                  <el-form-item label="图片草稿" prop="images_url">
+                    <div class="file-list">
+                      <el-row :gutter="10">
+                        <el-col :span="8" v-for="(d, index) in fileDraftList" :key="index">
+                          <el-card :body-style="{ padding: '0px' }" class="item">
+                            <div class="image-box">
+                                <img :src="d">
+                            </div>
+                            <div class="content">
+                              <div class="opt">
+                                <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
+                                  <a href="javascript:void(0);" :url="d" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </el-tooltip>
+                              </div>
+                            </div>
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                    </div>
+
+                  </el-form-item>
+
+                </el-col>
+              </el-row>
+
               <el-form-item label="简述" prop="summary">
                 <el-input
                   type="textarea"
@@ -185,6 +212,7 @@ export default {
       imageUrl: '',
       coverId: '',
       fileList: [],
+      fileDraftList: [],
       form: {
         category_id: '',
         grade: '',
@@ -284,6 +312,11 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
       })
+    },
+    // 删除草稿图
+    delDrafImage(event) {
+      var index = event.currentTarget.getAttribute('index')
+      self.fileDraftList.splice(index, 1)
     },
     // 编辑附件
     editAssetBtn(event) {
@@ -421,6 +454,11 @@ export default {
               files.push(item)
             }
             that.fileList = files
+          }
+
+          // 图片草稿
+          if (response.data.data.images_url) {
+            that.fileDraftList = response.data.data.images_url.split('@@')
           }
         }
       })
