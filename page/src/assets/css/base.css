@@ -1077,6 +1077,7 @@ button {
 }
 
 .fc-head-container.fc-widget-header {
+  text-align: center;
   border-color: transparent;
   -webkit-border-radius: 10px 10px 0 0;
   -moz-border-radius: 10px 10px 0 0;
@@ -1567,6 +1568,7 @@ td.fc-day.fc-widget-content.fc-today::before {
   }
 
   .fc-widget-header {
+    text-align: center;
     font-size: 12px;
     line-height: 20px;
 

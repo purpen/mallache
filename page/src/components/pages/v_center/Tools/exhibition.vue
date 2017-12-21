@@ -6,10 +6,10 @@
         <v-menu currentName="exhibition"></v-menu>
         <el-col :span="isMob ? 24 : 20">
           <vCalendar
-            :events="events" @day-click="dayClick"
-            @event-selected="eventSelected"
-            @env-mouse-over="envMouseOver"
-            @env-mouse-out="envMouseOut">
+            :events="events"
+            @event-click="eventClick"
+            @day-click="dayClick"
+            @event-selected="eventSelected">
           </vCalendar>
         </el-col>
       </el-row>
@@ -29,9 +29,8 @@
     data () {
       return {
         events: [],
-        eventMsg: {},
         id: '',
-        backGround: ''
+        backgroundColor: ''
       }
     },
     computed: {
@@ -42,10 +41,10 @@
     created () {
       this.$http.get(api.dateOfAwardMonth).then((res) => {
         if (res.data.meta.status_code === 200) {
-          let n = 0
+          //          let n = 0
           for (let i of res.data.data) {
-            n++
-            i.type = n
+            //            n++
+            //            i.type = n
             let obj = {}
             switch (i.type) {
               case 1:  // 大赛
@@ -69,8 +68,8 @@
             obj.start = i.start_time
             obj.end = i.end_time
             obj.type = i.type
+            obj.type_value = i.type_value
             obj.summary = i.summary
-            obj.editable = false
             this.events.push(obj)
           }
         } else {
@@ -83,26 +82,9 @@
     methods: {
       dayClick (e) {
       },
+      eventClick (e) {
+      },
       eventSelected (e) {
-        console.log(e)
-        this.eventMsg.title = e.title
-        this.eventMsg.summary = e.summary
-        this.eventMsg.type = e.type
-        if (e.end) {
-          this.eventMsg.date = e.start._i + ' - ' + e.end._i
-        } else {
-          this.eventMsg.date = e.start._i
-        }
-      },
-      envMouseOver (id, bg) {
-        this.id = id
-        this.backGround = bg
-        this.events[id].backgroundColor = '#0004'
-        console.log('envMouseOver')
-      },
-      envMouseOut () {
-        console.log('envMouseOut')
-        this.events[this.id].backgroundColor = this.backGround
       }
     }
   }
