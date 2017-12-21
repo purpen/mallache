@@ -167,7 +167,7 @@ class AwardCaseController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($AwardCase, new AdminAwardCaseTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($AwardCase, new AwardCaseTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -207,7 +207,7 @@ class AwardCaseController extends BaseController
             ->orderBy('id', 'desc')
             ->paginate($per_page);
 
-        return $this->response->paginator($lists, new AdminAwardCaseListTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new AwardCaseListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
