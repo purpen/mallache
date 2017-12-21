@@ -802,7 +802,7 @@ const routes = [
   },
   // 公司工具 => 图片素材
   {
-    path: '/vcenter/veerImage',
+    path: '/vcenter/veer_image',
     name: 'vcenterVeerImage',
     meta: {
       title: '图片素材',
@@ -812,13 +812,23 @@ const routes = [
   },
   // 公司工具 => 趋势/报告
   {
-    path: '/vcenter/trendReport',
+    path: '/vcenter/trend_report',
     name: 'vcenterTrendReport',
     meta: {
       title: '趋势/报告',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/Tools/trendReport')
+  },
+  // 公司工具 => 常用网站
+  {
+    path: '/vcenter/commonly_sites',
+    name: 'vcentercommonlySites',
+    meta: {
+      title: '常用网站',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/Tools/commonlySites')
   },
   // 公司工具 => 展览
   {
@@ -831,6 +841,10 @@ const routes = [
     component: (resolve) => {
       require(['@/components/pages/v_center/Tools/exhibition'], resolve)
     }
+  },
+  {
+    path: '/vcenter/calendar',
+    redirect: '/vcenter/exhibition'
   },
   // ###### 后台管理 ##########
   // 控制台

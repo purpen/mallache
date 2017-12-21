@@ -3,7 +3,8 @@
     <div class="veer-image">
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="veerImage"></v-menu>
+        <v-menu currentName="veerImage"
+        ></v-menu>
         <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
           <h2>{{msg}}</h2>
           <el-input placeholder="请输入内容" v-model="keyword">

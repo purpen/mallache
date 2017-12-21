@@ -3,8 +3,10 @@
     <div class="trend-report">
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="trendReport"></v-menu>
+        <v-menu currentName="trendReport" ></v-menu>
         <el-col :span="isMob ? 24 : 20">
+          <iframe src="../../../../../static/pdf/demo.pdf" type="application/pdf" :scroll="no">
+          </iframe>
         </el-col>
       </el-row>
     </div>
@@ -29,5 +31,8 @@
   }
 </script>
 <style scoped>
-
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
 </style>

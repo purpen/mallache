@@ -53,6 +53,7 @@
 <script>
   import { FullCalendar } from 'vue-full-calendar'
   import $ from 'jquery'
+  //  import api from '@/api/api'
 
   export default {
     props: {
@@ -210,18 +211,24 @@
     methods: {
       prev (e) {
         this.isToday = false
+        self.hideinfo = false
         this.$refs.calendar.fireMethod('prev')
         this.getView()
+        this.$emit('update-date', this.view, this.eventMsg.month)
       },
       next (e) {
         this.isToday = false
+        self.hideinfo = false
         this.$refs.calendar.fireMethod('next')
         this.getView()
+        this.$emit('update-date', this.view, this.eventMsg.month)
       },
       todays (e) {
         this.isToday = true
+        self.hideinfo = false
         this.$refs.calendar.fireMethod('today')
         this.getView()
+        this.$emit('update-date')
       },
       changeView (method) {
         this.view = method

@@ -68,7 +68,7 @@ const state = {
 
 let IsMobile = function () {
   let sUserAgent = navigator.userAgent
-  let mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
+  let mobileAgents = ['Mobile', 'Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
   let ismob = 0
 
   for (let i = 0; i < mobileAgents.length; i++) {
