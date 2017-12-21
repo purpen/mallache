@@ -127,16 +127,22 @@ return [
         // 作品删除
         '/admin/works/delete',
 
-
-
-        // 常用网站详情
+        // 常用网站详情 编辑 删除
         '/admin/commonlyUsedUrls',
         // 常用网站列表
         '/admin/commonlyUsedUrls/list',
-        // 常用网站删除
-        '/admin/commonlyUsedUrls/delete',
         //启用禁用
         '/admin/commonlyUsedUrls/verifyStatus',
+
+        /**
+         * 奖项案列
+         */
+        // 详情 编辑 删除
+        '/admin/awardCase',
+        // 列表
+        '/admin/awardCase/list',
+        //启用禁用
+        '/admin/awardCase/changeStatus',
     ],
 
     /**
@@ -259,14 +265,22 @@ return [
         '/admin/works/published',
 
 
-        // 常用网站详情
+        // 常用网站详情 编辑 删除
         '/admin/commonlyUsedUrls',
         // 常用网站列表
         '/admin/commonlyUsedUrls/list',
-        // 常用网站删除
-        '/admin/commonlyUsedUrls/delete',
         //启用禁用
         '/admin/commonlyUsedUrls/verifyStatus',
+
+        /**
+         * 奖项案列
+         */
+        // 详情 编辑 删除
+        '/admin/awardCase',
+        // 列表
+        '/admin/awardCase/list',
+        //启用禁用
+        '/admin/awardCase/changeStatus',
     ],
 
     /**
@@ -347,14 +361,22 @@ return [
         '/admin/works/published',
 
 
-        // 常用网站详情
+        // 常用网站详情 编辑 删除
         '/admin/commonlyUsedUrls',
         // 常用网站列表
         '/admin/commonlyUsedUrls/list',
-        // 常用网站删除
-        '/admin/commonlyUsedUrls/delete',
         //启用禁用
         '/admin/commonlyUsedUrls/verifyStatus',
+
+        /**
+         * 奖项案列
+         */
+        // 详情 编辑 删除
+        '/admin/awardCase',
+        // 列表
+        '/admin/awardCase/list',
+        //启用禁用
+        '/admin/awardCase/changeStatus',
 
     ],
 ];

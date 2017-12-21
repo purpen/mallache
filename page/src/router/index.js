@@ -1156,6 +1156,36 @@ const routes = [
     },
     component: require('@/components/admin/commonly_site/List')
   },
+  // 添加奖项案例
+  {
+    path: '/admin/award_case/add',
+    name: 'adminAwardCaseAdd',
+    meta: {
+      title: '添加奖项案例',
+      requireAuth: true
+    },
+    component: require('@/components/admin/award_case/Submit')
+  },
+  // 编辑奖项案例
+  {
+    path: '/admin/award_case/edit/:id',
+    name: 'adminAwardCaseEdit',
+    meta: {
+      title: '编辑奖项案例',
+      requireAuth: true
+    },
+    component: require('@/components/admin/award_case/Submit')
+  },
+  // 奖项案例列表
+  {
+    path: '/admin/award_case/list',
+    name: 'adminAwardCaseList',
+    meta: {
+      title: '奖项案例列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/award_case/List')
+  },
   // 404
   {
     path: '*',

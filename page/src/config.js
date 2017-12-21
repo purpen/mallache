@@ -760,7 +760,31 @@ const COMMONLY_SITE_TYPE = [
     name: '设计奖项'
   },
   {
-    id: 0,
+    id: 99,
+    name: '其它'
+  }
+]
+
+// 奖项案例分类
+const AWARD_CASE_CATEGORY = [
+  {
+    id: 1,
+    name: '美国IDEA设计大奖'
+  },
+  {
+    id: 2,
+    name: '日本g-mark优良设计奖'
+  },
+  {
+    id: 3,
+    name: '德国 IF设计大奖'
+  },
+  {
+    id: 4,
+    name: '德国红点奖'
+  },
+  {
+    id: 99,
     name: '其它'
   }
 ]
@@ -788,6 +812,7 @@ module.exports = {
   AWARDS_TYPE,
   AWARDS_EVT,
   COMMONLY_SITE_TYPE,
+  AWARD_CASE_CATEGORY,
 
   TEST
 }

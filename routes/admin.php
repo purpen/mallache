@@ -235,6 +235,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //启用禁用
         $api->put('/admin/commonlyUsedUrls/verifyStatus', 'CommonlyUsedUrlController@verifyStatus');
 
+        /**
+         * 奖项案例
+         */
+        // 保存
+        $api->post('/admin/awardCase', 'AwardCaseController@store');
+        // 更新
+        $api->put('/admin/awardCase', 'AwardCaseController@update');
+        // 详情
+        $api->get('/admin/awardCase', 'AwardCaseController@show');
+        // 删除
+        $api->delete('/admin/awardCase', 'AwardCaseController@delete');
+        // 列表
+        $api->get('/admin/awardCase/list', 'AwardCaseController@lists');
+        //启用禁用
+        $api->put('/admin/awardCase/changeStatus', 'AwardCaseController@changeStatus');
+
     });
 
 });
