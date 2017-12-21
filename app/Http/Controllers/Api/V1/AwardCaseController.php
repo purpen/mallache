@@ -77,8 +77,8 @@ class AwardCaseController extends BaseController
      * @apiName awardCase awardCaseShow
      * @apiGroup AwardCase
      *
-     * @apiParam {integer} id 文章id
-     * @apiParam {string} token
+     * @apiParam {integer} id ID
+     * @apiParam {string} auth_code 接口验证标识
      *
      * @apiSuccessExample 成功响应:
      *
@@ -113,6 +113,12 @@ class AwardCaseController extends BaseController
         if (empty($auth_code) || $auth_code != 'tHnD3IN2017') {
             return $this->response->array($this->apiError('授权失败！', 401));
         }
+
+        $auth_code = $request->input('auth_code') ? $request->input('auth_code') : '';
+        if (empty($auth_code) || $auth_code != 'tHnD3IN2017') {
+            return $this->response->array($this->apiError('授权失败！', 401));
+        }
+
         $id = $request->input('id');
 
         $awardCase = AwardCase::find($id);
@@ -133,7 +139,7 @@ class AwardCaseController extends BaseController
      * @apiParam {integer} category_id 奖项分类：0.全部；1.--; 2.--;
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
-     * @apiParam {string} token
+     * @apiParam {string} auth_code 接口验证标识
      *
      * @apiSuccessExample 成功响应:
      *
