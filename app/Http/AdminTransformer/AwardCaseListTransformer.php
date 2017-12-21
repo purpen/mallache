@@ -23,7 +23,6 @@ class AwardCaseListTransformer extends TransformerAbstract
             'time_at' => $awardCase->time_at,
             'recommended' => $awardCase->recommended,
             'recommended_on' => $awardCase->recommended_on,
-            'images_url' => $awardCase->images_url,
             'grade' => $awardCase->grade,
             'status' => $awardCase->status,
             'created_at' => $awardCase->created_at,
