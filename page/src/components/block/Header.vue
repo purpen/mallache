@@ -109,8 +109,8 @@
         </a>
       </div>
       <div class="option" v-if="!optionHide">
-        <a @click="toCenter">个人中心</a>
-        <a @click="toTools">工具</a>
+        <a @click="toCenter" :class="{'aActive': menuStatus === 'center'}">个人中心</a>
+        <a @click="toTools" :class="{'aActive': menuStatus === 'tools'}">工具</a>
       </div>
     </div>
     <div class="header-buttom-line"></div>
@@ -120,7 +120,7 @@
 <script>
   import auth from '@/helper/auth'
   import api from '@/api/api'
-  import { MSG_COUNT } from '@/store/mutation-types'
+  import { MSG_COUNT, MENU_STATUS } from '@/store/mutation-types'
   export default {
     name: 'header',
     data() {
@@ -223,11 +223,13 @@
       },
       toCenter () {
         this.moptionHide()
+        this.$store.commit(MENU_STATUS, 'center')
         sessionStorage.setItem('MENU_BAR', 11)
         this.$router.push({name: 'vcenterControl'})
       },
       toTools () {
         this.moptionHide()
+        this.$store.commit(MENU_STATUS, 'tools')
         sessionStorage.setItem('MENU_BAR', 11)
         this.$router.push({name: 'vcentercommonlySites'})
       },
@@ -266,6 +268,9 @@
       },
       messageCount() {
         return this.$store.state.event.msgCount
+      },
+      menuStatus () {
+        return this.$store.state.event.menuStatus
       }
     },
     created: function () {
@@ -275,6 +280,7 @@
         self.timeLoadMessage()
       }
       this.$store.commit('INIT_PAGE')
+      console.log(this.menuStatus)
     },
     mounted() {
       let that = this
@@ -352,6 +358,10 @@
     display: block;
     line-height: 30px;
     text-align: center;
+  }
+
+  .option a.aActive {
+    color: #FE3824;
   }
 
   .option a:first-child {

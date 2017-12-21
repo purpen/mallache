@@ -1,6 +1,6 @@
 <template>
   <div class="tools-menu">
-    <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-else>
+    <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist">
       <a @click="alick" :to="'/vcenter/commonly_sites'"
          :class="{'item': true, 'is-active': currentName === 'commonlySites'}">
         常用网站
@@ -25,6 +25,9 @@
     name: 'ToolsMenu',
     data () {
       return {}
+    },
+    props: {
+      currentName: {}
     },
     computed: {
       isMob() {

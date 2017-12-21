@@ -3,7 +3,8 @@
     <div class="commonly">
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="commonlySites" ></v-menu>
+        <v-menu currentName="commonlySites" v-if="menuStatus !== 'tools'"></v-menu>
+        <ToolsMenu v-if="menuStatus === 'tools'" currentName="commonlySites"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
                 v-loading.body="loading">
           <div class="commonly-sites">
@@ -121,10 +122,12 @@
 <script>
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
+  import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'commonlySites',
     components: {
-      vMenu
+      vMenu,
+      ToolsMenu
     },
     data () {
       return {
@@ -187,6 +190,9 @@
     computed: {
       isMob() {
         return this.$store.state.event.isMob
+      },
+      menuStatus () {
+        return this.$store.state.event.menuStatus
       }
     }
   }
