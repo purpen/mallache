@@ -45,7 +45,7 @@ class AwardCaseController extends BaseController
             return $this->response->array($this->apiError('授权失败！', 401));
         }
         $rules = [
-            'title' => 'required|max:30',
+            'title' => 'required|max:200',
             'category_id' => 'required|integer',
         ];
 
