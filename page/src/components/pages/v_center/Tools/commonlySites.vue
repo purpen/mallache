@@ -3,8 +3,8 @@
     <div class="commonly">
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="commonlySites" v-if="menuStatus !== 'tools'"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools'" currentName="commonlySites"></ToolsMenu>
+        <v-menu currentName="commonlySites" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
+        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="commonlySites"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
                 v-loading.body="loading">
           <div class="commonly-sites">

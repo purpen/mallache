@@ -280,7 +280,6 @@
         self.timeLoadMessage()
       }
       this.$store.commit('INIT_PAGE')
-      console.log(this.menuStatus)
     },
     mounted() {
       let that = this
