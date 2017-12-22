@@ -4,8 +4,8 @@
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
         <v-menu currentName="veerImage"
-                v-if="menuStatus !== 'tools'"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools'" currentName="veerImage"></ToolsMenu>
+                v-if="menuStatus !== 'tools' || !isMob"></v-menu>
+        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="veerImage"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
           <h2>{{msg}}</h2>
           <el-input placeholder="请输入内容" v-model="keyword">

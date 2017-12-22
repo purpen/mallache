@@ -3,8 +3,8 @@
     <div class="exhibition">
       <div class="blank20"></div>
       <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="exhibition" v-if="menuStatus !== 'tools'"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools'" currentName="exhibition"></ToolsMenu>
+        <v-menu currentName="exhibition" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
+        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="exhibition"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
                 v-loading.body="loading">
           <vCalendar
