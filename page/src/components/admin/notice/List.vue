@@ -78,7 +78,7 @@
                 <template scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发送</a>
                   </p>
                   <p>
                     <router-link :to="{name: 'adminNoticeEdit', params: {id: scope.row.id}}">编辑</router-link>
@@ -192,7 +192,7 @@ export default {
     setStatus(index, item, evt) {
       var id = item.id
       var self = this
-      self.$http.put(api.adminNoticeSetStatus, {id: id, status: evt})
+      self.$http.put(api.adminNoticeSetStatus, {id: id, evt: evt})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.tableData[index].status = evt

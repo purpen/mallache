@@ -100,9 +100,10 @@
                 <el-input
                   type="textarea"
                   :rows="4"
-                  placeholder="请输入内容"
+                  placeholder="请输入备注"
                   v-model="form.summary">
                 </el-input>
+                <div class="description">只用于后台备注，前端不显示</div>
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
@@ -188,8 +189,9 @@ export default {
     submit(formName) {
       const that = this
       if (!that.coverId) {
-        that.$message.error('请设置一张封面图')
-        return false
+        // that.$message.error('请设置一张封面图')
+        // return false
+        that.coverId = 0
       }
       that.$refs[formName].validate((valid) => {
         // 验证通过，提交
