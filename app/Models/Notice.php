@@ -25,6 +25,17 @@ class Notice extends BaseModel
         'url',
       ];
 
+    // 目标人群修改器
+    public function getEvtValueAttribute()
+    {
+        $evt = $this->evt;
+        $notice = config('constant.notice_evt');
+        if (array_key_exists($evt, $notice)) {
+            return $notice[$evt];
+        }
+        return null;
+    }
+
     /**
      * 封面图
      */

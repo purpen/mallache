@@ -28,7 +28,7 @@ class NoticeTransformer extends TransformerAbstract
             'id' => $notice->id,
             'type' => $notice->type,
             'evt' => $notice->evt,
-            'evt' => $notice->evt,
+            'evt_value' => $notice->evt_value,
             'url' => $notice->url,
             'title' => $notice->title,
             'user_id' => $notice->user_id,

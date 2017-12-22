@@ -2,17 +2,17 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="commonlySiteList"></v-menu>
+      <v-menu selectedName="noticeList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCommonlySiteList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminNoticeList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="fr">
-            <router-link :to="{name: 'adminCommonlySiteAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
+            <router-link :to="{name: 'adminNoticeAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
           </div>
         </div>
 
@@ -23,10 +23,10 @@
             <el-form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
 
-              <el-form-item label="网站类型" prop="type">
-                <el-radio-group v-model.number="form.type">
+              <el-form-item label="目标人群" prop="evt">
+                <el-radio-group v-model.number="form.evt">
                   <el-radio-button
-                    v-for="item in typeOptions"
+                    v-for="item in evtOptions"
                     :key="item.index"
                     :label="item.value">{{ item.label }}</el-radio-button>
                 </el-radio-group>
@@ -96,12 +96,21 @@
                 </el-col>
               </el-row>
 
-              <el-form-item label="描述" prop="summary">
+              <el-form-item label="备注" prop="summary">
                 <el-input
                   type="textarea"
-                  :rows="10"
+                  :rows="4"
                   placeholder="请输入内容"
                   v-model="form.summary">
+                </el-input>
+              </el-form-item>
+
+              <el-form-item label="内容" prop="content">
+                <el-input
+                  type="textarea"
+                  :rows="7"
+                  placeholder="请输入内容"
+                  v-model="form.content">
                 </el-input>
               </el-form-item>
 
@@ -126,14 +135,14 @@ import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 import typeData from '@/config'
 export default {
-  name: 'admin_commonly_site_submit',
+  name: 'admin_notice_submit',
   components: {
     vMenu
   },
   data () {
     return {
       menuType: 0,
-      itemMode: '添加常用网站',
+      itemMode: '添加系统通知',
       isLoading: false,
       isLoadingBtn: false,
       uploadUrl: '',
@@ -142,7 +151,7 @@ export default {
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
         'x:target_id': '',
-        'x:type': 18
+        'x:type': 28
       },
       uploadMsg: '只能上传jpg/png文件，且不超过5M',
       pickerOptions: {
@@ -153,12 +162,14 @@ export default {
       form: {
         type: '',
         title: '',
+        evt: '',
+        content: '',
         summary: '',
         url: ''
       },
       ruleForm: {
-        type: [
-          { type: 'number', message: '请选择类型', trigger: 'change' }
+        evt: [
+          { type: 'number', message: '请选择目标人群', trigger: 'change' }
         ],
         title: [
           { required: true, message: '请添写标题', trigger: 'blur' }
@@ -166,7 +177,7 @@ export default {
         url: [
           { required: true, message: '链接不能为空', trigger: 'blur' }
         ],
-        summary: [
+        content: [
           { required: true, message: '请添写内容', trigger: 'blur' }
         ]
       },
@@ -184,9 +195,10 @@ export default {
         // 验证通过，提交
         if (valid) {
           var row = {
-            type: that.form.type,
+            evt: that.form.evt,
             title: that.form.title,
             summary: that.form.summary,
+            content: that.form.content,
             url: that.form.url
           }
           row.cover_id = that.coverId
@@ -202,11 +214,11 @@ export default {
             }
           }
           that.isLoadingBtn = true
-          that.$http({method: method, url: api.adminCommonlySite, data: row})
+          that.$http({method: method, url: api.adminNotice, data: row})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminCommonlySiteList'})
+              that.$router.push({name: 'adminNoticeList'})
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -226,7 +238,7 @@ export default {
       })
     },
     returnList() {
-      this.$router.push({name: 'adminCommonlySiteList'})
+      this.$router.push({name: 'adminNoticeList'})
     },
     // 删除附件
     delAsset(event) {
@@ -289,8 +301,6 @@ export default {
       var item = {
         name: add.name,
         url: add.url,
-        edit: false,
-        summary: '',
         response: {
           asset_id: add.response.asset_id
         }
@@ -312,12 +322,12 @@ export default {
     }
   },
   computed: {
-    typeOptions() {
+    evtOptions() {
       var items = []
-      for (var i = 0; i < typeData.COMMONLY_SITE_TYPE.length; i++) {
+      for (var i = 0; i < typeData.NOTICE_EVT.length; i++) {
         var item = {
-          value: typeData.COMMONLY_SITE_TYPE[i]['id'],
-          label: typeData.COMMONLY_SITE_TYPE[i]['name']
+          value: typeData.NOTICE_EVT[i]['id'],
+          label: typeData.NOTICE_EVT[i]['name']
         }
         items.push(item)
       }
@@ -328,10 +338,10 @@ export default {
     const that = this
     var id = this.$route.params.id
     if (id) {
-      that.itemMode = '编辑常用网站'
+      that.itemMode = '编辑系统通知'
       that.itemId = id
       that.uploadParam['x:target_id'] = id
-      that.$http.get(api.adminCommonlySite, {params: {id: id}})
+      that.$http.get(api.adminNotice, {params: {id: id}})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           that.form = response.data.data

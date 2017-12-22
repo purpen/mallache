@@ -1200,6 +1200,36 @@ const routes = [
     },
     component: require('@/components/admin/award_case/List')
   },
+  // 添加系统通知
+  {
+    path: '/admin/notice/add',
+    name: 'adminNoticeAdd',
+    meta: {
+      title: '添加系统通知',
+      requireAuth: true
+    },
+    component: require('@/components/admin/notice/Submit')
+  },
+  // 编辑系统通知
+  {
+    path: '/admin/notice/edit/:id',
+    name: 'adminNoticeEdit',
+    meta: {
+      title: '编辑系统通知',
+      requireAuth: true
+    },
+    component: require('@/components/admin/notice/Submit')
+  },
+  // 系统通知列表
+  {
+    path: '/admin/notice/list',
+    name: 'adminNoticeList',
+    meta: {
+      title: '系统通知列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/notice/List')
+  },
   // 404
   {
     path: '*',
