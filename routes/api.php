@@ -341,5 +341,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 常用网站列表
         $api->get('/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
 
+        /**
+         * 系统通知
+         */
+        // 详情
+        $api->get('/notice', 'NoticeController@show');
+        // 列表
+        $api->get('/notice/list', 'NoticeController@lists');
+
     });
 });
