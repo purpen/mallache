@@ -316,7 +316,7 @@ export default {
     // 删除草稿图
     delDrafImage(event) {
       var index = event.currentTarget.getAttribute('index')
-      self.fileDraftList.splice(index, 1)
+      this.fileDraftList.splice(index, 1)
     },
     // 编辑附件
     editAssetBtn(event) {
