@@ -7,7 +7,7 @@
         <ToolsMenu v-if="menuStatus === 'tools' && isMob"
                    currentName="trendReport"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20">
-          <pdf @password="password" class="pdf" :page="1" src="../../../../../static/pdf/dig.pdf"></pdf>
+          <!--<pdf @password="password" class="pdf" :page="1" src="../../../../../static/pdf/dig.pdf"></pdf>-->
         </el-col>
       </el-row>
     </div>
