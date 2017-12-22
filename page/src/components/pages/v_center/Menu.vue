@@ -3,7 +3,8 @@
     <section :class="['menuHide', isMob ? 'MmenuHide' : '']">
       <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
         <span v-if="!isMob">个人中心</span>
-        <a @click="alick" :to="'/vcenter/control'" :class="{'item': true, 'is-active': currentName === 'control'}">
+        <a @click="alick" :to="'/vcenter/control'"
+           :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
         <a @click="alick" :to="'/vcenter/message/list'"
@@ -68,17 +69,17 @@
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
-      <div class="menu-list" v-if="true">
+      <div class="menu-list">
         <span v-if="!isMob">工具</span>
-        <a v-if="false" @click="alick" :to="'/vcenter/usefulSites'"
-           :class="{'item': true, 'is-active': currentName === 'usefulSites'}">
+        <a @click="alick" :to="'/vcenter/commonly_sites'"
+           :class="{'item': true, 'is-active': currentName === 'commonlySites'}">
           常用网站
         </a>
-        <a @click="alick" class="item" :to="'/vcenter/veerImage'"
+        <a @click="alick" class="item" :to="'/vcenter/veer_image'"
            :class="{'item': true, 'is-active': currentName === 'veerImage'}">
           图片素材
         </a>
-        <a @click="alick" :to="'/vcenter/trendReport'"
+        <a @click="alick" :to="'/vcenter/trend_report'"
            :class="{'item': true, 'is-active': currentName === 'trendReport'}">
           趋势/报告
         </a>
@@ -128,7 +129,6 @@
     },
     mounted() {
       let menu = sessionStorage.getItem('MENU_BAR')
-
       this.$refs.Mmenulist.scrollLeft = menu - document.documentElement.clientWidth / 2 + 38
     }
   }

@@ -4,7 +4,8 @@ import {
   USER_INFO,
   MSG_COUNT,
   PREV_URL_NAME,
-  CLEAR_PREV_URL_NAME
+  CLEAR_PREV_URL_NAME,
+  MENU_STATUS
 } from './mutation-types.js'
 
 // 判断是否登录
@@ -47,6 +48,16 @@ let msgCount = function () {
   }
 }
 
+// 判断是否登录
+let getMenustatus = function () {
+  let menuStatus = localStorage.getItem('menu_status')
+  if (menuStatus) {
+    return menuStatus
+  } else {
+    return false
+  }
+}
+
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
@@ -63,12 +74,13 @@ const state = {
     title: '' // 标题
   },
   pmdHeight: '0px', // 页面大图高度
-  isMob: false
+  isMob: false,
+  menuStatus: getMenustatus() || 'center'
 }
 
 let IsMobile = function () {
   let sUserAgent = navigator.userAgent
-  let mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
+  let mobileAgents = ['Mobile', 'Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
   let ismob = 0
 
   for (let i = 0; i < mobileAgents.length; i++) {
@@ -116,6 +128,10 @@ const mutations = {
   [CLEAR_PREV_URL_NAME](state) {
     localStorage.removeItem('prev_url_name')
     state.prevUrlName = null
+  },
+  [MENU_STATUS](state, status) {
+    localStorage.setItem('menu_status', status)
+    state.menuStatus = status
   },
   INIT_PAGE(state) {
     if (IsMobile()) {
