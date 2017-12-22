@@ -12,7 +12,7 @@
               <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in reportList" :key="index">
                 <router-link to="" class="item">
                   <div class="picture"
-                       :style="{background: 'url('+ele.cover.middle+'no-repeat center)', backgroundSize: 'cover'}">
+                       :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                     {{ele.cover.summary}}
                   </div>
                   <article class="item-boty clearfix">
