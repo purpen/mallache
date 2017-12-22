@@ -103,72 +103,74 @@
 
       </div>
       <div class="m-Nav-right" v-if="isLogin">
-        <a @click="addPosition">
+        <a @click="moptionHide">
           <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url"/>
           <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
         </a>
       </div>
-
+      <div class="option" v-if="!optionHide">
+        <a @click="toCenter" :class="{'aActive': menuStatus === 'center'}">个人中心</a>
+        <a @click="toTools" :class="{'aActive': menuStatus === 'tools'}">工具</a>
+      </div>
     </div>
     <div class="header-buttom-line"></div>
   </div>
 </template>
 
 <script>
-import auth from '@/helper/auth'
-import api from '@/api/api'
-import { MSG_COUNT } from '@/store/mutation-types'
-export default {
-  name: 'header',
-  data() {
-    return {
-      // menuactive: this.$route.path.split('/')[1],
-      requestMessageTask: null,
-      menu: {
-        home: { path: '/home' },
-        server: { path: '/server' },
-        design: { path: '/server_design' },
-        topic: { path: '/article/list' },
-        stuff: { path: '/stuff' },
-        apply: { path: '/apply' },
-        login: { path: '/login' },
-        register: { path: '/register' },
-        identity: { path: '/identity' }
+  import auth from '@/helper/auth'
+  import api from '@/api/api'
+  import { MSG_COUNT, MENU_STATUS } from '@/store/mutation-types'
+  export default {
+    name: 'header',
+    data() {
+      return {
+        // menuactive: this.$route.path.split('/')[1],
+        requestMessageTask: null,
+        menu: {
+          home: {path: '/home'},
+          server: {path: '/server'},
+          design: {path: '/server_design'},
+          topic: {path: '/article/list'},
+          stuff: {path: '/stuff'},
+          apply: {path: '/apply'},
+          login: {path: '/login'},
+          register: {path: '/register'},
+          identity: {path: '/identity'}
+        },
+        menuHide: true,
+        optionHide: true
+      }
+    },
+    watch: {
+      $route(to, from) {
+        // 对路由变化作出响应...
+        // this.navdefact()
+      }
+    },
+    methods: {
+      navdefact() {
+        // 设置router函数跳转
+        this.menuactive = this.$route.path.split('/')[1]
       },
-      menuHide: true
-    }
-  },
-  watch: {
-    $route(to, from) {
-      // 对路由变化作出响应...
-      // this.navdefact()
-    }
-  },
-  methods: {
-    navdefact() {
-      // 设置router函数跳转
-      this.menuactive = this.$route.path.split('/')[1]
-    },
-    logout() {
-      auth.logout()
-      this.isLogin = false
-      this.$message({
-        showClose: true,
-        message: '登出成功!',
-        type: 'success'
-      })
-      clearInterval(this.requestMessageTask)
-      this.$router.replace('/home')
-    },
-    toServer() {
-      this.$router.push({ name: 'serverDesign' })
-    },
-    // 请求消息数量
-    fetchMessageCount() {
-      const self = this
-      this.$http
-        .get(api.messageGetMessageQuantity, {})
-        .then(function(response) {
+      logout() {
+        auth.logout()
+        this.isLogin = false
+        this.$message({
+          showClose: true,
+          message: '登出成功!',
+          type: 'success'
+        })
+        clearInterval(this.requestMessageTask)
+        this.$router.replace('/home')
+      },
+      toServer() {
+        this.$router.push({name: 'serverDesign'})
+      },
+      // 请求消息数量
+      fetchMessageCount() {
+        const self = this
+        this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
           if (response.data.meta.status_code === 200) {
             let messageCount = parseInt(response.data.data.quantity)
             // 写入localStorage
@@ -177,149 +179,215 @@ export default {
             self.$message.error(response.data.meta.message)
           }
         })
-    },
-    // 定时加载消息数量
-    timeLoadMessage() {
-      const self = this
-      // 定时请求消息数量
-      self.requestMessageTask = setInterval(function() {
-        self.fetchMessageCount()
-      }, 30000)
-    },
-    // 移动端菜单显示/隐藏
-    mmenuHide() {
-      this.menuHide = !this.menuHide
-      if (this.menuHide) {
-        this.reScroll()
-      } else {
-        this.addScroll()
-      }
-    },
-    // 点击超链接关闭菜单
-    closeMenu(e) {
-      e.stopPropagation()
-      this.menuHide = !this.menuHide
-      this.reScroll()
-    },
-    // 点击其他地方关闭菜单
-    mNavClick(e) {
-      this.closeMenu(e)
-    },
-    addScroll() {
-      // this.$refs.mCover.style.width = '100%'
-      this.$refs.mNav.style.marginLeft = 0
-      this.$refs.mMenu.style.width = '100%'
-      document.body.setAttribute('class', 'disableScroll')
-      document.childNodes[1].setAttribute('class', 'disableScroll')
-    },
-    reScroll() {
-      // this.$refs.mCover.style.width = 0
-      this.$refs.mNav.style.marginLeft = '-54vw'
-      this.$refs.mMenu.style.width = 0
-      document.body.removeAttribute('class', 'disableScroll')
-      document.childNodes[1].removeAttribute('class', 'disableScroll')
-    },
-    addPosition() {
-      sessionStorage.setItem('MENU_BAR', 11)
-      this.$router.push({ name: 'vcenterControl' })
-    }
-  },
-  computed: {
-    isMob() {
-      return this.$store.state.event.isMob
-    },
-    isLogin: {
-      get() {
-        return this.$store.state.event.token
       },
-      set() {}
-    },
-    eventUser() {
-      let user = this.$store.state.event.user
-      if (user.avatar) {
-        user.logo_url = user.avatar.logo
-      } else {
-        user.logo_url = null
+      // 定时加载消息数量
+      timeLoadMessage() {
+        const self = this
+        // 定时请求消息数量
+        self.requestMessageTask = setInterval(function () {
+          self.fetchMessageCount()
+        }, 30000)
+      },
+      // 移动端菜单显示/隐藏
+      mmenuHide() {
+        this.menuHide = !this.menuHide
+        if (this.menuHide) {
+          this.reScroll()
+        } else {
+          this.addScroll()
+        }
+      },
+      // 点击超链接关闭菜单
+      closeMenu(e) {
+        e.stopPropagation()
+        this.menuHide = !this.menuHide
+        this.reScroll()
+      },
+      // 点击其他地方关闭菜单
+      mNavClick(e) {
+        this.closeMenu(e)
+      },
+      addScroll() {
+        // this.$refs.mCover.style.width = '100%'
+        this.$refs.mNav.style.marginLeft = 0
+        this.$refs.mMenu.style.width = '100%'
+        document.body.setAttribute('class', 'disableScroll')
+        document.childNodes[1].setAttribute('class', 'disableScroll')
+      },
+      reScroll() {
+        // this.$refs.mCover.style.width = 0
+        this.$refs.mNav.style.marginLeft = '-54vw'
+        this.$refs.mMenu.style.width = 0
+        document.body.removeAttribute('class', 'disableScroll')
+        document.childNodes[1].removeAttribute('class', 'disableScroll')
+      },
+      toCenter () {
+        this.moptionHide()
+        this.$store.commit(MENU_STATUS, 'center')
+        sessionStorage.setItem('MENU_BAR', 11)
+        this.$router.push({name: 'vcenterControl'})
+      },
+      toTools () {
+        this.moptionHide()
+        this.$store.commit(MENU_STATUS, 'tools')
+        sessionStorage.setItem('MENU_BAR', 11)
+        this.$router.push({name: 'vcentercommonlySites'})
+      },
+      moptionHide () {
+        this.optionHide = !this.optionHide
       }
-      return user
     },
-    isAdmin() {
-      return this.$store.state.event.user.role_id
-    },
-    menuactive() {
-      let menu = this.$route.path.split('/')[1]
-      if (menu === 'article' || menu === 'subject') {
-        return 'topic'
+    computed: {
+      isMob() {
+        return this.$store.state.event.isMob
+      },
+      isLogin: {
+        get() {
+          return this.$store.state.event.token
+        },
+        set() {}
+      },
+      eventUser() {
+        let user = this.$store.state.event.user
+        if (user.avatar) {
+          user.logo_url = user.avatar.logo
+        } else {
+          user.logo_url = null
+        }
+        return user
+      },
+      isAdmin() {
+        return this.$store.state.event.user.role_id
+      },
+      menuactive() {
+        let menu = this.$route.path.split('/')[1]
+        if (menu === 'article' || menu === 'subject') {
+          return 'topic'
+        }
+        return menu
+      },
+      messageCount() {
+        return this.$store.state.event.msgCount
+      },
+      menuStatus () {
+        return this.$store.state.event.menuStatus
       }
-      return menu
     },
-    messageCount() {
-      return this.$store.state.event.msgCount
+    created: function () {
+      const self = this
+      if (self.isLogin) {
+        self.fetchMessageCount()
+        self.timeLoadMessage()
+      }
+      this.$store.commit('INIT_PAGE')
+    },
+    mounted() {
+      let that = this
+      window.addEventListener('resize', () => {
+        that.$store.commit('INIT_PAGE')
+      })
+    },
+    destroyed() {
+      clearInterval(this.requestMessageTask)
     }
-  },
-  created: function() {
-    const self = this
-    if (self.isLogin) {
-      self.fetchMessageCount()
-      self.timeLoadMessage()
-    }
-    this.$store.commit('INIT_PAGE')
-  },
-  mounted() {
-    let that = this
-    window.addEventListener('resize', () => {
-      that.$store.commit('INIT_PAGE')
-    })
-  },
-  destroyed() {
-    clearInterval(this.requestMessageTask)
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@keyframes slow {
-  0% {
-    transform: translateY(-60px);
+  @keyframes slow {
+    0% {
+      transform: translateY(-60px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
   }
-  100% {
-    transform: translateY(0px);
+
+  #header-layout {
+    position: relative;
+    z-index: 999;
+    animation: slow 0.4s;
   }
-}
 
-#header-layout {
-  position: relative;
-  z-index: 999;
-  animation: slow 0.4s;
-}
+  .Flogin {
+    background: #ff5a5f;
+    border-color: #ff5a5f;
+  }
 
-.Flogin {
-  background: #ff5a5f;
-  border-color: #ff5a5f;
-}
+  .server-in-btn {
+    height: 60px;
+    line-height: 60px;
+    margin-right: 20px;
+  }
 
-.server-in-btn {
-  height: 60px;
-  line-height: 60px;
-  margin-right: 20px;
-}
+  .more {
+    width: 1200px;
+    height: 60px;
+    background: #ff4500;
+    position: fixed;
+  }
 
-.more {
-  width: 1200px;
-  height: 60px;
-  background: #ff4500;
-  position: fixed;
-}
+  .m-Nav-right {
+    position: absolute;
+    top: 15px;
+    right: 12px;
+  }
 
-.m-Nav-right {
-  position: absolute;
-  top: 15px;
-  right: 12px;
-}
+  .m-Nav-right .avatar {
+    width: 30px;
+    height: 30px;
+  }
 
-.m-Nav-right .avatar {
-  width: 30px;
-  height: 30px;
-}
+  .option {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    background: #FFFFFF;
+    right: 8px;
+    top: 53px;
+    border: 1px solid #DCDCDC;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 0 4px;
+    font-size: 14px;
+  }
+
+  .option a {
+    display: block;
+    line-height: 30px;
+    text-align: center;
+  }
+
+  .option a.aActive {
+    color: #FE3824;
+  }
+
+  .option a:first-child {
+    border-bottom: 1px solid #DCDCDC;
+  }
+
+  .option::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background: #FFFFFF;
+    right: 12px;
+    top: -5px;
+    border: 1px solid #DCDCDC;
+    transform: rotate(45deg);
+  }
+
+  .option::before {
+    content: "";
+    width: 10px;
+    height: 20px;
+    position: absolute;
+    z-index: 2;
+    right: 12px;
+    top: -5px;
+    background: #FFFFFF;
+    transform: rotate(90deg);
+  }
 </style>

@@ -204,18 +204,24 @@ export default {
   adminAwardsList: '/admin/dateOfAward/list', // GET 列表
   adminAwards: '/admin/dateOfAward', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminAwardsChangeStatus: '/admin/dateOfAward/changeStatus', // PUT 更新状态
-  dateOfAwardWeek: '/admin/dateOfAward/week', // GET 周历
-  dateOfAwardMonth: '/admin/dateOfAward/month', // GET 月历
+  adminDateOfAwardWeek: '/admin/dateOfAward/week', // GET 周历
+  adminDateOfAwardMonth: '/admin/dateOfAward/month', // GET 月历
+  dateOfAwardMonth: '/dateOfAward/month', // GET 月历
+  dateOfAwardWeek: '/dateOfAward/week', // GET 周历
 
   // 趋势/报告管理
   adminTrendReportList: '/admin/trendReports/lists',  // GET 列表
   adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
+  TrendReportList: '/trendReports/lists',  // GET 列表
+  trendReports: 'trendReports', // GET 详情
 
   // 常用网站管理
-  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
   adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
   adminCommonlySiteSetStatus: '/admin/commonlyUsedUrls/verifyStatus', // PUT 更改状态
+  CommonlySite: '/commonlyUsedUrls', // GET 详情
+  CommonlySiteList: '/commonlyUsedUrls/list',  // GET 列表
 
   // 奖项案例管理
   adminAwardCaseList: '/admin/awardCase/list', // GET 列表
