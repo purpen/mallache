@@ -213,13 +213,15 @@ export default {
   adminTrendReportList: '/admin/trendReports/lists',  // GET 列表
   adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
+  TrendReportList: '/trendReports/lists',  // GET 列表
+  trendReports: 'trendReports', // GET 详情
 
   // 常用网站管理
-  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
-  CommonlySiteList: '/commonlyUsedUrls/list',  // GET 列表
   adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  CommonlySite: '/commonlyUsedUrls', // GET 详情
+  adminCommonlySiteList: '/admin/commonlyUsedUrls/list',  // GET 列表
   adminCommonlySiteSetStatus: '/admin/commonlyUsedUrls/verifyStatus', // PUT 更改状态
+  CommonlySite: '/commonlyUsedUrls', // GET 详情
+  CommonlySiteList: '/commonlyUsedUrls/list',  // GET 列表
 
   // 奖项案例管理
   adminAwardCaseList: '/admin/awardCase/list', // GET 列表

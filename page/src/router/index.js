@@ -820,6 +820,15 @@ const routes = [
     },
     component: require('@/components/pages/v_center/Tools/trendReport')
   },
+  {
+    path: '/vcenter/trend_report/:id',
+    name: 'trendReportShow',
+    meta: {
+      title: '趋势/报告',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/Tools/trendReportShow')
+  },
   // 公司工具 => 常用网站
   {
     path: '/vcenter/commonly_sites',
