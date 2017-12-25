@@ -44,6 +44,7 @@
         <el-submenu index="18">
           <template slot="title"><i class="fa fa-cogs"></i> 系统管理</template>
             <el-menu-item index="categoryList" :route="{name: 'adminCategoryList'}">分类列表</el-menu-item>
+            <el-menu-item index="noticeList" :route="{name: 'adminNoticeList'}">通知列表</el-menu-item>
         </el-submenu>
         <el-submenu index="20">
           <template slot="title"><i class="fa fa-user"></i> 用户管理</template>

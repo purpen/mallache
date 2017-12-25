@@ -46,8 +46,8 @@
             </el-table-column>
             <el-table-column
               prop="user_id"
-              label="创建人ID"
-              min-width="40">
+              label="用户ID"
+              width="60">
             </el-table-column>
             <el-table-column
               prop="hits"

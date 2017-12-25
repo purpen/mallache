@@ -8,6 +8,7 @@
 namespace App\Helper;
 
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Mockery\Exception;
@@ -88,7 +89,7 @@ class Tools
     }
 
     /**
-     * 减少未读消息数量
+     * 减少未读消息数量 ---已不用
      * @param int $user_id
      * @param int $type
      */
@@ -126,8 +127,27 @@ class Tools
 //            return 0;
 //        }
 
-        $quantity = Message::where(['status' => 0, 'user_id' => $user_id])->count();
-        return (int)$quantity;
+        $data = array(
+            'message' => 0,
+            'notice' => 0,
+            'quantity' => 0,
+        );
+
+        if (!$user_id) {
+            return $data;
+        }
+
+        $user = User::find($user_id);
+        if (!$user) {
+            return $data;
+        }
+
+        if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
+        if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
+        $data['quantity'] = $data['message'] + $data['notice'];
+
+        // $data = Message::where(['status' => 0, 'user_id' => $user_id])->count();
+        return $data;
     }
 
     /**
@@ -140,12 +160,14 @@ class Tools
             $message->status = 1;
             if($message->save()){
                 $this->reduceMessageQuantity($message->user_id);
+                $user = User::find($message->user_id);
+                if ($user && $user->message_count > 0) {
+                    $user->decrement('message_count');
+                    return true;
+                }
             }
-
-            return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
     /**

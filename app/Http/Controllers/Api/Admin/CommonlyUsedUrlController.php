@@ -135,7 +135,7 @@ class CommonlyUsedUrlController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
+        $params['user_id'] = $this->auth_user_id;
         if (!$CommonlyUsedUrl = CommonlyUsedUrl::create($params)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }

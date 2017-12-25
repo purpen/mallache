@@ -19,6 +19,8 @@ class AwardCase extends BaseModel
         'type',
         'category_id',
         'grade',
+        'tags',
+        'summary',
         'content',
         'url',
         'recommended',
@@ -32,10 +34,19 @@ class AwardCase extends BaseModel
         $category_id = $this->category_id;
         $awardCase = config('constant.awardCase_category');
         if (array_key_exists($category_id, $awardCase)) {
-            return $awardCase[$category_value];
+            return $awardCase[$category_id];
         }
 
         return null;
+    }
+
+    /**
+     * tags 标签访问修改器
+     * @return array
+     */
+    public function getTagsAttribute($key)
+    {
+        return $key ? explode(',',$key) : [];
     }
 
 

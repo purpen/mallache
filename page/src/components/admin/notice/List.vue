@@ -2,14 +2,17 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="worksList"></v-menu>
+      <v-menu selectedName="noticeList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminWorksList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminNoticeList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+          </div>
+          <div class="fr">
+            <router-link :to="{name: 'adminNoticeAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
           </div>
         </div>
 
@@ -31,54 +34,37 @@
             </el-table-column>
             <el-table-column
               label="封面"
-              width="70">
+              width="90">
                 <template scope="scope">
-                  <p><img :src="scope.row.cover_url" width="50" /></p>
+                  <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
-              label="内容"
-              min-width="200">
+              label="信息"
+              min-width="180">
                 <template scope="scope">
-                  <p>标题: <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
+                  <p>标题: {{ scope.row.title }}</p>
+                  <p>链接: {{ scope.row.url }}</p>
                 </template>
             </el-table-column>
             <el-table-column
-              prop="match_id"
-              label="大赛ID"
+              width="80"
+              label="目标人群">
+                <template scope="scope">
+                  <p>{{ scope.row.evt_value }}</p>
+                </template>
+            </el-table-column>
+            <el-table-column
+              prop="user_id"
+              label="用户ID"
               width="60">
             </el-table-column>
             <el-table-column
               width="60"
-              label="用户ID">
-                <template scope="scope">
-                  <p>
-                    {{ scope.row.user_id }}
-                  </p>
-                </template>
-            </el-table-column>
-            <el-table-column
-              label="所属公司">
-                <template scope="scope">
-                  <p>
-                    <router-link :to="{name: 'companyShow', params: {id: scope.row.company.id}}" target="_blank">{{ scope.row.company.company_name }}</router-link>
-                  </p>
-                </template>
-            </el-table-column>
-
-            <el-table-column
-              prop="published"
-              label="是否发布">
-                <template scope="scope">
-                  <p v-if="scope.row.published === 1"><el-tag type="success">是</el-tag></p>
-                  <p v-else><el-tag type="gray">否</el-tag></p>
-                </template>
-            </el-table-column>
-            <el-table-column
               label="状态">
                 <template scope="scope">
-                  <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
-                  <p v-else><el-tag type="gray">禁用</el-tag></p>
+                  <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
+                  <p v-else><el-tag type="success">启用</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -91,14 +77,12 @@
               label="操作">
                 <template scope="scope">
                   <p>
-                    <a href="javascript:void(0);" v-if="scope.row.published === 1" @click="setPublish(scope.$index, scope.row, 0)">取消发布</a>
-                    <a href="javascript:void(0);" v-else @click="setPublish(scope.$index, scope.row, 1)">发布</a>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发送</a>
                   </p>
                   <p>
-                    <!--<a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>-->
-                    <a href="javascript:void(0);" @click="removeBtn(scope.$index, scope.row)">删除</a>
+                    <router-link :to="{name: 'adminNoticeEdit', params: {id: scope.row.id}}">编辑</router-link>
+                    <a href="javascript:void(0)" @click="removeBtn(scope.$index, scope.row)">删除</a>
                   </p>
                 </template>
             </el-table-column>
@@ -109,8 +93,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[50, 100, 500]"
-            :page-size="query.pageSize"
+            :page-sizes="[10, 50, 100, 500]"
+            :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
           </el-pagination>
@@ -130,7 +114,6 @@
       </span>
     </el-dialog>
 
-
   </div>
 </template>
 
@@ -138,7 +121,7 @@
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 export default {
-  name: 'admin_works_list',
+  name: 'admin_notice_list',
   components: {
     vMenu
   },
@@ -148,17 +131,21 @@ export default {
       itemList: [],
       tableData: [],
       isLoading: false,
+      setRoleDialog: false,
+      currentAccount: '',
+      roleId: 0,
       sureDialog: false,
       dialogLoadingBtn: false,
       currentDialogIndex: '',
       currentDialogId: '',
       query: {
         page: 1,
-        pageSize: 50,
+        pageSize: 10,
         totalCount: 0,
         sort: 1,
         type: 0,
-
+        evt: 0,
+        status: 0,
         test: null
       },
       msg: ''
@@ -176,40 +163,6 @@ export default {
       this.query.page = val
       this.$router.push({name: this.$route.name, query: {page: val}})
     },
-    setPublish(index, item, evt) {
-      var id = item.id
-      var self = this
-      self.$http.put(api.adminWorksPublished, {id: id, published: evt})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.itemList[index].published = evt
-          self.$message.success('操作成功')
-        } else {
-          self.$message.error(response.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-        console.log(error.message)
-      })
-    },
-    setStatus(index, item, evt) {
-      var id = item.id
-      var self = this
-      self.$http.put(api.adminWorksStatus, {id: id, status: evt})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.itemList[index].status = evt
-          self.$message.success('操作成功')
-        } else {
-          self.$message.error(response.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-        console.log(error.message)
-      })
-    },
     // 删除弹层
     removeBtn (index, obj) {
       this.sureDialog = true
@@ -220,7 +173,7 @@ export default {
     sureDialogSubmit () {
       var self = this
       self.dialogLoadingBtn = true
-      self.$http.delete(api.adminWorksDelete, {params: {id: self.currentDialogId}})
+      self.$http.delete(api.adminNotice, {params: {id: self.currentDialogId}})
       .then (function(response) {
         self.dialogLoadingBtn = false
         if (response.data.meta.status_code === 200) {
@@ -235,35 +188,53 @@ export default {
         self.dialogLoadingBtn = false
       })
     },
+    // 状态设置
+    setStatus(index, item, evt) {
+      var id = item.id
+      var self = this
+      self.$http.put(api.adminNoticeSetStatus, {id: id, evt: evt})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.tableData[index].status = evt
+          self.$message.success('操作成功')
+        } else {
+          self.$message.error(response.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        console.log(error.message)
+      })
+    },
     loadList() {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
-      self.query.sort = this.$route.query.sort || 1
+      self.query.sort = this.$route.query.sort || 0
       self.query.type = this.$route.query.type || 0
+      self.query.status = this.$route.query.status || 0
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
       self.isLoading = true
-      self.$http.get(api.adminWorksList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      self.$http.get(api.adminNoticeList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, status: self.query.status, evt: self.evt}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
-          console.log(self.itemList)
-          self.query.totalCount = parseInt(response.data.meta.pagination.total)
+          self.query.totalCount = response.data.meta.pagination.total
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
             item.cover_url = ''
             if (item.cover) {
-              item.cover_url = item.cover.small
+              item.cover_url = item.cover.logo
             }
-
             item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             self.tableData.push(item)
           } // endfor
+          console.log(self.tableData)
         } else {
           self.$message.error(response.data.meta.message)
         }
@@ -289,5 +260,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .set-role-name {
+    margin-bottom: 20px;
+  }
 
 </style>

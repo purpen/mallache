@@ -34,28 +34,43 @@
             </el-table-column>
             <el-table-column
               label="封面"
-              width="80">
+              width="90">
                 <template scope="scope">
-                  <p><img :src="scope.row.cover_url" width="50" /></p>
+                  <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
-              label="信息"
-              min-width="180">
+              label="产品信息"
+              min-width="160">
                 <template scope="scope">
                   <p>标题: {{ scope.row.title }}</p>
                   <p>链接: {{ scope.row.url }}</p>
                 </template>
             </el-table-column>
             <el-table-column
-              width="80"
-              label="类型">
+              min-width="150"
+              label="奖项信息">
                 <template scope="scope">
-                  <p>{{ scope.row.type_value }}</p>
+                  <p>奖项: {{ scope.row.category_value }}</p>
+                  <p>等级: {{ scope.row.grade }}</p>
+                  <p>获奖时间: {{ scope.row.time_at }}</p>
                 </template>
             </el-table-column>
             <el-table-column
-              width="80"
+              prop="user_id"
+              label="用户ID"
+              min-width="50">
+            </el-table-column>
+            <el-table-column
+              width="60"
+              label="推荐">
+                <template scope="scope">
+                  <p v-if="scope.row.recommended === 0"><el-tag type="gray">否</el-tag></p>
+                  <p v-else><el-tag type="success">是</el-tag></p>
+                </template>
+            </el-table-column>
+            <el-table-column
+              width="60"
               label="状态">
                 <template scope="scope">
                   <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
@@ -72,6 +87,8 @@
               label="操作">
                 <template scope="scope">
                   <p>
+                    <a href="javascript:void(0);" v-if="scope.row.recommended === 1" @click="setRecommended(scope.$index, scope.row, 0)">取消推荐</a>
+                    <a href="javascript:void(0);" v-else @click="setRecommended(scope.$index, scope.row, 1)">推荐</a>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
@@ -180,6 +197,24 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
         self.dialogLoadingBtn = false
+      })
+    },
+    // 状态设置
+    setRecommended(index, item, evt) {
+      var id = item.id
+      var self = this
+      self.$http.put(api.adminAwardCaseChangeRecommended, {id: id, evt: evt})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.tableData[index].recommended = evt
+          self.$message.success('操作成功')
+        } else {
+          self.$message.error(response.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        console.log(error.message)
       })
     },
     // 状态设置

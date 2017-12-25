@@ -23,6 +23,7 @@ class AwardCaseController extends BaseController
      * @apiParam {string} summary 简述
      * @apiParam {text} content 内容
      * @apiParam {string} url 链接
+     * @apiParam {string} tags 标签
      * @apiParam {string} grade 奖项等级
      * @apiParam {string} time_at 获奖时间
      * @apiParam {integer} category_id 所属奖项ID
@@ -45,6 +46,7 @@ class AwardCaseController extends BaseController
             'title' => 'required|max:100',
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
+            'tags' => 'array',
             'time_at' => 'required',
         ];
 
@@ -54,13 +56,14 @@ class AwardCaseController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
-        if (!$AwardCase = AwardCase::create($all)) {
+        $all['user_id'] = $this->auth_user_id;
+        $all['tags'] = $request->input('tags') ? implode(',', $request->input('tags')) : '';
+        if (!$awardCase = AwardCase::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
 
         if($random = $request->input('random')){
-            AssetModel::setRandom($AwardCase->id, $random);
+            AssetModel::setRandom($awardCase->id, $random);
         }
 
         return $this->response->array($this->apiSuccess());
@@ -77,6 +80,7 @@ class AwardCaseController extends BaseController
      * @apiParam {string} summary 简述
      * @apiParam {text} content 内容
      * @apiParam {string} url 链接
+     * @apiParam {string} tags 标签
      * @apiParam {string} grade 奖项等级
      * @apiParam {string} time_at 获奖时间
      * @apiParam {integer} category_id 所属奖项ID
@@ -100,6 +104,7 @@ class AwardCaseController extends BaseController
             'title' => 'required|max:100',
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
+            'tags' => 'array',
             'time_at' => 'required',
         ];
 
@@ -110,12 +115,13 @@ class AwardCaseController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $AwardCase = AwardCase::find($request->input('id'));
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($request->input('id'));
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if (!$AwardCase = $AwardCase->update($all)) {
+        $all['tags'] = $request->input('tags') ? implode(',', $request->input('tags')) : '';
+        if (!$awardCase = $awardCase->update($all)) {
             return $this->response->array($this->apiError('更新失败', 500));
         }
 
@@ -143,6 +149,10 @@ class AwardCaseController extends BaseController
      *          "user_id": 255, // 创建人ID
      *          "content": "产品内容",
      *          "url": "www.baidu.com",
+     *          "tags": [
+     *            "美丽",
+     *            "智慧"
+     *          ],
      *          "grade": "金奖",
      *          "time_at": "2017-12-12",
      *          "recommended": 1,             // 是否推荐：0.否；1.是；
@@ -162,12 +172,12 @@ class AwardCaseController extends BaseController
     {
         $id = $request->input('id');
 
-        $AwardCase = AwardCase::find($id);
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($AwardCase, new AwardCaseTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($awardCase, new AwardCaseTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -176,7 +186,8 @@ class AwardCaseController extends BaseController
      * @apiName awardCase awardCaseList
      * @apiGroup AdminAwardCase
      *
-     * @apiParam {integer} type 类型；
+     * @apiParam {integer} type 类型: 0.全部；；
+     * @apiParam {integer} category_id 奖项类型: 0.全部；
      * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
@@ -201,7 +212,13 @@ class AwardCaseController extends BaseController
         $query = array();
         if ($type) $query['type'] = $type;
         if ($category_id) $query['category_id'] = $category_id;
-        if ($status) $query['status'] = $status;
+        if ($status) {
+            if ($status === -1) {
+                $query['status'] = 0;
+            } else {
+                $query['status'] = 1;
+            }
+        }
 
         $lists = AwardCase::where($query)
             ->orderBy('id', 'desc')
@@ -234,17 +251,59 @@ class AwardCaseController extends BaseController
         $id = $request->input("id");
         $status = $request->input("status");
 
-        $AwardCase = AwardCase::find($id);
-        if (!$AwardCase) {
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         if ($status) {
-            $AwardCase->status = 1;
+            $awardCase->status = 1;
         } else {
-            $AwardCase->status = 0;
+            $awardCase->status = 0;
         }
-        if (!$AwardCase->save()) {
+        if (!$awardCase->save()) {
+            return $this->response->array($this->apiError('Error', 500));
+        } else {
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
+    /**
+     * @api {put} /admin/awardCase/changeRecommended 奖项案例推荐操作
+     * @apiVersion 1.0.0
+     * @apiName awardCase awardCaseChangeRecommended
+     * @apiGroup AdminAwardCase
+     *
+     * @apiParam {integer} id ID
+     * @apiParam {integer} evt 推荐： 0.取消推荐；1.推荐；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     * }
+     */
+    public function changeRecommended(Request $request)
+    {
+        $id = $request->input("id");
+        $evt = $request->input("evt");
+
+        $awardCase = AwardCase::find($id);
+        if (!$awardCase) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($evt) {
+            $awardCase->recommended = 1;
+            $awardCase->recommended_on = time();
+        } else {
+            $awardCase->recommended = 0;
+        }
+        if (!$awardCase->save()) {
             return $this->response->array($this->apiError('Error', 500));
         } else {
             return $this->response->array($this->apiSuccess());

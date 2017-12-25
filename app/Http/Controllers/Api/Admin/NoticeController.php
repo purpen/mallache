@@ -3,27 +3,26 @@
 namespace App\Http\Controllers\Api\Admin;
 
 
-use App\Http\AdminTransformer\AdminColumnListsTransformer;
-use App\Http\AdminTransformer\AdminColumnTransformer;
+use App\Http\Transformer\NoticeTransformer;
 use App\Models\AssetModel;
-use App\Models\Column;
+use App\Models\Notice;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ColumnController extends BaseController
+class NoticeController extends BaseController
 {
     /**
-     * @api {post} /admin/column 添加栏目文章
+     * @api {post} /admin/notice 添加
      * @apiVersion 1.0.0
-     * @apiName column columnStore
-     * @apiGroup AdminColumn
+     * @apiName notice noticeStore
+     * @apiGroup AdminNotice
      *
-     * @apiParam {integer} type *栏目类型：1.灵感；
-     * @apiParam {string} title *文章标题
-     * @apiParam {string} content *内容
+     * @apiParam {string} title *标题
+     * @apiParam {string} summary 简述
+     * @apiParam {text} content 内容
      * @apiParam {string} url 链接
-     * @apiParam {integer} sort 排序权重
+     * @apiParam {integer} evt 目标：0.全部；1.需求方；2.设计公司；
      * @apiParam {integer} cover_id 封面图ID
      * @apiParam {string} token
      *
@@ -39,12 +38,8 @@ class ColumnController extends BaseController
     public function store(Request $request)
     {
         $rules = [
-            'type' => 'required|integer',
             'title' => 'required|max:100',
-            'content' => 'required|max:500',
-            'url' => 'max:200',
-            'sort' => 'integer',
-            'cover_id' => 'required|integer',
+            'content' => 'required',
         ];
 
         $all = $request->all();
@@ -53,34 +48,30 @@ class ColumnController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-
-        $all['url'] = $request->input('url') ?? '';
-        $all['status'] = 0;
         $all['user_id'] = $this->auth_user_id;
-        if (!$column = Column::create($all)) {
+        if (!$notice = Notice::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
 
         if($random = $request->input('random')){
-            AssetModel::setRandom($column->id, $random);
+            AssetModel::setRandom($notice->id, $random);
         }
-
 
         return $this->response->array($this->apiSuccess());
     }
 
     /**
-     * @api {put} /admin/column 更新栏目文章
+     * @api {put} /admin/notice 更新
      * @apiVersion 1.0.0
-     * @apiName column columnUpdate
-     * @apiGroup AdminColumn
+     * @apiName notice noticeUpdate
+     * @apiGroup AdminNotice
      *
      * @apiParam {integer} id 文章ID
-     * @apiParam {integer} type 栏目类型：1.灵感；
-     * @apiParam {string} title 文章标题
-     * @apiParam {string} content 内容
-     * @apiParam {string} url 链接
-     * @apiParam {integer} sort 排序权重
+     * @apiParam {string} title *标题
+     * @apiParam {string} summary 简述
+     * @apiParam {text} content 内容
+     * @apiParam {integer} evt 目标：0.全部；1.需求方；2.设计公司；
+     * @apiParam {integer} cover_id 封面图ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -96,12 +87,8 @@ class ColumnController extends BaseController
     {
         $rules = [
             'id' => 'required|integer',
-            'type' => 'integer',
-            'title' => 'max:100',
-            'content' => 'max:500',
-            'url' => 'max:200',
-            'sort' => 'integer',
-            'cover_id' => 'integer',
+            'title' => 'required|max:100',
+            'content' => 'required',
         ];
 
         $all = $request->all();
@@ -111,12 +98,12 @@ class ColumnController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        $column = Column::find($request->input('id'));
-        if (!$column) {
+        $notice = Notice::find($request->input('id'));
+        if (!$notice) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if (!$column = $column->update($all)) {
+        if (!$notice = $notice->update($all)) {
             return $this->response->array($this->apiError('更新失败', 500));
         }
 
@@ -124,12 +111,12 @@ class ColumnController extends BaseController
     }
 
     /**
-     * @api {get} /admin/column 栏目文章详情
+     * @api {get} /admin/notice 详情
      * @apiVersion 1.0.0
-     * @apiName column columnShow
-     * @apiGroup AdminColumn
+     * @apiName notice noticeShow
+     * @apiGroup AdminNotice
      *
-     * @apiParam {integer} id 文章id
+     * @apiParam {integer} id ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -137,14 +124,15 @@ class ColumnController extends BaseController
      * {
      *      "data": {
      *          "type": 1,
-     *          "type_value": "灵感",
-     *          "title": "这是第一篇",
-     *          "content": "这是第一篇",
+     *          "title": "产品名称",
+     *          "summary": "产品简介",
+     *          "user_id": 255, // 创建人ID
+     *          "content": "产品内容",
      *          "url": "www.baidu.com",
+     *          "evt": 1,  // 目标人群：0.全部； 1.需求方； 2.设计公司；
      *          "status": 0,
      *          "cover_id": 1,
      *          "cover": null,
-     *          "image": []
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -156,22 +144,23 @@ class ColumnController extends BaseController
     {
         $id = $request->input('id');
 
-        $column = Column::find($id);
-        if (!$column) {
+        $notice = Notice::find($id);
+        if (!$notice) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($column, new AdminColumnTransformer)->setMeta($this->apiMeta());
+        return $this->response->item($notice, new NoticeTransformer)->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {get} /admin/column/lists 栏目文章列表
+     * @api {get} /admin/notice/list 列表
      * @apiVersion 1.0.0
-     * @apiName column columnLists
-     * @apiGroup AdminColumn
+     * @apiName notice noticeList
+     * @apiGroup AdminNotice
      *
-     * @apiParam {integer} type 类型；1.灵感
-     * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
+     * @apiParam {integer} type 类型: 0.全部；
+     * @apiParam {integer} status 状态: -1.未发布；0.全部；1.发布；
+     * @apiParam {integer} evt 目标人群: -1.全部；1.需求方；2.设计公司；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -188,46 +177,42 @@ class ColumnController extends BaseController
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type = $request->type;
-        $status = $request->status;
+        $type = $request->input('type') ? (int)$request->input('type') : 0;
+        $status = $request->input('status') ? (int)$request->input('status') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 0;
 
-        switch ($status) {
-            case -1:
-                $status = 0;
-                break;
-            case 0:
-                $status = null;
-                break;
-            case 1:
-                $status = 1;
-                break;
-            default:
-                $status = 1;
+        $query = array();
+        if ($type) $query['type'] = $type;
+        if ($status) {
+            if ($status === -1) {
+                $query['status'] = 0;
+            } else {
+                $query['status'] = 1;
+            }
+        }
+        if ($evt) {
+            if ($evt === -1) {
+                $query['evt'] = 0;
+            } else {
+                $query['evt'] = $evt;
+            }
         }
 
+        $lists = Notice::where($query)
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
 
-
-        $query = Column::query();
-        if ($type != 0) {
-            $query->where('type', (int)$type);
-        }
-        if ($status != null) {
-            $query->where('status', (int)$status);
-        }
-
-        $lists = $query->paginate($per_page);
-
-        return $this->response->paginator($lists, new AdminColumnListsTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new NoticeTransformer)->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {put} /admin/column/changeStatus 栏目文章变更状态
+     * @api {put} /admin/notice/changeStatus 变更状态
      * @apiVersion 1.0.0
-     * @apiName column changeStatus
-     * @apiGroup AdminColumn
+     * @apiName notice noticeChangeStatus
+     * @apiGroup AdminNotice
      *
-     * @apiParam {integer} id 栏目文章ID
-     * @apiParam {integer} status 状态 0.未发布；1.发布；
+     * @apiParam {integer} id ID
+     * @apiParam {integer} evt 状态 0.未发布；1.发布；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -242,19 +227,19 @@ class ColumnController extends BaseController
     public function changeStatus(Request $request)
     {
         $id = $request->input("id");
-        $status = $request->input("status");
+        $status = $request->input("evt");
 
-        $column = Column::find($id);
-        if (!$column) {
+        $notice = Notice::find($id);
+        if (!$notice) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         if ($status) {
-            $column->status = 1;
+            $notice->status = 1;
         } else {
-            $column->status = 0;
+            $notice->status = 0;
         }
-        if (!$column->save()) {
+        if (!$notice->save()) {
             return $this->response->array($this->apiError('Error', 500));
         } else {
             return $this->response->array($this->apiSuccess());
@@ -262,12 +247,12 @@ class ColumnController extends BaseController
     }
 
     /**
-     * @api {delete} /admin/column 栏目文章删除
+     * @api {delete} /admin/notice 删除
      * @apiVersion 1.0.0
-     * @apiName column delete
-     * @apiGroup AdminColumn
+     * @apiName notice noticeDelete
+     * @apiGroup AdminNotice
      *
-     * @apiParam {integer} id 栏目文章ID
+     * @apiParam {integer} id ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -282,7 +267,7 @@ class ColumnController extends BaseController
     public function delete(Request $request)
     {
         $id = (int)$request->input('id');
-        Column::destroy($id);
+        Notice::destroy($id);
 
         return $this->response->array($this->apiSuccess());
     }

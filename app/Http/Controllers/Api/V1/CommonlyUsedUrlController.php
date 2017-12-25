@@ -16,10 +16,6 @@ class CommonlyUsedUrlController extends BaseController
      * @apiName CommonlyUsedUrls lists
      * @apiGroup CommonlyUsedUrl
      *
-     * @apiParam {integer} status 状态 -1.禁用；0.全部；1.启用；
-     * @apiParam {integer} type 分类
-     * @apiParam {integer} page 页数
-     * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -56,33 +52,9 @@ class CommonlyUsedUrlController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        $type = $request->input('type') ? (int)$request->input('type') : 0;
-        $status = $request->input('status') ? (int)$request->input('status') : 0;
 
-        switch ($status) {
-            case -1:
-                $status = 0;
-                break;
-            case 0:
-                $status = null;
-                break;
-            case 1:
-                $status = 1;
-                break;
-            default:
-                $status = 1;
-        }
-
-        $query = array();
-        if ($type) $query['type'] = $type;
-        if ($status) $query['status'] = $status;
-
-        $lists = CommonlyUsedUrl::where($query)
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
-
-        return $this->response->paginator($lists, new CommonlyUsedUrlTransformer())->setMeta($this->apiMeta());
+        $lists = CommonlyUsedUrl::get();
+        return $this->response->collection($lists, new CommonlyUsedUrlTransformer())->setMeta($this->apiMeta());
     }
 
     /**
