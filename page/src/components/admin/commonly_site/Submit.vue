@@ -2,7 +2,7 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="columnList"></v-menu>
+      <v-menu selectedName="commonlySiteList"></v-menu>
 
       <el-col :span="20">
         <div class="content">

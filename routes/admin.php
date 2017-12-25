@@ -253,6 +253,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //推荐/取消推荐
         $api->put('/admin/awardCase/changeRecommended', 'AwardCaseController@changeRecommended');
 
+        /**
+         * 系统通知
+         */
+        // 保存
+        $api->post('/admin/notice', 'NoticeController@store');
+        // 更新
+        $api->put('/admin/notice', 'NoticeController@update');
+        // 详情
+        $api->get('/admin/notice', 'NoticeController@show');
+        // 删除
+        $api->delete('/admin/notice', 'NoticeController@delete');
+        // 列表
+        $api->get('/admin/notice/list', 'NoticeController@lists');
+        //启用禁用
+        $api->put('/admin/notice/changeStatus', 'NoticeController@changeStatus');
+
     });
 
 });

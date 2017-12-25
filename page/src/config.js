@@ -789,6 +789,22 @@ const AWARD_CASE_CATEGORY = [
   }
 ]
 
+// 通知目标人群
+const NOTICE_EVT = [
+  {
+    id: 0,
+    name: '全部'
+  },
+  {
+    id: 1,
+    name: '需求方'
+  },
+  {
+    id: 2,
+    name: '设计公司'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -813,6 +829,7 @@ module.exports = {
   AWARDS_EVT,
   COMMONLY_SITE_TYPE,
   AWARD_CASE_CATEGORY,
+  NOTICE_EVT,
 
   TEST
 }

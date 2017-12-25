@@ -2,17 +2,17 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="awardCaseList"></v-menu>
+      <v-menu selectedName="noticeList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminAwardCaseList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminNoticeList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
           <div class="fr">
-            <router-link :to="{name: 'adminAwardCaseAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
+            <router-link :to="{name: 'adminNoticeAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
           </div>
         </div>
 
@@ -23,10 +23,10 @@
             <el-form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
 
 
-              <el-form-item label="所属奖项" prop="category_id">
-                <el-radio-group v-model.number="form.category_id">
+              <el-form-item label="目标人群" prop="evt">
+                <el-radio-group v-model.number="form.evt">
                   <el-radio-button
-                    v-for="item in categoryOptions"
+                    v-for="item in evtOptions"
                     :key="item.index"
                     :label="item.value">{{ item.label }}</el-radio-button>
                 </el-radio-group>
@@ -44,19 +44,6 @@
                 <el-col :span="12">
                   <el-form-item label="链接" prop="url">
                     <el-input v-model="form.url" placeholder=""></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row :gutter="12">
-                <el-col :span="6">
-                  <el-form-item label="奖项级别" prop="grade">
-                    <el-input v-model="form.grade" placeholder=""></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item label="获奖时间" prop="time_at">
-                    <el-input v-model="form.time_at" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -90,22 +77,9 @@
                             </div>
                             <div class="content">
                               <p>{{ d.name }}</p>
-                              <div class="summary-edit" v-if="d.edit">
-                                <textarea v-model="d.summary">{{ d.summary }}</textarea>
-                              </div>
-                              <div class="summary" v-else>
-                                <p v-if="d.summary">{{ d.summary }}</p>
-                                <p class="image-no-summary" v-else>暂无描述信息</p>
-                              </div>
-                              <div class="opt" v-if="d.edit">
-                                <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="saveAssetSummary">保存</a>
-                              </div>
-                              <div class="opt" v-else>
+                              <div class="opt">
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
                                   <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="delAsset"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                </el-tooltip>
-                                <el-tooltip class="item" effect="dark" content="编辑文字" placement="top">
-                                  <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="editAssetBtn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </el-tooltip>
                                 <el-tooltip class="item" effect="dark" content="设为封面" placement="top">
                                 <a href="javascript:void(0);" :item_id="d.response.asset_id" :index="index" @click="setCoverBtn"><i :class="{'fa': true, 'fa-flag': true, 'is-active': parseInt(coverId) === d.response.asset_id ? true : false }" aria-hidden="true"></i></a>
@@ -122,46 +96,20 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="form.images_url">
-                <el-col :span="24">
-                  <el-form-item label="图片草稿" prop="images_url">
-                    <div class="file-list">
-                      <el-row :gutter="10">
-                        <el-col :span="8" v-for="(d, index) in fileDraftList" :key="index">
-                          <el-card :body-style="{ padding: '0px' }" class="item">
-                            <div class="image-box">
-                                <img :src="d">
-                            </div>
-                            <div class="content">
-                              <div class="opt">
-                                <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
-                                  <a href="javascript:void(0);" :url="d" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                </el-tooltip>
-                              </div>
-                            </div>
-                          </el-card>
-                        </el-col>
-                      </el-row>
-                    </div>
-
-                  </el-form-item>
-
-                </el-col>
-              </el-row>
-
-              <el-form-item label="简述" prop="summary">
+              <el-form-item label="备注" prop="summary">
                 <el-input
                   type="textarea"
-                  :rows="5"
-                  placeholder="请输入简述"
+                  :rows="4"
+                  placeholder="请输入备注"
                   v-model="form.summary">
                 </el-input>
+                <div class="description">只用于后台备注，前端不显示</div>
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
                 <el-input
                   type="textarea"
-                  :rows="10"
+                  :rows="7"
                   placeholder="请输入内容"
                   v-model="form.content">
                 </el-input>
@@ -188,14 +136,14 @@ import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 import typeData from '@/config'
 export default {
-  name: 'admin_award_case_submit',
+  name: 'admin_notice_submit',
   components: {
     vMenu
   },
   data () {
     return {
       menuType: 0,
-      itemMode: '添加奖项案例',
+      itemMode: '添加系统通知',
       isLoading: false,
       isLoadingBtn: false,
       uploadUrl: '',
@@ -204,7 +152,7 @@ export default {
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
         'x:target_id': '',
-        'x:type': 25
+        'x:type': 28
       },
       uploadMsg: '只能上传jpg/png文件，且不超过5M',
       pickerOptions: {
@@ -212,26 +160,26 @@ export default {
       imageUrl: '',
       coverId: '',
       fileList: [],
-      fileDraftList: [],
       form: {
-        category_id: '',
-        grade: '',
-        time_at: '',
-        'summary': '',
+        type: '',
         title: '',
+        evt: '',
         content: '',
-        cover_id: '',
+        summary: '',
         url: ''
       },
       ruleForm: {
-        category_id: [
-          { type: 'number', message: '请选择所属奖项', trigger: 'change' }
+        evt: [
+          { type: 'number', message: '请选择目标人群', trigger: 'change' }
         ],
         title: [
           { required: true, message: '请添写标题', trigger: 'blur' }
         ],
-        time_at: [
-          { required: true, message: '请添写获奖时间', trigger: 'blur' }
+        url: [
+          { required: true, message: '链接不能为空', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请添写内容', trigger: 'blur' }
         ]
       },
       msg: ''
@@ -241,18 +189,17 @@ export default {
     submit(formName) {
       const that = this
       if (!that.coverId) {
-        that.$message.error('请设置一张封面图')
-        return false
+        // that.$message.error('请设置一张封面图')
+        // return false
+        that.coverId = 0
       }
       that.$refs[formName].validate((valid) => {
         // 验证通过，提交
         if (valid) {
           var row = {
-            category_id: that.form.category_id,
+            evt: that.form.evt,
             title: that.form.title,
             summary: that.form.summary,
-            grade: that.form.grade,
-            time_at: that.form.time_at,
             content: that.form.content,
             url: that.form.url
           }
@@ -269,11 +216,11 @@ export default {
             }
           }
           that.isLoadingBtn = true
-          that.$http({method: method, url: api.adminAwardCase, data: row})
+          that.$http({method: method, url: api.adminNotice, data: row})
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminAwardCaseList'})
+              that.$router.push({name: 'adminNoticeList'})
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -293,7 +240,7 @@ export default {
       })
     },
     returnList() {
-      this.$router.push({name: 'adminAwardCaseList'})
+      this.$router.push({name: 'adminNoticeList'})
     },
     // 删除附件
     delAsset(event) {
@@ -305,39 +252,6 @@ export default {
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.fileList.splice(index, 1)
-        } else {
-          self.$message.error(response.data.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-      })
-    },
-    // 删除草稿图
-    delDrafImage(event) {
-      var index = event.currentTarget.getAttribute('index')
-      this.fileDraftList.splice(index, 1)
-    },
-    // 编辑附件
-    editAssetBtn(event) {
-      // var id = event.currentTarget.getAttribute('item_id')
-      var index = event.currentTarget.getAttribute('index')
-      this.fileList[index].edit = true
-    },
-    // 保存附件描述
-    saveAssetSummary(event) {
-      var id = event.currentTarget.getAttribute('item_id')
-      var index = event.currentTarget.getAttribute('index')
-      var summary = this.fileList[index].summary
-      if (summary === '' || summary === null) {
-        this.$message.error('描述信息不能为空!')
-        return false
-      }
-      const self = this
-      self.$http.put(api.updateImageSummary, {asset_id: id, summary: summary})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.fileList[index].edit = false
         } else {
           self.$message.error(response.data.meta.message)
         }
@@ -389,8 +303,6 @@ export default {
       var item = {
         name: add.name,
         url: add.url,
-        edit: false,
-        summary: '',
         response: {
           asset_id: add.response.asset_id
         }
@@ -412,12 +324,12 @@ export default {
     }
   },
   computed: {
-    categoryOptions() {
+    evtOptions() {
       var items = []
-      for (var i = 0; i < typeData.AWARD_CASE_CATEGORY.length; i++) {
+      for (var i = 0; i < typeData.NOTICE_EVT.length; i++) {
         var item = {
-          value: typeData.AWARD_CASE_CATEGORY[i]['id'],
-          label: typeData.AWARD_CASE_CATEGORY[i]['name']
+          value: typeData.NOTICE_EVT[i]['id'],
+          label: typeData.NOTICE_EVT[i]['name']
         }
         items.push(item)
       }
@@ -428,10 +340,10 @@ export default {
     const that = this
     var id = this.$route.params.id
     if (id) {
-      that.itemMode = '编辑奖项案例'
+      that.itemMode = '编辑系统通知'
       that.itemId = id
       that.uploadParam['x:target_id'] = id
-      that.$http.get(api.adminAwardCase, {params: {id: id}})
+      that.$http.get(api.adminNotice, {params: {id: id}})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           that.form = response.data.data
@@ -439,26 +351,17 @@ export default {
             that.coverId = that.form.cover_id
           }
 
-          if (response.data.data.images) {
+          if (response.data.data.cover) {
             var files = []
-            for (var i = 0; i < response.data.data.images.length; i++) {
-              var obj = response.data.data.images[i]
-              var item = {}
-              item['response'] = {}
-              item['id'] = obj['id']
-              item['name'] = obj['name']
-              item['url'] = obj['middle']
-              item['summary'] = obj['summary']
-              item['response']['asset_id'] = obj['id']
-              item['edit'] = false
-              files.push(item)
-            }
+            var obj = response.data.data.cover
+            var item = {}
+            item['response'] = {}
+            item['id'] = obj['id']
+            item['name'] = obj['name']
+            item['url'] = obj['middle']
+            item['response']['asset_id'] = obj['id']
+            files.push(item)
             that.fileList = files
-          }
-
-          // 图片草稿
-          if (response.data.data.images_url) {
-            that.fileDraftList = response.data.data.images_url.split('@@')
           }
         }
       })

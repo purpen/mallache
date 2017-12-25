@@ -70,7 +70,13 @@ class WorksController extends Controller
         $query = array();
         if ($type) $query['type'] = $type;
         if ($published) $query['published'] = $published;
-        if ($status) $query['status'] = $status;
+        if ($status) {
+            if ($status === -1) {
+                $query['status'] = 0;
+            } else {
+                $query['status'] = 1;
+            }
+        }
 
         $lists = Works::where($query)
             ->orderBy('id', 'desc')

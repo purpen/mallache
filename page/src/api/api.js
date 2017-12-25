@@ -229,6 +229,11 @@ export default {
   adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用／禁用
   adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用／禁用
 
+  // 系统通知管理
+  adminNoticeList: '/admin/notice/list', // GET 列表
+  adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用／禁用
+
   // veer图片列表
   veerImage: '/veerImage/list',
 

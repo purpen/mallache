@@ -145,6 +145,16 @@ return [
         '/admin/awardCase/changeStatus',
         //推荐/取消
         '/admin/awardCase/changeRecommended',
+
+        /**
+         * 系统通知
+         */
+        // 详情 编辑 删除
+        '/admin/notice',
+        // 列表
+        '/admin/notice/list',
+        //启用禁用
+        '/admin/notice/changeStatus',
     ],
 
     /**
@@ -285,6 +295,16 @@ return [
         '/admin/awardCase/changeStatus',
         //推荐/取消
         '/admin/awardCase/changeRecommended',
+
+        /**
+         * 系统通知
+         */
+        // 详情 编辑 删除
+        '/admin/notice',
+        // 列表
+        '/admin/notice/list',
+        //启用禁用
+        '/admin/notice/changeStatus',
     ],
 
     /**
@@ -383,6 +403,16 @@ return [
         '/admin/awardCase/changeStatus',
         //推荐/取消
         '/admin/awardCase/changeRecommended',
+
+        /**
+         * 系统通知
+         */
+        // 详情 编辑 删除
+        '/admin/notice',
+        // 列表
+        '/admin/notice/list',
+        //启用禁用
+        '/admin/notice/changeStatus',
 
     ],
 ];

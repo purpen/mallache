@@ -19,6 +19,7 @@ class AwardCase extends BaseModel
         'type',
         'category_id',
         'grade',
+        'summary',
         'content',
         'url',
         'recommended',
