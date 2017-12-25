@@ -454,8 +454,6 @@ export default {
             that.coverId = that.form.cover_id
           }
 
-          console.log(that.form)
-
           if (that.form.tags) {
             that.form.tags = that.form.tags.join(',')
           }
@@ -476,8 +474,6 @@ export default {
             }
             that.fileList = files
           }
-
-          console.log(that.form)
 
           // 图片草稿
           if (response.data.data.images_url) {
