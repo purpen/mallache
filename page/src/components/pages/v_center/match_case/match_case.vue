@@ -7,8 +7,8 @@
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div :class="['content-box', isMob ? 'content-box-m' : '']">
-            <div class="form-title" v-if="designCases.length">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-if="designCases.length">
+            <div class="form-title">
               <span>参赛作品案例</span>
             </div>
 

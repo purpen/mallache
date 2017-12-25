@@ -24,7 +24,7 @@
             </el-col>
           </el-row>
 
-          <div class="item" v-for="(d, index) in designItems">
+          <div class="item" v-for="(d, index) in designItems" :key="index">
 
             <el-row class="banner list-box">
               <el-col :span="12">

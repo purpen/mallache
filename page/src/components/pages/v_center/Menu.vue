@@ -69,7 +69,7 @@
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
-      <div class="menu-list">
+      <div class="menu-list" v-if="true">
         <span v-if="!isMob">工具</span>
         <a @click="alick" :to="'/vcenter/commonly_sites'"
            :class="{'item': true, 'is-active': currentName === 'commonlySites'}">
@@ -85,7 +85,7 @@
         </a>
         <a @click="alick" :to="'/vcenter/exhibition'"
            :class="{'item': true, 'is-active': currentName === 'exhibition'}">
-          展览
+          设计日历
         </a>
       </div>
     </section>

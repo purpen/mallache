@@ -12,8 +12,8 @@
             <section class="lists design-info" v-if="designInfo.length">
               <h2>设计资讯</h2>
               <article>
-                <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                  <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in designInfo" :key="ele.id">
+                <el-row :gutter="isMob ? 10 : 20">
+                  <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designInfo" :key="index">
                     <div class="item clearfix" @click="aClick(ele.url)">
                       <div class="left fl"
                            :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -33,8 +33,8 @@
               <h2>创意灵感</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in originality" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in originality" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -54,8 +54,8 @@
               <h2>众筹</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in crowdFunding" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in crowdFunding" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -75,8 +75,8 @@
               <h2>商业咨询</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in businessConsult" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in businessConsult" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -96,8 +96,8 @@
               <h2>设计奖项</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in designAwards" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designAwards" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -148,7 +148,6 @@
             switch (i.type) {
               case 1:
                 this.designInfo.push(i)
-                console.log(i)
                 break
               case 2:
                 this.originality.push(i)
@@ -267,10 +266,6 @@
     line-height: 1.2;
   }
 
-  .padding10 {
-    padding: 0 10px;
-  }
-
   @media screen and (max-width: 600px) {
     .item {
       min-height: 70px;
@@ -302,6 +297,10 @@
       font-size: 17px;
       background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
       background-size: 17px;
+    }
+
+    .lists h2:first-child {
+      margin: 0 0 20px;
     }
 
     .originality h2 {

@@ -5,7 +5,7 @@
       <v-menu currentName="control"></v-menu>
       <el-col :span="isMob ? 24 : 20">
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
-          <div class="item ing" v-for="(d, index) in itemIngList">
+          <div class="item ing" v-for="(d, index) in itemIngList" :key="index">
             <div class="banner">
               <p>
                 <span>进行中</span>

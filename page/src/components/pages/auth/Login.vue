@@ -28,9 +28,12 @@
         </el-form>
 
         <div class="reg">
-          <p>还没有铟果账户？
+          <p v-if="!isMob">还没有铟果账户？
             <router-link v-if="type" :to="{name: 'register',params:{type: type}}">立即注册</router-link>
             <router-link v-else :to="{name: 'register'}">立即注册</router-link>
+          </p>
+          <p v-else>还没有铟果账户？
+            <router-link :to="{name: 'identity'}">立即注册</router-link>
           </p>
         </div>
 

@@ -187,6 +187,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   min-width: initial;
 }
 
+.hide2lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .blank10 {
   margin: 10px;
 }
@@ -1189,7 +1196,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .fc-toolbar.fc-header-toolbar {
-  margin: 20px 0;
+  display: none
 }
 
 .fc .fc-month-button,

@@ -39,25 +39,4 @@ phenix.in_array = function (arr, val) {
   }
   return -1;
 }; // 返回-1表示没找到，返回其他值表示找到的索引
-
-// 判断当前的浏览器是pc还是移动设备
-export function IsMobile() {
-  var sUserAgent = navigator.userAgent;
-  var mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE'];
-  var ismob = 0;
-
-  for (var i = 0; i < mobileAgents.length; i++) {
-    if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
-      ismob = 1;
-      break;
-    }
-  }
-
-  if (ismob) {
-    return true
-  } else {
-    return false
-  }
-}
-
 export default phenix;
