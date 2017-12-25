@@ -61,6 +61,15 @@
                 </el-col>
               </el-row>
 
+              <el-row :gutter="24">
+                <el-col :span="12">
+                  <el-form-item label="标签" prop="tags">
+                    <el-input v-model="form.tags" placeholder=""></el-input>
+                    <div class="description">*多个标签用','分隔,每个标签不超过7个字符，尽量避免使用特殊字符。</div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
               <el-row >
                 <el-col :span="24">
                   <el-form-item label="上传图片" prop="">
@@ -221,6 +230,7 @@ export default {
         title: '',
         content: '',
         cover_id: '',
+        tags: '',
         url: ''
       },
       ruleForm: {
@@ -256,6 +266,11 @@ export default {
             content: that.form.content,
             url: that.form.url
           }
+
+          if (that.form.tags) {
+            row.tags = that.form.tags.split(',')
+          }
+
           row.cover_id = that.coverId
           var method = null
 
@@ -439,6 +454,10 @@ export default {
             that.coverId = that.form.cover_id
           }
 
+          if (that.form.tags) {
+            that.form.tags = that.form.tags.join(',')
+          }
+
           if (response.data.data.images) {
             var files = []
             for (var i = 0; i < response.data.data.images.length; i++) {
@@ -455,6 +474,8 @@ export default {
             }
             that.fileList = files
           }
+
+          console.log(that.form)
 
           // 图片草稿
           if (response.data.data.images_url) {

@@ -176,7 +176,7 @@ export default {
         content: '',
         summary: '',
         url: '',
-        tags: '',
+        tags: ''
       },
       ruleForm: {
         evt: [
