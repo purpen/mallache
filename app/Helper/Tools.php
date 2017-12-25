@@ -144,7 +144,7 @@ class Tools
 
         if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
         if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
-        $data['quantity'] = $data['message'] + $dat['notice'];
+        $data['quantity'] = $data['message'] + $data['notice'];
 
         // $data = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return $data;
