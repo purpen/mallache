@@ -454,6 +454,8 @@ export default {
             that.coverId = that.form.cover_id
           }
 
+          console.log(that.form)
+
           if (that.form.tags) {
             that.form.tags = that.form.tags.join(',')
           }

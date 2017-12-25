@@ -40,6 +40,15 @@ class AwardCase extends BaseModel
         return null;
     }
 
+    /**
+     * tags 标签访问修改器
+     * @return array
+     */
+    public function getTagsAttribute($key)
+    {
+        return $key ? explode(',',$key) : [];
+    }
+
 
     /**
      * 图片列表

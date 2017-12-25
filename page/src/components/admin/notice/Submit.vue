@@ -48,15 +48,6 @@
                 </el-col>
               </el-row>
 
-              <el-row :gutter="24">
-                <el-col :span="12">
-                  <el-form-item label="标签" prop="tags">
-                    <el-input v-model="form.tags" placeholder=""></el-input>
-                    <div class="description">*多个标签用','分隔,每个标签不超过7个字符，尽量避免使用特殊字符。</div>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
               <el-row >
                 <el-col :span="24">
                   <el-form-item label="上传图片" prop="">
@@ -175,8 +166,7 @@ export default {
         evt: '',
         content: '',
         summary: '',
-        url: '',
-        tags: ''
+        url: ''
       },
       ruleForm: {
         evt: [
@@ -190,9 +180,6 @@ export default {
         ],
         content: [
           { required: true, message: '请添写内容', trigger: 'blur' }
-        ],
-        tags: [
-          { required: true, message: '请添写标签', trigger: 'blur' }
         ]
       },
       msg: ''
@@ -214,14 +201,8 @@ export default {
             title: that.form.title,
             summary: that.form.summary,
             content: that.form.content,
-            url: that.form.url,
-            tags: that.form.tags
+            url: that.form.url
           }
-
-          if (row.tags) {
-            row.tags = row.tags.split(',')
-          }
-
           row.cover_id = that.coverId
           var method = null
 
@@ -368,10 +349,6 @@ export default {
           that.form = response.data.data
           if (that.form.cover_id) {
             that.coverId = that.form.cover_id
-          }
-
-          if (that.form.tags) {
-            that.form.tags = that.form.tags.join(',')
           }
 
           if (response.data.data.cover) {
