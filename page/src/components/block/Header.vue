@@ -122,7 +122,7 @@
   import api from '@/api/api'
   import { MSG_COUNT, MENU_STATUS } from '@/store/mutation-types'
   export default {
-    name: 'header',
+    name: 'head_menu',
     data() {
       return {
         // menuactive: this.$route.path.split('/')[1],

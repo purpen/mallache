@@ -24,6 +24,7 @@ class AwardCaseController extends BaseController
      * @apiParam {string} summary 简述
      * @apiParam {text} content 内容
      * @apiParam {string} url 链接
+     * @apiParam {string} tags 标签，多个标签用','分隔
      * @apiParam {string} grade 奖项等级
      * @apiParam {string} time_at 获奖时间
      * @apiParam {string} images_url 多个图片链接用@@分隔
