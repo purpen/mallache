@@ -44,10 +44,18 @@ class TrendReportsController extends BaseController
         //
         $type = $this->auth_user->type;
         if($type == 1){
-            $design_company = DesignCompanyModel::where('id' , $this->auth_user->design_company_id)->first();
+            $design_company = $this->auth_user->design_company_id;
+            if(!$design_company){
+                return $this->response->array($this->apiError('not found design_company', 404));
+            }
+            $design_company = DesignCompanyModel::where('id' , $design_company)->first();
             $verify_status = $design_company->verify_status;
         }else{
-            $demand_company = DemandCompany::where('id' , $this->auth_user->demand_company_id)->first();
+            $demand_company = $this->auth_user->demand_company_id;
+            if(!$demand_company){
+                return $this->response->array($this->apiError('not found demand_company', 404));
+            }
+            $demand_company = DemandCompany::where('id' , $demand_company)->first();
             $verify_status = $demand_company->verify_status;
 
         }
