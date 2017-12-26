@@ -6,12 +6,12 @@
           <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
             <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
             <div class="el-menu-item logo">
-              <span class="logo">太火鸟&nbsp;SaaS</span>
+              <span class="logo">太火鸟 SaaS</span>
             </div>
-            <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
-            <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
-            <el-menu-item index="topic" v-bind:route="menu.topic">铟果说</el-menu-item>
-            <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
+            <el-menu-item index="home" :route="menu.home">首页</el-menu-item>
+            <el-menu-item index="server" :route="menu.server">服务</el-menu-item>
+            <el-menu-item index="topic" :route="menu.topic">铟果说</el-menu-item>
+            <el-menu-item index="design_case" :route="menu.design_case">灵感</el-menu-item>
           </el-menu>
         </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
@@ -54,8 +54,8 @@
             <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
           </div>
           <el-menu class="el-menu-header" :default-active="menuactive" mode="horizontal" router>
-            <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
-            <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
+            <el-menu-item index="login" :route="menu.login">登录</el-menu-item>
+            <el-menu-item index="register" :route="menu.register">注册</el-menu-item>
           </el-menu>
         </div>
 
@@ -81,7 +81,7 @@
             <router-link :to="menu.topic">铟果说</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link :to="menu.stuff">灵感</router-link>
+            <router-link :to="menu.design_case">灵感</router-link>
           </li>
           <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
@@ -142,7 +142,7 @@
           server: {path: '/server'},
           design: {path: '/server_design'},
           topic: {path: '/article/list'},
-          stuff: {path: '/stuff'},
+          design_case: {path: '/design_case/list'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},
@@ -173,9 +173,9 @@
         auth.logout()
         this.isLogin = false
         this.$message({
-          showClose: true,
-          message: '登出成功!',
-          type: 'success'
+          message: '已退出',
+          type: 'success',
+          duration: 800
         })
         clearInterval(this.requestMessageTask)
         this.$router.replace('/home')
@@ -301,6 +301,7 @@
       }
     },
     created: function () {
+      console.log(this.menuactive)
       const self = this
       if (self.isLogin) {
         self.fetchMessageCount()

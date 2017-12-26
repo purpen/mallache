@@ -45,6 +45,7 @@
 <script>
 import api from '@/api/api'
 import auth from '@/helper/auth'
+import { MENU_STATUS } from '@/store/mutation-types'
 
 export default {
   name: 'login',
@@ -93,7 +94,12 @@ export default {
                   .get(api.user, {})
                   .then(function(response) {
                     if (response.data.meta.status_code === 200) {
-                      that.$message.success('登录成功')
+                      that.$message({
+                        message: '登陆成功',
+                        type: 'success',
+                        duration: 800
+                      })
+                      that.$store.commit(MENU_STATUS, '')
                       auth.write_user(response.data.data)
                       let prevUrlName = that.$store.state.event.prevUrlName
                       if (prevUrlName) {
@@ -145,7 +151,8 @@ export default {
     if (this.$route.params.url === 'yq') {
       this.$message({
         message: '请使用设计服务商的账号登录',
-        type: 'info'
+        type: 'info',
+        duration: 800
       })
     } else {
       if (prevUrlName) {

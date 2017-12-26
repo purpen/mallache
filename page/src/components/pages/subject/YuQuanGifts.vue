@@ -65,7 +65,8 @@ export default {
         if (!this.isCompany) {
           this.$message({
             message: '此活动只允许设计服务商参与',
-            type: 'error'
+            type: 'error',
+            duration: 1000
           })
         } else {
           this.$router.push({ name: 'vcenterMatchCaseSubmit' })

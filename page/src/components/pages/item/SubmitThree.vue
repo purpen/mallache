@@ -349,9 +349,9 @@ export default {
     },
     uploadError(err, file, fileList) {
       this.$message({
-        showClose: true,
         message: '文件上传失败!',
-        type: 'error'
+        type: 'error',
+        duration: 1000
       })
       console.log(err)
     },

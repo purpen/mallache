@@ -16,7 +16,7 @@
                 <el-col :span="12">
                   <el-form-item label="标题" prop="title">
                     <el-input v-model="form.title" placeholder=""></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -195,9 +195,9 @@
       },
       uploadError(err, file, fileList) {
         this.$message({
-          showClose: true,
           message: '文件上传失败!',
-          type: 'error'
+          type: 'error',
+          duration: 1000
         })
         console.log(err)
       },

@@ -64,11 +64,16 @@ const routes = [
   {
     path: '/stuff',
     name: 'stuff',
+    redirect: '/design_case/list'
+  },
+  {
+    path: '/design_case/list',
+    name: 'designCaseList',
     meta: {
       title: '灵感',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Stuff')
+    component: require('@/components/pages/design_case/List')
   },
   // 联系我们
   {
