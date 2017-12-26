@@ -206,6 +206,7 @@ export default {
       itemMode: '添加奖项案例',
       isLoading: false,
       isLoadingBtn: false,
+      content_file: [],
       uploadUrl: '',
       uploadParam: {
         'token': '',

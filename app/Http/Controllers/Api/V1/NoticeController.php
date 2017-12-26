@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\NoticeTransformer;
 use App\Models\AssetModel;
 use App\Models\Notice;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,6 @@ class NoticeController extends BaseController
      * @apiName notice noticeList
      * @apiGroup Notice
      *
-     * @apiParam {integer} evt 目标人群： 1.需求方；2.设计公司；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -79,12 +79,26 @@ class NoticeController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->input('type') ? (int)$request->input('type') : 1;
-        $status = $request->input('status') ? (int)$request->input('status') : 1;
-        $evt = $request->input('evt') ? (int)$request->input('evt') : 0;
+        $evt = 0;
+
+        $user_id = $this->auth_user_id;
+        if ($user_id) {
+            $user = User::find($user_id);
+            $evt = (int)$user->type;
+            // 更新已读数
+            if ($user->notice_count > 0) {
+                $user->notice_count = 0;
+                $user->save();           
+            }
+        }
+
+        if ($evt === 0) {
+            return $this->response->array($this->apiError('User type error', 500));
+        }
 
         $query = array();
         if ($type) $query['type'] = $type;
-        if ($status) $query['status'] = $status;
+        $query['status'] = 1;
         if ($evt) {
             if ($evt === 1) {
                 $query['evt'] = array(0, 1);
