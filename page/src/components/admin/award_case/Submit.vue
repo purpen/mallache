@@ -431,11 +431,10 @@ export default {
 
       var formdata = new FormData()
       formdata.append('file', $file)
-      that.uploadParam['x:type'] = 14
+      that.uploadParam['x:type'] = 26
       for (var key in that.uploadParam) {
         formdata.append(key, that.uploadParam[key])
       }
-      console.log(formdata)
       axios
         .post(that.uploadUrl, formdata, {
           headers: {
@@ -453,7 +452,6 @@ export default {
         })
         .catch(function(error) {
           that.$message.error(error)
-          console.log(error)
         })
     },
     $imgDel(pos) {
