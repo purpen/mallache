@@ -67,13 +67,31 @@ const routes = [
     redirect: '/design_case/list'
   },
   {
-    path: '/design_case/list',
-    name: 'designCaseList',
+    path: '/design_case/general_list',
+    name: 'designGeneralList',
     meta: {
-      title: '灵感',
+      title: '常规案例',
       requireAuth: false
     },
-    component: require('@/components/pages/design_case/List')
+    component: require('@/components/pages/design_case/GeneralList')
+  },
+  {
+    path: '/design_case/awards_list',
+    name: 'designAwardsList',
+    meta: {
+      title: '奖项案例',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsList')
+  },
+  {
+    path: '/design_case/awards_show/:id',
+    name: 'designAwardsShow',
+    meta: {
+      title: '案例详情',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsShow')
   },
   // 联系我们
   {

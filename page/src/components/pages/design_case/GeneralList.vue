@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
+    <menuSub></menuSub>
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
-
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
@@ -32,7 +32,7 @@
     </div>
     <div class="blank20"></div>
     <div class="pager">
-      <el-pagination class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
+      <el-pagination v-if="itemList.length" class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
                      :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper"
                      @current-change="handleCurrentChange">
       </el-pagination>
@@ -42,8 +42,9 @@
 
 <script>
 import api from '@/api/api'
+import menuSub from './MenuSub'
 export default {
-  name: 'design_case_list',
+  name: 'designGeneralList',
   data() {
     return {
       itemList: [],
@@ -56,6 +57,9 @@ export default {
       },
       test: ''
     }
+  },
+  components: {
+    menuSub
   },
   methods: {
     handleCurrentChange(page) {
@@ -71,7 +75,6 @@ export default {
         .then(function(response) {
           self.isLoading = false
           if (response.data.meta.status_code === 200) {
-            // console.log(response)
             self.itemList = response.data.data
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages

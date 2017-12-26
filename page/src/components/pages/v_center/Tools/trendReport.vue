@@ -24,12 +24,14 @@
               </el-col>
             </el-row>
             <div class="pager">
-              <el-pagination class="pagination"
-                             :current-page="pagination.current_page"
-                             :page-size="pagination.per_page"
-                             :total="pagination.total" :page-count="pagination.total_pages"
-                             layout="prev, pager, next, total"
-                             @current-change="handleCurrentChange">
+              <el-pagination
+                v-if="reportList.lgnth"
+                class="pagination"
+                :current-page="pagination.current_page"
+                :page-size="pagination.per_page"
+                :total="pagination.total" :page-count="pagination.total_pages"
+                layout="prev, pager, next, total"
+                @current-change="handleCurrentChange">
               </el-pagination>
             </div>
             <div class="no-report" v-if="noReport">

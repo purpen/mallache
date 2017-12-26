@@ -142,7 +142,7 @@
           server: {path: '/server'},
           design: {path: '/server_design'},
           topic: {path: '/article/list'},
-          design_case: {path: '/design_case/list'},
+          design_case: {path: '/design_case/general_list'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},
@@ -301,7 +301,6 @@
       }
     },
     created: function () {
-      console.log(this.menuactive)
       const self = this
       if (self.isLogin) {
         self.fetchMessageCount()

@@ -8,7 +8,6 @@
         active-class="false" :class="{'item': true, 'is-active': menuType === 'systemMessageList'}">
         系统通知</router-link>
     </div>
-
   </div>
 </template>
 
@@ -31,7 +30,6 @@
       }
     }
   }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

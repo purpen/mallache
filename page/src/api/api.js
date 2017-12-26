@@ -32,7 +32,7 @@ export default {
   column: '/column', // GET 详情
 
   // 银行卡
-  bank: '/bank', // GET/POST 查看列表／保存银行卡
+  bank: '/bank', // GET/POST 查看列表 | 保存银行卡
   bankId: '/bank/{0}', // PUT 更新银行卡信息
   bankUnStatus: '/bank/un/status', // PUT 关闭银行卡
 
@@ -133,7 +133,7 @@ export default {
   categoryList: '/classification/list', // GET 分类列表
 
   // 附件操作
-  asset: '/upload/deleteFile/{0}',  // 删除／查看图片
+  asset: '/upload/deleteFile/{0}',  // 删除 | 查看图片
   upToken: '/upload/upToken',  // 获取上传token
   updateImageSummary: '/designCase/imageSummary', // PUT 更新图片备注
 
@@ -185,7 +185,7 @@ export default {
   // 栏目管理
   adminColumnList: '/admin/column/lists', // GET 列表
   adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用／禁用
+  adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用 | 禁用
 
   // 分类管理
   adminCategoryList: '/admin/classification/list', // GET 列表
@@ -230,13 +230,15 @@ export default {
   // 奖项案例管理
   adminAwardCaseList: '/admin/awardCase/list', // GET 列表
   adminAwardCase: '/admin/awardCase', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用／禁用
-  adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用／禁用
+  adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用 | 禁用
+  adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用 | 禁用
+  awardCaseList: '/awardCase/list', // GET 列表
+  awardCase: '/awardCase', // GET 详情
 
   // 系统通知管理
   adminNoticeList: '/admin/notice/list', // GET 列表
   adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用／禁用
+  adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用 | 禁用
 
   // veer图片列表
   veerImage: '/veerImage/list',
