@@ -1197,7 +1197,10 @@ const routes = [
       title: '编辑奖项案例',
       requireAuth: true
     },
-    component: require('@/components/admin/award_case/Submit')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/admin/award_case/Submit'], resolve)
+    }
   },
   // 奖项案例列表
   {
