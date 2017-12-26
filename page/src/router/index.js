@@ -532,13 +532,23 @@ const routes = [
   },
   // 消息列表
   {
-    path: '/vcenter/message/list',
+    path: '/vcenter/message',
     name: 'vcenterMessageList',
     meta: {
       title: '消息列表',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/message/List')
+  },
+  // 系统通知
+  {
+    path: '/vcenter/notice',
+    name: 'systemMessageList',
+    meta: {
+      title: '系统通知',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/message/systemMessageList')
   },
   // 作品列表
   {

@@ -1,7 +1,12 @@
 <template>
   <div class="vcenter-menu-sub" v-if="!isMob">
     <div class="vcenter-menu-sub-list">
-      <router-link :to="{name: 'vcenterMessageList'}" active-class="false" :class="{'item': true, 'is-active': menuType === 0}">全部</router-link>
+      <router-link :to="{name: 'vcenterMessageList'}"
+        active-class="false" :class="{'item': true, 'is-active': menuType === 'vcenterMessageList'}">
+        项目提醒</router-link>
+      <router-link :to="{name: 'systemMessageList'}"
+        active-class="false" :class="{'item': true, 'is-active': menuType === 'systemMessageList'}">
+        系统通知</router-link>
     </div>
 
   </div>
@@ -12,27 +17,13 @@
     name: 'vcenter_message_menu',
     data () {
       return {
-        menuType: 0,
+        menuType: '',
         msg: ''
       }
     },
     methods: {},
     created: function() {
-      let type = this.$route.query.type
-      this.menuType = 0
-      if (type) {
-        this.menuType = parseInt(type)
-      }
-    },
-    watch: {
-      '$route' (to, from) {
-        // 对路由变化作出响应...
-        let type = this.$route.query.type
-        this.menuType = 0
-        if (type) {
-          this.menuType = parseInt(type)
-        }
-      }
+      this.menuType = this.$route.name
     },
     computed: {
       isMob() {

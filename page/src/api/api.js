@@ -116,10 +116,14 @@ export default {
   surveyDemandCompanySurvey: '/survey/demandCompanySurvey', // GET 需求方控制面板
   surveyDesignCompanySurvey: '/survey/designCompanySurvey', // GET 设计公司控制面板
 
-  // 系统通知
+  // 项目提醒
   messageGetMessageQuantity: '/message/getMessageQuantity', // GET 获取数量
   messageGetMessageList: '/message/getMessageList', // GET 列表
   messageTrueRead: '/message/trueRead', // PUT 确认已读
+
+  // 系统通知
+  getNoticeList: '/notice/list', // GET 列表
+  getNotice: '/notice',  // GET 详情
 
   // 文章
   articleList: '/article/list', // GET 列表
