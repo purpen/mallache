@@ -9,7 +9,7 @@
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
 
-            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)">
+            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
                 <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
                 <p class="title">{{ d.title }}</p>
@@ -19,8 +19,7 @@
                 </p>
                 <p class="time">{{ d.created_at }}</p>
               </div>
-              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1"
-                                                                       @click.stop="redirect(d)">查看</a></p>
+              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
             </div>
           </div>
 
@@ -34,8 +33,8 @@
           </el-pagination>
 
         </div>
-        <div class="empty" v-if="!isEmpty"></div>
-        <p v-if="!isEmpty" class="noMsg">您还没收到任何消息～</p>
+        <div class="empty" v-if="isEmpty === true"></div>
+        <p v-if="isEmpty === true" class="noMsg">您还没收到任何消息～</p>
       </el-col>
     </el-row>
   </div>
@@ -67,7 +66,7 @@
           test: null
         },
         userId: this.$store.state.event.user.id,
-        isEmpty: false
+        isEmpty: ''
       }
     },
     methods: {
@@ -98,9 +97,9 @@
               }
               self.itemList = data
               if (self.itemList.length) {
-                self.isEmpty = true
-              } else {
                 self.isEmpty = false
+              } else {
+                self.isEmpty = true
               }
 //              console.log(data)
             }

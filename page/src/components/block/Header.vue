@@ -108,9 +108,10 @@
           <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
         </a>
       </div>
+      <div class="option-cover" v-if="!optionHide" @click="moptionHide"></div>
       <div class="option" v-if="!optionHide">
         <a @click="toCenter" :class="{'aActive': menuStatus === 'center'}">个人中心</a>
-        <a @click="toTools" :class="{'aActive': menuStatus === 'tools'}">工具</a>
+        <a v-if="isCompany" @click="toTools" :class="{'aActive': menuStatus === 'tools'}">工具</a>
       </div>
     </div>
     <div class="header-buttom-line"></div>
@@ -271,6 +272,9 @@
       },
       menuStatus () {
         return this.$store.state.event.menuStatus
+      },
+      isCompany() {
+        return this.$store.state.event.user.type === 2
       }
     },
     created: function () {
@@ -341,8 +345,8 @@
 
   .option {
     position: absolute;
+    z-index: 10;
     width: 100px;
-    height: 60px;
     background: #FFFFFF;
     right: 8px;
     top: 53px;
@@ -367,6 +371,10 @@
     border-bottom: 1px solid #DCDCDC;
   }
 
+  .option a:last-child {
+    border-bottom: none;
+  }
+
   .option::after {
     content: "";
     width: 10px;
@@ -389,5 +397,15 @@
     top: -5px;
     background: #FFFFFF;
     transform: rotate(90deg);
+  }
+
+  .option-cover {
+    position: absolute;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #0006
   }
 </style>

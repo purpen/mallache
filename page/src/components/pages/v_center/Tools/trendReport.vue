@@ -7,10 +7,10 @@
         <ToolsMenu v-if="menuStatus === 'tools' && isMob"
                    currentName="trendReport"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20">
-          <div class="report">
+          <div :class="['report', {isMob : 'm-report'}]">
             <el-row :gutter="20">
-              <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in reportList" :key="index">
-                <router-link to="" class="item">
+              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index">
+                <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
                   <div class="picture"
                        :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                     {{ele.cover.summary}}
@@ -30,7 +30,6 @@
                              :total="pagination.total" :page-count="pagination.total_pages"
                              layout="prev, pager, next, total"
                              @current-change="handleCurrentChange">
-                <!--@current-change="handleCurrentChange"-->
               </el-pagination>
             </div>
             <div class="no-report" v-if="noReport">
@@ -47,13 +46,11 @@
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
-  import pdf from 'vue-pdf'
   export default {
     name: 'trendReport',
     components: {
       vMenu,
-      ToolsMenu,
-      pdf
+      ToolsMenu
     },
     data () {
       return {
@@ -78,7 +75,7 @@
             per_page: this.pagination.per_page
           }
         }).then((res) => {
-          console.log(res.data.data)
+          //          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             let meta = res.data.meta
             if (res.data.data.length) {
@@ -92,6 +89,8 @@
             } else {
               this.noReport = true
             }
+          } else {
+            this.$message.error(res.data.meta.message)
           }
         }).catch((err) => {
           console.error(err)
@@ -122,6 +121,7 @@
   }
 
   .item {
+    margin-bottom: 20px;
     border: 1px solid #D2D2D2;
     border-radius: 4px 4px 0 0;
     display: block;
@@ -132,6 +132,10 @@
     min-height: 100%;
     position: relative;
     padding-bottom: 50px
+  }
+
+  .m-report {
+    padding-top: 20px;
   }
 
   .no-report {

@@ -214,7 +214,7 @@ export default {
   adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
   TrendReportList: '/trendReports/lists',  // GET 列表
-  trendReports: 'trendReports', // GET 详情
+  trendReports: '/trendReports', // GET 详情
 
   // 常用网站管理
   adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除

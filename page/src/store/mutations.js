@@ -75,16 +75,16 @@ const state = {
   },
   pmdHeight: '0px', // 页面大图高度
   isMob: false,
-  menuStatus: getMenustatus() || 'center'
+  menuStatus: getMenustatus() || ''
 }
 
 let IsMobile = function () {
   let sUserAgent = navigator.userAgent
-  let mobileAgents = ['Mobile', 'Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'BlackBerry', 'Windows CE']
+  let mobileAgents = ['Android', 'iPhone', 'Symbian', 'WindowsPhone', 'iPod', 'Mobile Safari', 'Windows CE']
   let ismob = 0
 
   for (let i = 0; i < mobileAgents.length; i++) {
-    if (sUserAgent.indexOf(mobileAgents[i]) > -1) {
+    if (sUserAgent.indexOf(mobileAgents[i]) > -1 && document.documentElement.clientWidth < 768) {
       ismob = 1
       break
     }

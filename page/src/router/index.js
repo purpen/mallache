@@ -821,7 +821,7 @@ const routes = [
     component: require('@/components/pages/v_center/Tools/trendReport')
   },
   {
-    path: '/vcenter/trend_report/:id',
+    path: '/vcenter/trend_report/show/:id',
     name: 'trendReportShow',
     meta: {
       title: '趋势/报告',
@@ -835,7 +835,7 @@ const routes = [
     name: 'vcentercommonlySites',
     meta: {
       title: '常用网站',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/commonlySites')
   },

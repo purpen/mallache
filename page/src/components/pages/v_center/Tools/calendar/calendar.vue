@@ -1,6 +1,6 @@
 <template>
-  <div class="calendar">
-    <div class="header clearfix" ref="header">
+  <div :class="['calendar', {'m-calendar' : isMob}]">
+    <div :class="['header', 'clearfix', {'mHeader' : isMob}]" ref="header">
       <div class="fl fc-button-group">
         <button type="button" @click="prev"
                 class="fc-prev-button fc-button fc-state-default fc-corner-left fc-state-hover">
@@ -53,7 +53,6 @@
 <script>
   import { FullCalendar } from 'vue-full-calendar'
   import $ from 'jquery'
-  //  import api from '@/api/api'
 
   export default {
     props: {
@@ -203,35 +202,37 @@
     },
     mounted() {
       this.getView()
-      window.addEventListener('resize', () => {
-        this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
-      })
+      window.addEventListener('resize', this.winResize)
       this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
     },
     methods: {
+      winResize () {
+        this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
+      },
       prev (e) {
         this.isToday = false
-        self.hideinfo = false
+        this.hideinfo = false
         this.$refs.calendar.fireMethod('prev')
         this.getView()
         this.$emit('update-date', this.view, this.eventMsg.month)
       },
       next (e) {
         this.isToday = false
-        self.hideinfo = false
+        this.hideinfo = false
         this.$refs.calendar.fireMethod('next')
         this.getView()
         this.$emit('update-date', this.view, this.eventMsg.month)
       },
       todays (e) {
         this.isToday = true
-        self.hideinfo = false
+        this.hideinfo = false
         this.$refs.calendar.fireMethod('today')
         this.getView()
         this.$emit('update-date')
       },
       changeView (method) {
         this.view = method
+        this.hideinfo = false
         this.$refs.calendar.fireMethod('changeView', method)
       },
       getView () {
@@ -270,10 +271,25 @@
       this.$off('render-event')
       this.$off('reload-events')
       this.$off('rebuild-sources')
+    },
+    destroyed () {
+      window.removeEventListener('resize', this.winResize)
     }
   }
 </script>
 <style scoped>
+  .calendar {
+    padding-top: 10px;
+  }
+
+  .m-calendar {
+    padding-top: 15px;
+  }
+
+  #calendar {
+    margin-top:-40px;
+  }
+
   .header {
     position: absolute;
     top: 16px;
@@ -283,6 +299,13 @@
     text-align: center;
     font-size: 16px;
     font-weight: 600;
+    margin-top: -25px;
+  }
+
+  .mHeader {
+    margin-top: 0;
+    position: absolute;
+    top: 30px;
   }
 
   .header .fr {
@@ -438,13 +461,6 @@
     }
   }
 
-  @media screen and (max-width: 500px) {
-    .header {
-      position: absolute;
-      top: 36px;
-      width: 100%;
-      height: 30px;
-    }
-  }
+  @media screen and (max-width: 500px) {}
 </style>
 

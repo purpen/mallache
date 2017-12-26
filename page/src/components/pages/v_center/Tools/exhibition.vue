@@ -6,7 +6,7 @@
         <v-menu currentName="exhibition" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="exhibition"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
-                v-loading.body="loading">
+                v-loading.body="loading" :style="{paddingTop: '50px'}">
           <vCalendar
             :events="events"
             @event-click="eventClick"
@@ -22,13 +22,13 @@
 <script>
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
-  import vCalendar from '@/components/pages/v_center/Tools/calendar/calendar'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
-
   export default {
     name: 'exhibition',
     components: {
-      vCalendar,
+      vCalendar: (resolve) => {
+        require(['@/components/pages/v_center/Tools/calendar/calendar'], resolve)
+      },
       vMenu,
       ToolsMenu
     },
