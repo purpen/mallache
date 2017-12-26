@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 
 use App\Http\Transformer\NoticeTransformer;
+use App\Jobs\SendUserNotice;
 use App\Models\AssetModel;
 use App\Models\Notice;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -235,7 +236,12 @@ class NoticeController extends BaseController
         }
 
         if ($status) {
-            $notice->status = 1;
+            $notice->status = -1;
+            $evt = $notice->evt;
+            if($notice->save()){
+                $job = (new SendUserNotice($evt , $id));
+                $this->dispatch($job);
+            }
         } else {
             $notice->status = 0;
         }
