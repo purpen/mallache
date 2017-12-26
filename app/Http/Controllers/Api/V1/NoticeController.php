@@ -97,17 +97,19 @@ class NoticeController extends BaseController
         }
 
         $query = array();
+        $evtArr = array();
         if ($type) $query['type'] = $type;
         $query['status'] = 1;
         if ($evt) {
             if ($evt === 1) {
-                $query['evt'] = array(0, 1);
+                $evtArr = array(0, 1);
             } elseif ($evt === 2) {
-                $query['evt'] = array(0, 2);
+                $evtArr = array(0, 2);
             }
         }
 
         $lists = Notice::where($query)
+            ->whereIn('evt', $evtArr)
             ->orderBy('id', 'desc')
             ->paginate($per_page);
 
