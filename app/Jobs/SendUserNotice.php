@@ -41,7 +41,7 @@ class SendUserNotice implements ShouldQueue
         } else {
             $query['evt'] = $this->evt;
         }
-        User::where('type' , $query['evt'])->chunk(1, function ($users) {
+        User::where('type' , $query['evt'])->chunk(200, function ($users) {
             foreach ($users as $user){
                 $user->increment('notice_count');
             }
