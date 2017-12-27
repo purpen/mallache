@@ -21,13 +21,15 @@ class UploadAssetController extends BaseController
      * @apiGroup AdminUrlUpload
      *
      * @apiParam {string} url url
+     * @apiParam {integer} type 类型
+     * @apiParam {integer} target_id 目标id
      * @apiParam {string} token
      */
     public function urlUpload(Request $request)
     {
         $url = $request->input('url');
-        $accessKey = config('qiniu.access_key');
-        $secretKey = config('qiniu.secret_key');
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
 
         $bucket = config('filesystems.disks.qiniu.bucket');
@@ -39,8 +41,17 @@ class UploadAssetController extends BaseController
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 put 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
-        $data = config('filesystems.disks.qiniu.url').$key;
-        return $this->response->array($this->apiSuccess('success' , 200 ,compact('data')));
+        $asset = new AssetModel();
+        $asset->type = $request->input('type') ? $request->input('type') : 0;
+        $asset->name = '';
+        $asset->domain = 'url';
+        $asset->target_id = $request->input('target_id') ? $request->input('target_id') : 0;
+        $asset->path = $key;
+        $asset->save();
+
+        $urlImage = AssetModel::getOneImage($asset->id);
+
+        return $this->response->array($this->apiSuccess('success' , 200 ,compact('urlImage')));
     }
 
 }
