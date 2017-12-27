@@ -6,26 +6,35 @@
           <el-menu class="el-menu-header nav-left" :default-active="menuactive" mode="horizontal" router>
             <!--<img src="../../assets/images/logo.png" width="120" alt="太火鸟">-->
             <div class="el-menu-item logo">
-              <span class="logo">太火鸟&nbsp;SaaS</span>
+              <span class="logo">太火鸟 SaaS</span>
             </div>
-            <el-menu-item index="home" v-bind:route="menu.home">首页</el-menu-item>
-            <el-menu-item index="server" v-bind:route="menu.server">服务</el-menu-item>
-            <el-menu-item index="topic" v-bind:route="menu.topic">铟果说</el-menu-item>
-            <el-menu-item index="stuff" v-bind:route="menu.stuff">灵感</el-menu-item>
+            <el-menu-item index="home" :route="menu.home">首页</el-menu-item>
+            <el-menu-item index="server" :route="menu.server">服务</el-menu-item>
+            <el-menu-item index="topic" :route="menu.topic">铟果说</el-menu-item>
+            <el-menu-item index="design_case" :route="menu.design_case">灵感</el-menu-item>
           </el-menu>
         </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
           <div class="server-in-btn">
             <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
           </div>
-          <router-link :to="{name: 'vcenterMessageList'}" class="nav-item is-hidden-mobile">
+          <a class="nav-item is-hidden-mobile" @click="viewMsg" ref="msgList">
               <span class="icon active">
                 <i class="fa fa-bell-o" aria-hidden="true">
                   <span v-if="messageCount > 0">{{ messageCount }}</span>
                 </i>
               </span>
-          </router-link>
-
+              <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
+                <router-link :to="{name: 'vcenterMessageList'}" class="news">
+                  <span v-if="msg.message">{{msg.message}}条[项目提醒]未查看</span>
+                  <span v-else>[项目提醒]</span>
+                </router-link>
+                <router-link :to="{name: 'systemMessageList'}" class="notice">
+                  <span v-if="msg.notice">{{msg.notice}}条[系统通知]未查看</span>
+                  <span v-else>[系统通知]</span>
+                </router-link>
+              </div>
+          </a>
           <el-menu class="el-menu-info" mode="horizontal" router>
             <el-submenu index="2">
               <template slot="title">
@@ -45,8 +54,8 @@
             <el-button size="small" class="is-custom" @click="toServer">设计服务商入驻</el-button>
           </div>
           <el-menu class="el-menu-header" :default-active="menuactive" mode="horizontal" router>
-            <el-menu-item index="login" v-bind:route="menu.login">登录</el-menu-item>
-            <el-menu-item index="register" v-bind:route="menu.register">注册</el-menu-item>
+            <el-menu-item index="login" :route="menu.login">登录</el-menu-item>
+            <el-menu-item index="register" :route="menu.register">注册</el-menu-item>
           </el-menu>
         </div>
 
@@ -57,7 +66,7 @@
       <div class="el-menu-item logo">
         <span class="logo">太火鸟&nbsp;SaaS</span>
       </div>
-      <div class="bars" @click="mmenuHide"></div>
+      <div class="bars" @click="mMenuHide"></div>
       <section class="m-Menu" ref="mMenu" @click="mNavClick">
       </section>
       <div class="m-Nav" ref="mNav">
@@ -72,7 +81,7 @@
             <router-link :to="menu.topic">铟果说</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link :to="menu.stuff">灵感</router-link>
+            <router-link :to="menu.design_case">灵感</router-link>
           </li>
           <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
@@ -133,14 +142,20 @@
           server: {path: '/server'},
           design: {path: '/server_design'},
           topic: {path: '/article/list'},
-          stuff: {path: '/stuff'},
+          design_case: {path: '/design_case/general_list'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},
           identity: {path: '/identity'}
         },
         menuHide: true,
-        optionHide: true
+        msgHide: true,
+        optionHide: true,
+        msg: {
+          message: 0,
+          notice: 0,
+          quantity: 0
+        }
       }
     },
     watch: {
@@ -158,9 +173,9 @@
         auth.logout()
         this.isLogin = false
         this.$message({
-          showClose: true,
-          message: '登出成功!',
-          type: 'success'
+          message: '已退出',
+          type: 'success',
+          duration: 800
         })
         clearInterval(this.requestMessageTask)
         this.$router.replace('/home')
@@ -173,12 +188,17 @@
         const self = this
         this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
           if (response.data.meta.status_code === 200) {
+            self.msg.message = parseInt(response.data.data.message)
+            self.msg.notice = parseInt(response.data.data.notice)
+            sessionStorage.setItem('noticeCount', self.msg.notice)
             let messageCount = parseInt(response.data.data.quantity)
             // 写入localStorage
             self.$store.commit(MSG_COUNT, messageCount)
           } else {
             self.$message.error(response.data.meta.message)
           }
+        }).catch((error) => {
+          console.error(error)
         })
       },
       // 定时加载消息数量
@@ -189,8 +209,11 @@
           self.fetchMessageCount()
         }, 30000)
       },
+      // 查看消息
+      viewMsg() {
+      },
       // 移动端菜单显示/隐藏
-      mmenuHide() {
+      mMenuHide() {
         this.menuHide = !this.menuHide
         if (this.menuHide) {
           this.reScroll()
@@ -214,7 +237,7 @@
         this.$refs.mMenu.style.width = '100%'
         document.body.setAttribute('class', 'disableScroll')
         document.childNodes[1].setAttribute('class', 'disableScroll')
-      },
+      }, // 移动端显示 ↑  隐藏 ↓ 侧边栏
       reScroll() {
         // this.$refs.mCover.style.width = 0
         this.$refs.mNav.style.marginLeft = '-54vw'
@@ -308,6 +331,15 @@
     }
   }
 
+  @keyframes slowShow {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: 64px;
+    }
+  }
+
   #header-layout {
     position: relative;
     z-index: 999;
@@ -322,7 +354,7 @@
   .server-in-btn {
     height: 60px;
     line-height: 60px;
-    margin-right: 20px;
+    margin-right: 11px;
   }
 
   .more {
@@ -407,5 +439,9 @@
     width: 100%;
     height: 100vh;
     background: #0006
+  }
+
+  .view-msg {
+    animation: slowShow 0.3s;
   }
 </style>

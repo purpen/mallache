@@ -7,7 +7,7 @@
            :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
-        <a @click="alick" :to="'/vcenter/message/list'"
+        <a @click="alick" :to="'/vcenter/message'"
            :class="{'item': true, 'is-active': currentName === 'message'}">
           消息
         </a>
@@ -44,7 +44,7 @@
         <a @click="alick" :to="'/vcenter/control'" :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
         </a>
-        <a @click="alick" :to="'/vcenter/message/list'"
+        <a @click="alick" :to="'/vcenter/message'"
            :class="{'item': true, 'is-active': currentName === 'message'}">
           消息
         </a>
@@ -69,7 +69,7 @@
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
-      <div class="menu-list" v-if="true">
+      <div class="menu-list" v-if="isCompany">
         <span v-if="!isMob">工具</span>
         <a @click="alick" :to="'/vcenter/commonly_sites'"
            :class="{'item': true, 'is-active': currentName === 'commonlySites'}">

@@ -120,7 +120,7 @@
                   <el-table-column
                     label="项目名称"
                     min-width="140">
-                    <template slot-scope="scope">
+                    <template scope="scope">
                       <p>
                         <a href="#">{{ scope.row.info.name }}</a>
                       </p>

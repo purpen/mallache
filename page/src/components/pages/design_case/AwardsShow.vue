@@ -1,51 +1,34 @@
 <template>
   <div class="container article-content" v-loading.fullscreen.lock="isFullLoading">
     <div class="blank20"></div>
-
-    <!--
-              <el-breadcrumb separator="/" class="bread">
-                <el-breadcrumb-item :to="{ name: 'home' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item :to="{ name: 'articleList' }">铟果说</el-breadcrumb-item>
-                <el-breadcrumb-item>{{ item.title }}</el-breadcrumb-item>
-              </el-breadcrumb>
-              -->
-
     <div class="content">
       <div class="title">
-        <p class="title-menu">
-          <router-link :to="{name: 'articleList'}">铟果说</router-link>
-          /
-          <router-link :to="{name: 'articleList', query: {category_id: item.classification_id}}">
-            {{ item.classification_value }}
-          </router-link>
-        </p>
         <h3>{{ item.title }}</h3>
-        <p class="from" v-if="item.source_from">by {{ item.source_from }} &nbsp;&nbsp;&nbsp;{{ item.created_at }} </p>
-        <p class="from" v-else>{{ item.created_at }} </p>
-
-        <v-share :link="share.link" :title="share.title" :picUrl="share.picUrl"></v-share>
+        <p class="from">
+          <span class="awards">{{item.category_value}}</span>
+          <span class="category">国际大赛</span>
+          <span class="awards-date">{{item.created_at}}</span>
+        </p>
+        <p class="tigs">
+          标签:
+          <span>aaa</span>
+          <span>bbb</span>
+          <span>ccc</span>
+          <span v-for="(ele,index) in item.tags" :key="index">{{ele}}</span>
+        </p>
       </div>
       <div class="body markdown-body" v-html="item.content"></div>
     </div>
-
-    <div class="tag-box">
-      <a v-for="(d, index) in item.label" :key="index"><img src="../../../assets/images/icon/label.png"/> {{ d }}</a>
-    </div>
-
   </div>
 </template>
 
 <script>
 import api from '@/api/api'
 import '@/assets/js/format'
-import vShare from '@/components/block/Share'
 // import 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'article_show',
-  components: {
-    vShare
-  },
   data() {
     return {
       isFullLoading: false,
@@ -63,15 +46,15 @@ export default {
   created: function() {
     let id = this.$route.params.id
     if (!id) {
-      that.$message.error('文章不存在！')
-      that.$router.replace({ name: 'home' })
+      that.$message.error('案例不存在！')
+      that.$router.replace({ name: 'designAwardsList' })
       return false
     }
     const that = this
 
     that.isFullLoading = true
     that.$http
-      .get(api.article, { params: { id: id } })
+      .get(api.awardCase, { params: { id: id } })
       .then(function(response) {
         that.isFullLoading = false
         if (response.data.meta.status_code === 200) {
@@ -117,7 +100,7 @@ export default {
           }
         } else {
           that.$message.error(response.data.meta.message)
-          that.$router.replace({ name: 'home' })
+          that.$router.replace({ name: 'designAwardsList' })
         }
       })
       .catch(function(error) {
@@ -142,19 +125,53 @@ export default {
 }
 
 .content .title h3 {
+  padding: 26px 0 16px;
   font-size: 2.4rem;
-  line-height: 2;
+  line-height: 1;
   color: #222;
   font-weight: 600;
 }
 
 .content .title p.from {
-  line-height: 40px;
+  line-height: 20px;
   font-size: 1.6rem;
   color: #999999;
-  height: 40px;
+  height: 36px;
+  text-align: center;
+  padding-bottom: 16px;
 }
 
+p.from span {
+  padding-left: 30px;
+  margin-left: 8px;
+}
+
+.awards {
+  background: url("../../../assets/images/tools/calendar/Contest@2x.png") no-repeat 0 1px;
+  background-size: 18px;
+}
+
+.category {
+  background: url("../../../assets/images/tools/calendar/Grade@2x.png") no-repeat 0;
+  background-size: 20px;
+}
+
+.awards-date {
+  background: url("../../../assets/images/tools/calendar/Winning@2x.png") no-repeat 0;
+  background-size: 20px;
+}
+
+p.tigs {
+  font-size: 14px;
+  color: #999999
+}
+p.tigs span {
+  padding-left: 30px;
+  color: #C8C8C8;
+  margin-left: 5px;
+  background: url("../../../assets/images/tools/calendar/Fill@2x.png") no-repeat 3px;
+  background-size: 15px;
+}
 p.title-menu,
 p.title-menu a {
   color: #ff5a5f;
@@ -177,8 +194,9 @@ p.title-menu a {
   width: 2%;
   vertical-align: middle;
 }
+
 .markdown-body {
   color: #666;
-  line-height: 22.5px;
+  line-height: 28px;
 }
 </style>
