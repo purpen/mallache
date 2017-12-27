@@ -7,17 +7,36 @@
       <el-col :span="20">
         <div class="content">
 
-        <div class="admin-menu-sub">
-          <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+          <div class="admin-menu-sub">
+            <div class="admin-menu-sub-list">
+              <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            </div>
+            <div class="admin-menu-sub-list">
+              <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
+            </div>
+            <div class="admin-menu-sub-list">
+              <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
+            </div>
           </div>
-          <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
+
+          <div class="admin-search-form">
+            <el-form :inline="true" :model="query">
+              <el-form-item>
+                <el-select v-model="query.evt" placeholder="选择条件..." size="small">
+                  <el-option label="公司ID" value="1"></el-option>
+                  <el-option label="公司名称" value="2"></el-option>
+                  <el-option label="公司简称" value="3"></el-option>
+                  <el-option label="用户ID" value="4"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
+              </el-form-item>
+            </el-form>
           </div>
-          <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
-          </div>
-        </div>
 
           <el-table
             :data="tableData"
@@ -144,6 +163,8 @@ export default {
         totalCount: 0,
         sort: 1,
         type: 0,
+        evt: '',
+        val: '',
 
         test: null
       },
@@ -151,6 +172,10 @@ export default {
     }
   },
   methods: {
+    onSearch() {
+      this.query.page = 1
+      this.$router.push({name: this.$route.name, query: this.query})
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -160,7 +185,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.query.page = val
-      this.$router.push({name: this.$route.name, query: {page: val}})
+      this.$router.push({name: this.$route.name, query: this.query})
     },
     setVerify(index, item, evt) {
       var id = item.id
@@ -210,15 +235,18 @@ export default {
     },
     loadList() {
       const self = this
+      // 查询条件
       self.query.page = parseInt(this.$route.query.page || 1)
       self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
+      self.query.evt = this.$route.query.evt || ''
+      self.query.val = this.$route.query.val || ''
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
       self.isLoading = true
-      self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type}})
+      self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type, evt: self.query.evt, val: self.query.val}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
