@@ -76,12 +76,13 @@ class UploadAssetController extends BaseController
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type = $request->input('type') ?? $request->input('type');
+        $type = $request->input('type') ? $request->input('type') : 0;
         if($type !== 0){
             $assets = AssetModel::where('type' , $type)->paginate($per_page);
             ;
         }else{
-            $assets = AssetModel::get();
+            $assets = AssetModel::orderBy('id', 'desc')
+                ->paginate($per_page);;
         }
 
         return $this->response->paginator($assets, new AssetsTransformer())->setMeta($this->apiMeta());
