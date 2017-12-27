@@ -31,7 +31,7 @@ class UploadAssetController extends BaseController
     public function urlUpload(Request $request)
     {
         $url = $request->input('url');
-        $accessKey = config('qiniu.access_key');
+        $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
 
