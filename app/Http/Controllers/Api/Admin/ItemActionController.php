@@ -131,6 +131,7 @@ class ItemActionController extends Controller
     public function itemList(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
+        $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
 
