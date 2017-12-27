@@ -130,6 +130,8 @@ class AdminDemandCompanyController extends Controller
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）
      * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
+     * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
+     * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
      * @apiParam {string} token
      */
     public function lists(Request $request)
