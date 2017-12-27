@@ -56,7 +56,6 @@ export default {
     that.$http
       .get(api.awardCase, { params: { id: id } })
       .then(function(response) {
-        console.log(response)
         that.isFullLoading = false
         if (response.data.meta.status_code === 200) {
           that.item = response.data.data

@@ -82,8 +82,7 @@
             let meta = res.data.meta
             if (res.data.data.length) {
               for (let i of res.data.data) {
-                let date = new Date(i.created_at * 1000)
-                i.created_at = date.toLocaleDateString() + ' ' + date.getHours() + ':' + date.getMinutes()
+                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日 hh:mm')
               }
               this.reportList = res.data.data
               this.pagination.total = meta.pagination.total
@@ -133,7 +132,7 @@
   .report {
     min-height: 100%;
     position: relative;
-    padding-bottom: 50px
+    /* padding-bottom: 50px */
   }
 
   .m-report {
@@ -190,7 +189,7 @@
     font-weight: normal;
     background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat left;
     background-size: 20px;
-    padding-right: 40px;
+    padding-right: 24px;
     margin-bottom: 10px;
   }
 

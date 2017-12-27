@@ -24,7 +24,7 @@
                   <span v-if="messageCount > 0">{{ messageCount }}</span>
                 </i>
               </span>
-              <div class="view-msg">
+              <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
                 <router-link :to="{name: 'vcenterMessageList'}" class="news">
                   <span v-if="msg.message">{{msg.message}}条[项目提醒]未查看</span>
                   <span v-else>[项目提醒]</span>

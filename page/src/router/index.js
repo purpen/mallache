@@ -33,9 +33,9 @@ const routes = [
     path: '/test',
     name: 'test',
     meta: {
-      title: '首页'
+      title: '测试'
     },
-    component: require('@/components/pages/home/Home')
+    component: require('@/components/Test')
   },
   {
     path: '/about',
@@ -571,7 +571,7 @@ const routes = [
       title: '系统通知',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/message/systemMessageList')
+    component: require('@/components/pages/v_center/message/SystemMessageList')
   },
   // 作品列表
   {

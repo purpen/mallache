@@ -652,6 +652,10 @@ button.is-custom.is-outlined.is-loading:after {
   overflow: hidden
 }
 
+.nav-item .view-msg-min {
+  width: 140px;
+}
+
 .nav-item .view-msg a {
   display: block;
   line-height: 20px;
@@ -843,12 +847,12 @@ button.is-custom.is-outlined.is-loading:after {
 .vcenter-menu-sub {
   height: 25px;
   line-height: 24px;
-  border-bottom: 1px solid #CCCCCC;
 }
 
 .vcenter-menu-sub-list {
   overflow: hidden;
   float: left;
+  border-bottom: 1px solid #CCCCCC;
 }
 
 .vcenter-menu-sub-list .item {
@@ -1258,9 +1262,6 @@ td.fc-day.fc-widget-content.fc-today::before {
   line-height: 28px;
   padding: 0 12px;
   color: #FF5A5F
-}
-
-.fc .fc-button-group {
 }
 
 .fc .fc-button-group .fc-state-active {
