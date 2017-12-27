@@ -50,7 +50,7 @@ let msgCount = function () {
 
 // 判断是否登录
 let getMenustatus = function () {
-  let menuStatus = localStorage.getItem('menu_status')
+  let menuStatus = localStorage.getItem('menuStatus')
   if (menuStatus) {
     return menuStatus
   } else {
@@ -130,7 +130,7 @@ const mutations = {
     state.prevUrlName = null
   },
   [MENU_STATUS](state, status) {
-    localStorage.setItem('menu_status', status)
+    localStorage.setItem('menuStatus', status)
     state.menuStatus = status
   },
   INIT_PAGE(state) {

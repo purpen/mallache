@@ -32,7 +32,7 @@
                 <el-col :span="12">
                   <el-form-item label="企业名称" prop="company_name">
                     <el-input v-model="form.company_name" name="company_name" ref="company_name" placeholder="请输入完整的公司名称"></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -47,7 +47,7 @@
                 <el-col :span="12">
                   <el-form-item label="注册号" prop="registration_number">
                     <el-input v-model="form.registration_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -55,7 +55,7 @@
                 <el-col :span="12">
                   <el-form-item label="公司简称" prop="company_abbreviation">
                     <el-input v-model="form.company_abbreviation" name="company_abbreviation" ref="company_abbreviation" placeholder="如: 太火鸟"></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -74,7 +74,7 @@
                 <el-col :span="12">
                   <el-form-item label="网址" prop="web">
                     <el-input v-model="form.web" name="web" ref="web" placeholder="http://"></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -126,17 +126,17 @@
                 <el-col :span="6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="电话" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -418,9 +418,9 @@
       },
       uploadError(err, file, fileList) {
         this.$message({
-          showClose: true,
           message: '文件上传失败!',
-          type: 'error'
+          type: 'error',
+          duration: 1000
         })
         console.log(err)
       },

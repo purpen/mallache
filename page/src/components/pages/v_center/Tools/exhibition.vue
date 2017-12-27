@@ -66,24 +66,27 @@
           if (res.data.meta.status_code === 200) {
             if (res.data.data.length) {
               this.events = []
+              let a = 0
               for (let i of res.data.data) {
+                a++
                 let obj = {}
                 switch (i.type) {
                   case 1:  // 大赛
-                    obj.backgroundColor = '#65A6FFCC'
-                    obj.borderColor = '#65A6FFCC'
+                    obj.backgroundColor = '#65A6FF' + this.colorOpacity(a)
+                    obj.borderColor = '#65A6FF' + this.colorOpacity(a)
                     break
                   case 2:  // 节日
-                    obj.backgroundColor = '#67D496CC'
-                    obj.borderColor = '#67D496CC'
+                    obj.backgroundColor = '#67D496' + this.colorOpacity(a)
+                    obj.borderColor = '#67D496' + this.colorOpacity(a)
                     break
                   case 3:  // 展会
-                    obj.backgroundColor = '#FD9E5FCC'
-                    obj.borderColor = '#FD9E5FCC'
+                    obj.backgroundColor = '#FD9E5F' + this.colorOpacity(a)
+                    obj.borderColor = '#FD9E5F' + this.colorOpacity(a)
                     break
                   case 4:  // 事件
-                    obj.backgroundColor = '#FF6E73CC'
-                    obj.borderColor = '#FF6E73CC'
+                    console.log(a % 4)
+                    obj.backgroundColor = '#FF6E73' + this.colorOpacity(a)
+                    obj.borderColor = '#FF6E73' + this.colorOpacity(a)
                     break
                 }
                 obj.title = i.name
@@ -111,6 +114,16 @@
       },
       updateDate (view, date) {
         this.getDate(view, date)
+      },
+      colorOpacity (a) {
+        switch (a % 3) {
+          case 0:
+            return 'D8'
+          case 1:
+            return 'B2'
+          case 2:
+            return '8C'
+        }
       }
     }
   }

@@ -4,23 +4,21 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20"
-        v-loading="isLoading">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box" v-if="itemList.length">
 
-            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
+            <div class="item" v-for="(d, index) in itemList" :key="index">
               <div class="banner2">
                 <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
-                <p class="title">{{ d.title }}</p>
-                <p class="icon">
-                  <i v-if="d.is_show" class="el-icon-arrow-up"></i>
-                  <i v-else class="el-icon-arrow-down"></i>
-                </p>
+                  <p class="title">
+                    <el-badge :is-dot="d.not_read">{{ d.title }}</el-badge>
+                  </p>
                 <p class="time">{{ d.created_at }}</p>
               </div>
-              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
+              <p class="content">{{ d.content }}</p>
+              <p class="url"><a @click="aClick(d.url)">查看详情>></a></p>
             </div>
           </div>
 
@@ -36,7 +34,7 @@
 
         </div>
         <div class="empty" v-if="isEmpty === true"></div>
-        <p v-if="isEmpty === true" class="noMsg">您还没收到任何消息～</p>
+        <p v-if="isEmpty === true" class="noMsg">您还没收到任何通知～</p>
       </el-col>
     </el-row>
   </div>
@@ -50,7 +48,7 @@
   import '@/assets/js/date_format'
 
   export default {
-    name: 'VcenterMessageList',
+    name: 'SystemMessageList',
     components: {
       vMenu,
       vMenuSub
@@ -61,31 +59,23 @@
         itemList: [],
         query: {
           page: 1,
-          pageSize: 50,
-          totalCount: 0,
-          sort: 1,
-          type: 0,
-          test: null
+          pageSize: 10,
+          totalCount: 0
         },
         userId: this.$store.state.event.user.id,
-        isEmpty: ''
+        isEmpty: '',
+        notice: 0
       }
     },
     methods: {
-      loadList(type) {
+      loadList() {
         const self = this
-        self.query.page = parseInt(this.$route.query.page || 1)
-        self.query.sort = this.$route.query.sort || 1
-        self.query.type = this.$route.query.type || 0
-
         self.isLoading = true
         self.itemList = []
-        self.$http.get(api.messageGetMessageList, {
+        self.$http.get(api.getNoticeList, { // 获取所有系统通知
           params: {
             page: self.query.page,
-            per_page: self.query.pageSize,
-            sort: self.query.sort,
-            type: self.query.type
+            per_page: self.query.pageSize
           }
         })
           .then(function (response) {
@@ -96,7 +86,7 @@
               for (let i = 0; i < data.length; i++) {
                 let item = data[i]
                 data[i]['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
-                data[i]['is_show'] = false
+                data[i]['not_read'] = false
               }
               self.itemList = data
               if (self.itemList.length) {
@@ -104,7 +94,12 @@
               } else {
                 self.isEmpty = true
               }
-//              console.log(data)
+              let noticeCount = sessionStorage.getItem('noticeCount')
+              for (let j = 0; j < noticeCount; j++) {
+                self.itemList[j]['not_read'] = true // 给未读通知加上红点
+              }
+            } else {
+              self.$message.error(response.data.meta.message)
             }
           })
           .catch(function (error) {
@@ -112,45 +107,27 @@
             self.$message.error(error.message)
           })
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-      },
-      handleSizeChange(val) {
-        this.query.pageSize = val
-        this.loadList()
-      },
       handleCurrentChange(val) {
         this.query.page = val
         this.$router.push({name: this.$route.name, query: {page: val}})
       },
-      // 下拉展开
-      showDes(d, index) {
-        const self = this
-        if (d.is_show) {
-          this.itemList[index].is_show = false
-        } else {
-          this.itemList[index].is_show = true
-          // 确认已读状态
-          if (d.status === 0) {
-            self.$http.put(api.messageTrueRead, {id: d.id})
-              .then(function (response) {
-                if (response.data.meta.status_code === 200) {
-                  self.itemList[index].status = 1
-                }
-              })
-              .catch(function (error) {
-                self.$message.error(error.message)
-              })
-          }
+      aClick (link) {
+        let reg = /^(http)/
+        if (!reg.test(link)) {
+          window.open('http://' + link)
         }
       },
-      // 根据类型跳转
-      redirect(d) {
-        if (d.type === 2) {
-          this.$router.push({name: 'vcenterItemShow', params: {id: d.target_id}})
-        } else if (d.type === 3) {
-          this.$router.push({name: 'vcenterWalletList'})
-        }
+      // 请求消息数量
+      fetchMessageCount() {
+        this.$http.get(api.messageGetMessageQuantity, {}).then((response) => {
+          if (response.data.meta.status_code === 200) {
+            this.notice = parseInt(response.data.data.notice)
+          } else {
+            this.$message.error(response.data.meta.message)
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     computed: {
@@ -159,31 +136,29 @@
       }
     },
     created: function () {
-      let type = this.$route.query.page
-      if (type) {
-        type = parseInt(type)
+      let page = this.$route.query.page
+      if (page) {
+        this.query.page = parseInt(page)
       } else {
-        type = 0
+        this.query.page = 1
       }
-      this.loadList(type)
+      this.loadList()
     },
     watch: {
       '$route' (to, from) {
         // 对路由变化作出响应...
-        let type = this.$route.query.page
-        if (type) {
-          type = parseInt(type)
+        let page = this.$route.query.page
+        if (page) {
+          this.query.page = parseInt(page)
         } else {
-          type = 0
+          this.query.page = 1
         }
         this.loadList()
       }
     }
   }
-
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
   .right-content .content-box {
@@ -222,6 +197,8 @@
   }
 
   .item p.title {
+    font-size: 16px;
+    font-weight: 600;
     float: left;
     color: #222;
   }
@@ -238,13 +215,14 @@
   }
 
   .item p.content {
+    font-size: 14px;
     clear: both;
     line-height: 3;
     color: #666;
   }
 
-  .item p.content a {
-    font-size: 1.2rem;
+  .item p.url a{
+    color: #FF5A5F
   }
 
   i.alert {
@@ -280,10 +258,6 @@
     color: #969696;
   }
 
-  .content a {
-    color: #FF5A5F
-  }
-
   @media screen and (max-width: 350px) {
     .content-box .item {
       padding: 10px 15px;
@@ -294,5 +268,11 @@
       position: absolute;
       right: 15px;
     }
+  }
+</style>
+<style>
+  .item p.title .el-badge__content.is-fixed {
+    top: 16px;
+    left: -20px;
   }
 </style>

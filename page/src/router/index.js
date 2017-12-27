@@ -33,9 +33,9 @@ const routes = [
     path: '/test',
     name: 'test',
     meta: {
-      title: '首页'
+      title: '测试'
     },
-    component: require('@/components/pages/home/Home')
+    component: require('@/components/Test')
   },
   {
     path: '/about',
@@ -64,11 +64,34 @@ const routes = [
   {
     path: '/stuff',
     name: 'stuff',
+    redirect: '/design_case/list'
+  },
+  {
+    path: '/design_case/general_list',
+    name: 'designGeneralList',
     meta: {
-      title: '灵感',
+      title: '常规案例',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Stuff')
+    component: require('@/components/pages/design_case/GeneralList')
+  },
+  {
+    path: '/design_case/awards_list',
+    name: 'designAwardsList',
+    meta: {
+      title: '奖项案例',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsList')
+  },
+  {
+    path: '/design_case/awards_show/:id',
+    name: 'designAwardsShow',
+    meta: {
+      title: '案例详情',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsShow')
   },
   // 联系我们
   {
@@ -532,13 +555,23 @@ const routes = [
   },
   // 消息列表
   {
-    path: '/vcenter/message/list',
+    path: '/vcenter/message',
     name: 'vcenterMessageList',
     meta: {
       title: '消息列表',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/message/List')
+  },
+  // 系统通知
+  {
+    path: '/vcenter/notice',
+    name: 'systemMessageList',
+    meta: {
+      title: '系统通知',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/message/SystemMessageList')
   },
   // 作品列表
   {

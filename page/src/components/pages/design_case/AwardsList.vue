@@ -1,29 +1,29 @@
 <template>
   <div class="container">
     <div class="blank20"></div>
+    <menuSub></menuSub>
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
-
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
-              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
+              <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}"
                            :target="BMob ? '_self' : '_blank'">
-                <img v-lazy="d.cover.middle">
+                <img v-lazy="d.cover.logo">
               </router-link>
             </div>
             <div class="content">
-              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}
+              <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}" target="_blank">{{ d.title }}
               </router-link>
               <div class="des">
-                <p>{{ d.profile }}</p>
+                <p>{{ d.summary }}</p>
               </div>
 
               <p class="company">
-                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
+                <img class="avatar" v-if="false" :src="d.cover.middle"
                      width="30"/>
-                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
-                <span>{{d.design_company.company_abbreviation}}</span>
+                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30" height="30"/>
+                <span>{{d.category_value}}</span>
               </p>
             </div>
           </el-card>
@@ -32,7 +32,7 @@
     </div>
     <div class="blank20"></div>
     <div class="pager">
-      <el-pagination class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
+      <el-pagination v-if="itemList.length" class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
                      :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper"
                      @current-change="handleCurrentChange">
       </el-pagination>
@@ -42,8 +42,9 @@
 
 <script>
 import api from '@/api/api'
+import menuSub from './MenuSub'
 export default {
-  name: 'design_case_list',
+  name: 'designAwardsList',
   data() {
     return {
       itemList: [],
@@ -57,6 +58,9 @@ export default {
       test: ''
     }
   },
+  components: {
+    menuSub
+  },
   methods: {
     handleCurrentChange(page) {
       this.query.page = page
@@ -65,13 +69,12 @@ export default {
     loadList() {
       const self = this
       self.$http
-        .get(api.designCaseOpenLists, {
+        .get(api.awardCaseList, {
           params: { page: self.query.page, per_page: self.query.pageSize }
         })
         .then(function(response) {
           self.isLoading = false
           if (response.data.meta.status_code === 200) {
-            // console.log(response)
             self.itemList = response.data.data
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages

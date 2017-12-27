@@ -272,7 +272,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         /**
          * url上传七牛
          */
+        //直接上传七牛
         $api->get('/admin/urlUpload', 'UploadAssetController@urlUpload');
+        //附件列表
+        $api->get('/admin/assets', 'UploadAssetController@lists');
 
     });
 

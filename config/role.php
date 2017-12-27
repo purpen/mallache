@@ -159,7 +159,10 @@ return [
         /**
          * url上传七牛
          */
+        //七牛直接上传
         '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
     ],
 
     /**
@@ -314,7 +317,10 @@ return [
         /**
          * url上传七牛
          */
+        //七牛直接上传
         '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
     ],
 
     /**
@@ -428,6 +434,9 @@ return [
         /**
          * url上传七牛
          */
+        //直接上传七牛
         '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
     ],
 ];
