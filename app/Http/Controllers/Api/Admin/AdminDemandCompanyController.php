@@ -136,23 +136,46 @@ class AdminDemandCompanyController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2]) ? $request->input('type_verify_status') : null;
-        if($request->input('sort') == 0 && $request->input('sort') !== null)
-        {
-            $sort = 'asc';
-        }
-        else
-        {
-            $sort = 'desc';
-        }
+        $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
 
         $query = DemandCompany::query();
         if($type_verify_status !== null){
             $query->where('verify_status', $type_verify_status);
         }
 
-        $lists = $query->orderBy('id', $sort)->paginate($per_page);
-        return $this->response->paginator($lists , new DemandCompanyTransformer)->setMeta($this->apiMeta());
+        if ($val) {
+            switch($evt) {
+                case 1:
+                    $query->where('id', (int)$val);
+                    break;
+                case 2:
+                    $query->where('company_name', $val);
+                    break;
+                case 3:
+                    $query->where('company_abbreviation', $val);
+                    break;
+                case 4:
+                    $query->where('user_id', (int)$val);
+                    break;
+                default:
+                    $query->where('id', (int)$val);
+            }
+        }
 
+        //排序
+        switch ($sort){
+            case 0:
+                $query->orderBy('id', 'desc');
+                break;
+            case 1:
+                $query->orderBy('id', 'asc');
+                break;
+        }
+
+        $lists = $query->paginate($per_page);
+        return $this->response->paginator($lists , new DemandCompanyTransformer)->setMeta($this->apiMeta());
     }
 
     /**

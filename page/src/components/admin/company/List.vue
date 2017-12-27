@@ -172,6 +172,7 @@ export default {
     }
   },
   methods: {
+    // 查询
     onSearch() {
       this.query.page = 1
       this.$router.push({name: this.$route.name, query: this.query})
@@ -237,7 +238,7 @@ export default {
       const self = this
       // 查询条件
       self.query.page = parseInt(this.$route.query.page || 1)
-      self.query.sort = this.$route.query.sort || 1
+      self.query.sort = this.$route.query.sort || 0
       self.query.type = this.$route.query.type || 0
       self.query.evt = this.$route.query.evt || ''
       self.query.val = this.$route.query.val || ''
