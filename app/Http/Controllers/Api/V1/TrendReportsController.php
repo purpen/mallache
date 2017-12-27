@@ -43,7 +43,7 @@ class TrendReportsController extends BaseController
     {
         //
         $type = $this->auth_user->type;
-        if($type == 1){
+        if($type == 2){
             $design_company = $this->auth_user->design_company_id;
             if(!$design_company){
                 return $this->response->array($this->apiError('not found design_company', 404));

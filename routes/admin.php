@@ -269,6 +269,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //启用禁用
         $api->put('/admin/notice/changeStatus', 'NoticeController@changeStatus');
 
+        /**
+         * url上传七牛
+         */
+        $api->get('/admin/urlUpload', 'UploadAssetController@urlUpload');
+
     });
 
 });

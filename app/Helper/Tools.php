@@ -68,11 +68,13 @@ class Tools
 
         if ($message) {
             //新消息数量加1
-            $this->addMessageQuantity($user_id);
-            return true;
-        } else {
-            return false;
+            $user = User::find($message->user_id);
+            if ($user) {
+                $user->increment('message_count');
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -159,7 +161,6 @@ class Tools
         if ($message = Message::find($id)) {
             $message->status = 1;
             if($message->save()){
-                $this->reduceMessageQuantity($message->user_id);
                 $user = User::find($message->user_id);
                 if ($user && $user->message_count > 0) {
                     $user->decrement('message_count');

@@ -168,12 +168,7 @@
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
-                <el-input
-                  type="textarea"
-                  :rows="10"
-                  placeholder="请输入内容"
-                  v-model="form.content">
-                </el-input>
+                <mavon-editor ref="mavonEditor" :ishljs="false" v-model="form.content" id="editor" @imgAdd="$imgAdd" @imgDel="$imgDel" ></mavon-editor>
               </el-form-item>
 
               <div class="form-btn">
@@ -193,13 +188,17 @@
 </template>
 
 <script>
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+import axios from 'axios'
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 import typeData from '@/config'
 export default {
   name: 'admin_award_case_submit',
   components: {
-    vMenu
+    vMenu,
+    mavonEditor
   },
   data () {
     return {
@@ -207,6 +206,7 @@ export default {
       itemMode: '添加奖项案例',
       isLoading: false,
       isLoadingBtn: false,
+      content_file: [],
       uploadUrl: '',
       uploadParam: {
         'token': '',
@@ -424,6 +424,38 @@ export default {
         this.$message.error('上传文件大小不能超过 5MB!')
         return false
       }
+    },
+    $imgAdd(pos, $file) {
+      this.content_file[pos] = $file
+      const that = this
+
+      var formdata = new FormData()
+      formdata.append('file', $file)
+      that.uploadParam['x:type'] = 26
+      for (var key in that.uploadParam) {
+        formdata.append(key, that.uploadParam[key])
+      }
+      axios
+        .post(that.uploadUrl, formdata, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(function(response) {
+          if (response.data.success === 1) {
+            // that.$refs.mavonEditor.$imgUpdateByFilename(pos, './aaa')
+            that.$refs.mavonEditor.$img2Url(pos, response.data.big)
+          } else {
+            that.$message.error('上传失败！')
+          }
+          console.log(response)
+        })
+        .catch(function(error) {
+          that.$message.error(error)
+        })
+    },
+    $imgDel(pos) {
+      delete this.content_file[pos]
     }
   },
   computed: {

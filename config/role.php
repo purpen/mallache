@@ -155,6 +155,11 @@ return [
         '/admin/notice/list',
         //启用禁用
         '/admin/notice/changeStatus',
+
+        /**
+         * url上传七牛
+         */
+        '/admin/urlUpload',
     ],
 
     /**
@@ -305,6 +310,11 @@ return [
         '/admin/notice/list',
         //启用禁用
         '/admin/notice/changeStatus',
+
+        /**
+         * url上传七牛
+         */
+        '/admin/urlUpload',
     ],
 
     /**
@@ -414,5 +424,10 @@ return [
         //启用禁用
         '/admin/notice/changeStatus',
 
+
+        /**
+         * url上传七牛
+         */
+        '/admin/urlUpload',
     ],
 ];
