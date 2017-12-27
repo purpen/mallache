@@ -101,8 +101,9 @@
               label="权限">
                 <template scope="scope">
                   <p v-if="scope.row.role_id === 0">用户</p>
-                  <p v-else-if="scope.row.role_id === 10">观察员</p>
-                  <p v-else-if="scope.row.role_id === 15">管理员</p>
+                  <p v-else-if="scope.row.role_id === 5">编辑</p>
+                  <p v-else-if="scope.row.role_id === 10">管理员</p>
+                  <p v-else-if="scope.row.role_id === 15">管理员Plus</p>
                   <p v-else-if="scope.row.role_id === 20">超级管理员</p>
                   <p v-else>--</p>
                 </template>
@@ -144,7 +145,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
+            :page-sizes="[50, 100, 500]"
             :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
@@ -163,8 +164,9 @@
       <div>
         <el-radio-group v-model.number="roleId">
           <el-radio :label="0">用户</el-radio>
-          <el-radio :label="10">观察员</el-radio>
-          <el-radio :label="15">管理员</el-radio>
+          <el-radio :label="5">编辑</el-radio>
+          <el-radio :label="10">管理员</el-radio>
+          <el-radio :label="15">管理员plus</el-radio>
         </el-radio-group>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -195,7 +197,7 @@ export default {
       roleId: 0,
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: '',

@@ -9,7 +9,7 @@
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminUserList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
         </div>
 

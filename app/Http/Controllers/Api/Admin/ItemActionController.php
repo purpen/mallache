@@ -23,9 +23,11 @@ class ItemActionController extends Controller
      *
      * @apiParam {string} token
      * @apiParam {integer} type 0.全部；1.填写资料ing；2.等待推荐； 默认0；
+     * @apiParam {int} evt 查询条件：1.ID；2.公司名称；3.联系人电话；8.用户ID；9.--；
+     * @apiParam {string} val 查询值
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
-     * @apiParam {integer} sort 0.升序；1.降序（默认）；
+     * @apiParam {integer} sort 0.降序（默认）；1.升序；
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -129,17 +131,10 @@ class ItemActionController extends Controller
     public function itemList(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
 
-        if($request->input('sort') == 0 && $request->input('sort') !== null)
-        {
-            $sort = 'asc';
-        }
-        else
-        {
-            $sort = 'desc';
-        }
-
-        $query = Item::with(['user',]);
+        $query = Item::with(['user']);
         switch ($request->input('type')){
             case 1:
                 $query = $query->where('status', 1);
@@ -149,7 +144,38 @@ class ItemActionController extends Controller
                 break;
             default:
         }
-        $lists = $query->orderBy('id', $sort)->paginate($per_page);
+
+        if ($val) {
+            switch($evt) {
+                case 1:
+                    $query->where('id', (int)$val);
+                    break;
+                case 2:
+                    $query->where('company_name', $val);
+                    break;
+                case 3:
+                    $query->where('phone', $val);
+                    break;
+                case 8:
+                    $query->where('user_id', $val);
+                    break;
+                default:
+                    $query->where('id', (int)$val);
+            }
+        }
+
+        //排序
+        switch ($sort){
+            case 0:
+                $query->orderBy('id', 'desc');
+                break;
+            case 1:
+                $query->orderBy('id', 'asc');
+                break;
+        }
+
+
+        $lists = $query->paginate($per_page);
 
         return $this->response->paginator($lists, new ItemTransformer)->setMeta($this->apiMeta());
     }
