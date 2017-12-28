@@ -34,6 +34,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .vcenter-menu-sub {
+    border-bottom: none;
+  }
+
   .vcenter-menu-sub-m {
     padding: 15px 0 0;
     height: auto;
@@ -44,6 +48,7 @@
     float: none;
     margin:0 -15px -1px;
     border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     display: flex;
     justify-content: space-around;
   }

@@ -30,21 +30,22 @@
                       <div class="opt">
                         <a href="javascript:void(0);" :item_id="d.id" :index="index"
                            @click="delItem">删除</a>
-                        <router-link :to="{name: 'vcenterMatchCaseSubmit', params: {id: d.id}}">
+                        <router-link :to="{name: 'vcenterMatchCaseSubmit', params: {id: d.id, match_id: d.match_id}}">
                           编辑
                         </router-link>
                       </div>
                     </div>
                   </el-card>
                 </el-col>
-
               </el-row>
-
             </div>
-
+          </div>
+          <div class="add blank20">
+            <el-button class="is-custom" @click="add" type="primary">
+              <i class="el-icon-plus"></i> 添加参赛作品
+            </el-button>
           </div>
         </div>
-
       </el-col>
     </el-row>
   </div>
@@ -142,56 +143,53 @@
     border-top: 1px solid #E6E6E6;
     margin: 14px 0 0 0;
     padding: 0 15px;
-    }
+  }
 
   .content-box-m .form-title {
     margin: 10px 0 6px;
-    }
-
-  .design-case-list {
-    }
+  }
 
   .design-case-list .item {
     height: 240px;
-    }
+  }
 
   .item {
     margin: 5px 0;
-    }
+  }
 
   .item img {
     width: 100%;
-    }
+  }
 
   .image-box {
     height: 180px;
     overflow: hidden;
-    }
+  }
 
   .content {
     padding: 10px;
-    }
+  }
 
   .content a {
     font-size: 1.5rem;
-    }
+  }
 
   .opt {
     margin: 10px 0 0 0;
     text-align: right;
-    }
+  }
 
   .opt a {
     font-size: 1.2rem;
-    }
+  }
 
   @media screen and (max-width: 767px) {
     .opt a {
       font-size: 1.4rem;
-      }
     }
+  }
 
   .add {
     text-align: center;
-    }
+  }
 </style>

@@ -22,7 +22,7 @@
 
       <h2><span class="icon">主办单位</span></h2>
       <section class="img-list clearfix">
-        <div v-for="(ele, index) in imgList">
+        <div v-for="(ele, index) in imgList" :key="index">
           <img v-lazy="require(`assets/images/subject/gifts/${ele}@2x.png`)">
         </div>
       </section>
@@ -66,14 +66,14 @@ export default {
           this.$message({
             message: '此活动只允许设计服务商参与',
             type: 'error',
-            duration: 1000
+            duration: 3000
           })
         } else {
-          this.$router.push({ name: 'vcenterMatchCaseSubmit' })
+          this.$router.push({name: 'vcenterMatchCaseSubmit', params: {match_id: 1}})
         }
       } else {
         store.commit(types.PREV_URL_NAME, 'YuQuanGifts')
-        this.$router.push({ name: 'login', params: { url: 'yq', type: 2 } })
+        this.$router.push({name: 'login', params: { url: 'yq', type: 2 }})
       }
     }
   },
