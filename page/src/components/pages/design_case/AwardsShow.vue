@@ -6,14 +6,11 @@
         <h3>{{ item.title }}</h3>
         <p class="from">
           <span class="awards">{{item.category_value}}</span>
-          <span class="category">国际大赛</span>
+          <!-- <span class="category">国际大赛</span> -->
           <span class="awards-date">{{item.created_at}}</span>
         </p>
-        <p class="tigs">
+        <p v-if="item.tags.length" class="tigs">
           标签:
-          <span>aaa</span>
-          <span>bbb</span>
-          <span>ccc</span>
           <span v-for="(ele,index) in item.tags" :key="index">{{ele}}</span>
         </p>
       </div>
