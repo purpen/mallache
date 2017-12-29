@@ -694,9 +694,6 @@ button.is-custom.is-outlined.is-loading:after {
   color: #FF4500
 }
 
-.nav-item .view-msg a:hover span {
-}
-
 .nav-item .view-msg a:last-child {
   border-bottom:none
 }
