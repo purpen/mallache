@@ -96,6 +96,7 @@ export default {
             }
             console.log(response.data.data)
             self.itemList = response.data.data
+            console.log(self.itemList)
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages
           } else {

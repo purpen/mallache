@@ -197,6 +197,8 @@ class AdminDesignCompanyController extends Controller
      * @apiParam {integer} sort 0.升序；1.降序（默认）;2.推荐降序；
      * @apiParam {integer} type_status 0.禁用; 1.正常；
      * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
+     * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
+     * @apiParam {integer} val 查询值（根据查询条件判断）
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -281,7 +283,9 @@ class AdminDesignCompanyController extends Controller
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type_verify_status = $request->input('type_verify_status') ? (int)$request->input('type_verify_status') : 0;
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
-        $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : null;
+        $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
 
         $query = DesignCompanyModel::with('user','user.designItem');
         if($type_status !== null){
@@ -301,20 +305,39 @@ class AdminDesignCompanyController extends Controller
             $query->where('verify_status', $type_verify_status);
         }
 
+        if ($val) {
+            switch($evt) {
+                case 1:
+                    $query->where('id', (int)$val);
+                    break;
+                case 2:
+                    $query->where('company_name', $val);
+                    break;
+                case 3:
+                    $query->where('company_abbreviation', $val);
+                    break;
+                case 4:
+                    $query->where('user_id', (int)$val);
+                    break;
+                default:
+                    $query->where('id', (int)$val);
+            }
+        }
+
         //排序
         switch ($sort){
             case 0:
-                $query->orderBy('id', 'asc');
+                $query->orderBy('id', 'desc');
                 break;
             case 1:
-                $query->orderBy('id', 'desc');
+                $query->orderBy('id', 'asc');
                 break;
             case 2:
                 $query->orderBy('open_time', 'desc');
                 break;
         }
 
-        $lists = $query->orderBy('id', $sort)->paginate($per_page);
+        $lists = $query->paginate($per_page);
         return $this->response->paginator($lists , new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 

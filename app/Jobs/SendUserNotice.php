@@ -36,16 +36,24 @@ class SendUserNotice implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->evt === -1) {
+        //全部
+        if ($this->evt === 0) {
             $query['evt'] = 0;
+            User::whereIn('type' , [1,2])->chunk(200, function ($users) {
+                foreach ($users as $user){
+                    $user->increment('notice_count');
+                }
+            });
         } else {
+            //需求或者设计
             $query['evt'] = $this->evt;
+            User::where('type' , $query['evt'])->chunk(200, function ($users) {
+                foreach ($users as $user){
+                    $user->increment('notice_count');
+                }
+            });
         }
-        User::where('type' , $query['evt'])->chunk(200, function ($users) {
-            foreach ($users as $user){
-                $user->increment('notice_count');
-            }
-        });
+
 
         $notice = Notice::find($this->id);
         $notice->status = 1;

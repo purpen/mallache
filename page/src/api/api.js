@@ -240,6 +240,9 @@ export default {
   adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用 | 禁用
 
+  // 附件管理
+  adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
+
   // veer图片列表
   veerImage: '/veerImage/list',
 

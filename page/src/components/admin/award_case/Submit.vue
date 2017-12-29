@@ -143,6 +143,9 @@
                             </div>
                             <div class="content">
                               <div class="opt">
+                                <el-tooltip class="item" effect="dark" content="设为封面" placement="top">
+                                <a href="javascript:void(0);" :index="index" :url="d" @click="upCoverBtn"><i class="fa fa-flag" aria-hidden="true"></i></a>
+                                </el-tooltip>
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
                                   <a href="javascript:void(0);" :url="d" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </el-tooltip>
@@ -165,6 +168,7 @@
                   placeholder="请输入简述"
                   v-model="form.summary">
                 </el-input>
+                <div class="description">* 用于列表页显示,字数不易过多</div>
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
@@ -366,6 +370,41 @@ export default {
       var id = event.currentTarget.getAttribute('item_id')
       // var index = event.currentTarget.getAttribute('index')
       this.coverId = id
+    },
+    // 上传封面图
+    upCoverBtn (event) {
+      var self = this
+      var url = event.currentTarget.getAttribute('url')
+      // var index = event.currentTarget.getAttribute('index')
+      // 上传图片
+      self.$http.get(api.adminAssetUrlUpload, {params: {url: url, type: self.uploadParam['x:type'], target_id: self.uploadParam['x:target_id'], user_id: self.uploadParam['x:user_id']}})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            var item = {
+              name: response.data.data.name,
+              url: response.data.data.middle,
+              edit: false,
+              summary: '',
+              response: {
+                asset_id: response.data.data.id
+              }
+            }
+            self.fileList.push(item)
+            self.coverId = response.data.data.id
+          } else {
+            console.log(response.data)
+          }
+        }
+      })
+      .catch (function(error) {
+        self.$message({
+          showClose: true,
+          message: error.message,
+          type: 'error'
+        })
+        return false
+      })
     },
     handleRemove(file, fileList) {
       if (file === null) {

@@ -153,7 +153,7 @@ class UploadController extends BaseController
         }
 
         if ($file->user_id !== $this->auth_user_id) {
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiError('没有权限', 403));
         }
 
         $accessKey = config('filesystems.disks.qiniu.access_key');

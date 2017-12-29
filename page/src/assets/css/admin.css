@@ -29,7 +29,7 @@
   height: 20px;
   line-height: 10px;
   border-bottom: 1px solid #ccc;
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
 }
 
 .admin-menu-sub-list {
@@ -49,3 +49,14 @@
 /**
  * Admin Menu Sub --- End
  */
+
+/**
+ * Admin Search Form --- Start
+ */
+  .admin-search-form {
+    float: right;
+  }
+  .admin-search-form .el-form-item {
+    margin: 0;
+    padding: 0;
+  }
