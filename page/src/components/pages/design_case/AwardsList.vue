@@ -76,6 +76,7 @@ export default {
           self.isLoading = false
           if (response.data.meta.status_code === 200) {
             self.itemList = response.data.data
+            console.log(self.itemList)
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages
           } else {

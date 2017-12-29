@@ -168,6 +168,7 @@
                   placeholder="请输入简述"
                   v-model="form.summary">
                 </el-input>
+                <div class="description">* 用于列表页显示,字数不易过多</div>
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
