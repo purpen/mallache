@@ -244,6 +244,9 @@ export default {
         title: [
           { required: true, message: '请添写标题', trigger: 'blur' }
         ],
+        summary: [
+          { required: true, message: '请添写简述内容', trigger: 'blur' }
+        ],
         time_at: [
           { required: true, message: '请添写获奖时间', trigger: 'blur' }
         ]
