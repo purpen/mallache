@@ -222,11 +222,13 @@
   img {
     width: 100%;
     height: auto;
-    padding: 10px;
+    padding: 6px;
+    transition: all ease .3s;
   }
 
   img:hover {
-    animation: move .2s 2;
+    transform: scale(1.05);
+    /* transform: translate3d(0, -2px, 0); */
   }
 
   .pagination {
@@ -236,39 +238,6 @@
 
   .waterfall {
     margin: 20px 0;
-  }
-
-  @keyframes move {
-    10% {
-      transform: translate(4px, 0) rotate(0);
-    }
-    20% {
-      transform: translate(8px, 0) rotate(0);
-    }
-    30% {
-      transform: translate(7px, 0) rotate(0);
-    }
-    40% {
-      transform: translate(2px, 0) rotate(0);
-    }
-    50% {
-      transform: translate(0px, 0) rotate(0);
-    }
-    60% {
-      transform: translate(7px, 0) rotate(0);
-    }
-    70% {
-      transform: translate(8px, 0) rotate(0);
-    }
-    80% {
-      transform: translate(4px, 0) rotate(0);
-    }
-    90% {
-      transform: translate(2px, 0) rotate(0);
-    }
-    0%, 100% {
-      transform: translate(0, 0) rotate(0);
-    }
   }
 
   .search-btn {

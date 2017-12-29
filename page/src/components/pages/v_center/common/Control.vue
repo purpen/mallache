@@ -432,6 +432,7 @@
     margin-top: 20px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
+    border-bottom: none;
   }
 
   .list-box .el-col {

@@ -136,6 +136,10 @@ a {
 
 .content a {
   font-size: 1.6rem;
+  display: block;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 
 .des {

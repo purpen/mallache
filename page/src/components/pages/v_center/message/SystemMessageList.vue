@@ -4,21 +4,28 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20"
+      v-loading="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box" v-if="itemList.length">
-
-            <div class="item" v-for="(d, index) in itemList" :key="index">
-              <div class="banner2">
-                <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
+            <div class="item clearfix" v-for="(d, index) in itemList" :key="index">
+              <div class="left">
+                <p class="logo"></p>
+              </div>
+              <div class="right">
+                <div class="banner2">
+                  <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
+                  <p class="notice">系统通知
+                    <span class="time">{{ d.created_at }}</span>
+                  </p>
                   <p class="title">
                     <el-badge :is-dot="d.not_read">{{ d.title }}</el-badge>
                   </p>
-                <p class="time">{{ d.created_at }}</p>
+                </div>
+                <p class="content">{{ d.content }}</p>
+                <p class="url"><a @click="aClick(d.url)">查看详情>></a></p>
               </div>
-              <p class="content">{{ d.content }}</p>
-              <p class="url"><a @click="aClick(d.url)">查看详情>></a></p>
             </div>
           </div>
 
@@ -115,7 +122,9 @@
         let reg = /^(http)/
         if (!reg.test(link)) {
           window.open('http://' + link)
+          return
         }
+        window.open(link)
       },
       // 请求消息数量
       fetchMessageCount() {
@@ -168,10 +177,10 @@
   .content-box .item {
     position: relative;
     border-bottom: 1px solid #ccc;
-    padding: 10px 20px 10px;
-    cursor: pointer;
+    padding: 10px 20px 10px 70px;
     min-height: 30px;
-    line-height: 30px
+    line-height: 30px;
+    cursor: default;
   }
 
   .content-box .item:last-child {
@@ -182,8 +191,30 @@
     background-color: #F2F1F1;
   }
 
+  .item .left{
+    position: absolute;
+    height: 100%;
+    width: 70px;
+    left:0;
+    top:0;
+    display: flex;
+    align-items:flex-start;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .item .left .logo{
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #EBEBEB;
+    background: url("../../../../assets/images/logo.png") no-repeat center;
+    background-size: 25px;
+  }
+
   .item p {
-    line-height: 30px
+    line-height: 24px
   }
 
   .item .banner2 {
@@ -197,17 +228,18 @@
   }
 
   .item p.title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     float: left;
     color: #222;
   }
-
-  .item p.time {
+  .item p.notice {
+    font-size: 15px;
+  }
+  .item span.time {
     color: #666;
-    font-size: 1.2rem;
-    float: right;
-    margin: 0 30px;
+    font-size: 1.4rem;
+    margin-left: 15px;
   }
 
   .item p.icon {
@@ -217,12 +249,13 @@
   .item p.content {
     font-size: 14px;
     clear: both;
-    line-height: 3;
+    line-height: 1.5;
     color: #666;
   }
 
   .item p.url a{
-    color: #FF5A5F
+    color: #FF5A5F;
+    cursor: pointer;
   }
 
   i.alert {
@@ -231,8 +264,8 @@
     border-radius: 50%;
     width: 7px;
     height: 7px;
-    margin-top: 11px;
-    margin-left: -13px;
+    margin-top: 34px;
+    margin-left: -92px;
     position: absolute;;
   }
 

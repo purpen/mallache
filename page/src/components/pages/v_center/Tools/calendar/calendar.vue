@@ -396,6 +396,7 @@
     color: #FFFFFF;
     height: 60px;
     background: #67D496CC;
+    border-radius: 4px;
     position: relative;
     overflow: hidden;
   }

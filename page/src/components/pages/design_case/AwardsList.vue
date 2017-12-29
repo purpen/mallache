@@ -9,7 +9,7 @@
             <div class="image-box">
               <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}"
                            :target="BMob ? '_self' : '_blank'">
-                <img v-lazy="d.cover.logo">
+                <img v-lazy="d.cover.middle">
               </router-link>
             </div>
             <div class="content">
@@ -20,9 +20,8 @@
               </div>
 
               <p class="company">
-                <img class="avatar" v-if="false" :src="d.cover.middle"
+                <img class="avatar" :src="d.img"
                      width="30"/>
-                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30" height="30"/>
                 <span>{{d.category_value}}</span>
               </p>
             </div>
@@ -43,6 +42,7 @@
 <script>
 import api from '@/api/api'
 import menuSub from './MenuSub'
+import {AWARD_CASE_CATEGORY} from '@/config'
 export default {
   name: 'designAwardsList',
   data() {
@@ -75,6 +75,26 @@ export default {
         .then(function(response) {
           self.isLoading = false
           if (response.data.meta.status_code === 200) {
+            for (let i of response.data.data) {
+              switch (i.category_id) {
+                case 1:
+                  i.img = AWARD_CASE_CATEGORY[0].img
+                  break
+                case 2:
+                  i.img = AWARD_CASE_CATEGORY[1].img
+                  break
+                case 3:
+                  i.img = AWARD_CASE_CATEGORY[2].img
+                  break
+                case 4:
+                  i.img = AWARD_CASE_CATEGORY[3].img
+                  break
+                default:
+                  i.img = AWARD_CASE_CATEGORY[4].img
+                  break
+              }
+            }
+            console.log(response.data.data)
             self.itemList = response.data.data
             self.query.totalCount = response.data.meta.pagination.total
             self.query.totalPges = response.data.meta.total_pages
@@ -135,20 +155,26 @@ a {
 }
 
 .content a {
+  display: block;
   font-size: 1.6rem;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 
 .des {
-  height: 35px;
+  height: 36px;
   margin: 10px 0;
-  overflow: hidden;
 }
 
 .des p {
   color: #666;
-  font-size: 1.4rem;
-  line-height: 1.3;
-  text-overflow: ellipsis;
+  font-size: 1.3rem;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .company {

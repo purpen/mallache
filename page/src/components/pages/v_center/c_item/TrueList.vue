@@ -26,7 +26,7 @@
             </el-col>
           </el-row>
 
-          <div class="item" v-for="(d, index) in designItems">
+          <div class="item" v-for="(d, index) in designItems" :key="index">
             <el-row class="banner list-box">
               <el-col :span="12">
                 <p>{{ d.item.created_at }}</p>
@@ -388,13 +388,11 @@
   .item-title-box {
     margin-top: 20px;
     border: 1px solid #ccc;
+    border-bottom: none;
   }
 
   .list-box .el-col {
     padding: 10px 20px 10px 20px;
-  }
-
-  .el-col p {
   }
 
   .status-str {

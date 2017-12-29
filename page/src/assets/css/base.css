@@ -644,24 +644,28 @@ button.is-custom.is-outlined.is-loading:after {
 .nav-item .view-msg {
   display: none;
   position: absolute;
-  top:60px;
-  left:0;
+  top: 60px;
+  left: 0;
   width: 200px;
-  background: #FFFFFF;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.30);
-  overflow: hidden
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12),
+  0 0 6px 0 rgba(0, 0, 0, .04);
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .nav-item .view-msg-min {
   width: 140px;
 }
 
-.nav-item .view-msg a {
+.nav-item .view-msg .news, .nav-item .view-msg .notice {
+  font-size: 14px;
   display: block;
   line-height: 20px;
   color: #999999;
   padding: 10px 15px 10px 40px;
-  border-bottom: 1px solid #D2D2D2;
+  transition: 0.3s;
 }
 
 .view-msg .news {
@@ -670,7 +674,8 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .view-msg .news:hover {
-  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center;
+  color:#222;
+  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center #0000000d;
   background-size: 20px;
 }
 
@@ -680,12 +685,12 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .view-msg .notice:hover {
-  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center;
+  color: #222;
+  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center #0000000d;
   background-size: 20px;
 }
 
 .nav-item .view-msg a:hover span {
-  color:#FF5A5F
 }
 
 .nav-item .view-msg a:last-child {
@@ -775,6 +780,7 @@ button.is-custom.is-outlined.is-loading:after {
   width: 170px;
   min-width: 170px;
   padding: 0;
+  border-radius: 4px;
 }
 
 .el-menu-info .el-menu .el-menu-item {
@@ -791,10 +797,48 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 0;
   padding: .85rem 1.5rem .85rem 1.5rem !important;
   text-align: center;
+  -webkit-transition: none 86ms ease-out;
+  transition: none 86ms ease-out;
 }
 
-.el-menu-info .el-menu .el-menu-item:hover {
-  background: rgba(0, 0, 0, .05);
+.el-menu-info .el-menu .el-menu-item.menu-control {
+  background: url("../images/icon/Console@2x.png") no-repeat 24px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-admin {
+  background: url("../images/icon/PersonalCenter@2x.png") no-repeat 24px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-sign-out {
+  background: url("../images/icon/logout@2x.png") no-repeat 27px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item:first-child {
+  border-radius: 4px 4px 0 0
+}
+
+.el-menu-info .el-menu .el-menu-item:last-child {
+    border-radius: 0 0 4px 4px
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-control:hover {
+  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px #0000000d;
+  background-size: 22px;
+  color: #222222;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-admin:hover {
+  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px #0000000d;
+  background-size: 22px;
+  color: #222222;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-sign-out:hover {
+  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px #0000000d;
+  background-size: 22px;
   color: #222222;
 }
 

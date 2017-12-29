@@ -425,6 +425,7 @@
   .item-title-box {
     margin-top: 20px;
     border: 1px solid #ccc;
+    border-bottom: none;
   }
 
   .list-box .el-col {

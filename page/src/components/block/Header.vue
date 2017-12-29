@@ -42,9 +42,9 @@
                 <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
                 <span class="b-nickname">{{ eventUser.account }}</span>
               </template>
-              <el-menu-item index="/vcenter/control">个人中心</el-menu-item>
-              <el-menu-item index="/admin" v-if="isAdmin > 0 ? true : false">后台管理</el-menu-item>
-              <el-menu-item index="" @click="logout">安全退出</el-menu-item>
+              <el-menu-item class="menu-control" index="/vcenter/control">个人中心</el-menu-item>
+              <el-menu-item class="menu-admin" index="/admin" v-if="isAdmin > 0 ? true : false">后台管理</el-menu-item>
+              <el-menu-item index="" class="menu-sign-out" @click="logout">安全退出</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>
@@ -336,7 +336,7 @@
       height: 0;
     }
     100% {
-      height: 64px;
+      height: 81.5px;
     }
   }
 

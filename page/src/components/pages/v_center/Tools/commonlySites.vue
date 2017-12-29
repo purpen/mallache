@@ -246,6 +246,8 @@
     height: 42px;
     border-radius: 50%;
     text-indent: -999rem;
+    border: 1px solid #DCDCDC;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
   }
 
   .item .right {
@@ -255,7 +257,6 @@
 
   .right .title {
     font-size: 16px;
-    font-weight: 600;
     color: #222;
     padding-bottom: 10px;
   }

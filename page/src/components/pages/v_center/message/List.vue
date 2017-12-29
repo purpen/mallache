@@ -13,12 +13,14 @@
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
                 <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
+                <p class="notice">项目提醒
+                  <span class="time">{{ d.created_at }}</span>
+                </p>
                 <p class="title">{{ d.title }}</p>
                 <p class="icon">
                   <i v-if="d.is_show" class="el-icon-arrow-up"></i>
                   <i v-else class="el-icon-arrow-down"></i>
                 </p>
-                <p class="time">{{ d.created_at }}</p>
               </div>
               <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
             </div>
@@ -99,6 +101,7 @@
                 data[i]['is_show'] = false
               }
               self.itemList = data
+              console.log(data)
               if (self.itemList.length) {
                 self.isEmpty = false
               } else {
@@ -196,7 +199,8 @@
     padding: 10px 20px 10px;
     cursor: pointer;
     min-height: 30px;
-    line-height: 30px
+    line-height: 30px;
+    overflow: hidden;
   }
 
   .content-box .item:last-child {
@@ -208,7 +212,7 @@
   }
 
   .item p {
-    line-height: 30px
+    line-height: 24px
   }
 
   .item .banner2 {
@@ -222,15 +226,20 @@
   }
 
   .item p.title {
+    font-size: 15px;
+    font-weight: 600;
     float: left;
     color: #222;
   }
 
-  .item p.time {
+  .item p.notice {
+    font-size: 15px;
+  }
+
+  .item span.time {
     color: #666;
-    font-size: 1.2rem;
-    float: right;
-    margin: 0 30px;
+    font-size: 1.4rem;
+    margin-left: 15px;
   }
 
   .item p.icon {
@@ -238,8 +247,10 @@
   }
 
   .item p.content {
+    padding-top: 10px;
+    font-size: 14px;
     clear: both;
-    line-height: 3;
+    line-height: 18px;
     color: #666;
   }
 
@@ -253,7 +264,7 @@
     border-radius: 50%;
     width: 7px;
     height: 7px;
-    margin-top: 11px;
+    margin-top: 9px;
     margin-left: -13px;
     position: absolute;;
   }

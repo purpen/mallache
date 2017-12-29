@@ -15,7 +15,7 @@
                        :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                     {{ele.cover.summary}}
                   </div>
-                  <article class="item-boty clearfix">
+                  <article class="item-body clearfix">
                     <p class="title">{{ele.title}}</p>
                     <p class="view fl">{{ele.hits}}</p>
                     <p class="date fl">{{ele.created_at}}</p>
@@ -124,9 +124,15 @@
   .item {
     margin-bottom: 20px;
     border: 1px solid #D2D2D2;
-    border-radius: 4px 4px 0 0;
+    border-radius: 4px;
     display: block;
     height: 100%;
+    transition: all ease .3s;
+  }
+
+  .item:hover {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
   }
 
   .report {
@@ -166,22 +172,24 @@
 
   .picture {
     height: 180px;
+    border-radius: 4px 4px 0 0;
   }
 
-  .item-boty {
+  .item-body {
     overflow: hidden;
     padding: 10px 10px 20px;
+    border-top: 1px solid #D2D2D2;
+    border-radius: 0 0 4px 4px;
   }
 
-  .item-boty .title {
-    font-size: 18px;
+  .item-body .title {
+    font-size: 15px;
     line-height: 1.4;
     margin: 10px 0;
-    color: #222222;
-    font-weight: 600;
+    /* color: #222222; */
   }
 
-  .item-boty .view {
+  .item-body .view {
     font-size: 12px;
     line-height: 16px;
     text-indent: 26px;
@@ -193,7 +201,7 @@
     margin-bottom: 10px;
   }
 
-  .item-boty .date {
+  .item-body .date {
     font-size: 12px;
     line-height: 16px;
     text-indent: 26px;
