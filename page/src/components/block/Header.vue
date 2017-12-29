@@ -26,11 +26,11 @@
               </span>
               <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
                 <router-link :to="{name: 'vcenterMessageList'}" class="news">
-                  <span v-if="msg.message">{{msg.message}}条[项目提醒]未查看</span>
+                  <span v-if="msg.message"><i>{{msg.message}}</i>条[项目提醒]未查看</span>
                   <span v-else>[项目提醒]</span>
                 </router-link>
                 <router-link :to="{name: 'systemMessageList'}" class="notice">
-                  <span v-if="msg.notice">{{msg.notice}}条[系统通知]未查看</span>
+                  <span v-if="msg.notice"><i>{{msg.notice}}</i>条[系统通知]未查看</span>
                   <span v-else>[系统通知]</span>
                 </router-link>
               </div>

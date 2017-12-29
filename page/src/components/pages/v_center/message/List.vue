@@ -101,7 +101,6 @@
                 data[i]['is_show'] = false
               }
               self.itemList = data
-              console.log(data)
               if (self.itemList.length) {
                 self.isEmpty = false
               } else {
@@ -233,14 +232,14 @@
   }
 
   .item p.notice {
-    font-size: 15px;
+    color: #999;
+    font-size: 12px;
   }
 
   .item span.time {
-    color: #666;
-    font-size: 1.4rem;
     margin-left: 15px;
   }
+
 
   .item p.icon {
     float: right;

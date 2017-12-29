@@ -690,6 +690,10 @@ button.is-custom.is-outlined.is-loading:after {
   background-size: 20px;
 }
 
+.nav-item .view-msg a i{
+  color: #FF4500
+}
+
 .nav-item .view-msg a:hover span {
 }
 

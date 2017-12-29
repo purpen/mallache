@@ -7,7 +7,7 @@
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="commonlySites"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
                 v-loading.body="loading">
-          <div class="commonly-sites">
+          <div :class="['commonly-sites', {'commonly-sites-m' : isMob}]">
 
             <section class="lists design-info" v-if="designInfo.length">
               <h2>设计资讯</h2>
@@ -21,7 +21,7 @@
                       </div>
                       <div class="right fl">
                         <p class="title">{{ele.title}}</p>
-                        <p class="summary">{{ele.summary}}</p>
+                        <p class="summary hide2lines">{{ele.summary}}</p>
                       </div>
                     </div>
                   </el-col>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>

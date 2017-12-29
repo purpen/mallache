@@ -24,6 +24,7 @@
                   </p>
                 </div>
                 <p class="content">{{ d.content }}</p>
+                <img class="content-img" :src="d.cover.big" :alt="d.cover.name">
                 <p class="url"><a @click="aClick(d.url)">查看详情>></a></p>
               </div>
             </div>
@@ -204,7 +205,7 @@
   }
 
   .item .left .logo{
-    margin-top: 20px;
+    margin-top: 8px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -234,11 +235,11 @@
     color: #222;
   }
   .item p.notice {
-    font-size: 15px;
+    color: #999;
+    font-size: 12px;
+    line-height: 18px;
   }
   .item span.time {
-    color: #666;
-    font-size: 1.4rem;
     margin-left: 15px;
   }
 
@@ -247,13 +248,20 @@
   }
 
   .item p.content {
+    padding-top: 6px;
     font-size: 14px;
     clear: both;
     line-height: 1.5;
     color: #666;
   }
 
+  .content-img {
+    max-width: 100%;
+    margin-top:12px;
+  }
+
   .item p.url a{
+    font-size: 14px;
     color: #FF5A5F;
     cursor: pointer;
   }
