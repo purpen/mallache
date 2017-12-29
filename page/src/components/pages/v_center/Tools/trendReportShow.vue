@@ -16,13 +16,32 @@
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
             </p>
-          <div v-if="already" class="pdf" v-loading.body="isLoading">
-            <pdf :src="pdf.image.file">
+          <div v-if="already" class="pdf swiper-container" v-loading.body="isLoading">
+            <pdf :src="pdf.image.file"
+              @progress="loadedRatio = $event"
+              @pageLoaded ="load = $event"
+              @numPages="numPages = $event"
+              @error="error"
+              :rotate="rotate"
+              :page="page">
             </pdf>
-            <menu>
-              <menuitem class="plus">aaa</menuitem>
-              <menuitem>aaa</menuitem>
-              <menuitem>aaa</menuitem>
+            <p class="flip" v-if="load">
+              <span class="swiper-button-prev fl" @click="prev">
+                <i class="el-icon-arrow-left"></i>
+              </span>
+              <span class="swiper-button-next fr" @click="next">
+                <i class="el-icon-arrow-right"></i>
+              </span>
+            </p>
+            <menu class="clearfix">
+              <menuitem class="add" @click="prev">add</menuitem>
+              <menuitem class="subtract" @click="next">subtract</menuitem>
+              <menuitem class="rotate" @click="rotate += 90">rotate</menuitem>
+              <p class="total-page fr">
+                <span>共{{numPages}}页</span>前往
+                <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
+                页
+              </p>
             </menu>
           </div>
         </el-col>
@@ -49,30 +68,72 @@
         already: false,
         pdf: {},
         pdfUrl: '',
-        title: ''
+        rotate: 0,
+        page: 1,
+        title: '',
+        numPages: 0,
+        loadedRatio: 0,
+        load: 0
       }
     },
-    created () {
+    created() {
       this.id = this.$route.params.id
       this.getPDF()
     },
+    mounted() {
+      window.addEventListener('keydown', (e) => {
+        if (e.keyCode === 13) {
+          this.gotoPage(this.page)
+        } else {
+          return
+        }
+      })
+    },
+    watch: {
+      loadedRatio() {
+        // console.log(this.loadedRatio)
+      }
+    },
     methods: {
-      getPDF () {
+      getPDF() {
         this.$http.get(api.trendReports, {params: {id: this.id}}).then((res) => {
           if (res.data.meta.status_code === 200) {
+            this.already = true
             res.data.data.created_at = res.data.data.created_at
             .date_format()
             .format('yyyy年MM月dd日 hh:mm')
             this.pdf = res.data.data
-            this.already = true
             this.isLoading = false
           } else {
             this.$message.error(res.data.meta.message)
           }
-          console.log(res.data.data)
+          // console.log(res.data.data)
         }).catch((err) => {
-          console.log(err)
+          console.error(err)
         })
+      },
+      next() {
+        this.page ++
+        if (this.page > this.numPages) {
+          this.page = this.numPages
+        }
+      },
+      prev() {
+        this.page --
+        if (this.page < 1) {
+          this.page = 1
+        }
+      },
+      gotoPage(e) {
+        this.page = Number(e)
+        if (this.page < 1) {
+          this.page = 1
+        } else if (this.page > this.numPages) {
+          this.page = this.numPages
+        }
+      },
+      error(err) {
+        console.error(err)
       }
     },
     computed: {
@@ -129,10 +190,97 @@
   p.info .tigs {
     text-indent: 0;
   }
+
   .tigs i {
     float: left;
     text-indent: 24px;
     background: url('../../../../assets/images/tools/report/label-gray@2x.png') no-repeat 6px 2px;
     background-size: 14px;
+  }
+
+  p.flip {
+    position: absolute;
+    height: 50px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin:auto;
+  }
+
+  p.flip span{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  menu {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 30px;
+    border-bottom: 1px solid #D2D2D2;
+    padding: 10px 30px;
+  }
+
+  menu menuitem {
+    float: left;
+    margin-right: 28px;
+    width: 24px;
+    height: 30px;
+    text-indent: -999rem;
+  }
+
+  menuitem.add {
+    background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+  menuitem.add:hover {
+    background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+
+  menuitem.subtract {
+    background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+  menuitem.subtract:hover {
+    background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+
+  menuitem.rotate {
+    background: url('../../../../assets/images/tools/report/Rotate@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+  menuitem.rotate:hover {
+    background: url('../../../../assets/images/tools/report/RotateHover@2x.png') no-repeat center;
+    background-size: 18px;
+  }
+
+  .total-page span {
+    position: relative;
+    margin-right: 20px;
+  }
+
+  .total-page span::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 2px;
+    height: 16px;
+    width: 2px;
+    background: #666666
+  }
+  .page-input {
+    margin-top: 5px;
+    width: 30px;
+    height: 20px;
+    border: none;
+    background: #FFFFFF;
+    border: 1px solid #D2D2D2;
+    border-radius: 4px;
+    text-align: center
   }
 </style>

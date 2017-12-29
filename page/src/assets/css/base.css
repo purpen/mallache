@@ -847,12 +847,12 @@ button.is-custom.is-outlined.is-loading:after {
 .vcenter-menu-sub {
   height: 25px;
   line-height: 24px;
+  border-bottom: 1px solid #CCCCCC;
 }
 
 .vcenter-menu-sub-list {
   overflow: hidden;
   float: left;
-  border-bottom: 1px solid #CCCCCC;
 }
 
 .vcenter-menu-sub-list .item {
@@ -1018,11 +1018,13 @@ img.avatar {
 }
 
 .file-list .content p {
+  line-height: 1.5;
   font-size: 1.3rem;
   color: #222222;
 }
 
 .file-list .content .summary {
+  padding-top: 6px;
   height: 40px;
   overflow: hidden;
 }

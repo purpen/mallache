@@ -84,7 +84,6 @@
                     obj.borderColor = '#FD9E5F' + this.colorOpacity(a)
                     break
                   case 4:  // 事件
-                    console.log(a % 4)
                     obj.backgroundColor = '#FF6E73' + this.colorOpacity(a)
                     obj.borderColor = '#FF6E73' + this.colorOpacity(a)
                     break

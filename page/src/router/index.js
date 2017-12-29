@@ -200,7 +200,7 @@ const routes = [
       requireAuth: true,
       title: '上传作品'
     },
-    component: require('@/components/pages/v_center/match_case/uploadwork')
+    component: require('@/components/pages/v_center/match_case/UploadWork')
   },
   // 企业招募
   {
@@ -591,7 +591,7 @@ const routes = [
       title: '参赛作品',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/match_case/match_case')
+    component: require('@/components/pages/v_center/match_case/MatchCase')
   },
   // 作品详情
   {

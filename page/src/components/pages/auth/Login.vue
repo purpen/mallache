@@ -152,7 +152,7 @@ export default {
       this.$message({
         message: '请使用设计服务商的账号登录',
         type: 'info',
-        duration: 800
+        duration: 3000
       })
     } else {
       if (prevUrlName) {
