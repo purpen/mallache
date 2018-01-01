@@ -6,10 +6,10 @@
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
+          <v-menu-sub v-if="false"></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']">
             <div class="form-title" v-if="designCases.length">
-              <span>全部作品案例</span>
+              <span>作品案例</span>
             </div>
 
             <div class="design-case-list" v-loading.body="isLoading">

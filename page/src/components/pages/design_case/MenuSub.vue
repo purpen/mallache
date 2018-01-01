@@ -1,8 +1,8 @@
 <template>
 <div class="nav-list">
   <div class="category-list">
-    <router-link :to="{name: 'designGeneralList'}" :class="{'active': menuType === 'designGeneralList'}">常规案例</router-link>
-    <router-link :to="{name: 'designAwardsList'}"  :class="{'active': menuType === 'designAwardsList'}">奖项案例</router-link>
+    <router-link :to="{name: 'designGeneralList'}" :class="{'active': menuType === 'designGeneralList'}">公司案例</router-link>
+    <router-link :to="{name: 'designAwardsList'}"  :class="{'active': menuType === 'designAwardsList'}">设计奖项</router-link>
   </div>
 </div>
 </template>

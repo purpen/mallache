@@ -183,7 +183,9 @@
         let reg = /^(http)/
         if (!reg.test(link)) {
           window.open('http://' + link)
+          return
         }
+        window.open(link)
       }
     },
     computed: {
@@ -228,11 +230,18 @@
 
   .item {
     min-height: 100px;
-    padding: 28px 0 15px 20px;
+    padding: 28px 20px 15px;
     border: 1px solid #DCDCDC;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
     border-radius: 10px;
     margin-bottom: 20px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+
+  .item:hover {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
   }
 
   .item a {
@@ -264,7 +273,7 @@
   .right .summary {
     font-size: 14px;
     color: #666;
-    line-height: 1.2;
+    line-height: 16px;
   }
 
   @media screen and (max-width: 600px) {

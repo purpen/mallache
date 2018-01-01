@@ -70,7 +70,7 @@ const routes = [
     path: '/design_case/general_list',
     name: 'designGeneralList',
     meta: {
-      title: '常规案例',
+      title: '公司案例',
       requireAuth: false
     },
     component: require('@/components/pages/design_case/GeneralList')
@@ -79,7 +79,7 @@ const routes = [
     path: '/design_case/awards_list',
     name: 'designAwardsList',
     meta: {
-      title: '奖项案例',
+      title: '设计奖项',
       requireAuth: false
     },
     component: require('@/components/pages/design_case/AwardsList')
@@ -583,12 +583,12 @@ const routes = [
     },
     component: require('@/components/pages/v_center/design_case/List')
   },
-  // 参赛作品
+  // 提交作品
   {
     path: '/vcenter/match_case',
     name: 'vcenterMatchCaseList',
     meta: {
-      title: '参赛作品',
+      title: '提交作品',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/match_case/MatchCase')

@@ -148,7 +148,7 @@
                             <div class="content">
                               <p>{{ d.name }}</p>
                               <div class="summary-edit" v-if="d.edit">
-                                <textarea v-model="d.summary">{{ d.summary }}</textarea>
+                                <textarea v-model="d.summary"></textarea>
                               </div>
                               <div class="summary" v-else>
                                 <p v-if="d.summary">{{ d.summary }}</p>

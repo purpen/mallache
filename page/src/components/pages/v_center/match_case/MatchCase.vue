@@ -6,10 +6,10 @@
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
+          <v-menu-sub v-if="false"></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']" v-if="designCases.length">
             <div class="form-title">
-              <span>参赛作品案例</span>
+              <span>提交产品</span>
             </div>
 
             <div class="design-case-list" v-loading.body="isLoading">
@@ -42,7 +42,7 @@
           </div>
           <div class="add blank20">
             <el-button class="is-custom" @click="add" type="primary">
-              <i class="el-icon-plus"></i> 添加参赛作品
+              <i class="el-icon-plus"></i> 提交产品
             </el-button>
           </div>
         </div>

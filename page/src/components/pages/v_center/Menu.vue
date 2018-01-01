@@ -21,7 +21,7 @@
         </a>
         <a @click="alick" :to="'/vcenter/match_case'"
            :class="{'item': true, 'is-active': currentName === 'match_case'}">
-          参赛作品
+          提交作品
         </a>
         <a @click="alick" :to="'/vcenter/wallet/list'"
            :class="{'item': true, 'is-active': currentName === 'wallet'}">

@@ -279,11 +279,11 @@
 </script>
 <style scoped>
   .calendar {
-    padding-top: 10px;
+    padding-top: 24px;
   }
 
   .m-calendar {
-    padding-top: 15px;
+    padding-top: 28px;
   }
 
   #calendar {
@@ -292,7 +292,7 @@
 
   .header {
     position: absolute;
-    top: 16px;
+    top: 30px;
     width: 100%;
     height: 30px;
     line-height: 20px;
@@ -305,7 +305,7 @@
   .mHeader {
     margin-top: 0;
     position: absolute;
-    top: 30px;
+    top: 38px;
   }
 
   .header .fr {
