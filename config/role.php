@@ -163,6 +163,17 @@ return [
         '/admin/urlUpload',
         //附件列表
         '/admin/assets',
+
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+       '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 
     /**
@@ -321,6 +332,16 @@ return [
         '/admin/urlUpload',
         //附件列表
         '/admin/assets',
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+        '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 
     /**
@@ -438,5 +459,16 @@ return [
         '/admin/urlUpload',
         //附件列表
         '/admin/assets',
+
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+        '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 ];
