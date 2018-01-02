@@ -19,7 +19,7 @@
                            :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                         {{ele.cover.name}}
                       </div>
-                      <div class="right fl">
+                      <div class="right hide2lines fl">
                         <p class="title">{{ele.title}}</p>
                         <p class="summary hide2lines">{{ele.summary}}</p>
                       </div>
@@ -208,6 +208,10 @@
     background-size: 25px;
   }
 
+  .lists h2:first-child {
+    margin: 10px 0 20px;
+  }
+
   .originality h2 {
     background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
     background-size: 25px;
@@ -229,8 +233,8 @@
   }
 
   .item {
-    min-height: 100px;
-    padding: 28px 20px 15px;
+    height: 100px;
+    padding: 20px;
     border: 1px solid #DCDCDC;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
     border-radius: 10px;
@@ -274,13 +278,19 @@
     font-size: 14px;
     color: #666;
     line-height: 16px;
+    height: 32px;
   }
 
   @media screen and (max-width: 600px) {
     .item {
-      min-height: 70px;
+      height: 80px;
       padding: 10px;
       margin-bottom: 10px;
+    }
+
+    .item:hover {
+      transform: translate3d(0, 0, 0);
+      box-shadow: none;
     }
 
     .item .left {

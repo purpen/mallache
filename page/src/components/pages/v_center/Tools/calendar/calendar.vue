@@ -127,7 +127,6 @@
           dayNamesShort: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           eventClick (event, jq, mouth) {
             let docWidth = $(window).width()
-            // let mindocHeight = $(document).scrollTop()
             let maxdocHeight = $(window).height() + $(document).scrollTop()
             let infoWidth = $(self.$refs.info).width()
             let infoHeight = $(self.$refs.info).height()
@@ -214,7 +213,7 @@
         this.hideinfo = false
         this.$refs.calendar.fireMethod('prev')
         this.getView()
-        this.$emit('update-date', this.view, this.eventMsg.month)
+        this.$emit('update-date', this.eventMsg.month)
       },
       next (e) {
         this.isToday = false

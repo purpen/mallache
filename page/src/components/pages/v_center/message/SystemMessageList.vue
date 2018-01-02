@@ -15,7 +15,6 @@
               </div>
               <div class="right">
                 <div class="banner2">
-                  <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
                   <p class="notice">系统通知
                     <span class="time">{{ d.created_at }}</span>
                   </p>
@@ -178,7 +177,7 @@
   .content-box .item {
     position: relative;
     border-bottom: 1px solid #ccc;
-    padding: 10px 20px 10px 70px;
+    padding: 10px 20px 10px 80px;
     min-height: 30px;
     line-height: 30px;
     cursor: default;
@@ -196,7 +195,7 @@
     position: absolute;
     height: 100%;
     width: 70px;
-    left:0;
+    left: 6px;
     top:0;
     display: flex;
     align-items:flex-start;
@@ -267,14 +266,13 @@
   }
 
   i.alert {
-    display: block;
-    background: #f00;
-    border-radius: 50%;
+    position: absolute;
     width: 7px;
     height: 7px;
-    margin-top: 34px;
-    margin-left: -92px;
-    position: absolute;;
+    margin-top: 20px;
+    margin-left: -72px;
+    background: #f00;
+    border-radius: 50%;
   }
 
   i.alert.gray {
@@ -313,7 +311,7 @@
 </style>
 <style>
   .item p.title .el-badge__content.is-fixed {
-    top: 16px;
-    left: -20px;
+    top: 3px;
+    left: -84px;
   }
 </style>

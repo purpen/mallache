@@ -52,50 +52,29 @@
       this.getDate()
     },
     methods: {
-      getDate (view = 'month', date) {
-        this.loading = true
-        let method = ''
-        if (view === 'month') {
-          method = api.dateOfAwardMonth
-        } else {
-          date = ''
-          method = api.dateOfAwardWeek
+      getDate (date) {
+        if (date) {
+          let arr = date.match(/\d+/g)
+          if (arr.length > 2) {
+            var date2 = arr.splice(2, arr.length).join('-')
+          }
+          date = arr.join('-')
         }
+        this.loading = true
+        let method = api.dateOfAwardMonth
         this.$http.get(method, {params: {yearMonth: date}}).then((res) => {
           this.loading = false
           if (res.data.meta.status_code === 200) {
-            if (res.data.data.length) {
-              this.events = []
-              let a = 0
-              for (let i of res.data.data) {
-                a++
-                let obj = {}
-                switch (i.type) {
-                  case 1:  // 大赛
-                    obj.backgroundColor = '#65A6FF' + this.colorOpacity(a)
-                    obj.borderColor = '#65A6FF' + this.colorOpacity(a)
-                    break
-                  case 2:  // 节日
-                    obj.backgroundColor = '#67D496' + this.colorOpacity(a)
-                    obj.borderColor = '#67D496' + this.colorOpacity(a)
-                    break
-                  case 3:  // 展会
-                    obj.backgroundColor = '#FD9E5F' + this.colorOpacity(a)
-                    obj.borderColor = '#FD9E5F' + this.colorOpacity(a)
-                    break
-                  case 4:  // 事件
-                    obj.backgroundColor = '#FF6E73' + this.colorOpacity(a)
-                    obj.borderColor = '#FF6E73' + this.colorOpacity(a)
-                    break
+            this.events = this.addType (res.data.data)
+            if (date2) {
+              this.$http.get(method, {params: {yearMonth: date2}}).then((res) => {
+                if (res.data.meta.status_code === 200) {
+                  this.events.concat = this.events.concat(this.addType (res.data.data))
                 }
-                obj.title = i.name
-                obj.start = i.start_time
-                obj.end = i.end_time
-                obj.type = i.type
-                obj.type_value = i.type_value
-                obj.summary = i.summary
-                this.events.push(obj)
-              }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
             }
           } else {
             this.$message.error(res.data.meta.message)
@@ -104,6 +83,42 @@
           this.loading = false
           console.error(err)
         })
+      },
+      addType (arr) {
+        let events = []
+        if (arr.length) {
+          let a = 0
+          for (let i of arr) {
+            a++
+            let obj = {}
+            switch (i.type) {
+              case 1:  // 大赛
+                obj.backgroundColor = '#65A6FF' + this.colorOpacity(a)
+                obj.borderColor = '#65A6FF' + this.colorOpacity(a)
+                break
+              case 2:  // 节日
+                obj.backgroundColor = '#67D496' + this.colorOpacity(a)
+                obj.borderColor = '#67D496' + this.colorOpacity(a)
+                break
+              case 3:  // 展会
+                obj.backgroundColor = '#FD9E5F' + this.colorOpacity(a)
+                obj.borderColor = '#FD9E5F' + this.colorOpacity(a)
+                break
+              case 4:  // 事件
+                obj.backgroundColor = '#FF6E73' + this.colorOpacity(a)
+                obj.borderColor = '#FF6E73' + this.colorOpacity(a)
+                break
+            }
+            obj.title = i.name
+            obj.start = i.start_time
+            obj.end = i.end_time
+            obj.type = i.type
+            obj.type_value = i.type_value
+            obj.summary = i.summary
+            events.push(obj)
+          }
+        }
+        return events
       },
       dayClick (e) {
       },

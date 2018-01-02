@@ -877,7 +877,7 @@ const routes = [
     path: '/vcenter/exhibition',
     name: 'vcenterExhibition',
     meta: {
-      title: '展览',
+      title: '设计日历',
       requireAuth: true
     },
     component: (resolve) => {
