@@ -53,13 +53,14 @@
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
-  import pdf from 'vue-pdf'
   export default {
     name: 'trendReport',
     components: {
       vMenu,
       ToolsMenu,
-      pdf
+      pdf: (resolve) => {
+        require(['vue-pdf'], resolve)
+      }
     },
     data () {
       return {
@@ -71,7 +72,7 @@
         rotate: 0,
         page: 1,
         title: '',
-        numPages: 0,
+        numPages: 1,
         loadedRatio: 0,
         load: 0
       }
@@ -150,6 +151,7 @@
   .pdf {
     border: 1px solid #D2D2D2;
     position: relative;
+    padding-top: 50px;
   }
 
   p.title {
@@ -226,7 +228,7 @@
 
   menu menuitem {
     float: left;
-    margin-right: 28px;
+    margin-right: 8px;
     width: 24px;
     height: 30px;
     text-indent: -999rem;
@@ -234,29 +236,30 @@
 
   menuitem.add {
     background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
   menuitem.add:hover {
     background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
 
   menuitem.subtract {
+    margin-right: 18px;
     background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
   menuitem.subtract:hover {
     background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
 
   menuitem.rotate {
     background: url('../../../../assets/images/tools/report/Rotate@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
   menuitem.rotate:hover {
     background: url('../../../../assets/images/tools/report/RotateHover@2x.png') no-repeat center;
-    background-size: 18px;
+    background-size: 22px;
   }
 
   .total-page span {
