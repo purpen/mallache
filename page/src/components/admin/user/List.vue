@@ -32,15 +32,15 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
+                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
+              </el-form-item>
+              <el-form-item>
                 <el-select v-model="query.evt" placeholder="选择条件..." size="small">
                   <el-option label="ID" value="1"></el-option>
                   <el-option label="手机号" value="2"></el-option>
                   <el-option label="昵称" value="3"></el-option>
                   <el-option label="邮箱" value="4"></el-option>
                 </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onSearch" size="small">查询</el-button>

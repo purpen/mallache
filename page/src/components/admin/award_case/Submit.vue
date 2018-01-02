@@ -139,15 +139,19 @@
                         <el-col :span="8" v-for="(d, index) in fileDraftList" :key="index">
                           <el-card :body-style="{ padding: '0px' }" class="item">
                             <div class="image-box">
-                                <img :src="d">
+                                <img :src="d.url">
                             </div>
                             <div class="content">
                               <div class="opt">
-                                <el-tooltip class="item" effect="dark" content="设为封面" placement="top">
-                                <a href="javascript:void(0);" :index="index" :url="d" @click="upCoverBtn"><i class="fa fa-flag" aria-hidden="true"></i></a>
+                                <input type="checkbox" name="imgUrls" v-model="imgUrls" :value="d.url" style="float:left;" />
+                                <el-tooltip class="item" effect="dark" content="设为封面" placement="top" v-if="!d.genImg">
+                                  <a href="javascript:void(0);" :index="index" :url="d.url" @click="upCoverBtn"><i class="fa fa-flag" aria-hidden="true"></i></a>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="dark" content="上传中" placement="top" v-else>
+                                  <a>上传中...</a>
                                 </el-tooltip>
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
-                                  <a href="javascript:void(0);" :url="d" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                  <a href="javascript:void(0);" :url="d.url" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </el-tooltip>
                               </div>
                             </div>
@@ -155,7 +159,10 @@
                         </el-col>
                       </el-row>
                     </div>
-
+                    <div class="description">
+                      <a href="javascript:void(0);" @click="insertEditor" v-if="!genEditorImg">插入至编辑器</a>
+                      <a v-else>上传中...</a>
+                    </div>
                   </el-form-item>
 
                 </el-col>
@@ -197,6 +204,7 @@ import 'mavon-editor/dist/css/index.css'
 import axios from 'axios'
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
+import d3in from 'assets/js/d3in'
 import typeData from '@/config'
 export default {
   name: 'admin_award_case_submit',
@@ -251,6 +259,14 @@ export default {
           { required: true, message: '请添写获奖时间', trigger: 'blur' }
         ]
       },
+      // 上一页信息
+      beforeRoute: {
+        name: null,
+        query: {}
+      },
+      genEditorImg: false,
+      imgUrls: [],
+      genImgList: [],
       msg: ''
     }
   },
@@ -295,7 +311,12 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminAwardCaseList'})
+              // 跳转到上一页
+              if (that.beforeRoute.name) {
+                that.$router.push({name: that.beforeRoute.name, query: that.beforeRoute.query})
+              } else {
+                that.$router.push({name: 'adminAwardCaseList'})
+              }
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -378,8 +399,9 @@ export default {
     upCoverBtn (event) {
       var self = this
       var url = event.currentTarget.getAttribute('url')
-      // var index = event.currentTarget.getAttribute('index')
+      var index = event.currentTarget.getAttribute('index')
       // 上传图片
+      self.fileDraftList[index]['genImg'] = true
       self.$http.get(api.adminAssetUrlUpload, {params: {url: url, type: self.uploadParam['x:type'], target_id: self.uploadParam['x:target_id'], user_id: self.uploadParam['x:user_id']}})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
@@ -399,6 +421,7 @@ export default {
             console.log(response.data)
           }
         }
+        self.genImg = false
       })
       .catch (function(error) {
         self.$message({
@@ -406,8 +429,55 @@ export default {
           message: error.message,
           type: 'error'
         })
+        self.fileDraftList[index]['genImg'] = false
         return false
       })
+    },
+    // 一键插入图片到编辑器
+    insertEditor () {
+      if (this.imgUrls.length === 0) {
+        this.$message.error('至少选择一张图片！')
+        return
+      }
+      var self = this
+      self.genEditorImg = true
+      self.uploadParam['x:type'] = 26
+      var upCount = 0
+      for (var i = 0; i < self.imgUrls.length; i++) {
+        var url = self.imgUrls[i]
+        // 上传到七牛
+        self.$http.get(api.adminAssetUrlUpload, {params: {url: url, type: self.uploadParam['x:type'], target_id: self.uploadParam['x:target_id'], user_id: self.uploadParam['x:user_id']}})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              var url = response.data.data.big
+              self.genImgList.push(url)
+            } else {
+              console.log(response.data)
+            }
+          }
+          upCount += 1
+        })
+        .catch (function(error) {
+          upCount += 1
+          self.$message.error(error.message)
+        })
+      }
+      var intObj = setInterval(function() {
+        if (upCount >= self.imgUrls.length) {
+          // 插入编辑器
+          for (var j = 0; j < self.genImgList.length; j++) {
+            var content = '![](' + self.genImgList[j] + ')\n'
+            var editor = window.document.getElementById('editor').querySelector('textarea')
+            d3in.insertAtCursor(editor, content)
+            console.log(self.genImgList[j])
+          }
+          self.genEditorImg = false
+          upCount = 0
+          self.genImgList = []
+          clearInterval(intObj)
+        }
+      }, 3000)
     },
     handleRemove(file, fileList) {
       if (file === null) {
@@ -466,6 +536,7 @@ export default {
         this.$message.error('上传文件大小不能超过 5MB!')
         return false
       }
+      this.uploadParam['x:type'] = 25
     },
     $imgAdd(pos, $file) {
       this.content_file[pos] = $file
@@ -551,7 +622,10 @@ export default {
 
           // 图片草稿
           if (response.data.data.images_url) {
-            that.fileDraftList = response.data.data.images_url.split('@@')
+            var arr = response.data.data.images_url.split('@@')
+            for (var k = 0; k < arr.length; k++) {
+              that.fileDraftList.push({url: arr[k], genImg: false})
+            }
           }
         }
       })
@@ -587,6 +661,14 @@ export default {
     '$route' (to, from) {
       // 对路由变化作出响应...
     }
+  },
+  // 页面进入前获取路由信息
+  beforeRouteEnter (to, from, next) {
+    // 在导航完成前获取数据
+    next (vm => {
+      vm.beforeRoute.name = from.name
+      vm.beforeRoute.query = from.query
+    })
   }
 }
 </script>

@@ -206,6 +206,11 @@ export default {
         type: [{ type: 'number', message: '请选择类型', trigger: 'change' }],
         content: [{ required: true, message: '请添写内容', trigger: 'blur' }]
       },
+      // 上一页信息
+      beforeRoute: {
+        name: null,
+        query: {}
+      },
       msg: ''
     }
   },
@@ -254,7 +259,12 @@ export default {
                 // 同步到官网社区
                 if (that.isSynchro) {
                 }
-                that.$router.push({ name: 'adminArticleList' })
+                // 跳转到上一页
+                if (that.beforeRoute.name) {
+                  that.$router.push({name: that.beforeRoute.name, query: that.beforeRoute.query})
+                } else {
+                  that.$router.push({name: 'adminArticleList'})
+                }
                 return false
               } else {
                 that.$message.error(response.data.meta.message)
@@ -544,6 +554,14 @@ export default {
     $route(to, from) {
       // 对路由变化作出响应...
     }
+  },
+  // 页面进入前获取路由信息
+  beforeRouteEnter (to, from, next) {
+    // 在导航完成前获取数据
+    next (vm => {
+      vm.beforeRoute.name = from.name
+      vm.beforeRoute.query = from.query
+    })
   }
 }
 </script>

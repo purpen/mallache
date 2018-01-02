@@ -205,8 +205,14 @@
       timeLoadMessage() {
         const self = this
         // 定时请求消息数量
+        var limitTimes = 0
         self.requestMessageTask = setInterval(function () {
-          self.fetchMessageCount()
+          if (limitTimes >= 12) {
+            return
+          } else {
+            self.fetchMessageCount()
+            limitTimes += 1
+          }
         }, 30000)
       },
       // 查看消息
