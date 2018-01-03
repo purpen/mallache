@@ -2,7 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
-var nodeExternals = require('webpack-node-externals')
+// var nodeExternals = require('webpack-node-externals')
 process.noDeprecation = true
 // var webpack = require('webpack')
 // var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
@@ -15,7 +15,7 @@ module.exports = {
   entry: {
     app: ['babel-polyfill', './src/main.js']
   },
-  externals: [nodeExternals()],
+  // externals: [nodeExternals()],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
