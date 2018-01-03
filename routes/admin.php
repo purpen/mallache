@@ -277,6 +277,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //附件列表
         $api->get('/admin/assets', 'UploadAssetController@lists');
 
+
+        /**
+         * block
+         */
+        // 保存
+        $api->post('/admin/block', 'BlockController@store');
+        // 更新
+        $api->put('/admin/block', 'BlockController@update');
+        // 详情
+        $api->get('/admin/block', 'BlockController@show');
+        // 删除
+        $api->delete('/admin/block', 'BlockController@delete');
+        // 列表
+        $api->get('/admin/block/list', 'BlockController@lists');
+        //启用禁用
+        $api->put('/admin/block/changeStatus', 'BlockController@changeStatus');
     });
 
 });

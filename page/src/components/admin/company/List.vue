@@ -22,15 +22,15 @@
           <div class="admin-search-form">
             <el-form :inline="true" :model="query">
               <el-form-item>
+                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
+              </el-form-item>
+              <el-form-item>
                 <el-select v-model="query.evt" placeholder="选择条件..." size="small">
                   <el-option label="公司ID" value="1"></el-option>
                   <el-option label="公司名称" value="2"></el-option>
                   <el-option label="公司简称" value="3"></el-option>
                   <el-option label="用户ID" value="4"></el-option>
                 </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onSearch" size="small">查询</el-button>

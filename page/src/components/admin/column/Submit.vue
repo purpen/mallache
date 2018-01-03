@@ -183,6 +183,11 @@ export default {
           { required: true, message: '请添写内容', trigger: 'blur' }
         ]
       },
+      // 上一页信息
+      beforeRoute: {
+        name: null,
+        query: {}
+      },
       msg: ''
     }
   },
@@ -219,7 +224,12 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminColumnList'})
+              // 跳转到上一页
+              if (that.beforeRoute.name) {
+                that.$router.push({name: that.beforeRoute.name, query: that.beforeRoute.query})
+              } else {
+                that.$router.push({name: 'adminColumnList'})
+              }
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -430,6 +440,14 @@ export default {
     '$route' (to, from) {
       // 对路由变化作出响应...
     }
+  },
+  // 页面进入前获取路由信息
+  beforeRouteEnter (to, from, next) {
+    // 在导航完成前获取数据
+    next (vm => {
+      vm.beforeRoute.name = from.name
+      vm.beforeRoute.query = from.query
+    })
   }
 }
 </script>

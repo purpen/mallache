@@ -179,14 +179,14 @@ class DateOfAwardController extends BaseController
      */
     public function show(Request $request)
     {
-        $day = $request->input('day');
+        $id = $request->input('id');
 
-        $dateOfAward = DateOfAward::where('start_time' , $day)->get();
+        $dateOfAward = DateOfAward::where('id' , $id)->first();
         if (!$dateOfAward) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->collection($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($dateOfAward, new DateOfAwardTransformer())->setMeta($this->apiMeta());
     }
 
 
