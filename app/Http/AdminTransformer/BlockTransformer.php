@@ -11,6 +11,7 @@ class BlockTransformer extends TransformerAbstract
         return [
             'id' => $block->id,
             'name' => $block->name,
+            'mark' => $block->mark,
             'type' => $block->type,
             'status' => $block->status,
             'user_id' => $block->user_id,
