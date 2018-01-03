@@ -429,6 +429,10 @@ button.is-custom.is-outlined.is-loading:after {
   background-size: contain;
 }
 
+.footer p a:hover {
+  color: #CCCCCC;
+}
+
 .footer p a.is-active {
   color: #CCCCCC;
 }

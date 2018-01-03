@@ -16,8 +16,9 @@
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
             </p>
-          <div v-if="already" class="pdf swiper-container" v-loading.body="isLoading">
+          <div v-if="already" class="pdf swiper-container">
             <pdf :src="pdf.image.file"
+              v-loading.body="isLoading"
               @progress="loadedRatio = $event"
               @pageLoaded ="load = $event"
               @numPages="numPages = $event"
@@ -72,7 +73,7 @@
         rotate: 0,
         page: 1,
         title: '',
-        numPages: 1,
+        numPages: 0,
         loadedRatio: 0,
         load: 0
       }
@@ -91,8 +92,10 @@
       })
     },
     watch: {
-      loadedRatio() {
-        // console.log(this.loadedRatio)
+      numPages() {
+        if (this.numPages) {
+          this.isLoading = false
+        }
       }
     },
     methods: {
@@ -104,11 +107,9 @@
             .date_format()
             .format('yyyy年MM月dd日 hh:mm')
             this.pdf = res.data.data
-            this.isLoading = false
           } else {
             this.$message.error(res.data.meta.message)
           }
-          // console.log(res.data.data)
         }).catch((err) => {
           console.error(err)
         })
@@ -290,5 +291,10 @@
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     text-align: center
+  }
+  @media screen and (max-width:330px) {
+    menuitem.rotate {
+      margin-right: 0;
+    }
   }
 </style>

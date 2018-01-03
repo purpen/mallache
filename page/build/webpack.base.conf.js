@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+process.noDeprecation = true
 // var webpack = require('webpack')
 // var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
 // var ignoreFiles = new webpack.IgnorePlugin(/pdfmake.min$/, /vfs_fonts$/)
