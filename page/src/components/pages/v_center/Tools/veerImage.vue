@@ -11,6 +11,13 @@
           <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
             <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
           </el-input>
+
+          <el-row class="tips" :gutter="10">
+            <el-col v-for="(ele, index) in 14" :key="index" :span="isMob ? 6 : 4">
+              <a @click="tipClick(ele)" class="tips-item">{{ele}}</a>
+            </el-col>
+          </el-row>
+
           <waterfall :line-gap="picWidth" align="center" :watch="imgList"
                      class="waterfall" v-if="isEmpty !== true">
             <waterfall-slot
@@ -198,6 +205,10 @@
       handleCurChange(val) {
         this.pagination.curPage = val
         this.getImgList(this.keyword)
+      },
+      tipClick (e) {
+        this.keyword = e
+        this.getImgList(e)
       }
     },
     computed: {
@@ -266,6 +277,29 @@
     margin:auto;
     background: url("../../../../assets/images/tools/report/NoMaterial.png") no-repeat center;
     background-size: 100px;
+  }
+
+  .tips {
+    padding: 20px 0 0 14px;
+    margin-bottom: -15px;
+  }
+
+  .tips .tips-item {
+    display: block;
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #999;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.3s all;
+  }
+
+  .tips .tips-item:hover {
+    background: #FF5A5F;
+    color:#fff;
   }
 
   @media screen and (max-width: 767px) {
