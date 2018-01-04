@@ -406,6 +406,9 @@
               apiUrl = api.contract
             }
             that.isLoadingBtn = true
+            console.log(method, 'method')
+            console.log(apiUrl, 'url')
+            console.log(row, 'data')
             that.$http({method: method, url: apiUrl, data: row})
               .then(function (response) {
                 if (response.data.meta.status_code === 200) {

@@ -41,6 +41,7 @@ body {
 }
 
 .container {
+  overflow: hidden;
   margin: 0 auto;
 }
 
@@ -1367,6 +1368,13 @@ td.fc-day.fc-widget-content.fc-today::before {
 /* 暂时隐藏具体时间 */
 .fc-content .fc-time {
   display: none;
+}
+
+.fc-content {
+  padding-right:8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 /*日历 end*/
 

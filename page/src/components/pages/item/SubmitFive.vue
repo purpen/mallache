@@ -25,7 +25,7 @@
             </el-table-column>
             <el-table-column
               label="客户添写信息">
-              <template slot-scope="scope">
+              <template scope="scope">
                 <div v-if="scope.row.key === '相关附件'">
                   <p v-for="(d, index) in scope.row.image" :key="index"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
                 </div>
@@ -325,7 +325,7 @@
               that.itemTab = itemTab
               that.tab = tab
               that.assetFile = assetFile
-              console.log(that.assetFile)
+              // console.log(that.assetFile)
               that.baseTab = baseTab
             } else {
               that.$message.error(response.data.meta.message)

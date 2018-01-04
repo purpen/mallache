@@ -202,6 +202,7 @@
     },
     mounted() {
       this.getView()
+      this.$emit('update-date', this.eventMsg.month)
       window.addEventListener('resize', this.winResize)
       this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
     },
@@ -251,13 +252,13 @@
         this.$refs.title.style.background = bg
         this.$refs.title_ico.style.backgroundSize = '24px'
         this.$refs.date.style.background = 'url(' +
-          require(`@/assets/images/tools/calendar/time-${color}@2x.png`) + ') no-repeat left'
+          require(`@/assets/images/tools/calendar/time-${color}@2x.png`) + ') no-repeat left 3px'
         this.$refs.date.style.backgroundSize = '15px'
         this.$refs.summary.style.background = 'url(' +
-          require(`@/assets/images/tools/calendar/details-${color}@2x.png`) + ') no-repeat left'
+          require(`@/assets/images/tools/calendar/details-${color}@2x.png`) + ') no-repeat left 3px'
         this.$refs.summary.style.backgroundSize = '15px'
         this.$refs.tips.style.background = 'url(' +
-          require(`@/assets/images/tools/calendar/Label-${color}@2x.png`) + ') no-repeat left'
+          require(`@/assets/images/tools/calendar/Label-${color}@2x.png`) + ') no-repeat left 3px'
         this.$refs.tips.style.backgroundSize = '15px'
       },
       eventCreated (...e) {
@@ -435,7 +436,7 @@
   }
 
   .date {
-    background: url('../../../../../assets/images/tools/calendar/time-green@2x.png') no-repeat left;
+    background: url('../../../../../assets/images/tools/calendar/time-green@2x.png') no-repeat left 3px;
     background-size: 15px;
   }
 
@@ -444,12 +445,12 @@
   }
 
   .summary {
-    background: url('../../../../../assets/images/tools/calendar/details-green@2x.png') no-repeat left;
+    background: url('../../../../../assets/images/tools/calendar/details-green@2x.png') no-repeat left 3px;
     background-size: 15px;
   }
 
   .tips {
-    background: url('../../../../../assets/images/tools/calendar/Label-green@2x.png') no-repeat left;
+    background: url('../../../../../assets/images/tools/calendar/Label-green@2x.png') no-repeat left 3px;
     background-size: 15px;
   }
 
@@ -461,7 +462,5 @@
       max-width: 100%;
     }
   }
-
-  @media screen and (max-width: 500px) {}
 </style>
 

@@ -3,10 +3,10 @@
     <div class="blank20"></div>
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20">
-      <div class="right-content" v-if="!isEmpty">
+      <div class="right-content">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
-        <div class="loading" v-loading.body="isLoading"></div>
+        <div class="loading"></div>
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
 
           <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
@@ -31,7 +31,7 @@
                 <p>{{ d.item.created_at }}</p>
               </el-col>
               <el-col :span="12">
-                <el-popover class="contact-popover" trigger="hover" placement="top">
+                <el-popover class="contact-popover" trigger="hover" placement="top-start">
                   <p class="contact">联系人: {{ d.item.contact_name }}</p>
                   <p class="contact">职位: {{ d.item.position }}</p>
                   <p class="contact">电话: {{ d.item.phone }}</p>
@@ -86,11 +86,11 @@
                 </p>
               </el-col>
             </el-row>
-
           </div>
         </div>
       </div>
-
+      <div class="empty" v-if="isEmpty === true"></div>
+      <p v-if="isEmpty === true" class="noMsg">暂无项目订单</p>
     </el-col>
 
     <el-dialog title="提交项目报价" v-model="takingPriceDialog">
@@ -125,7 +125,6 @@
         <el-button type="primary" :loading="refuseItemLoadingBtn" @click="sureRefuseItemSubmit">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -167,7 +166,7 @@
           ]
         },
         userId: this.$store.state.event.user.id,
-        isEmpty: true
+        isEmpty: ''
       }
     },
     methods: {
@@ -489,5 +488,18 @@
   .item-content-m .item-title p {
     font-size: 1.4rem;
     line-height: 1.4;
+  }
+
+  .empty {
+    width: 122px;
+    height: 113px;
+    margin: 100px auto 0;
+    background: url("../../../../assets/images/item/Group5.png");
+    background-size: contain;
+  }
+
+  .noMsg {
+    text-align: center;
+    color: #969696;
   }
 </style>

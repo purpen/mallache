@@ -1,5 +1,5 @@
 <template>
-  <div v-if="waitCountProp" :class="['vcenter-menu-sub', isMob ? 'vcenter-menu-sub-m' : '', 'clearfix']">
+  <div :class="['vcenter-menu-sub', isMob ? 'vcenter-menu-sub-m' : '', 'clearfix']">
     <div :class="['vcenter-menu-sub-list', isMob ? 'vcenter-menu-sub-list-m' : '']">
       <router-link :to="{name: 'vcenterCItemList'}" :class="{'item': true}">待确认({{ waitCountProp }})</router-link>
       <router-link :to="{name: 'vcenterTrueCItemList'}" :class="{'item': true}">已合作({{ ingCountProp }})</router-link>
