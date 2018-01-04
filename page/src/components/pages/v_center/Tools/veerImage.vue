@@ -219,7 +219,7 @@
         this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
         .then((res) => {
           if (res.data.meta.status_code === 200) {
-            this.tags = res.data.data.mark.split(',')
+            this.tags = res.data.data.code.split(',')
           } else {
             this.$Message.error(res.data.meta.message)
           }

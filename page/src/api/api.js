@@ -100,8 +100,8 @@ export default {
   designItem: '/designItem/{0}', // 查看/编辑/删除接单信息
 
   // 案例
-  designCase: '/designCase',  // 公司案例
-  designCaseId: '/designCase/{0}',  // 公司案例
+  designCase: '/designCase',  // 作品案例
+  designCaseId: '/designCase/{0}',  // 作品案例
   designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
   designCaseOpenLists: '/designCase/openLists', // GET 案例列表
 
