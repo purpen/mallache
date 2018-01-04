@@ -132,7 +132,7 @@ class ContractController extends BaseController
             'design_company_legal_person' => 'required',
 //            'item_content' => 'required',
 //            'design_work_content' => 'required',
-            'title' => 'required|max:20',
+            'title' => 'required|max:50',
 //            'item_stage' => 'array',
         ];
 

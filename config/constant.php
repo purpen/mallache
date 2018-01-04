@@ -17,13 +17,22 @@ return [
     //项目推荐失败后，是否人工后台介入处理
     'item_recommend_lose' => true,     // true:人工介入； false：项目匹配失败
 
+
+
+    //是否开启项目状态短信通知 true | false
+    'sms_send' => true,
+
     // 有新项目发布需要通知的手机号
     'new_item_send_phone' => [
         '马哲' =>'15711016577',
     ],
 
+    // 短信通知标签
+    'sms_fix' => '【太火鸟铟果】',
+
     // 系统短信通知中的联系手机
     'notice_phone' => 15711016577,
+
 
 
     //产品领域配置
