@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\DropPayOrder::class,
 
         // 批量生成设计公司用户
-        Commands\createUsers::class,
+        Commands\CreateUsers::class,
 
         //更改veer的token
         Commands\UpdateVeerToken::class,
