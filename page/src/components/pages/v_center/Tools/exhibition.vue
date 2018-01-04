@@ -73,7 +73,7 @@
                 }
               })
               .catch((err) => {
-                console.log(err)
+                console.error(err)
               })
             }
           } else {
@@ -111,7 +111,9 @@
             }
             obj.title = i.name
             obj.start = i.start_time
-            obj.end = i.end_time
+            if (i.end_time) {
+              obj.end = i.end_time + ' 23:59' // 修复时间显示少一天
+            }
             obj.type = i.type
             obj.type_value = i.type_value
             obj.summary = i.summary
@@ -126,8 +128,8 @@
       },
       eventSelected (e) {
       },
-      updateDate (view, date) {
-        this.getDate(view, date)
+      updateDate (date) {
+        this.getDate(date)
       },
       colorOpacity (a) {
         switch (a % 3) {

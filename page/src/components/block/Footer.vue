@@ -36,7 +36,7 @@
 
       <el-col class="item fllow" :xs="12" :sm="6" :md="6" :lg="6">
         <p class="title">关注我们</p>
-        <p class="call clearfix"><span>电话：</span><span>4008-798-751</span></p>
+        <p class="call clearfix"><span>电话：</span><span><a href="tel:4008798751">4008-798-751</a></span></p>
         <div class="Fshare-box">
           <p class="share" @click="clickwx">
             <i class="wechat"></i>

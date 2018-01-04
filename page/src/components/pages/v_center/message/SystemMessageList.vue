@@ -23,7 +23,7 @@
                   </p>
                 </div>
                 <p class="content">{{ d.content }}</p>
-                <img class="content-img" :src="d.cover.big" :alt="d.cover.name">
+                <img class="content-img" v-lazy="d.cover.big" :alt="d.cover.name">
                 <p class="url"><a @click="aClick(d.url)">查看详情>></a></p>
               </div>
             </div>

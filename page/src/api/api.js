@@ -250,6 +250,7 @@ export default {
 
   // veer图片列表
   veerImage: '/veerImage/list',
+  block: '/block',
 
   // test
   test: '/'  // End

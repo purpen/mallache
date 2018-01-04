@@ -152,6 +152,7 @@
             self.eventMsg.summary = event.summary
             self.eventMsg.tips = event.type_value
             if (event.end) {
+              event.end._i = event.end._i.split(' ')[0] // 暂时隐藏具体时间
               self.eventMsg.date = event.start._i + ' - ' + event.end._i
             } else {
               self.eventMsg.date = event.start._i
@@ -220,7 +221,7 @@
         this.hideinfo = false
         this.$refs.calendar.fireMethod('next')
         this.getView()
-        this.$emit('update-date', this.view, this.eventMsg.month)
+        this.$emit('update-date', this.eventMsg.month)
       },
       todays (e) {
         this.isToday = true

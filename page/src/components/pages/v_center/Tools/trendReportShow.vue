@@ -16,8 +16,9 @@
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
             </p>
-          <div v-if="already" class="pdf swiper-container" v-loading.body="isLoading">
+          <div v-if="already" class="pdf swiper-container">
             <pdf :src="pdf.image.file"
+              v-loading.body="isLoading"
               @progress="loadedRatio = $event"
               @pageLoaded ="load = $event"
               @numPages="numPages = $event"
@@ -72,7 +73,7 @@
         rotate: 0,
         page: 1,
         title: '',
-        numPages: 1,
+        numPages: 0,
         loadedRatio: 0,
         load: 0
       }
@@ -91,8 +92,10 @@
       })
     },
     watch: {
-      loadedRatio() {
-        // console.log(this.loadedRatio)
+      numPages() {
+        if (this.numPages) {
+          this.isLoading = false
+        }
       }
     },
     methods: {
@@ -104,11 +107,9 @@
             .date_format()
             .format('yyyy年MM月dd日 hh:mm')
             this.pdf = res.data.data
-            this.isLoading = false
           } else {
             this.$message.error(res.data.meta.message)
           }
-          // console.log(res.data.data)
         }).catch((err) => {
           console.error(err)
         })
@@ -221,45 +222,50 @@
     top: 0;
     width: 100%;
     height: 50px;
-    line-height: 30px;
+    line-height: 50px;
     border-bottom: 1px solid #D2D2D2;
-    padding: 10px 30px;
+    padding: 0 20px 0 15px;
   }
 
   menu menuitem {
     float: left;
+    margin-top: 10px;
     margin-right: 8px;
-    width: 24px;
+    width: 26px;
     height: 30px;
     text-indent: -999rem;
+    cursor: pointer;
+    transition: 0.1s all ease;
   }
 
   menuitem.add {
     background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
   menuitem.add:hover {
+    transform: scale(1.2);
     background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
 
   menuitem.subtract {
     margin-right: 18px;
     background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
   menuitem.subtract:hover {
+    transform: scale(1.2);
     background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
 
   menuitem.rotate {
     background: url('../../../../assets/images/tools/report/Rotate@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
   menuitem.rotate:hover {
     background: url('../../../../assets/images/tools/report/RotateHover@2x.png') no-repeat center;
-    background-size: 22px;
+    background-size: 24px;
   }
 
   .total-page span {
@@ -277,7 +283,7 @@
     background: #666666
   }
   .page-input {
-    margin-top: 5px;
+    margin-top: 15px;
     width: 30px;
     height: 20px;
     border: none;
@@ -285,5 +291,10 @@
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     text-align: center
+  }
+  @media screen and (max-width:330px) {
+    menuitem.rotate {
+      margin-right: 0;
+    }
   }
 </style>

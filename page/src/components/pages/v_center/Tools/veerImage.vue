@@ -11,6 +11,13 @@
           <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
             <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
           </el-input>
+
+          <el-row class="tags" :gutter="10">
+            <el-col v-for="(ele, index) in tags" :key="index" :span="isMob ? 8 : 4">
+              <a @click="tipClick(ele)" class="tags-item">{{ele}}</a>
+            </el-col>
+          </el-row>
+
           <waterfall :line-gap="picWidth" align="center" :watch="imgList"
                      class="waterfall" v-if="isEmpty !== true">
             <waterfall-slot
@@ -63,6 +70,7 @@
         msg: '图片素材',
         keyword: '',
         imgList: [],
+        tags: [],
         isEmpty: false,
         isLoading: false,
         isOk: true,
@@ -77,12 +85,16 @@
       }
     },
     created () {
+      this.getBlock()
       let docWidth = document.body.offsetWidth
       if (docWidth < 750) {
         this.picWidth = 200
       }
-      if (docWidth < 630) {
-        this.picWidth = 160
+      if (docWidth < 500) {
+        this.picWidth = 184
+      }
+      if (docWidth < 400) {
+        this.picWidth = 165
       }
       if (docWidth < 350) {
         this.picWidth = 140
@@ -198,6 +210,23 @@
       handleCurChange(val) {
         this.pagination.curPage = val
         this.getImgList(this.keyword)
+      },
+      tipClick (e) {
+        this.keyword = e
+        this.getImgList(e)
+      },
+      getBlock () {
+        this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
+        .then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.tags = res.data.data.mark.split(',')
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+        })
       }
     },
     computed: {
@@ -266,6 +295,29 @@
     margin:auto;
     background: url("../../../../assets/images/tools/report/NoMaterial.png") no-repeat center;
     background-size: 100px;
+  }
+
+  .tags {
+    padding: 20px 0 0 14px;
+    margin-bottom: -15px;
+  }
+
+  .tags .tags-item {
+    display: block;
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #999;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.3s all;
+  }
+
+  .tags .tags-item:hover {
+    background: #FF5A5F;
+    color:#fff;
   }
 
   @media screen and (max-width: 767px) {

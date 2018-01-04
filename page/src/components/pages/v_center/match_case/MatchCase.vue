@@ -19,7 +19,7 @@
                     <div class="image-box">
                       <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">
-                        <img :src="d.cover.middle">
+                        <img v-lazy="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">
