@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\AdminTransformer;
+namespace App\Http\Transformer;
 
 use App\Models\Block;
 use League\Fractal\TransformerAbstract;
