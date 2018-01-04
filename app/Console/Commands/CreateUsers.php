@@ -7,7 +7,7 @@ use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class createUsers extends Command
+class CreateUsers extends Command
 {
     /**
      * The name and signature of the console command.
@@ -63,6 +63,7 @@ class createUsers extends Command
                     'password' => bcrypt('123456'),
                     'auto_create' => 1,
                 ]);
+
                 if($type == 1){
                     DemandCompany::createCompany($user->id);
                 }else if($type == 2){
