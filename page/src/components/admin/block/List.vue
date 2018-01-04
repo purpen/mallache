@@ -68,7 +68,7 @@
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
                   <p>
-                    <router-link :to="{name: 'adminBlockEdit', query: {id: scope.row.id}}">编辑</router-link>
+                    <router-link :to="{name: 'adminBlockEdit', params: {id: scope.row.id}}">编辑</router-link>
                     <a href="javascript:void(0);" @click="removeBtn(scope.$index, scope.row)">删除</a>
                   </p>
                   <!--

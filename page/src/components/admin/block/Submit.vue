@@ -187,7 +187,7 @@ export default {
   },
   created: function() {
     const that = this
-    var id = this.$route.query.id
+    var id = this.$route.params.id
     if (id) {
       that.itemMode = '编辑区块'
       that.itemId = id
