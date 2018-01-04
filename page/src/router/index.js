@@ -70,7 +70,7 @@ const routes = [
     path: '/design_case/general_list',
     name: 'designGeneralList',
     meta: {
-      title: '公司案例',
+      title: '作品案例',
       requireAuth: false
     },
     component: require('@/components/pages/design_case/GeneralList')
