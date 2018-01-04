@@ -7,7 +7,7 @@ use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class createUsers extends Command
+class CreateUsers extends Command
 {
     /**
      * The name and signature of the console command.
