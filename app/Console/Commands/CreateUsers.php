@@ -63,6 +63,7 @@ class CreateUsers extends Command
                     'password' => bcrypt('123456'),
                     'auto_create' => 1,
                 ]);
+
                 if($type == 1){
                     DemandCompany::createCompany($user->id);
                 }else if($type == 2){
