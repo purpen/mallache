@@ -97,8 +97,8 @@ git@github.com:purpen/mallache.git
  ###### 计算设计公司加权分数score
  php artisan Weighted:calculation
  
- ###### 批量生成设计公司账号
- php artisan user:create --count=10
+ ###### 批量生成用户账号
+ php artisan user:create --count=10 --type=2 创建用户命令: --count 创建数量  --type 1.需求公司；2.设计公司
  
  ###### 更新veerToken
  php artisan Update:token
