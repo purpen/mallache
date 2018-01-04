@@ -7,21 +7,21 @@
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="commonlySites"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20"
                 v-loading.body="loading">
-          <div class="commonly-sites">
+          <div :class="['commonly-sites', {'commonly-sites-m' : isMob}]">
 
             <section class="lists design-info" v-if="designInfo.length">
               <h2>设计资讯</h2>
               <article>
-                <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                  <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in designInfo" :key="ele.id">
+                <el-row :gutter="isMob ? 10 : 20">
+                  <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designInfo" :key="index">
                     <div class="item clearfix" @click="aClick(ele.url)">
                       <div class="left fl"
                            :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                         {{ele.cover.name}}
                       </div>
-                      <div class="right fl">
+                      <div class="right hide2lines fl">
                         <p class="title">{{ele.title}}</p>
-                        <p class="summary">{{ele.summary}}</p>
+                        <p class="summary hide2lines">{{ele.summary}}</p>
                       </div>
                     </div>
                   </el-col>
@@ -33,8 +33,8 @@
               <h2>创意灵感</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in originality" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in originality" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -54,8 +54,8 @@
               <h2>众筹</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in crowdFunding" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in crowdFunding" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -75,8 +75,8 @@
               <h2>商业咨询</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in businessConsult" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in businessConsult" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -96,8 +96,8 @@
               <h2>设计奖项</h2>
               <article>
                 <article>
-                  <el-row :gutter="isMob ? 10 : 20" class="padding10">
-                    <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in designAwards" :key="ele.id">
+                  <el-row :gutter="isMob ? 10 : 20">
+                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designAwards" :key="index">
                       <div class="item clearfix" @click="aClick(ele.url)">
                         <div class="left fl"
                              :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -105,7 +105,7 @@
                         </div>
                         <div class="right fl">
                           <p class="title">{{ele.title}}</p>
-                          <p class="summary">{{ele.summary}}</p>
+                          <p class="summary hide2lines">{{ele.summary}}</p>
                         </div>
                       </div>
                     </el-col>
@@ -148,7 +148,6 @@
             switch (i.type) {
               case 1:
                 this.designInfo.push(i)
-                console.log(i)
                 break
               case 2:
                 this.originality.push(i)
@@ -184,7 +183,9 @@
         let reg = /^(http)/
         if (!reg.test(link)) {
           window.open('http://' + link)
+          return
         }
+        window.open(link)
       }
     },
     computed: {
@@ -205,6 +206,10 @@
     text-indent: 30px;
     background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
     background-size: 25px;
+  }
+
+  .lists h2:first-child {
+    margin: 10px 0 20px;
   }
 
   .originality h2 {
@@ -228,12 +233,19 @@
   }
 
   .item {
-    min-height: 100px;
-    padding: 28px 0 15px 20px;
+    height: 100px;
+    padding: 20px;
     border: 1px solid #DCDCDC;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
     border-radius: 10px;
     margin-bottom: 20px;
+    cursor: pointer;
+    transition: all ease .3s;
+  }
+
+  .item:hover {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
   }
 
   .item a {
@@ -247,6 +259,8 @@
     height: 42px;
     border-radius: 50%;
     text-indent: -999rem;
+    border: 1px solid #DCDCDC;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
   }
 
   .item .right {
@@ -256,7 +270,6 @@
 
   .right .title {
     font-size: 16px;
-    font-weight: 600;
     color: #222;
     padding-bottom: 10px;
   }
@@ -264,18 +277,20 @@
   .right .summary {
     font-size: 14px;
     color: #666;
-    line-height: 1.2;
-  }
-
-  .padding10 {
-    padding: 0 10px;
+    line-height: 16px;
+    height: 32px;
   }
 
   @media screen and (max-width: 600px) {
     .item {
-      min-height: 70px;
+      height: 80px;
       padding: 10px;
       margin-bottom: 10px;
+    }
+
+    .item:hover {
+      transform: translate3d(0, 0, 0);
+      box-shadow: none;
     }
 
     .item .left {
@@ -302,6 +317,10 @@
       font-size: 17px;
       background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
       background-size: 17px;
+    }
+
+    .lists h2:first-child {
+      margin: 0 0 20px;
     }
 
     .originality h2 {

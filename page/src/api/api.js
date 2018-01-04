@@ -32,7 +32,7 @@ export default {
   column: '/column', // GET 详情
 
   // 银行卡
-  bank: '/bank', // GET/POST 查看列表／保存银行卡
+  bank: '/bank', // GET/POST 查看列表 | 保存银行卡
   bankId: '/bank/{0}', // PUT 更新银行卡信息
   bankUnStatus: '/bank/un/status', // PUT 关闭银行卡
 
@@ -116,10 +116,14 @@ export default {
   surveyDemandCompanySurvey: '/survey/demandCompanySurvey', // GET 需求方控制面板
   surveyDesignCompanySurvey: '/survey/designCompanySurvey', // GET 设计公司控制面板
 
-  // 系统通知
+  // 项目提醒
   messageGetMessageQuantity: '/message/getMessageQuantity', // GET 获取数量
   messageGetMessageList: '/message/getMessageList', // GET 列表
   messageTrueRead: '/message/trueRead', // PUT 确认已读
+
+  // 系统通知
+  getNoticeList: '/notice/list', // GET 列表
+  getNotice: '/notice',  // GET 详情
 
   // 文章
   articleList: '/article/list', // GET 列表
@@ -129,7 +133,7 @@ export default {
   categoryList: '/classification/list', // GET 分类列表
 
   // 附件操作
-  asset: '/upload/deleteFile/{0}',  // 删除／查看图片
+  asset: '/upload/deleteFile/{0}',  // 删除 | 查看图片
   upToken: '/upload/upToken',  // 获取上传token
   updateImageSummary: '/designCase/imageSummary', // PUT 更新图片备注
 
@@ -181,7 +185,7 @@ export default {
   // 栏目管理
   adminColumnList: '/admin/column/lists', // GET 列表
   adminColumn: '/admin/column', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用／禁用
+  adminColumnChangeStatus: '/admin/column/changeStatus', // PUT 启用 | 禁用
 
   // 分类管理
   adminCategoryList: '/admin/classification/list', // GET 列表
@@ -214,7 +218,7 @@ export default {
   adminTrendReport: '/admin/trendReports', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminTrendReprotSetStatus: '/admin/trendReports/verifyStatus', // PUT 更改状态
   TrendReportList: '/trendReports/lists',  // GET 列表
-  trendReports: 'trendReports', // GET 详情
+  trendReports: '/trendReports', // GET 详情
 
   // 常用网站管理
   adminCommonlySite: '/admin/commonlyUsedUrls', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
@@ -226,13 +230,18 @@ export default {
   // 奖项案例管理
   adminAwardCaseList: '/admin/awardCase/list', // GET 列表
   adminAwardCase: '/admin/awardCase', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用／禁用
-  adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用／禁用
+  adminAwardCaseChangeStatus: '/admin/awardCase/changeStatus', // PUT 启用 | 禁用
+  adminAwardCaseChangeRecommended: '/admin/awardCase/changeRecommended', // PUT 启用 | 禁用
+  awardCaseList: '/awardCase/list', // GET 列表
+  awardCase: '/awardCase', // GET 详情
 
   // 系统通知管理
   adminNoticeList: '/admin/notice/list', // GET 列表
   adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
-  adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用／禁用
+  adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用 | 禁用
+
+  // 附件管理
+  adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
 
   // veer图片列表
   veerImage: '/veerImage/list',

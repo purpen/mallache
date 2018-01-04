@@ -28,11 +28,17 @@ class CheckRole
             throw new JWTException('用户不存在');
         }
 
-        //0.用户; 10.管理员 admin； 15:管理员 admin_plus  20：超级管理员 root
+        //0.用户; 5.编辑； 10.管理员 admin； 15:管理员 admin_plus  20：超级管理员 root
         switch ($user->role_id){
             //普通用户
             case 0:
                 throw new HttpException(401, '无访问权限');
+                break;
+            //编辑 editor
+            case 5:
+                if(!$this->check($request, 'editor')){
+                    throw new HttpException(401, '无访问权限');
+                }
                 break;
             //管理员 admin
             case 10:

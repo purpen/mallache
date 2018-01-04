@@ -15,7 +15,7 @@
       </a>
       <a @click="alick" :to="'/vcenter/exhibition'"
          :class="{'item': true, 'is-active': currentName === 'exhibition'}">
-        展览
+        设计日历
       </a>
     </div>
   </div>
@@ -36,13 +36,24 @@
     },
     methods: {
       alick(e) {
-        sessionStorage.setItem('MENU_BAR', e.target.offsetLeft)
+        sessionStorage.setItem('TOOLS_MENU_BAR', e.target.offsetLeft)
         this.$router.push(e.target.getAttribute('to'))
       }
+    },
+    mounted() {
+      let menu = sessionStorage.getItem('TOOLS_MENU_BAR')
+      this.$refs.Mmenulist.scrollLeft = menu - document.documentElement.clientWidth / 2 + 38
     }
   }
 </script>
 <style scoped>
+  .tools-menu {
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
   .menu-list span {
     display: block;
     padding: .85rem 1.5rem;

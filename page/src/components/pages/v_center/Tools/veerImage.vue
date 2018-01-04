@@ -7,12 +7,12 @@
                 v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="veerImage"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
-          <h2>{{msg}}</h2>
-          <el-input placeholder="请输入内容" v-model="keyword">
-            <el-button slot="append" @click="getImgList(keyword)">搜索</el-button>
+          <h2 v-if="!isMob">{{msg}}</h2>
+          <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
+            <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
           </el-input>
           <waterfall :line-gap="picWidth" align="center" :watch="imgList"
-                     class="waterfall">
+                     class="waterfall" v-if="isEmpty !== true">
             <waterfall-slot
               v-for="(item, index) in imgList"
               :width="item.width"
@@ -33,6 +33,12 @@
             :total="pagination.total"
             @current-change="handleCurChange">
           </el-pagination>
+
+          <div class="is-empty" v-if="isEmpty === true">
+            <div class="empty-bg">
+              暂无相关信息～
+            </div>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -118,7 +124,9 @@
           }
         }
       }
-      window.addEventListener('touchmove', getImg, false)
+      if (this.imgList.length) {
+        window.addEventListener('touchmove', getImg, false)
+      }
     },
     methods: {
       getImgList (val) {
@@ -133,16 +141,17 @@
           this.isLoading = false
           if (res.data.meta.status_code === 200) {
             let data = res.data.data
-            if (data) {
-              if (data.length < 1) {
-                this.isEmpty = true
-              }
+            if (data.length) {
+              this.isEmpty = false
               this.imgList = data
               this.pagination.pageCount = res.data.meta.pagination.total_pages
               if (this.pagination.pageCount > 1000) {
                 this.pagination.pageCount = 1000
               }
               this.pagination.total = this.pagination.pageSize * this.pagination.pageCount
+            } else {
+              this.isEmpty = true
+              this.imgList = data
             }
           } else {
             this.$message.error(res.data.meta.message)
@@ -207,17 +216,19 @@
     font-size: 17px;
     color: #222222;
     font-weight: 600;
-    padding: 44px 0 20px;
+    padding: 6px 0 20px;
   }
 
   img {
     width: 100%;
     height: auto;
-    padding: 10px;
+    padding: 6px;
+    transition: all ease .3s;
   }
 
   img:hover {
-    animation: move .2s 2;
+    transform: scale(1.05);
+    /* transform: translate3d(0, -2px, 0); */
   }
 
   .pagination {
@@ -229,36 +240,37 @@
     margin: 20px 0;
   }
 
-  @keyframes move {
-    10% {
-      transform: translate(4px, 0) rotate(0);
-    }
-    20% {
-      transform: translate(8px, 0) rotate(0);
-    }
-    30% {
-      transform: translate(7px, 0) rotate(0);
-    }
-    40% {
-      transform: translate(2px, 0) rotate(0);
-    }
-    50% {
-      transform: translate(0px, 0) rotate(0);
-    }
-    60% {
-      transform: translate(7px, 0) rotate(0);
-    }
-    70% {
-      transform: translate(8px, 0) rotate(0);
-    }
-    80% {
-      transform: translate(4px, 0) rotate(0);
-    }
-    90% {
-      transform: translate(2px, 0) rotate(0);
-    }
-    0%, 100% {
-      transform: translate(0, 0) rotate(0);
+  .search-btn {
+    height: 36px;
+    background: #FF5A5F!important;
+    color: #ffffff!important;
+    border-radius: 0 4px 4px 0!important
+  }
+
+  .is-empty {
+    position: relative;
+    height: calc(100% - 100px);
+    min-height: 200px;
+  }
+
+  .empty-bg {
+    width: 120px;
+    height: 100px;
+    line-height: 220px;
+    text-align: center;
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    margin:auto;
+    background: url("../../../../assets/images/tools/report/NoMaterial.png") no-repeat center;
+    background-size: 100px;
+  }
+
+  @media screen and (max-width: 767px) {
+    h2 {
+      padding: 20px 0
     }
   }
 </style>

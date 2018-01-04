@@ -60,11 +60,12 @@
               width="60">
             </el-table-column>
             <el-table-column
-              width="60"
+              width="70"
               label="状态">
                 <template scope="scope">
                   <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
-                  <p v-else><el-tag type="success">启用</el-tag></p>
+                  <p v-else-if="scope.row.status === -1"><el-tag type="warning">发送中...</el-tag></p>
+                  <p v-else><el-tag type="success">已发送</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -78,7 +79,8 @@
                 <template scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发送</a>
+                    <a href="javascript:void(0);" v-else-if="scope.row.status === -1">发送中...</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, -1)">发送</a>
                   </p>
                   <p>
                     <router-link :to="{name: 'adminNoticeEdit', params: {id: scope.row.id}}">编辑</router-link>
@@ -93,7 +95,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
+            :page-sizes="[50, 100, 500]"
             :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
@@ -140,7 +142,7 @@ export default {
       currentDialogId: '',
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: 0,

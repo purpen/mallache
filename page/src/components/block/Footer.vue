@@ -71,7 +71,7 @@
 
 <script>
   export default {
-    name: 'footer',
+    name: 'foot',
     props: {
       currentName: {
         default: ''

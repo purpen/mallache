@@ -23,16 +23,18 @@ class MessageController extends BaseController
      *          "status_code": 200
      *      },
      *      "data":{
-                "quantity": 2;
+                "quantity": 10,
+                "message": 4,
+                "notice": 6,
      *      }
      *  }
      */
     public function getMessageQuantity()
     {
         $tools = new Tools();
-        $quantity = $tools->getMessageQuantity($this->auth_user_id);
+        $data = $tools->getMessageQuantity($this->auth_user_id);
 
-        return $this->response->array($this->apiSuccess('Success', 200, ['quantity' => $quantity]));
+        return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
 
     /**

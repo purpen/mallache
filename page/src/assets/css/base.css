@@ -187,6 +187,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   min-width: initial;
 }
 
+.hide2lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .blank10 {
   margin: 10px;
 }
@@ -619,6 +626,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .nav-header .nav-item {
+  position: relative;
   align-items: center;
   display: flex;
   flex-grow: 0;
@@ -626,7 +634,68 @@ button.is-custom.is-outlined.is-loading:after {
   font-size: 1rem;
   justify-content: center;
   line-height: 1.5;
-  padding: 0.5rem 0.75rem;
+  padding: 6px 20px 6px 9px;
+}
+
+.nav-header .nav-item:hover .view-msg {
+    display: block
+}
+
+.nav-item .view-msg {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12),
+  0 0 6px 0 rgba(0, 0, 0, .04);
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.nav-item .view-msg-min {
+  width: 140px;
+}
+
+.nav-item .view-msg .news, .nav-item .view-msg .notice {
+  font-size: 14px;
+  display: block;
+  line-height: 20px;
+  color: #999999;
+  padding: 10px 15px 10px 40px;
+  transition: 0.3s;
+}
+
+.view-msg .news {
+  background: url("../images/icon/News@2x.png") no-repeat 10px center;
+  background-size: 20px;
+}
+
+.view-msg .news:hover {
+  color:#222;
+  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center #0000000d;
+  background-size: 20px;
+}
+
+.view-msg .notice {
+  background: url("../images/icon/Notice@2x.png") no-repeat 10px center;
+  background-size: 20px;
+}
+
+.view-msg .notice:hover {
+  color: #222;
+  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center #0000000d;
+  background-size: 20px;
+}
+
+.nav-item .view-msg a i{
+  color: #FF4500
+}
+
+.nav-item .view-msg a:last-child {
+  border-bottom:none
 }
 
 .nav-header .nav-item .icon {
@@ -700,7 +769,8 @@ button.is-custom.is-outlined.is-loading:after {
   border: none;
   background: #FFFFFF;
   color: #7A7A7A;
-  padding: 0 14px;
+  padding: 0;
+  padding-right: 14px;
 }
 
 .el-menu-info .el-submenu > .el-menu {
@@ -711,6 +781,7 @@ button.is-custom.is-outlined.is-loading:after {
   width: 170px;
   min-width: 170px;
   padding: 0;
+  border-radius: 4px;
 }
 
 .el-menu-info .el-menu .el-menu-item {
@@ -727,10 +798,48 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 0;
   padding: .85rem 1.5rem .85rem 1.5rem !important;
   text-align: center;
+  -webkit-transition: none 86ms ease-out;
+  transition: none 86ms ease-out;
 }
 
-.el-menu-info .el-menu .el-menu-item:hover {
-  background: rgba(0, 0, 0, .05);
+.el-menu-info .el-menu .el-menu-item.menu-control {
+  background: url("../images/icon/Console@2x.png") no-repeat 24px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-admin {
+  background: url("../images/icon/PersonalCenter@2x.png") no-repeat 24px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-sign-out {
+  background: url("../images/icon/logout@2x.png") no-repeat 27px;
+  background-size: 22px;
+}
+
+.el-menu-info .el-menu .el-menu-item:first-child {
+  border-radius: 4px 4px 0 0
+}
+
+.el-menu-info .el-menu .el-menu-item:last-child {
+    border-radius: 0 0 4px 4px
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-control:hover {
+  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px #0000000d;
+  background-size: 22px;
+  color: #222222;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-admin:hover {
+  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px #0000000d;
+  background-size: 22px;
+  color: #222222;
+}
+
+.el-menu-info .el-menu .el-menu-item.menu-sign-out:hover {
+  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px #0000000d;
+  background-size: 22px;
   color: #222222;
 }
 
@@ -954,11 +1063,13 @@ img.avatar {
 }
 
 .file-list .content p {
+  line-height: 1.5;
   font-size: 1.3rem;
   color: #222222;
 }
 
 .file-list .content .summary {
+  padding-top: 6px;
   height: 40px;
   overflow: hidden;
 }
@@ -1189,7 +1300,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .fc-toolbar.fc-header-toolbar {
-  margin: 20px 0;
+  display: none
 }
 
 .fc .fc-month-button,
@@ -1198,9 +1309,6 @@ td.fc-day.fc-widget-content.fc-today::before {
   line-height: 28px;
   padding: 0 12px;
   color: #FF5A5F
-}
-
-.fc .fc-button-group {
 }
 
 .fc .fc-button-group .fc-state-active {

@@ -5,7 +5,7 @@
       <v-menu currentName="control"></v-menu>
       <el-col :span="isMob ? 24 : 20">
         <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
-          <div class="item ing" v-for="(d, index) in itemIngList">
+          <div class="item ing" v-for="(d, index) in itemIngList" :key="index">
             <div class="banner">
               <p>
                 <span>进行中</span>
@@ -318,6 +318,7 @@
 
   .content-box .item .item-btn {
     float: right;
+    margin-top: 5px;
     margin-right: 10px;
     font-size: 1.4rem;
     line-height: 1.7;
@@ -431,6 +432,7 @@
     margin-top: 20px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
+    border-bottom: none;
   }
 
   .list-box .el-col {

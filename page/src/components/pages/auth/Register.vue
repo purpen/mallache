@@ -204,9 +204,9 @@
         let account = this.$refs.account.value
         if (account === '') {
           this.$message({
-            showClose: true,
             message: '请输入手机号码！',
-            type: 'error'
+            type: 'error',
+            duration: 1000
           })
           return
         }
@@ -215,7 +215,8 @@
           this.$message({
             showClose: true,
             message: '手机号格式不正确！',
-            type: 'error'
+            type: 'error',
+            duration: 1000
           })
           return
         }

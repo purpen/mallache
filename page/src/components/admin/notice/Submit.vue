@@ -42,7 +42,7 @@
 
               <el-row :gutter="24">
                 <el-col :span="12">
-                  <el-form-item label="链接" prop="url">
+                  <el-form-item label="原文链接" prop="url">
                     <el-input v-model="form.url" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>

@@ -769,23 +769,28 @@ const COMMONLY_SITE_TYPE = [
 const AWARD_CASE_CATEGORY = [
   {
     id: 1,
-    name: '美国IDEA设计大奖'
+    name: 'IDEA设计奖',
+    img: require('assets/images/awards_logo/4.png')
   },
   {
     id: 2,
-    name: '日本g-mark优良设计奖'
+    name: 'G-Mark设计奖',
+    img: require('assets/images/awards_logo/3.png')
   },
   {
     id: 3,
-    name: '德国 IF设计大奖'
+    name: 'IF设计奖',
+    img: require('assets/images/awards_logo/1.png')
   },
   {
     id: 4,
-    name: '德国红点奖'
+    name: '红点设计奖',
+    img: require('assets/images/awards_logo/2.png')
   },
   {
     id: 99,
-    name: '其它'
+    name: '其它',
+    img: require('assets/images/awards_logo/0.png')
   }
 ]
 

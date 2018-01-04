@@ -23,6 +23,7 @@ class AwardCaseController extends BaseController
      * @apiParam {string} summary 简述
      * @apiParam {text} content 内容
      * @apiParam {string} url 链接
+     * @apiParam {string} tags 标签
      * @apiParam {string} grade 奖项等级
      * @apiParam {string} time_at 获奖时间
      * @apiParam {integer} category_id 所属奖项ID
@@ -45,6 +46,7 @@ class AwardCaseController extends BaseController
             'title' => 'required|max:100',
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
+            'tags' => 'array',
             'time_at' => 'required',
         ];
 
@@ -55,6 +57,7 @@ class AwardCaseController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $all['user_id'] = $this->auth_user_id;
+        $all['tags'] = $request->input('tags') ? implode(',', $request->input('tags')) : '';
         if (!$awardCase = AwardCase::create($all)) {
             return $this->response->array($this->apiError('添加失败', 500));
         }
@@ -77,6 +80,7 @@ class AwardCaseController extends BaseController
      * @apiParam {string} summary 简述
      * @apiParam {text} content 内容
      * @apiParam {string} url 链接
+     * @apiParam {string} tags 标签
      * @apiParam {string} grade 奖项等级
      * @apiParam {string} time_at 获奖时间
      * @apiParam {integer} category_id 所属奖项ID
@@ -100,6 +104,7 @@ class AwardCaseController extends BaseController
             'title' => 'required|max:100',
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
+            'tags' => 'array',
             'time_at' => 'required',
         ];
 
@@ -115,6 +120,7 @@ class AwardCaseController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
+        $all['tags'] = $request->input('tags') ? implode(',', $request->input('tags')) : '';
         if (!$awardCase = $awardCase->update($all)) {
             return $this->response->array($this->apiError('更新失败', 500));
         }
@@ -143,6 +149,10 @@ class AwardCaseController extends BaseController
      *          "user_id": 255, // 创建人ID
      *          "content": "产品内容",
      *          "url": "www.baidu.com",
+     *          "tags": [
+     *            "美丽",
+     *            "智慧"
+     *          ],
      *          "grade": "金奖",
      *          "time_at": "2017-12-12",
      *          "recommended": 1,             // 是否推荐：0.否；1.是；

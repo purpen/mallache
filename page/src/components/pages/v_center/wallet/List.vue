@@ -63,7 +63,8 @@
               </el-table-column>
             </el-table>
             <section v-loading.body="isLoading" v-if="isMob">
-              <div class="transaction-record" v-for="(ele, index) in tableData"
+              <div class="transaction-record"
+                v-for="(ele, index) in tableData" :key="index"
                    @selection-change="handleSelectionChange">
                 <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
                 <p>时间：<span>{{ele.created_at}}</span></p>
@@ -74,6 +75,7 @@
               </div>
             </section>
             <el-pagination
+              v-if="tableData.length"
               class="pagination"
               @current-change="handleCurrentChange"
               :current-page="query.page"

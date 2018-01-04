@@ -61,6 +61,15 @@
                 </el-col>
               </el-row>
 
+              <el-row :gutter="24">
+                <el-col :span="12">
+                  <el-form-item label="标签" prop="tags">
+                    <el-input v-model="form.tags" placeholder=""></el-input>
+                    <div class="description">*多个标签用','分隔,每个标签不超过7个字符，尽量避免使用特殊字符。</div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
               <el-row >
                 <el-col :span="24">
                   <el-form-item label="上传图片" prop="">
@@ -130,12 +139,19 @@
                         <el-col :span="8" v-for="(d, index) in fileDraftList" :key="index">
                           <el-card :body-style="{ padding: '0px' }" class="item">
                             <div class="image-box">
-                                <img :src="d">
+                                <img :src="d.url">
                             </div>
                             <div class="content">
                               <div class="opt">
+                                <input type="checkbox" name="imgUrls" v-model="imgUrls" :value="d.url" style="float:left;" />
+                                <el-tooltip class="item" effect="dark" content="设为封面" placement="top" v-if="!d.genImg">
+                                  <a href="javascript:void(0);" :index="index" :url="d.url" @click="upCoverBtn"><i class="fa fa-flag" aria-hidden="true"></i></a>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="dark" content="上传中" placement="top" v-else>
+                                  <a>上传中...</a>
+                                </el-tooltip>
                                 <el-tooltip class="item" effect="dark" content="删除图片" placement="top">
-                                  <a href="javascript:void(0);" :url="d" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                  <a href="javascript:void(0);" :url="d.url" :index="index" @click="delDrafImage"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </el-tooltip>
                               </div>
                             </div>
@@ -143,7 +159,10 @@
                         </el-col>
                       </el-row>
                     </div>
-
+                    <div class="description">
+                      <a href="javascript:void(0);" @click="insertEditor" v-if="!genEditorImg">插入至编辑器</a>
+                      <a v-else>上传中...</a>
+                    </div>
                   </el-form-item>
 
                 </el-col>
@@ -156,15 +175,11 @@
                   placeholder="请输入简述"
                   v-model="form.summary">
                 </el-input>
+                <div class="description">* 用于列表页显示,字数不易过多</div>
               </el-form-item>
 
               <el-form-item label="内容" prop="content">
-                <el-input
-                  type="textarea"
-                  :rows="10"
-                  placeholder="请输入内容"
-                  v-model="form.content">
-                </el-input>
+                <mavon-editor ref="mavonEditor" :ishljs="false" v-model="form.content" id="editor" @imgAdd="$imgAdd" @imgDel="$imgDel" ></mavon-editor>
               </el-form-item>
 
               <div class="form-btn">
@@ -184,13 +199,18 @@
 </template>
 
 <script>
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+import axios from 'axios'
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
+import d3in from 'assets/js/d3in'
 import typeData from '@/config'
 export default {
   name: 'admin_award_case_submit',
   components: {
-    vMenu
+    vMenu,
+    mavonEditor
   },
   data () {
     return {
@@ -198,6 +218,7 @@ export default {
       itemMode: '添加奖项案例',
       isLoading: false,
       isLoadingBtn: false,
+      content_file: [],
       uploadUrl: '',
       uploadParam: {
         'token': '',
@@ -221,6 +242,7 @@ export default {
         title: '',
         content: '',
         cover_id: '',
+        tags: '',
         url: ''
       },
       ruleForm: {
@@ -230,10 +252,21 @@ export default {
         title: [
           { required: true, message: '请添写标题', trigger: 'blur' }
         ],
+        summary: [
+          { required: true, message: '请添写简述内容', trigger: 'blur' }
+        ],
         time_at: [
           { required: true, message: '请添写获奖时间', trigger: 'blur' }
         ]
       },
+      // 上一页信息
+      beforeRoute: {
+        name: null,
+        query: {}
+      },
+      genEditorImg: false,
+      imgUrls: [],
+      genImgList: [],
       msg: ''
     }
   },
@@ -256,6 +289,11 @@ export default {
             content: that.form.content,
             url: that.form.url
           }
+
+          if (that.form.tags) {
+            row.tags = that.form.tags.split(',')
+          }
+
           row.cover_id = that.coverId
           var method = null
 
@@ -273,7 +311,12 @@ export default {
           .then (function(response) {
             if (response.data.meta.status_code === 200) {
               that.$message.success('提交成功！')
-              that.$router.push({name: 'adminAwardCaseList'})
+              // 跳转到上一页
+              if (that.beforeRoute.name) {
+                that.$router.push({name: that.beforeRoute.name, query: that.beforeRoute.query})
+              } else {
+                that.$router.push({name: 'adminAwardCaseList'})
+              }
               return false
             } else {
               that.$message.error(response.data.meta.message)
@@ -352,6 +395,90 @@ export default {
       // var index = event.currentTarget.getAttribute('index')
       this.coverId = id
     },
+    // 上传封面图
+    upCoverBtn (event) {
+      var self = this
+      var url = event.currentTarget.getAttribute('url')
+      var index = event.currentTarget.getAttribute('index')
+      // 上传图片
+      self.fileDraftList[index]['genImg'] = true
+      self.$http.get(api.adminAssetUrlUpload, {params: {url: url, type: self.uploadParam['x:type'], target_id: self.uploadParam['x:target_id'], user_id: self.uploadParam['x:user_id']}})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            var item = {
+              name: response.data.data.name,
+              url: response.data.data.middle,
+              edit: false,
+              summary: '',
+              response: {
+                asset_id: response.data.data.id
+              }
+            }
+            self.fileList.push(item)
+            self.coverId = response.data.data.id
+          } else {
+            console.log(response.data)
+          }
+        }
+        self.genImg = false
+      })
+      .catch (function(error) {
+        self.$message({
+          showClose: true,
+          message: error.message,
+          type: 'error'
+        })
+        self.fileDraftList[index]['genImg'] = false
+        return false
+      })
+    },
+    // 一键插入图片到编辑器
+    insertEditor () {
+      if (this.imgUrls.length === 0) {
+        this.$message.error('至少选择一张图片！')
+        return
+      }
+      var self = this
+      self.genEditorImg = true
+      self.uploadParam['x:type'] = 26
+      var upCount = 0
+      for (var i = 0; i < self.imgUrls.length; i++) {
+        var url = self.imgUrls[i]
+        // 上传到七牛
+        self.$http.get(api.adminAssetUrlUpload, {params: {url: url, type: self.uploadParam['x:type'], target_id: self.uploadParam['x:target_id'], user_id: self.uploadParam['x:user_id']}})
+        .then (function(response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              var url = response.data.data.big
+              self.genImgList.push(url)
+            } else {
+              console.log(response.data)
+            }
+          }
+          upCount += 1
+        })
+        .catch (function(error) {
+          upCount += 1
+          self.$message.error(error.message)
+        })
+      }
+      var intObj = setInterval(function() {
+        if (upCount >= self.imgUrls.length) {
+          // 插入编辑器
+          for (var j = 0; j < self.genImgList.length; j++) {
+            var content = '![](' + self.genImgList[j] + ')\n'
+            var editor = window.document.getElementById('editor').querySelector('textarea')
+            d3in.insertAtCursor(editor, content)
+            console.log(self.genImgList[j])
+          }
+          self.genEditorImg = false
+          upCount = 0
+          self.genImgList = []
+          clearInterval(intObj)
+        }
+      }, 3000)
+    },
     handleRemove(file, fileList) {
       if (file === null) {
         return false
@@ -409,6 +536,39 @@ export default {
         this.$message.error('上传文件大小不能超过 5MB!')
         return false
       }
+      this.uploadParam['x:type'] = 25
+    },
+    $imgAdd(pos, $file) {
+      this.content_file[pos] = $file
+      const that = this
+
+      var formdata = new FormData()
+      formdata.append('file', $file)
+      that.uploadParam['x:type'] = 26
+      for (var key in that.uploadParam) {
+        formdata.append(key, that.uploadParam[key])
+      }
+      axios
+        .post(that.uploadUrl, formdata, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(function(response) {
+          if (response.data.success === 1) {
+            // that.$refs.mavonEditor.$imgUpdateByFilename(pos, './aaa')
+            that.$refs.mavonEditor.$img2Url(pos, response.data.big)
+          } else {
+            that.$message.error('上传失败！')
+          }
+          console.log(response)
+        })
+        .catch(function(error) {
+          that.$message.error(error)
+        })
+    },
+    $imgDel(pos) {
+      delete this.content_file[pos]
     }
   },
   computed: {
@@ -439,6 +599,10 @@ export default {
             that.coverId = that.form.cover_id
           }
 
+          if (that.form.tags) {
+            that.form.tags = that.form.tags.join(',')
+          }
+
           if (response.data.data.images) {
             var files = []
             for (var i = 0; i < response.data.data.images.length; i++) {
@@ -458,7 +622,10 @@ export default {
 
           // 图片草稿
           if (response.data.data.images_url) {
-            that.fileDraftList = response.data.data.images_url.split('@@')
+            var arr = response.data.data.images_url.split('@@')
+            for (var k = 0; k < arr.length; k++) {
+              that.fileDraftList.push({url: arr[k], genImg: false})
+            }
           }
         }
       })
@@ -494,6 +661,14 @@ export default {
     '$route' (to, from) {
       // 对路由变化作出响应...
     }
+  },
+  // 页面进入前获取路由信息
+  beforeRouteEnter (to, from, next) {
+    // 在导航完成前获取数据
+    next (vm => {
+      vm.beforeRoute.name = from.name
+      vm.beforeRoute.query = from.query
+    })
   }
 }
 </script>

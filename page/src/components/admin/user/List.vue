@@ -7,11 +7,46 @@
       <el-col :span="20">
         <div class="content">
 
-        <div class="admin-menu-sub">
-          <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+          <div class="admin-menu-sub">
+            <div class="admin-menu-sub-list">
+              <router-link :to="{name: 'adminUserList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            </div>
           </div>
-        </div>
+
+          <div class="admin-search-form">
+            <el-form :inline="true" :model="query">
+              <el-form-item>
+                <el-select v-model="query.role_id" placeholder="权限查询..." size="small">
+                  <el-option label="全部" value="0"></el-option>
+                  <el-option label="用户" value="1"></el-option>
+                  <el-option label="编辑" value="5"></el-option>
+                  <el-option label="管理员" value="10"></el-option>
+                  <el-option label="管理员plus" value="15"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-select v-model="query.type" placeholder="目标人群..." size="small">
+                  <el-option label="全部" value="0"></el-option>
+                  <el-option label="需求方" value="1"></el-option>
+                  <el-option label="设计公司" value="2"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="query.val" placeholder="Search..." size="small"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-select v-model="query.evt" placeholder="选择条件..." size="small">
+                  <el-option label="ID" value="1"></el-option>
+                  <el-option label="手机号" value="2"></el-option>
+                  <el-option label="昵称" value="3"></el-option>
+                  <el-option label="邮箱" value="4"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
 
           <el-table
             :data="tableData"
@@ -66,8 +101,9 @@
               label="权限">
                 <template scope="scope">
                   <p v-if="scope.row.role_id === 0">用户</p>
-                  <p v-else-if="scope.row.role_id === 10">观察员</p>
-                  <p v-else-if="scope.row.role_id === 15">管理员</p>
+                  <p v-else-if="scope.row.role_id === 5">编辑</p>
+                  <p v-else-if="scope.row.role_id === 10">管理员</p>
+                  <p v-else-if="scope.row.role_id === 15">管理员Plus</p>
                   <p v-else-if="scope.row.role_id === 20">超级管理员</p>
                   <p v-else>--</p>
                 </template>
@@ -109,7 +145,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
+            :page-sizes="[50, 100, 500]"
             :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
@@ -128,8 +164,9 @@
       <div>
         <el-radio-group v-model.number="roleId">
           <el-radio :label="0">用户</el-radio>
-          <el-radio :label="10">观察员</el-radio>
-          <el-radio :label="15">管理员</el-radio>
+          <el-radio :label="5">编辑</el-radio>
+          <el-radio :label="10">管理员</el-radio>
+          <el-radio :label="15">管理员plus</el-radio>
         </el-radio-group>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -160,10 +197,13 @@ export default {
       roleId: 0,
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
-        type: 0,
+        type: '',
+        evt: '',
+        val: '',
+        role_id: '',
 
         test: null
       },
@@ -171,6 +211,11 @@ export default {
     }
   },
   methods: {
+    // 查询
+    onSearch() {
+      this.query.page = 1
+      this.$router.push({name: this.$route.name, query: this.query})
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -180,7 +225,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.query.page = val
-      this.$router.push({name: this.$route.name, query: {page: val}})
+      this.$router.push({name: this.$route.name, query: this.query})
     },
     setRoleBtn(index, item) {
       this.$refs.roleIndex.value = index
@@ -228,14 +273,17 @@ export default {
     loadList() {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
-      self.query.sort = this.$route.query.sort || 1
-      self.query.type = this.$route.query.type || 0
+      self.query.sort = this.$route.query.sort || 0
+      self.query.type = this.$route.query.type || ''
+      self.query.evt = this.$route.query.evt || ''
+      self.query.val = this.$route.query.val || ''
+      self.query.role_id = this.$route.query.role_id || ''
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
       self.isLoading = true
-      self.$http.get(api.adminUserLists, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
+      self.$http.get(api.adminUserLists, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, evt: self.query.evt, val: self.query.val, role_id: self.query.role_id}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []

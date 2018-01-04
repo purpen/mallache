@@ -22,7 +22,9 @@ class UserActionController extends BaseController
      * @apiParam {int} per_page   每页数量 （默认：10）
      * @apiParam {int} sort 排序：0.正序；1.倒序；（默认：倒序）；
      * @apiParam {int} status 状态：；-1：禁用；0.激活;
-     * @apiParam {int} type 1.需求公司；2.设计公司;
+     * @apiParam {int} type 0.全部；1.需求公司；2.设计公司;
+     * @apiParam {int} evt 查询条件：1.ID；2.手机号；3.昵称；4.邮箱；
+     * @apiParam {string} val 查询值
      * @apiParam {int} role_id  角色：0.用户; 10.管理员admin； 15:管理员admin_plus  20：超级管理员root
      *
      * @apiSuccessExample 成功响应:
@@ -56,26 +58,53 @@ class UserActionController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = in_array($request->input('status'), [0,-1]) ? $request->input('status') : null;
         $role_id = $request->input('role_id') ? $request->input('role_id') : null;
-        $type = in_array($request->input('type'), [1,2]) ? $request->input('type') : null;
+        $type = $request->input('type') ? (int)$request->input('type') : 0;
+        $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
 
-        $user = User::query();
+        $query = User::query();
 
         if($status !== null){
-            $user->where('status', (int)$status);
+            $query->where('status', (int)$status);
         }
         if($role_id !== null){
-            $user->where('role_id', (int)$role_id);
+            $query->where('role_id', (int)$role_id);
         }
-        if($type !== null){
-            $user->where('type', (int)$type);
-        }
-        if($request->input('sort') === 0){
-            $sort = 'asc';
-        }else{
-            $sort = 'desc';
+        if($type){
+            $query->where('type', (int)$type);
         }
 
-        $lists = $user->orderBy('id', $sort)->paginate($per_page);
+        if ($val) {
+            switch($evt) {
+                case 1:
+                    $query->where('id', (int)$val);
+                    break;
+                case 2:
+                    $query->where('account', $val);
+                    break;
+                case 3:
+                    $query->where('username', $val);
+                    break;
+                case 4:
+                    $query->where('email', $val);
+                    break;
+                default:
+                    $query->where('id', (int)$val);
+            }
+        }
+
+        //排序
+        switch ($sort){
+            case 0:
+                $query->orderBy('id', 'desc');
+                break;
+            case 1:
+                $query->orderBy('id', 'asc');
+                break;
+        }
+
+        $lists = $query->paginate($per_page);
 
         return $this->response->paginator($lists,new UserTransformer)->setMeta($this->apiMeta());
     }

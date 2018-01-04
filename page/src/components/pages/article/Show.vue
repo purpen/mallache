@@ -64,7 +64,7 @@ export default {
     let id = this.$route.params.id
     if (!id) {
       that.$message.error('文章不存在！')
-      that.$route.replace({ name: 'home' })
+      that.$router.replace({ name: 'home' })
       return false
     }
     const that = this
@@ -117,7 +117,7 @@ export default {
           }
         } else {
           that.$message.error(response.data.meta.message)
-          that.$route.replace({ name: 'home' })
+          that.$router.replace({ name: 'home' })
         }
       })
       .catch(function(error) {

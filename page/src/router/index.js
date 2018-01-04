@@ -33,9 +33,9 @@ const routes = [
     path: '/test',
     name: 'test',
     meta: {
-      title: '首页'
+      title: '测试'
     },
-    component: require('@/components/pages/home/Home')
+    component: require('@/components/Test')
   },
   {
     path: '/about',
@@ -64,11 +64,34 @@ const routes = [
   {
     path: '/stuff',
     name: 'stuff',
+    redirect: '/design_case/list'
+  },
+  {
+    path: '/design_case/general_list',
+    name: 'designGeneralList',
     meta: {
-      title: '灵感',
+      title: '公司案例',
       requireAuth: false
     },
-    component: require('@/components/pages/home/Stuff')
+    component: require('@/components/pages/design_case/GeneralList')
+  },
+  {
+    path: '/design_case/awards_list',
+    name: 'designAwardsList',
+    meta: {
+      title: '设计奖项',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsList')
+  },
+  {
+    path: '/design_case/awards_show/:id',
+    name: 'designAwardsShow',
+    meta: {
+      title: '案例详情',
+      requireAuth: false
+    },
+    component: require('@/components/pages/design_case/AwardsShow')
   },
   // 联系我们
   {
@@ -177,7 +200,7 @@ const routes = [
       requireAuth: true,
       title: '上传作品'
     },
-    component: require('@/components/pages/v_center/match_case/uploadwork')
+    component: require('@/components/pages/v_center/match_case/UploadWork')
   },
   // 企业招募
   {
@@ -532,13 +555,23 @@ const routes = [
   },
   // 消息列表
   {
-    path: '/vcenter/message/list',
+    path: '/vcenter/message',
     name: 'vcenterMessageList',
     meta: {
       title: '消息列表',
       requireAuth: true
     },
     component: require('@/components/pages/v_center/message/List')
+  },
+  // 系统通知
+  {
+    path: '/vcenter/notice',
+    name: 'systemMessageList',
+    meta: {
+      title: '系统通知',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/message/SystemMessageList')
   },
   // 作品列表
   {
@@ -550,15 +583,15 @@ const routes = [
     },
     component: require('@/components/pages/v_center/design_case/List')
   },
-  // 参赛作品
+  // 提交作品
   {
     path: '/vcenter/match_case',
     name: 'vcenterMatchCaseList',
     meta: {
-      title: '参赛作品',
+      title: '提交作品',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/match_case/match_case')
+    component: require('@/components/pages/v_center/match_case/MatchCase')
   },
   // 作品详情
   {
@@ -821,7 +854,7 @@ const routes = [
     component: require('@/components/pages/v_center/Tools/trendReport')
   },
   {
-    path: '/vcenter/trend_report/:id',
+    path: '/vcenter/trend_report/show/:id',
     name: 'trendReportShow',
     meta: {
       title: '趋势/报告',
@@ -835,7 +868,7 @@ const routes = [
     name: 'vcentercommonlySites',
     meta: {
       title: '常用网站',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/commonlySites')
   },
@@ -844,7 +877,7 @@ const routes = [
     path: '/vcenter/exhibition',
     name: 'vcenterExhibition',
     meta: {
-      title: '展览',
+      title: '设计日历',
       requireAuth: true
     },
     component: (resolve) => {
@@ -1197,7 +1230,10 @@ const routes = [
       title: '编辑奖项案例',
       requireAuth: true
     },
-    component: require('@/components/admin/award_case/Submit')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/admin/award_case/Submit'], resolve)
+    }
   },
   // 奖项案例列表
   {

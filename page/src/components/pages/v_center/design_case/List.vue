@@ -6,14 +6,13 @@
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
-          <v-menu-sub></v-menu-sub>
+          <v-menu-sub v-if="false"></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']">
             <div class="form-title" v-if="designCases.length">
-              <span>全部作品案例</span>
+              <span>作品案例</span>
             </div>
 
             <div class="design-case-list" v-loading.body="isLoading">
-
               <el-row :gutter="10">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
@@ -38,9 +37,7 @@
                     </div>
                   </el-card>
                 </el-col>
-
               </el-row>
-
             </div>
             <div class="add blank20">
               <el-button class="is-custom" @click="add" type="primary">
@@ -49,7 +46,6 @@
             </div>
           </div>
         </div>
-
       </el-col>
     </el-row>
   </div>

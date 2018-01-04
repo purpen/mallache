@@ -2,6 +2,12 @@
   <div class="uploads">
     <div class="upload">
       <h2>上传作品</h2>
+      <p class="match-type">类型</p>
+      <el-radio-group class="match" v-model="match" fill="#FF5A5F">
+        <el-radio-button label="羽泉的礼物"></el-radio-button>
+        <el-radio-button label="敬请期待.." disabled></el-radio-button>
+      </el-radio-group>
+
       <el-form label-position="top" :model="form" :rules="rules" class="uploadform" ref="ruleForm">
 
         <el-form-item label="作品标题" prop="title" class="color222">
@@ -42,7 +48,7 @@
                 <div class="content">
                   <p>{{ d.name }}</p>
                   <div class="summary-edit" v-if="d.edit">
-                    <textarea v-model="d.summary">{{ d.summary }}</textarea>
+                    <textarea v-model="d.summary"></textarea>
                   </div>
                   <div class="summary" v-else>
                     <p v-if="d.summary">{{ d.summary }}</p>
@@ -117,12 +123,18 @@
           content: [
             {required: true, message: '请添写作品介绍', trigger: 'blur'}
           ]
-        }
+        },
+        match: '',
+        match_id: 0
       }
     },
     methods: {
       submit (formName) {
         const that = this
+        if (!that.match) {
+          that.$message.error ('必须选择一场比赛!')
+          return false
+        }
         if (!that.coverId) {
           that.$message.error ('必须设置一张封面图!')
           return false
@@ -197,7 +209,7 @@
       },
       uploadProgress(event, file, fileList) {
         this.uploadMsg = '上传中...'
-//        console.log (event)
+        // console.log (event)
       },
       uploadSuccess(response, file, fileList) {
         this.uploadMsg = '格式: jpg/png<br >' + '大小: 小于10MB'
@@ -294,6 +306,7 @@
         })
         return
       }
+      this.match_id = this.$route.params.match_id
       const that = this
       let id = this.$route.params.id
       if (id) {
@@ -335,7 +348,7 @@
       // 获取图片token
       that.$http.get (api.upToken, {})
         .then (function (response) {
-//          console.log (response)
+          // console.log (response)
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
               that.uploadParam['token'] = response.data.data.upToken
@@ -361,6 +374,22 @@
       isCompany() {
         return this.$store.state.event.user.type === 2
       }
+    },
+    watch: {
+      match_id() {
+        switch (this.match_id) {
+          case 1:
+            this.match = '羽泉的礼物'
+            break
+        }
+      },
+      match() {
+        switch (this.match) {
+          case '羽泉的礼物':
+            this.match_id = 1
+            break
+        }
+      }
     }
   }
 </script>
@@ -371,28 +400,40 @@
     background: #FFFFFF;
     border: 1px solid #D2D2D2;
     padding: 0 15px;
-    }
+  }
 
   h2 {
     font-size: 24px;
     color: #222222;
     text-align: center;
     padding: 30px 0 45px;
-    }
+  }
+
+  .match, .match-type {
+    display:block;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+  }
+
+  .match-type {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
 
   .uploadform {
     max-width: 800px;
     margin: 0 auto;
-    }
+  }
 
   .name {
     width: 40%;
-    }
+  }
 
   .upload-pic {
     font-size: 1.6rem;
     padding-bottom: 10px;
-    }
+  }
 
   .buttons {
     max-width: 1180px;
@@ -400,26 +441,26 @@
     padding: 10px 15px;
     border: 1px solid #D2D2D2;
     border-top: none;
-    }
+  }
 
   .cancel, .submit {
     width: 128px;
-    }
+  }
 
   .submit {
     background-color: #FF5A5F;
     border-color: #FF5A5F;
-    }
+  }
 
   .submit:visited, .submit:hover, .submit:active {
     background: #FF4500;
     border-color: #FF4500;
-    }
+  }
 
   .upload-demo {
     position: relative;
     width: 160px;
-    }
+  }
 
   .el-upload__tip {
     text-align: center;
@@ -430,15 +471,21 @@
     margin: 0 auto;
     position: absolute;
     line-height: 1.5;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .upload, .buttons {
+      max-width: 1000px;
     }
+  }
 
   @media screen and (max-width: 767px) {
     .upload, .buttons {
       border: none
-      }
+    }
 
     .upload-demo {
       width: 100%;
-      }
     }
+  }
 </style>

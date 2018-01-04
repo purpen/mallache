@@ -10,6 +10,8 @@
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
             <router-link :to="{name: 'adminAwardCaseList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminAwardCaseList', query: {status: 1}}" active-class="false" :class="{'item': true, 'is-active': menuType == 1}">启用</router-link>
+            <router-link :to="{name: 'adminAwardCaseList', query: {status: -1}}" active-class="false" :class="{'item': true, 'is-active': menuType == -1}">禁用</router-link>
           </div>
           <div class="fr">
             <router-link :to="{name: 'adminAwardCaseAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
@@ -172,7 +174,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.query.page = val
-      this.$router.push({name: this.$route.name, query: {page: val}})
+      this.$router.push({name: this.$route.name, query: this.query})
     },
     // 删除弹层
     removeBtn (index, obj) {
@@ -242,8 +244,8 @@ export default {
       self.query.type = this.$route.query.type || 0
       self.query.status = this.$route.query.status || 0
       this.menuType = 0
-      if (self.query.type) {
-        this.menuType = parseInt(self.query.type)
+      if (self.query.status) {
+        this.menuType = parseInt(self.query.status)
       }
       self.isLoading = true
       self.$http.get(api.adminAwardCaseList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, status: self.query.status}})

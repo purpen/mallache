@@ -4,27 +4,30 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
-        <div class="right-content" v-if="itemList.length">
+      <el-col :span="isMob ? 24 : 20"
+        v-loading="isLoading">
+        <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box">
+          <div class="content-box" v-if="itemList.length">
 
-            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)">
+            <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
                 <p class="read" v-if="d.status === 0"><i class="alert"></i></p>
+                <p class="notice">项目提醒
+                  <span class="time">{{ d.created_at }}</span>
+                </p>
                 <p class="title">{{ d.title }}</p>
                 <p class="icon">
                   <i v-if="d.is_show" class="el-icon-arrow-up"></i>
                   <i v-else class="el-icon-arrow-down"></i>
                 </p>
-                <p class="time">{{ d.created_at }}</p>
               </div>
-              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1"
-                                                                       @click.stop="redirect(d)">查看</a></p>
+              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
             </div>
           </div>
 
           <el-pagination
+            v-if="itemList.length"
             class="pagination"
             @current-change="handleCurrentChange"
             :current-page="query.page"
@@ -34,8 +37,8 @@
           </el-pagination>
 
         </div>
-        <div class="empty" v-if="!isEmpty"></div>
-        <p v-if="!isEmpty" class="noMsg">您还没收到任何消息～</p>
+        <div class="empty" v-if="isEmpty === true"></div>
+        <p v-if="isEmpty === true" class="noMsg">您还没收到任何消息～</p>
       </el-col>
     </el-row>
   </div>
@@ -49,7 +52,7 @@
   import '@/assets/js/date_format'
 
   export default {
-    name: 'vcenter_message_list',
+    name: 'VcenterMessageList',
     components: {
       vMenu,
       vMenuSub
@@ -60,14 +63,14 @@
         itemList: [],
         query: {
           page: 1,
-          pageSize: 10,
+          pageSize: 50,
           totalCount: 0,
           sort: 1,
           type: 0,
           test: null
         },
         userId: this.$store.state.event.user.id,
-        isEmpty: false
+        isEmpty: ''
       }
     },
     methods: {
@@ -88,6 +91,7 @@
           }
         })
           .then(function (response) {
+            self.isLoading = false
             if (response.data.meta.status_code === 200) {
               let data = response.data.data
               self.query.totalCount = response.data.meta.pagination.total
@@ -98,14 +102,15 @@
               }
               self.itemList = data
               if (self.itemList.length) {
-                self.isEmpty = true
-              } else {
                 self.isEmpty = false
+              } else {
+                self.isEmpty = true
               }
 //              console.log(data)
             }
           })
           .catch(function (error) {
+            self.isLoading = false
             self.$message.error(error.message)
           })
       },
@@ -156,7 +161,7 @@
       }
     },
     created: function () {
-      let type = this.$route.query.type
+      let type = this.$route.query.page
       if (type) {
         type = parseInt(type)
       } else {
@@ -167,7 +172,7 @@
     watch: {
       '$route' (to, from) {
         // 对路由变化作出响应...
-        let type = this.$route.query.type
+        let type = this.$route.query.page
         if (type) {
           type = parseInt(type)
         } else {
@@ -193,7 +198,12 @@
     padding: 10px 20px 10px;
     cursor: pointer;
     min-height: 30px;
-    line-height: 30px
+    line-height: 30px;
+    overflow: hidden;
+  }
+
+  .content-box .item:last-child {
+    border-bottom: none;
   }
 
   .content-box .item:hover {
@@ -201,7 +211,7 @@
   }
 
   .item p {
-    line-height: 30px
+    line-height: 24px
   }
 
   .item .banner2 {
@@ -215,24 +225,31 @@
   }
 
   .item p.title {
+    font-size: 15px;
+    font-weight: 600;
     float: left;
     color: #222;
   }
 
-  .item p.time {
-    color: #666;
-    font-size: 1.2rem;
-    float: right;
-    margin: 0 30px;
+  .item p.notice {
+    color: #999;
+    font-size: 12px;
   }
+
+  .item span.time {
+    margin-left: 15px;
+  }
+
 
   .item p.icon {
     float: right;
   }
 
   .item p.content {
+    padding-top: 10px;
+    font-size: 14px;
     clear: both;
-    line-height: 3;
+    line-height: 18px;
     color: #666;
   }
 
@@ -246,7 +263,7 @@
     border-radius: 50%;
     width: 7px;
     height: 7px;
-    margin-top: 11px;
+    margin-top: 9px;
     margin-left: -13px;
     position: absolute;;
   }
@@ -271,6 +288,10 @@
   .noMsg {
     text-align: center;
     color: #969696;
+  }
+
+  .content a {
+    color: #FF5A5F
   }
 
   @media screen and (max-width: 350px) {

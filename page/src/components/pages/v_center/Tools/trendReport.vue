@@ -7,15 +7,15 @@
         <ToolsMenu v-if="menuStatus === 'tools' && isMob"
                    currentName="trendReport"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20">
-          <div class="report">
+          <div :class="['report', {isMob : 'm-report'}]">
             <el-row :gutter="20">
-              <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in reportList" :key="index">
-                <router-link to="" class="item">
+              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index">
+                <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
                   <div class="picture"
                        :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                     {{ele.cover.summary}}
                   </div>
-                  <article class="item-boty clearfix">
+                  <article class="item-body clearfix">
                     <p class="title">{{ele.title}}</p>
                     <p class="view fl">{{ele.hits}}</p>
                     <p class="date fl">{{ele.created_at}}</p>
@@ -24,13 +24,14 @@
               </el-col>
             </el-row>
             <div class="pager">
-              <el-pagination class="pagination"
-                             :current-page="pagination.current_page"
-                             :page-size="pagination.per_page"
-                             :total="pagination.total" :page-count="pagination.total_pages"
-                             layout="prev, pager, next, total"
-                             @current-change="handleCurrentChange">
-                <!--@current-change="handleCurrentChange"-->
+              <el-pagination
+                v-if="reportList.lgnth"
+                class="pagination"
+                :current-page="pagination.current_page"
+                :page-size="pagination.per_page"
+                :total="pagination.total" :page-count="pagination.total_pages"
+                layout="prev, pager, next, total"
+                @current-change="handleCurrentChange">
               </el-pagination>
             </div>
             <div class="no-report" v-if="noReport">
@@ -47,13 +48,11 @@
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
-  import pdf from 'vue-pdf'
   export default {
     name: 'trendReport',
     components: {
       vMenu,
-      ToolsMenu,
-      pdf
+      ToolsMenu
     },
     data () {
       return {
@@ -78,13 +77,12 @@
             per_page: this.pagination.per_page
           }
         }).then((res) => {
-          console.log(res.data.data)
+          //          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             let meta = res.data.meta
             if (res.data.data.length) {
               for (let i of res.data.data) {
-                let date = new Date(i.created_at * 1000)
-                i.created_at = date.toLocaleDateString() + ' ' + date.getHours() + ':' + date.getMinutes()
+                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日 hh:mm')
               }
               this.reportList = res.data.data
               this.pagination.total = meta.pagination.total
@@ -92,6 +90,8 @@
             } else {
               this.noReport = true
             }
+          } else {
+            this.$message.error(res.data.meta.message)
           }
         }).catch((err) => {
           console.error(err)
@@ -122,16 +122,27 @@
   }
 
   .item {
+    margin-bottom: 20px;
     border: 1px solid #D2D2D2;
-    border-radius: 4px 4px 0 0;
+    border-radius: 4px;
     display: block;
     height: 100%;
+    transition: all ease .3s;
+  }
+
+  .item:hover {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
   }
 
   .report {
     min-height: 100%;
     position: relative;
-    padding-bottom: 50px
+    /* padding-bottom: 50px */
+  }
+
+  .m-report {
+    padding-top: 20px;
   }
 
   .no-report {
@@ -161,22 +172,24 @@
 
   .picture {
     height: 180px;
+    border-radius: 4px 4px 0 0;
   }
 
-  .item-boty {
+  .item-body {
     overflow: hidden;
     padding: 10px 10px 20px;
+    border-top: 1px solid #D2D2D2;
+    border-radius: 0 0 4px 4px;
   }
 
-  .item-boty .title {
-    font-size: 18px;
+  .item-body .title {
+    font-size: 15px;
     line-height: 1.4;
     margin: 10px 0;
-    color: #222222;
-    font-weight: 600;
+    /* color: #222222; */
   }
 
-  .item-boty .view {
+  .item-body .view {
     font-size: 12px;
     line-height: 16px;
     text-indent: 26px;
@@ -184,11 +197,11 @@
     font-weight: normal;
     background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat left;
     background-size: 20px;
-    padding-right: 40px;
+    padding-right: 24px;
     margin-bottom: 10px;
   }
 
-  .item-boty .date {
+  .item-body .date {
     font-size: 12px;
     line-height: 16px;
     text-indent: 26px;

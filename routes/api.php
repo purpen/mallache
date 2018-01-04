@@ -91,6 +91,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     // 列表
     $api->get('/awardCase/list', 'AwardCaseController@lists');
 
+
+    /**
+     * block
+     */
+    $api->get('/block', 'BlockController@show');
+
+
     /**
      * 需验证用户token
      */

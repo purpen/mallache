@@ -155,6 +155,25 @@ return [
         '/admin/notice/list',
         //启用禁用
         '/admin/notice/changeStatus',
+
+        /**
+         * url上传七牛
+         */
+        //七牛直接上传
+        '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
+
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+       '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 
     /**
@@ -305,6 +324,24 @@ return [
         '/admin/notice/list',
         //启用禁用
         '/admin/notice/changeStatus',
+
+        /**
+         * url上传七牛
+         */
+        //七牛直接上传
+        '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+        '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 
     /**
@@ -414,5 +451,24 @@ return [
         //启用禁用
         '/admin/notice/changeStatus',
 
+
+        /**
+         * url上传七牛
+         */
+        //直接上传七牛
+        '/admin/urlUpload',
+        //附件列表
+        '/admin/assets',
+
+
+        /**
+         * block
+         */
+        // 保存 更新 详情 删除
+        '/admin/block',
+        // 列表
+        '/admin/block/list',
+        //启用禁用
+        '/admin/block/changeStatus',
     ],
 ];

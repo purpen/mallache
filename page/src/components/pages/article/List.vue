@@ -11,7 +11,6 @@
     </div>
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
-
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="item">
             <div class="image-box">
@@ -36,7 +35,7 @@
   </div>
 
   <div class="pager">
-    <el-pagination class="pagination" :small="BMob" @size-change="handleSizeChange"
+    <el-pagination v-if="itemList.length" class="pagination" :small="BMob" @size-change="handleSizeChange"
                    @current-change="handleCurrentChange" :current-page="query.page" :page-size="query.pageSize"
                    layout="total, prev, pager, next, jumper" :total="query.totalCount">
     </el-pagination>
@@ -214,7 +213,7 @@
 
   .content a {
     color: #222;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .des {

@@ -15,6 +15,7 @@ class AwardCaseTransformer extends TransformerAbstract
             'category_id' => $awardCase->category_id,
             'category_value' => $awardCase->category_value,
             'url' => $awardCase->url,
+            'tags' => $awardCase->tags,
             'title' => $awardCase->title,
             'user_id' => $awardCase->user_id,
             'cover_id' => $awardCase->cover_id,
