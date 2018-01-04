@@ -440,7 +440,7 @@ class ItemMessageListener
     // 短信发送内容拼接
     protected function phoneMessage($content)
     {
-        return config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电'. config('constant.notice_phone') .'。';
+        return config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 '. config('constant.notice_phone') .'。';
 
 //        return '您好，您在铟果平台的项目最新状态已更新为“' . $content . '”，请您及时登录铟果官网查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电'. config('constant.notice_phone') .'。';
     }
