@@ -12,9 +12,9 @@
             <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
           </el-input>
 
-          <el-row class="tips" :gutter="10">
-            <el-col v-for="(ele, index) in 14" :key="index" :span="isMob ? 6 : 4">
-              <a @click="tipClick(ele)" class="tips-item">{{ele}}</a>
+          <el-row class="tags" :gutter="10">
+            <el-col v-for="(ele, index) in tags" :key="index" :span="isMob ? 8 : 4">
+              <a @click="tipClick(ele)" class="tags-item">{{ele}}</a>
             </el-col>
           </el-row>
 
@@ -70,6 +70,7 @@
         msg: '图片素材',
         keyword: '',
         imgList: [],
+        tags: [],
         isEmpty: false,
         isLoading: false,
         isOk: true,
@@ -84,12 +85,16 @@
       }
     },
     created () {
+      this.getBlock()
       let docWidth = document.body.offsetWidth
       if (docWidth < 750) {
         this.picWidth = 200
       }
-      if (docWidth < 630) {
-        this.picWidth = 160
+      if (docWidth < 500) {
+        this.picWidth = 184
+      }
+      if (docWidth < 400) {
+        this.picWidth = 165
       }
       if (docWidth < 350) {
         this.picWidth = 140
@@ -209,6 +214,19 @@
       tipClick (e) {
         this.keyword = e
         this.getImgList(e)
+      },
+      getBlock () {
+        this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
+        .then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.tags = res.data.data.mark.split(',')
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+        })
       }
     },
     computed: {
@@ -279,12 +297,12 @@
     background-size: 100px;
   }
 
-  .tips {
+  .tags {
     padding: 20px 0 0 14px;
     margin-bottom: -15px;
   }
 
-  .tips .tips-item {
+  .tags .tags-item {
     display: block;
     border: 1px solid #DCDCDC;
     border-radius: 4px;
@@ -297,7 +315,7 @@
     transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.3s all;
   }
 
-  .tips .tips-item:hover {
+  .tags .tags-item:hover {
     background: #FF5A5F;
     color:#fff;
   }
