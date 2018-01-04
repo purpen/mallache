@@ -4,11 +4,10 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20"
-        v-loading="isLoading">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-if="itemList.length">
+          <div class="content-box" v-if="itemList.length" v-loading="isLoading">
 
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">

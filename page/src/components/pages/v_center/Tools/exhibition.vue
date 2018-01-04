@@ -21,6 +21,7 @@
 </template>
 <script>
   import api from '@/api/api'
+  // import axios from 'axios'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
@@ -49,42 +50,55 @@
       }
     },
     created () {
-      this.getDate()
     },
     methods: {
       getDate (date) {
         if (date) {
           let arr = date.match(/\d+/g)
           if (arr.length > 2) {
-            var date2 = arr.splice(2, arr.length).join('-')
+            var date1 = arr.splice(0, 2).join('-')
+            var date2 = arr.splice(0, 2).join('-')
           }
           date = arr.join('-')
         }
         this.loading = true
         let method = api.dateOfAwardMonth
-        this.$http.get(method, {params: {yearMonth: date}}).then((res) => {
-          this.loading = false
-          if (res.data.meta.status_code === 200) {
-            this.events = this.addType (res.data.data)
-            if (date2) {
-              this.$http.get(method, {params: {yearMonth: date2}}).then((res) => {
-                if (res.data.meta.status_code === 200) {
-                  this.events.concat = this.events.concat(this.addType (res.data.data))
-                }
-              })
-              .catch((err) => {
-                console.error(err)
-              })
+        if (date1 && date2) {
+          Promise.all([ // 显示周历时可能出现 12-31 -- 1,6 获取两个月的信息
+            this.$http.get(method, {params: {yearMonth: date1}}),
+            this.$http.get(method, {params: {yearMonth: date2}})])
+            .then(([res1, res2]) => {
+              this.loading = false
+              if (res1.data.meta.status_code === 200) {
+                this.events = this.unique(this.events.concat(this.addType (res1.data.data)))
+              } else {
+                this.$message.error(res1.data.meta.message)
+              }
+              if (res2.data.meta.status_code === 200) {
+                this.events = this.unique(this.events.concat(this.addType (res2.data.data)))
+              } else {
+                this.$message.error(res2.data.meta.message)
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+            })
+        } else {
+          this.$http.get(method, {params: {yearMonth: date}})
+          .then((res) => {
+            this.loading = false
+            if (res.data.meta.status_code === 200) {
+              this.events = this.addType (res.data.data)
+            } else {
+              this.$message.error(res.data.meta.message)
             }
-          } else {
-            this.$message.error(res.data.meta.message)
-          }
-        }).catch((err) => {
-          this.loading = false
-          console.error(err)
-        })
+          }).catch((err) => {
+            this.loading = false
+            console.error(err)
+          })
+        }
       },
-      addType (arr) {
+      addType (arr) { // 修改键名,添加颜色
         let events = []
         if (arr.length) {
           let a = 0
@@ -109,6 +123,7 @@
                 obj.borderColor = '#FF6E73' + this.colorOpacity(a)
                 break
             }
+            obj.id = i.id
             obj.title = i.name
             obj.start = i.start_time
             if (i.end_time) {
@@ -140,6 +155,17 @@
           case 2:
             return '8C'
         }
+      },
+      unique (arr) { // 根据id 去重
+        var result = {}
+        var finalResult = []
+        for (let i of arr) {
+          result[i.id] = i
+        }
+        for (let j in result) {
+          finalResult.push(result[j])
+        }
+        return finalResult
       }
     }
   }

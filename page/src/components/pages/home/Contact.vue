@@ -17,7 +17,7 @@
               <a class="contact">马哲</a>
               <a class="phone" href="tel:15711016577">15711016577</a>
               <a class="tel" href="tel:010-84799327">010-84799327</a>
-              <a class="mail" href="mailto:mazhe@taihuoniao.com">mazhe@taihuoniao.com</a>
+              <a class="mail" href="mailto:products@taihuoniao.com">products@taihuoniao.com</a>
               <a class="addr">北京市 朝阳区 酒仙桥路4号 751北京时尚设计广场 B7栋</a>
             </div>
           </div>

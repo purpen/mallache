@@ -8,8 +8,8 @@
                    currentName="trendReport"></ToolsMenu>
         <el-col :span="isMob ? 24 : 20">
           <div :class="['report', {isMob : 'm-report'}]">
-            <el-row :gutter="20">
-              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index">
+            <el-row :gutter="20" class="report-list">
+              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
                 <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
                   <div class="picture"
                        :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
@@ -121,8 +121,16 @@
     margin-bottom: -30px;
   }
 
-  .item {
+  .report-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .item-cover {
     margin-bottom: 20px;
+  }
+  .item {
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     display: block;
@@ -185,8 +193,11 @@
   .item-body .title {
     font-size: 15px;
     line-height: 1.4;
-    margin: 10px 0;
-    /* color: #222222; */
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .item-body .view {
