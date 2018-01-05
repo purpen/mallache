@@ -543,6 +543,10 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
+        if($item->status != 1){
+            return $this->response->array($this->apiError('项目已发布', 403));
+        }
+
         //验证是否是当前用户对应的项目
         if ($item->user_id !== $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
