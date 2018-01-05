@@ -512,7 +512,7 @@
               } else if (mark === 'branch') {
                 that.form.branch = row.web
                 if (that.form.branch_office > 0) {
-                  that.form.branch = '有, ' + that.form.branch_office + '家'
+                  that.form.branch = that.form.branch_office + '家'
                 } else {
                   that.form.branch = '无'
                 }
@@ -607,7 +607,7 @@
                 }
                 that.form.branch = '无'
                 if (that.form.branch_office > 0) {
-                  that.form.branch = '有, ' + that.form.branch_office + '家'
+                  that.form.branch = that.form.branch_office + '家'
                 }
                 if (response.data.data.logo_image) {
                   that.imageUrl = response.data.data.logo_image.logo
@@ -653,6 +653,10 @@
   .right-content .content-box-m {
     margin: 0;
     padding: 0 15px;
+  }
+
+  .right-content .content-box {
+    padding: 0 20px;
   }
 
   .item {

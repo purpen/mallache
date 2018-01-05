@@ -68,6 +68,7 @@ export default {
     },
     loadList() {
       const self = this
+      self.isLoading = true
       self.$http
         .get(api.designCaseOpenLists, {
           params: { page: self.query.page, per_page: self.query.pageSize }
@@ -89,8 +90,6 @@ export default {
     }
   },
   created: function() {
-    const self = this
-    self.isLoading = true
     this.loadList()
   },
   computed: {
