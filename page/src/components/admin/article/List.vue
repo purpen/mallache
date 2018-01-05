@@ -24,7 +24,7 @@
             <el-table-column prop="id" label="ID" width="60">
             </el-table-column>
             <el-table-column label="封面" width="80">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p><img :src="scope.row.cover_url" width="50" /></p>
               </template>
             </el-table-column>
@@ -39,7 +39,7 @@
             <el-table-column prop="read_amount" label="浏览量" width="60">
             </el-table-column>
             <el-table-column label="状态" width="60">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p v-if="scope.row.status === 1">
                   <el-tag type="success">发布</el-tag>
                 </p>
@@ -51,7 +51,7 @@
             <el-table-column prop="created_at" width="100" label="创建时间">
             </el-table-column>
             <el-table-column width="100" label="操作">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p>
                   <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">取消发布</a>
                   <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">发布</a>

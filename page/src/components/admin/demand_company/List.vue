@@ -57,14 +57,14 @@
             <el-table-column
               label="Logo"
               width="80">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p><img :src="scope.row.logo_url" width="50" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="内容"
               min-width="180">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>全称: {{ scope.row.company_name }}</p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
                   <p>网址: {{ scope.row.company_web }}</p>
@@ -75,7 +75,7 @@
             <el-table-column
               width="120"
               label="创建人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.user">
                     {{ scope.row.user.account }}[{{ scope.row.user_id }}]
                   </p>
@@ -84,7 +84,7 @@
             <el-table-column
               width="80"
               label="是否认证">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>
                   <p v-else-if="scope.row.verify_status === 2"><el-tag type="gray">拒绝</el-tag></p>
                   <p v-else><el-tag type="warning">待认证</el-tag></p>
@@ -99,7 +99,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.verify_status === 0">
                     <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 2)">拒绝</a>
                     <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
