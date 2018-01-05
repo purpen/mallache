@@ -7,7 +7,7 @@
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-if="itemList.length" v-loading="isLoading">
+          <div class="content-box" v-loading="isLoading">
 
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
@@ -186,23 +186,24 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .container {
+    overflow: hidden;
+  }
 
   .right-content .content-box {
     padding: 0;
+    border: none;
   }
 
   .content-box .item {
     position: relative;
-    border-bottom: 1px solid #ccc;
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
     padding: 10px 20px 10px;
     cursor: pointer;
     min-height: 30px;
     line-height: 30px;
     overflow: hidden;
-  }
-
-  .content-box .item:last-child {
-    border-bottom: none;
   }
 
   .content-box .item:hover {

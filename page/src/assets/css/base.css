@@ -41,7 +41,7 @@ body {
 }
 
 .container {
-  overflow: hidden;
+  /* overflow: hidden; */
   margin: 0 auto;
 }
 

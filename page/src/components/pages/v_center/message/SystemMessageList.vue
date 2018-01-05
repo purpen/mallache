@@ -4,11 +4,10 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20"
-      v-loading="isLoading">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-if="itemList.length">
+          <div class="content-box" v-loading="isLoading">
             <div class="item clearfix" v-for="(d, index) in itemList" :key="index">
               <div class="left">
                 <p class="logo"></p>
@@ -62,7 +61,7 @@
     },
     data () {
       return {
-        isLoading: true,
+        isLoading: false,
         itemList: [],
         query: {
           page: 1,
@@ -169,22 +168,23 @@
 </script>
 
 <style scoped>
+  .container {
+    overflow: hidden;
+  }
 
   .right-content .content-box {
     padding: 0;
+    border: none;
   }
 
   .content-box .item {
     position: relative;
-    border-bottom: 1px solid #ccc;
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
     padding: 10px 20px 10px 80px;
     min-height: 30px;
     line-height: 30px;
     cursor: default;
-  }
-
-  .content-box .item:last-child {
-    border-bottom: none;
   }
 
   .content-box .item:hover {

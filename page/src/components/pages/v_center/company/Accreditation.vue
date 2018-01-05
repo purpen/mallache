@@ -7,61 +7,61 @@
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div :class="['content-box', isMob ? 'content-box-m' : '']">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
 
             <div class="form-title">
               <span>企业实名认证</span>
             </div>
 
-            <div class="company-show" v-if="isApply">
+            <div class="company-show">
               <div class="item">
                 <p class="p-key">企业名称</p>
-                <p class="p-val">{{ item.company_name }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.company_name }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">企业证件类型</p>
-                <p class="p-val">{{ item.company_type_val }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.company_type_val }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">统一社会信用代码</p>
-                <p class="p-val">{{ item.registration_number }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.registration_number }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">法人姓名</p>
-                <p class="p-val">{{ item.legal_person }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.legal_person }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">法人证件类型</p>
-                <p class="p-val">{{ item.document_type_val }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.document_type_val }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">证件号码</p>
-                <p class="p-val">{{ item.document_number }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.document_number }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">联系人</p>
-                <p class="p-val">{{ item.contact_name }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.contact_name }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">职位</p>
-                <p class="p-val">{{ item.position }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.position }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">手机</p>
-                <p class="p-val">{{ item.phone }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.phone }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">邮箱</p>
-                <p class="p-val">{{ item.email }}</p>
+                <p  v-if="isApply" class="p-val">{{ item.email }}</p>
               </div>
 
 
@@ -117,6 +117,7 @@
     },
     data () {
       return {
+        isLoading: false,
         isReady: false,
         isApply: false,
         userId: this.$store.state.event.user.id,
@@ -126,6 +127,7 @@
     },
     methods: {},
     created: function () {
+      this.isLoading = true
       var uType = this.$store.state.event.user.type
       // 如果是需求公司，跳到设计公司
       if (uType !== 2) {
@@ -135,6 +137,7 @@
       const that = this
       that.$http.get(api.designCompany, {})
         .then(function (response) {
+          that.isLoading = false
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
               that.item = response.data.data
@@ -146,15 +149,17 @@
             }
           } else {
             that.isReady = true
+            that.message.error(response.data.meta.message)
           }
         })
         .catch(function (error) {
+          that.isLoading = false
           that.$message({
             showClose: true,
             message: error.message,
             type: 'error'
           })
-          console.log(error.message)
+          console.error(error.message)
           return false
         })
     },

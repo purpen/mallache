@@ -6,7 +6,7 @@
         <v-menu currentName="veerImage"
                 v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="veerImage"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
+        <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
           <h2 v-if="!isMob">{{msg}}</h2>
           <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
             <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>

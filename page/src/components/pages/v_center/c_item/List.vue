@@ -7,7 +7,7 @@
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
         <div class="loading"></div>
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]"  v-loading.body="isLoading">
 
           <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
@@ -334,6 +334,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .container {
+    overflow: hidden;
+  }
   .content-item-box-m {
     margin: 15px 15px 0;
   }

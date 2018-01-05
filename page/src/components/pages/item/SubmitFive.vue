@@ -25,7 +25,7 @@
             </el-table-column>
             <el-table-column
               label="客户添写信息">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <div v-if="scope.row.key === '相关附件'">
                   <p v-for="(d, index) in scope.row.image" :key="index"><a :href="d.file" target="_blank">{{ d.name }}</a></p>
                 </div>

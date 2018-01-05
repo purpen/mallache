@@ -63,7 +63,7 @@
             <el-table-column
               label="内容"
               min-width="140">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p>
                   标题: {{ scope.row.info.name }}
                   类型: {{ scope.row.item.type_label }}
@@ -75,7 +75,7 @@
             <el-table-column
               width="120"
               label="创建人">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p>
                   {{ scope.row.item.user.account }}[{{ scope.row.item.user_id }}]
                 </p>
@@ -98,7 +98,7 @@
             <el-table-column
               width="100"
               label="操作">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <p>
                   <a href="javascript:void(0);" v-show="scope.row.item.status === 2 || scope.row.item.status === 3"
                      @click="handleMatch(scope.$index, scope.row)">匹配公司</a>

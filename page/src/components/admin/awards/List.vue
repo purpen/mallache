@@ -50,7 +50,7 @@
             <el-table-column
               label="开始/结束时间"
               width="100">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>{{ scope.row.start_time }}</p>
                   <p>{{ scope.row.end_time }}</p>
                 </template>
@@ -63,7 +63,7 @@
             <el-table-column
               label="状态"
               width="100">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.status === 1"><el-tag type="success">启用</el-tag></p>
                   <p v-else><el-tag type="gray">禁用</el-tag></p>
                 </template>
@@ -71,7 +71,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>

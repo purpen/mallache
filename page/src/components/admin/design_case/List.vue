@@ -32,14 +32,14 @@
             <el-table-column
               label="封面"
               width="80">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p><img :src="scope.row.cover_url" width="50" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="内容"
               min-width="250">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>标题: <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
                   <p>类型: {{ scope.row.type_label }}</p>
                   <p>服务客户: {{ scope.row.customer }}</p>
@@ -47,7 +47,7 @@
             </el-table-column>
             <el-table-column
               label="创建人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     {{ scope.row.user_id }}
                   </p>
@@ -55,7 +55,7 @@
             </el-table-column>
             <el-table-column
               label="所属公司">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <router-link :to="{name: 'companyShow', params: {id: scope.row.design_company.id}}" target="_blank">{{ scope.row.design_company.company_name }}</router-link>
                   </p>
@@ -65,14 +65,14 @@
             <el-table-column
               prop="verify_status"
               label="是否公开">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.open === 1"><el-tag type="success">是</el-tag></p>
                   <p v-else><el-tag type="gray">否</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
                   <p v-else><el-tag type="gray">禁用</el-tag></p>
                 </template>
@@ -85,7 +85,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.open === 1" @click="setOpen(scope.$index, scope.row, 0)">取消公开</a>
                     <a href="javascript:void(0);" v-else @click="setOpen(scope.$index, scope.row, 1)">公开</a>

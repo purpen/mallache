@@ -8,7 +8,7 @@
         <div class="right-content">
           <v-menu-sub v-if="false"></v-menu-sub>
           <div :class="['content-box', isMob ? 'content-box-m' : '']">
-            <div class="form-title" v-if="designCases.length">
+            <div class="form-title">
               <span>作品案例</span>
             </div>
 

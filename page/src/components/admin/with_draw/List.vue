@@ -33,7 +33,7 @@
             <el-table-column
               label="银行卡信息"
               min-width="200">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     类型：{{ scope.row.account_bank_value }}
                   </p>
@@ -56,7 +56,7 @@
             <el-table-column
               width="60"
               label="创建人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     {{ scope.row.user_id }}
                   </p>
@@ -85,7 +85,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-show="scope.row.status === 0" @click="sureTransfer(scope.$index, scope.row)">确认打款</a>
                   </p>
