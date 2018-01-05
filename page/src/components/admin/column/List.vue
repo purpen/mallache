@@ -226,7 +226,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.cover_url = ''
+            item.cover_url = require ('@/assets/images/df_100x100.png')
             if (item.cover) {
               item.cover_url = item.cover.logo
             }

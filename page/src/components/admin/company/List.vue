@@ -257,7 +257,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.logo_url = ''
+            item.logo_url = require ('@/assets/images/df_100x100.png')
             if (item.logo_image) {
               item.logo_url = item.logo_image.logo
             }
