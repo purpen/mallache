@@ -450,4 +450,8 @@
   .view-msg {
     animation: slowShow 0.3s;
   }
+
+  .container {
+    overflow:visible
+  }
 </style>
