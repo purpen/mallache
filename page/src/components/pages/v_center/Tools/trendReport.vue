@@ -6,7 +6,7 @@
         <v-menu currentName="trendReport" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob"
                    currentName="trendReport"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20">
+        <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
           <div :class="['report', {isMob : 'm-report'}]">
             <el-row :gutter="20" class="report-list">
               <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
@@ -57,6 +57,7 @@
     data () {
       return {
         noReport: false,
+        isLoading: false,
         reportList: [],
         pagination: {
           current_page: 1,
@@ -71,12 +72,14 @@
     },
     methods: {
       getTrendReportList () {
+        this.isLoading = true
         this.$http.get(api.TrendReportList, {
           params: {
             page: this.pagination.current_page,
             per_page: this.pagination.per_page
           }
         }).then((res) => {
+          this.isLoading = false
           //          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             let meta = res.data.meta
@@ -94,6 +97,7 @@
             this.$message.error(res.data.meta.message)
           }
         }).catch((err) => {
+          this.isLoading = false
           console.error(err)
         })
       },

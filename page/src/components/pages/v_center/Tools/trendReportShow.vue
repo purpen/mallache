@@ -15,12 +15,12 @@
               <b class="fl">标签:</b>
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
-            </p>
+            </p>{{load}}
           <div v-if="already" class="pdf swiper-container">
             <pdf :src="pdf.image.file"
               v-loading.body="isLoading"
               @progress="loadedRatio = $event"
-              @page-loaded ="load = $event"
+              @loaded ="load = $event"
               @num-pages="numPages = $event"
               @error="error"
               :rotate="rotate"
@@ -86,8 +86,10 @@
       window.addEventListener('keydown', (e) => {
         if (e.keyCode === 13) {
           this.gotoPage(this.page)
-        } else {
-          return
+        } else if (e.keyCode === 37) {
+          this.prev()
+        } else if (e.keyCode === 39) {
+          this.next()
         }
       })
     },

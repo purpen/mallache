@@ -216,8 +216,10 @@
         this.getImgList(e)
       },
       getBlock () {
+        this.isLoading = true
         this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
         .then((res) => {
+          this.isLoading = false
           if (res.data.meta.status_code === 200) {
             this.tags = res.data.data.code.split(',')
           } else {
@@ -225,6 +227,7 @@
           }
         })
         .catch((err) => {
+          this.isLoading = false
           console.error(err)
         })
       }
