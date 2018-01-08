@@ -306,7 +306,7 @@
   .mHeader {
     margin-top: 0;
     position: absolute;
-    top: 38px;
+    top: 30px;
   }
 
   .header .fr {
