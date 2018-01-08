@@ -167,7 +167,7 @@ p.tigs {
   color: #999999
 }
 p.tigs span {
-  padding-left: 30px;
+  padding-left: 25px;
   color: #C8C8C8;
   margin-left: 5px;
   background: url("../../../assets/images/tools/calendar/Fill@2x.png") no-repeat 3px;
