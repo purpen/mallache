@@ -200,12 +200,12 @@
 </script>
 <style scoped>
   .lists h2 {
-    font-size: 24px;
+    font-size: 20px;
     color: #222222;
     margin: 40px 0 20px;
     text-indent: 30px;
     background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
-    background-size: 25px;
+    background-size: 20px;
   }
 
   .lists h2:first-child {
@@ -214,22 +214,22 @@
 
   .originality h2 {
     background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
-    background-size: 25px;
+    background-size: 20px;
   }
 
   .crowd-funding h2 {
     background: url("../../../../assets/images/tools/commonlySite/Crowd-funding.png") no-repeat left;
-    background-size: 25px;
+    background-size: 20px;
   }
 
   .business-consult h2 {
     background: url("../../../../assets/images/tools/commonlySite/BusinessConsulting.png") no-repeat left;
-    background-size: 25px;
+    background-size: 20px;
   }
 
   .design-awards h2 {
     background: url("../../../../assets/images/tools/commonlySite/designAwards.png") no-repeat left;
-    background-size: 25px;
+    background-size: 20px;
   }
 
   .item {

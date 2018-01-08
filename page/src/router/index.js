@@ -880,9 +880,10 @@ const routes = [
       title: '设计日历',
       requireAuth: true
     },
-    component: (resolve) => {
-      require(['@/components/pages/v_center/Tools/exhibition'], resolve)
-    }
+    // component: (resolve) => {
+    //   require(['@/components/pages/v_center/Tools/exhibition'], resolve)
+    // }
+    component: require('@/components/pages/v_center/Tools/exhibition')
   },
   {
     path: '/vcenter/calendar',

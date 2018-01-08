@@ -27,9 +27,10 @@
   export default {
     name: 'exhibition',
     components: {
-      vCalendar: (resolve) => {
-        require(['@/components/pages/v_center/Tools/calendar/calendar'], resolve)
-      },
+      vCalendar: require('@/components/pages/v_center/Tools/calendar/calendar'),
+      // (resolve) => {
+      //   require(['@/components/pages/v_center/Tools/calendar/calendar'], resolve)
+      // },
       vMenu,
       ToolsMenu
     },
