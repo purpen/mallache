@@ -107,7 +107,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
+            :page-sizes="[50, 100, 500]"
             :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
@@ -154,7 +154,7 @@ export default {
       currentDialogId: '',
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: 0,
