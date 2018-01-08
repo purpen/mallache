@@ -23,6 +23,7 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  cache: true,
   resolve: {
     extensions: ['.js', '.vue', '.json', '.styl'],
     alias: {
@@ -53,7 +54,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: ['babel-loader?cacheDirectory=true'],
         exclude: /node_modules/
       },
       {

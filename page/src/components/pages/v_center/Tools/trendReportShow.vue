@@ -15,7 +15,7 @@
               <b class="fl">标签:</b>
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
-            </p>{{load}}
+            </p>
           <div v-if="already" class="pdf swiper-container">
             <pdf :src="pdf.image.file"
               v-loading.body="isLoading"
@@ -83,13 +83,24 @@
       this.getPDF()
     },
     mounted() {
+      var resizeTimer = null
+      const that = this
       window.addEventListener('keydown', (e) => {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer)
+        }
         if (e.keyCode === 13) {
-          this.gotoPage(this.page)
+          resizeTimer = setTimeout(function() {
+            that.gotoPage(that.page)
+          }, 100)
         } else if (e.keyCode === 37) {
-          this.prev()
+          resizeTimer = setTimeout(function() {
+            that.prev()
+          }, 100)
         } else if (e.keyCode === 39) {
-          this.next()
+          resizeTimer = setTimeout(function() {
+            that.next()
+          }, 100)
         }
       })
     },

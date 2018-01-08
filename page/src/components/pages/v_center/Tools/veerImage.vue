@@ -77,7 +77,7 @@
         picWidth: 240,
         docHeight: 0,
         pagination: {
-          curPage: 1,
+          curPage: 8,
           pageSize: 20,
           total: 0,
           pageCount: 0
@@ -106,22 +106,31 @@
       }
     },
     mounted () {
+      var resizeTimer = null
+      const that = this
       window.addEventListener('keydown', (e) => {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer)
+        }
         if (this.keyword) {
           if (e.keyCode === 13) {
             this.getImgList(this.keyword)
           } else if (e.keyCode === 37) {
-            this.pagination.curPage--
-            if (this.pagination.curPage < 0) {
-              this.pagination.curPage = 0
-            }
-            this.getImgList(this.keyword)
+            resizeTimer = setTimeout(function() {
+              that.pagination.curPage--
+              if (that.pagination.curPage < 0) {
+                that.pagination.curPage = 0
+              }
+              that.getImgList(that.keyword)
+            }, 100)
           } else if (e.keyCode === 39) {
-            this.pagination.curPage++
-            if (this.pagination.curPage > this.pagination.pageCount) {
-              this.pagination.curPage = this.pagination.pageCount
-            }
-            this.getImgList(this.keyword)
+            resizeTimer = setTimeout(function() {
+              that.pagination.curPage++
+              if (that.pagination.curPage > that.pagination.pageCount) {
+                that.pagination.curPage = that.pagination.pageCount
+              }
+              that.getImgList(that.keyword)
+            }, 100)
           }
         } else {
           return false
