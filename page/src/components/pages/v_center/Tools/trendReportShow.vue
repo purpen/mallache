@@ -20,8 +20,8 @@
             <pdf :src="pdf.image.file"
               v-loading.body="isLoading"
               @progress="loadedRatio = $event"
-              @pageLoaded ="load = $event"
-              @numPages="numPages = $event"
+              @page-loaded ="load = $event"
+              @num-pages="numPages = $event"
               @error="error"
               :rotate="rotate"
               :page="page">
