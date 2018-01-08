@@ -1,13 +1,13 @@
 <template>
   <div class="container article-content" v-loading.fullscreen.lock="isFullLoading">
     <div class="blank20"></div>
-    <div class="content">
+    <div class="content" v-if="item">
       <div class="title">
         <h3>{{ item.title }}</h3>
         <p class="from">
           <span class="awards">{{item.category_value}}</span>
           <!-- <span class="category">国际大赛</span> -->
-          <span class="awards-date">{{item.created_at}}</span>
+          <span class="awards-date" v-if="item.created_at">{{item.created_at}}</span>
         </p>
         <p v-if="item.tags.length" class="tigs">
           标签:
@@ -85,12 +85,16 @@ export default {
           /* align right */
 
           that.item['content'] = markdown.render(that.item.content)
-          that.item['created_at'] = that.item.created_at
-            .date_format()
-            .format('yyyy年MM月dd日')
+          if (that.item['created_at']) {
+            that.item['created_at'] = that.item.created_at
+              .date_format()
+              .format('yyyy年MM月dd日')
+          } else {
+            that.item['created_at'] = ''
+          }
           // 添加标题
           document.title = that.item.title + '-铟果'
-
+          console.log(that.item['created_at'])
           that.share.title = that.item.title
           if (that.item.cover) {
             that.share.picUrl = that.item.cover.middle
