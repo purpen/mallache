@@ -18,7 +18,7 @@
                   <article class="item-body clearfix">
                     <p class="title">{{ele.title}}</p>
                     <p class="view fl">{{ele.hits}}</p>
-                    <p class="date fl">{{ele.created_at}}</p>
+                    <p class="date fr">{{ele.created_at}}</p>
                   </article>
                 </router-link>
               </el-col>
@@ -82,7 +82,7 @@
             let meta = res.data.meta
             if (res.data.data.length) {
               for (let i of res.data.data) {
-                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日 hh:mm')
+                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日')
               }
               this.reportList = res.data.data
               this.pagination.total = meta.pagination.total
@@ -185,13 +185,14 @@
 
   .item-body {
     overflow: hidden;
-    padding: 10px 10px 20px;
+    padding: 10px;
     border-top: 1px solid #D2D2D2;
     border-radius: 0 0 4px 4px;
   }
 
   .item-body .title {
     font-size: 15px;
+    height: 40px;
     line-height: 1.4;
     margin-bottom: 10px;
     display: -webkit-box;
@@ -209,7 +210,6 @@
     background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat left;
     background-size: 20px;
     padding-right: 24px;
-    margin-bottom: 10px;
   }
 
   .item-body .date {
