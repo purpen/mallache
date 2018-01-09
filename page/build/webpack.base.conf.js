@@ -2,6 +2,9 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var os = require('os')
+var HappyPack = require('happypack')
+var happThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 // var nodeExternals = require('webpack-node-externals')
 process.noDeprecation = true
 // var webpack = require('webpack')
@@ -35,6 +38,11 @@ module.exports = {
   },
   // 增加一个plugins
   plugins: [
+    new HappyPack({
+      id: 'js',
+      loaders: ['babel-loader?cacheDirectory=true'],
+      threadPool: happThreadPool
+    })
   ],
   module: {
     rules: [
@@ -50,17 +58,21 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig
+        options: {
+          loaders: {
+            js: 'happypack/loader?id=js' // 将loader换成happypack
+          }
+        }
       },
       {
         test: /\.js$/,
-        loader: ['babel-loader?cacheDirectory=true'],
+        loader: ['happypack/loader?id=js'],
         exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
@@ -68,7 +80,7 @@ module.exports = {
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
