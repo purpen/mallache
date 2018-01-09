@@ -7,8 +7,9 @@ var HappyPack = require('happypack')
 var happThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 // var nodeExternals = require('webpack-node-externals')
 process.noDeprecation = true
-// var webpack = require('webpack')
-// var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
+var webpack = require('webpack')
+var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
+var ignoreFiles = new webpack.IgnorePlugin(/\.\/pdfmake.min.js$/)
 // var ignoreFiles = new webpack.IgnorePlugin(/pdfmake.min$/, /vfs_fonts$/)
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -17,6 +18,9 @@ function resolve(dir) {
 module.exports = {
   entry: {
     app: ['babel-polyfill', './src/main.js']
+  },
+  externals: {
+    'pdfMake': './static/js/pdfmake.min.js'
   },
   // externals: [nodeExternals()],
   output: {
@@ -42,7 +46,9 @@ module.exports = {
       id: 'js',
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happThreadPool
-    })
+    }),
+    // 忽略某些js文件参与打包
+    ignoreFiles
   ],
   module: {
     rules: [
@@ -67,7 +73,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: ['happypack/loader?id=js'],
-        exclude: /node_modules/
+        exclude: [/node_modules/, /pdfmake.min.js$/, /vfs_fonts.js$/]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
