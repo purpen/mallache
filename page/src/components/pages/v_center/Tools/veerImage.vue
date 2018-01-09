@@ -34,7 +34,7 @@
           <el-pagination
             class="pagination"
             v-if="imgList.length && !isMob"
-            :current-page.sync="pagination.page"
+            :current-page.sync="pagination.curPage"
             :page-size="pagination.pageSize"
             layout="prev, pager, next"
             :total="pagination.total"
@@ -112,9 +112,9 @@
         if (resizeTimer) {
           clearTimeout(resizeTimer)
         }
-        if (this.keyword) {
+        if (that.keyword) {
           if (e.keyCode === 13) {
-            this.getImgList(this.keyword)
+            that.getImgList(that.keyword)
           } else if (e.keyCode === 37) {
             resizeTimer = setTimeout(function() {
               that.pagination.curPage--
