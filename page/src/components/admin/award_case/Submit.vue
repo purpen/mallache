@@ -254,9 +254,6 @@ export default {
         ],
         summary: [
           { required: true, message: '请添写简述内容', trigger: 'blur' }
-        ],
-        time_at: [
-          { required: true, message: '请添写获奖时间', trigger: 'blur' }
         ]
       },
       // 上一页信息

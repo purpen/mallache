@@ -240,6 +240,11 @@ export default {
   adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用 | 禁用
 
+  // 栏目位管理
+  adminBlockList: '/admin/block/list', // GET 列表
+  adminBlock: '/admin/block', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminBlockSetStatus: '/admin/block/changeStatus', // PUT 启用 | 禁用
+
   // 附件管理
   adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
 

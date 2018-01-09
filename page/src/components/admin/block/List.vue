@@ -2,17 +2,18 @@
   <div class="container">
     <div class="blank20"></div>
     <el-row :gutter="20">
-      <v-menu selectedName="trendReportList"></v-menu>
+      <v-menu selectedName="blockList"></v-menu>
 
       <el-col :span="20">
         <div class="content">
 
         <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
-            <router-link :to="{name: 'adminTrendReportList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+            <router-link :to="{name: 'adminBlockList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
+
           <div class="fr">
-            <router-link :to="{name: 'adminTrendReportAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
+            <router-link :to="{name: 'adminBlockAdd'}" class="item add"><i class="el-icon-plus"></i> 添加</router-link>
           </div>
         </div>
 
@@ -33,52 +34,48 @@
               width="60">
             </el-table-column>
             <el-table-column
-              label="封面"
-              width="90">
-                <template slot-scope="scope">
-                  <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
-                </template>
+              prop="name"
+              label="名称">
             </el-table-column>
             <el-table-column
-              prop="title"
-              label="标题"
-              min-width="180">
+              prop="mark"
+              label="标识">
             </el-table-column>
             <el-table-column
               prop="user_id"
-              label="用户ID"
+              label="创建人"
               width="60">
             </el-table-column>
             <el-table-column
-              prop="hits"
-              label="浏览量"
-              min-width="30">
+              prop="type"
+              label="类型"
+              width="60">
             </el-table-column>
             <el-table-column
-              width="60"
-              label="状态">
-                <template slot-scope="scope">
-                  <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
-                  <p v-else><el-tag type="success">启用</el-tag></p>
+              label="状态"
+              width="100">
+                <template scope="scope">
+                  <p v-if="scope.row.status === 1"><el-tag type="success">启用</el-tag></p>
+                  <p v-else><el-tag type="gray">禁用</el-tag></p>
                 </template>
-            </el-table-column>
-            <el-table-column
-              prop="created_at"
-              width="80"
-              label="创建时间">
             </el-table-column>
             <el-table-column
               width="100"
               label="操作">
-                <template slot-scope="scope">
+                <template scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
                   <p>
-                    <router-link :to="{name: 'adminTrendReportEdit', params: {id: scope.row.id}}">编辑</router-link>
-                    <a href="javascript:void(0)" @click="removeBtn(scope.$index, scope.row)">删除</a>
+                    <router-link :to="{name: 'adminBlockEdit', params: {id: scope.row.id}}">编辑</router-link>
+                    <a href="javascript:void(0);" @click="removeBtn(scope.$index, scope.row)">删除</a>
                   </p>
+                  <!--
+                  <p>
+                    <router-link :to="{name: 'adminCategoryShow', params: {id: scope.row.id}}" target="_blank">查看</router-link>
+                  </p>
+                  -->
                 </template>
             </el-table-column>
           </el-table>
@@ -88,8 +85,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
-            :page-size="query.pagesize"
+            :page-sizes="[50, 100, 500]"
+            :page-size="query.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
           </el-pagination>
@@ -116,7 +113,7 @@
 import api from '@/api/api'
 import vMenu from '@/components/admin/Menu'
 export default {
-  name: 'admin_trend_report_list',
+  name: 'admin_block_list',
   components: {
     vMenu
   },
@@ -126,20 +123,17 @@ export default {
       itemList: [],
       tableData: [],
       isLoading: false,
-      setRoleDialog: false,
-      currentAccount: '',
-      roleId: 0,
       sureDialog: false,
       dialogLoadingBtn: false,
       currentDialogIndex: '',
       currentDialogId: '',
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: 0,
-        status: 0,
+
         test: null
       },
       msg: ''
@@ -157,6 +151,24 @@ export default {
       this.query.page = val
       this.$router.push({name: this.$route.name, query: {page: val}})
     },
+    setStatus(index, item, evt) {
+      var id = item.id
+      var url = api.adminBlockSetStatus
+      var self = this
+      self.$http.put(url, {id: id, status: evt})
+      .then (function(response) {
+        if (response.data.meta.status_code === 200) {
+          self.itemList[index].status = evt
+          self.$message.success('操作成功')
+        } else {
+          self.$message.error(response.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        console.log(error.message)
+      })
+    },
     // 删除弹层
     removeBtn (index, obj) {
       this.sureDialog = true
@@ -167,7 +179,7 @@ export default {
     sureDialogSubmit () {
       var self = this
       self.dialogLoadingBtn = true
-      self.$http.delete(api.adminTrendReport, {params: {id: self.currentDialogId}})
+      self.$http.delete(api.adminBlock, {params: {id: self.currentDialogId}})
       .then (function(response) {
         self.dialogLoadingBtn = false
         if (response.data.meta.status_code === 200) {
@@ -182,53 +194,31 @@ export default {
         self.dialogLoadingBtn = false
       })
     },
-    // 状态设置
-    setStatus(index, item, evt) {
-      var id = item.id
-      var self = this
-      self.$http.put(api.adminTrendReprotSetStatus, {id: id, status: evt})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.tableData[index].status = evt
-          self.$message.success('操作成功')
-        } else {
-          self.$message.error(response.meta.message)
-        }
-      })
-      .catch (function(error) {
-        self.$message.error(error.message)
-        console.log(error.message)
-      })
-    },
     loadList() {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
-      self.query.sort = this.$route.query.sort || 0
+      self.query.sort = this.$route.query.sort || 1
       self.query.type = this.$route.query.type || 0
-      self.query.status = this.$route.query.status || 0
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
       self.isLoading = true
-      self.$http.get(api.adminTrendReportList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type, status: self.query.status}})
+      self.$http.get(api.adminBlockList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type: self.query.type}})
       .then (function(response) {
         self.isLoading = false
         self.tableData = []
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
-          self.query.totalCount = response.data.meta.pagination.total
+          self.query.totalCount = parseInt(response.data.meta.pagination.total)
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.cover_url = require ('@/assets/images/df_100x100.png')
-            if (item.cover) {
-              item.cover_url = item.cover.logo
-            }
-            item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
+            // item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             self.tableData.push(item)
           } // endfor
-          console.log(self.tableData)
+
+          console.log(self.itemList)
         } else {
           self.$message.error(response.data.meta.message)
         }
@@ -254,8 +244,5 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .set-role-name {
-    margin-bottom: 20px;
-  }
 
 </style>

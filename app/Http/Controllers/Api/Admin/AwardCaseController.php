@@ -47,7 +47,6 @@ class AwardCaseController extends BaseController
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
             'tags' => 'array',
-            'time_at' => 'required',
         ];
 
         $all = $request->all();
@@ -105,7 +104,6 @@ class AwardCaseController extends BaseController
             'category_id' => 'required|integer',
             'cover_id' => 'required|integer',
             'tags' => 'array',
-            'time_at' => 'required',
         ];
 
         $all = $request->all();

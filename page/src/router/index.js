@@ -1276,6 +1276,36 @@ const routes = [
     },
     component: require('@/components/admin/notice/List')
   },
+  // 添加区块
+  {
+    path: '/admin/block/add',
+    name: 'adminBlockAdd',
+    meta: {
+      title: '添加区块',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/Submit')
+  },
+  // 编辑区块
+  {
+    path: '/admin/block/edit/:id',
+    name: 'adminBlockEdit',
+    meta: {
+      title: '编辑区块',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/Submit')
+  },
+  // 区块列表
+  {
+    path: '/admin/block/list',
+    name: 'adminBlockList',
+    meta: {
+      title: '区块列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/List')
+  },
   // 404
   {
     path: '*',

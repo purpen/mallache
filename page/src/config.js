@@ -810,6 +810,14 @@ const NOTICE_EVT = [
   }
 ]
 
+// 区块分类
+const BLOCK_TYPE = [
+  {
+    id: 1,
+    name: '默认'
+  }
+]
+
 // test
 const TEST = {}
 
@@ -835,6 +843,7 @@ module.exports = {
   COMMONLY_SITE_TYPE,
   AWARD_CASE_CATEGORY,
   NOTICE_EVT,
+  BLOCK_TYPE,
 
   TEST
 }

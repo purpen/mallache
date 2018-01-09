@@ -77,7 +77,7 @@
         picWidth: 240,
         docHeight: 0,
         pagination: {
-          curPage: 8,
+          curPage: 0,
           pageSize: 20,
           total: 0,
           pageCount: 0
