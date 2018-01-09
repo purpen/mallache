@@ -1,7 +1,7 @@
 <template>
   <div :class="['calendar', {'m-calendar' : isMob}]">
     <div :class="['header', 'clearfix', {'mHeader' : isMob}]" ref="header">
-      <div class="fl fc-button-group">
+      <div class="fc-button-group-fl fc-button-group">
         <button type="button" @click="prev"
                 class="fc-prev-button fc-button fc-state-default fc-corner-left fc-state-hover">
           <span
@@ -17,7 +17,7 @@
         </button>
       </div>
       {{eventMsg.month}}
-      <div class="fr fc-button-group">
+      <div class="fc-button-group-fr fc-button-group">
         <button type="button" @click="changeView('month')"
                 :class="['fc-month-button','fc-button', 'fc-state-default', 'fc-corner-left',
                 view === 'month' ? 'fc-state-active' : '']">
@@ -205,6 +205,7 @@
       this.$emit('update-date', this.eventMsg.month)
       window.addEventListener('resize', this.winResize)
       this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
+      console.log(this.$refs.calendar.$refs.calendar.offsetWidth)
     },
     methods: {
       winResize () {
@@ -279,44 +280,36 @@
   }
 </script>
 <style scoped>
-  .calendar {
-    padding-top: 24px;
-  }
-
-  .m-calendar {
-    padding-top: 28px;
-  }
-
-  #calendar {
-    margin-top:-40px;
-  }
-
   .header {
-    position: absolute;
-    top: 30px;
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    height: 30px;
-    line-height: 20px;
     text-align: center;
     font-size: 16px;
     font-weight: 600;
-    margin-top: -25px;
+    margin-top: 6px;
+    padding: 8px 80px 14px 100px
   }
 
   .mHeader {
-    margin-top: 0;
-    position: absolute;
-    top: 30px;
-  }
-
-  .header .fr {
-    margin-top: -4px;
+    position: relative;
+    margin-top: -14px;
   }
 
   .fc-button-group {
+    position: absolute;
     display: flex;
     justify-content: center;
     width: auto;
+  }
+
+  .fc-button-group-fl {
+    left: 0;
+    top: 5px;
+  }
+  .fc-button-group-fr {
+    right: 0;
+    top: 0;
   }
 
   .fc-button-group .fc-state-default {
@@ -352,12 +345,12 @@
   }
 
   .fc-button-group .fc-today-button {
-    margin: 0 4px !important;
+    margin: 0 8px !important;
     border-radius: 10px;
     padding: 0 8px;
     color: #999999;
-    height: 24px;
-    line-height: 24px;
+    height: 22px;
+    line-height: 22px;
   }
 
   .fc-button-group .fc-month-button,
