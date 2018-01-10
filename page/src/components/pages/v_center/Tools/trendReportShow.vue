@@ -346,10 +346,11 @@
     left: 0;
     right: 0;
     width: 400px;
-    height: 50px;
+    height: 60px;
     margin: auto;
     opacity: 0.8;
     background-image: linear-gradient(-180deg, rgba(0,0,0,0.70) 0%, #000000 100%);
+    border: 1px solid #FFFFFF;
     border-radius: 25px;
     display: flex;
     justify-content: center;
