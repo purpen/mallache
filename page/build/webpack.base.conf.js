@@ -46,7 +46,27 @@ module.exports = {
     // ignoreFiles,
     new HappyPack({
       id: 'js',
-      loaders: ['babel-loader?cacheDirectory=true'],
+      threads: 4,
+      loaders: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015', 'stage-2']
+          }
+        }
+      ],
+      threadPool: happThreadPool
+    }),
+    new HappyPack({
+      id: 'eslint',
+      threads: 4,
+      loaders: [{
+        loader: 'eslint-loader',
+        // here you can place eslint-loader options:
+        options: {
+          formatter: require('eslint-friendly-formatter')
+        }
+      }],
       threadPool: happThreadPool
     }),
     new webpack.DllReferencePlugin({
@@ -66,12 +86,9 @@ module.exports = {
     rules: [
       {
         test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
+        loader: 'happypack/loader?id=eslint',
         enforce: "pre",
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.vue$/,

@@ -1,23 +1,22 @@
 <template>
   <div :class="['calendar', {'m-calendar' : isMob}]">
     <div :class="['header', 'clearfix', {'mHeader' : isMob}]" ref="header">
-      <div class="fl fc-button-group">
+      <div class="fl fc-button-group fc-button-group-fl">
         <button type="button" @click="prev"
-                class="fc-prev-button fc-button fc-state-default fc-corner-left fc-state-hover">
+                class="fc-prev-button fc-button fl fc-state-default fc-corner-left fc-state-hover">
           <span
             class="fc-icon fc-icon-left-single-arrow"></span>
         </button>
         <button type="button" @click="todays"
-                :class="['fc-today-button', 'fc-button', 'fc-state-default']" :disabled="isToday">今天
+                :class="['fc-today-button', 'fc-button', 'fl', 'fc-state-default']" :disabled="isToday">今天
         </button>
         <button type="button" @click="next"
-                class="fc-next-button fc-button fc-state-default fc-corner-right">
+                class="fc-next-button fc-button fl fc-state-default fc-corner-right">
           <span
             class="fc-icon fc-icon-right-single-arrow"></span>
         </button>
       </div>
-      {{eventMsg.month}}
-      <div class="fr fc-button-group">
+      <div class="fr fc-button-group fc-button-group-fr">
         <button type="button" @click="changeView('month')"
                 :class="['fc-month-button','fc-button', 'fc-state-default', 'fc-corner-left',
                 view === 'month' ? 'fc-state-active' : '']">
@@ -29,6 +28,7 @@
           周
         </button>
       </div>
+      <div class="fc-button-group fc-button-group-center">{{eventMsg.headtitle}}</div>
     </div>
     <full-calendar ref="calendar"
                    @event-selected="eventSelected"
@@ -71,6 +71,7 @@
         eventMsg: {
           month: '',
           date: '',
+          headtitle: '',
           title: '',
           summary: '',
           tips: ''
@@ -161,22 +162,22 @@
               case 1:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Contest@2x.png`) + ') no-repeat left'
-                self.changeColor('#65A6FFCC', 'blue')
+                self.changeColor('rgba(101, 166, 255, 0.8)', 'blue')
                 break
               case 2:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/festival@2x.png`) + ') no-repeat left'
-                self.changeColor('#67D496CC', 'green')
+                self.changeColor('rgba(103, 212, 150, 0.8)', 'green')
                 break
               case 3:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/exhibition@2x.png`) + ') no-repeat left'
-                self.changeColor('#FD9E5FCC', 'orange')
+                self.changeColor('rgba(253, 158, 95, 0.8)', 'orange')
                 break
               case 4:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Event@2x.png`) + ') no-repeat left'
-                self.changeColor('#FF6E73CC', 'red')
+                self.changeColor('rgba(255, 110, 115, 0.8)', 'red')
                 break
             }
           },
@@ -238,6 +239,22 @@
       },
       getView () {
         this.eventMsg.month = this.$refs.calendar.fireMethod('getView').title
+        let arr = this.$refs.calendar.fireMethod('getView').title.match(/\d+/g)
+        switch (arr.length) {
+          case 2:
+            this.eventMsg.headtitle = `${arr[0]}.${arr[1]}`
+            break
+          case 3:
+            this.eventMsg.headtitle = `${arr[0]}.${arr[1]}-${arr[2]}`
+            break
+          case 4:
+            if (arr[0] === arr[2]) {
+              this.eventMsg.headtitle = `${arr[0]}`
+            } else {
+              this.eventMsg.headtitle = `${arr[0]} - ${arr[2]}`
+            }
+            break
+        }
       },
       fireMethod(...options) {
         return $(this.$el).fullCalendar(...options)
@@ -279,44 +296,30 @@
   }
 </script>
 <style scoped>
-  .calendar {
-    padding-top: 24px;
-  }
-
-  .m-calendar {
-    padding-top: 28px;
-  }
-
-  #calendar {
-    margin-top:-40px;
-  }
-
   .header {
-    position: absolute;
-    top: 30px;
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    height: 30px;
-    line-height: 20px;
     text-align: center;
     font-size: 16px;
-    font-weight: 600;
-    margin-top: -25px;
+    line-height: 26px;
+    margin-top: 6px;
+    padding: 8px 0;
   }
 
   .mHeader {
-    margin-top: 0;
-    position: absolute;
-    top: 30px;
+    position: relative;
+    margin-top: -14px;
   }
 
-  .header .fr {
-    margin-top: -4px;
+  .fc-button-group-fl {
+    padding-top: 4px;
   }
 
-  .fc-button-group {
-    display: flex;
-    justify-content: center;
-    width: auto;
+  .fc-button-group-center {
+    display: block;
+    padding: 0 88px 0 108px;
+    line-height: 28px;
   }
 
   .fc-button-group .fc-state-default {
@@ -352,16 +355,17 @@
   }
 
   .fc-button-group .fc-today-button {
-    margin: 0 4px !important;
+    margin: 0 16px !important;
     border-radius: 10px;
     padding: 0 8px;
     color: #999999;
-    height: 24px;
-    line-height: 24px;
+    height: 22px;
+    line-height: 22px;
   }
 
   .fc-button-group .fc-month-button,
   .fc-button-group .fc-basicWeek-button {
+    float: left;
     margin-left: -1px;
     height: 28px;
     line-height: 28px;
@@ -396,7 +400,7 @@
     font-size: 14px;
     color: #FFFFFF;
     height: 60px;
-    background: #67D496CC;
+    background: rgba(103, 212, 150, 0.8);
     border-radius: 4px;
     position: relative;
     overflow: hidden;
@@ -460,6 +464,9 @@
       margin-top: 20px;
       width: 100%;
       max-width: 100%;
+    }
+    .fc-button-group .fc-today-button {
+      margin: 0 8px !important;
     }
   }
 </style>
