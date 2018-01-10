@@ -162,22 +162,22 @@
               case 1:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Contest@2x.png`) + ') no-repeat left'
-                self.changeColor('#65A6FFCC', 'blue')
+                self.changeColor('rgba(101, 166, 255, 0.8)', 'blue')
                 break
               case 2:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/festival@2x.png`) + ') no-repeat left'
-                self.changeColor('#67D496CC', 'green')
+                self.changeColor('rgba(103, 212, 150, 0.8)', 'green')
                 break
               case 3:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/exhibition@2x.png`) + ') no-repeat left'
-                self.changeColor('#FD9E5FCC', 'orange')
+                self.changeColor('rgba(253, 158, 95, 0.8)', 'orange')
                 break
               case 4:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Event@2x.png`) + ') no-repeat left'
-                self.changeColor('#FF6E73CC', 'red')
+                self.changeColor('rgba(255, 110, 115, 0.8)', 'red')
                 break
             }
           },
@@ -400,7 +400,7 @@
     font-size: 14px;
     color: #FFFFFF;
     height: 60px;
-    background: #67D496CC;
+    background: rgba(103, 212, 150, 0.8);
     border-radius: 4px;
     position: relative;
     overflow: hidden;

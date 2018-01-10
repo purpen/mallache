@@ -680,7 +680,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .view-msg .news:hover {
   color:#222;
-  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center #0000000d;
+  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
   background-size: 20px;
 }
 
@@ -691,7 +691,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .view-msg .notice:hover {
   color: #222;
-  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center #0000000d;
+  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
   background-size: 20px;
 }
 
@@ -831,19 +831,19 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-control:hover {
-  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px #0000000d;
+  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-admin:hover {
-  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px #0000000d;
+  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-sign-out:hover {
-  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px #0000000d;
+  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
@@ -1183,7 +1183,7 @@ button {
 .fc-head {
   font-family: PingFangSC-Medium;
   font-size: 14px;
-  background: #FF5A6099;
+  background: rgba(255, 90, 96, 0.6);
   height: 40px;
   line-height: 40px;
   color: #FFFFFF;
@@ -1215,7 +1215,7 @@ button {
 .fc-unthemed .fc-popover,
 .fc-unthemed .fc-list-view,
 .fc-unthemed .fc-list-heading td {
-  border-color: #FF5A6099;
+  border-color: rgba(255, 90, 96, 0.6);
 }
 
 .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {

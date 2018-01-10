@@ -107,20 +107,20 @@
             let obj = {}
             switch (i.type) {
               case 1:  // 大赛
-                obj.backgroundColor = '#65A6FF' + this.colorOpacity(a)
-                obj.borderColor = '#65A6FF' + this.colorOpacity(a)
+                obj.backgroundColor = `rgba(101, 166, 255, ${this.colorOpacity(a)})`
+                obj.borderColor = `rgba(101, 166, 255, ${this.colorOpacity(a)})`
                 break
               case 2:  // 节日
-                obj.backgroundColor = '#67D496' + this.colorOpacity(a)
-                obj.borderColor = '#67D496' + this.colorOpacity(a)
+                obj.backgroundColor = `rgba(103, 212, 150, ${this.colorOpacity(a)})`
+                obj.borderColor = `rgba(103, 212, 150, ${this.colorOpacity(a)})`
                 break
               case 3:  // 展会
-                obj.backgroundColor = '#FD9E5F' + this.colorOpacity(a)
-                obj.borderColor = '#FD9E5F' + this.colorOpacity(a)
+                obj.backgroundColor = `rgba(253, 158, 95, ${this.colorOpacity(a)})`
+                obj.borderColor = `rgba(253, 158, 95, ${this.colorOpacity(a)})`
                 break
               case 4:  // 事件
-                obj.backgroundColor = '#FF6E73' + this.colorOpacity(a)
-                obj.borderColor = '#FF6E73' + this.colorOpacity(a)
+                obj.backgroundColor = `rgba(255, 110, 115, ${this.colorOpacity(a)})`
+                obj.borderColor = `rgba(255, 110, 115, ${this.colorOpacity(a)})`
                 break
             }
             obj.id = i.id
@@ -149,11 +149,11 @@
       colorOpacity (a) {
         switch (a % 3) {
           case 0:
-            return 'D8'
+            return '0.85' // 0.85 ==> D8
           case 1:
-            return 'B2'
+            return '0.7' // 0.7 ==> B2
           case 2:
-            return '8C'
+            return '0.55' // 0.55 ==> 8C
         }
       },
       unique (arr) { // 根据id 去重
