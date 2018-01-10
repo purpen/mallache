@@ -243,8 +243,8 @@
         window.pdfMake.createPdf(dd).download(this.itemName + '.pdf')
         setTimeout(function () {
           window.close()
-        }, 3000)
-        this.downStatus = `已成功下载合同文件，页面将在3秒后关闭`
+        }, 5000)
+        this.downStatus = `已成功下载合同文件，页面将在5秒后关闭`
       }
     },
     computed: {},
@@ -283,8 +283,8 @@
                   that.form = item
                   // 生成pdf插件太大，实现懒加载
                   require.ensure([], function (require) {
-                    require('../../../../../static/js/pdfmake.min.js')
-                    require('../../../../../static/js/vfs_fonts.js')
+                    require('../../../../../lib/js/pdfmake.js')
+                    require('../../../../../lib/js/vfs_fonts.js')
                     that.downBtn()
                   })
                 })

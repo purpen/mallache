@@ -8,8 +8,9 @@ var happThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 // var nodeExternals = require('webpack-node-externals')
 process.noDeprecation = true
 var webpack = require('webpack')
-var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.js$/)
-var ignoreFiles = new webpack.IgnorePlugin(/\.\/pdfmake.min.js$/)
+// var ignoreFiles = new webpack.IgnorePlugin(/\.\.dll.js$/)
+// var ignoreFiles = new webpack.IgnorePlugin(/\.\/pdfmake.dll.js$/)
+// var ignoreFiles = new webpack.IgnorePlugin(/\.\/vfs_fonts.dll.js$/)
 // var ignoreFiles = new webpack.IgnorePlugin(/pdfmake.min$/, /vfs_fonts$/)
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -20,7 +21,6 @@ module.exports = {
     app: ['babel-polyfill', './src/main.js']
   },
   externals: {
-    'pdfMake': './static/js/pdfmake.min.js'
   },
   // externals: [nodeExternals()],
   output: {
@@ -37,11 +37,13 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'components': resolve('src/components'),
-      'assets': resolve('src/assets')
+      'assets': resolve('src/assets'),
+      'static': resolve('/static')
     }
   },
   // 增加一个plugins
   plugins: [
+    // ignoreFiles,
     new HappyPack({
       id: 'js',
       threads: 4,
@@ -67,8 +69,10 @@ module.exports = {
       }],
       threadPool: happThreadPool
     }),
-    // 忽略某些js文件参与打包
-    ignoreFiles
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('../static/js/vendor/core-mainfest.json') // 指向这个json
+    })
   ],
   module: {
     rules: [
@@ -90,14 +94,14 @@ module.exports = {
       {
         test: /\.js$/,
         loader: ['happypack/loader?id=js'],
-        exclude: [/node_modules/, /pdfmake.min.js$/, /vfs_fonts.js$/]
+        exclude: [/node_modules/, /pdfmake.js$/]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: utils.assetsPath('img/[name].[hash:5].[ext]')
         }
       },
       {
@@ -105,7 +109,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          name: utils.assetsPath('fonts/[name].[hash:5].[ext]')
         }
       }
     ],

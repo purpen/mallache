@@ -91,7 +91,10 @@ const routes = [
       title: '案例详情',
       requireAuth: false
     },
-    component: require('@/components/pages/design_case/AwardsShow')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/pages/design_case/AwardsShow'], resolve)
+    }
   },
   // 联系我们
   {
@@ -882,10 +885,9 @@ const routes = [
       title: '设计日历',
       requireAuth: true
     },
-    // component: (resolve) => {
-    //   require(['@/components/pages/v_center/Tools/exhibition'], resolve)
-    // }
-    component: require('@/components/pages/v_center/Tools/exhibition')
+    component: (resolve) => {
+      require(['@/components/pages/v_center/Tools/exhibition'], resolve)
+    }
   },
   {
     path: '/vcenter/calendar',
@@ -1223,7 +1225,10 @@ const routes = [
       title: '添加奖项案例',
       requireAuth: true
     },
-    component: require('@/components/admin/award_case/Submit')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/admin/award_case/Submit'], resolve)
+    }
   },
   // 编辑奖项案例
   {
