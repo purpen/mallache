@@ -26,7 +26,7 @@
               :rotate="rotate"
               :page="page">
             </pdf>
-            <p class="flip" v-if="numPages">
+            <p :class="['flip', {'flip-fullscreen' : isFullscreen}]" v-if="numPages">
               <span class="swiper-button-prev fl" @click="prev">
                 <i class="el-icon-arrow-left"></i>
               </span>
@@ -159,6 +159,7 @@
         this.isFullscreen = true
         document.body.setAttribute('class', 'disableScroll')
         document.childNodes[1].setAttribute('class', 'disableScroll')
+        console.log(this.$refs.pdf.offsetHeight)
       },
       exitFullscreen () {
         this.isFullscreen = false
@@ -320,6 +321,7 @@
     width: 2px;
     background: #666666
   }
+
   .page-input {
     margin-top: 15px;
     width: 30px;
@@ -330,6 +332,7 @@
     border-radius: 4px;
     text-align: center
   }
+
   .fullscreen-pdf {
     position: fixed;
     z-index: 999;
@@ -340,21 +343,28 @@
     padding-top: 0;
     overflow-y: scroll
   }
+
   .fullscreen-tools {
     position: fixed;
     bottom:50px;
     left: 0;
     right: 0;
     width: 400px;
-    height: 60px;
+    height: 50px;
     margin: auto;
     opacity: 0.8;
-    background-image: linear-gradient(-180deg, rgba(0,0,0,0.70) 0%, #000000 100%);
-    border: 1px solid #FFFFFF;
+    background-image: linear-gradient(-180deg, rgba(0,0,0,0.30) 0%, #000000 100%);
+    border: 0.5px solid #FFFFFF;
     border-radius: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 0.3;
+    transition: 0.3s all ease
+  }
+
+  .fullscreen-tools:hover {
+    opacity: 1;
   }
   .exit-fullscreen {
     cursor: pointer;
@@ -362,6 +372,16 @@
     height: 24px;
     background: url('../../../../assets/images/tools/report/ExitFullScreen.svg') no-repeat center;
     background-size: 20px;
+  }
+
+  p.flip-fullscreen {
+    position: fixed;
+    height: 50px;
+    top: 0;
+    left: 0;
+    right: 18px;
+    bottom: 0;
+    margin:auto;
   }
   @media screen and (max-width:330px) {
     menuitem.rotate {
