@@ -243,8 +243,8 @@
         window.pdfMake.createPdf(dd).download(this.itemName + '.pdf')
         setTimeout(function () {
           window.close()
-        }, 2000)
-        this.downStatus = `已成功下载合同文件，页面将在2秒后关闭`
+        }, 3000)
+        this.downStatus = `已成功下载合同文件，页面将在3秒后关闭`
       }
     },
     computed: {},
