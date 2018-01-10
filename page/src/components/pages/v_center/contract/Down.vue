@@ -283,8 +283,8 @@
                   that.form = item
                   // 生成pdf插件太大，实现懒加载
                   require.ensure([], function (require) {
-                    require('static/js/vendor/pdfmake.dll.js')
-                    // require('static/js/vendor/vfs_fonts.dll.js')
+                    require('../../../../../lib/js/pdfmake.js')
+                    require('../../../../../lib/js/vfs_fonts.js')
                     that.downBtn()
                   })
                 })

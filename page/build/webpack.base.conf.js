@@ -72,14 +72,6 @@ module.exports = {
     new webpack.DllReferencePlugin({
       context: __dirname,
       manifest: require('../static/js/vendor/core-mainfest.json') // 指向这个json
-    }),
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: require('../static/js/vendor/pdfmake-mainfest.json') // 指向这个json
-    }),
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: require('../static/js/vendor/vfs_fonts-mainfest.json') // 指向这个json
     })
   ],
   module: {
@@ -102,7 +94,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: ['happypack/loader?id=js'],
-        exclude: [/node_modules/]
+        exclude: [/node_modules/, /pdfmake.js$/]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

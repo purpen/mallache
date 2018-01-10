@@ -3,10 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    core: ['vue/dist/vue.esm.js', 'element-ui', 'vue-router', 'axios', 'vuex'], // 需要打包起来的依赖
-    mavon: ['mavon-editor'], // 编辑器插件
-    pdfmake: ['./lib/js/pdfmake.js'], // 制作PDF插件
-    vfs_fonts: ['./lib/js/vfs_fonts.js']  // PDF中文字体包
+    core: ['vue/dist/vue.esm.js', 'element-ui', 'vue-router', 'axios', 'vuex'] // 需要打包起来的依赖
   },
   output: {
     path: path.join(__dirname, '../static/js/vendor'), // 输出的路径
