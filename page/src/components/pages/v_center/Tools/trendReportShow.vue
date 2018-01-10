@@ -16,7 +16,7 @@
               <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
             </span>
             </p>
-          <div v-if="already" class="pdf swiper-container">
+          <div v-if="already" :class="['pdf', 'swiper-container', {'fullscreen-pdf' : isFullscreen}]" ref="pdf">
             <pdf :src="pdf.image.file"
               v-loading.body="isLoading"
               @progress="loadedRatio = $event"
@@ -26,7 +26,7 @@
               :rotate="rotate"
               :page="page">
             </pdf>
-            <p class="flip" v-if="load">
+            <p class="flip" v-if="numPages">
               <span class="swiper-button-prev fl" @click="prev">
                 <i class="el-icon-arrow-left"></i>
               </span>
@@ -34,10 +34,14 @@
                 <i class="el-icon-arrow-right"></i>
               </span>
             </p>
-            <menu class="clearfix">
+            <div class="fullscreen-tools" v-if="isFullscreen">
+              <span class="exit-fullscreen" @click="exitFullscreen"></span>
+            </div>
+            <menu class="clearfix" v-if="!isFullscreen">
               <menuitem class="add" @click="prev">add</menuitem>
               <menuitem class="subtract" @click="next">subtract</menuitem>
               <menuitem class="rotate" @click="rotate += 90">rotate</menuitem>
+              <menuitem class="fullscreen" @click="fullscreen">fullscreen</menuitem>
               <p class="total-page fr">
                 <span>共{{numPages}}页</span>前往
                 <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
@@ -75,7 +79,8 @@
         title: '',
         numPages: 0,
         loadedRatio: 0,
-        load: 0
+        load: 0,
+        isFullscreen: false
       }
     },
     created() {
@@ -149,6 +154,16 @@
       },
       error(err) {
         console.error(err)
+      },
+      fullscreen () {
+        this.isFullscreen = true
+        document.body.setAttribute('class', 'disableScroll')
+        document.childNodes[1].setAttribute('class', 'disableScroll')
+      },
+      exitFullscreen () {
+        this.isFullscreen = false
+        document.body.removeAttribute('class', 'disableScroll')
+        document.childNodes[1].removeAttribute('class', 'disableScroll')
       }
     },
     computed: {
@@ -238,6 +253,7 @@
     line-height: 50px;
     border-bottom: 1px solid #D2D2D2;
     padding: 0 20px 0 15px;
+    background: #FFFFFF
   }
 
   menu menuitem {
@@ -281,6 +297,15 @@
     background-size: 24px;
   }
 
+  menuitem.fullscreen {
+    background: url('../../../../assets/images/tools/report/FullScreen.svg') no-repeat center;
+    background-size: 20px;
+  }
+  menuitem.fullscreen:hover {
+    background: url('../../../../assets/images/tools/report/FullScreenHover.svg') no-repeat center;
+    background-size: 20px;
+  }
+
   .total-page span {
     position: relative;
     margin-right: 20px;
@@ -304,6 +329,38 @@
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     text-align: center
+  }
+  .fullscreen-pdf {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 0;
+    overflow-y: scroll
+  }
+  .fullscreen-tools {
+    position: fixed;
+    bottom:50px;
+    left: 0;
+    right: 0;
+    width: 400px;
+    height: 50px;
+    margin: auto;
+    opacity: 0.8;
+    background-image: linear-gradient(-180deg, rgba(0,0,0,0.70) 0%, #000000 100%);
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .exit-fullscreen {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    background: url('../../../../assets/images/tools/report/ExitFullScreen.svg') no-repeat center;
+    background-size: 20px;
   }
   @media screen and (max-width:330px) {
     menuitem.rotate {

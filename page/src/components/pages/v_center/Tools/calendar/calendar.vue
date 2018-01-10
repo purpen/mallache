@@ -1,23 +1,22 @@
 <template>
   <div :class="['calendar', {'m-calendar' : isMob}]">
     <div :class="['header', 'clearfix', {'mHeader' : isMob}]" ref="header">
-      <div class="fc-button-group-fl fc-button-group">
+      <div class="fl fc-button-group fc-button-group-fl">
         <button type="button" @click="prev"
-                class="fc-prev-button fc-button fc-state-default fc-corner-left fc-state-hover">
+                class="fc-prev-button fc-button fl fc-state-default fc-corner-left fc-state-hover">
           <span
             class="fc-icon fc-icon-left-single-arrow"></span>
         </button>
         <button type="button" @click="todays"
-                :class="['fc-today-button', 'fc-button', 'fc-state-default']" :disabled="isToday">今天
+                :class="['fc-today-button', 'fc-button', 'fl', 'fc-state-default']" :disabled="isToday">今天
         </button>
         <button type="button" @click="next"
-                class="fc-next-button fc-button fc-state-default fc-corner-right">
+                class="fc-next-button fc-button fl fc-state-default fc-corner-right">
           <span
             class="fc-icon fc-icon-right-single-arrow"></span>
         </button>
       </div>
-      {{eventMsg.month}}
-      <div class="fc-button-group-fr fc-button-group">
+      <div class="fr fc-button-group fc-button-group-fr">
         <button type="button" @click="changeView('month')"
                 :class="['fc-month-button','fc-button', 'fc-state-default', 'fc-corner-left',
                 view === 'month' ? 'fc-state-active' : '']">
@@ -29,6 +28,7 @@
           周
         </button>
       </div>
+      <div class="fc-button-group fc-button-group-center">{{eventMsg.headtitle}}</div>
     </div>
     <full-calendar ref="calendar"
                    @event-selected="eventSelected"
@@ -71,6 +71,7 @@
         eventMsg: {
           month: '',
           date: '',
+          headtitle: '',
           title: '',
           summary: '',
           tips: ''
@@ -205,7 +206,6 @@
       this.$emit('update-date', this.eventMsg.month)
       window.addEventListener('resize', this.winResize)
       this.$refs.header.style.width = this.$refs.calendar.$refs.calendar.offsetWidth + 'px'
-      console.log(this.$refs.calendar.$refs.calendar.offsetWidth)
     },
     methods: {
       winResize () {
@@ -239,6 +239,22 @@
       },
       getView () {
         this.eventMsg.month = this.$refs.calendar.fireMethod('getView').title
+        let arr = this.$refs.calendar.fireMethod('getView').title.match(/\d+/g)
+        switch (arr.length) {
+          case 2:
+            this.eventMsg.headtitle = `${arr[0]}.${arr[1]}`
+            break
+          case 3:
+            this.eventMsg.headtitle = `${arr[0]}.${arr[1]}-${arr[2]}`
+            break
+          case 4:
+            if (arr[0] === arr[2]) {
+              this.eventMsg.headtitle = `${arr[0]}`
+            } else {
+              this.eventMsg.headtitle = `${arr[0]} - ${arr[2]}`
+            }
+            break
+        }
       },
       fireMethod(...options) {
         return $(this.$el).fullCalendar(...options)
@@ -286,9 +302,9 @@
     width: 100%;
     text-align: center;
     font-size: 16px;
-    font-weight: 600;
+    line-height: 26px;
     margin-top: 6px;
-    padding: 8px 80px 14px 100px
+    padding: 8px 0;
   }
 
   .mHeader {
@@ -296,20 +312,14 @@
     margin-top: -14px;
   }
 
-  .fc-button-group {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    width: auto;
+  .fc-button-group-fl {
+    padding-top: 4px;
   }
 
-  .fc-button-group-fl {
-    left: 0;
-    top: 5px;
-  }
-  .fc-button-group-fr {
-    right: 0;
-    top: 0;
+  .fc-button-group-center {
+    display: block;
+    padding: 0 88px 0 108px;
+    line-height: 28px;
   }
 
   .fc-button-group .fc-state-default {
@@ -345,7 +355,7 @@
   }
 
   .fc-button-group .fc-today-button {
-    margin: 0 8px !important;
+    margin: 0 16px !important;
     border-radius: 10px;
     padding: 0 8px;
     color: #999999;
@@ -355,6 +365,7 @@
 
   .fc-button-group .fc-month-button,
   .fc-button-group .fc-basicWeek-button {
+    float: left;
     margin-left: -1px;
     height: 28px;
     line-height: 28px;
@@ -453,6 +464,9 @@
       margin-top: 20px;
       width: 100%;
       max-width: 100%;
+    }
+    .fc-button-group .fc-today-button {
+      margin: 0 8px !important;
     }
   }
 </style>
