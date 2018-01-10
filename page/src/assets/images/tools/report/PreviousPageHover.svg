@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>PreviousPageHover@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="图标" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="PreviousPageHover" stroke="#FF5D62">
+            <g id="Group-16">
+                <circle id="Oval-4" cx="10" cy="10" r="9.5"></circle>
+                <polyline id="Path-2" stroke-linecap="round" stroke-linejoin="round" transform="translate(11.267645, 10.407999) rotate(45.000000) translate(-11.267645, -10.407999) " points="8.18181818 7.27272727 8.18181818 13.5432715 14.3534717 13.5432715"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

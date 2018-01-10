@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "fetch": "git fetch origin"
+    "lzh": "git pull origin lzh"
   },
   "dependencies": {
     "auto-textarea": "^1.3.8",

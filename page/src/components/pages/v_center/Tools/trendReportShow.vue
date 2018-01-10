@@ -36,12 +36,19 @@
             </p>
             <div class="fullscreen-tools" v-if="isFullscreen">
               <span class="exit-fullscreen" @click="exitFullscreen"></span>
+              <span class="prev" @click="prev"></span>
+              <span class="next" @click="next"></span>
+              <p class="total-page">
+                <span>共{{numPages}}页</span>前往
+                <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
+                页
+              </p>
             </div>
             <menu class="clearfix" v-if="!isFullscreen">
+              <menuitem class="fullscreen" @click="fullscreen">fullscreen</menuitem>
               <menuitem class="add" @click="prev">add</menuitem>
               <menuitem class="subtract" @click="next">subtract</menuitem>
-              <menuitem class="rotate" @click="rotate += 90">rotate</menuitem>
-              <menuitem class="fullscreen" @click="fullscreen">fullscreen</menuitem>
+              <menuitem class="rotate" @click="rotate += 90" v-if="isMob">rotate</menuitem>
               <p class="total-page fr">
                 <span>共{{numPages}}页</span>前往
                 <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
@@ -58,14 +65,13 @@
   import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
+  import pdf from 'vue-pdf'
   export default {
     name: 'trendReport',
     components: {
       vMenu,
       ToolsMenu,
-      pdf: (resolve) => {
-        require(['vue-pdf'], resolve)
-      }
+      pdf
     },
     data () {
       return {
@@ -133,33 +139,41 @@
         })
       },
       next() {
-        this.page ++
-        if (this.page > this.numPages) {
-          this.page = this.numPages
+        if (this.numPages) {
+          this.page ++
+          if (this.page > this.numPages) {
+            this.page = this.numPages
+          }
         }
       },
       prev() {
-        this.page --
-        if (this.page < 1) {
-          this.page = 1
+        if (this.numPages) {
+          this.page --
+          if (this.page < 1) {
+            this.page = 1
+          }
         }
       },
       gotoPage(e) {
-        this.page = Number(e)
-        if (this.page < 1) {
-          this.page = 1
-        } else if (this.page > this.numPages) {
-          this.page = this.numPages
+        if (this.numPages) {
+          this.page = Number(e)
+          if (this.page < 1) {
+            this.page = 1
+          } else if (this.page > this.numPages) {
+            this.page = this.numPages
+          }
         }
       },
       error(err) {
         console.error(err)
       },
       fullscreen () {
-        this.isFullscreen = true
-        document.body.setAttribute('class', 'disableScroll')
-        document.childNodes[1].setAttribute('class', 'disableScroll')
-        console.log(this.$refs.pdf.offsetHeight)
+        if (this.numPages) {
+          this.isFullscreen = true
+          document.body.setAttribute('class', 'disableScroll')
+          document.childNodes[1].setAttribute('class', 'disableScroll')
+          console.log(this.$refs.pdf.offsetHeight)
+        }
       },
       exitFullscreen () {
         this.isFullscreen = false
@@ -261,31 +275,32 @@
     float: left;
     margin-top: 10px;
     margin-right: 8px;
-    width: 26px;
+    width: 30px;
     height: 30px;
     text-indent: -999rem;
     cursor: pointer;
-    transition: 0.1s all ease;
+    transition: 0.2s all ease;
   }
 
   menuitem.add {
-    background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
+    background: url('../../../../assets/images/tools/report/PreviousPage.svg') no-repeat center;
     background-size: 24px;
   }
   menuitem.add:hover {
-    transform: scale(1.2);
-    background: url('../../../../assets/images/tools/report/left@2x.png') no-repeat center;
+    transform: scale(1.3);
+    background: url('../../../../assets/images/tools/report/PreviousPageHover.svg') no-repeat center;
     background-size: 24px;
   }
 
   menuitem.subtract {
+    margin-left: 8px;
     margin-right: 18px;
-    background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
+    background: url('../../../../assets/images/tools/report/NextPage.svg') no-repeat center;
     background-size: 24px;
   }
   menuitem.subtract:hover {
-    transform: scale(1.2);
-    background: url('../../../../assets/images/tools/report/right@2x.png') no-repeat center;
+    transform: scale(1.3);
+    background: url('../../../../assets/images/tools/report/NextPageHover.svg') no-repeat center;
     background-size: 24px;
   }
 
@@ -303,6 +318,7 @@
     background-size: 20px;
   }
   menuitem.fullscreen:hover {
+    transform: scale(1.3);
     background: url('../../../../assets/images/tools/report/FullScreenHover.svg') no-repeat center;
     background-size: 20px;
   }
@@ -349,29 +365,57 @@
     bottom:50px;
     left: 0;
     right: 0;
-    width: 400px;
+    width: 330px;
     height: 50px;
     margin: auto;
     opacity: 0.8;
-    background-image: linear-gradient(-180deg, rgba(0,0,0,0.30) 0%, #000000 100%);
+    background-image: linear-gradient(-180deg, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.90) 100%);
     border: 0.5px solid #FFFFFF;
     border-radius: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0.3;
-    transition: 0.3s all ease
+    transition: 0.3s all ease;
+    color: #fff;
   }
 
   .fullscreen-tools:hover {
     opacity: 1;
   }
-  .exit-fullscreen {
+  .fullscreen-tools span {
     cursor: pointer;
     width: 24px;
     height: 24px;
+    margin-right: 20px;
+  }
+
+  span.exit-fullscreen {
     background: url('../../../../assets/images/tools/report/ExitFullScreen.svg') no-repeat center;
-    background-size: 20px;
+    background-size: 24px;
+  }
+
+  span.prev {
+    background: url('../../../../assets/images/tools/report/PreviousPageWhite.svg') no-repeat center;
+    background-size: 24px;
+  }
+
+  span.next {
+    background: url('../../../../assets/images/tools/report/NextPageWhite.svg') no-repeat center;
+    background-size: 24px;
+  }
+
+  .fullscreen-tools .total-page {
+    line-height: 50px;
+  }
+
+  .fullscreen-tools .total-page span::after {
+    background: #fff
+  }
+
+  .fullscreen-tools .page-input {
+    background: #333;
+    color: #fff;
   }
 
   p.flip-fullscreen {

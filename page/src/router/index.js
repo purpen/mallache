@@ -860,7 +860,9 @@ const routes = [
       title: '趋势/报告',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/Tools/trendReportShow')
+    component: (resolve) => {
+      require(['@/components/pages/v_center/Tools/trendReportShow'], resolve)
+    }
   },
   // 公司工具 => 常用网站
   {
