@@ -292,7 +292,6 @@
     background-size: 24px;
   }
   menuitem.add:hover {
-    transform: scale(1.3);
     background: url('../../../../assets/images/tools/report/PreviousPageHover.svg') no-repeat center;
     background-size: 24px;
   }
@@ -304,7 +303,6 @@
     background-size: 24px;
   }
   menuitem.subtract:hover {
-    transform: scale(1.3);
     background: url('../../../../assets/images/tools/report/NextPageHover.svg') no-repeat center;
     background-size: 24px;
   }
@@ -323,9 +321,11 @@
     background-size: 20px;
   }
   menuitem.fullscreen:hover {
-    transform: scale(1.3);
     background: url('../../../../assets/images/tools/report/FullScreenHover.svg') no-repeat center;
     background-size: 20px;
+  }
+  .total-page {
+    color: #666;
   }
 
   .total-page span {
@@ -340,10 +340,11 @@
     top: 2px;
     height: 16px;
     width: 2px;
-    background: #666666
+    background: #999
   }
 
   .page-input {
+    color: #666;
     margin-top: 15px;
     width: 30px;
     height: 20px;
@@ -411,6 +412,7 @@
   }
 
   .fullscreen-tools .total-page {
+    color: #fff;
     line-height: 50px;
   }
 

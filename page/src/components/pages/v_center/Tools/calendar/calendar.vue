@@ -401,7 +401,7 @@
     color: #FFFFFF;
     height: 60px;
     background: rgba(103, 212, 150, 0.8);
-    border-radius: 4px;
+    border-radius: 4px 4px 0 0;
     position: relative;
     overflow: hidden;
   }

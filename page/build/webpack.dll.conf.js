@@ -3,7 +3,8 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    core: ['vue/dist/vue.esm.js', 'element-ui', 'vue-router', 'axios', 'vuex'] // 需要打包起来的依赖
+    core: ['vue/dist/vue.esm.js', 'element-ui', 'vue-router', 'axios', 'vuex']
+    // 需要打包起来的依赖
   },
   output: {
     path: path.join(__dirname, '../static/js/vendor'), // 输出的路径
@@ -13,13 +14,8 @@ module.exports = {
   plugins: [
     new webpack.DllPlugin({
       path: path.join(__dirname, '../static/js/vendor', '[name]-mainfest.json'), // 描述依赖对应关系的json文件
-      name: '[name]_library', 
+      name: '[name]_library',
       context: __dirname // 执行的上下文环境，对之后DllReferencePlugin有用
-    }),
-    new webpack.optimize.UglifyJsPlugin({ // uglifjs压缩
-      compress: {
-        warnings: false
-      }
     })
   ]
 }

@@ -307,6 +307,14 @@
       isMob() {
         return this.$store.state.event.isMob
       }
+    },
+    components: {
+      swiper: (resolve) => {
+        require(['vue-awesome-swiper/src/swiper'], resolve)
+      },
+      swiperSlide: (resolve) => {
+        require(['vue-awesome-swiper/src/slide'], resolve)
+      }
     }
   }
 </script>

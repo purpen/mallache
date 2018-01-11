@@ -21,7 +21,6 @@
 </template>
 <script>
   import api from '@/api/api'
-  // import axios from 'axios'
   import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
