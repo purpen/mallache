@@ -55,11 +55,21 @@
       getDate (date) {
         if (date) {
           let arr = date.match(/\d+/g)
-          if (arr.length > 2) {
-            var date1 = arr.splice(0, 2).join('-')
-            var date2 = arr.splice(0, 2).join('-')
+          var date1 = ''
+          var date2 = ''
+          switch (arr.length) {
+            case 2:
+              date = arr.join('-')
+              break
+            case 3:
+              date1 = `${arr[0]}-${arr[1]}`
+              date2 = `${arr[0]}-${arr[2]}`
+              break
+            case 4:
+              date1 = `${arr[0]}-${arr[1]}`
+              date2 = `${arr[2]}-${arr[3]}`
+              break
           }
-          date = arr.join('-')
         }
         this.loading = true
         let method = api.dateOfAwardMonth

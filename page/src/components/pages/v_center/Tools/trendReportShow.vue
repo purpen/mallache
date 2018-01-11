@@ -104,6 +104,10 @@
           resizeTimer = setTimeout(function() {
             that.gotoPage(that.page)
           }, 100)
+        } else if (e.keyCode === 27) {
+          resizeTimer = setTimeout(function() {
+            that.exitFullscreen()
+          }, 100)
         } else if (e.keyCode === 37) {
           resizeTimer = setTimeout(function() {
             that.prev()
@@ -196,6 +200,7 @@
     border: 1px solid #D2D2D2;
     position: relative;
     padding-top: 50px;
+    background: #fff;
   }
 
   p.title {

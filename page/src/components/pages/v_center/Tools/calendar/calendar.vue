@@ -18,17 +18,18 @@
       </div>
       <div class="fr fc-button-group fc-button-group-fr">
         <button type="button" @click="changeView('month')"
-                :class="['fc-month-button','fc-button', 'fc-state-default', 'fc-corner-left',
+                :class="['fc-month-button','fc-button', 'fl', 'fc-state-default', 'fc-corner-left',
                 view === 'month' ? 'fc-state-active' : '']">
           月
         </button>
         <button type="button" @click="changeView('basicWeek')"
-                :class="['fc-basicWeek-button','fc-button', 'fc-state-default', 'fc-corner-right',
+                :class="['fc-basicWeek-button','fc-button', 'fl', 'fc-state-default', 'fc-corner-right',
                 view === 'basicWeek' ? 'fc-state-active' : '']">
           周
         </button>
       </div>
-      <div class="fc-button-group fc-button-group-center">{{eventMsg.headtitle}}</div>
+      <div class="fc-button-group fc-button-group-center" v-if="isMob">{{eventMsg.headtitle}}</div>
+      <div class="fc-button-group fc-button-group-center" v-else>{{eventMsg.month}}</div>
     </div>
     <full-calendar ref="calendar"
                    @event-selected="eventSelected"
@@ -238,7 +239,7 @@
         this.$refs.calendar.fireMethod('changeView', method)
       },
       getView () {
-        this.eventMsg.month = this.$refs.calendar.fireMethod('getView').title
+        this.eventMsg.month = this.$refs.calendar.fireMethod('getView').title.replace(/(年)\s(\d)/g, '$1$2')
         let arr = this.$refs.calendar.fireMethod('getView').title.match(/\d+/g)
         switch (arr.length) {
           case 2:
@@ -279,7 +280,6 @@
         this.$refs.tips.style.backgroundSize = '15px'
       },
       eventCreated (...e) {
-        //        console.log(e)
       }
     },
     beforeDestroy () {

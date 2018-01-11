@@ -1370,6 +1370,10 @@ td.fc-day.fc-widget-content.fc-today::before {
   display: none;
 }
 
+.fc-content .fc-title {
+  font-size: 14px;
+}
+
 .fc-content {
   padding-right:8px;
   overflow: hidden;
@@ -1690,6 +1694,10 @@ td.fc-day.fc-widget-content.fc-today::before {
     top: 7px;
   }
 
+
+  .fc-content .fc-title {
+    font-size: 12px;
+  }
   /*767 end*/
 }
 
