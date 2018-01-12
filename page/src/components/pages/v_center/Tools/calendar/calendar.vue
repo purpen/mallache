@@ -316,6 +316,11 @@
     padding-top: 4px;
   }
 
+  .fc-button-group-fr {
+    display: flex;
+    justify-content: center;
+  }
+
   .fc-button-group-center {
     display: block;
     padding: 0 88px 0 108px;
@@ -365,7 +370,6 @@
 
   .fc-button-group .fc-month-button,
   .fc-button-group .fc-basicWeek-button {
-    float: left;
     margin-left: -1px;
     height: 28px;
     line-height: 28px;
