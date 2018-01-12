@@ -241,6 +241,9 @@
     margin-bottom: 20px;
     cursor: pointer;
     transition: all ease .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .item:hover {
@@ -278,7 +281,7 @@
     font-size: 14px;
     color: #666;
     line-height: 16px;
-    height: 32px;
+    /* height: 32px; */
   }
 
   @media screen and (max-width: 600px) {

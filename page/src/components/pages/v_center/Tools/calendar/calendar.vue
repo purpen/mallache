@@ -309,7 +309,7 @@
 
   .mHeader {
     position: relative;
-    margin-top: -14px;
+    /* margin-top: -14px; */
   }
 
   .fc-button-group-fl {

@@ -1254,7 +1254,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .fc-widget-content .fc-event-container {
-  padding: 6px 0 !important;
+  padding: 6px 4px !important;
 }
 
 .fc button {
@@ -1381,7 +1381,7 @@ td.fc-day.fc-widget-content.fc-today::before {
   text-overflow: ellipsis;
 }
 
-td.fc-day-top {
+.fc td.fc-day-top {
   padding-left: 8px;
 }
 /*日历 end*/
@@ -1660,6 +1660,8 @@ td.fc-day-top {
   .fc-event {
     text-indent: 0;
     padding-left: 14px !important;
+    height: 18px;
+    line-height: 18px !important;
   }
 
   .upload .el-upload--picture-card {
@@ -1687,11 +1689,6 @@ td.fc-day-top {
 
   .fc-month-view .fc-widget-header {
     line-height: 40px;
-  }
-
-  .fc-event {
-    height: 18px;
-    line-height: 18px !important;
   }
 
   .fc-start::before {
