@@ -280,8 +280,7 @@
   .right .summary {
     font-size: 14px;
     color: #666;
-    line-height: 16px;
-    /* height: 32px; */
+    line-height: 18px;
   }
 
   @media screen and (max-width: 600px) {

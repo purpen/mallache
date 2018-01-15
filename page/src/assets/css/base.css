@@ -1270,27 +1270,6 @@ td.fc-day.fc-widget-content.fc-today::before {
   height: 22px;
 }
 
-.fc-icon-left-single-arrow,
-.fc-icon-right-single-arrow {
-  position: relative;
-}
-
-.fc-icon-left-single-arrow:after,
-.fc-icon-right-single-arrow:after {
-  position: absolute;
-  top: -4% !important;
-  font-weight: normal !important;
-  font-size: 26px !important;
-}
-
-.fc-icon-left-single-arrow:after {
-  left: 1px;
-}
-
-.fc-icon-right-single-arrow:after {
-  right: 2px;
-}
-
 .fc-toolbar {
   text-align: left;
 }
