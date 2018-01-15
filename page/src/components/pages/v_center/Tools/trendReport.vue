@@ -17,8 +17,8 @@
                   </div>
                   <article class="item-body clearfix">
                     <p class="title">{{ele.title}}</p>
-                    <p class="view fl">{{ele.hits}}</p>
-                    <p class="date fr">{{ele.created_at}}</p>
+                    <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
+                    <p class="date fr"><i class="fx-4 fx-icon-time"></i>{{ele.created_at}}</p>
                   </article>
                 </router-link>
               </el-col>
@@ -207,23 +207,21 @@
 
   .item-body .view {
     font-size: 12px;
-    line-height: 16px;
-    text-indent: 26px;
     color: #999999;
     font-weight: normal;
-    background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat left;
-    background-size: 20px;
     padding-right: 24px;
   }
 
   .item-body .date {
     font-size: 12px;
-    line-height: 16px;
-    text-indent: 26px;
     color: #999999;
     font-weight: normal;
-    background: url('../../../../assets/images/tools/report/time-gray@2x.png') no-repeat left;
-    background-size: 16px;
+  }
+
+  .item-body .view,
+  .item-body .date {
+    display: flex;
+    align-items: center;
   }
 
   .pager {

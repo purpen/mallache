@@ -5,8 +5,7 @@
       <el-row :gutter="24" class="anli-elrow">
         <v-menu currentName="exhibition" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="exhibition"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20"
-                v-loading.body="loading">
+        <el-col :span="isMob ? 24 : 20">
           <vCalendar
             :events="events"
             @event-click="eventClick"
@@ -34,7 +33,6 @@
     },
     data () {
       return {
-        loading: false,
         events: [],
         id: '',
         backgroundColor: ''
@@ -47,8 +45,6 @@
       menuStatus () {
         return this.$store.state.event.menuStatus
       }
-    },
-    created () {
     },
     methods: {
       getDate (date) {
@@ -70,14 +66,12 @@
               break
           }
         }
-        this.loading = true
         let method = api.dateOfAwardMonth
         if (date1 && date2) {
           Promise.all([ // 显示周历时可能出现 12-31 -- 1,6 获取两个月的信息
             this.$http.get(method, {params: {yearMonth: date1}}),
             this.$http.get(method, {params: {yearMonth: date2}})])
             .then(([res1, res2]) => {
-              this.loading = false
               if (res1.data.meta.status_code === 200) {
                 this.events = this.unique(this.events.concat(this.addType (res1.data.data)))
               } else {
@@ -95,14 +89,12 @@
         } else {
           this.$http.get(method, {params: {yearMonth: date}})
           .then((res) => {
-            this.loading = false
             if (res.data.meta.status_code === 200) {
               this.events = this.addType (res.data.data)
             } else {
               this.$message.error(res.data.meta.message)
             }
           }).catch((err) => {
-            this.loading = false
             console.error(err)
           })
         }
