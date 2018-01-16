@@ -351,6 +351,7 @@
   }
 
   .fx-icon-nothing-left, .fx-icon-nothing-right {
+    margin-right: 0;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -389,7 +390,7 @@
     padding: 0 8px;
     color: #999999;
     height: 22px;
-    line-height: 22px;
+    line-height: 20px;
   }
 
   .fc-button-group .fc-month-button,

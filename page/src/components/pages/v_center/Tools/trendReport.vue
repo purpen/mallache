@@ -18,7 +18,7 @@
                   <article class="item-body clearfix">
                     <p class="title">{{ele.title}}</p>
                     <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
-                    <p class="date fr"><i class="fx-4 fx-icon-time"></i>{{ele.created_at}}</p>
+                    <p class="date fr"><i class="fx-2 fx-icon-time"></i>{{ele.created_at}}</p>
                   </article>
                 </router-link>
               </el-col>
