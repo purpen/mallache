@@ -30,10 +30,10 @@
               :page="page">
             </pdf>
             <p :class="['flip', {'flip-fullscreen' : isFullscreen}]" v-if="numPages">
-              <span class="swiper-button-prev fl" @click="prev">
+              <span :class="['swiper-button-prev','fl', {'not-allow' : prevNotAllow}]" @click="prev">
                 <i class="el-icon-arrow-left"></i>
               </span>
-              <span class="swiper-button-next fr" @click="next">
+              <span :class="['swiper-button-next','fr', {'not-allow' : nextNotAllow}]" @click="next">
                 <i class="el-icon-arrow-right"></i>
               </span>
             </p>
@@ -99,7 +99,9 @@
         numPages: 0,
         loadedRatio: 0,
         load: 0,
-        isFullscreen: false
+        isFullscreen: false,
+        prevNotAllow: true,
+        nextNotAllow: false
       }
     },
     created() {
@@ -136,6 +138,16 @@
       numPages() {
         if (this.numPages) {
           this.isLoading = false
+        }
+      },
+      page() {
+        if (this.page === 1) {
+          this.prevNotAllow = true
+        } else if (this.page === this.numPages) {
+          this.nextNotAllow = true
+        } else {
+          this.prevNotAllow = false
+          this.nextNotAllow = false
         }
       }
     },
@@ -274,6 +286,7 @@
     background: #FFFFFF;
     display: flex;
     align-items: center;
+    color: #999;
   }
 
   menu menuitem {
@@ -345,7 +358,7 @@
   }
 
   .total-page {
-    color: #666;
+    color: #999;
   }
 
   .total-page i {
@@ -364,7 +377,7 @@
   }
 
   .page-input {
-    color: #666;
+    color: #999;
     margin-top: 15px;
     width: 30px;
     height: 20px;
@@ -440,7 +453,7 @@
   .fullscreen-tools .fx-icon-nothing-left:hover {
     color:#fff;
     background-color: transparent;
-    border-color: #979797;
+    border-color: #ccc;
   }
 
   .fullscreen-tools .fx-icon-nothing-right:active,

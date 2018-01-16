@@ -261,6 +261,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   cursor: pointer;
 }
 
+.not-allow {
+  cursor: not-allowed!important;
+}
 /**
  * 面包屑
  */
