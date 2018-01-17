@@ -16,6 +16,7 @@ page/config/index.js
 page/config/prod.env.js
 page/package-lock.json
 page/static/js/vendor/*
+page/deploy.sh
 *.swp
 *.swo
 *.swn

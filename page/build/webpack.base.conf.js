@@ -68,10 +68,6 @@ module.exports = {
         }
       }],
       threadPool: happThreadPool
-    }),
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: require('../static/js/vendor/core-mainfest.json') // 指向这个json
     })
   ],
   module: {
