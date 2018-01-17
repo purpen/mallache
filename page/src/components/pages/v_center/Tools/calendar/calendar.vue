@@ -2,31 +2,31 @@
   <div :class="['calendar', {'m-calendar' : isMob}]">
     <div :class="['header', 'clearfix', {'mHeader' : isMob}]" ref="header">
       <div class="fl fc-button-group fc-button-group-fl">
-        <button type="button" @click="prev"
+        <a type="button" @click="prev"
                 class="fc-prev-button fc-button fl fc-state-default fc-corner-left fc-state-hover">
           <span
-            class="fc-icon fc-icon-left-single-arrow"></span>
-        </button>
-        <button type="button" @click="todays"
+            class="fx-icon-nothing-left"></span>
+        </a>
+        <a type="button" @click="todays"
                 :class="['fc-today-button', 'fc-button', 'fl', 'fc-state-default']" :disabled="isToday">今天
-        </button>
-        <button type="button" @click="next"
+        </a>
+        <a type="button" @click="next"
                 class="fc-next-button fc-button fl fc-state-default fc-corner-right">
           <span
-            class="fc-icon fc-icon-right-single-arrow"></span>
-        </button>
+            class="fx-icon-nothing-right"></span>
+        </a>
       </div>
       <div class="fr fc-button-group fc-button-group-fr">
-        <button type="button" @click="changeView('month')"
+        <a type="button" @click="changeView('month')"
                 :class="['fc-month-button','fc-button', 'fl', 'fc-state-default', 'fc-corner-left',
                 view === 'month' ? 'fc-state-active' : '']">
           月
-        </button>
-        <button type="button" @click="changeView('basicWeek')"
+        </a>
+        <a type="button" @click="changeView('basicWeek')"
                 :class="['fc-basicWeek-button','fc-button', 'fl', 'fc-state-default', 'fc-corner-right',
                 view === 'basicWeek' ? 'fc-state-active' : '']">
           周
-        </button>
+        </a>
       </div>
       <div class="fc-button-group fc-button-group-center" v-if="isMob">{{eventMsg.headtitle}}</div>
       <div class="fc-button-group fc-button-group-center" v-else>{{eventMsg.month}}</div>
@@ -309,17 +309,30 @@
 
   .mHeader {
     position: relative;
-    margin-top: -14px;
+    /* margin-top: -14px; */
+  }
+  .fc-button-group {
+    font-size: 14px;
+  }
+
+  .fc-button-group a{
+    cursor: pointer;
   }
 
   .fc-button-group-fl {
     padding-top: 4px;
   }
 
+  .fc-button-group-fr {
+    display: flex;
+    justify-content: center;
+  }
+
   .fc-button-group-center {
     display: block;
-    padding: 0 88px 0 108px;
+    padding: 0 80px 0 114px;
     line-height: 28px;
+    font-size: 17px;
   }
 
   .fc-button-group .fc-state-default {
@@ -332,22 +345,39 @@
 
   .fc-button-group .fc-prev-button,
   .fc-button-group .fc-next-button {
-    background: #FFFFFF;
-    border-radius: 50% !important;
-    width: 22px;
-    line-height: 1;
-    color: #979797
+    border-radius: 50%;
+    color: #999999;
+    border: none;
   }
 
-  .fc-button-group .fc-prev-button:hover,
-  .fc-button-group .fc-next-button:hover,
-  .fc-button-group .fc-today-button:hover {
+  .fx-icon-nothing-left, .fx-icon-nothing-right {
+    margin-right: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    line-height: 22px;
+    border: 1px solid #979797;
+  }
+
+  .fx-icon-nothing-left{
+    padding-right: 2px
+  }
+  .fx-icon-nothing-right{
+    padding-left: 2px
+  }
+
+  .fc-button-group .fc-today-button:hover,
+  .fx-icon-nothing-left:hover, .fx-icon-nothing-right:hover {
     color: #FF5D62;
     border-color: #FF5D62;
   }
 
-  .fc-button-group .fc-prev-button:active,
-  .fc-button-group .fc-next-button:active,
+  .fc-button-group .fc-prev-button:active .fx-icon-nothing-left,
+  .fc-button-group .fc-next-button:active .fx-icon-nothing-right,
   .fc-button-group .fc-today-button:active {
     color: #FFFFFF;
     background-color: #FFACAF;
@@ -355,22 +385,22 @@
   }
 
   .fc-button-group .fc-today-button {
-    margin: 0 16px !important;
+    margin: 0 12px !important;
     border-radius: 10px;
     padding: 0 8px;
     color: #999999;
     height: 22px;
-    line-height: 22px;
+    line-height: 20px;
   }
 
   .fc-button-group .fc-month-button,
   .fc-button-group .fc-basicWeek-button {
-    float: left;
     margin-left: -1px;
     height: 28px;
     line-height: 28px;
     padding: 0 12px;
-    color: #FF5A5F
+    color: #FF5A5F;
+    border-color: #FF5A5F;
   }
 
   .fc-button-group .fc-state-active {

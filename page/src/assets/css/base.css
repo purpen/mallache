@@ -223,6 +223,34 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-weight: 500;
 }
 
+.font-weight6 {
+  font-weight: 600;
+}
+
+[class^="fx-icon-"], [class*=" fx-icon-"] {
+  margin-right: 6px;
+}
+
+.fx {
+  font-size: 14px;
+}
+
+.fx-2 {
+  font-size: 16px;
+}
+
+.fx-3{
+  font-size: 18px;
+}
+
+.fx-4 {
+  font-size: 20px;
+}
+
+.fx-5 {
+  font-size: 22px;
+}
+
 .loading {
   position: fixed;
   top: 30%;
@@ -233,6 +261,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   cursor: pointer;
 }
 
+.not-allow {
+  cursor: not-allowed!important;
+}
 /**
  * 面包屑
  */
@@ -1233,8 +1264,8 @@ td.fc-day.fc-widget-content.fc-today::before {
   content: "今";
   display: block;
   position: absolute;
-  top: 5px;
-  left: 5px;
+  top: 6px;
+  left: 8px;
   width: 25px;
   height: 25px;
   background: #FF5D62;
@@ -1254,7 +1285,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .fc-widget-content .fc-event-container {
-  padding: 6px 0 !important;
+  padding: 6px 4px !important;
 }
 
 .fc button {
@@ -1268,27 +1299,6 @@ td.fc-day.fc-widget-content.fc-today::before {
   border: 1px solid #979797;
   box-shadow: none;
   height: 22px;
-}
-
-.fc-icon-left-single-arrow,
-.fc-icon-right-single-arrow {
-  position: relative;
-}
-
-.fc-icon-left-single-arrow:after,
-.fc-icon-right-single-arrow:after {
-  position: absolute;
-  top: -4% !important;
-  font-weight: normal !important;
-  font-size: 26px !important;
-}
-
-.fc-icon-left-single-arrow:after {
-  left: 1px;
-}
-
-.fc-icon-right-single-arrow:after {
-  right: 2px;
 }
 
 .fc-toolbar {
@@ -1379,6 +1389,10 @@ td.fc-day.fc-widget-content.fc-today::before {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.fc td.fc-day-top {
+  padding-left: 8px;
 }
 /*日历 end*/
 
@@ -1656,6 +1670,8 @@ td.fc-day.fc-widget-content.fc-today::before {
   .fc-event {
     text-indent: 0;
     padding-left: 14px !important;
+    height: 18px;
+    line-height: 18px !important;
   }
 
   .upload .el-upload--picture-card {
@@ -1683,11 +1699,6 @@ td.fc-day.fc-widget-content.fc-today::before {
 
   .fc-month-view .fc-widget-header {
     line-height: 40px;
-  }
-
-  .fc-event {
-    height: 18px;
-    line-height: 18px !important;
   }
 
   .fc-start::before {

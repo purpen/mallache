@@ -10,7 +10,7 @@
           <div :class="['commonly-sites', {'commonly-sites-m' : isMob}]">
 
             <section class="lists design-info" v-if="designInfo.length">
-              <h2>设计资讯</h2>
+              <h2><span class="fx-3 fx-icon-information"></span>设计资讯</h2>
               <article>
                 <el-row :gutter="isMob ? 10 : 20">
                   <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designInfo" :key="index">
@@ -51,7 +51,7 @@
               </article>
             </section>
             <section class="lists crowd-funding" v-if="crowdFunding.length">
-              <h2>众筹</h2>
+              <h2><span class="fx-icon-crowdfunding"></span>众筹</h2>
               <article>
                 <article>
                   <el-row :gutter="isMob ? 10 : 20">
@@ -72,7 +72,7 @@
               </article>
             </section>
             <section class="lists business-consult" v-if="businessConsult.length">
-              <h2>商业咨询</h2>
+              <h2><span class="fx-icon-business-consulting"></span>商业咨询</h2>
               <article>
                 <article>
                   <el-row :gutter="isMob ? 10 : 20">
@@ -93,7 +93,7 @@
               </article>
             </section>
             <section class="lists design-awards" v-if="designAwards.length">
-              <h2>设计奖项</h2>
+              <h2><span class="fx-icon-prize"></span>设计奖项</h2>
               <article>
                 <article>
                   <el-row :gutter="isMob ? 10 : 20">
@@ -203,9 +203,9 @@
     font-size: 20px;
     color: #222222;
     margin: 40px 0 20px;
-    text-indent: 30px;
-    background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
-    background-size: 20px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
   }
 
   .lists h2:first-child {
@@ -215,22 +215,23 @@
   .originality h2 {
     background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
     background-size: 20px;
+    text-indent: 30px;
   }
 
-  .crowd-funding h2 {
+  /* .crowd-funding h2 {
     background: url("../../../../assets/images/tools/commonlySite/Crowd-funding.png") no-repeat left;
     background-size: 20px;
-  }
+  } */
 
-  .business-consult h2 {
+  /* .business-consult h2 {
     background: url("../../../../assets/images/tools/commonlySite/BusinessConsulting.png") no-repeat left;
     background-size: 20px;
-  }
+  } */
 
-  .design-awards h2 {
+  /* .design-awards h2 {
     background: url("../../../../assets/images/tools/commonlySite/designAwards.png") no-repeat left;
     background-size: 20px;
-  }
+  } */
 
   .item {
     height: 100px;
@@ -241,6 +242,9 @@
     margin-bottom: 20px;
     cursor: pointer;
     transition: all ease .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .item:hover {
@@ -277,8 +281,7 @@
   .right .summary {
     font-size: 14px;
     color: #666;
-    line-height: 16px;
-    height: 32px;
+    line-height: 18px;
   }
 
   @media screen and (max-width: 600px) {
@@ -312,18 +315,18 @@
     }
 
     .lists h2 {
-      text-indent: 24px;
+      /* text-indent: 24px; */
       margin: 20px 0;
       font-size: 17px;
-      background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
-      background-size: 17px;
+      /* background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
+      background-size: 17px; */
     }
 
     .lists h2:first-child {
       margin: 0 0 20px;
     }
 
-    .originality h2 {
+    /* .originality h2 {
       background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
       background-size: 17px;
     }
@@ -341,7 +344,7 @@
     .design-awards h2 {
       background: url("../../../../assets/images/tools/commonlySite/designAwards.png") no-repeat left;
       background-size: 17px;
-    }
+    } */
 
   }
 </style>

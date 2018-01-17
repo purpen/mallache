@@ -9,11 +9,14 @@
         <el-col :span="isMob ? 24 : 20">
           <p class="title">{{pdf.title}}</p>
           <p class="info clearfix">
-            <span class="date fl">{{pdf.created_at}}</span>
-            <span class="view fl">{{pdf.hits}}</span>
+            <span class="date fl"><i class="fx-2 fx-icon-time"></i>{{pdf.created_at}}</span>
+            <span class="view fl"><i class="fx-3 fx-icon-see"></i>{{pdf.hits}}</span>
             <span class="tigs fl">
               <b class="fl">标签:</b>
-              <i v-for="(e, i) in pdf.tag" :key="i">{{e}}</i>
+              <i class="fx" v-for="(e, i) in pdf.tag" :key="i">
+                <i class="fx-icon-label"></i>
+                {{e}}
+              </i>
             </span>
             </p>
           <div v-if="already" :class="['pdf', 'swiper-container', {'fullscreen-pdf' : isFullscreen}]" ref="pdf">
@@ -27,30 +30,40 @@
               :page="page">
             </pdf>
             <p :class="['flip', {'flip-fullscreen' : isFullscreen}]" v-if="numPages">
-              <span class="swiper-button-prev fl" @click="prev">
+              <span :class="['swiper-button-prev','fl', {'not-allow' : prevNotAllow}]" @click="prev">
                 <i class="el-icon-arrow-left"></i>
               </span>
-              <span class="swiper-button-next fr" @click="next">
+              <span :class="['swiper-button-next','fr', {'not-allow' : nextNotAllow}]" @click="next">
                 <i class="el-icon-arrow-right"></i>
               </span>
             </p>
             <div class="fullscreen-tools" v-if="isFullscreen">
-              <span class="exit-fullscreen" @click="exitFullscreen"></span>
-              <span class="prev" @click="prev"></span>
-              <span class="next" @click="next"></span>
+              <span class="exit-fullscreen" @click="exitFullscreen">
+                <span class="fx-4 fx-icon-exitFull-screen"></span>
+              </span>
+              <span class="fx-icon-nothing-left" @click="prev"></span>
+              <span class="fx-icon-nothing-right" @click="next"></span>
               <p class="total-page">
-                <span>共{{numPages}}页</span>前往
+                <i>共{{numPages}}页</i>前往
                 <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
                 页
               </p>
             </div>
             <menu class="clearfix" v-if="!isFullscreen">
-              <menuitem class="fullscreen" @click="fullscreen">fullscreen</menuitem>
-              <menuitem class="add" @click="prev">add</menuitem>
-              <menuitem class="subtract" @click="next">subtract</menuitem>
-              <menuitem class="rotate" @click="rotate += 90" v-if="isMob">rotate</menuitem>
-              <p class="total-page fr">
-                <span>共{{numPages}}页</span>前往
+              <menuitem class="fullscreen" @click="fullscreen">
+                <span class="fx-4 fx-icon-full-screen"></span>
+              </menuitem>
+              <menuitem class="add" @click="prev">
+                <span class="fx-icon-nothing-left"></span>
+              </menuitem>
+              <menuitem class="subtract" @click="next">
+                <span class="fx-icon-nothing-right"></span>
+              </menuitem>
+              <menuitem class="rotate" @click="rotate += 90" v-if="isMob">
+                <span class="fx-icon-rotate"></span>
+              </menuitem>
+              <p class="total-page">
+                <i>共{{numPages}}页</i>前往
                 <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
                 页
               </p>
@@ -86,7 +99,9 @@
         numPages: 0,
         loadedRatio: 0,
         load: 0,
-        isFullscreen: false
+        isFullscreen: false,
+        prevNotAllow: true,
+        nextNotAllow: false
       }
     },
     created() {
@@ -124,6 +139,16 @@
         if (this.numPages) {
           this.isLoading = false
         }
+      },
+      page() {
+        if (this.page === 1) {
+          this.prevNotAllow = true
+        } else if (this.page === this.numPages) {
+          this.nextNotAllow = true
+        } else {
+          this.prevNotAllow = false
+          this.nextNotAllow = false
+        }
       }
     },
     methods: {
@@ -133,7 +158,8 @@
             this.already = true
             res.data.data.created_at = res.data.data.created_at
             .date_format()
-            .format('yyyy年MM月dd日 hh:mm')
+            .format('yyyy年MM月dd日')
+            // .format('yyyy年MM月dd日 hh:mm')
             this.pdf = res.data.data
           } else {
             this.$message.error(res.data.meta.message)
@@ -219,34 +245,18 @@
   }
 
   p.info span {
-    text-indent: 26px;
     font-size: 12px;
     line-height: 16px;
     padding-right: 15px;
     margin: 5px 0;
+    display: flex;
+    align-items: center;
   }
 
-  p.info .date {
-    text-indent: 22px;
-    background: url('../../../../assets/images/tools/report/time-gray@2x.png') no-repeat 0 center;
-    background-size: 16px;
-  }
-
-  p.info .view {
-    text-indent: 30px;
-    background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat 4px center;
-    background-size: 20px;
-  }
-
-  p.info .tigs {
-    text-indent: 0;
-  }
-
-  .tigs i {
-    float: left;
-    text-indent: 24px;
-    background: url('../../../../assets/images/tools/report/label-gray@2x.png') no-repeat 6px 2px;
-    background-size: 14px;
+  .tigs i.fx {
+    display: flex;
+    align-items: center;
+    margin-left: 6px;
   }
 
   p.flip {
@@ -273,67 +283,90 @@
     line-height: 50px;
     border-bottom: 1px solid #D2D2D2;
     padding: 0 20px 0 15px;
-    background: #FFFFFF
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    color: #999;
   }
 
   menu menuitem {
-    float: left;
-    margin-top: 10px;
     margin-right: 8px;
     width: 30px;
     height: 30px;
-    text-indent: -999rem;
+    font-size: 14px;
     cursor: pointer;
     transition: 0.2s all ease;
+    display: flex;
+    align-items: center;
   }
 
-  menuitem.add {
-    background: url('../../../../assets/images/tools/report/PreviousPage.svg') no-repeat center;
-    background-size: 24px;
-  }
-  menuitem.add:hover {
-    background: url('../../../../assets/images/tools/report/PreviousPageHover.svg') no-repeat center;
-    background-size: 24px;
+  .fc-prev-button,
+  .fc-next-button {
+    border-radius: 50%;
+    color: #999999;
+    border: none;
   }
 
-  menuitem.subtract {
-    margin-left: 8px;
-    margin-right: 18px;
-    background: url('../../../../assets/images/tools/report/NextPage.svg') no-repeat center;
-    background-size: 24px;
-  }
-  menuitem.subtract:hover {
-    background: url('../../../../assets/images/tools/report/NextPageHover.svg') no-repeat center;
-    background-size: 24px;
-  }
-
-  menuitem.rotate {
-    background: url('../../../../assets/images/tools/report/Rotate@2x.png') no-repeat center;
-    background-size: 24px;
-  }
-  menuitem.rotate:hover {
-    background: url('../../../../assets/images/tools/report/RotateHover@2x.png') no-repeat center;
-    background-size: 24px;
+  .fx-icon-full-screen, .fx-icon-nothing-left, .fx-icon-nothing-right {
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 50px;
+    border: 1px solid #979797;
   }
 
-  menuitem.fullscreen {
-    background: url('../../../../assets/images/tools/report/FullScreen.svg') no-repeat center;
-    background-size: 20px;
+ .fx-icon-full-screen {
+    border: none;
+    font-size: 20px;
   }
-  menuitem.fullscreen:hover {
-    background: url('../../../../assets/images/tools/report/FullScreenHover.svg') no-repeat center;
-    background-size: 20px;
+
+  .fx-icon-nothing-left{
+    padding-right: 2px
   }
+
+  .fx-icon-nothing-right{
+    padding-left: 2px
+  }
+
+  .fx-icon-rotate {
+    font-size: 24px;
+  }
+
+  .fx-icon-rotate:hover,
+  .fx-icon-full-screen:hover,
+  .fx-icon-nothing-left:hover,
+  .fx-icon-nothing-right:hover {
+    color: #FF5D62;
+    border-color: #FF5D62;
+  }
+
+  .fx-icon-nothing-left:active,
+  .fx-icon-nothing-right:active {
+    color: #FFFFFF;
+    background-color: #FFACAF;
+    border-color: #FF5D62;
+  }
+
+  menu .total-page {
+    position: absolute;
+    right: 15px;
+    top: 0;
+  }
+
   .total-page {
-    color: #666;
+    color: #999;
   }
 
-  .total-page span {
+  .total-page i {
     position: relative;
     margin-right: 20px;
   }
 
-  .total-page span::after {
+  .total-page i::after {
     content: "";
     position: absolute;
     right: -10px;
@@ -344,7 +377,7 @@
   }
 
   .page-input {
-    color: #666;
+    color: #999;
     margin-top: 15px;
     width: 30px;
     height: 20px;
@@ -393,22 +426,8 @@
     cursor: pointer;
     width: 24px;
     height: 24px;
+    line-height: 24px;
     margin-right: 20px;
-  }
-
-  span.exit-fullscreen {
-    background: url('../../../../assets/images/tools/report/ExitFullScreen.svg') no-repeat center;
-    background-size: 24px;
-  }
-
-  span.prev {
-    background: url('../../../../assets/images/tools/report/PreviousPageWhite.svg') no-repeat center;
-    background-size: 24px;
-  }
-
-  span.next {
-    background: url('../../../../assets/images/tools/report/NextPageWhite.svg') no-repeat center;
-    background-size: 24px;
   }
 
   .fullscreen-tools .total-page {
@@ -416,13 +435,41 @@
     line-height: 50px;
   }
 
-  .fullscreen-tools .total-page span::after {
+  .fullscreen-tools .total-page i::after {
     background: #fff
   }
 
   .fullscreen-tools .page-input {
     background: #333;
     color: #fff;
+  }
+
+  .fullscreen-tools .fx-icon-nothing-right,
+  .fullscreen-tools .fx-icon-nothing-left {
+    border-width: 2px;
+  }
+
+  .fullscreen-tools .fx-icon-nothing-right:hover,
+  .fullscreen-tools .fx-icon-nothing-left:hover {
+    color:#fff;
+    background-color: transparent;
+    border-color: #ccc;
+  }
+
+  .fullscreen-tools .fx-icon-nothing-right:active,
+  .fullscreen-tools .fx-icon-nothing-left:active {
+    color:#fff;
+    background-color: transparent;
+    border-color: #979797;
+  }
+
+  .fullscreen-tools span {
+    opacity: 0.7;
+  }
+
+  .fullscreen-tools span:hover,
+  .fullscreen-tools span:active {
+    opacity: 1;
   }
 
   p.flip-fullscreen {
