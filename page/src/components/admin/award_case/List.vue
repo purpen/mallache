@@ -45,8 +45,8 @@
               label="产品信息"
               min-width="160">
                 <template slot-scope="scope">
-                  <p>标题: {{ scope.row.title }}</p>
-                  <p>链接: {{ scope.row.url }}</p>
+                  <p>标题: <router-link :to="{name: 'designAwardsShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
+                  <p>链接: <a :href="scope.row.url" target="_blank">{{ scope.row.url }}</a></p>
                 </template>
             </el-table-column>
             <el-table-column
