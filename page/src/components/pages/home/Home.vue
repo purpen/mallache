@@ -1,20 +1,5 @@
 <template>
   <div class="content-box">
-    <!-- <swiper :options="swiperOption" class="banner">
-      <swiper-slide v-for="(item, index) in slideList" :key="index">
-        <a :href="item.clickUrl">
-
-        </a>
-      </swiper-slide>
-      <div class="swiper-pagination" slot="pagination">
-      </div> -->
-      <!-- <div class="swiper-button-prev" slot="button-prev">
-        <i class="el-icon-arrow-left"></i>
-      </div>
-      <div class="swiper-button-next" slot="button-next">
-        <i class="el-icon-arrow-right"></i>
-      </div> -->
-    <!-- </swiper> -->
   <div class="slide" ref="slide"
     :style="{ 'background-image': 'url(' + require ('@/assets/images/home/BG@2x.jpg') + ')', height: '500px'}">
       <div class="container clearfix" style="height:100%;">
@@ -57,85 +42,104 @@
         </el-col>
       </el-row>
     </div>
-    <div class="article">
-
+    <div class="container article">
+      <h3 class="title">铟果说</h3>
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in articleList" :key="index">
+          <el-card class="card" :body-style="{ padding: '0px' }">
+            <router-link :to="{name: 'articleShow', params: {id: d.id}}"
+                        :target="isMob ? '_self' : '_blank'">
+              <div class="image-box">
+                <img v-lazy="d.cover.middle">
+              </div>
+              <div class="content">
+                <p class="title">{{ d.title }}<p>
+                <p class="des">{{ d.short_content }}</p>
+              </div>
+            </router-link>
+          </el-card>
+        </el-col>
+      </el-row>
     </div>
 
-    <div class="container anli">
-      <div class="item item_3">
-        <h3>铟果案例</h3>
-        <swiper :options="swiperOption" v-if="!isMob">
-          <swiper-slide v-for="(d, index) in caseSlideList" :key="index">
-            <el-row :gutter="30">
-              <a :href="k.clickUrl" v-for="(k, i) in d" :key="i">
-                <el-col :span="8" class="home-elrow">
-                  <el-card class="box-card" :body-style="{ padding: '0px' }">
-                    <div class="image-box">
-                      <img v-lazy="k.image">
-                    </div>
-                    <div class="content">
-                      <p class="stuff-title">{{ k.title }}</p>
-                      <div class="des">
-                        <p>{{ k.desc }}</p>
-                      </div>
-                    </div>
-                  </el-card>
-                </el-col>
-              </a>
-            </el-row>
-          </swiper-slide>
-          <div class="swiper-pagination" slot="pagination"></div>
-          <div class="swiper-button-prev" slot="button-prev">
-            <i class="el-icon-arrow-left"></i>
-          </div>
-          <div class="swiper-button-next" slot="button-next">
-            <i class="el-icon-arrow-right"></i>
-          </div>
-        </swiper>
-
-        <swiper :options="swiperOption" v-if="isMob">
-          <swiper-slide v-for="(k, index) in McaseSlideList" :key="index">
-            <el-row :gutter="30">
-              <a :href="k.clickUrl">
-                <el-col :xs="24" :sm="8" :md="8" :lg="8">
-                  <el-card class="box-card" :body-style="{ padding: '0px' }">
-                    <div class="image-box">
-                      <img v-lazy="k.image">
-                    </div>
-                    <div class="content">
-                      <p class="stuff-title">{{ k.title }}</p>
-                      <div class="des">
-                        <p>{{ k.desc }}</p>
-                      </div>
-                    </div>
-                  </el-card>
-                </el-col>
-              </a>
-            </el-row>
-          </swiper-slide>
-          <div class="swiper-pagination" slot="pagination"></div>
-          <div class="swiper-button-prev" slot="button-prev">
-            <i class="el-icon-arrow-left"></i>
-          </div>
-          <div class="swiper-button-next" slot="button-next">
-            <i class="el-icon-arrow-right"></i>
-          </div>
-        </swiper>
-      </div>
+    <div class="container article design">
+      <h3 class="title">设计造物</h3>
+      <el-row :gutter="20">
+      <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in designList" :key="index">
+        <el-card class="card" :body-style="{ padding: '0px' }">
+          <a :href="d.url" :target="isMob ? '_self' : '_blank'">
+            <div class="image-box not-limit">
+                <img v-lazy="d.cover_url">
+            </div>
+            <div class="content">
+              <p class="title">{{ d.title }}</p>
+              <p class="des">{{ d.content }}</p>
+            </div>
+          </a>
+        </el-card>
+      </el-col>
+    </el-row>
     </div>
 
-    <div class="item item_4">
-      <h3>战略合作</h3>
+    <div class="container article design-case">
+      <h3 class="title">灵感</h3>
+      <el-row :gutter="20">
+      <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCaseList" :key="index">
+        <el-card class="card" :body-style="{ padding: '0px' }">
+          <a :href="d.url" :target="isMob ? '_self' : '_blank'">
+            <div class="image-box">
+                <img v-lazy="d.cover_url">
+            </div>
+            <div class="content">
+              <p class="title">{{ d.title }}</p>
+              <p class="des">{{ d.profile }}</p>
+              <p class="company">
+                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
+                    width="30"/>
+                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
+                <span>{{d.design_company.company_abbreviation}}</span>
+              </p>
+            </div>
+          </a>
+        </el-card>
+      </el-col>
+    </el-row>
+    </div>
+
+    <div class="anli">
+      <h3 class="title-center">铟果案例</h3>
+      <swiper :options="swiperOption" class="clearfix">
+        <swiper-slide v-for="(ele, index) in caseSlideList" :key="index" class="clearfix">
+          <div class="slide-content container">
+            <div class="slide-left">
+              <p class="slide-company"><img v-lazy="ele.companyLogo" :alt="ele.title" width="40px">{{ele.company}}</p>
+              <h4 class="slide-title">{{ele.title}}</h4>
+              <p class="slide-sales">{{ele.sales}}</p>
+              <p class="slide-intro">{{ele.intro}}</p>
+            </div>
+            <a class="slide-right" :href="ele.clickUrl">
+              <img v-lazy="ele.image" :alt="ele.title">
+            </a>
+          </div>
+        </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-button-prev" slot="button-prev">
+          <i class="el-icon-arrow-left"></i>
+        </div>
+        <div class="swiper-button-next" slot="button-next">
+          <i class="el-icon-arrow-right"></i>
+        </div>
+      </swiper>
+    </div>
+
+    <div class="item_4">
+      <h3 class="title-center title-center2">合作伙伴</h3>
 
       <div class="logo-list clearfix">
         <img v-lazy="require('assets/images/home/logo_md.jpg')" />
         <img v-lazy="require('assets/images/home/jdjr_logo.jpg')" />
         <img v-lazy="require('assets/images/home/logo_cxgc.jpg')" />
         <img v-lazy="require('assets/images/home/logo_hqjj.jpg')" />
-      </div>
-      <h3 class="m-partner">合作伙伴</h3>
-
-      <div class="logo-list clearfix">
         <img v-lazy="require('assets/images/home/1logo.jpg')" />
         <img v-lazy="require('assets/images/home/2logo.jpg')" />
         <img v-lazy="require('assets/images/home/3logo.jpg')" />
@@ -149,103 +153,64 @@
 
 <script>
   import { calcImgSize } from 'assets/js/common'
+  import api from '@/api/api'
   export default {
     name: 'index',
     data() {
       return {
         uType: this.$store.state.event.user.type || 1,
-        slideList: [
+        caseSlideList: [
           {
-            clickUrl: 'javascript:void(0);',
-            title: '铟果D³INGO产品创新SaaS平台',
-            desc: '用设计重塑品质生活',
-            image: require ('@/assets/images/home/BG@2x.jpg')
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/26',
+            company: '洒哇地咔',
+            companyLogo: require('@/assets/images/home/logo_swdk.png'),
+            title: '洒哇地咔智能拖地机器人',
+            sales: '单周销量1500台',
+            intro: '由太火鸟科技对接产品需求与设计服务，促成项目实现并通过太火鸟自媒体独家销售及独家专款产品首发，头部大号一条主推家电商品，曝光率100w＋，3个月出货量近5000台。',
+            image: require ('@/assets/images/home/case_swdk.jpg')
+          },
+          {
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            company: '素士',
+            companyLogo: require('@/assets/images/home/logo_sushi.png'),
+            title: '素士声波电动牙刷',
+            sales: '自媒体销售额约2000万',
+            intro: '种子期投资孵化项目，资本助力创业团队搭建和产品开发升级，头部大号攻城掠地、中腰和底部社群全网覆盖战略，已有100＋合作自媒体，助力全渠道分发',
+            image: require ('@/assets/images/home/case_ss.jpg')
           }
         ],
-        caseSlideList: [
-          [
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/26',
-              title: '洒哇地咔无线擦地机',
-              desc: '由太火鸟科技对接产品需求与设计服务，促成项目实现并通过太火鸟自媒体独家销售及独家专款产品首发，头部大号一条主推家电商品，曝光率100w＋，3个月出货量近5000台。',
-              image: require ('@/assets/images/home/case_swdk.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/18',
-              title: '云马C1智能电单车',
-              desc: '2015年10月15日，太火鸟协助国内电单车品牌云造科技正式发布云马 C1智能电单车，同步上线淘宝众筹，并助其拓展线上线下及海外营销渠道，不到一个月时间即完成众筹金额破千万的成绩。截止众筹结束，云马C1智行车共取得5879粉丝支持，筹得资金¥11597621，1159%完成众筹目标，渠道直采4万台。',
-              image: require ('@/assets/images/home/case_ym1.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
-              title: '素士声波电动牙刷白金版',
-              desc: '素士品牌牙刷是由太火鸟孵化的舒可士（深圳）科技有限公司自主研发，2016年7月19日正式在小米众筹上线，共获得2,289,771元众筹金额，以999%的成绩完成了众筹目标。2016年12月，品牌系列产品登陆太火鸟自媒体电商销售，太火鸟担任了品牌首发总代理，截止2017年6月，该款产品在太火鸟自有电商平台上的销售额已高达5000万人民币。',
-              image: require ('@/assets/images/home/case_ss.jpg')
-            }
-          ],
-          [
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/23',
-              title: '婴萌智能配奶机',
-              desc: '北京婴萌科技有限公司设计研发的智能配奶机由太火鸟全程孵化运营，配合卖点提炼、市场定位和针对性营销规划。至今产品已在淘宝众筹平台共筹集320多万人民币，649%达成众筹目标，获得3794多人支持。',
-              image: require ('@/assets/images/home/case_ym.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/24',
-              title: '小蚁智能行车记录仪',
-              desc: '2015年，太火鸟联合小蚁智能行车记录仪的出品公司小蚁科技，在淘宝众筹首发小蚁智能行车记录仪。太火鸟社区发起“募百人首批小蚁样机体验团”试用活动，申请使用人数突破2300人，3天众筹金额突破1000万，众筹总额高达16,191,730元。',
-              image: require ('@/assets/images/home/case_xy.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/20',
-              title: 'WOWSTICK 1fs电动螺丝刀',
-              desc: 'WOWSTICK电动螺丝刀是小米智能家居2016年第42期众筹新品，太火鸟参与运营众筹并担任线上销售总代理，最终筹集金额199万元，2016年12月至2017年4月，该款产品在米家商城/米家有品的销售额高达600万，分销总额超过3,000万元。',
-              image: require ('@/assets/images/home/case_lsd.jpg')
-            }
-          ],
-          [
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/19',
-              title: 'AMIRO LUX日光镜',
-              desc: '深圳市宗匠科技有限公司（以下简称宗匠）以智能照明为核心研发对象，发布了高科技智能化妆镜由。2015年，太火鸟参与宗匠天使轮投资，并开放自有电商平台供宗匠产品入驻销售。如今，宗匠已通过研发日光灯、自拍补光灯等产品获得“中国智能化妆镜第一品牌”的称号。',
-              image: require ('@/assets/images/home/case_rgj.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/25',
-              title: '四季沐歌不插电的WOW净水机',
-              desc: '产品由太火鸟运营众筹，3月27日众筹正式开始便展现了惊人的潜力，曾经创下38分钟众筹金额破百万、4天破千万的记录，经过一个月的众筹，最终的众筹总额高达23,134,254元，支持人数14,804人，2313%完成众筹目标。',
-              image: require ('@/assets/images/home/case_sjmg.jpg')
-            },
-            {
-              clickUrl: 'http://d3ingo.taihuoniao.com/article/show/22',
-              title: '飞行鱼-亚特兰蒂斯号FiFish Atlantis',
-              desc: '由太火鸟旗下的“太火鸟深圳D3IN铟立方未来实验室”在2016年推出的全球首款进入消费级市场的ROV智能水下机器人，主要用途为水下摄像，一经推出即获得了2017年美国CES创新大奖和2017年DIA中国智造大奖。',
-              image: require ('@/assets/images/home/case_fxy.jpg')
-            }
-          ]
-        ],
-        McaseSlideList: [],
         calcHeight: '',
-        notNextTick: true,
         swiperOption: {
           pagination: '.swiper-pagination',
           paginationClickable: true,
-          loop: false,
           lazyLoading: true,
           autoplay: 500000,
-          autoHeight: true,
           prevButton: '.swiper-button-prev',
           nextButton: '.swiper-button-next',
           spaceBetween: 0
-        }
+        },
+        articleList: [],
+        designList: [
+          {
+            id: 7,
+            title: '羽泉二十周年巡回演唱会-IP衍生品招募',
+            cover_url: require ('@/assets/images/subject/list_05.jpg'),
+            url: '/subject/YuQuanGifts',
+            content: '2017年底，内地知名唱作组合羽泉与京东金融结成战略合作伙伴，双方在组合成立20周年巡回演唱会期间，将以羽泉组合这一明星IP为核心，衍生系列创意创新活动，内容涵盖广泛产品，活动名称为“羽泉的礼物”。'
+          },
+          {
+            id: 5,
+            title: '轻创新⋅设计造物-再设计⋅消费升级创新产品征集',
+            cover_url: require ('@/assets/images/subject/list_03.jpg'),
+            url: '/subject/ProductRecruit',
+            content: '2017年初，太火鸟与投资方罗莱生活、海泉基金、京东金融、麦顿资本、泰德资本以及创新工场、真格基金等战略合作方共同发起了名为 “智见未来-太火鸟AesTech联合加速计划”，希望能够将太火鸟在产品孵化方面的前瞻性与各资本方及平台、渠道方在创新产品研发、孵化、营销环节的势能最大限度发挥出来，促进设计相关产业发展，改善设计生态，惠及大众。'
+          }],
+        designCaseList: []
       }
     },
     created() {
-      if (this.caseSlideList.length) {
-        for (let i of this.caseSlideList) {
-          this.McaseSlideList = this.McaseSlideList.concat (i)
-        }
-      }
+      this.getArticleList()
+      this.getDesignCase()
     },
     mounted() {
       let that = this
@@ -260,6 +225,33 @@
         that.calcHeight = calcImgSize (180, 320)
       } else {
         this.calcHeight = calcImgSize (500, 1440)
+      }
+    },
+    methods: {
+      getArticleList() {
+        this.$http.get(api.articleList,
+        {params: {per_page: 3}})
+        .then((res) => {
+          this.articleList = res.data.data
+          for (let i = 0; i < res.data.data.length; i++) {
+            this.articleList[i].cover_url = res.data.data[i].cover.middle
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      },
+      getDesignCase() {
+        this.$http.get(api.designCaseOpenLists,
+        {params: {per_page: 6}})
+        .then((res) => {
+          this.designCaseList = res.data.data
+          console.log(res.data.data)
+          for (let i = 0; i < res.data.data.length; i++) {
+            this.designCaseList[i].cover_url = res.data.data[i].cover.middle
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
       }
     },
     computed: {
@@ -385,6 +377,21 @@
     font-size: 16px;
   }
 
+  .title {
+    color: #222;
+    font-size: 20px;
+    padding: 30px 10px 10px;
+  }
+
+  .title-center {
+    text-align: center;
+    color: #222;
+    font-size: 24px;
+    padding: 50px 0 40px;
+  }
+  .title-center2 {
+    padding: 55px 0 30px;
+  }
   .slide .head-cover a:hover {
     border: 1px solid rgba(255, 255, 255, 1);
     color: #fff;
@@ -400,72 +407,12 @@
     font-size: 2.4rem;
   }
 
-  .item h3 {
-    font-size: 2.8rem;
-    padding-bottom: 80px;
-  }
-
   .pub {
     margin: 80px 0 0 0;
   }
 
   .pub .pub-btn {
     padding: 20px 80px 20px 80px;
-  }
-
-  .item_3 h3 {
-    padding-bottom: 20px;
-    color: #4B4B4B;
-  }
-
-  .m-partner {
-    padding-top: 30px;
-  }
-
-  .item_4 {
-    background-color: #FAFAFA;
-    margin: 50px 0 -50px 0;
-  }
-
-  .item_4 h3 {
-    padding-bottom: 40px;
-  }
-
-  .item {
-    text-align: center;
-    padding: 60px 0;
-  }
-
-  .avatar-header {
-    height: 60px;
-    padding-bottom: 30px;
-  }
-
-  .avator-box {
-    float: left;
-    width: 60px;
-  }
-
-  .avator-content {
-    float: left;
-    margin: 0 0 0 20px;
-    border-bottom: 1px solid #CCCCCC;
-    width: 80%;
-    padding: 10px 0 20px 0;
-  }
-
-  .avator-content p {
-    line-height: 1.5;
-  }
-
-  .avatar-title {
-    color: #222222;
-    font-size: 1.5rem;
-  }
-
-  .avatar-des {
-    font-size: 1.2rem;
-    color: #666666;
   }
 
   .company-des {
@@ -478,20 +425,21 @@
     line-height: 1.5;
   }
 
-  .item_5 h3 {
-    padding-bottom: 0;
-  }
-
   .logo-list {
     text-align: center;
-    margin: 0;
-    padding: 0 15px;
+    margin: 0 auto;
+    max-width: 815px;
   }
 
   .logo-list img {
-    margin: 10px 20px;
+    /* margin: 10px 20px;
     width: 15%;
-    height: auto;
+    height: auto; */
+    width: 144px;
+    height: 60px;
+    margin: 15px 15px 0 0;
+    border: 1px solid #F6F6F6;
+    border-radius: 4px;
   }
 
   .box-card {
@@ -503,12 +451,13 @@
 
   .box-card img {
     width: 100%;
+    height: 100%;
   }
 
   .image-box {
     margin: 0 auto;
-    max-width: 549px;
-    max-height: 347px;
+    /* max-width: 549px;
+    max-height: 347px; */
     overflow: hidden;
   }
 
@@ -569,8 +518,114 @@
   .swiper-pagination-fraction,
   .swiper-pagination-custom,
   .swiper-container-horizontal > .swiper-pagination-bullets {
-    bottom: -16px;
     width: 100%;
+  }
+
+
+/* articleList */
+  .article .content {
+    padding: 15px;
+  }
+
+  .article .content .title {
+    padding: 0;
+    color: #222;
+    font-size: 1.8rem;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+
+  .design .content .title {
+    font-size: 1.8rem;
+    color: #222;
+  }
+
+  .article .content .des {
+    margin: 10px 0;
+    font-size: 1.4rem;
+    color: #666;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .image-box:not(.not-limit) {
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .image-box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .company {
+    color: #666;
+    display: block;
+    line-height: 28px;
+  }
+
+  .company span {
+    font-size: 14px;
+  }
+
+  .company img {
+    margin-right: 6px;
+  }
+/* articleList */
+
+  .slide-content {
+    display: flex;
+  }
+
+  .slide-left, .slide-right {
+    flex: 1;
+    padding: 10px 20px;
+  }
+
+  .slide-right img {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .slide-company {
+    font-size: 18px;
+    color: #222;
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+
+  .slide-company img{
+    padding-right: 10px;
+  }
+
+  .slide-title {
+    font-size: 24px;
+    color: #222;
+    padding-bottom: 10px;
+  }
+
+  .slide-sales {
+    font-size: 18px;
+    color: #666;
+    padding-bottom: 10px;
+  }
+
+  .slide-intro {
+    font-size: 14px;
+    color:#666;
+  }
+
+  @media screen and (max-width: 1199px) and (min-width: 991px) {
+    .image-box:not(.not-limit) {
+      height: 166px;
+    }
   }
 
   @media screen and (max-width: 991px) {
@@ -578,8 +633,20 @@
       width: 100%;
       padding: 0 15px;
     }
+
+    .image-box {
+      height: auto!important;
+    }
   }
   @media screen and (max-width: 767px) {
+    .container {
+      padding: 0;
+    }
+
+    .title {
+      font-size: 20px;
+      padding: 30px 15px 10px;
+    }
     .logo-list {
       display: flex;
       justify-content: space-between;
@@ -591,15 +658,6 @@
       float: left;
       margin: 2%;
       width: 46%;
-    }
-
-    .item {
-      padding: 30px 0;
-    }
-
-    .item h3 {
-      font-size: 2rem;
-      padding: 30px 0;
     }
 
     .el-row {

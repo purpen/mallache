@@ -1147,7 +1147,9 @@ img.avatar {
 }
 
 /* 为所有卡片增加hover效果 */
-
+.card {
+  margin: 10px 0;
+}
 .el-card {
   transition: all ease .3s;
 }
@@ -1737,6 +1739,21 @@ td.fc-day.fc-widget-content.fc-today::before {
  */
 
 /* swiper css*/
+.swiper-container {
+  padding-bottom: 40px;
+}
+.swiper-wrapper {
+  height: auto;
+}
+
+.swiper-button-prev.swiper-button-disabled, .swiper-button-next.swiper-button-disabled {
+  cursor: no-drop;
+  pointer-events: auto;
+}
+
+.swiper-pagination {
+  width: 100%;
+}
 
 .swiper-pagination-bullet-active {
   background: #FF6C70;
@@ -1750,7 +1767,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 .swiper-button-next, .swiper-button-prev {
   cursor: pointer;
   transition: 0.3s;
-  transform: translate(50%, 0);
+  transform: translate(150%, 0);
   opacity: 0;
   background: none;
   background-color: rgba(31, 45, 61, .11);
@@ -1763,7 +1780,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .swiper-button-prev {
-  transform: translate(-50%, 0);
+  transform: translate(-150%, 0);
 }
 
 .swiper-button-next:hover, .swiper-button-prev:hover {

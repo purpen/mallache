@@ -5,34 +5,33 @@
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
-          <el-card :body-style="{ padding: '0px' }" class="item">
-            <div class="image-box">
+          <el-card :body-style="{ padding: '0px' }" class="card">
               <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
-                           :target="BMob ? '_self' : '_blank'">
-                <img v-lazy="d.cover.middle">
-              </router-link>
-            </div>
-            <div class="content">
-              <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}
-              </router-link>
-              <div class="des">
-                <p>{{ d.profile }}</p>
+                            :target="isMob ? '_self' : '_blank'">
+              <div class="image-box">
+                  <img v-lazy="d.cover.middle">
+              </div>
+              <div class="content">
+                <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" target="_blank">{{ d.title }}
+                </router-link>
+                <p class="des">{{ d.profile }}</p>
+
+                <p class="company">
+                  <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
+                      width="30"/>
+                  <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
+                  <span>{{d.design_company.company_abbreviation}}</span>
+                </p>
               </div>
 
-              <p class="company">
-                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
-                     width="30"/>
-                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
-                <span>{{d.design_company.company_abbreviation}}</span>
-              </p>
-            </div>
+            </router-link>
           </el-card>
         </el-col>
       </el-row>
     </div>
     <div class="blank20"></div>
     <div class="pager">
-      <el-pagination v-if="itemList.length" class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
+      <el-pagination v-if="itemList.length" class="pagination" :small="isMob" :current-page="query.page" :page-size="query.pageSize"
                      :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper"
                      @current-change="handleCurrentChange">
       </el-pagination>
@@ -93,7 +92,7 @@ export default {
     this.loadList()
   },
   computed: {
-    BMob() {
+    isMob() {
       return this.$store.state.event.isMob
     }
   }
@@ -112,11 +111,6 @@ a {
 
 .case-list {
   min-height: 350px;
-}
-
-.item {
-  /* height: 300px; */
-  margin: 10px auto;
 }
 
 .image-box {
