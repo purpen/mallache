@@ -5,7 +5,8 @@
       <el-row :gutter="24" class="anli-elrow">
         <v-menu currentName="exhibition" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
         <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="exhibition"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20">
+        <el-col :span="isMob ? 24 : 20"
+                v-loading.body="loading">
           <vCalendar
             :events="events"
             @event-click="eventClick"
@@ -33,6 +34,7 @@
     },
     data () {
       return {
+        loading: false,
         events: [],
         id: '',
         backgroundColor: ''
@@ -54,7 +56,12 @@
           var date2 = ''
           switch (arr.length) {
             case 2:
-              date = arr.join('-')
+              date1 = arr.join('-')
+              if (Number(arr[1]) === 1) {
+                date2 = `${arr[0] - 1}-12`
+              } else {
+                date2 = arr[0] + '-' + (arr[1] - 1)
+              }
               break
             case 3:
               date1 = `${arr[0]}-${arr[1]}`
@@ -66,12 +73,14 @@
               break
           }
         }
+        this.loading = true
         let method = api.dateOfAwardMonth
         if (date1 && date2) {
           Promise.all([ // 显示周历时可能出现 12-31 -- 1,6 获取两个月的信息
             this.$http.get(method, {params: {yearMonth: date1}}),
             this.$http.get(method, {params: {yearMonth: date2}})])
             .then(([res1, res2]) => {
+              this.loading = false
               if (res1.data.meta.status_code === 200) {
                 this.events = this.unique(this.events.concat(this.addType (res1.data.data)))
               } else {
@@ -84,17 +93,20 @@
               }
             })
             .catch((err) => {
+              this.loading = false
               console.error(err)
             })
         } else {
           this.$http.get(method, {params: {yearMonth: date}})
           .then((res) => {
+            this.loading = false
             if (res.data.meta.status_code === 200) {
               this.events = this.addType (res.data.data)
             } else {
               this.$message.error(res.data.meta.message)
             }
           }).catch((err) => {
+            this.loading = false
             console.error(err)
           })
         }
@@ -168,6 +180,11 @@
         }
         return finalResult
       }
+    },
+    watch: {
+      // events() {
+      //   console.log(this.events)
+      // }
     }
   }
 </script>

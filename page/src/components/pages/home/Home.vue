@@ -1,86 +1,69 @@
 <template>
   <div class="content-box">
-    <swiper :options="swiperOption" class="banner">
+    <!-- <swiper :options="swiperOption" class="banner">
       <swiper-slide v-for="(item, index) in slideList" :key="index">
         <a :href="item.clickUrl">
-          <div class="slide" ref="slide" :style="{ 'background-image': 'url(' + item.image + ')', height: calcHeight}">
-            <h3 :class="{'m-h3' : isMob}">{{ item.title }}</h3>
-            <p :class="{'m-p' : isMob}">{{ item.desc }}</p>
-          </div>
+
         </a>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination">
-      </div>
-      <div class="swiper-button-prev" slot="button-prev">
+      </div> -->
+      <!-- <div class="swiper-button-prev" slot="button-prev">
         <i class="el-icon-arrow-left"></i>
       </div>
       <div class="swiper-button-next" slot="button-next">
         <i class="el-icon-arrow-right"></i>
-      </div>
-    </swiper>
-
-    <div class="container">
-      <div class="item_1 item">
-        <h3>提供专业设计解决方案</h3>
-        <el-row>
-          <el-col :xs="24" :sm="12" :md="12" :lg="12">
-            <div class="item_1_l">
-              <img src="../../../assets/images/home/index_01.png" width="150" />
-              <p class="item_1_title font-weight5">产品设计</p>
-              <p class="item_1_desc">产品策略／产品外观设计／结构设计</p>
-            </div>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="12">
-            <div class="item_1_r">
-              <img src="../../../assets/images/home/index_02.png" width="150" />
-              <p class="item_1_title font-weight5">UI/UE设计</p>
-              <p class="item_1_desc">App设计／网页设计／界面设计／服务设计／用户体验咨询</p>
-            </div>
-          </el-col>
-        </el-row>
-
-        <div class="pub" v-if="uType !== 2 && !isMob">
-          <router-link :to="{name: 'itemSubmitOne'}">
-            <el-button class="pub-btn is-custom" type="primary" size="large">发布项目</el-button>
-          </router-link>
+      </div> -->
+    <!-- </swiper> -->
+  <div class="slide" ref="slide"
+    :style="{ 'background-image': 'url(' + require ('@/assets/images/home/BG@2x.jpg') + ')', height: '500px'}">
+      <div class="container clearfix" style="height:100%;">
+        <div class="left">
+          <h3 :class="{'m-h3' : isMob}">铟果D³INGO产品创新SaaS平台</h3>
+          <p :class="{'m-p' : isMob}">用设计重塑品质生活</p>
         </div>
+        <div class="draw">
+          <img :src="require('assets/images/home/BG02@2x.png')" width="90%" alt="">
+        </div>
+      </div>
+      <div class="head-cover">
+        <p><span>100+</span>专业设计服务商，<span>20+</span>成交项目，<span>200万</span>成交金额</p>
+        <router-link v-if="uType !== 2" :to="{}">发布项目需求</router-link>
       </div>
     </div>
 
-    <div class="item item_2">
-      <div class="item_2_box">
-        <h3>铟果优势</h3>
+    <div class="categorie">
+      <el-row class="container">
+        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+          <i class="fx-icon-major-lg"></i>
+          <article>
+            <h3>专业服务</h3>
+            <p>汇聚国内专业设计服务商</p>
+          </article>
+        </el-col>
+        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+          <i class="fx-icon-accurate-lg"></i>
+          <article>
+            <h3>智能精准</h3>
+            <p>找到适合你的设计服务商</p>
+          </article>
+        </el-col>
+        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+          <i class="fx-icon-design-lg"></i>
+          <article>
+            <h3>优质设计</h3>
+            <p>项目协同追踪保证质量</p>
+          </article>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="article">
 
-        <el-row :gutter="24">
-          <el-col :xs="24" :sm="8" :md="8" :lg="8">
-            <div class="">
-              <img src="../../../assets/images/home/index_03.png" />
-              <p class="item_1_title">智能</p>
-              <p class="item_1_desc">通过云平台+大数据计算，帮您智能匹配设计服务供应商</p>
-            </div>
-          </el-col>
-          <el-col :xs="24" :sm="8" :md="8" :lg="8">
-            <div class="item2banner">
-              <img src="../../../assets/images/home/index_04.png" />
-              <p class="item_1_title">安全</p>
-              <p class="item_1_desc">资金托管、时间戳、供应商信用评级为交易提供全方位的安全保障 </p>
-            </div>
-          </el-col>
-          <el-col :xs="24" :sm="8" :md="8" :lg="8">
-            <div class="">
-              <img src="../../../assets/images/home/index_05.png" />
-              <p class="item_1_title">高效</p>
-              <p class="item_1_desc">重构产品创新流程，提供高效、便捷的设计体验 </p>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
     </div>
 
     <div class="container anli">
       <div class="item item_3">
         <h3>铟果案例</h3>
-
         <swiper :options="swiperOption" v-if="!isMob">
           <swiper-slide v-for="(d, index) in caseSlideList" :key="index">
             <el-row :gutter="30">
@@ -176,31 +159,7 @@
             clickUrl: 'javascript:void(0);',
             title: '铟果D³INGO产品创新SaaS平台',
             desc: '用设计重塑品质生活',
-            image: require ('@/assets/images/home/banner1.jpg')
-          },
-          {
-            clickUrl: '/subject/YuQuanGifts',
-            title: '',
-            desc: '',
-            image: require ('@/assets/images/subject/gifts/YQGifts.jpg')
-          },
-          {
-            clickUrl: '/subject/ProductRecruit',
-            title: '',
-            desc: '',
-            image: require ('@/assets/images/subject/recruit/product/product@2x.jpg')
-          },
-          {
-            clickUrl: '/subject/EnterpriseRecruit',
-            title: '',
-            desc: '',
-            image: require ('@/assets/images/subject/recruit/enterprise/enterprise.jpg')
-          },
-          {
-            clickUrl: '/subject/zj',
-            title: '',
-            desc: '',
-            image: require ('@/assets/images/home/banner2.jpg')
+            image: require ('@/assets/images/home/BG@2x.jpg')
           }
         ],
         caseSlideList: [
@@ -271,7 +230,7 @@
         swiperOption: {
           pagination: '.swiper-pagination',
           paginationClickable: true,
-          loop: true,
+          loop: false,
           lazyLoading: true,
           autoplay: 500000,
           autoHeight: true,
@@ -294,13 +253,13 @@
         if (that.isMob) {
           that.calcHeight = calcImgSize (180, 320)
         } else {
-          that.calcHeight = calcImgSize (650, 1440)
+          that.calcHeight = calcImgSize (500, 1440)
         }
       })
       if (that.isMob) {
         that.calcHeight = calcImgSize (180, 320)
       } else {
-        this.calcHeight = calcImgSize (650, 1440)
+        this.calcHeight = calcImgSize (500, 1440)
       }
     },
     computed: {
@@ -329,118 +288,163 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    text-align: center;
-    }
+    text-align: left;
+    position: relative;
+    padding-bottom: 50px;
+  }
 
   .slide h3 {
-    font-size: 2.3rem;
+    font-size: 2.4rem;
     color: #FFFFFF;
     line-height: 1.8;
     font-weight: 300;
-    padding: 10% 0 0 0;
-    }
+  }
 
   .slide p {
-    font-size: 5rem;
+    font-size: 4.8rem;
     color: #FFFFFF;
     font-weight: 300;
     padding: 0;
-    }
+  }
+
+  .slide .left {
+    float: left;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+  }
+
+  .slide .draw {
+    float: right;
+    width: 50%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center
+  }
+
+  .slide .head-cover {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 13%;
+    min-height: 50px;
+    line-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.3)
+  }
+
+  .slide .head-cover p {
+    font-size: 1.7rem;
+    padding-right: 35px;
+  }
+
+  .slide .head-cover p span {
+    font-weight: 600;
+    margin: 0 10px;
+  }
+
+  .slide .head-cover a {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color:rgba(255, 255, 255, 0.7);
+    font-size: 1.4rem;
+    border-radius: 4px;
+    line-height: 30px;
+    padding: 0 10px;
+  }
+
+  .categorie {
+    background: #fafafa;
+  }
+
+  .categorie .container .list{
+    height: 150px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center
+  }
+
+  .categorie .list i {
+    font-size: 60px;
+    margin-right: 12px;
+  }
+
+  .categorie .container .list h3{
+    font-size: 18px;
+    line-height: 1.5
+  }
+
+  .categorie .container .list p{
+    font-size: 16px;
+  }
+
+  .slide .head-cover a:hover {
+    border: 1px solid rgba(255, 255, 255, 1);
+    color: #fff;
+  }
 
   .slide .m-h3 {
     font-size: 1.4rem;
     padding: 0;
     padding-top: 20px;
-    }
+  }
 
   .slide .m-p {
     font-size: 2.4rem;
-    }
+  }
 
   .item h3 {
     font-size: 2.8rem;
     padding-bottom: 80px;
-    }
-
-  .item_1_l {
-    margin-left: 120px;
-    }
-
-  .item_1_r {
-    margin-right: 120px;
-    }
-
-  .item_1_title {
-    color: #222222;
-    font-size: 2rem;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    line-height: 2;
-    }
-
-  .item_1_desc {
-    color: #666666;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    padding: 0 20px;
-    }
+  }
 
   .pub {
     margin: 80px 0 0 0;
-    }
+  }
 
   .pub .pub-btn {
     padding: 20px 80px 20px 80px;
-    }
-
-  .item_2 {
-    background-color: #FAFAFA;
-    }
-
-  .item_2_box {
-    margin: 0 8%;
-    }
-
-  .item_2_box img {
-    width: 35%;
-    }
-
-  .item_2 h3 {
-    padding-bottom: 80px;
-    }
+  }
 
   .item_3 h3 {
     padding-bottom: 20px;
     color: #4B4B4B;
-    }
+  }
 
   .m-partner {
     padding-top: 30px;
-    }
+  }
 
   .item_4 {
     background-color: #FAFAFA;
     margin: 50px 0 -50px 0;
-    }
+  }
 
   .item_4 h3 {
     padding-bottom: 40px;
-    }
+  }
 
   .item {
     text-align: center;
     padding: 60px 0;
-    }
+  }
 
   .avatar-header {
     height: 60px;
     padding-bottom: 30px;
-    }
+  }
 
   .avator-box {
     float: left;
     width: 60px;
-    }
+  }
 
   .avator-content {
     float: left;
@@ -448,83 +452,83 @@
     border-bottom: 1px solid #CCCCCC;
     width: 80%;
     padding: 10px 0 20px 0;
-    }
+  }
 
   .avator-content p {
     line-height: 1.5;
-    }
+  }
 
   .avatar-title {
     color: #222222;
     font-size: 1.5rem;
-    }
+  }
 
   .avatar-des {
     font-size: 1.2rem;
     color: #666666;
-    }
+  }
 
   .company-des {
     clear: both;
-    }
+  }
 
   .company-des p {
     font-size: 1.2rem;
     color: #666666;
     line-height: 1.5;
-    }
+  }
 
   .item_5 h3 {
     padding-bottom: 0;
-    }
+  }
 
   .logo-list {
     text-align: center;
     margin: 0;
     padding: 0 15px;
-    }
+  }
 
   .logo-list img {
     margin: 10px 20px;
     width: 15%;
     height: auto;
-    }
+  }
 
   .box-card {
     text-align: left;
     width: 100%;
     height: 460px;
     margin: 10px 0;
-    }
+  }
 
   .box-card img {
     width: 100%;
-    }
+  }
 
   .image-box {
     margin: 0 auto;
     max-width: 549px;
     max-height: 347px;
     overflow: hidden;
-    }
+  }
 
   .image-box a {
     display: block;
-    }
+  }
 
   .box-card .content {
     padding: 10px;
-    }
+  }
 
   .box-card .content p.stuff-title {
     font-size: 1.5rem;
     color: #222222;
-    }
+  }
 
   .box-card .des {
     margin: 10px 0;
     overflow: hidden;
-    }
+  }
 
   .box-card .des p {
     color: #666666;
@@ -532,105 +536,93 @@
     line-height: 1.8;
     font-weight: 300;
     text-overflow: ellipsis;
-    }
+  }
 
   .el-card:hover {
     transform: translate3d(0, -3px, 0);
     box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
-    }
+  }
 
   .anli {
     overflow: hidden;
-    }
+  }
 
   .el-row {
     padding: 0 10px;
-    }
+  }
 
   /* swiper css*/
 
   .swiper-container {
     overflow: visible;
-    }
+  }
 
   .banner > .swiper-pagination-bullets {
     width: 100%;
     bottom: 10px !important;
-    }
+  }
 
   .swiper-pagination .swiper-pagination-bullet {
     margin-right: 8px;
-    }
+  }
 
   .swiper-pagination-fraction,
   .swiper-pagination-custom,
   .swiper-container-horizontal > .swiper-pagination-bullets {
     bottom: -16px;
     width: 100%;
-    }
+  }
 
+  @media screen and (max-width: 991px) {
+    .container {
+      width: 100%;
+      padding: 0 15px;
+    }
+  }
   @media screen and (max-width: 767px) {
     .logo-list {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      }
+    }
 
     .logo-list img {
       float: left;
       margin: 2%;
       width: 46%;
-      }
+    }
 
     .item {
       padding: 30px 0;
-      }
+    }
 
     .item h3 {
       font-size: 2rem;
       padding: 30px 0;
-      }
-
-    .item_1_title {
-      font-size: 1.8rem;
-      }
-
-    .item_1_l {
-      margin-left: 0;
-      margin-bottom: 30px;
-      }
-
-    .item_1_r {
-      margin-right: 0;
-      padding: 0 18%;
-      }
-
-    .item_1_l img,
-    .item_1_r img {
-      width: 80px;
-      }
-
-    .item_2 {
-      margin-top: 0;
-      }
-
-    .item_2_box .item2banner {
-      margin: 40px 0;
-      }
+    }
 
     .el-row {
       padding: 0 15px;
-      }
     }
+
+    .categorie .container {
+      padding-top: 20px;
+    }
+
+    .categorie .container .list{
+      flex-direction: column;
+    }
+
+    .categorie .container .list h3{
+      text-align: center;
+      line-height: 2.4
+    }
+  }
 
   @media screen and (max-width: 500px) {
     .box-card .content {
       padding-top: 28px;
-      }
-
-    .item_2 h3 {
-      padding-bottom: 30px;
-      }
     }
+  }
 </style>

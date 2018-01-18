@@ -1102,11 +1102,18 @@ img.avatar {
   line-height: 1.5;
   font-size: 1.3rem;
   color: #222222;
+  height: 3.2rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .file-list .content .summary {
   padding-top: 6px;
-  height: 40px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 

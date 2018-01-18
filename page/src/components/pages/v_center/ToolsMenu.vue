@@ -63,6 +63,10 @@
     text-indent: 12px;
   }
 
+  .menu-list span:first-child {
+    padding-top: 0;
+  }
+
   .menu-list span::before {
     content: "";
     display: block;
