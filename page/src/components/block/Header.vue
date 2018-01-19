@@ -85,6 +85,9 @@
             <router-link :to="menu.design_case">灵感</router-link>
           </li>
           <li @click="closeMenu">
+            <router-link :to="menu.commonly_sites">设计工具</router-link>
+          </li>
+          <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
           </li>
           <li @click="closeMenu" class="m-Sign">
@@ -113,15 +116,10 @@
 
       </div>
       <div class="m-Nav-right" v-if="isLogin">
-        <a @click="moptionHide">
+        <router-link to="/vcenter/control">
           <img class="avatar" v-if="eventUser.logo_url" :src="eventUser.logo_url"/>
           <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
-        </a>
-      </div>
-      <div class="option-cover" v-if="!optionHide" @click="moptionHide"></div>
-      <div class="option" v-if="!optionHide">
-        <a @click="toCenter" :class="{'aActive': menuStatus === 'center'}">个人中心</a>
-        <a v-if="isCompany" @click="toTools" :class="{'aActive': menuStatus === 'tools'}">工具</a>
+        </router-link>
       </div>
     </div>
     <div class="header-buttom-line"></div>
@@ -131,7 +129,7 @@
 <script>
   import auth from '@/helper/auth'
   import api from '@/api/api'
-  import { MSG_COUNT, MENU_STATUS } from '@/store/mutation-types'
+  import { MSG_COUNT } from '@/store/mutation-types'
   export default {
     name: 'head_menu',
     data() {
@@ -152,7 +150,6 @@
         },
         menuHide: true,
         msgHide: true,
-        optionHide: true,
         msg: {
           message: 0,
           notice: 0,
@@ -252,21 +249,6 @@
         this.$refs.mMenu.style.width = 0
         document.body.removeAttribute('class', 'disableScroll')
         document.childNodes[1].removeAttribute('class', 'disableScroll')
-      },
-      toCenter () {
-        this.moptionHide()
-        this.$store.commit(MENU_STATUS, 'center')
-        sessionStorage.setItem('MENU_BAR', 11)
-        this.$router.push({name: 'vcenterControl'})
-      },
-      toTools () {
-        this.moptionHide()
-        this.$store.commit(MENU_STATUS, 'tools')
-        sessionStorage.setItem('MENU_BAR', 11)
-        this.$router.push({name: 'vcentercommonlySites'})
-      },
-      moptionHide () {
-        this.optionHide = !this.optionHide
       }
     },
     computed: {
@@ -386,7 +368,7 @@
     height: 30px;
   }
 
-  .option {
+  /* .option {
     position: absolute;
     z-index: 10;
     width: 100px;
@@ -450,7 +432,7 @@
     width: 100%;
     height: 100vh;
     background: #0006
-  }
+  } */
 
   .view-msg {
     animation: slowShow 0.3s;
