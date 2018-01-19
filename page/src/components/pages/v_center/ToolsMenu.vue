@@ -68,11 +68,24 @@
     width: 100%;
     height: 40px;
     overflow: hidden;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
+
   .mMenuList {
     margin-top: 20px;
   }
+
+  .menu-list {
+    padding: 0;
+    white-space: nowrap;
+    overflow-x: scroll;
+    padding-bottom: 40px;
+  }
+
+  .menu-list .item {
+    display: inline;
+  }
+
   .menu-list span {
     display: block;
     padding: .85rem 1.5rem;

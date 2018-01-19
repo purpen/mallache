@@ -199,7 +199,6 @@
     margin: 40px 0 20px;
     display: flex;
     align-items: center;
-    overflow: hidden;
   }
 
   .lists h2:first-child {
