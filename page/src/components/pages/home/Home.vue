@@ -1,7 +1,7 @@
 <template>
   <div class="content-box">
   <div class="slide" ref="slide"
-    :style="{ 'background-image': 'url(' + require ('@/assets/images/home/BG@2x.jpg') + ')', height: '500px'}">
+    :style="{ 'background-image': 'url(' + require ('@/assets/images/home/BG@2x.jpg') + ')', height: calcHeight}">
       <div class="container clearfix" style="height:100%;">
         <div class="left">
           <h3 :class="{'m-h3' : isMob}">铟果D³INGO产品创新SaaS平台</h3>
@@ -18,22 +18,22 @@
     </div>
 
     <div class="categorie">
-      <el-row class="container">
-        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+      <el-row class="container" :gutter="15">
+        <el-col class="list" :span="8">
           <i class="fx-icon-major-lg"></i>
           <article>
             <h3>专业服务</h3>
             <p>汇聚国内专业设计服务商</p>
           </article>
         </el-col>
-        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+        <el-col class="list" :span="8">
           <i class="fx-icon-accurate-lg"></i>
           <article>
             <h3>智能精准</h3>
             <p>找到适合你的设计服务商</p>
           </article>
         </el-col>
-        <el-col class="list" :xs="24" :sm="8" :md="8" :lg="8">
+        <el-col class="list" :span="8">
           <i class="fx-icon-design-lg"></i>
           <article>
             <h3>优质设计</h3>
@@ -211,6 +211,7 @@
     created() {
       this.getArticleList()
       this.getDesignCase()
+      this.getBlock()
     },
     mounted() {
       let that = this
@@ -245,7 +246,6 @@
         {params: {per_page: 6}})
         .then((res) => {
           this.designCaseList = res.data.data
-          console.log(res.data.data)
           for (let i = 0; i < res.data.data.length; i++) {
             this.designCaseList[i].cover_url = res.data.data[i].cover.middle
           }
@@ -255,11 +255,12 @@
       },
       getBlock () {
         this.isLoading = true
-        this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
+        this.$http.get(api.block, {params: {mark: 'data_number_view'}})
         .then((res) => {
           this.isLoading = false
           if (res.data.meta.status_code === 200) {
-            this.tags = res.data.data.code.split(',')
+            console.log(res.data.data)
+            // this.tags = res.data.data.code.split(';')
           } else {
             this.$Message.error(res.data.meta.message)
           }
@@ -292,6 +293,8 @@
     color: #475669;
     font-size: 18px;
     width: 100%;
+    max-height: 500px;
+    min-height: 180px;
     margin: 0;
     background-size: cover;
     background-position: center;
@@ -315,9 +318,12 @@
     padding: 0;
   }
 
+  .slide .container {
+    display: flex;
+  }
+
   .slide .left {
-    float: left;
-    width: 50%;
+    flex: 1;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -325,8 +331,7 @@
   }
 
   .slide .draw {
-    float: right;
-    width: 50%;
+    flex: 1;
     height:100%;
     display: flex;
     flex-direction: column;
@@ -356,6 +361,10 @@
   .slide .head-cover p span {
     font-weight: 600;
     margin: 0 10px;
+  }
+
+  .slide .head-cover p span:first-child {
+    margin-left: 0;
   }
 
   .slide .head-cover a {
@@ -414,7 +423,7 @@
   }
 
   .slide .m-h3 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     padding: 0;
     padding-top: 20px;
   }
@@ -627,11 +636,61 @@
       width: auto;
       padding: 0 15px;
     }
+    .slide p {
+      font-size: 4rem
+    }
+    .slide h3 {
+      font-size: 2rem
+    }
   }
 
   @media screen and (max-width: 767px) {
     .container {
       padding: 0;
+    }
+
+    .slide .container {
+      display: block;
+      position: relative;
+    }
+
+    .slide .left {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      justify-content: flex-start
+    }
+
+    .slide .draw {
+      position: absolute;
+      top: 80px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 70%;
+      height: auto;
+    }
+
+    .slide .head-cover {
+      padding: 0 15px;
+    }
+
+    .slide .head-cover p {
+      width: calc(100% - 106px);
+      font-size: 1.2rem;
+      padding-right: 0;
+      margin-right: 12px;
+    }
+
+   .slide .head-cover p span {
+      font-weight: normal;
+      margin: 0 4px;
+    }
+
+    .slide .head-cover a {
+      font-size: 1.2rem;
+      width: 94px;
     }
 
     .title {
@@ -643,17 +702,13 @@
       padding: 0 15px;
     }
 
-    .categorie .container {
-      padding-top: 20px;
-    }
-
     .categorie .container .list{
       flex-direction: column;
     }
 
     .categorie .container .list h3{
       text-align: center;
-      line-height: 2.4
+      margin-top: 10px;
     }
     .slide-content {
       display: flex;
@@ -661,6 +716,25 @@
     }
     .image-box {
       height: auto!important;
+    }
+    .slide p {
+      font-size: 4rem
+    }
+    .slide h3 {
+      font-size: 2rem
+    }
+    .categorie .container .list {
+      text-align: center
+    }
+    .categorie .list i {
+      font-size: 36px;
+      margin-right: 0;
+    }
+    .categorie .container .list p {
+      font-size: 12px;
+    }
+    .categorie .container .list h3 {
+      font-size: 16px;
     }
   }
 

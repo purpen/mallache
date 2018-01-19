@@ -838,7 +838,7 @@ const routes = [
     name: 'vcenterVeerImage',
     meta: {
       title: '图片素材',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/veerImage')
   },
@@ -848,7 +848,7 @@ const routes = [
     name: 'vcenterTrendReport',
     meta: {
       title: '趋势/报告',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/trendReport')
   },
@@ -857,7 +857,7 @@ const routes = [
     name: 'trendReportShow',
     meta: {
       title: '趋势/报告',
-      requireAuth: true
+      requireAuth: false
     },
     component: (resolve) => {
       require(['@/components/pages/v_center/Tools/trendReportShow'], resolve)
@@ -879,7 +879,7 @@ const routes = [
     name: 'vcenterExhibition',
     meta: {
       title: '设计日历',
-      requireAuth: true
+      requireAuth: false
     },
     component: (resolve) => {
       require(['@/components/pages/v_center/Tools/exhibition'], resolve)
