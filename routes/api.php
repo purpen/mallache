@@ -97,6 +97,26 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
      */
     $api->get('/block', 'BlockController@show');
 
+    /**
+     * 常用网站
+     */
+    // 常用网站详情
+    $api->get('/commonlyUsedUrls', 'CommonlyUsedUrlController@show');
+    // 常用网站列表
+    $api->get('/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
+
+    /**
+     * 趋势报告
+     */
+    //趋势报告列表
+    $api->get('/trendReports/lists', 'TrendReportsController@lists');
+    //趋势报告详情
+    $api->get('/trendReports', 'TrendReportsController@show');
+
+    /**
+     * veer图片列表
+     */
+    $api->get('/veerImage/list', 'VeerController@lists');
 
     /**
      * 需验证用户token
@@ -317,11 +337,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/works', 'WorksController');
 
         /**
-         * veer图片列表
-         */
-        $api->get('/veerImage/list', 'VeerController@lists');
-
-        /**
          * 日历列表详情
          */
         //日历详情
@@ -331,22 +346,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //日历月
         $api->get('/dateOfAward/month', 'DateOfAwardController@month');
 
-        /**
-         * 趋势报告
-         */
-        //趋势报告列表
-        $api->get('/trendReports/lists', 'TrendReportsController@lists');
-        //趋势报告详情
-        $api->get('/trendReports', 'TrendReportsController@show');
-
-
-        /**
-         * 常用网站
-         */
-        // 常用网站详情
-        $api->get('/commonlyUsedUrls', 'CommonlyUsedUrlController@show');
-        // 常用网站列表
-        $api->get('/commonlyUsedUrls/list', 'CommonlyUsedUrlController@lists');
 
         /**
          * 系统通知
