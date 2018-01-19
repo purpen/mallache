@@ -70,9 +70,15 @@
     overflow: hidden;
     margin-bottom: 15px;
   }
+
   .mMenuList {
     margin-top: 20px;
   }
+
+  .menu-list .item {
+    display: inline;
+  }
+
   .menu-list span {
     display: block;
     padding: .85rem 1.5rem;

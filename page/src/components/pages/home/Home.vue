@@ -741,6 +741,25 @@
     .categorie .list h3 {
       font-size: 16px;
     }
+
+    .inline-flex {
+      display: block;
+      width: 322px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .inline-flex img {
+      float: left;
+    }
+  }
+
+  @media screen and (min-width: 480px) and (max-width: 767px) {
+    .inline-flex {
+      display: block;
+      width: 477px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
   }
 
   @media screen and (max-width: 320px) {
