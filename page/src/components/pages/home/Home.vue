@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="head-cover">
-        <p :class="[{'need': uType !== 2}]"><span>100+</span>专业设计服务商，<span>20+</span>成交项目，<span>200万</span>成交金额</p>
+        <p :class="[{'need': uType !== 2}]"><span>{{tags[0]}}</span>专业设计服务商，<span>{{tags[1]}}</span>成交项目，<span>{{tags[2]}}</span>成交金额</p>
         <router-link v-if="uType !== 2" to="/item/submit_one">发布项目需求</router-link>
       </div>
     </div>
@@ -86,7 +86,7 @@
       <el-row :gutter="20" class="card-list">
       <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCaseList" :key="index">
         <el-card class="card" :body-style="{ padding: '0px' }">
-          <a :href="d.url" :target="isMob ? '_self' : '_blank'">
+          <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" :target="isMob ? '_self' : '_blank'">
             <div class="image-box">
                 <img v-lazy="d.cover_url">
             </div>
@@ -100,7 +100,7 @@
                 <span>{{d.design_company.company_abbreviation}}</span>
               </p>
             </div>
-          </a>
+          </router-link>
         </el-card>
       </el-col>
     </el-row>
@@ -207,7 +207,8 @@
             url: '/subject/ProductRecruit',
             content: '2017年初，太火鸟与投资方罗莱生活、海泉基金、京东金融、麦顿资本、泰德资本以及创新工场、真格基金等战略合作方共同发起了名为 “智见未来-太火鸟AesTech联合加速计划”，希望能够将太火鸟在产品孵化方面的前瞻性与各资本方及平台、渠道方在创新产品研发、孵化、营销环节的势能最大限度发挥出来，促进设计相关产业发展，改善设计生态，惠及大众。'
           }],
-        designCaseList: []
+        designCaseList: [],
+        tags: []
       }
     },
     created() {
@@ -261,8 +262,7 @@
         .then((res) => {
           this.isLoading = false
           if (res.data.meta.status_code === 200) {
-            console.log(res.data.data)
-            // this.tags = res.data.data.code.split(';')
+            this.tags = res.data.data.code.split(';')[0].split('|')
           } else {
             this.$Message.error(res.data.meta.message)
           }
