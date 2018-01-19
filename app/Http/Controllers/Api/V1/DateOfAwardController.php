@@ -17,7 +17,6 @@ class DateOfAwardController extends BaseController
      * @apiGroup DateOfAward
      *
      * @apiParam {string} day 日期 //2017-01-11
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
         {
@@ -55,7 +54,6 @@ class DateOfAwardController extends BaseController
      * @apiName DateOfAward week
      * @apiGroup DateOfAward
      *
-     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
         {
@@ -109,7 +107,6 @@ class DateOfAwardController extends BaseController
      * @apiGroup DateOfAward
      *
      * @apiParam {string} yearMonth 年月 //2017-01
-     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
         {
