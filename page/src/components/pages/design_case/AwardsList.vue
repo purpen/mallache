@@ -5,26 +5,26 @@
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
-          <el-card :body-style="{ padding: '0px' }" class="item">
-            <div class="image-box">
-              <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}"
-                           :target="BMob ? '_self' : '_blank'">
-                <img v-lazy="d.cover.middle">
-              </router-link>
-            </div>
-            <div class="content">
-              <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}" target="_blank">{{ d.title }}
-              </router-link>
-              <div class="des">
-                <p>{{ d.summary }}</p>
+          <el-card :body-style="{ padding: '0px' }" class="card">
+            <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}"
+                        :target="BMob ? '_self' : '_blank'">
+              <div class="image-box">
+                  <img v-lazy="d.cover.middle">
               </div>
+              <div class="content">
+                <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}" target="_blank">{{ d.title }}
+                </router-link>
+                <div class="des">
+                  <p>{{ d.summary }}</p>
+                </div>
 
-              <p class="company">
-                <img class="avatar" :src="d.img"
-                     width="30"/>
-                <span>{{d.category_value}}</span>
-              </p>
-            </div>
+                <p class="company">
+                  <img class="avatar" :src="d.img"
+                      width="30"/>
+                  <span>{{d.category_value}}</span>
+                </p>
+              </div>
+            </router-link>
           </el-card>
         </el-col>
       </el-row>
@@ -131,11 +131,6 @@ a {
 
 .case-list {
   min-height: 350px;
-}
-
-.item {
-  /* height: 300px; */
-  margin: 10px auto;
 }
 
 .image-box {

@@ -1,66 +1,56 @@
 <template>
   <div class="container">
-    <div class="veer-image">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="veerImage"
-                v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="veerImage"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
-          <h2 v-if="!isMob">{{msg}}</h2>
-          <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
-            <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
-          </el-input>
+    <ToolsMenu currentName="veerImage"></ToolsMenu>
+    <div class="veer-image" v-loading.body="isLoading">
+      <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
+        <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
+      </el-input>
 
-          <el-row class="tags" :gutter="10">
-            <el-col v-for="(ele, index) in tags" :key="index" :span="isMob ? 8 : 4">
-              <a @click="tipClick(ele)" class="tags-item">{{ele}}</a>
-            </el-col>
-          </el-row>
-
-          <waterfall :line-gap="picWidth" align="center" :watch="imgList"
-                     class="waterfall" v-if="isEmpty !== true">
-            <waterfall-slot
-              v-for="(item, index) in imgList"
-              :width="item.width"
-              :height="item.height"
-              :order="index"
-              :key="item.id">
-              <a :href="item.veer_url" target="_blank">
-                <img v-lazy="item.small_url" alt="">
-              </a>
-            </waterfall-slot>
-          </waterfall>
-          <el-pagination
-            class="pagination"
-            v-if="imgList.length && !isMob"
-            :current-page.sync="pagination.curPage"
-            :page-size="pagination.pageSize"
-            layout="prev, pager, next"
-            :total="pagination.total"
-            @current-change="handleCurChange">
-          </el-pagination>
-
-          <div class="is-empty" v-if="isEmpty === true">
-            <div class="empty-bg">
-              暂无相关信息～
-            </div>
-          </div>
+      <el-row class="tags" :gutter="10">
+        <el-col v-for="(ele, index) in tags" :key="index" :span="isMob ? 8 : 4">
+          <a @click="tipClick(ele)" class="tags-item">{{ele}}</a>
         </el-col>
       </el-row>
+
+      <waterfall :line-gap="picWidth" align="center" :watch="imgList"
+                  class="waterfall" v-if="isEmpty !== true">
+        <waterfall-slot
+          v-for="(item, index) in imgList"
+          :width="item.width"
+          :height="item.height"
+          :order="index"
+          :key="item.id">
+          <a :href="item.veer_url" target="_blank">
+            <img v-lazy="item.small_url" alt="">
+          </a>
+        </waterfall-slot>
+      </waterfall>
+      <el-pagination
+        class="pagination"
+        v-if="imgList.length && !isMob"
+        :current-page.sync="pagination.curPage"
+        :page-size="pagination.pageSize"
+        layout="prev, pager, next"
+        :total="pagination.total"
+        @current-change="handleCurChange">
+      </el-pagination>
+
+      <div class="is-empty" v-if="isEmpty === true">
+        <div class="empty-bg">
+          暂无相关信息～
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import Waterfall from 'vue-waterfall/lib/waterfall'
   import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'veerImage',
     components: {
-      vMenu,
       Waterfall,
       WaterfallSlot,
       ToolsMenu
@@ -252,6 +242,10 @@
   }
 </script>
 <style scoped>
+  .veer-image {
+    padding: 0 15px;
+  }
+
   h2 {
     text-align: center;
     font-size: 17px;
@@ -279,6 +273,10 @@
 
   .waterfall {
     margin: 20px 0;
+  }
+
+  .search-input {
+    margin-top: 10px;
   }
 
   .search-btn {

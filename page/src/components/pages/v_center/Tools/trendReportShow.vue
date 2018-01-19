@@ -1,88 +1,79 @@
 <template>
   <div class="container">
     <div class="trend-report">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="trendReport" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob"
-                   currentName="trendReport"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20">
-          <p class="title">{{pdf.title}}</p>
-          <p class="info clearfix">
-            <span class="date fl"><i class="fx-2 fx-icon-time"></i>{{pdf.created_at}}</span>
-            <span class="view fl"><i class="fx-3 fx-icon-see"></i>{{pdf.hits}}</span>
-            <span class="tigs fl">
-              <b class="fl">标签:</b>
-              <i class="fx" v-for="(e, i) in pdf.tag" :key="i">
-                <i class="fx-icon-label"></i>
-                {{e}}
-              </i>
-            </span>
-            </p>
-          <div v-if="already" :class="['pdf', 'swiper-container', {'fullscreen-pdf' : isFullscreen}]" ref="pdf">
-            <pdf :src="pdf.image.file"
-              v-loading.body="isLoading"
-              @progress="loadedRatio = $event"
-              @loaded ="load = $event"
-              @num-pages="numPages = $event"
-              @error="error"
-              :rotate="rotate"
-              :page="page">
-            </pdf>
-            <p :class="['flip', {'flip-fullscreen' : isFullscreen}]" v-if="numPages">
-              <span :class="['swiper-button-prev','fl', {'not-allow' : prevNotAllow}]" @click="prev">
-                <i class="el-icon-arrow-left"></i>
-              </span>
-              <span :class="['swiper-button-next','fr', {'not-allow' : nextNotAllow}]" @click="next">
-                <i class="el-icon-arrow-right"></i>
-              </span>
-            </p>
-            <div class="fullscreen-tools" v-if="isFullscreen">
-              <span class="exit-fullscreen" @click="exitFullscreen">
-                <span class="fx-4 fx-icon-exitFull-screen"></span>
-              </span>
-              <span class="fx-icon-nothing-left" @click="prev"></span>
-              <span class="fx-icon-nothing-right" @click="next"></span>
-              <p class="total-page">
-                <i>共{{numPages}}页</i>前往
-                <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
-                页
-              </p>
-            </div>
-            <menu class="clearfix" v-if="!isFullscreen">
-              <menuitem class="fullscreen" @click="fullscreen">
-                <span class="fx-4 fx-icon-full-screen"></span>
-              </menuitem>
-              <menuitem class="add" @click="prev">
-                <span class="fx-icon-nothing-left"></span>
-              </menuitem>
-              <menuitem class="subtract" @click="next">
-                <span class="fx-icon-nothing-right"></span>
-              </menuitem>
-              <menuitem class="rotate" @click="rotate += 90" v-if="isMob">
-                <span class="fx-icon-rotate"></span>
-              </menuitem>
-              <p class="total-page">
-                <i>共{{numPages}}页</i>前往
-                <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
-                页
-              </p>
-            </menu>
-          </div>
-        </el-col>
-      </el-row>
+      <ToolsMenu currentName="trendReport"></ToolsMenu>
+      <p class="title">{{pdf.title}}</p>
+      <p class="info clearfix">
+        <span class="date fl"><i class="fx-2 fx-icon-time"></i>{{pdf.created_at}}</span>
+        <span class="view fl"><i class="fx-3 fx-icon-see"></i>{{pdf.hits}}</span>
+        <span class="tigs fl">
+          <b class="fl">标签:</b>
+          <i class="fx" v-for="(e, i) in pdf.tag" :key="i">
+            <i class="fx-icon-label"></i>
+            {{e}}
+          </i>
+        </span>
+        </p>
+      <div v-if="already" :class="['pdf', 'swiper-container', {'fullscreen-pdf' : isFullscreen}]" ref="pdf">
+        <pdf :src="pdf.image.file"
+          v-loading.body="isLoading"
+          @progress="loadedRatio = $event"
+          @loaded ="load = $event"
+          @num-pages="numPages = $event"
+          @error="error"
+          :rotate="rotate"
+          :page="page">
+        </pdf>
+        <p :class="['flip', {'flip-fullscreen' : isFullscreen}]" v-if="numPages">
+          <span :class="['swiper-button-prev','fl', {'not-allow' : prevNotAllow}]" @click="prev">
+            <i class="el-icon-arrow-left"></i>
+          </span>
+          <span :class="['swiper-button-next','fr', {'not-allow' : nextNotAllow}]" @click="next">
+            <i class="el-icon-arrow-right"></i>
+          </span>
+        </p>
+        <div class="fullscreen-tools" v-if="isFullscreen">
+          <span class="exit-fullscreen" @click="exitFullscreen">
+            <span class="fx-4 fx-icon-exitFull-screen"></span>
+          </span>
+          <span class="fx-icon-nothing-left" @click="prev"></span>
+          <span class="fx-icon-nothing-right" @click="next"></span>
+          <p class="total-page">
+            <i>共{{numPages}}页</i>前往
+            <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
+            页
+          </p>
+        </div>
+        <menu class="clearfix" v-if="!isFullscreen">
+          <menuitem class="fullscreen" @click="fullscreen">
+            <span class="fx-4 fx-icon-full-screen"></span>
+          </menuitem>
+          <menuitem class="add" @click="prev">
+            <span class="fx-icon-nothing-left"></span>
+          </menuitem>
+          <menuitem class="subtract" @click="next">
+            <span class="fx-icon-nothing-right"></span>
+          </menuitem>
+          <menuitem class="rotate" @click="rotate += 90" v-if="isMob">
+            <span class="fx-icon-rotate"></span>
+          </menuitem>
+          <p class="total-page">
+            <i>共{{numPages}}页</i>前往
+            <input type="text" class="page-input" v-model.number="page" @blur="gotoPage(page)">
+            页
+          </p>
+        </menu>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   import pdf from 'vue-pdf'
   export default {
     name: 'trendReport',
     components: {
-      vMenu,
       ToolsMenu,
       pdf
     },

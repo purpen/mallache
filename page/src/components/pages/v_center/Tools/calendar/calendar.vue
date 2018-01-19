@@ -43,9 +43,9 @@
         <p ref="title_ico">{{eventMsg.title}}</p>
       </div>
       <div class="info-body">
-        <p class="date" ref="date"><span>时间:</span>{{eventMsg.date}}</p>
-        <p class="summary" ref="summary">{{eventMsg.summary}}</p>
-        <p class="tips" ref="tips">{{eventMsg.tips}}</p>
+        <p class="date" ref="date"><span class="fx-icon-time"></span><span>时间:</span>{{eventMsg.date}}</p>
+        <p class="summary" ref="summary"><span class="fx-icon-list"></span>{{eventMsg.summary}}</p>
+        <p class="tips" ref="tips"><span></span>{{eventMsg.tips}}</p>
       </div>
     </div>
   </div>
@@ -163,22 +163,22 @@
               case 1:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Contest@2x.png`) + ') no-repeat left'
-                self.changeColor('rgba(101, 166, 255, 0.8)', 'blue')
+                self.changeColor(event.backgroundColor, 'blue')
                 break
               case 2:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/festival@2x.png`) + ') no-repeat left'
-                self.changeColor('rgba(103, 212, 150, 0.8)', 'green')
+                self.changeColor(event.backgroundColor, 'green')
                 break
               case 3:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/exhibition@2x.png`) + ') no-repeat left'
-                self.changeColor('rgba(253, 158, 95, 0.8)', 'orange')
+                self.changeColor(event.backgroundColor, 'orange')
                 break
               case 4:
                 self.$refs.title_ico.style.background = 'url(' +
                   require(`@/assets/images/tools/calendar/Event@2x.png`) + ') no-repeat left'
-                self.changeColor('rgba(255, 110, 115, 0.8)', 'red')
+                self.changeColor(event.backgroundColor, 'red')
                 break
             }
           },
@@ -303,8 +303,7 @@
     text-align: center;
     font-size: 16px;
     line-height: 26px;
-    margin-top: 6px;
-    padding: 8px 0;
+    padding-bottom: 8px;
   }
 
   .mHeader {
