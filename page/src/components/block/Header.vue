@@ -10,8 +10,9 @@
             </div>
             <el-menu-item index="home" :route="menu.home">首页</el-menu-item>
             <el-menu-item index="server" :route="menu.server">服务</el-menu-item>
-            <el-menu-item index="topic" :route="menu.topic">铟果说</el-menu-item>
+            <el-menu-item index="article" :route="menu.article">铟果说</el-menu-item>
             <el-menu-item index="design_case" :route="menu.design_case">灵感</el-menu-item>
+            <el-menu-item index="commonly_sites" :route="menu.commonly_sites">设计工具</el-menu-item>
           </el-menu>
         </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
@@ -78,7 +79,7 @@
             <router-link :to="menu.server">服务</router-link>
           </li>
           <li @click="closeMenu">
-            <router-link :to="menu.topic">铟果说</router-link>
+            <router-link :to="menu.article">铟果说</router-link>
           </li>
           <li @click="closeMenu">
             <router-link :to="menu.design_case">灵感</router-link>
@@ -141,8 +142,9 @@
           home: {path: '/home'},
           server: {path: '/server'},
           design: {path: '/server_design'},
-          topic: {path: '/article/list'},
+          article: {path: '/article/list'},
           design_case: {path: '/design_case/general_list'},
+          commonly_sites: {path: '/vcenter/commonly_sites'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},
@@ -291,10 +293,12 @@
       },
       menuactive() {
         let menu = this.$route.path.split('/')[1]
+        let menu2 = this.$route.path.split('/')[2]
         if (menu === 'article' || menu === 'subject') {
-          return 'topic'
+          return 'article'
+        } else if (menu2 === 'commonly_sites' || menu2 === 'veer_image' || menu2 === 'trend_report' || menu2 === 'exhibition') {
+          return 'commonly_sites'
         }
-        return menu
       },
       messageCount() {
         return this.$store.state.event.msgCount

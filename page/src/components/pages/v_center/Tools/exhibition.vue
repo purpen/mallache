@@ -1,27 +1,19 @@
 <template>
   <div class="container">
-    <div class="exhibition">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="exhibition" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="exhibition"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20"
-                v-loading.body="loading">
-          <vCalendar
-            :events="events"
-            @event-click="eventClick"
-            @day-click="dayClick"
-            @event-selected="eventSelected"
-            @update-date="updateDate">
-          </vCalendar>
-        </el-col>
-      </el-row>
+    <ToolsMenu currentName="exhibition"></ToolsMenu>
+    <div class="exhibition" :span="24" v-loading.body="loading">
+      <vCalendar
+        :events="events"
+        @event-click="eventClick"
+        @day-click="dayClick"
+        @event-selected="eventSelected"
+        @update-date="updateDate">
+      </vCalendar>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'exhibition',
@@ -29,7 +21,6 @@
       vCalendar: (resolve) => {
         require(['@/components/pages/v_center/Tools/calendar/calendar'], resolve)
       },
-      vMenu,
       ToolsMenu
     },
     data () {
@@ -189,5 +180,7 @@
   }
 </script>
 <style scoped>
-
+  .exhibition {
+    padding: 0 15px
+  }
 </style>

@@ -1718,6 +1718,10 @@ td.fc-day.fc-widget-content.fc-today::before {
   .fc-content .fc-title {
     font-size: 12px;
   }
+
+  .el-input-group--append {
+    padding-left: 3px;
+  }
   /*767 end*/
 }
 

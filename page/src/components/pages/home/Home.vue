@@ -44,7 +44,7 @@
     </div>
     <div class="container article">
       <h3 class="title">铟果说</h3>
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="card-list">
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in articleList" :key="index">
           <el-card class="card" :body-style="{ padding: '0px' }">
             <router-link :to="{name: 'articleShow', params: {id: d.id}}"
@@ -64,7 +64,7 @@
 
     <div class="container article design">
       <h3 class="title">设计造物</h3>
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="card-list">
       <el-col :xs="24" :sm="12" :md="12" :lg="12" v-for="(d, index) in designList" :key="index">
         <el-card class="card" :body-style="{ padding: '0px' }">
           <a :href="d.url" :target="isMob ? '_self' : '_blank'">
@@ -83,7 +83,7 @@
 
     <div class="container article design-case">
       <h3 class="title">灵感</h3>
-      <el-row :gutter="20">
+      <el-row :gutter="20" class="card-list">
       <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCaseList" :key="index">
         <el-card class="card" :body-style="{ padding: '0px' }">
           <a :href="d.url" :target="isMob ? '_self' : '_blank'">
@@ -184,7 +184,7 @@
           pagination: '.swiper-pagination',
           paginationClickable: true,
           lazyLoading: true,
-          autoplay: 500000,
+          autoplay: 5000,
           prevButton: '.swiper-button-prev',
           nextButton: '.swiper-button-next',
           spaceBetween: 0
@@ -250,6 +250,22 @@
             this.designCaseList[i].cover_url = res.data.data[i].cover.middle
           }
         }).catch((err) => {
+          console.error(err)
+        })
+      },
+      getBlock () {
+        this.isLoading = true
+        this.$http.get(api.block, {params: {mark: 'hot_search_tags'}})
+        .then((res) => {
+          this.isLoading = false
+          if (res.data.meta.status_code === 200) {
+            this.tags = res.data.data.code.split(',')
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false
           console.error(err)
         })
       }
@@ -432,9 +448,6 @@
   }
 
   .logo-list img {
-    /* margin: 10px 20px;
-    width: 15%;
-    height: auto; */
     width: 144px;
     height: 60px;
     margin: 15px 15px 0 0;
@@ -442,49 +455,13 @@
     border-radius: 4px;
   }
 
-  .box-card {
-    text-align: left;
-    width: 100%;
-    height: 460px;
-    margin: 10px 0;
-  }
-
-  .box-card img {
-    width: 100%;
-    height: 100%;
-  }
-
   .image-box {
     margin: 0 auto;
-    /* max-width: 549px;
-    max-height: 347px; */
     overflow: hidden;
   }
 
   .image-box a {
     display: block;
-  }
-
-  .box-card .content {
-    padding: 10px;
-  }
-
-  .box-card .content p.stuff-title {
-    font-size: 1.5rem;
-    color: #222222;
-  }
-
-  .box-card .des {
-    margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .box-card .des p {
-    color: #666666;
-    font-size: 1.2rem;
-    line-height: 1.8;
-    font-weight: 300;
-    text-overflow: ellipsis;
   }
 
   .el-card:hover {
@@ -551,6 +528,11 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .image-box:not(.not-limit) {
@@ -628,16 +610,25 @@
     }
   }
 
-  @media screen and (max-width: 991px) {
-    .container {
-      width: 100%;
-      padding: 0 15px;
-    }
-
-    .image-box {
-      height: auto!important;
+  @media screen and (max-width: 990px) and (min-width: 851px) {
+    .image-box:not(.not-limit) {
+      height: 150px;
     }
   }
+
+  @media screen and (max-width: 850px) and (min-width: 768px) {
+    .image-box:not(.not-limit) {
+      height: 136px;
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+    .container {
+      width: auto;
+      padding: 0 15px;
+    }
+  }
+
   @media screen and (max-width: 767px) {
     .container {
       padding: 0;
@@ -646,18 +637,6 @@
     .title {
       font-size: 20px;
       padding: 30px 15px 10px;
-    }
-    .logo-list {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .logo-list img {
-      float: left;
-      margin: 2%;
-      width: 46%;
     }
 
     .el-row {
@@ -676,11 +655,20 @@
       text-align: center;
       line-height: 2.4
     }
+    .slide-content {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .image-box {
+      height: auto!important;
+    }
   }
 
-  @media screen and (max-width: 500px) {
-    .box-card .content {
-      padding-top: 28px;
+  @media screen and (max-width: 320px) {
+    .logo-list img {
+      width: 40%;
+      height: auto;
     }
+
   }
 </style>

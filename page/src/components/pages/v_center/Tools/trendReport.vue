@@ -1,57 +1,48 @@
 <template>
   <div class="container">
     <div class="trend-report">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="trendReport" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob"
-                   currentName="trendReport"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
-          <div :class="['report', {isMob : 'm-report'}]">
-            <el-row :gutter="20" class="report-list">
-              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
-                <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-                  <div class="picture"
-                       :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
-                    {{ele.cover.summary}}
-                  </div>
-                  <article class="item-body clearfix">
-                    <p class="title">{{ele.title}}</p>
-                    <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
-                    <p class="date fr"><i class="fx-2 fx-icon-time"></i>{{ele.created_at}}</p>
-                  </article>
-                </router-link>
-              </el-col>
-            </el-row>
-            <div class="pager">
-              <el-pagination
-                v-if="reportList.lgnth"
-                class="pagination"
-                :current-page="pagination.current_page"
-                :page-size="pagination.per_page"
-                :total="pagination.total" :page-count="pagination.total_pages"
-                layout="prev, pager, next, total"
-                @current-change="handleCurrentChange">
-              </el-pagination>
-            </div>
-            <div class="no-report" v-if="noReport">
-              <span class="icon"></span>
-              <p>还没有相关报告~</p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+      <ToolsMenu currentName="trendReport"></ToolsMenu>
+      <div :class="['report', {isMob : 'm-report'}]" v-loading.body="isLoading">
+        <el-row :gutter="20" class="report-list">
+          <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
+            <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
+              <div class="picture"
+                    :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                {{ele.cover.summary}}
+              </div>
+              <article class="item-body clearfix">
+                <p class="title">{{ele.title}}</p>
+                <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
+                <p class="date fr"><i class="fx-2 fx-icon-time"></i>{{ele.created_at}}</p>
+              </article>
+            </router-link>
+          </el-col>
+        </el-row>
+        <div class="pager">
+          <el-pagination
+            v-if="reportList.lgnth"
+            class="pagination"
+            :current-page="pagination.current_page"
+            :page-size="pagination.per_page"
+            :total="pagination.total" :page-count="pagination.total_pages"
+            layout="prev, pager, next, total"
+            @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+        <div class="no-report" v-if="noReport">
+          <span class="icon"></span>
+          <p>还没有相关报告~</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'trendReport',
     components: {
-      vMenu,
       ToolsMenu
     },
     data () {
@@ -132,7 +123,7 @@
   }
 
   .item-cover {
-    margin-bottom: 20px;
+    margin: 10px 0;
   }
   .item {
     border: 1px solid #D2D2D2;
@@ -150,11 +141,7 @@
   .report {
     min-height: 100%;
     position: relative;
-    /* padding-bottom: 50px */
-  }
-
-  .m-report {
-    padding-top: 20px;
+    padding: 0 15px;
   }
 
   .no-report {
