@@ -12,13 +12,13 @@
         </div>
       </div>
       <div class="head-cover">
-        <p><span>100+</span>专业设计服务商，<span>20+</span>成交项目，<span>200万</span>成交金额</p>
-        <router-link v-if="uType !== 2" :to="{}">发布项目需求</router-link>
+        <p :class="[{'need': uType !== 2}]"><span>100+</span>专业设计服务商，<span>20+</span>成交项目，<span>200万</span>成交金额</p>
+        <router-link v-if="uType !== 2" to="/item/submit_one">发布项目需求</router-link>
       </div>
     </div>
 
     <div class="categorie">
-      <el-row class="container" :gutter="15">
+      <el-row :gutter="15">
         <el-col class="list" :span="8">
           <i class="fx-icon-major-lg"></i>
           <article>
@@ -136,15 +136,17 @@
       <h3 class="title-center title-center2">合作伙伴</h3>
 
       <div class="logo-list clearfix">
-        <img v-lazy="require('assets/images/home/logo_md.jpg')" />
-        <img v-lazy="require('assets/images/home/jdjr_logo.jpg')" />
-        <img v-lazy="require('assets/images/home/logo_cxgc.jpg')" />
-        <img v-lazy="require('assets/images/home/logo_hqjj.jpg')" />
-        <img v-lazy="require('assets/images/home/1logo.jpg')" />
-        <img v-lazy="require('assets/images/home/2logo.jpg')" />
-        <img v-lazy="require('assets/images/home/3logo.jpg')" />
-        <img v-lazy="require('assets/images/home/4logo.jpg')" />
-        <img v-lazy="require('assets/images/home/5logo.png')" />
+        <span class="inline-flex">
+          <img v-lazy="require('assets/images/home/logo_md.jpg')" />
+          <img v-lazy="require('assets/images/home/jdjr_logo.jpg')" />
+          <img v-lazy="require('assets/images/home/logo_cxgc.jpg')" />
+          <img v-lazy="require('assets/images/home/logo_hqjj.jpg')" />
+          <img v-lazy="require('assets/images/home/1logo.jpg')" />
+          <img v-lazy="require('assets/images/home/2logo.jpg')" />
+          <img v-lazy="require('assets/images/home/3logo.jpg')" />
+          <img v-lazy="require('assets/images/home/4logo.jpg')" />
+          <img v-lazy="require('assets/images/home/5logo.png')" />
+        </span>
       </div>
     </div>
 
@@ -380,7 +382,7 @@
     background: #fafafa;
   }
 
-  .categorie .container .list{
+  .categorie .list{
     height: 150px;
     flex: 1;
     display: flex;
@@ -393,12 +395,12 @@
     margin-right: 12px;
   }
 
-  .categorie .container .list h3{
+  .categorie .list h3{
     font-size: 18px;
     line-height: 1.5
   }
 
-  .categorie .container .list p{
+  .categorie .list p{
     font-size: 16px;
   }
 
@@ -451,9 +453,9 @@
   }
 
   .logo-list {
-    text-align: center;
     margin: 0 auto;
     max-width: 815px;
+    text-align: center;
   }
 
   .logo-list img {
@@ -677,10 +679,13 @@
     }
 
     .slide .head-cover p {
-      width: calc(100% - 106px);
       font-size: 1.2rem;
       padding-right: 0;
       margin-right: 12px;
+    }
+
+    .slide .head-cover p.need {
+      width: calc(100% - 106px);
     }
 
    .slide .head-cover p span {
@@ -702,11 +707,11 @@
       padding: 0 15px;
     }
 
-    .categorie .container .list{
+    .categorie .list{
       flex-direction: column;
     }
 
-    .categorie .container .list h3{
+    .categorie .list h3{
       text-align: center;
       margin-top: 10px;
     }
@@ -723,17 +728,17 @@
     .slide h3 {
       font-size: 2rem
     }
-    .categorie .container .list {
+    .categorie .list {
       text-align: center
     }
     .categorie .list i {
       font-size: 36px;
       margin-right: 0;
     }
-    .categorie .container .list p {
+    .categorie .list p {
       font-size: 12px;
     }
-    .categorie .container .list h3 {
+    .categorie .list h3 {
       font-size: 16px;
     }
   }

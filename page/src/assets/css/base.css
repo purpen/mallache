@@ -1722,6 +1722,11 @@ td.fc-day.fc-widget-content.fc-today::before {
   .el-input-group--append {
     padding-left: 3px;
   }
+
+  .el-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
   /*767 end*/
 }
 

@@ -299,6 +299,7 @@
         } else if (menu2 === 'commonly_sites' || menu2 === 'veer_image' || menu2 === 'trend_report' || menu2 === 'exhibition') {
           return 'commonly_sites'
         }
+        return menu
       },
       messageCount() {
         return this.$store.state.event.msgCount
