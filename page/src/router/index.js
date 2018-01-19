@@ -598,7 +598,7 @@ const routes = [
     name: 'vcenterDesignCaseShow',
     meta: {
       title: '作品详情',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/design_case/Show')
   },
