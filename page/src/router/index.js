@@ -31,11 +31,7 @@ const routes = [
   },
   {
     path: '/test',
-    name: 'test',
-    meta: {
-      title: '测试'
-    },
-    component: require('@/components/Test')
+    redirect: '/home'
   },
   {
     path: '/about',
@@ -70,7 +66,7 @@ const routes = [
     path: '/design_case/general_list',
     name: 'designGeneralList',
     meta: {
-      title: '公司案例',
+      title: '作品案例',
       requireAuth: false
     },
     component: require('@/components/pages/design_case/GeneralList')
@@ -91,7 +87,10 @@ const routes = [
       title: '案例详情',
       requireAuth: false
     },
-    component: require('@/components/pages/design_case/AwardsShow')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/pages/design_case/AwardsShow'], resolve)
+    }
   },
   // 联系我们
   {
@@ -599,7 +598,7 @@ const routes = [
     name: 'vcenterDesignCaseShow',
     meta: {
       title: '作品详情',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/design_case/Show')
   },
@@ -839,7 +838,7 @@ const routes = [
     name: 'vcenterVeerImage',
     meta: {
       title: '图片素材',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/veerImage')
   },
@@ -849,7 +848,7 @@ const routes = [
     name: 'vcenterTrendReport',
     meta: {
       title: '趋势/报告',
-      requireAuth: true
+      requireAuth: false
     },
     component: require('@/components/pages/v_center/Tools/trendReport')
   },
@@ -858,9 +857,11 @@ const routes = [
     name: 'trendReportShow',
     meta: {
       title: '趋势/报告',
-      requireAuth: true
+      requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/trendReportShow')
+    component: (resolve) => {
+      require(['@/components/pages/v_center/Tools/trendReportShow'], resolve)
+    }
   },
   // 公司工具 => 常用网站
   {
@@ -878,7 +879,7 @@ const routes = [
     name: 'vcenterExhibition',
     meta: {
       title: '设计日历',
-      requireAuth: true
+      requireAuth: false
     },
     component: (resolve) => {
       require(['@/components/pages/v_center/Tools/exhibition'], resolve)
@@ -1220,7 +1221,10 @@ const routes = [
       title: '添加奖项案例',
       requireAuth: true
     },
-    component: require('@/components/admin/award_case/Submit')
+    // 按需加载
+    component: (resolve) => {
+      require(['@/components/admin/award_case/Submit'], resolve)
+    }
   },
   // 编辑奖项案例
   {
@@ -1274,6 +1278,36 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/admin/notice/List')
+  },
+  // 添加区块
+  {
+    path: '/admin/block/add',
+    name: 'adminBlockAdd',
+    meta: {
+      title: '添加区块',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/Submit')
+  },
+  // 编辑区块
+  {
+    path: '/admin/block/edit/:id',
+    name: 'adminBlockEdit',
+    meta: {
+      title: '编辑区块',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/Submit')
+  },
+  // 区块列表
+  {
+    path: '/admin/block/list',
+    name: 'adminBlockList',
+    meta: {
+      title: '区块列表',
+      requireAuth: true
+    },
+    component: require('@/components/admin/block/List')
   },
   // 404
   {

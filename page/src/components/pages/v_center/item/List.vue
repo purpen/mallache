@@ -319,7 +319,7 @@
             that.isLoading = false
             if (response.data.meta.status_code === 200) {
               if (!response.data.data) {
-                console.log(that)
+                // console.log(that)
                 return false
               }
               let data = response.data.data

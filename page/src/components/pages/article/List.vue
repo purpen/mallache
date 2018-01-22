@@ -12,7 +12,7 @@
     <div class="case-list" v-loading.body="isLoading">
       <el-row :gutter="20" class="anli-elrow">
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
-          <el-card :body-style="{ padding: '0px' }" class="item">
+          <el-card :body-style="{ padding: '0px' }" class="card">
             <div class="image-box">
               <router-link :to="{name: 'articleShow', params: {id: d.id}}"
                            :target="BMob ? '_self' : '_blank'">
@@ -25,23 +25,21 @@
                   {{ d.title }}
                 </router-link>
               <p>
-                <div class="des">
-              <p>{{ d.short_content }}</p>
+              <p class="des">{{ d.short_content }}</p>
             </div>
+          </el-card>
+        </el-col>
+      </el-row>
     </div>
-    </el-card>
-    </el-col>
-    </el-row>
-  </div>
 
-  <div class="pager">
-    <el-pagination v-if="itemList.length" class="pagination" :small="BMob" @size-change="handleSizeChange"
-                   @current-change="handleCurrentChange" :current-page="query.page" :page-size="query.pageSize"
-                   layout="total, prev, pager, next, jumper" :total="query.totalCount">
-    </el-pagination>
-  </div>
+    <div class="pager">
+      <el-pagination v-if="itemList.length" class="pagination" :small="BMob" @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange" :current-page="query.page" :page-size="query.pageSize"
+                    layout="total, prev, pager, next, jumper" :total="query.totalCount">
+      </el-pagination>
+    </div>
 
-  <div class="blank20"></div>
+    <div class="blank20"></div>
   </div>
 </template>
 
@@ -186,19 +184,13 @@
     min-height: 360px;
   }
 
-  .item {
-    /* height: 330px; */
-    margin: 10px auto;
+  .image-box {
+    overflow: hidden;
   }
 
-  .item img {
+  .image-box img {
     width: 100%;
     height: 100%;
-  }
-
-  .image-box {
-    /* height: 220px; */
-    overflow: hidden;
   }
 
   .content {
@@ -213,16 +205,11 @@
 
   .content a {
     color: #222;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
   .des {
-    height: 40px;
     margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .des p {
     color: #666;
     font-size: 1.4rem;
     line-height: 1.5;

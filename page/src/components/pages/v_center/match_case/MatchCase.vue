@@ -7,7 +7,7 @@
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub v-if="false"></v-menu-sub>
-          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-if="designCases.length">
+          <div :class="['content-box', isMob ? 'content-box-m' : '']">
             <div class="form-title">
               <span>提交产品</span>
             </div>
@@ -19,7 +19,7 @@
                     <div class="image-box">
                       <router-link :to="{name: 'vcenterMatchCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">
-                        <img :src="d.cover.middle">
+                        <img v-lazy="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">
@@ -39,11 +39,11 @@
                 </el-col>
               </el-row>
             </div>
-          </div>
-          <div class="add blank20">
-            <el-button class="is-custom" @click="add" type="primary">
-              <i class="el-icon-plus"></i> 提交产品
-            </el-button>
+            <div class="add blank20">
+              <el-button class="is-custom" @click="add" type="primary">
+                <i class="el-icon-plus"></i> 提交产品
+              </el-button>
+            </div>
           </div>
         </div>
       </el-col>

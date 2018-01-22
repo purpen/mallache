@@ -8,8 +8,21 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+var CleanWebpackPlugin = require('clean-webpack-plugin')
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
+// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+var os = require('os')
 
 var env = config.build.env
+
+let pathsToClean = [
+  'dist'
+]
+// the clean options to use
+let cleanOptions = {
+  root: path.join(__dirname, '../')
+}
 
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -21,19 +34,34 @@ var webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    filename: utils.assetsPath('js/[name].[chunkhash:5].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash:5].js')
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
+    // new BundleAnalyzerPlugin(),
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   },
+    //   sourceMap: true
+    // }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ecma: 8,
+        mangle: true,
+        output: { comments: false },
+        compress: {
+          warnings: false,
+          drop_console: true
+        }
       },
-      sourceMap: true
+      sourceMap: false,
+      cache: true,
+      parallel: os.cpus().length * 2
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -46,16 +74,28 @@ var webpackConfig = merge(baseWebpackConfig, {
         safe: true
       }
     }),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('../static/js/vendor/core-mainfest.json') // 指向这个json
+    }),
+	  // 复制公共dll.js，并插入html
+    new AddAssetHtmlPlugin([{
+      filepath: path.resolve(__dirname,'../static/js/vendor/core.dll.*.js'), // 同webpack.dll.conf.js output
+      outputPath: utils.assetsPath(''),
+      publicPath: path.posix.join(config.build.assetsPublicPath, '/static/js/vendor'),
+      includeSourcemap: false,
+      hash: false,
+    }]),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: config.build.index,
       template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
+      inject: true,   // 允许插件修改哪些内容，包括head与body
+      minify: { // 压缩HTML文件
+        removeComments: true, // 移除HTML中的注释
+        collapseWhitespace: true, // 删除空白符与换行符
         removeAttributeQuotes: true
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
@@ -90,7 +130,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new CleanWebpackPlugin(pathsToClean, cleanOptions)  // 清除dist
   ]
 })
 

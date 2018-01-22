@@ -37,22 +37,22 @@
             <el-table-column
               label="封面"
               width="90">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="产品信息"
               min-width="160">
-                <template scope="scope">
-                  <p>标题: {{ scope.row.title }}</p>
-                  <p>链接: {{ scope.row.url }}</p>
+                <template slot-scope="scope">
+                  <p>标题: <router-link :to="{name: 'designAwardsShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.title }}</router-link></p>
+                  <p>链接: <a :href="scope.row.url" target="_blank">{{ scope.row.url }}</a></p>
                 </template>
             </el-table-column>
             <el-table-column
               min-width="150"
               label="奖项信息">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>奖项: {{ scope.row.category_value }}</p>
                   <p>等级: {{ scope.row.grade }}</p>
                   <p>获奖时间: {{ scope.row.time_at }}</p>
@@ -66,7 +66,7 @@
             <el-table-column
               width="60"
               label="推荐">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.recommended === 0"><el-tag type="gray">否</el-tag></p>
                   <p v-else><el-tag type="success">是</el-tag></p>
                 </template>
@@ -74,7 +74,7 @@
             <el-table-column
               width="60"
               label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
                   <p v-else><el-tag type="success">启用</el-tag></p>
                 </template>
@@ -87,7 +87,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.recommended === 1" @click="setRecommended(scope.$index, scope.row, 0)">取消推荐</a>
                     <a href="javascript:void(0);" v-else @click="setRecommended(scope.$index, scope.row, 1)">推荐</a>
@@ -107,7 +107,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="query.page"
-            :page-sizes="[10, 50, 100, 500]"
+            :page-sizes="[50, 100, 500]"
             :page-size="query.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
@@ -154,7 +154,7 @@ export default {
       currentDialogId: '',
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalCount: 0,
         sort: 1,
         type: 0,
@@ -258,7 +258,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.cover_url = ''
+            item.cover_url = require ('@/assets/images/df_100x100.png')
             if (item.cover) {
               item.cover_url = item.cover.logo
             }

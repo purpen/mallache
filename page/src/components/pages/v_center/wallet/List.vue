@@ -46,7 +46,7 @@
               </el-table-column>
               <el-table-column
                 label="收入/支出" width="120">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
                        @click="sureTransfer(scope.$index, scope.row)">确认收款</a>

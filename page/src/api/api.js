@@ -100,8 +100,8 @@ export default {
   designItem: '/designItem/{0}', // 查看/编辑/删除接单信息
 
   // 案例
-  designCase: '/designCase',  // 公司案例
-  designCaseId: '/designCase/{0}',  // 公司案例
+  designCase: '/designCase',  // 作品案例
+  designCaseId: '/designCase/{0}',  // 作品案例
   designCaseCompanyId: '/designCase/designCompany/{0}', // GET 通过公司ID查看案例
   designCaseOpenLists: '/designCase/openLists', // GET 案例列表
 
@@ -240,11 +240,17 @@ export default {
   adminNotice: '/admin/notice', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
   adminNoticeSetStatus: '/admin/notice/changeStatus', // PUT 启用 | 禁用
 
+  // 栏目位管理
+  adminBlockList: '/admin/block/list', // GET 列表
+  adminBlock: '/admin/block', // GET 详情 | POST 添加 | PUT 更新 | DELETE 删除
+  adminBlockSetStatus: '/admin/block/changeStatus', // PUT 启用 | 禁用
+
   // 附件管理
   adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
 
   // veer图片列表
   veerImage: '/veerImage/list',
+  block: '/block',
 
   // test
   test: '/'  // End

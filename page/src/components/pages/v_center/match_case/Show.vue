@@ -13,7 +13,7 @@
           </div>
           <div class="des">
             <p v-for="(d, index) in item.images" :key="index">
-              <img :src="d.big" :alt="d.name" :title="d.name" />
+              <img v-lazy="d.big" :alt="d.name" :title="d.name" />
               <slot>
             <p class="img-des">{{ d.summary }}</p>
             </slot>

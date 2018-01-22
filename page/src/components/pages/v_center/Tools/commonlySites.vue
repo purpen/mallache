@@ -1,132 +1,122 @@
 <template>
   <div class="container">
     <div class="commonly">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="commonlySites" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob" currentName="commonlySites"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20"
-                v-loading.body="loading">
-          <div :class="['commonly-sites', {'commonly-sites-m' : isMob}]">
+      <ToolsMenu currentName="commonlySites"></ToolsMenu>
+      <div class="commonly-sites" v-loading.body="loading">
+        <section class="lists design-info" v-if="designInfo.length">
+          <h2><span class="fx-3 fx-icon-information"></span>设计资讯</h2>
+          <article>
+            <el-row :gutter="isMob ? 10 : 20">
+              <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designInfo" :key="index">
+                <div class="item clearfix" @click="aClick(ele.url)">
+                  <div class="left fl"
+                        :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
+                    {{ele.cover.name}}
+                  </div>
+                  <div class="right hide2lines fl">
+                    <p class="title">{{ele.title}}</p>
+                    <p class="summary hide2lines">{{ele.summary}}</p>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+          </article>
+        </section>
 
-            <section class="lists design-info" v-if="designInfo.length">
-              <h2>设计资讯</h2>
-              <article>
-                <el-row :gutter="isMob ? 10 : 20">
-                  <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designInfo" :key="index">
-                    <div class="item clearfix" @click="aClick(ele.url)">
-                      <div class="left fl"
-                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
-                        {{ele.cover.name}}
-                      </div>
-                      <div class="right hide2lines fl">
-                        <p class="title">{{ele.title}}</p>
-                        <p class="summary hide2lines">{{ele.summary}}</p>
-                      </div>
+        <section class="lists originality" v-if="originality.length">
+          <h2><span class="fx-icon-inspiration2"></span>创意灵感</h2>
+          <article>
+            <article>
+              <el-row :gutter="isMob ? 10 : 20">
+                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in originality" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)">
+                    <div class="left fl"
+                          :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
+                      {{ele.cover.name}}
                     </div>
-                  </el-col>
-                </el-row>
-              </article>
-            </section>
-
-            <section class="lists originality" v-if="originality.length">
-              <h2>创意灵感</h2>
-              <article>
-                <article>
-                  <el-row :gutter="isMob ? 10 : 20">
-                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in originality" :key="index">
-                      <div class="item clearfix" @click="aClick(ele.url)">
-                        <div class="left fl"
-                             :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
-                          {{ele.cover.name}}
-                        </div>
-                        <div class="right fl">
-                          <p class="title">{{ele.title}}</p>
-                          <p class="summary hide2lines">{{ele.summary}}</p>
-                        </div>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </article>
-              </article>
-            </section>
-            <section class="lists crowd-funding" v-if="crowdFunding.length">
-              <h2>众筹</h2>
-              <article>
-                <article>
-                  <el-row :gutter="isMob ? 10 : 20">
-                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in crowdFunding" :key="index">
-                      <div class="item clearfix" @click="aClick(ele.url)">
-                        <div class="left fl"
-                             :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
-                          {{ele.cover.name}}
-                        </div>
-                        <div class="right fl">
-                          <p class="title">{{ele.title}}</p>
-                          <p class="summary hide2lines">{{ele.summary}}</p>
-                        </div>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </article>
-              </article>
-            </section>
-            <section class="lists business-consult" v-if="businessConsult.length">
-              <h2>商业咨询</h2>
-              <article>
-                <article>
-                  <el-row :gutter="isMob ? 10 : 20">
-                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in businessConsult" :key="index">
-                      <div class="item clearfix" @click="aClick(ele.url)">
-                        <div class="left fl"
-                             :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
-                          {{ele.cover.name}}
-                        </div>
-                        <div class="right fl">
-                          <p class="title">{{ele.title}}</p>
-                          <p class="summary hide2lines">{{ele.summary}}</p>
-                        </div>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </article>
-              </article>
-            </section>
-            <section class="lists design-awards" v-if="designAwards.length">
-              <h2>设计奖项</h2>
-              <article>
-                <article>
-                  <el-row :gutter="isMob ? 10 : 20">
-                    <el-col :span="isMob ? 12 : 8" v-for="(ele, index) in designAwards" :key="index">
-                      <div class="item clearfix" @click="aClick(ele.url)">
-                        <div class="left fl"
-                             :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
-                          {{ele.cover.name}}
-                        </div>
-                        <div class="right fl">
-                          <p class="title">{{ele.title}}</p>
-                          <p class="summary hide2lines">{{ele.summary}}</p>
-                        </div>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </article>
-              </article>
-            </section>
-          </div>
-        </el-col>
-      </el-row>
+                    <div class="right fl">
+                      <p class="title">{{ele.title}}</p>
+                      <p class="summary hide2lines">{{ele.summary}}</p>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </article>
+          </article>
+        </section>
+        <section class="lists crowd-funding" v-if="crowdFunding.length">
+          <h2><span class="fx-icon-crowdfunding"></span>众筹</h2>
+          <article>
+            <article>
+              <el-row :gutter="isMob ? 10 : 20">
+                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in crowdFunding" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)">
+                    <div class="left fl"
+                          :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
+                      {{ele.cover.name}}
+                    </div>
+                    <div class="right fl">
+                      <p class="title">{{ele.title}}</p>
+                      <p class="summary hide2lines">{{ele.summary}}</p>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </article>
+          </article>
+        </section>
+        <section class="lists business-consult" v-if="businessConsult.length">
+          <h2><span class="fx-icon-business-consulting"></span>商业咨询</h2>
+          <article>
+            <article>
+              <el-row :gutter="isMob ? 10 : 20">
+                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in businessConsult" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)">
+                    <div class="left fl"
+                          :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
+                      {{ele.cover.name}}
+                    </div>
+                    <div class="right fl">
+                      <p class="title">{{ele.title}}</p>
+                      <p class="summary hide2lines">{{ele.summary}}</p>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </article>
+          </article>
+        </section>
+        <section class="lists design-awards" v-if="designAwards.length">
+          <h2><span class="fx-icon-prize"></span>设计奖项</h2>
+          <article>
+            <article>
+              <el-row :gutter="isMob ? 10 : 20">
+                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designAwards" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)">
+                    <div class="left fl"
+                          :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
+                      {{ele.cover.name}}
+                    </div>
+                    <div class="right fl">
+                      <p class="title">{{ele.title}}</p>
+                      <p class="summary hide2lines">{{ele.summary}}</p>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </article>
+          </article>
+        </section>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'commonlySites',
     components: {
-      vMenu,
       ToolsMenu
     },
     data () {
@@ -199,37 +189,20 @@
   }
 </script>
 <style scoped>
+  .commonly-sites {
+    padding: 0 15px;
+  }
+
   .lists h2 {
-    font-size: 24px;
+    font-size: 20px;
     color: #222222;
     margin: 40px 0 20px;
-    text-indent: 30px;
-    background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
-    background-size: 25px;
+    display: flex;
+    align-items: center;
   }
 
   .lists h2:first-child {
     margin: 10px 0 20px;
-  }
-
-  .originality h2 {
-    background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
-    background-size: 25px;
-  }
-
-  .crowd-funding h2 {
-    background: url("../../../../assets/images/tools/commonlySite/Crowd-funding.png") no-repeat left;
-    background-size: 25px;
-  }
-
-  .business-consult h2 {
-    background: url("../../../../assets/images/tools/commonlySite/BusinessConsulting.png") no-repeat left;
-    background-size: 25px;
-  }
-
-  .design-awards h2 {
-    background: url("../../../../assets/images/tools/commonlySite/designAwards.png") no-repeat left;
-    background-size: 25px;
   }
 
   .item {
@@ -241,11 +214,14 @@
     margin-bottom: 20px;
     cursor: pointer;
     transition: all ease .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .item:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
 
   .item a {
@@ -277,8 +253,7 @@
   .right .summary {
     font-size: 14px;
     color: #666;
-    line-height: 16px;
-    height: 32px;
+    line-height: 18px;
   }
 
   @media screen and (max-width: 600px) {
@@ -312,36 +287,12 @@
     }
 
     .lists h2 {
-      text-indent: 24px;
       margin: 20px 0;
       font-size: 17px;
-      background: url("../../../../assets/images/tools/commonlySite/DesignInformation.png") no-repeat left;
-      background-size: 17px;
     }
 
     .lists h2:first-child {
       margin: 0 0 20px;
     }
-
-    .originality h2 {
-      background: url("../../../../assets/images/tools/commonlySite/inspiration.png") no-repeat left;
-      background-size: 17px;
-    }
-
-    .crowd-funding h2 {
-      background: url("../../../../assets/images/tools/commonlySite/Crowd-funding.png") no-repeat left;
-      background-size: 17px;
-    }
-
-    .business-consult h2 {
-      background: url("../../../../assets/images/tools/commonlySite/BusinessConsulting.png") no-repeat left;
-      background-size: 17px;
-    }
-
-    .design-awards h2 {
-      background: url("../../../../assets/images/tools/commonlySite/designAwards.png") no-repeat left;
-      background-size: 17px;
-    }
-
   }
 </style>

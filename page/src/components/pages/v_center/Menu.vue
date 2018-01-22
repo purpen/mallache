@@ -69,25 +69,6 @@
       <div class="computer-btn" v-if="isCompany">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
-      <div class="menu-list" v-if="isCompany">
-        <span v-if="!isMob">工具</span>
-        <a @click="alick" :to="'/vcenter/commonly_sites'"
-           :class="{'item': true, 'is-active': currentName === 'commonlySites'}">
-          常用网站
-        </a>
-        <a @click="alick" class="item" :to="'/vcenter/veer_image'"
-           :class="{'item': true, 'is-active': currentName === 'veerImage'}">
-          图片素材
-        </a>
-        <a @click="alick" :to="'/vcenter/trend_report'"
-           :class="{'item': true, 'is-active': currentName === 'trendReport'}">
-          趋势/报告
-        </a>
-        <a @click="alick" :to="'/vcenter/exhibition'"
-           :class="{'item': true, 'is-active': currentName === 'exhibition'}">
-          设计日历
-        </a>
-      </div>
     </section>
   </el-col>
 </template>
@@ -144,6 +125,10 @@
     color: #666666;
     position: relative;
     text-indent: 12px;
+  }
+
+  .menu-list span:first-child {
+    padding-top: 0;
   }
 
   .menu-list span::before {

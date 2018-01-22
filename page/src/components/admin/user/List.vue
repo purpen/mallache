@@ -67,14 +67,14 @@
             <el-table-column
               label="Logo"
               width="80">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p><img :src="scope.row.logo_url" width="50" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="用户信息"
               min-width="180">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>账户: {{ scope.row.account }}</p>
                   <p>昵称: {{ scope.row.username }}</p>
                   <p v-if="scope.row.realname">真实姓名: {{ scope.row.realname }} [{{ scope.row.position }}]</p>
@@ -83,7 +83,7 @@
             <el-table-column
               width="60"
               label="属性">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.kind === 2">鸟人</p>
                   <p v-else>默认</p>
                 </template>
@@ -91,7 +91,7 @@
             <el-table-column
               width="80"
               label="类型">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.type === 2">设计公司</p>
                   <p v-else>用户</p>
                 </template>
@@ -99,7 +99,7 @@
             <el-table-column
               width="80"
               label="权限">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.role_id === 0">用户</p>
                   <p v-else-if="scope.row.role_id === 5">编辑</p>
                   <p v-else-if="scope.row.role_id === 10">管理员</p>
@@ -111,7 +111,7 @@
             <el-table-column
               width="80"
               label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.status === -1"><el-tag type="gray">禁用</el-tag></p>
                   <p v-else><el-tag type="success">正常</el-tag></p>
                 </template>
@@ -124,7 +124,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 0" @click="setStatus(scope.$index, scope.row, -1)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 0)">启用</a>
@@ -293,7 +293,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.logo_url = ''
+            item.logo_url = require ('@/assets/images/df_100x100.png')
             if (item.logo_image) {
               item.logo_url = item.logo_image.logo
             }

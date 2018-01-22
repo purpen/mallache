@@ -42,7 +42,7 @@
             <el-table-column
               width="120"
               label="创建人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     {{ scope.row.user.account }}[{{ scope.row.user_id }}]
                   </p>
@@ -71,15 +71,15 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer" @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
                   </p>
                   <p>
                   <!--
                     <a href="javascript:void(0);" @click="handleEdit(scope.$index, scope.row.id)">编辑</a>
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>                 
-                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">查看</a> 
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
+                    <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">查看</a>
 
                     -->
                   </p>

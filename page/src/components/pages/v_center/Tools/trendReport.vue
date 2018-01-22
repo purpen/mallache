@@ -1,62 +1,54 @@
 <template>
   <div class="container">
     <div class="trend-report">
-      <div class="blank20"></div>
-      <el-row :gutter="24" class="anli-elrow">
-        <v-menu currentName="trendReport" v-if="menuStatus !== 'tools' || !isMob"></v-menu>
-        <ToolsMenu v-if="menuStatus === 'tools' && isMob"
-                   currentName="trendReport"></ToolsMenu>
-        <el-col :span="isMob ? 24 : 20">
-          <div :class="['report', {isMob : 'm-report'}]">
-            <el-row :gutter="20">
-              <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index">
-                <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-                  <div class="picture"
-                       :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
-                    {{ele.cover.summary}}
-                  </div>
-                  <article class="item-body clearfix">
-                    <p class="title">{{ele.title}}</p>
-                    <p class="view fl">{{ele.hits}}</p>
-                    <p class="date fl">{{ele.created_at}}</p>
-                  </article>
-                </router-link>
-              </el-col>
-            </el-row>
-            <div class="pager">
-              <el-pagination
-                v-if="reportList.lgnth"
-                class="pagination"
-                :current-page="pagination.current_page"
-                :page-size="pagination.per_page"
-                :total="pagination.total" :page-count="pagination.total_pages"
-                layout="prev, pager, next, total"
-                @current-change="handleCurrentChange">
-              </el-pagination>
-            </div>
-            <div class="no-report" v-if="noReport">
-              <span class="icon"></span>
-              <p>还没有相关报告~</p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+      <ToolsMenu currentName="trendReport"></ToolsMenu>
+      <div :class="['report', {isMob : 'm-report'}]" v-loading.body="isLoading">
+        <el-row :gutter="20" class="report-list">
+          <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
+            <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
+              <div class="picture"
+                    :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                {{ele.cover.summary}}
+              </div>
+              <article class="item-body clearfix">
+                <p class="title">{{ele.title}}</p>
+                <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
+                <p class="date fr"><i class="fx-2 fx-icon-time"></i>{{ele.created_at}}</p>
+              </article>
+            </router-link>
+          </el-col>
+        </el-row>
+        <div class="pager">
+          <el-pagination
+            v-if="reportList.lgnth"
+            class="pagination"
+            :current-page="pagination.current_page"
+            :page-size="pagination.per_page"
+            :total="pagination.total" :page-count="pagination.total_pages"
+            layout="prev, pager, next, total"
+            @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
+        <div class="no-report" v-if="noReport">
+          <span class="icon"></span>
+          <p>还没有相关报告~</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Menu'
   import ToolsMenu from '@/components/pages/v_center/ToolsMenu'
   export default {
     name: 'trendReport',
     components: {
-      vMenu,
       ToolsMenu
     },
     data () {
       return {
         noReport: false,
+        isLoading: false,
         reportList: [],
         pagination: {
           current_page: 1,
@@ -71,18 +63,20 @@
     },
     methods: {
       getTrendReportList () {
+        this.isLoading = true
         this.$http.get(api.TrendReportList, {
           params: {
             page: this.pagination.current_page,
             per_page: this.pagination.per_page
           }
         }).then((res) => {
+          this.isLoading = false
           //          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             let meta = res.data.meta
             if (res.data.data.length) {
               for (let i of res.data.data) {
-                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日 hh:mm')
+                i.created_at = i.created_at.date_format().format('yyyy年MM月dd日')
               }
               this.reportList = res.data.data
               this.pagination.total = meta.pagination.total
@@ -94,6 +88,7 @@
             this.$message.error(res.data.meta.message)
           }
         }).catch((err) => {
+          this.isLoading = false
           console.error(err)
         })
       },
@@ -121,8 +116,16 @@
     margin-bottom: -30px;
   }
 
+  .report-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .item-cover {
+    margin: 10px 0;
+  }
   .item {
-    margin-bottom: 20px;
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     display: block;
@@ -138,11 +141,7 @@
   .report {
     min-height: 100%;
     position: relative;
-    /* padding-bottom: 50px */
-  }
-
-  .m-report {
-    padding-top: 20px;
+    padding: 0 15px;
   }
 
   .no-report {
@@ -177,38 +176,39 @@
 
   .item-body {
     overflow: hidden;
-    padding: 10px 10px 20px;
+    padding: 10px;
     border-top: 1px solid #D2D2D2;
     border-radius: 0 0 4px 4px;
   }
 
   .item-body .title {
     font-size: 15px;
+    height: 40px;
     line-height: 1.4;
-    margin: 10px 0;
-    /* color: #222222; */
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
 
   .item-body .view {
     font-size: 12px;
-    line-height: 16px;
-    text-indent: 26px;
     color: #999999;
     font-weight: normal;
-    background: url('../../../../assets/images/tools/report/browse@2x.png') no-repeat left;
-    background-size: 20px;
     padding-right: 24px;
-    margin-bottom: 10px;
   }
 
   .item-body .date {
     font-size: 12px;
-    line-height: 16px;
-    text-indent: 26px;
     color: #999999;
     font-weight: normal;
-    background: url('../../../../assets/images/tools/report/time-gray@2x.png') no-repeat left;
-    background-size: 16px;
+  }
+
+  .item-body .view,
+  .item-body .date {
+    display: flex;
+    align-items: center;
   }
 
   .pager {

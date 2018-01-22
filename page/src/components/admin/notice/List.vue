@@ -35,14 +35,14 @@
             <el-table-column
               label="封面"
               width="90">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p><img :src="scope.row.cover_url" width="60" style="margin: 5px;" /></p>
                 </template>
             </el-table-column>
             <el-table-column
               label="信息"
               min-width="180">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>标题: {{ scope.row.title }}</p>
                   <p>链接: {{ scope.row.url }}</p>
                 </template>
@@ -50,7 +50,7 @@
             <el-table-column
               width="80"
               label="目标人群">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>{{ scope.row.evt_value }}</p>
                 </template>
             </el-table-column>
@@ -62,7 +62,7 @@
             <el-table-column
               width="70"
               label="状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p v-if="scope.row.status === 0"><el-tag type="gray">禁用</el-tag></p>
                   <p v-else-if="scope.row.status === -1"><el-tag type="warning">发送中...</el-tag></p>
                   <p v-else><el-tag type="success">已发送</el-tag></p>
@@ -76,7 +76,7 @@
             <el-table-column
               width="100"
               label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <p>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else-if="scope.row.status === -1">发送中...</a>
@@ -229,7 +229,7 @@ export default {
 
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
-            item.cover_url = ''
+            item.cover_url = require ('@/assets/images/df_100x100.png')
             if (item.cover) {
               item.cover_url = item.cover.logo
             }

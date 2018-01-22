@@ -22,7 +22,6 @@ class TrendReportsController extends BaseController
      * @apiGroup TrendReports
      *
      * @apiParam {integer} id 趋势报告id
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *
@@ -80,7 +79,6 @@ class TrendReportsController extends BaseController
      *
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *
@@ -97,7 +95,7 @@ class TrendReportsController extends BaseController
 
         $query = TrendReports::query();
 
-        $lists = $query->paginate($per_page);
+        $lists = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new TrendReportsTransformer())->setMeta($this->apiMeta());
     }

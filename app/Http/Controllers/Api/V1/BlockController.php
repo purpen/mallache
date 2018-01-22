@@ -50,11 +50,10 @@ class BlockController extends BaseController
      */
     public function show(Request $request)
     {
-        $mark = $request->input('mark') ? (int)$request->input('mark') : '';
+        $mark = $request->input('mark') ? $request->input('mark') : '';
 
         $block = Block::where('mark' , $mark)->first();
-
-        if($block){
+        if($block && $block->status===1){
             return $this->response->item($block, new BlockTransformer())->setMeta($this->apiMeta());
         }else{
             return $this->response->array($this->apiError('not found', 404));

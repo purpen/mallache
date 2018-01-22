@@ -7,17 +7,18 @@
       </div>
     </div>
     <div class="line"></div>
-    <div class="container">
+    <div class="">
       <el-row :gutter="20">
-
         <el-col :span="24">
           <div class="h-right-content">
-
+            <div class="banner" :style="{height: calcHeight}"></div>
             <div class="content-box">
               <h3>联系我们</h3>
-              <p class="addr">北京市 朝阳区 酒仙桥路4号 751北京时尚设计广场 B7栋</p>
-              <p class="phone">010-84799327</p>
-              <p class="mail">support@taihuoniao.com</p>
+              <a class="contact">马哲</a>
+              <a class="phone" href="tel:15711016577">15711016577</a>
+              <a class="tel" href="tel:010-84799327">010-84799327</a>
+              <a class="mail" href="mailto:mazhe@taihuoniao.com">mazhe@taihuoniao.com</a>
+              <a class="addr">北京市 朝阳区 酒仙桥路4号 751北京时尚设计广场 B7栋</a>
             </div>
           </div>
         </el-col>
@@ -27,14 +28,15 @@
 </template>
 
 <script>
-
+import { calcImgSize } from 'assets/js/common'
 export default {
   name: 'contact',
   components: {
   },
   data() {
     return {
-      test: ''
+      test: '',
+      calcHeight: ''
     }
   },
   methods: {
@@ -42,6 +44,12 @@ export default {
   created: function() {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
+  },
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.calcHeight = calcImgSize(400, 1440)
+    })
+    this.calcHeight = calcImgSize(400, 1440)
   }
 }
 
@@ -49,12 +57,27 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.h-right-content .content-box {
+  margin-top: 0;
+}
+
+.banner {
+  width: 100%;
+  min-height: 180px;
+  background: url('../../../assets/images/home/Contactus@2x.png') no-repeat center;
+  background-size: cover;
+  text-align: center;
+  flex-wrap: wrap;
+  align-content: center
+}
+
 .line {
   border-bottom: 1px solid #ccc;
 }
 
 .content-box {
-  padding: 20px 120px;
+  padding: 0px 120px 20px;
 }
 
 .content-box h3 {
@@ -63,28 +86,45 @@ export default {
   margin: 10px 0;
 }
 
-.content-box p {
+.content-box a {
+  font-size: 1.4rem;
+  color: #666;
+  display: block;
   line-height: 20px;
   padding-left: 30px;
-  margin: 5px 0
+  margin: 10px 0
 }
 
-.content-box p img {
+.content-box a:hover {
+  color: #222
+}
+
+.content-box a img {
   vertical-align: top;
   margin-right: 10px;
 }
 
-p.addr {
-  background: url("../../../assets/images/icon/iconfont-shouhuodizhi.png") no-repeat -2px top;
+a.addr {
+  background: url("../../../assets/images/icon/iconfont-address.png") no-repeat -2px top;
   background-size: 20px;
 }
 
-p.phone {
+a.contact {
+  background: url("../../../assets/images/icon/iconfont-contact.png") no-repeat -1px top;
+  background-size: 20px;
+}
+
+a.phone {
+  background: url("../../../assets/images/icon/iconfont-phone.png") no-repeat -1px top;
+  background-size: 20px;
+}
+
+a.tel {
   background: url("../../../assets/images/icon/iconfont-tel.png") no-repeat -1px top;
   background-size: 20px;
 }
 
-p.mail {
+a.mail {
   background: url("../../../assets/images/icon/iconfont-email.png") no-repeat 0px top;
   background-size: 20px;
 }

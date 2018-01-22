@@ -35,7 +35,7 @@
                       width="180">
                     </el-table-column>
                     <el-table-column>
-                      <template scope="scope">
+                      <template slot-scope="scope">
                         <div v-if="scope.row.name === '相关附件'">
                           <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a>
                           </p>

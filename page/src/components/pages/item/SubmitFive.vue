@@ -325,7 +325,7 @@
               that.itemTab = itemTab
               that.tab = tab
               that.assetFile = assetFile
-              console.log(that.assetFile)
+              // console.log(that.assetFile)
               that.baseTab = baseTab
             } else {
               that.$message.error(response.data.meta.message)

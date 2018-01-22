@@ -41,6 +41,7 @@ body {
 }
 
 .container {
+  /* overflow: hidden; */
   margin: 0 auto;
 }
 
@@ -222,6 +223,34 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-weight: 500;
 }
 
+.font-weight6 {
+  font-weight: 600;
+}
+
+[class^="fx-icon-"], [class*=" fx-icon-"] {
+  margin-right: 6px;
+}
+
+.fx {
+  font-size: 14px;
+}
+
+.fx-2 {
+  font-size: 16px;
+}
+
+.fx-3{
+  font-size: 18px;
+}
+
+.fx-4 {
+  font-size: 20px;
+}
+
+.fx-5 {
+  font-size: 22px;
+}
+
 .loading {
   position: fixed;
   top: 30%;
@@ -232,6 +261,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   cursor: pointer;
 }
 
+.not-allow {
+  cursor: not-allowed!important;
+}
 /**
  * 面包屑
  */
@@ -427,6 +459,10 @@ button.is-custom.is-outlined.is-loading:after {
 .weibo:hover {
   background: url('../../assets/images/icon/Weibohover@2x.png');
   background-size: contain;
+}
+
+.footer p a:hover {
+  color: #CCCCCC;
 }
 
 .footer p a.is-active {
@@ -675,7 +711,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .view-msg .news:hover {
   color:#222;
-  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center #0000000d;
+  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
   background-size: 20px;
 }
 
@@ -686,7 +722,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .view-msg .notice:hover {
   color: #222;
-  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center #0000000d;
+  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
   background-size: 20px;
 }
 
@@ -826,19 +862,19 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-control:hover {
-  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px #0000000d;
+  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-admin:hover {
-  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px #0000000d;
+  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
 
 .el-menu-info .el-menu .el-menu-item.menu-sign-out:hover {
-  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px #0000000d;
+  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px rgba(0, 0, 0, 0.051);
   background-size: 22px;
   color: #222222;
 }
@@ -1066,11 +1102,18 @@ img.avatar {
   line-height: 1.5;
   font-size: 1.3rem;
   color: #222222;
+  height: 3.2rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .file-list .content .summary {
   padding-top: 6px;
-  height: 40px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
@@ -1104,7 +1147,9 @@ img.avatar {
 }
 
 /* 为所有卡片增加hover效果 */
-
+.card {
+  margin: 10px 0;
+}
 .el-card {
   transition: all ease .3s;
 }
@@ -1178,7 +1223,7 @@ button {
 .fc-head {
   font-family: PingFangSC-Medium;
   font-size: 14px;
-  background: #FF5A6099;
+  background: rgba(255, 90, 96, 0.6);
   height: 40px;
   line-height: 40px;
   color: #FFFFFF;
@@ -1210,7 +1255,7 @@ button {
 .fc-unthemed .fc-popover,
 .fc-unthemed .fc-list-view,
 .fc-unthemed .fc-list-heading td {
-  border-color: #FF5A6099;
+  border-color: rgba(255, 90, 96, 0.6);
 }
 
 .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
@@ -1228,8 +1273,8 @@ td.fc-day.fc-widget-content.fc-today::before {
   content: "今";
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 6px;
+  left: 8px;
   width: 25px;
   height: 25px;
   background: #FF5D62;
@@ -1249,7 +1294,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .fc-widget-content .fc-event-container {
-  padding: 6px 0 !important;
+  padding: 6px 4px !important;
 }
 
 .fc button {
@@ -1263,27 +1308,6 @@ td.fc-day.fc-widget-content.fc-today::before {
   border: 1px solid #979797;
   box-shadow: none;
   height: 22px;
-}
-
-.fc-icon-left-single-arrow,
-.fc-icon-right-single-arrow {
-  position: relative;
-}
-
-.fc-icon-left-single-arrow:after,
-.fc-icon-right-single-arrow:after {
-  position: absolute;
-  top: -4% !important;
-  font-weight: normal !important;
-  font-size: 26px !important;
-}
-
-.fc-icon-left-single-arrow:after {
-  left: 1px;
-}
-
-.fc-icon-right-single-arrow:after {
-  right: 2px;
 }
 
 .fc-toolbar {
@@ -1360,6 +1384,25 @@ td.fc-day.fc-widget-content.fc-today::before {
   border-radius: 50%;
 }
 
+/* 暂时隐藏具体时间 */
+.fc-content .fc-time {
+  display: none;
+}
+
+.fc-content .fc-title {
+  font-size: 14px;
+}
+
+.fc-content {
+  padding-right:8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fc td.fc-day-top {
+  padding-left: 8px;
+}
 /*日历 end*/
 
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
@@ -1636,6 +1679,8 @@ td.fc-day.fc-widget-content.fc-today::before {
   .fc-event {
     text-indent: 0;
     padding-left: 14px !important;
+    height: 18px;
+    line-height: 18px !important;
   }
 
   .upload .el-upload--picture-card {
@@ -1665,15 +1710,32 @@ td.fc-day.fc-widget-content.fc-today::before {
     line-height: 40px;
   }
 
-  .fc-event {
-    height: 18px;
-    line-height: 18px !important;
-  }
-
   .fc-start::before {
     top: 7px;
   }
 
+
+  .fc-content .fc-title {
+    font-size: 12px;
+  }
+
+  .el-input-group--append {
+    padding-left: 3px;
+  }
+
+  .el-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .el-input-group--append {
+    padding-left: 3px;
+  }
+
+  .el-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
   /*767 end*/
 }
 
@@ -1695,6 +1757,21 @@ td.fc-day.fc-widget-content.fc-today::before {
  */
 
 /* swiper css*/
+.swiper-container {
+  padding-bottom: 40px;
+}
+.swiper-wrapper {
+  height: auto;
+}
+
+.swiper-button-prev.swiper-button-disabled, .swiper-button-next.swiper-button-disabled {
+  cursor: no-drop;
+  pointer-events: auto;
+}
+
+.swiper-pagination {
+  width: 100%;
+}
 
 .swiper-pagination-bullet-active {
   background: #FF6C70;
@@ -1708,7 +1785,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 .swiper-button-next, .swiper-button-prev {
   cursor: pointer;
   transition: 0.3s;
-  transform: translate(50%, 0);
+  transform: translate(150%, 0);
   opacity: 0;
   background: none;
   background-color: rgba(31, 45, 61, .11);
@@ -1721,7 +1798,7 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 
 .swiper-button-prev {
-  transform: translate(-50%, 0);
+  transform: translate(-150%, 0);
 }
 
 .swiper-button-next:hover, .swiper-button-prev:hover {

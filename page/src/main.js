@@ -8,7 +8,6 @@ import axios from './http'
 import ElementUI from 'element-ui'
 import phenix from '@/assets/js/base'
 import VueLazyload from 'vue-lazyload'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 // 兼容 IE
 import 'babel-polyfill'
@@ -19,6 +18,7 @@ import 'swiper/dist/css/swiper.css'
 import './assets/css/reset.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/base.css'
+import './assets/css/fineix.css'
 import './assets/css/admin.css'
 import 'fullcalendar/dist/fullcalendar.css'
 
@@ -27,7 +27,6 @@ Vue.use(ElementUI)
 Vue.use(VueLazyload, {
   loading: require('assets/images/Bitmap.png')
 })
-Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
 

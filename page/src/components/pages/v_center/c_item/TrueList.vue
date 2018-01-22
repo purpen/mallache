@@ -5,13 +5,13 @@
     <v-menu currentName="c_item" class="c_item"></v-menu>
 
     <el-col :span="isMob ? 24 : 20">
-      <div class="right-content" v-if="!isEmpty">
+      <div class="right-content">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
-        <div class="loading" v-loading.body="isLoading"></div>
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-if="!isLoading">
+        <div class="loading"></div>
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-loading="isLoading">
 
-          <el-row v-if="!isMob" class="item-title-box list-box">
+          <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
               <p>项目名称</p>
             </el-col>
@@ -32,7 +32,7 @@
                 <p>{{ d.item.created_at }}</p>
               </el-col>
               <el-col :span="12">
-                <el-popover class="contact-popover" trigger="hover" placement="top">
+                <el-popover class="contact-popover" trigger="hover" placement="top-start">
                   <p class="contact">联系人: {{ d.item.contact_name }}</p>
                   <p class="contact">职位: {{ d.item.position }}</p>
                   <p class="contact">电话: {{ d.item.phone }}</p>
@@ -109,6 +109,8 @@
         </div>
       </div>
 
+      <div class="empty" v-if="isEmpty === true"></div>
+      <p v-if="isEmpty === true" class="noMsg">暂无已合作项目</p>
     </el-col>
 
     <el-dialog
@@ -149,7 +151,7 @@
         waitCount: 0,
         ingCount: 0,
         userId: this.$store.state.event.user.id,
-        isEmpty: true
+        isEmpty: ''
       }
     },
     methods: {
@@ -291,6 +293,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .container {
+    overflow: hidden;
+  }
+
   .content-item-box-m {
     margin: 15px 15px 0;
   }
@@ -450,5 +456,18 @@
   .item-content-m .item-title p {
     font-size: 1.4rem;
     line-height: 1.4;
+  }
+
+  .empty {
+    width: 122px;
+    height: 113px;
+    margin: 100px auto 0;
+    background: url("../../../../assets/images/item/Group5.png");
+    background-size: contain;
+  }
+
+  .noMsg {
+    text-align: center;
+    color: #969696;
   }
 </style>
