@@ -215,7 +215,7 @@
       },
       // 提现弹出框
       withdraw() {
-        this.wallet.price = 10000000
+        this.wallet.price = this.wallet.price_total - this.wallet.price_frozen
         if (this.wallet.price <= 0) {
           this.$message.error ('没有可提现余额!')
           return false
@@ -238,7 +238,6 @@
                   }
                   self.bankOptions.push (newItem)
                 } // endfor
-//                console.log(response.data.data)
               }
             })
             .catch (function (error) {

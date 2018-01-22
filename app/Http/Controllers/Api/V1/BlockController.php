@@ -53,7 +53,7 @@ class BlockController extends BaseController
         $mark = $request->input('mark') ? $request->input('mark') : '';
 
         $block = Block::where('mark' , $mark)->first();
-        if($block){
+        if($block && $block->status===1){
             return $this->response->item($block, new BlockTransformer())->setMeta($this->apiMeta());
         }else{
             return $this->response->array($this->apiError('not found', 404));

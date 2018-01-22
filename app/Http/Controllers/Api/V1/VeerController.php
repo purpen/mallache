@@ -20,7 +20,6 @@ class VeerController extends BaseController
      * @apiParam {string} keyword 搜索词
      * @apiParam {integer} page 第几页.最小1.最大1000
      * @apiParam {integer} nums 每页数量.最大100.默认10
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
     {

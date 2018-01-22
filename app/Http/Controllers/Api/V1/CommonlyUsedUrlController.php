@@ -16,7 +16,6 @@ class CommonlyUsedUrlController extends BaseController
      * @apiName CommonlyUsedUrls lists
      * @apiGroup CommonlyUsedUrl
      *
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
         {
@@ -64,7 +63,6 @@ class CommonlyUsedUrlController extends BaseController
      * @apiGroup CommonlyUsedUrl
      *
      * @apiParam {integer} id 常用网站id
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
         {
