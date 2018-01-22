@@ -543,7 +543,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if($item->status != 1){
+        if ($item->status != 1) {
             return $this->response->array($this->apiError('项目已发布', 403));
         }
 
@@ -1139,7 +1139,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Permission denied', 403));
         }
 
-        if ($item->status != -2) {
+        if (!in_array($item->status, [-2, 1, 2, 3, 4])) {
             return $this->response->array($this->apiError('当前状态不能修改', 403));
         }
 
@@ -1149,6 +1149,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('Error', 500));
         }
 
+        // 触发项目变更状态
         event(new ItemStatusEvent($item));
 
         //解冻保证金
