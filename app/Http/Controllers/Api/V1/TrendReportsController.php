@@ -95,7 +95,7 @@ class TrendReportsController extends BaseController
 
         $query = TrendReports::query();
 
-        $lists = $query->paginate($per_page);
+        $lists = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new TrendReportsTransformer())->setMeta($this->apiMeta());
     }
