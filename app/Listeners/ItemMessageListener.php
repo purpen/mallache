@@ -477,26 +477,27 @@ class ItemMessageListener
                 $qt->save();
 
             }
+
+            $design_company_id_arr = $item_recommend_qt->pluck('design_company_id')->all();
+            $designCompanies = DesignCompanyModel::whereIn('id', $design_company_id_arr)->get();
+            // 需要通知的设计用户ID
+            $user_id_arr = $designCompanies->pluck('user_id')->all();
+            // 需要通知的设计公司手机
+            $phone_arr = $designCompanies->pluck('phone')->all();
+
+            //添加系统通知
+            $title = '需求方已关闭项目';
+            $content = '【' . $item_info['name'] . '】' . '需求方已关闭项目';
+
+            $tools = new Tools();
+            $n = count($user_id_arr);
+            for ($i = 0; $i < $n; ++$i) {
+                $tools->message($user_id_arr[$i], $title, $content, 1, null);
+
+                $this->sendSmsToPhone($phone_arr[$i], $content);
+            }
         }
 
-        $design_company_id_arr = $item_recommend_qt->pluck('design_company_id')->all();
-        $designCompanies = DesignCompanyModel::whereIn('id', $design_company_id_arr)->get();
-        // 需要通知的设计用户ID
-        $user_id_arr = $designCompanies->pluck('user_id')->all();
-        // 需要通知的设计公司手机
-        $phone_arr = $designCompanies->pluck('phone')->all();
-
-        //添加系统通知
-        $title = '需求方已关闭项目';
-        $content = '【' . $item_info['name'] . '】' . '需求方已关闭项目';
-
-        $tools = new Tools();
-        $n = count($user_id_arr);
-        for ($i = 0; $i < $n; ++$i) {
-            $tools->message($user_id_arr[$i], $title, $content, 1, null);
-
-            $this->sendSmsToPhone($phone_arr[$i], $content);
-        }
     }
 
 }
