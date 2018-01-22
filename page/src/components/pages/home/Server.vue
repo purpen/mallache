@@ -153,7 +153,8 @@
 
   .banner {
     width: 100%;
-    height: 650px;
+    height: 500px;
+    max-height: 500px;
     background: url('../../../assets/images/home/service_banner.jpg') #fafafa;
     background-size: cover;
     background-repeat: no-repeat;

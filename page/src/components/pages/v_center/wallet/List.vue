@@ -29,7 +29,10 @@
           </div>
 
           <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
-            <h3>交易记录</h3>
+            <h3>
+              <router-link to="/vcenter/wallet/list">交易记录</router-link>
+              <router-link to="/vcenter/wallet/withdraw">提现记录</router-link>
+            </h3>
 
             <el-table v-if="!isMob"
                       :data="tableData" :border="false" v-loading.body="isLoading"

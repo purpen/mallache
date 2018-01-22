@@ -26,6 +26,7 @@ export default {
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
   fundLogList: '/fundLogList', // GET 交易记录
   withdrawCreate: '/withdraw/create', // POST 提现
+  withdrawList: '/withdraw/lists', // GET 用户提现列表
 
   // 栏目
   columnList: '/column/lists', // GET 列表

@@ -304,6 +304,7 @@
     text-align: left;
     position: relative;
     padding-bottom: 50px;
+    overflow: hidden;
   }
 
   .slide h3 {
