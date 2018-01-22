@@ -2,6 +2,7 @@
   <div class="container">
     <ToolsMenu currentName="veerImage"></ToolsMenu>
     <div class="veer-image" v-loading.body="isLoading">
+      <div class="veer-header">
       <el-input class="search-input" placeholder="请输入内容" v-model="keyword">
         <el-button slot="append" class="search-btn" @click="getImgList(keyword)">搜索</el-button>
       </el-input>
@@ -11,9 +12,14 @@
           <a @click="tipClick(ele)" class="tags-item">{{ele}}</a>
         </el-col>
       </el-row>
-
-      <waterfall :line-gap="picWidth" align="center" :watch="imgList"
-                  class="waterfall" v-if="isEmpty !== true">
+      </div>
+      <waterfall
+        v-if="isEmpty !== true"
+        line = "v"
+        :line-gap="picWidth"
+        align="center"
+        :watch="imgList"
+        class="waterfall">
         <waterfall-slot
           v-for="(item, index) in imgList"
           :width="item.width"
@@ -155,6 +161,7 @@
             if (data.length) {
               this.isEmpty = false
               this.imgList = data
+              console.log(data)
               this.pagination.pageCount = res.data.meta.pagination.total_pages
               if (this.pagination.pageCount > 1000) {
                 this.pagination.pageCount = 1000
@@ -246,6 +253,11 @@
     padding: 0 15px;
   }
 
+  .veer-header {
+    max-width: 880px;
+    margin: 0 auto
+  }
+
   h2 {
     text-align: center;
     font-size: 17px;
@@ -276,6 +288,7 @@
   }
 
   .search-input {
+    padding-left: 0;
     margin-top: 10px;
   }
 
@@ -308,7 +321,7 @@
   }
 
   .tags {
-    padding: 20px 0 0 14px;
+    padding-top: 20px;
     margin-bottom: -15px;
   }
 

@@ -136,7 +136,7 @@ a {
 }
 
 .des {
-  height: 35px;
+  height: 28px;
   margin: 10px 0;
   overflow: hidden;
 }

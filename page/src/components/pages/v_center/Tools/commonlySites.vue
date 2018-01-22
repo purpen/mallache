@@ -201,7 +201,7 @@
     align-items: center;
   }
 
-  .lists h2:first-child {
+  .design-info h2 {
     margin: 10px 0 20px;
   }
 
@@ -247,7 +247,7 @@
   .right .title {
     font-size: 16px;
     color: #222;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
   }
 
   .right .summary {
@@ -284,15 +284,16 @@
 
     .right .summary {
       font-size: 12px;
+      line-height: 14px;
     }
 
     .lists h2 {
-      margin: 20px 0;
+      margin: 15px 0;
       font-size: 17px;
     }
 
-    .lists h2:first-child {
-      margin: 0 0 20px;
+    .design-info h2 {
+      margin: 0 0 15px;
     }
   }
 </style>

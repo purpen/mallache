@@ -20,7 +20,7 @@
         </el-row>
         <div class="pager">
           <el-pagination
-            v-if="reportList.lgnth"
+            v-if="reportList.length > 12"
             class="pagination"
             :current-page="pagination.current_page"
             :page-size="pagination.per_page"
@@ -52,7 +52,7 @@
         reportList: [],
         pagination: {
           current_page: 1,
-          per_page: 10,
+          per_page: 12,
           total: 0,
           total_pages: 0
         }
