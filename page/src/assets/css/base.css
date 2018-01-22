@@ -1274,7 +1274,7 @@ td.fc-day.fc-widget-content.fc-today::before {
   display: block;
   position: absolute;
   top: 6px;
-  left: 10px;
+  left: 8px;
   width: 25px;
   height: 25px;
   background: #FF5D62;

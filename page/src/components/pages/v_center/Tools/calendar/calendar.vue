@@ -128,12 +128,13 @@
           dayNames: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           dayNamesShort: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           eventClick (event, jq, mouth) {
+            console.log(jq)
             let docWidth = $(window).width()
             let maxdocHeight = $(window).height() + $(document).scrollTop()
             let infoWidth = $(self.$refs.info).width()
             let infoHeight = $(self.$refs.info).height()
-            let top = jq.pageY - 50
-            let left = jq.pageX - 100
+            let top = jq.pageY + 25
+            let left = jq.pageX
 
             if (jq.pageX - 100 < 0) {
               left = 20
@@ -142,7 +143,7 @@
               left = docWidth - infoWidth - 100
             }
             if (jq.pageY + infoHeight > maxdocHeight) {
-              top = jq.pageY - infoHeight - 90
+              top = jq.pageY - infoHeight - 30
             }
             self.hideinfo = true
             self.$refs.info.style.top = top + 'px'
