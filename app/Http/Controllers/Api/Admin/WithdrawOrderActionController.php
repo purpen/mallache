@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Transformer\WithdrawOrderTransformer;
+use App\Http\AdminTransformer\WithdrawOrderTransformer;
 use App\Models\FundLog;
 use App\Models\User;
 use App\Models\WithdrawOrder;
