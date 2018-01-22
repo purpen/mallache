@@ -196,7 +196,7 @@
   .lists h2 {
     font-size: 20px;
     color: #222222;
-    margin: 40px 0 20px;
+    margin: 30px 0 20px;
     display: flex;
     align-items: center;
   }

@@ -43,8 +43,8 @@
         <p ref="title_ico">{{eventMsg.title}}</p>
       </div>
       <div class="info-body">
-        <p class="date" ref="date"><span class="fx-icon-time"></span><span>时间:</span>{{eventMsg.date}}</p>
-        <p class="summary" ref="summary"><span class="fx-icon-list"></span>{{eventMsg.summary}}</p>
+        <p class="date" ref="date"><span>时间:</span>{{eventMsg.date}}</p>
+        <p class="summary" ref="summary">{{eventMsg.summary}}</p>
         <p class="tips" ref="tips"><span></span>{{eventMsg.tips}}</p>
       </div>
     </div>

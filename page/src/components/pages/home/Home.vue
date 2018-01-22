@@ -18,7 +18,7 @@
     </div>
 
     <div class="categorie">
-      <el-row :gutter="15">
+      <el-row class="container">
         <el-col class="list" :span="8">
           <i class="fx-icon-major-lg"></i>
           <article>
@@ -380,6 +380,10 @@
 
   .categorie {
     background: #fafafa;
+  }
+
+  .categorie .container{
+    margin:0 auto
   }
 
   .categorie .list{
