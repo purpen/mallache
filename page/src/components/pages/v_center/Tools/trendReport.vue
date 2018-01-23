@@ -3,10 +3,10 @@
     <div class="trend-report">
       <ToolsMenu currentName="trendReport"></ToolsMenu>
       <div :class="['report', {isMob : 'm-report'}]" v-loading.body="isLoading">
-        <el-row :gutter="20" class="report-list">
-          <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
+        <el-row :gutter="15" class="report-list">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
             <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-              <div class="picture">
+              <div class="picture" :style="{background: 'url('+ ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                 <img :src="ele.cover.middle" :alt="ele.cover.summary">
               </div>
               <article class="item-body clearfix">
@@ -124,7 +124,10 @@
   .item-cover {
     margin: 10px 0;
   }
+
   .item {
+    max-width: 500px;
+    margin: auto;
     border: 1px solid #D2D2D2;
     border-radius: 4px;
     display: block;
@@ -170,13 +173,13 @@
 
   .picture {
     height: 220px;
-    overflow: hidden
+    overflow: hidden;
+    border-bottom: 1px solid #D2D2D2;
+    border-radius: 4px 4px 0 0;
   }
 
-  .picture img{
-    border-radius: 4px 4px 0 0;
-    width: 100%;
-    border-bottom: 1px solid #D2D2D2;
+  .picture img {
+    display: none
   }
 
   .item-body {
@@ -231,13 +234,13 @@
   @media screen and (max-width: 767px) {
   .picture {
     height: auto;
-    overflow: hidden
-  }
-
-  .picture img{
+    max-height: 300px;
+    overflow: hidden;
     border-radius: 4px 4px 0 0;
+  }
+  .picture img {
+    display: block;
     width: 100%;
-    height: auto;
   }
   }
 </style>

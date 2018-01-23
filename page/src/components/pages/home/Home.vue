@@ -49,7 +49,7 @@
           <el-card class="card" :body-style="{ padding: '0px' }">
             <router-link :to="{name: 'articleShow', params: {id: d.id}}"
                         :target="isMob ? '_self' : '_blank'">
-              <div class="image-box">
+              <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                 <img v-lazy="d.cover.middle">
               </div>
               <div class="content">
@@ -87,16 +87,16 @@
       <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCaseList" :key="index">
         <el-card class="card" :body-style="{ padding: '0px' }">
           <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" :target="isMob ? '_self' : '_blank'">
-            <div class="image-box">
-                <img v-lazy="d.cover_url">
+            <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                <img v-lazy="d.middle">
             </div>
             <div class="content">
               <p class="title">{{ d.title }}</p>
               <p class="des">{{ d.profile }}</p>
               <p class="company">
-                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
+                <img class="avatar" v-if="d.design_company.logo_image" v-lazy="d.design_company.logo_image.logo"
                     width="30"/>
-                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
+                <img class="avatar" v-else v-lazy="require('assets/images/avatar_100.png')" width="30"/>
                 <span>{{d.design_company.company_abbreviation}}</span>
               </p>
             </div>
@@ -470,15 +470,6 @@
     border-radius: 4px;
   }
 
-  .image-box {
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .image-box a {
-    display: block;
-  }
-
   .el-card:hover {
     transform: translate3d(0, -3px, 0);
     box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
@@ -552,13 +543,18 @@
   }
 
   .image-box:not(.not-limit) {
-    height: 220px;
-    overflow: hidden;
+      height: 220px;
+      overflow: hidden;
+      border-bottom: 1px solid #D2D2D2;
+      border-radius: 4px 4px 0 0;
   }
 
   .image-box img {
     width: 100%;
-    height: 100%;
+  }
+
+  .image-box:not(.not-limit) img {
+    display: none
   }
 
   .company {
@@ -618,24 +614,6 @@
   .slide-intro {
     font-size: 14px;
     color:#666;
-  }
-
-  @media screen and (max-width: 1199px) and (min-width: 991px) {
-    .image-box:not(.not-limit) {
-      height: 166px;
-    }
-  }
-
-  @media screen and (max-width: 990px) and (min-width: 851px) {
-    .image-box:not(.not-limit) {
-      height: 150px;
-    }
-  }
-
-  @media screen and (max-width: 850px) and (min-width: 768px) {
-    .image-box:not(.not-limit) {
-      height: 136px;
-    }
   }
 
   @media screen and (max-width: 991px) {
@@ -724,25 +702,28 @@
       display: flex;
       flex-direction: column-reverse;
     }
-    .image-box {
-      height: auto!important;
-    }
+
     .slide p {
       font-size: 2.2rem
     }
+
     .slide h3 {
       font-size: 1.2rem
     }
+
     .categorie .list {
       text-align: center
     }
+
     .categorie .list i {
       font-size: 36px;
       margin-right: 0;
     }
+
     .categorie .list p {
       font-size: 12px;
     }
+
     .categorie .list h3 {
       font-size: 16px;
     }
@@ -755,6 +736,18 @@
     }
     .inline-flex img {
       float: left;
+    }
+
+    .image-box {
+      height: auto!important;
+      overflow: hidden;
+      max-height: 300px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .image-box img {
+      display: block!important;
+      width: 100%;
     }
   }
 

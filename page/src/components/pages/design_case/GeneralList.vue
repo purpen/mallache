@@ -8,7 +8,7 @@
           <el-card :body-style="{ padding: '0px' }" class="card">
               <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
                             :target="isMob ? '_self' : '_blank'">
-              <div class="image-box">
+              <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                   <img v-lazy="d.cover.middle">
               </div>
               <div class="content">
@@ -23,7 +23,6 @@
                   <span>{{d.design_company.company_abbreviation}}</span>
                 </p>
               </div>
-
             </router-link>
           </el-card>
         </el-col>
@@ -114,13 +113,14 @@ a {
 }
 
 .image-box {
-  height: 220px;
-  overflow: hidden;
+    height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid #D2D2D2;
+    border-radius: 4px 4px 0 0;
 }
 
 .image-box img {
-  width: 100%;
-  max-height: 360px;
+  display: none
 }
 
 .content {
@@ -170,15 +170,20 @@ a {
   text-align: center;
 }
 
-@media screen and (max-width: 1199px) and (min-width: 768px) {
-  .image-box {
-    height: 136px;
-  }
-}
-
 @media screen and (max-width: 767px) {
+  .card {
+    max-width: 500px;
+    margin: 10px auto;
+  }
   .image-box {
     height: auto;
+    max-height: 300px;
+    overflow: hidden;
+    border-radius: 4px 4px 0 0;
+  }
+  .image-box img {
+    display: block;
+    width: 100%;
   }
 }
 </style>

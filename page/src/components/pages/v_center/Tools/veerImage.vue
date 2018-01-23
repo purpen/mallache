@@ -326,6 +326,7 @@
   }
 
   .tags .tags-item {
+    font-size: 12px;
     display: block;
     border: 1px solid #DCDCDC;
     border-radius: 4px;

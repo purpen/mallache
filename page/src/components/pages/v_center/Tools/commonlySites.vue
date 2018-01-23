@@ -7,7 +7,7 @@
           <h2><span class="fx-3 fx-icon-information"></span>设计资讯</h2>
           <article>
             <el-row :gutter="isMob ? 10 : 20">
-              <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designInfo" :key="index">
+              <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in designInfo" :key="index">
                 <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                   <div class="left fl"
                         :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -28,7 +28,7 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in originality" :key="index">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in originality" :key="index">
                   <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -49,7 +49,7 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in crowdFunding" :key="index">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in crowdFunding" :key="index">
                   <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -70,7 +70,7 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in businessConsult" :key="index">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in businessConsult" :key="index">
                   <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
@@ -91,7 +91,7 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designAwards" :key="index">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in designAwards" :key="index">
                   <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
