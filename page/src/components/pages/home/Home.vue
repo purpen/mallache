@@ -435,7 +435,7 @@
   }
 
   .slide .m-p {
-    font-size: 2.4rem;
+    font-size: 2.2rem;
   }
 
   .pub {
@@ -669,7 +669,7 @@
 
     .slide .draw {
       position: absolute;
-      top: 80px;
+      top: 100px;
       bottom: 0;
       left: 0;
       right: 0;
