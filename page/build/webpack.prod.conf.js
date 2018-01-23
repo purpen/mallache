@@ -82,7 +82,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     new AddAssetHtmlPlugin([{
       filepath: path.resolve(__dirname,'../static/js/vendor/core.dll.*.js'), // 同webpack.dll.conf.js output
       outputPath: utils.assetsPath(''),
-      publicPath: path.posix.join(config.build.assetsPublicPath, '/static/js/vendor'),
+      publicPath: config.build.assetsPublicPath + 'static/js/vendor',
       includeSourcemap: false,
       hash: false,
     }]),

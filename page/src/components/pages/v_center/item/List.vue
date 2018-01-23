@@ -33,11 +33,23 @@
                                    status="exception"></el-progress>
                     </p>
                     <p class="prefect">您的项目需求填写已经完成了{{ d.item.progress }}%。</p>
-                    <p>
+
+                    <p v-if="d.item.status === -1">
+                      <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="" type="primary">
+                        删除项目
+                      </el-button>
+                    </p>
+                    <p v-else>
                       <el-button class="is-custom" :progress="d.item.stage_status" :item_id="d.item.id"
                                  :item_type="d.item.type" @click="editItem" size="" type="primary">
                         <i class="el-icon-edit"> </i> 完善项目
                       </el-button>
+                      <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="top-start">
+                        <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="" type="gray">
+                          关闭项目
+                        </el-button>
+                      </el-tooltip>
+
                     </p>
                   </div>
                 </div>
@@ -99,9 +111,11 @@
                         </el-button>
                       </p>
                       <p>
-                        <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
-                                   type="gray">关闭项目
-                        </el-button>
+                        <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="right-end">
+                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
+                                     type="gray">关闭项目
+                          </el-button>
+                        </el-tooltip>
                       </p>
                     </div>
                     <p class="btn" v-show="d.item.status === -1">
@@ -110,11 +124,19 @@
                       </el-button>
                     </p>
 
-                    <p class="btn" v-show="d.item.status === 3">
-                      <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                        选择设计服务供应商
-                      </el-button>
-                    </p>
+                    <div class="btn" v-show="d.item.status === 3">
+                      <p>
+                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                          选择设计服务供应商
+                        </el-button>
+                      </p>
+                        <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="right-end">
+                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"type="gray">
+                            关闭项目
+                          </el-button>
+                        </el-tooltip>
+                      </p>
+                    </div>
                     <p class="btn" v-show="d.item.status === 4">
                       <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
                                  v-if="d.item.show_offer">查看报价
@@ -193,9 +215,11 @@
                           </el-button>
                         </p>
                         <p>
-                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"
-                                     type="gray">关闭项目
-                          </el-button>
+                          <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="right-end">
+                            <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small" type="gray">
+                              关闭项目
+                            </el-button>
+                          </el-tooltip>
                         </p>
                       </div>
                       <p class="btn" v-show="d.item.status === -1">
@@ -205,11 +229,20 @@
                         </el-button>
                       </p>
 
-                      <p class="btn" v-show="d.item.status === 3">
-                        <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
-                          选择设计服务供应商
-                        </el-button>
-                      </p>
+                      <div class="btn" v-show="d.item.status === 3">
+                        <p>
+                          <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary">
+                            选择设计服务供应商
+                          </el-button>
+                        </p>
+                        <p>
+                          <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="right-end">
+                            <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small" type="gray">
+                              关闭项目
+                            </el-button>
+                          </el-tooltip>
+                        </p>
+                      </div>
                       <p class="btn" v-show="d.item.status === 4">
                         <el-button class="is-custom" @click="viewShow" :item_id="d.item.id" size="small" type="primary"
                                    v-if="d.item.show_offer">查看报价
@@ -384,17 +417,22 @@
             .then(function (response) {
               self.sureDialogLoadingBtn = false
               if (response.data.meta.status_code === 200) {
-                self.designItems[index].item.status = -1
-                self.designItems[index].item.status_value = '项目关闭'
-                self.$message.success('提交成功！')
+                if (self.itemList[index] && self.itemList[index].item.id === itemId) {
+                  self.itemList[index].item.status = -1
+                  self.itemList[index].item.status_value = '项目关闭'
+                } else if (self.itemIngList[index] && self.itemIngList[index].item.id === itemId) {
+                  self.itemIngList[index].item.status = -1
+                }
               } else {
                 self.$message.error(response.data.meta.message)
               }
             })
             .catch(function (error) {
-              self.sureDialogLoadingBtn = false
               self.$message.error(error.message)
             })
+
+          self.sureDialogLoadingBtn = false
+          self.sureDialog = false
         }
       },
       editItem(event) {

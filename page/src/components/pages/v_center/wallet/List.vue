@@ -67,10 +67,11 @@
                 v-for="(ele, index) in tableData" :key="index"
                    @selection-change="handleSelectionChange">
                 <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
-                <p>时间：<span>{{ele.created_at}}</span></p>
                 <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
                 <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
                   v-if="ele.type === -1">-</span></p>
+
+                <p>时间：<span>{{ele.created_at}}</span></p>
                 <p class="no-border">备注：<span>{{ele.summary}}</span></p>
               </div>
             </section>
