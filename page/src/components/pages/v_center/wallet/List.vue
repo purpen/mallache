@@ -34,60 +34,50 @@
               <span @click="showWithdraw" :class="{'active' : record === 'withdraw'}">提现记录</span>
             </h3>
             <article v-if="record === 'transaction'">
-            <el-table v-if="!isMob"
-                      :data="tableData" :border="false" v-loading.body="isLoading"
-                      @selection-change="handleSelectionChange"
-                      key="transaction"
-                      style="width: 100%">
-              <el-table-column prop="number" label="交易单号" width="200">
-              </el-table-column>
+              <el-table v-if="!isMob"
+                        :data="tableData" :border="false" v-loading.body="isLoading"
+                        @selection-change="handleSelectionChange"
+                        key="transaction"
+                        style="width: 100%">
+                <el-table-column prop="number" label="交易单号" width="200">
+                </el-table-column>
 
-              <el-table-column
-                prop="created_at" label="时间" width="140">
-              </el-table-column>
-              <el-table-column
-                prop="transaction_type_value" label="交易类型" width="120">
-              </el-table-column>
-              <el-table-column
-                label="收入/支出" width="120">
-                <template slot-scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
-                       @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
-                    <span v-if="scope.row.type === 1">+</span>
-                    <span v-if="scope.row.type === -1">-</span>
-                    <span> {{ scope.row.amount }}</span>
-                  </p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="summary"
-                label="备注">
-              </el-table-column>
-            </el-table>
+                <el-table-column
+                  prop="created_at" label="时间" width="140">
+                </el-table-column>
+                <el-table-column
+                  prop="transaction_type_value" label="交易类型" width="120">
+                </el-table-column>
+                <el-table-column
+                  label="收入/支出" width="120">
+                  <template slot-scope="scope">
+                    <p>
+                      <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
+                        @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
+                      <span v-if="scope.row.type === 1">+</span>
+                      <span v-if="scope.row.type === -1">-</span>
+                      <span> {{ scope.row.amount }}</span>
+                    </p>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="summary"
+                  label="备注">
+                </el-table-column>
+              </el-table>
 
-            <section v-loading.body="isLoading" v-if="isMob">
-              <div class="transaction-record"
-                v-for="(ele, index) in tableData" :key="index"
-                   @selection-change="handleSelectionChange">
-                <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
-                <p>时间：<span>{{ele.created_at}}</span></p>
-                <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
-                <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
-                  v-if="ele.type === -1">-</span></p>
-                <p class="no-border">备注：<span>{{ele.summary}}</span></p>
-              </div>
-            </section>
-
-            <el-pagination
-              class="pagination"
-              @current-change="handleCurrentChange"
-              :current-page="query.page"
-              :page-size="query.pageSize"
-              layout="prev, pager, next"
-              :total="query.totalCount">
-            </el-pagination>
-
+              <section v-loading.body="isLoading" v-if="isMob">
+                <div class="transaction-record"
+                  v-for="(ele, index) in tableData" :key="index"
+                    @selection-change="handleSelectionChange">
+                  <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
+                  <p>时间：<span>{{ele.created_at}}</span></p>
+                  <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
+                  <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
+                    v-if="ele.type === -1">-</span></p>
+                  <p class="no-border">备注：<span>{{ele.summary}}</span></p>
+                </div>
+              </section>
             </article>
             <article v-if="record === 'withdraw'">
               <el-table
@@ -139,16 +129,15 @@
                   <p class="no-border">交易状态：<span>{{ele.status_value}}</span></p>
                 </div>
               </section>
-
-              <el-pagination
-                class="pagination"
-                @current-change="handleCurrentChange"
-                :current-page="query.page"
-                :page-size="query.pageSize"
-                layout="prev, pager, next"
-                :total="query.totalCount">
-              </el-pagination>
             </article>
+            <el-pagination
+              class="pagination"
+              @current-change="handleCurrentChange"
+              :current-page="query.page"
+              :page-size="query.pageSize"
+              layout="prev, pager, next"
+              :total="query.totalCount">
+            </el-pagination>
           </div>
 
         </div>
@@ -218,7 +207,7 @@
         bankOptions: [],
         query: {
           page: 1,
-          pageSize: 1,
+          pageSize: 10,
           totalCount: 0,
           sort: 1,
           type: 0,
@@ -394,6 +383,11 @@
       }
     },
     created: function () {
+      if (this.isMob) {
+        this.query.pageSize = 3
+      } else {
+        this.query.pageSize = 10
+      }
       const self = this
       // 获取我的钱包
       self.walletLoading = true
