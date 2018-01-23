@@ -50,7 +50,7 @@ class WithdrawOrderController extends BaseController
         ];
         $payload = $request->only('bank_id', 'amount');
         $validator = Validator::make($payload, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
@@ -60,23 +60,23 @@ class WithdrawOrderController extends BaseController
         //可提现金额
         $cash = $this->auth_user->cash;
 
-        if($amount > $cash){
+        if ($amount > $cash) {
             return $this->response->array($this->apiError('可提现金额不足', 403));
         }
 
-        if($cash == 0){
+        if ($cash == 0) {
             return $this->response->array($this->apiError('提现金额不能为空', 403));
         }
 
-        if(!$bank = Bank::where(['id' => $bank_id, 'status' => 0])->first()){
+        if (!$bank = Bank::where(['id' => $bank_id, 'status' => 0])->first()) {
             return $this->response->array($this->apiError('该银行卡不存在', 404));
         }
 
-        if($this->auth_user_id !== $bank->user_id){
+        if ($this->auth_user_id !== $bank->user_id) {
             return $this->response->array($this->apiError('银行卡错误', 403));
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $withdraw = WithdrawOrder::create([
@@ -95,15 +95,80 @@ class WithdrawOrderController extends BaseController
             $this->auth_user->frozenIncrease($this->auth_user_id, $amount);
 
             DB::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 
-        if($withdraw){
+        if ($withdraw) {
             return $this->response->item($withdraw, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
         }
+    }
+
+    //
+
+    /**
+     * @api {get} /withdraw/lists 用户提现列表
+     * @apiVersion 1.0.0
+     * @apiName withdraw lists
+     * @apiGroup Withdraw
+     *
+     * @apiParam {integer} status 状态：0.申请；1.同意；2.全部;
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 分页
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *     "data": {[
+     *          "id": 32,
+     *          "uid": "012211520000003378",
+     *          "user_id": 33,
+     *          "type": 1,
+     *          "amount": "0.80",
+     *          "account_name": "田帅",
+     *          "account_number": "1234567890",
+     *          "account_bank_id": 6,
+     *          "branch_name": "朝阳区三里屯运行",
+     *          "status": 0,
+     *          "summary": "",
+     *          "created_at": 1516593120,
+     *          "updated_at": 1516593120,
+     *          "true_time": null,
+     *          "account_bank_value": "民生银行"
+     *      ]}
+     *   }
+     */
+    public function lists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $status = $request->input('status', '');
+
+        $withdraw_order = WithdrawOrder::query();
+
+        switch ($status) {
+            case 0:
+                $withdraw_order->where('status', '=', 0);
+                break;
+            case 1:
+                $withdraw_order->where('status', '=', 1);
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
+        $result = $withdraw_order->where('user_id', '=', $this->auth_user_id)
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+
+        return $this->response->paginator($result, new WithdrawOrderTransformer)->setMeta($this->apiMeta());
     }
 
 }

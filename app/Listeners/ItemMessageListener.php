@@ -8,6 +8,7 @@ use App\Jobs\SendOneSms;
 use App\Models\DesignCompanyModel;
 use App\Models\FundLog;
 use App\Models\Item;
+use App\Models\ItemRecommend;
 use App\Models\User;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -52,6 +53,7 @@ class ItemMessageListener
                 break;
             //用户关闭项目
             case -1:
+                $this->closeItem($item);
                 break;
             //创建项目
             case 1:
@@ -440,7 +442,7 @@ class ItemMessageListener
     // 短信发送内容拼接
     protected function phoneMessage($content)
     {
-        return config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 '. config('constant.notice_phone') .'。';
+        return config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
 
 //        return '您好，您在铟果平台的项目最新状态已更新为“' . $content . '”，请您及时登录铟果官网查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电'. config('constant.notice_phone') .'。';
     }
@@ -451,14 +453,51 @@ class ItemMessageListener
         $text = $this->phoneMessage($content);
 
         // 判断短信通知是否开启
-        if(config('constant.sms_send')){
-            try{
+        if (config('constant.sms_send')) {
+            try {
                 dispatch(new SendOneSms($phone, $text));
-            }catch (\Exception $e){
-                Log::error($e->getMessage());
+            } catch (\Exception $e) {
+                Log::error($e);
             }
         }
     }
 
+    //用户关闭项目通知设计公司
+    protected function closeItem(Item $item)
+    {
+        $item_id = $item->id;
+        $item_info = $item->itemInfo();
+
+        $item_recommend_qt = ItemRecommend::where(['item_id' => $item_id, 'item_status' => 0])
+            ->where('design_company_status', '!=', -1)
+            ->get();
+        if (!$item_recommend_qt->isEmpty()) {
+            foreach ($item_recommend_qt as $qt) {
+                $qt->item_status = -1;
+                $qt->save();
+
+            }
+
+            $design_company_id_arr = $item_recommend_qt->pluck('design_company_id')->all();
+            $designCompanies = DesignCompanyModel::whereIn('id', $design_company_id_arr)->get();
+            // 需要通知的设计用户ID
+            $user_id_arr = $designCompanies->pluck('user_id')->all();
+            // 需要通知的设计公司手机
+            $phone_arr = $designCompanies->pluck('phone')->all();
+
+            //添加系统通知
+            $title = '需求方已关闭项目';
+            $content = '【' . $item_info['name'] . '】' . '需求方已关闭项目';
+
+            $tools = new Tools();
+            $n = count($user_id_arr);
+            for ($i = 0; $i < $n; ++$i) {
+                $tools->message($user_id_arr[$i], $title, $content, 1, null);
+
+                $this->sendSmsToPhone($phone_arr[$i], $content);
+            }
+        }
+
+    }
 
 }

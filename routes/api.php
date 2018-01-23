@@ -211,6 +211,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //用户提现
         $api->post('/withdraw/create', 'WithdrawOrderController@create');
+        $api->get('/withdraw/lists', 'WithdrawOrderController@lists');
 
         //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);
