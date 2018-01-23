@@ -6,9 +6,8 @@
         <el-row :gutter="20" class="report-list">
           <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
             <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-              <div class="picture"
-                    :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
-                {{ele.cover.summary}}
+              <div class="picture">
+                <img :src="ele.cover.middle" :alt="ele.cover.summary">
               </div>
               <article class="item-body clearfix">
                 <p class="title">{{ele.title}}</p>
@@ -170,20 +169,25 @@
   }
 
   .picture {
-    height: 180px;
+    height: 220px;
+    overflow: hidden
+  }
+
+  .picture img{
     border-radius: 4px 4px 0 0;
+    width: 100%;
+    border-bottom: 1px solid #D2D2D2;
   }
 
   .item-body {
     overflow: hidden;
     padding: 10px;
-    border-top: 1px solid #D2D2D2;
     border-radius: 0 0 4px 4px;
   }
 
   .item-body .title {
     font-size: 15px;
-    height: 40px;
+    max-height: 42px;
     line-height: 1.4;
     margin-bottom: 10px;
     display: -webkit-box;
@@ -223,5 +227,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  @media screen and (max-width: 767px) {
+  .picture {
+    height: auto;
+    overflow: hidden
+  }
+
+  .picture img{
+    border-radius: 4px 4px 0 0;
+    width: 100%;
+    height: auto;
+  }
   }
 </style>

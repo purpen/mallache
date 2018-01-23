@@ -232,7 +232,7 @@
         this.hideinfo = false
         this.$refs.calendar.fireMethod('today')
         this.getView()
-        this.$emit('update-date')
+        this.$emit('update-date', this.eventMsg.month)
       },
       changeView (method) {
         this.view = method

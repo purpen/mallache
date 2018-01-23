@@ -60,7 +60,12 @@ const routes = [
   {
     path: '/stuff',
     name: 'stuff',
-    redirect: '/design_case/list'
+    redirect: '/design_case/general_list'
+  },
+  {
+    path: '/design_case/list',
+    name: 'design_case',
+    redirect: '/design_case/general_list'
   },
   {
     path: '/design_case/general_list',

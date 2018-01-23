@@ -168,6 +168,7 @@ a {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  max-height: 36px;
 }
 
 .company {

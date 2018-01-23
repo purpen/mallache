@@ -539,6 +539,7 @@
     color: #666;
     line-height: 1.5;
     overflow: hidden;
+    max-height: 42px;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -727,10 +728,10 @@
       height: auto!important;
     }
     .slide p {
-      font-size: 4rem
+      font-size: 2.2rem
     }
     .slide h3 {
-      font-size: 2rem
+      font-size: 1.2rem
     }
     .categorie .list {
       text-align: center
