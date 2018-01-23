@@ -334,11 +334,10 @@
   }
 
   .slide .draw {
+    height: 100%;
     flex: 1;
-    height:100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center
+    align-items: center
   }
 
   .slide .head-cover {
@@ -676,7 +675,7 @@
       right: 0;
       margin: auto;
       width: 70%;
-      height: auto;
+      height: auto
     }
 
     .slide .head-cover {
@@ -770,7 +769,6 @@
   @media screen and (max-width: 320px) {
     .logo-list img {
       width: 40%;
-      height: auto;
     }
 
   }

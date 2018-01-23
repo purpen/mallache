@@ -29,9 +29,9 @@
           </div>
 
           <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
-            <h3>
-              <router-link to="/vcenter/wallet/list">交易记录</router-link>
-              <router-link to="/vcenter/wallet/withdraw">提现记录</router-link>
+            <h3 class="data-record">
+              <span>交易记录</span>
+              <span>提现记录</span>
             </h3>
 
             <el-table v-if="!isMob"
@@ -505,5 +505,8 @@
 
   .transaction-record .no-border {
     border: none;
+  }
+  .data-record span {
+    cursor: pointer;
   }
 </style>
