@@ -18,7 +18,7 @@
     </div>
 
     <div class="categorie">
-      <el-row :gutter="15">
+      <el-row class="container">
         <el-col class="list" :span="8">
           <i class="fx-icon-major-lg"></i>
           <article>
@@ -49,7 +49,7 @@
           <el-card class="card" :body-style="{ padding: '0px' }">
             <router-link :to="{name: 'articleShow', params: {id: d.id}}"
                         :target="isMob ? '_self' : '_blank'">
-              <div class="image-box">
+              <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                 <img v-lazy="d.cover.middle">
               </div>
               <div class="content">
@@ -87,16 +87,16 @@
       <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCaseList" :key="index">
         <el-card class="card" :body-style="{ padding: '0px' }">
           <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}" :target="isMob ? '_self' : '_blank'">
-            <div class="image-box">
-                <img v-lazy="d.cover_url">
+            <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                <img v-lazy="d.middle">
             </div>
             <div class="content">
               <p class="title">{{ d.title }}</p>
               <p class="des">{{ d.profile }}</p>
               <p class="company">
-                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
+                <img class="avatar" v-if="d.design_company.logo_image" v-lazy="d.design_company.logo_image.logo"
                     width="30"/>
-                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
+                <img class="avatar" v-else v-lazy="require('assets/images/avatar_100.png')" width="30"/>
                 <span>{{d.design_company.company_abbreviation}}</span>
               </p>
             </div>
@@ -304,6 +304,7 @@
     text-align: left;
     position: relative;
     padding-bottom: 50px;
+    overflow: hidden;
   }
 
   .slide h3 {
@@ -333,11 +334,10 @@
   }
 
   .slide .draw {
+    height: 100%;
     flex: 1;
-    height:100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center
+    align-items: center
   }
 
   .slide .head-cover {
@@ -380,6 +380,10 @@
 
   .categorie {
     background: #fafafa;
+  }
+
+  .categorie .container{
+    margin:0 auto
   }
 
   .categorie .list{
@@ -431,7 +435,7 @@
   }
 
   .slide .m-p {
-    font-size: 2.4rem;
+    font-size: 2.2rem;
   }
 
   .pub {
@@ -464,15 +468,6 @@
     margin: 15px 15px 0 0;
     border: 1px solid #F6F6F6;
     border-radius: 4px;
-  }
-
-  .image-box {
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .image-box a {
-    display: block;
   }
 
   .el-card:hover {
@@ -535,6 +530,7 @@
     color: #666;
     line-height: 1.5;
     overflow: hidden;
+    max-height: 42px;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -547,13 +543,18 @@
   }
 
   .image-box:not(.not-limit) {
-    height: 220px;
-    overflow: hidden;
+      height: 220px;
+      overflow: hidden;
+      border-bottom: 1px solid #D2D2D2;
+      border-radius: 4px 4px 0 0;
   }
 
   .image-box img {
     width: 100%;
-    height: 100%;
+  }
+
+  .image-box:not(.not-limit) img {
+    display: none
   }
 
   .company {
@@ -615,24 +616,6 @@
     color:#666;
   }
 
-  @media screen and (max-width: 1199px) and (min-width: 991px) {
-    .image-box:not(.not-limit) {
-      height: 166px;
-    }
-  }
-
-  @media screen and (max-width: 990px) and (min-width: 851px) {
-    .image-box:not(.not-limit) {
-      height: 150px;
-    }
-  }
-
-  @media screen and (max-width: 850px) and (min-width: 768px) {
-    .image-box:not(.not-limit) {
-      height: 136px;
-    }
-  }
-
   @media screen and (max-width: 991px) {
     .container {
       width: auto;
@@ -665,13 +648,13 @@
 
     .slide .draw {
       position: absolute;
-      top: 80px;
+      top: 100px;
       bottom: 0;
       left: 0;
       right: 0;
       margin: auto;
       width: 70%;
-      height: auto;
+      height: auto
     }
 
     .slide .head-cover {
@@ -719,25 +702,28 @@
       display: flex;
       flex-direction: column-reverse;
     }
-    .image-box {
-      height: auto!important;
-    }
+
     .slide p {
-      font-size: 4rem
+      font-size: 2.2rem
     }
+
     .slide h3 {
-      font-size: 2rem
+      font-size: 1.2rem
     }
+
     .categorie .list {
       text-align: center
     }
+
     .categorie .list i {
       font-size: 36px;
       margin-right: 0;
     }
+
     .categorie .list p {
       font-size: 12px;
     }
+
     .categorie .list h3 {
       font-size: 16px;
     }
@@ -750,6 +736,18 @@
     }
     .inline-flex img {
       float: left;
+    }
+
+    .image-box {
+      height: auto!important;
+      overflow: hidden;
+      max-height: 300px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .image-box img {
+      display: block!important;
+      width: 100%;
     }
   }
 
@@ -765,7 +763,6 @@
   @media screen and (max-width: 320px) {
     .logo-list img {
       width: 40%;
-      height: auto;
     }
 
   }

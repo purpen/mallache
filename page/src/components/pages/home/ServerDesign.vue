@@ -188,6 +188,7 @@
 
   .banner {
     width: 100%;
+    max-height: 500px;
     background: url('../../../assets/images/home/service_banner_02.jpg');
     background-size: cover;
     background-repeat: no-repeat;

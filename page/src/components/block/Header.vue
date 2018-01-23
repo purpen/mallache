@@ -333,6 +333,10 @@
     }
   }
 
+  .nav-right .el-menu-header {
+    min-width: 120px;
+  }
+
   #header-layout {
     position: relative;
     z-index: 999;

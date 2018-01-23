@@ -13,20 +13,18 @@
       <el-row :gutter="20" class="anli-elrow">
         <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in itemList" :key="index">
           <el-card :body-style="{ padding: '0px' }" class="card">
-            <div class="image-box">
-              <router-link :to="{name: 'articleShow', params: {id: d.id}}"
+            <router-link :to="{name: 'articleShow', params: {id: d.id}}"
                            :target="BMob ? '_self' : '_blank'">
-                <div><img v-lazy="d.cover.middle"></div>
-              </router-link>
-            </div>
-            <div class="content">
-              <p class="title">
-                <router-link :to="{name: 'articleShow', params: {id: d.id}}" :target="BMob ? '_self' : '_blank'">
+              <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                <img v-lazy="d.cover.middle">
+              </div>
+              <div class="content">
+                <p class="title">
                   {{ d.title }}
-                </router-link>
-              <p>
-              <p class="des">{{ d.short_content }}</p>
-            </div>
+                <p>
+                <p class="des">{{ d.short_content }}</p>
+              </div>
+            </router-link>
           </el-card>
         </el-col>
       </el-row>
@@ -185,12 +183,14 @@
   }
 
   .image-box {
-    overflow: hidden;
+      height: 220px;
+      overflow: hidden;
+      border-bottom: 1px solid #D2D2D2;
+      border-radius: 4px 4px 0 0;
   }
 
   .image-box img {
-    width: 100%;
-    height: 100%;
+    display: none
   }
 
   .content {
@@ -198,6 +198,7 @@
   }
 
   .content p.title {
+    color: #222;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -213,6 +214,7 @@
     color: #666;
     font-size: 1.4rem;
     line-height: 1.5;
+    max-height: 42px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -229,8 +231,19 @@
   }
 
   @media screen and (max-width: 767px) {
+    .card {
+      max-width: 500px;
+      margin: 10px auto;
+    }
     .image-box {
       height: auto;
+      max-height: 300px;
+      overflow: hidden;
+      border-radius: 4px 4px 0 0;
+    }
+    .image-box img {
+      display: block;
+      width: 100%;
     }
   }
 

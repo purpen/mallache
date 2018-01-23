@@ -7,23 +7,21 @@
       </div>
     </div>
     <div class="line"></div>
-    <div class="">
-      <el-row :gutter="20">
-        <el-col :span="24">
-          <div class="h-right-content">
-            <div class="banner" :style="{height: calcHeight}"></div>
-            <div class="content-box">
-              <h3>联系我们</h3>
-              <a class="contact">马哲</a>
-              <a class="phone" href="tel:15711016577">15711016577</a>
-              <a class="tel" href="tel:010-84799327">010-84799327</a>
-              <a class="mail" href="mailto:mazhe@taihuoniao.com">mazhe@taihuoniao.com</a>
-              <a class="addr">北京市 朝阳区 酒仙桥路4号 751北京时尚设计广场 B7栋</a>
-            </div>
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <div class="h-right-content">
+          <div class="banner" :style="{height: calcHeight}"></div>
+          <div class="container content-box">
+            <h3>联系我们</h3>
+            <a class="contact"><i class="fx-2 fx-icon-personal-center"></i>马哲</a>
+            <a class="phone" href="tel:15711016577"><i class="fx-2 fx-icon-phone"></i>15711016577</a>
+            <a class="tel" href="tel:010-84799327"><i class="fx-2 fx-icon-telephone"></i>010-84799327</a>
+            <a class="mail" href="mailto:products@taihuoniao.com"><i class="fx-2 fx-icon-mail"></i>products@taihuoniao.com</a>
+            <a class="addr"><i class="fx-2 fx-icon-address"></i>北京市 朝阳区 酒仙桥路4号 751北京时尚设计广场 B7栋</a>
           </div>
-        </el-col>
-      </el-row>
-    </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -59,7 +57,7 @@ export default {
 <style scoped>
 
 .h-right-content .content-box {
-  margin-top: 0;
+  margin-top: 20;
 }
 
 .banner {
@@ -77,7 +75,7 @@ export default {
 }
 
 .content-box {
-  padding: 0px 120px 20px;
+  padding: 20px 120px;
 }
 
 .content-box h3 {
@@ -91,7 +89,6 @@ export default {
   color: #666;
   display: block;
   line-height: 20px;
-  padding-left: 30px;
   margin: 10px 0
 }
 
@@ -99,40 +96,13 @@ export default {
   color: #222
 }
 
-.content-box a img {
-  vertical-align: top;
+.content-box a i{
   margin-right: 10px;
-}
-
-a.addr {
-  background: url("../../../assets/images/icon/iconfont-address.png") no-repeat -2px top;
-  background-size: 20px;
-}
-
-a.contact {
-  background: url("../../../assets/images/icon/iconfont-contact.png") no-repeat -1px top;
-  background-size: 20px;
-}
-
-a.phone {
-  background: url("../../../assets/images/icon/iconfont-phone.png") no-repeat -1px top;
-  background-size: 20px;
-}
-
-a.tel {
-  background: url("../../../assets/images/icon/iconfont-tel.png") no-repeat -1px top;
-  background-size: 20px;
-}
-
-a.mail {
-  background: url("../../../assets/images/icon/iconfont-email.png") no-repeat 0px top;
-  background-size: 20px;
 }
 
 @media screen and (max-width: 767px) {
   .content-box {
     padding: 20px;
-    padding-top: 0
   }
   .h-right-content .content-box {
     margin-top: 1px;

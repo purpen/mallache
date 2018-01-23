@@ -29,7 +29,10 @@
           </div>
 
           <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
-            <h3>交易记录</h3>
+            <h3 class="data-record">
+              <span>交易记录</span>
+              <span>提现记录</span>
+            </h3>
 
             <el-table v-if="!isMob"
                       :data="tableData" :border="false" v-loading.body="isLoading"
@@ -62,6 +65,45 @@
                 min-width="400">
               </el-table-column>
             </el-table>
+
+             <el-table
+              v-if="false"
+              :data="WithdrawList"
+              style="width: 100%">
+              <el-table-column
+                prop="uid"
+                label="交易单号">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="created_at"
+                label="时间">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="type_value"
+                label="交易类型">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="amount"
+                label="收入/支出">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="status_value"
+                label="交易状态"
+                :filters="[{ text: '申请中', value: '申请中' }, { text: '已同意', value: '已同意' }]"
+                :filter-method="filterTag"
+                filter-placement="bottom">
+                <template slot-scope="scope">
+                <el-tag
+                  :type="scope.row.status_value === '申请中' ? 'primary' : 'success'"
+                  close-transition>{{scope.row.status_value}}</el-tag>
+              </template>
+              </el-table-column>
+            </el-table>
+
             <section v-loading.body="isLoading" v-if="isMob">
               <div class="transaction-record"
                 v-for="(ele, index) in tableData" :key="index"
@@ -148,6 +190,7 @@
         wallet: {},
         tableData: [],
         itemList: [],
+        WithdrawList: [],
         withdrawPrice: '',
         bankId: '',
         bankOptions: [],
@@ -158,7 +201,6 @@
           sort: 1,
           type: 0,
           payType: 0,
-
           test: null
         },
         userId: this.$store.state.event.user.id
@@ -189,12 +231,14 @@
 
               for (let i = 0; i < self.itemList.length; i++) {
                 let item = self.itemList[i]
-                item['created_at'] = item.created_at.date_format ().format ('yy-MM-dd hh:mm')
+                item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
 
                 self.tableData.push (item)
               } // endfor
 
-//              console.log(self.tableData)
+            // console.log(self.tableData)
+            } else {
+              self.$message.error (response.data.meta.message)
             }
           })
           .catch (function (error) {
@@ -202,6 +246,40 @@
             self.isLoading = false
             return false
           })
+      },
+      getWithdrawList() {
+        this.$http.get(api.withdrawList, {params: {
+          per_page: this.query.pageSize,
+          page: this.query.page
+        }}).then((res) => {
+          console.log(res.data.data)
+          if (res.data.meta.status_code === 200) {
+            this.WithdrawList = res.data.data
+            for (let i of this.WithdrawList) {
+              i.created_at = i.created_at.date_format().format('yy-MM-dd hh:mm')
+              switch (i.type) {
+                case 1:
+                  i.type_value = '银行转账'
+                  break
+              }
+              switch (i.status) {
+                case 0:
+                  i.status_value = '申请中'
+                  break
+                case 1:
+                  i.status_value = '已同意'
+                  break
+              }
+            }
+          } else {
+            this.$message.error (res.data.meta.message)
+          }
+        }).catch((err) => {
+          this.$message.error (err.message)
+        })
+      },
+      filterTag(value, row) {
+        return row.status_value === value
       },
       handleSelectionChange(val) {
         this.multipleSelection = val
@@ -268,7 +346,7 @@
               self.itemModel = false
               self.$message.success ('操作成功,等待财务打款！')
             } else {
-//              console.log(response.data.meta.message)
+        //              console.log(response.data.meta.message)
             }
           })
           .catch (function (error) {
@@ -283,6 +361,7 @@
       }
     },
     created: function () {
+      this.getWithdrawList()
       const self = this
       // 获取我的钱包
       self.walletLoading = true
@@ -294,7 +373,7 @@
             if (wallet) {
               self.wallet = wallet
             }
-//            console.log(self.wallet)
+            //            console.log(self.wallet)
           }
         })
         .catch (function (error) {
@@ -503,5 +582,8 @@
 
   .transaction-record .no-border {
     border: none;
+  }
+  .data-record span {
+    cursor: pointer;
   }
 </style>
