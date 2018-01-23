@@ -215,7 +215,7 @@ class ColumnController extends BaseController
             $query->where('status', (int)$status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new AdminColumnListsTransformer)->setMeta($this->apiMeta());
     }
