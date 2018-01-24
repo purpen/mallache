@@ -30,95 +30,112 @@
 
           <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
             <h3 class="data-record">
-              <span>交易记录</span>
-              <span>提现记录</span>
+              <span @click="showTransaction" :class="{'active' : record === 'transaction'}">交易记录</span>
+              <span @click="showWithdraw" :class="{'active' : record === 'withdraw'}">提现记录</span>
             </h3>
 
-            <el-table v-if="!isMob"
-                      :data="tableData" :border="false" v-loading.body="isLoading"
-                      @selection-change="handleSelectionChange"
-                      style="width: 100%">
-              <el-table-column prop="number" label="交易单号" width="200">
-              </el-table-column>
+            <article v-if="record === 'transaction'">
+              <el-table v-if="!isMob"
+                        :data="tableData" :border="false" v-loading.body="isLoading"
+                        @selection-change="handleSelectionChange"
+                        key="transaction"
+                        style="width: 100%">
+                <el-table-column prop="number" label="交易单号" width="200">
+                </el-table-column>
 
-              <el-table-column
-                prop="created_at" label="时间" width="130">
-              </el-table-column>
-              <el-table-column
-                prop="transaction_type_value" label="交易类型" width="120">
-              </el-table-column>
-              <el-table-column
-                label="收入/支出" width="120">
-                <template slot-scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
-                       @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
-                    <span v-if="scope.row.type === 1">+</span>
-                    <span v-if="scope.row.type === -1">-</span>
-                    <span> {{ scope.row.amount }}</span>
-                  </p>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="summary"
-                label="备注"
-                min-width="400">
-              </el-table-column>
-            </el-table>
+                <el-table-column
+                  prop="transaction_type_value" label="交易类型" width="120">
+                </el-table-column>
+                <el-table-column
+                  label="收入/支出" width="120">
+                  <template slot-scope="scope">
+                    <p>
+                      <a href="javascript:void(0);" v-show="scope.row.sure_outline_transfer"
+                        @click="sureTransfer(scope.$index, scope.row)">确认收款</a>
+                      <span v-if="scope.row.type === 1">+</span>
+                      <span v-if="scope.row.type === -1">-</span>
+                      <span> {{ scope.row.amount }}</span>
+                    </p>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="created_at" label="时间" width="140">
+                </el-table-column>
+                <el-table-column
+                  prop="summary"
+                  label="备注">
+                </el-table-column>
+              </el-table>
 
-             <el-table
-              v-if="false"
-              :data="WithdrawList"
-              style="width: 100%">
-              <el-table-column
-                prop="uid"
-                label="交易单号">
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="created_at"
-                label="时间">
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="type_value"
-                label="交易类型">
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="amount"
-                label="收入/支出">
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="status_value"
-                label="交易状态"
-                :filters="[{ text: '申请中', value: '申请中' }, { text: '已同意', value: '已同意' }]"
-                :filter-method="filterTag"
-                filter-placement="bottom">
-                <template slot-scope="scope">
-                <el-tag
-                  :type="scope.row.status_value === '申请中' ? 'primary' : 'success'"
-                  close-transition>{{scope.row.status_value}}</el-tag>
-              </template>
-              </el-table-column>
-            </el-table>
+              <section v-loading.body="isLoading" v-if="isMob">
+                <div class="transaction-record"
+                  v-for="(ele, index) in tableData" :key="index"
+                    @selection-change="handleSelectionChange">
+                  <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
+                  <p>时间：<span>{{ele.created_at}}</span></p>
+                  <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
+                  <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
+                    v-if="ele.type === -1">-</span></p>
+                  <p class="no-border">备注：<span>{{ele.summary}}</span></p>
+                </div>
+              </section>
+            </article>
+            <article v-if="record === 'withdraw'">
+              <el-table
+                v-if="!isMob"
+                key="withdraw"
+                :data="WithdrawList"
+                style="width: 100%">
+                <el-table-column
+                  min-width="200"
+                  prop="uid"
+                  label="交易单号">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="amount"
+                  label="提现金额">
+                </el-table-column>
+                <el-table-column
+                  prop="type_value"
+                  label="交易类型">
+                </el-table-column>
+                <el-table-column
+                  prop="account_bank_value"
+                  label="银行">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="account_number"
+                  label="卡号尾数">
+                </el-table-column>
+                <el-table-column
+                  min-width="140"
+                  prop="created_at"
+                  label="时间">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="status_value"
+                  label="交易状态">
+                </el-table-column>
+              </el-table>
+              <section v-loading.body="isLoading" v-if="isMob">
+                <div class="transaction-record"
+                  v-for="(ele, index) in WithdrawList" :key="index"
+                    @selection-change="handleSelectionChange">
+                  <p>交易单号：<span v-if="ele.uid">{{ele.uid}}</span><span v-else>无</span></p>
+                  <p>时间：<span>{{ele.created_at}}</span></p>
+                  <p>提现金额: <span>{{ele.amount}}</span></p>
+                  <p>交易类型：<span>{{ele.type_value}}</span></p>
+                  <p>银行 <span>{{ele.account_bank_value}}</span></p>
+                  <p>卡号尾数: <span>{{ele.account_number}}</span></p>
+                  <p class="no-border">交易状态：<span>{{ele.status_value}}</span></p>
+                </div>
+              </section>
+            </article>
 
-            <section v-loading.body="isLoading" v-if="isMob">
-              <div class="transaction-record"
-                v-for="(ele, index) in tableData" :key="index"
-                   @selection-change="handleSelectionChange">
-                <p>交易单号：<span v-if="ele.number">{{ele.number}}</span><span v-else>无</span></p>
-                <p>交易类型：<span>{{ele.transaction_type_value}}</span></p>
-                <p>收入 / 支出：<span>{{ele.amount}}</span><span v-if="ele.type === 1">+</span><span
-                  v-if="ele.type === -1">-</span></p>
-
-                <p>时间：<span>{{ele.created_at}}</span></p>
-                <p class="no-border">备注：<span>{{ele.summary}}</span></p>
-              </div>
-            </section>
             <el-pagination
-              v-if="tableData.length"
               class="pagination"
               @current-change="handleCurrentChange"
               :current-page="query.page"
@@ -126,7 +143,6 @@
               layout="prev, pager, next"
               :total="query.totalCount">
             </el-pagination>
-
           </div>
 
         </div>
@@ -203,7 +219,8 @@
           payType: 0,
           test: null
         },
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        record: 'transaction' // transaction || withdraw
       }
     },
     methods: {
@@ -211,7 +228,6 @@
         const self = this
         self.query.page = parseInt (this.$route.query.page || 1)
         self.query.sort = this.$route.query.sort || 1
-        self.query.type = this.$route.query.type || 0
 
         self.isLoading = true
         self.$http.get (api.fundLogList, {
@@ -231,12 +247,10 @@
 
               for (let i = 0; i < self.itemList.length; i++) {
                 let item = self.itemList[i]
-                item['created_at'] = item.created_at.date_format().format('yy-MM-dd hh:mm')
+                item['created_at'] = item.created_at.date_format().format('yyyy-MM-dd hh:mm')
 
                 self.tableData.push (item)
               } // endfor
-
-            // console.log(self.tableData)
             } else {
               self.$message.error (response.data.meta.message)
             }
@@ -248,15 +262,22 @@
           })
       },
       getWithdrawList() {
+        this.query.page = parseInt (this.$route.query.page || 1)
+        this.query.sort = this.$route.query.sort || 1
+        this.query.type = this.$route.query.type || 0
+
+        this.isLoading = true
         this.$http.get(api.withdrawList, {params: {
           per_page: this.query.pageSize,
           page: this.query.page
         }}).then((res) => {
-          console.log(res.data.data)
+          this.isLoading = false
           if (res.data.meta.status_code === 200) {
+            this.query.totalCount = res.data.meta.pagination.total
             this.WithdrawList = res.data.data
             for (let i of this.WithdrawList) {
-              i.created_at = i.created_at.date_format().format('yy-MM-dd hh:mm')
+              i.created_at = i.created_at.date_format().format('yyyy-MM-dd hh:mm')
+              i.account_number = i.account_number.substring(i.account_number.length - 4)
               switch (i.type) {
                 case 1:
                   i.type_value = '银行转账'
@@ -275,18 +296,12 @@
             this.$message.error (res.data.meta.message)
           }
         }).catch((err) => {
+          this.isLoading = false
           this.$message.error (err.message)
         })
       },
-      filterTag(value, row) {
-        return row.status_value === value
-      },
       handleSelectionChange(val) {
         this.multipleSelection = val
-      },
-      handleSizeChange(val) {
-        this.query.pageSize = val
-        this.loadList ()
       },
       handleCurrentChange(val) {
         this.query.page = val
@@ -353,6 +368,18 @@
             self.isLoadingBtn = false
             self.$message.error (error.message)
           })
+      },
+      showTransaction() {
+        this.record = 'transaction'
+        this.loadList()
+        this.query.page = 1
+        this.$router.push ({name: this.$route.name, query: {page: 1}})
+      },
+      showWithdraw() {
+        this.record = 'withdraw'
+        this.getWithdrawList()
+        this.query.page = 1
+        this.$router.push ({name: this.$route.name, query: {page: 1}})
       }
     },
     computed: {
@@ -361,7 +388,11 @@
       }
     },
     created: function () {
-      this.getWithdrawList()
+      if (this.isMob) {
+        this.query.pageSize = 3
+      } else {
+        this.query.pageSize = 10
+      }
       const self = this
       // 获取我的钱包
       self.walletLoading = true
@@ -388,7 +419,11 @@
     watch: {
       '$route' (to, from) {
         // 对路由变化作出响应...
-        this.loadList ()
+        if (this.record === 'transaction') {
+          this.loadList()
+        } else {
+          this.getWithdrawList()
+        }
       }
     }
   }
@@ -577,7 +612,6 @@
   .pagination {
     display: flex;
     justify-content: center;
-    margin-bottom: -30px;
   }
 
   .transaction-record .no-border {
@@ -585,5 +619,9 @@
   }
   .data-record span {
     cursor: pointer;
+  }
+  .active {
+    color: #222;
+    font-weight: 600;
   }
 </style>
