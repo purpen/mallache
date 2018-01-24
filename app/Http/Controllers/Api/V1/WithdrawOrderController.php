@@ -53,6 +53,9 @@ class WithdrawOrderController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
+        if (0.01 > $payload['amount']) {
+            return $this->response->array($this->apiError('提现金额不能小于0.01', 403));
+        }
 
         $amount = sprintf("%0.2f", $payload['amount']);
         $bank_id = $payload['bank_id'];
