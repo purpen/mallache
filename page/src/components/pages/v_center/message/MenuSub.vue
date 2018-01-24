@@ -45,8 +45,8 @@
     /*padding: 0 10px;*/
     float: none;
     margin:0 -15px -1px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #d2d2d2;
+    border-bottom: 1px solid #d2d2d2;
     display: flex;
     justify-content: space-around;
   }

@@ -76,7 +76,7 @@ input {
 }
 
 a {
-  color: rgba(112, 123, 135, .92);
+  color: #666;
   text-decoration: none;
 }
 
@@ -915,7 +915,7 @@ button.is-custom.is-outlined.is-loading:after {
 .vcenter-menu-sub {
   height: 25px;
   line-height: 24px;
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom: 1px solid #d2d2d2;
 }
 
 .vcenter-menu-sub-list {
@@ -1011,7 +1011,7 @@ button.is-custom.is-outlined.is-loading:after {
 .right-content .content-box {
   margin-top: 20px;
   clear: both;
-  border: 1px solid #CCCCCC;
+  border: 1px solid #d2d2d2;
   padding: 0 20px 20px 20px;
   /*min-height: 350px;*/
 }

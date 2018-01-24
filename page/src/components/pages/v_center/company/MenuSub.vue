@@ -44,7 +44,7 @@
     /*padding: 0 10px;*/
     float: none;
     margin-bottom: -1px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #d2d2d2;
     display: flex;
     justify-content: space-around;
   }

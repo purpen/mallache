@@ -431,7 +431,7 @@
   .item-title-box {
     margin-top: 20px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #d2d2d2;
     border-bottom: none;
   }
 
