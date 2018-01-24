@@ -359,7 +359,8 @@
               self.itemModel = false
               self.$message.success ('操作成功,等待财务打款！')
             } else {
-        //              console.log(response.data.meta.message)
+              self.$message.error(response.data.meta.message)
+              console.log(response.data.meta.message)
             }
           })
           .catch (function (error) {
@@ -402,7 +403,7 @@
             if (wallet) {
               self.wallet = wallet
             }
-            //            console.log(self.wallet)
+            console.log(self.wallet)
           }
         })
         .catch (function (error) {
