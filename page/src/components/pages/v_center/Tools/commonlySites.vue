@@ -4,7 +4,7 @@
       <ToolsMenu currentName="commonlySites"></ToolsMenu>
       <div class="commonly-sites" v-loading.body="loading">
         <section class="lists design-info" v-if="designInfo.length">
-          <h2><span class="fx-3 fx-icon-information"></span>设计资讯</h2>
+          <h2><span class="fx-4 fx-icon-information"></span>设计资讯</h2>
           <article>
             <el-row :gutter="isMob ? 10 : 20">
               <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in designInfo" :key="index">
@@ -24,7 +24,7 @@
         </section>
 
         <section class="lists originality" v-if="originality.length">
-          <h2><span class="fx-icon-inspiration2"></span>创意灵感</h2>
+          <h2><span class="fx-6 fx-icon-inspiration2"></span>创意灵感</h2>
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
@@ -87,7 +87,7 @@
           </article>
         </section>
         <section class="lists design-awards" v-if="designAwards.length">
-          <h2><span class="fx-icon-prize"></span>设计奖项</h2>
+          <h2><span class="fx-5 fx-icon-prize"></span>设计奖项</h2>
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
@@ -203,6 +203,10 @@
 
   .design-info h2 {
     margin: 10px 0 20px;
+  }
+
+  .fx-icon-business-consulting {
+    font-size: 19px;
   }
 
   .item {

@@ -357,7 +357,7 @@
   .more {
     width: 1200px;
     height: 60px;
-    background: #ff4500;
+    background: #FF5A5F;
     position: fixed;
   }
 

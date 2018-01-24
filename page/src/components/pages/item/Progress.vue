@@ -134,7 +134,7 @@
 
   .el-col p {
     height: 60px;
-    line-height: 60px;
+    line-height: 50px;
   }
 
   p.first {

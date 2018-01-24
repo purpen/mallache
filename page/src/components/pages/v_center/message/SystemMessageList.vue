@@ -271,12 +271,8 @@
     height: 7px;
     margin-top: 20px;
     margin-left: -72px;
-    background: #f00;
+    background: #FF5A5F;
     border-radius: 50%;
-  }
-
-  i.alert.gray {
-    background: #ddd;
   }
 
   .pagination {

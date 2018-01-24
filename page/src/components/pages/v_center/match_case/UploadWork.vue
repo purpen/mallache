@@ -453,8 +453,8 @@
   }
 
   .submit:visited, .submit:hover, .submit:active {
-    background: #FF4500;
-    border-color: #FF4500;
+    background: #FF5A5F;
+    border-color: #FF5A5F;
   }
 
   .upload-demo {

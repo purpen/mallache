@@ -244,6 +244,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 22px;
 }
 
+.fx-6 {
+  font-size: 24px;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -277,8 +281,8 @@ button.is-custom.el-button--primary:hover {
 
 button.is-custom.el-button.el-button--default {
   background-color: #FFFFFF;
-  border-color: #FF4500;
-  color: #FF4500;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
 }
 
 button.is-custom.el-button.el-button--default:hover {
@@ -294,7 +298,7 @@ button.is-custom:focus, .button.is-custom.is-focused {
 }
 
 button.is-custom:active, .button.is-custom.is-active {
-  background-color: #FF4500;
+  background-color: #FF5A5F;
   border-color: transparent;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);
   color: #FFFFFF;
@@ -714,7 +718,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .nav-item .view-msg a i{
-  color: #FF4500
+  color: #FF5A5F
 }
 
 .nav-item .view-msg a:last-child {
@@ -738,12 +742,12 @@ button.is-custom.is-outlined.is-loading:after {
 .nav-header .icon.active span {
   width: 18px;
   min-height: 18px;
-  border: 1px solid red;
+  border: 1px solid #FF5A5F;
   /*设置红色*/
   border-radius: 50%;
   /*设置圆角*/
   overflow: hidden;
-  background-color: red;
+  background-color: #FF5A5F;
   position: absolute;
   z-index: 1000;
   right: 0;
@@ -777,7 +781,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .nav-header .nav-item a:hover, a.nav-item:hover {
-  color: #363636;
+  color: #222;
 }
 
 .header-buttom-line {
@@ -791,7 +795,7 @@ button.is-custom.is-outlined.is-loading:after {
   line-height: 60px;
   border: none;
   background: #FFFFFF;
-  color: #7A7A7A;
+  color: #666;
   padding: 0;
   padding-right: 14px;
 }
@@ -813,7 +817,7 @@ button.is-custom.is-outlined.is-loading:after {
   cursor: pointer;
   border: none;
   height: auto;
-  color: rgba(112, 123, 135, .92);
+  color: #999;
   line-height: 1em;
   text-transform: none;
   font-weight: 400;
@@ -913,8 +917,8 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .vcenter-menu-sub {
-  height: 25px;
-  line-height: 24px;
+  height: 40px;
+  line-height: 40px;
   border-bottom: 1px solid #d2d2d2;
 }
 
@@ -924,9 +928,10 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .vcenter-menu-sub-list .item {
+  line-height: 39px;
   font-size: 1.5rem;
   display: block;
-  margin: 0 16px 0 0;
+  margin: 0 20px 0 0;
   float: left;
 }
 
@@ -958,7 +963,7 @@ button.is-custom.is-outlined.is-loading:after {
   text-align: left;
   font-size: 1.5rem;
   line-height: 1em;
-  color: rgba(112, 123, 135, .92);
+  color: #666;
   text-transform: none;
   font-weight: 400;
   padding: 8px 15px!important;
@@ -1436,8 +1441,8 @@ td.fc-day.fc-widget-content.fc-today::before {
 /*查看公司主页按钮*/
 .computer-btn .companyBtn:hover, .computer-btn .companyBtn:focus {
   background-color: #FFFFFF;
-  border-color: #FF4500;
-  color: #FF4500;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
 }
 
 /*上传图片*/
@@ -1649,7 +1654,7 @@ td.fc-day.fc-widget-content.fc-today::before {
   }
 
   .menu-list .item:hover {
-    color: rgba(112, 123, 135, .92)
+    color: #666
   }
 
   .menu-list .item.is-active:hover {

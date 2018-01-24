@@ -56,7 +56,7 @@
                 </el-col>
               </el-row>
 
-              <div class="item" v-for="(d, index) in itemList" :key="index" v-if="!isMob">
+              <div class="item" v-for="(d, index) in itemList" :key="d + index" v-if="!isMob">
 
                 <el-row class="banner list-box">
                   <el-col :span="24">

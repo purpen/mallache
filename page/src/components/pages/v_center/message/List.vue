@@ -21,7 +21,8 @@
                   <i v-else class="el-icon-arrow-down"></i>
                 </p>
               </div>
-              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
+              <p v-show="d.is_show" class="content">{{ d.content }}</p>
+              <a v-show="d.is_show" class="detail" href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看详情>></a>
             </div>
           </div>
 
@@ -243,6 +244,7 @@
 
   .item p.icon {
     float: right;
+    color: #999;
   }
 
   .item p.content {
@@ -250,16 +252,18 @@
     font-size: 14px;
     clear: both;
     line-height: 18px;
-    color: #666;
   }
 
-  .item p.content a {
-    font-size: 1.2rem;
+  .item .detail {
+    font-size: 14px;
+    line-height: 24px;
+    color: #FF5A5F;
+    cursor: pointer;
   }
 
   i.alert {
     display: block;
-    background: #f00;
+    background: #FF5A5F;
     border-radius: 50%;
     width: 7px;
     height: 7px;
@@ -268,9 +272,6 @@
     position: absolute;;
   }
 
-  i.alert.gray {
-    background: #ddd;
-  }
 
   .pagination {
     display: flex;
