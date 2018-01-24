@@ -94,9 +94,9 @@
               <p class="title">{{ d.title }}</p>
               <p class="des">{{ d.profile }}</p>
               <p class="company">
-                <img class="avatar" v-if="d.design_company.logo_image" v-lazy="d.design_company.logo_image.logo"
+                <img class="avatar" v-if="d.design_company.logo_image" :src="d.design_company.logo_image.logo"
                     width="30"/>
-                <img class="avatar" v-else v-lazy="require('assets/images/avatar_100.png')" width="30"/>
+                <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="30"/>
                 <span>{{d.design_company.company_abbreviation}}</span>
               </p>
             </div>
