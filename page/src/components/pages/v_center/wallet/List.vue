@@ -86,12 +86,9 @@
                 :data="WithdrawList"
                 style="width: 100%">
                 <el-table-column
+                  min-width="200"
                   prop="uid"
                   label="交易单号">
-                </el-table-column>
-                <el-table-column
-                  prop="created_at"
-                  label="时间">
                 </el-table-column>
                 <el-table-column
                   align="center"
@@ -107,8 +104,14 @@
                   label="银行">
                 </el-table-column>
                 <el-table-column
+                  align="center"
                   prop="account_number"
                   label="卡号尾数">
+                </el-table-column>
+                <el-table-column
+                  min-width="140"
+                  prop="created_at"
+                  label="时间">
                 </el-table-column>
                 <el-table-column
                   align="center"
@@ -272,7 +275,7 @@
             this.WithdrawList = res.data.data
             for (let i of this.WithdrawList) {
               i.created_at = i.created_at.date_format().format('yyyy-MM-dd hh:mm')
-              i.account_number = i.account_number.substring(i.account_number.length - 6)
+              i.account_number = i.account_number.substring(i.account_number.length - 4)
               switch (i.type) {
                 case 1:
                   i.type_value = '银行转账'
