@@ -212,6 +212,8 @@ class AuthenticateController extends BaseController
      * @apiGroup User
      *
      * @apiParam {integer} phone
+     * @apiParam {string} str 随机码
+     * @apiParam {string} captcha 验证码
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -225,14 +227,24 @@ class AuthenticateController extends BaseController
     {
         $rules = [
             'phone' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'str' => 'required|string',
+            'captcha' => 'required|string',
         ];
 
-        $payload = $request->only('phone');
+        $payload = $request->only('phone','str','captcha');
         $validator = app('validator')->make($payload, $rules);
 
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
+
+        // 验证验证码
+        $str = $request->input('str');
+        $captcha = $request->input('captcha');
+        if(!Tools::checkCaptcha($str, $captcha)){
+            return $this->response->array($this->apiSuccess('验证码错误', 403));
+        }
+
 
         $phone = $payload['phone'];
 
