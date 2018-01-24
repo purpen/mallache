@@ -4,9 +4,9 @@
     <el-row :gutter="24" class="anli-elrow">
       <v-menu currentName="wallet"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" v-loading.body="walletLoading">
         <div class="right-content">
-          <div :class="['my-wallet', isMob ? 'my-wallet-m' : '' ]" v-loading.body="walletLoading">
+          <div :class="['my-wallet', isMob ? 'my-wallet-m' : '' ]">
             <div class="wallet-box">
               <div :class="['amount-show', isMob ? 'amount-show-m' : '']">
                 <p :class="['price-title', isMob ? 'price-title-m' : '']">账户余额（元）</p>

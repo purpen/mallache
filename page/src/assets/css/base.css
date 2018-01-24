@@ -244,12 +244,6 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 22px;
 }
 
-.loading {
-  position: fixed;
-  top: 30%;
-  left: 50%;
-}
-
 .pointer {
   cursor: pointer;
 }

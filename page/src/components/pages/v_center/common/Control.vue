@@ -3,8 +3,8 @@
     <div class="blank20"></div>
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="control"></v-menu>
-      <el-col :span="isMob ? 24 : 20">
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
+      <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']">
           <div class="item ing" v-for="(d, index) in itemIngList" :key="index">
             <div class="banner">
               <p>

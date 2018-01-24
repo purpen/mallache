@@ -4,99 +4,97 @@
     <el-row :gutter="24">
       <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div :class="['content-box', isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
+          <section class="verify">
+            <img :src="require('assets/images/item/authentication@2x.png')" alt="未认证">
+            <h3>您还没有实名认证</h3>
+            <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
+              <el-button class="is-custom" type="primary">马上去认证</el-button>
+            </router-link>
+          </section>
 
-            <div class="form-title">
-              <span>企业实名认证</span>
-            </div>
-
-            <div class="company-show">
-              <div class="item">
-                <p class="p-key">企业名称</p>
-                <p  v-if="isApply" class="p-val">{{ item.company_name }}</p>
+          <section class="verify">
+            <img :src="require('assets/images/item/to-examine@2x.png')" alt="认证中">
+            <h3>您的实名认证正在审核中</h3>
+            <p>请耐心等待...</p>
+          </section>
+          <div :class="['content-box', isMob ? 'content-box-m' : '']"
+          >
+            <section class="certified">
+              <div class="form-title">
+                <span>企业实名认证</span>
               </div>
 
-              <div class="item">
-                <p class="p-key">企业证件类型</p>
-                <p  v-if="isApply" class="p-val">{{ item.company_type_val }}</p>
+              <div class="company-show">
+                <div class="item">
+                  <p class="p-key">企业名称</p>
+                  <p class="p-val">{{ item.company_name }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">企业证件类型</p>
+                  <p class="p-val">{{ item.company_type_val }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">统一社会信用代码</p>
+                  <p class="p-val">{{ item.registration_number }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">法人姓名</p>
+                  <p class="p-val">{{ item.legal_person }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">法人证件类型</p>
+                  <p class="p-val">{{ item.document_type_val }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">证件号码</p>
+                  <p class="p-val">{{ item.document_number }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">联系人</p>
+                  <p class="p-val">{{ item.contact_name }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">职位</p>
+                  <p class="p-val">{{ item.position }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">手机</p>
+                  <p class="p-val">{{ item.phone }}</p>
+                </div>
+
+                <div class="item">
+                  <p class="p-key">邮箱</p>
+                  <p class="p-val">{{ item.email }}</p>
+                </div>
+
+
               </div>
-
-              <div class="item">
-                <p class="p-key">统一社会信用代码</p>
-                <p  v-if="isApply" class="p-val">{{ item.registration_number }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">法人姓名</p>
-                <p  v-if="isApply" class="p-val">{{ item.legal_person }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">法人证件类型</p>
-                <p  v-if="isApply" class="p-val">{{ item.document_type_val }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">证件号码</p>
-                <p  v-if="isApply" class="p-val">{{ item.document_number }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">联系人</p>
-                <p  v-if="isApply" class="p-val">{{ item.contact_name }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">职位</p>
-                <p  v-if="isApply" class="p-val">{{ item.position }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">手机</p>
-                <p  v-if="isApply" class="p-val">{{ item.phone }}</p>
-              </div>
-
-              <div class="item">
-                <p class="p-key">邮箱</p>
-                <p  v-if="isApply" class="p-val">{{ item.email }}</p>
-              </div>
-
-
-            </div>
-
-            <div class="rz-box" v-if="isReady">
-              <div class="rz-title">
-                <span>认证</span>
-              </div>
-              <div class="rz-stat">
-                <router-link :to="{name: 'vcenterComputerIdentification'}" class="item">
-                  +申请公司认证
-                </router-link>
-              </div>
-            </div>
-
-            <div class="rz-box" v-if="isApply">
-              <div class="rz-title success" v-if="item.verify_status === 1">
+            </section>
+            <div class="rz-box">
+              <div class="rz-title success">
                 <p>认证通过</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.verify_status === 0">
-                <p>等待认证</p>
-              </div>
-              <div class="rz-title rejust" v-else-if="item.verify_status === 2">
-                <p>认证未通过</p>
-              </div>
-              <div class="rz-stat" v-if="item.verify_status !== 1">
-                <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
-                  <el-button class="is-custom" type="primary">提交认证</el-button>
-                </router-link>
-              </div>
             </div>
-
-            <div class="clear"></div>
           </div>
+
+          <section class="verify">
+            <img :src="require('assets/images/item/authentication-error@2x.png')" alt="认证失败">
+            <h3>对不起，您的实名认证失败了...</h3>
+            <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
+              <el-button class="is-custom" type="primary">重新认证</el-button>
+            </router-link>
+          </section>
         </div>
 
       </el-col>
@@ -118,11 +116,10 @@
     data () {
       return {
         isLoading: false,
-        isReady: false,
-        isApply: false,
         userId: this.$store.state.event.user.id,
         companyId: '',
-        statusLabel: ''
+        statusLabel: '',
+        item: {}
       }
     },
     methods: {},
@@ -143,12 +140,8 @@
               that.item = response.data.data
               that.item.phone = that.item.phone === '0' ? '' : that.item.phone
               that.companyId = response.data.data.id
-              that.isApply = true
-            } else {
-              that.isReady = true
             }
           } else {
-            that.isReady = true
             that.message.error(response.data.meta.message)
           }
         })
@@ -180,11 +173,7 @@
   }
 
   .rz-box {
-    margin-top: 50px;
-  }
-
-  .rz-title {
-    float: left;
+    padding-top: 30px;
   }
 
   .rz-title p {
@@ -193,22 +182,9 @@
 
   .success p {
     color: #008000;
-  }
-
-  .wait p {
-    color: #FF4500;
-  }
-
-  .rejust p {
-    color: #FF4500;
-  }
-
-  .rz-stat {
-    float: right;
-  }
-
-  .company-show {
-
+    background: url(../../../../assets/images/item/badge@2x.png) no-repeat left;
+    background-size: contain;
+    text-indent: 30px;
   }
 
   .company-show .item {
@@ -233,4 +209,35 @@
     font-size: 1.5rem;
   }
 
+  .verify {
+    height: 300px;
+    padding-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 15px;
+    color: #999;
+  }
+
+  .verify img {
+    width: 120px;
+  }
+
+  .verify h3 {
+    color: #666;
+    padding: 20px 0 10px;
+  }
+
+  .verify p {
+  }
+
+  .verify a {
+    margin-top: 10px;
+    width: 120px;
+    height: 40px;
+  }
+  .is-custom {
+    width: 100%;
+  }
 </style>

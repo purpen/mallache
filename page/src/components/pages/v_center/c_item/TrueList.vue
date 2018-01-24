@@ -462,12 +462,13 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/\tools/report/NoContent.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 </style>

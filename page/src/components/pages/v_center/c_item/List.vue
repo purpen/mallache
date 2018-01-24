@@ -2,12 +2,11 @@
   <div class="container clearfix">
     <div class="blank20"></div>
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
-    <el-col :span="isMob ? 24 :20">
+    <el-col :span="isMob ? 24 :20" v-loading.body="isLoading">
       <div class="right-content">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
 
-        <div class="loading"></div>
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]"  v-loading.body="isLoading">
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]">
 
           <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
@@ -497,12 +496,13 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/\tools/report/NoContent.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 </style>

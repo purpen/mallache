@@ -4,7 +4,7 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="item"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20"  v-loading.body="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
@@ -15,10 +15,8 @@
               </router-link>
             </div>
 
-            <div class="loading" v-loading.body="isLoading" style="top: 50%;"></div>
-
             <div v-if="!isEmpty">
-              <div class="item ing" v-for="(d, index) in itemIngList">
+              <div class="item ing" v-for="(d, index) in itemIngList" :key="index">
                 <div class="banner">
                   <p>
                     <span>进行中</span>
@@ -58,7 +56,7 @@
                 </el-col>
               </el-row>
 
-              <div class="item" v-for="(d, index) in itemList" v-if="!isMob">
+              <div class="item" v-for="(d, index) in itemList" :key="index" v-if="!isMob">
 
                 <el-row class="banner list-box">
                   <el-col :span="24">
@@ -158,7 +156,7 @@
                 </el-row>
               </div>
 
-              <div class="item" v-for="(d, index) in itemList" v-if="isMob">
+              <div v-if="isMob" class="item" v-for="(d, index) in itemList" :key="index">
                 <div class="banner list-box">
                   <p>{{ d.item.created_at }}</p>
                 </div>

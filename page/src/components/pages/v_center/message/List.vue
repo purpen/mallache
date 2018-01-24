@@ -4,10 +4,10 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-loading="isLoading">
+          <div class="content-box">
 
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
@@ -281,13 +281,14 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/tools/report/NoMessage.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 
   .content a {

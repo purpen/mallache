@@ -67,17 +67,6 @@
 
             </div>
 
-            <div class="rz-box" v-if="isReady">
-              <div class="rz-title">
-                <span>认证</span>
-              </div>
-              <div class="rz-stat">
-                <router-link :to="{name: 'vcenterDCompanyIdentification'}" class="item">
-                  +申请企业认证
-                </router-link>
-              </div>
-            </div>
-
             <div class="rz-box" v-if="isApply">
               <div class="rz-title success" v-if="item.verify_status === 1">
                 <p>认证通过</p>
@@ -117,7 +106,6 @@
     },
     data () {
       return {
-        isReady: false,
         isApply: false,
         userId: this.$store.state.event.user.id,
         item: '',
@@ -137,17 +125,13 @@
       that.$http.get(api.demandCompany, {})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-//            console.log(response.data.data)
+            console.log(response.data.data)
             if (response.data.data) {
               that.item = response.data.data
               that.item.phone = that.item.phone === '0' ? '' : that.item.phone
               that.companyId = response.data.data.id
               that.isApply = true
-            } else {
-              that.isReady = true
             }
-          } else {
-            that.isReady = true
           }
         })
         .catch(function (error) {
