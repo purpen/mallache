@@ -185,8 +185,6 @@
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
   import api from '@/api/api'
-  import '@/assets/js/format'
-  import '@/assets/js/date_format'
 
   export default {
     name: 'vcenter_wallet_list',
@@ -309,7 +307,7 @@
       },
       // 提现弹出框
       withdraw() {
-        this.wallet.price = this.wallet.price_total - this.wallet.price_frozen
+        this.wallet.price = parseFloat(parseFloat(this.wallet.price_total).sub(parseFloat(this.wallet.price_frozen)))
         if (this.wallet.price <= 0) {
           this.$message.error ('没有可提现余额!')
           return false

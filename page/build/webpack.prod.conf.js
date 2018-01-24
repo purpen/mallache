@@ -54,8 +54,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         ecma: 8,
         mangle: true,
         output: { comments: false },
+        warnings: false,
         compress: {
-          warnings: false,
           drop_console: true
         }
       },
