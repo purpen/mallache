@@ -239,7 +239,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/evaluate', 'DemandController@evaluate');
         // 发布需求方确认项目阶段
         $api->post('/itemStage/demandFirmItemStage', 'ItemStageController@demandFirmItemStage');
-
+        // {delete} /demand/{id} 删除项目
+        $api->delete('/demand/trueItemDone/{id}', 'DemandController@destroy');
 
         // 获取当前信息匹配到的公司数量
         $api->post('/demand/matchingCount/', 'DemandController@matchingCount');

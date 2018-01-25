@@ -506,14 +506,32 @@ class DemandController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @api {delete} /demand/{id} 删除项目
+     * @apiVersion 1.0.0
+     * @apiName demand delete
+     * @apiGroup demandType
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
      */
     public function destroy($id)
     {
-        //
+        $item = $this->checkItemStatusAndAuth($id);
+
+        if($item->status != -2){
+            return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
+        }
+
+        $item->delete();
+
+        return $this->response->array($this->apiSuccess('Success', 200));
     }
 
     /**
@@ -1174,6 +1192,24 @@ class DemandController extends BaseController
         }
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * 验证项目是否属于当前登陆用户
+     * @param $item_id
+     * @return Item
+     */
+    protected function checkItemStatusAndAuth ($item_id)
+    {
+        if (!$item = Item::find($item_id)) {
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        if ($item->user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+
+        return $item;
     }
 
     /**

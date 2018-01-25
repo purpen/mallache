@@ -38,7 +38,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'price_total','price_frozen',
+        'password', 'remember_token', 'price_total', 'price_frozen',
     ];
 
     protected $appends = [
@@ -72,7 +72,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function designCompany()
     {
-        return $this->hasOne('App\Models\DesignCompanyModel' , 'user_id');
+        return $this->hasOne('App\Models\DesignCompanyModel', 'user_id');
     }
 
     /*
@@ -80,7 +80,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function designCase()
     {
-        return $this->hasMany('App\Models\DesignCaseModel' , 'user_id');
+        return $this->hasMany('App\Models\DesignCaseModel', 'user_id');
     }
 
     /*
@@ -88,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function designItem()
     {
-        return $this->hasMany('App\Models\DesignItemModel' , 'user_id');
+        return $this->hasMany('App\Models\DesignItemModel', 'user_id');
     }
 
     /*
@@ -96,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function quotation()
     {
-        return $this->hasMany('App\Models\QuotationModel' , 'user_id');
+        return $this->hasMany('App\Models\QuotationModel', 'user_id');
     }
 
     /**
@@ -118,7 +118,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function demandCompany()
     {
-        return $this->hasOne('App\Models\DemandCompany' , 'user_id');
+        return $this->hasOne('App\Models\DemandCompany', 'user_id');
     }
 
     /**
@@ -139,9 +139,9 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_total += $amount;
-        $user->price_frozen += $amount;
-        if(!$user->save()){
+        $user->price_total = bcadd($user->price_total, $amount, 2);
+        $user->price_frozen = bcadd($user->price_frozen, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户金额增加失败');
         }
     }
@@ -156,9 +156,9 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_total -= $amount;
-        $user->price_frozen -= $amount;
-        if(!$user->save()){
+        $user->price_total = bcsub($user->price_total, $amount, 2);
+        $user->price_frozen = bcsub($user->price_frozen, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户金额减少失败');
         }
     }
@@ -173,8 +173,8 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_total += $amount;
-        if(!$user->save()){
+        $user->price_total = bcadd($user->price_total, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户总金额增加失败');
         }
     }
@@ -189,8 +189,8 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_total -= $amount;
-        if(!$user->save()){
+        $user->price_total = bcsub($user->price_total, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户总金额减少失败');
         }
     }
@@ -205,8 +205,8 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_frozen += $amount;
-        if(!$user->save()){
+        $user->price_frozen = bcadd($user->price_frozen, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户冻结金额增加失败');
         }
     }
@@ -221,8 +221,8 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = User::find($user_id);
 
-        $user->price_frozen -= $amount;
-        if(!$user->save()){
+        $user->price_frozen = bcsub($user->price_frozen, $amount, 2);
+        if (!$user->save()) {
             Log::error('user_id:' . $user_id . '账户冻结金额减少失败');
         }
     }
@@ -233,7 +233,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getCashAttribute()
     {
-        return $this->price_total - $this->price_frozen;
+        return bcsub($this->price_total, $this->price_frozen, 2);
     }
 
     /**
@@ -246,8 +246,8 @@ class User extends Authenticatable implements JWTSubject
     {
         $auth = self::find($user_id);
         $is_admin = false;
-        if($auth){
-            if($auth->role_id > 0){
+        if ($auth) {
+            if ($auth->role_id > 0) {
                 $is_admin = true;
             }
         }

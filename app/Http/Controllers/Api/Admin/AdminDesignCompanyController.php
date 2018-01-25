@@ -15,12 +15,14 @@ use Illuminate\Validation\Rule;
 class AdminDesignCompanyController extends Controller
 {
     /**
-     * @api {put} /admin/designCompany/verifyStatus 设计公司通过审核
+     * @api {put} /admin/designCompany/verifyStatus 设计公司信息审核
      * @apiVersion 1.0.0
      * @apiName AdminDesignCompany verifyStatus
      * @apiGroup AdminDesignCompany
      *
      * @apiParam {integer} id
+     * @apiParam {integer} status 0: 未审核 1: 成功 2: 失败 3: 审核中
+     * @apiParam {string} verify_summary 审核备注
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -33,12 +35,24 @@ class AdminDesignCompanyController extends Controller
      */
     public function verifyStatus(Request $request)
     {
+        $this->validate($request,[
+            'status' => 'required',
+            'id' => 'required',
+        ]);
         $id = $request->input('id');
+        $status = $request->input('status');
+        $verify_summary = $request->input('verify_summary','');
+
+        if(!in_array($status,[0,1,2,3])){
+            return $this->response->array($this->apiSuccess('状态参数错误' , 403));
+        }
+
         $design_company = DesignCompanyModel::where('id' , $id)->first();
         if(!$design_company){
             return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
         }
-        $design = DesignCompanyModel::verifyStatus($id , 1);
+
+        $design = DesignCompanyModel::verifyStatus($id , $status, $verify_summary);
         if(!$design){
             return $this->response->array($this->apiError('修改失败' , 500));
         }
@@ -46,14 +60,28 @@ class AdminDesignCompanyController extends Controller
         // 系统消息通知
         $tools = new Tools();
         $title = '公司信息审核';
-        $content = '公司信息已通过审核';
+        $content = '';
+        switch ($status){
+            case 0:
+                $content = '公司信息变更为未审核状态，请修改资料重新提交';
+                break;
+            case 1:
+                $content = '公司信息已通过审核';
+                break;
+            case 2:
+                $content = '公司信息未通过审核，请修改资料重新提交';
+                break;
+            case 3:
+                $content = '公司信息正在审核中';
+                break;
+        }
         $tools->message($design_company->user_id, $title, $content, 1, null);
 
         return $this->response->array($this->apiSuccess());
     }
 
     /**
-     * @api {put} /admin/designCompany/unVerifyStatus 设计公司审核中
+     * @api {put} /admin/designCompany/unVerifyStatus 设计公司审核中（停用）
      * @apiVersion 1.0.0
      * @apiName AdminDesignCompany unVerifyStatus
      * @apiGroup AdminDesignCompany
@@ -85,7 +113,7 @@ class AdminDesignCompanyController extends Controller
 
 
     /**
-     * @api {put} /admin/designCompany/noVerifyStatus 设计公司未通过审核
+     * @api {put} /admin/designCompany/noVerifyStatus 设计公司未通过审核（停用）
      * @apiVersion 1.0.0
      * @apiName AdminDesignCompany noVerifyStatus
      * @apiGroup AdminDesignCompany
@@ -196,7 +224,7 @@ class AdminDesignCompanyController extends Controller
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）;2.推荐降序；
      * @apiParam {integer} type_status 0.禁用; 1.正常；
-     * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核
+     * @apiParam {integer} type_verify_status 0.未审核；1.审核通过；2.未通过审核 3.审核中
      * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
      * @apiParam {integer} val 查询值（根据查询条件判断）
      * @apiParam {string} token
@@ -281,7 +309,7 @@ class AdminDesignCompanyController extends Controller
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type_verify_status = $request->input('type_verify_status') ? (int)$request->input('type_verify_status') : 0;
+        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2,3]) ? $request->input('type_verify_status') : null;
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
         $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
@@ -291,17 +319,7 @@ class AdminDesignCompanyController extends Controller
         if($type_status !== null){
             $query->where('status', $type_status);
         }
-        if($type_verify_status){
-            switch($type_verify_status){
-                case -1:
-                    $type_verify_status = 0;
-                    break;
-                case 1:
-                    $type_verify_status = 1;
-                    break;
-                default:
-                    $type_verify_status = -1;
-            }
+        if($type_verify_status !== null){
             $query->where('verify_status', $type_verify_status);
         }
 
