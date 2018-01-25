@@ -92,6 +92,7 @@ class AdminDesignCompanyTransformer extends TransformerAbstract
             'document_number' => strval($DesignCompany->document_number),
             'document_image' => $DesignCompany->document_image,
             'open' => $DesignCompany->open,
+            'verify_summary' => $DesignCompany->verify_summary,
         ];
     }
 }

@@ -110,28 +110,28 @@ class DesignCompanyController extends BaseController
     {
         // 验证规则
         $rules = [
-            'design_type'  => 'nullable|max:50',
-            'company_name'  => 'nullable|max:50',
-            'company_abbreviation'  => 'nullable|max:50',
-            'province'  => 'nullable|integer',
-            'address'  => 'nullable|max:50',
-            'contact_name'  => 'nullable|max:20',
-            'phone'  => 'nullable',
-            'email'  => 'nullable|email',
-            'company_size'  => 'nullable|integer',
-            'branch_office'  => 'nullable|integer|max:125',
+            'design_type' => 'nullable|max:50',
+            'company_name' => 'nullable|max:50',
+            'company_abbreviation' => 'nullable|max:50',
+            'province' => 'nullable|integer',
+            'address' => 'nullable|max:50',
+            'contact_name' => 'nullable|max:20',
+            'phone' => 'nullable',
+            'email' => 'nullable|email',
+            'company_size' => 'nullable|integer',
+            'branch_office' => 'nullable|integer|max:125',
             'position' => 'nullable',
 //            'item_quantity'  => 'nullable|integer',
-            'web'  => 'nullable|max:50',
-            'company_profile'  => 'nullable|max:500',
-            'establishment_time'  => 'nullable|date',
-            'good_field'  => 'nullable|max:50',
-            'professional_advantage'  => 'nullable|max:500',
-            'awards'  => 'nullable|max:500',
-            'registration_number'  => 'nullable|min:15|max:18',
-            'legal_person'  => 'nullable|max:20',
-            'document_type'  => 'nullable|integer',
-            'document_number'  => 'nullable|max:20',
+            'web' => 'nullable|max:50',
+            'company_profile' => 'nullable|max:500',
+            'establishment_time' => 'nullable|date',
+            'good_field' => 'nullable|max:50',
+            'professional_advantage' => 'nullable|max:500',
+            'awards' => 'nullable|max:500',
+            'registration_number' => 'nullable|min:15|max:18',
+            'legal_person' => 'nullable|max:20',
+            'document_type' => 'nullable|integer',
+            'document_number' => 'nullable|max:20',
         ];
         $messages = [
             'design_type.max' => '产品设计不能超过50个字',
@@ -163,16 +163,16 @@ class DesignCompanyController extends BaseController
 
         //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        if($goodField){
+        if ($goodField) {
             $data = [];
-            foreach ($goodField as $v){
-                if ((int)$v){
+            foreach ($goodField as $v) {
+                if ((int)$v) {
                     $data[] = (int)$v;
                 }
             }
-            if(!empty($data)){
+            if (!empty($data)) {
                 //合并擅长领域
-                $good_field = implode(',' , $data);
+                $good_field = implode(',', $data);
                 $all['good_field'] = $good_field;
             }
         }
@@ -184,26 +184,25 @@ class DesignCompanyController extends BaseController
         $all['document_type'] = $request->input('document_type') ?? 1;
         $all['document_number'] = $request->input('document_number') ?? '';
         $all['open'] = $request->input('open') ?? 0;
-        $validator = Validator::make($all , $rules, $messages);
+        $validator = Validator::make($all, $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        try{
+        try {
             //检查用户的唯一性
-            $design = DesignCompanyModel::where('user_id' , $this->auth_user_id)->first();
-            if($design){
+            $design = DesignCompanyModel::where('user_id', $this->auth_user_id)->first();
+            if ($design) {
                 //判断值是不是空的，如果是空的用unset方法移除
-                foreach ($all as $key => $value){
-                    if($value == null){
+                foreach ($all as $key => $value) {
+                    if ($value == null) {
                         unset($all[$key]);
                     }
                 }
                 $design->update($all);
 
             }
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e);
             return $this->response->array($this->apiError());
         }
@@ -250,6 +249,7 @@ class DesignCompanyController extends BaseController
      *          "logo_image": ""，
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
+     *          "verify_summary": '',  // 审核备注
      *      },
      *       "meta": {
      *           "message": "Success",
@@ -263,10 +263,10 @@ class DesignCompanyController extends BaseController
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
 
-        if(!$design){
-            return $this->response->array($this->apiError('没有找到' , 404));
+        if (!$design) {
+            return $this->response->array($this->apiError('没有找到', 404));
         }
-        return $this->response->item($design , new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($design, new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -280,13 +280,13 @@ class DesignCompanyController extends BaseController
     public function otherIndex($id)
     {
         $design = DesignCompanyModel::where('id', $id)->first();
-        if(!$design){
-            return $this->response->array($this->apiError('没有找到' , 404));
+        if (!$design) {
+            return $this->response->array($this->apiError('没有找到', 404));
         }
 
         // 此参数用来判断是否返回设计公司的联系方式
         $is_phone = true;
-        if(($this->auth_user_id == null) || !$design->isRead($this->auth_user_id , $id)){
+        if (($this->auth_user_id == null) || !$design->isRead($this->auth_user_id, $id)) {
 //            return $this->response->array($this->apiSuccess('没有权限访问' , 403));
             $is_phone = false;
         }
@@ -295,15 +295,14 @@ class DesignCompanyController extends BaseController
 
 
         $design_type_val = [];
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             $design_type_val[] = $item->design_type_val;
         }
         $design->design_type_val = $design_type_val;
 
-        if($is_phone){
+        if ($is_phone) {
             return $this->response->item($design, new DesignCompanyOtherIndexTransformer())->setMeta($this->apiMeta());
-        }else{
+        } else {
             return $this->response->item($design, new DesignCompanyOtherIndexOpenTransformer())->setMeta($this->apiMeta());
         }
 
@@ -313,7 +312,7 @@ class DesignCompanyController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\DesignCompanyModel  $designCompanyModel
+     * @param  \App\Models\DesignCompanyModel $designCompanyModel
      * @return \Illuminate\Http\Response
      */
     public function edit(DesignCompanyModel $designCompanyModel)
@@ -382,6 +381,7 @@ class DesignCompanyController extends BaseController
      *          "logo_image": ""，
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
+     *          "verify_summary": '',  // 审核备注
      *      },
      *     "meta": {
      *       "message": "",
@@ -395,30 +395,30 @@ class DesignCompanyController extends BaseController
         $user_id = $this->auth_user_id;
         // 验证规则
         $rules = [
-            'design_type'  => 'nullable|max:50',
-            'company_name'  => 'nullable|max:50',
-            'company_abbreviation'  => 'nullable|max:50',
-            'province'  => 'nullable|integer',
+            'design_type' => 'nullable|max:50',
+            'company_name' => 'nullable|max:50',
+            'company_abbreviation' => 'nullable|max:50',
+            'province' => 'nullable|integer',
             'city' => 'integer',
             'area' => 'integer',
-            'address'  => 'nullable|max:50',
-            'contact_name'  => 'nullable|max:20',
-            'phone'  => 'nullable',
-            'email'  => 'nullable|email',
-            'company_size'  => 'nullable|integer',
-            'branch_office'  => 'nullable|integer',
+            'address' => 'nullable|max:50',
+            'contact_name' => 'nullable|max:20',
+            'phone' => 'nullable',
+            'email' => 'nullable|email',
+            'company_size' => 'nullable|integer',
+            'branch_office' => 'nullable|integer',
             'position' => 'nullable',
 //            'item_quantity'  => 'nullable|integer',
-            'web'  => 'nullable|max:50',
-            'company_profile'  => 'nullable|max:500',
-            'establishment_time'  => 'nullable|date',
-            'good_field'  => 'nullable|max:50',
-            'professional_advantage'  => 'nullable|max:500',
-            'awards'  => 'nullable|max:500',
-            'registration_number'  => 'nullable|min:15|max:18',
-            'legal_person'  => 'nullable|max:20',
-            'document_type'  => 'nullable|integer',
-            'document_number'  => 'nullable|max:20',
+            'web' => 'nullable|max:50',
+            'company_profile' => 'nullable|max:500',
+            'establishment_time' => 'nullable|date',
+            'good_field' => 'nullable|max:50',
+            'professional_advantage' => 'nullable|max:500',
+            'awards' => 'nullable|max:500',
+            'registration_number' => 'nullable|min:15|max:18',
+            'legal_person' => 'nullable|max:20',
+            'document_type' => 'nullable|integer',
+            'document_number' => 'nullable|max:20',
         ];
 
         $messages = [
@@ -444,30 +444,47 @@ class DesignCompanyController extends BaseController
 
         ];
         $all = $request->except(['token']);
-        $validator = Validator::make($all , $rules, $messages);
+        $validator = Validator::make($all, $rules, $messages);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         //擅长领域合并成字符串
         $goodField = $request->input('good_field');
-        if ($goodField){
+        if ($goodField) {
             $data = [];
-            foreach ($goodField as $v){
-                if ((int)$v){
+            foreach ($goodField as $v) {
+                if ((int)$v) {
                     $data[] = (int)$v;
                 }
             }
-            if(!empty($data)){
+            if (!empty($data)) {
                 //合并擅长领域
-                $good_field = implode(',' , $data);
+                $good_field = implode(',', $data);
                 $all['good_field'] = $good_field;
             }
         }
 
+        // 判断是否修改需要审核的信息
+        $verify = [
+            'company_name',
+            'document_type',
+            'registration_number',
+            'legal_person',
+            'document_type',
+            'document_number',
+            'contact_name',
+            'position',
+            'phone',
+            'email'
+        ];
+        if(!empty(array_intersect($verify, $all))){
+            $all['verify_status'] = 3;
+        }
+
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
         $design->update($all);
-        if(!$design){
+        if (!$design) {
             return $this->response->array($this->apiError());
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
@@ -476,7 +493,7 @@ class DesignCompanyController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\DesignCompanyModel  $designCompanyModel
+     * @param  \App\Models\DesignCompanyModel $designCompanyModel
      * @return \Illuminate\Http\Response
      */
     public function destroy(DesignCompanyModel $designCompanyModel)
