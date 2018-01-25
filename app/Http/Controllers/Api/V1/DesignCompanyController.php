@@ -478,9 +478,12 @@ class DesignCompanyController extends BaseController
             'phone',
             'email'
         ];
-        if(!empty(array_intersect($verify, $all))){
+        if(!empty(array_intersect($verify, array_keys($all)))){
+            dd('34');
             $all['verify_status'] = 3;
         }
+
+        dd($all);
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
         $design->update($all);

@@ -302,7 +302,7 @@ class DemandCompanyController extends BaseController
             'phone',
             'email'
         ];
-        if(!empty(array_intersect($verify, $all))){
+        if(!empty(array_intersect($verify, array_keys($all)))){
             $all['verify_status'] = 3;
         }
 

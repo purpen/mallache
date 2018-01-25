@@ -26,10 +26,15 @@ class ItemTransformer extends TransformerAbstract
         {
             $info = '';
         }
-        $design_company_id = explode(',' , $item->recommend);
-        $designCompany = DesignCompanyModel::whereIn("id", $design_company_id)->get();
-        $item->user;
 
+        $design_company_id = explode(',' , $item->recommend);
+        if(!empty($design_company_id)){
+            $designCompany = DesignCompanyModel::whereIn("id", $design_company_id)->get();
+        }else{
+            $designCompany = [];
+        }
+
+        $item->user;
         unset($item->productDesign, $item->uDesign);
 
         return [
