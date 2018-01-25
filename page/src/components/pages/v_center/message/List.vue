@@ -243,8 +243,10 @@
 
 
   .item p.icon {
-    float: right;
+    position: absolute;
+    right: 20px;
     color: #999;
+    top: 33px;
   }
 
   .item p.content {

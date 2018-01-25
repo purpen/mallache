@@ -178,29 +178,22 @@
   }
 
   .content-box .item {
-    position: relative;
     border: 1px solid #ccc;
     margin-bottom: -1px;
-    padding: 20px;
+    padding: 30px 50px 30px 20px;
     min-height: 30px;
     line-height: 30px;
     cursor: default;
+    display: flex;
   }
 
   .content-box .item:hover {
     background-color: #F2F1F1;
   }
 
-  .item .left{
-    position: absolute;
-    height: 100%;
+  .item .left {
     width: 70px;
-    left: 6px;
-    top:0;
-    display: flex;
-    align-items:flex-start;
-    justify-content: center;
-    overflow: hidden;
+    margin-right: 20px;
   }
 
   .item .left .logo{

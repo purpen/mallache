@@ -133,7 +133,7 @@
         .then(function (response) {
           that.isLoading = false
           if (response.data.meta.status_code === 200) {
-            console.log(response.data.data)
+            console.log(response)
             if (response.data.data) {
               that.item = response.data.data
               that.item.phone = that.item.phone === '0' ? '' : that.item.phone

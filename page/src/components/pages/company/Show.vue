@@ -16,14 +16,14 @@
             <p>信用指数：<span>{{ item.score }}分</span></p>
           </div>
 
-          <div class="cate">
+          <div class="cate" v-if="item.design_type_val">
             <p class="c-title">设计类别</p>
             <p class="tag">
               <el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag>
             </p>
           </div>
 
-          <div class="cate">
+          <div class="cate" v-if="item.good_field_value">
             <p class="c-title">擅长领域</p>
             <p class="tag">
               <el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag>
@@ -32,11 +32,11 @@
 
           <div class="cate">
             <p class="c-title">联系方式</p>
-            <p>地址: {{ item.address }}</p>
-            <p>联系人: {{ item.contact_name }}</p>
+            <p v-if="item.address">地址: {{ item.address }}</p>
+            <p v-if="item.contact_name">联系人: {{ item.contact_name }}</p>
             <p v-if="item.phone">电话: {{ item.phone }}</p>
             <p v-if="item.email">邮箱: {{ item.email }}</p>
-            <p class="web">网址: <a :href="item.web" :target="isMob ? '_self' : '_blank'">{{ item.web }}</a></p>
+            <p v-if="item.web" class="web">网址: <a :href="item.web" :target="isMob ? '_self' : '_blank'">{{ item.web }}</a></p>
           </div>
 
         </div>
@@ -46,9 +46,7 @@
         <div class="design-case-content">
           <div class="">
             <h2>作品案例</h2>
-
             <div class="design-case-list" v-loading.body="isLoading">
-
               <el-row :gutter="10">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
@@ -66,18 +64,17 @@
                   </el-card>
                 </el-col>
               </el-row>
-
             </div>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.company_profile">
             <h2>公司简介</h2>
             <p>{{ item.company_profile }}</p>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.professional_advantage">
             <h2>专业优势</h2>
             <p>{{ item.professional_advantage }}</p>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.awards">
             <h2>荣誉奖项</h2>
             <p>
               <pre v-html="item.awards" style="white-space:normal"></pre>
@@ -213,8 +210,8 @@ export default {
 }
 
 .design-case-slide h3 {
-  margin: 10px;
-  font-size: 2rem;
+  margin: 20px;
+  font-size: 1.8rem;
 }
 
 .design-case-slide .rate {
@@ -240,6 +237,10 @@ export default {
 
 .cate p.tag span {
   margin: 5px;
+}
+
+.cate p.tag span:nth-child(2n + 1) {
+  margin-left: 0;
 }
 
 .design-case-slide .prize {
