@@ -464,9 +464,10 @@
   }
 
   .info-body p {
-    text-indent: 24px;
     line-height: 1.5;
     margin-bottom: 6px;
+    position: relative;
+    padding-left: 24px;
   }
 
   .date {

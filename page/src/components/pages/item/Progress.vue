@@ -204,7 +204,17 @@
 
   }
 
+  @media screen and (min-width: 1180px) {
+    .el-col p {
+      line-height: 60px
+    }
+  }
+
   @media screen and (max-width: 1179px) {
+    .el-col p {
+      line-height: 50px
+    }
+
     .progress-box {
       margin-bottom: 6px;
     }

@@ -276,23 +276,32 @@
   }
 
   .design-company {
-    /* height: 350px; */
     margin: 0 20px;
     overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
 
   .design-company img {
     border: 1px solid #eee;
     border-radius: 160px;
-    width: 12%;
-    float: left;
-    margin: 20px 2%;
+    width: 10%;
+    margin: 20px 3%;
   }
 
+  .design-company img:nth-child(6n) {
+    margin-right: 0
+  }
   @media screen and ( max-width: 768px) {
     .design-company img {
       width: 20%;
       margin: 0 2.5% 20px 2.5%;
+    }
+
+    .design-company img:nth-child(6n) {
+      margin-right: 2.5%;
     }
 
     .item {

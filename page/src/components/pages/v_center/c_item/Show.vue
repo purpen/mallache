@@ -37,7 +37,7 @@
                     <el-table-column>
                       <template slot-scope="scope">
                         <div v-if="scope.row.name === '相关附件'">
-                          <p v-for="(d, index) in scope.row.image"><a :href="d.file" target="_blank">{{ d.name }}</a>
+                          <p v-for="(d, index) in scope.row.image" :key="d.name + index"><a :href="d.file" target="_blank">{{ d.name }}</a>
                           </p>
                         </div>
                         <div v-else>
@@ -198,7 +198,7 @@
                 </div>
                 <div class="manage-item add-stage" v-else>
 
-                  <div class="stage-item" v-for="(d, index) in stages">
+                  <div class="stage-item" v-for="(d, index) in stages" :key="d.title + index">
                     <div class="stage-title clearfix">
                       <h3 class="clearfix">第{{ d.no }}阶段: {{ d.title }}</h3>
                       <span style="color: #999" v-if="isMob && d.confirm !== 1">附件格式只限上传JPG／PNG／PDF文件</span>
@@ -234,7 +234,7 @@
                         </p>
                       </div>
                     </div>
-                    <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image">
+                    <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image" :key="asset.name + asset_index">
                       <div class="contract-left">
                         <img src="../../../../assets/images/icon/pdf2x.png" width="30"/>
                         <div class="contract-content">
@@ -1114,9 +1114,6 @@
     margin: 10px;
   }
 
-  .base_info {
-  }
-
   .el-step__title.is-finish {
     font-size: 3rem;
   }
@@ -1560,3 +1557,42 @@
 
 </style>
 
+<style>
+  .el-step__head.is-text.is-process {
+    color: #fff;
+    background-color: #00ac84!important;
+    border-color: #00ac84!important;
+  }
+
+  .el-step__head .el-step__line.is-vertical  {
+    position: absolute;
+    top: 28px;
+    left: 13px;
+  }
+
+  .is-process .el-step__line.is-vertical  {
+    background-color: #00ac84;
+  }
+
+  .el-step__head .el-step__icon {
+    line-height: 24px;
+  }
+  .el-step__main .el-step__title.is-process {
+    color: #00ac84
+  }
+  .el-step__main .el-step__title.is-wait {
+    color: #999;
+  }
+  .el-step .el-step__head.is-text.is-wait {
+    color: #d2d2d2;
+    border-color: #ededed;
+  }
+  .is-wait .el-step__line {
+    background-color: #ededed
+  }
+  .process-item p {
+    font-weight: normal;
+    line-height: 1;
+    padding-bottom: 20px;
+  }
+</style>

@@ -237,7 +237,7 @@
   p.info span {
     font-size: 12px;
     line-height: 16px;
-    padding-right: 15px;
+    padding-right: 20px;
     margin: 5px 0;
     display: flex;
     align-items: center;
@@ -246,7 +246,7 @@
   .tigs i.fx {
     display: flex;
     align-items: center;
-    margin-left: 6px;
+    margin-left: 14px;
   }
 
   p.flip {
@@ -272,7 +272,7 @@
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #D2D2D2;
-    padding: 0 20px 0 15px;
+    padding: 0 20px;
     background: #FFFFFF;
     display: flex;
     align-items: center;
@@ -280,7 +280,7 @@
   }
 
   menu menuitem {
-    margin-right: 8px;
+    margin-right: 20px;
     width: 30px;
     height: 30px;
     font-size: 14px;

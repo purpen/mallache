@@ -181,7 +181,7 @@
     position: relative;
     border: 1px solid #ccc;
     margin-bottom: -1px;
-    padding: 10px 20px 10px 80px;
+    padding: 20px;
     min-height: 30px;
     line-height: 30px;
     cursor: default;

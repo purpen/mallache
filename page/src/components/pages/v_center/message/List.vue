@@ -200,7 +200,7 @@
     position: relative;
     border: 1px solid #ccc;
     margin-bottom: -1px;
-    padding: 10px 20px 10px;
+    padding: 20px;
     cursor: pointer;
     min-height: 30px;
     line-height: 30px;

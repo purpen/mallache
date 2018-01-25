@@ -37,8 +37,9 @@
                     <el-table-column>
                       <template slot-scope="scope">
                         <div v-if="scope.row.name === '相关附件'">
-                          <p v-for="(d, index) in scope.row.image" :key="index"><a :href="d.file"
-                                                                                   target="_blank">{{ d.name }}</a></p>
+                          <p v-for="(d, index) in scope.row.image" :key="index">
+                            <a :href="d.file" target="_blank">{{ d.name }}</a>
+                          </p>
                         </div>
                         <div v-else>
                           <p>{{ scope.row.title }}</p>
@@ -72,7 +73,6 @@
           <div class="select-item-box clearfix" v-if="statusLabel.selectCompany">
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择系统推荐的设计公司" name="3">
-
                 <div class="select-company-item clearfix" v-for="(d, index) in stickCompany" :key="index">
                   <el-checkbox :class="['check-box',{'height220': d.cases.length}]" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
                   <div class="content">
@@ -1173,14 +1173,15 @@ export default {
 }
 
 .select-company-item {
-  /*height: 200px;*/
+  min-height: 150px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
+  display: flex;
+  align-items: center
 }
 
 .select-company-item .check-box {
   margin: 10px;
-  line-height: 150px;
   float: left;
 }
 
@@ -1188,13 +1189,10 @@ export default {
   line-height: 220px;
 }
 
-.select-company-item .company-title {
-  /*width: 350px;*/
-  /*height: 160px;*/
-  /*float: left;*/
-  /*overflow: hidden;*/
+.select-company-item .content {
+  display: flex;
+  align-items: center
 }
-
 .select-company-item .content .img {
   /*height: 180px;*/
   display: block;
@@ -1217,9 +1215,7 @@ export default {
   font-size: 1.2rem;
   font-weight: bold;
 }
-.select-company-item .content p.company-padding {
-  padding-left: 109px;
-}
+
 .company-title {
   margin: 10px;
 }
