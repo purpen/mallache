@@ -33,6 +33,7 @@
               <span @click="showTransaction" :class="{'active' : record === 'transaction'}">交易记录</span>
               <span @click="showWithdraw" :class="{'active' : record === 'withdraw'}">提现记录</span>
             </h3>
+
             <article v-if="record === 'transaction'">
               <el-table v-if="!isMob"
                         :data="tableData" :border="false" v-loading.body="isLoading"
@@ -42,9 +43,6 @@
                 <el-table-column prop="number" label="交易单号" width="200">
                 </el-table-column>
 
-                <el-table-column
-                  prop="created_at" label="时间" width="140">
-                </el-table-column>
                 <el-table-column
                   prop="transaction_type_value" label="交易类型" width="120">
                 </el-table-column>
@@ -59,6 +57,9 @@
                       <span> {{ scope.row.amount }}</span>
                     </p>
                   </template>
+                </el-table-column>
+                <el-table-column
+                  prop="created_at" label="时间" width="140">
                 </el-table-column>
                 <el-table-column
                   prop="summary"
@@ -133,6 +134,7 @@
                 </div>
               </section>
             </article>
+
             <el-pagination
               class="pagination"
               @current-change="handleCurrentChange"
@@ -183,8 +185,6 @@
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
   import api from '@/api/api'
-  import '@/assets/js/format'
-  import '@/assets/js/date_format'
 
   export default {
     name: 'vcenter_wallet_list',
@@ -307,7 +307,7 @@
       },
       // 提现弹出框
       withdraw() {
-        this.wallet.price = this.wallet.price_total - this.wallet.price_frozen
+        this.wallet.price = parseFloat(parseFloat(this.wallet.price_total).sub(parseFloat(this.wallet.price_frozen)))
         if (this.wallet.price <= 0) {
           this.$message.error ('没有可提现余额!')
           return false
@@ -359,7 +359,8 @@
               self.itemModel = false
               self.$message.success ('操作成功,等待财务打款！')
             } else {
-        //              console.log(response.data.meta.message)
+              self.$message.error(response.data.meta.message)
+              console.log(response.data.meta.message)
             }
           })
           .catch (function (error) {
@@ -402,7 +403,7 @@
             if (wallet) {
               self.wallet = wallet
             }
-            //            console.log(self.wallet)
+            console.log(self.wallet)
           }
         })
         .catch (function (error) {
