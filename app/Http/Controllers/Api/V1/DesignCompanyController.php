@@ -479,13 +479,11 @@ class DesignCompanyController extends BaseController
             'email'
         ];
         if(!empty(array_intersect($verify, array_keys($all)))){
-            dd('34');
             $all['verify_status'] = 3;
         }
 
-        dd($all);
-
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
+
         $design->update($all);
         if (!$design) {
             return $this->response->array($this->apiError());
