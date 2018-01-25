@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 class Item extends BaseModel
 {
+    use SoftDeletes;
+
     protected $table = 'item';
 
     /**
