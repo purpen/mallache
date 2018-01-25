@@ -87,6 +87,7 @@
           <section class="verify" v-if="item.verify_status === 2">
             <img :src="require('assets/images/item/authentication-error@2x.png')" alt="认证失败">
             <h3>对不起，您的实名认证失败了...</h3>
+            <p>{{item.verify_summary}}</p>
             <router-link :to="{name: 'vcenterComputerIdentification'}" class="item">
               <el-button class="is-custom" type="primary">重新认证</el-button>
             </router-link>

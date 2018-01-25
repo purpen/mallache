@@ -9,10 +9,10 @@
 
           <div class="admin-menu-sub">
             <div class="admin-menu-sub-list">
-              <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+              <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == ''}">全部</router-link>
             </div>
             <div class="admin-menu-sub-list">
-              <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
+              <router-link :to="{name: 'adminCompanyList', query: {type: 3}}" :class="{'item': true, 'is-active': menuType === 3}" active-class="false">待审核</router-link>
             </div>
             <div class="admin-menu-sub-list">
               <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
@@ -239,13 +239,14 @@ export default {
       // 查询条件
       self.query.page = parseInt(this.$route.query.page || 1)
       self.query.sort = this.$route.query.sort || 0
-      self.query.type = this.$route.query.type || 0
+      self.query.type = this.$route.query.type || ''
       self.query.evt = this.$route.query.evt || ''
       self.query.val = this.$route.query.val || ''
       this.menuType = 0
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
+      console.log('排序', self.query.sort, 'type_verify_status', self.query.type, 'evt', self.query.evt)
       self.isLoading = true
       self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type, evt: self.query.evt, val: self.query.val}})
       .then (function(response) {

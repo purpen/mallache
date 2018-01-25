@@ -273,7 +273,7 @@
               }
             }
             that.isLoadingBtn = true
-            that.$http({method: 'POST', url: api.demandCompany, data: row})
+            that.$http({method: 'PUT', url: api.demandCompany, data: row})
               .then(function (response) {
                 that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {
