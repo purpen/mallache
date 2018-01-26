@@ -157,6 +157,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-bottom: none !important;
 }
 
+.avatarhead  .el-upload__tip {
+  color: #999;
+}
+
 .el-form-item__label {
   font-size: 1.6rem;
   color: #666666;

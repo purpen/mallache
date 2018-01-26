@@ -22,7 +22,8 @@
                   :on-progress="avatarProgress"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload">
-                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                  <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar"> -->
+                  <img v-if="false" :src="imageUrl" class="avatar">
                   <i v-else class="el-icon-plus
                     avatar-uploader-icon"></i>
                   <div slot="tip" class="el-upload__tip" v-if="!isMob">{{ avatarStr }}</div>
@@ -661,7 +662,7 @@
   .item {
     margin: 5px 0;
     padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #d2d2d2;
   }
 
   .item-m {
@@ -719,7 +720,7 @@
   .item-mAvatar .avatarhead span {
     font-size: 10px;
     line-height: 1.1;
-    color: #8391a5;
+    color: #999;
   }
 
   .item-m .avatarcontent {
@@ -742,7 +743,7 @@
   }
 
   .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
+    border: 1px dashed #d2d2d2;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
@@ -755,12 +756,12 @@
 
   .avatar-uploader-icon {
     font-size: 28px;
-    color: #8c939d;
+    color: #999;
     width: 100px;
     height: 100px;
     line-height: 100px;
     text-align: center;
-    border: 1px dashed #ccc;
+    border: 1px dashed #d2d2d2;
   }
 
   .item-m .avatar-uploader-icon {
@@ -814,5 +815,9 @@
 
   .MmenuHide {
     margin-left: 0;
+  }
+
+  .el-upload__tip {
+    color: #999;
   }
 </style>
