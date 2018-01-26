@@ -316,10 +316,10 @@ class AdminDesignCompanyController extends Controller
         $val = $request->input('val') ? $request->input('val') : '';
 
         $query = DesignCompanyModel::with('user','user.designItem');
-        if($type_status !== null){
+        if($type_status !== null && $type_status !== ''){
             $query->where('status', $type_status);
         }
-        if($type_verify_status !== null){
+        if($type_verify_status !== null && $type_verify_status !== ''){
             $query->where('verify_status', $type_verify_status);
         }
 

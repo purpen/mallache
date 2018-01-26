@@ -103,7 +103,7 @@ class DesignCompanyModel extends BaseModel
     /**
      * 更改设计公司审核状态
      */
-    static public function verifyStatus($id, $verify_status = 0, $verify_summary = '')
+    static public function verifyStatus($id, $verify_status = 0, $verify_summary = ' ')
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;

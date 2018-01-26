@@ -207,7 +207,7 @@ class AdminDemandCompanyController extends Controller
         $val = $request->input('val') ? $request->input('val') : '';
 
         $query = DemandCompany::query()->with('user');
-        if($type_verify_status !== null){
+        if($type_verify_status !== null && $type_verify_status !== ''){
             $query->where('verify_status', $type_verify_status);
         }
 
