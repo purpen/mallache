@@ -166,7 +166,10 @@ class DemandCompany extends BaseModel
     {
         $demand_company = self::findOrFail($id);
         $demand_company->verify_status = $verify_status;
-        $demand_company->verify_summary = $verify_summary;
+        if($verify_summary){
+            $demand_company->verify_summary = $verify_summary;
+        }
+
         return $demand_company->save();
     }
 

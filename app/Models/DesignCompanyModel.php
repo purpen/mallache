@@ -107,7 +107,10 @@ class DesignCompanyModel extends BaseModel
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;
-        $design_company->verify_summary = $verify_summary;
+        if($verify_summary){
+            $design_company->verify_summary = $verify_summary;
+        }
+
         return $design_company->save();
     }
 
