@@ -140,7 +140,7 @@
 
   .right-content .content-box-m {
     border-top: 1px solid #E6E6E6;
-    margin: 14px 0 0 0;
+    margin: 0;
     padding: 0 15px;
   }
 

@@ -336,7 +336,7 @@
     overflow: hidden;
   }
   .content-item-box-m {
-    margin: 15px 15px 0;
+    margin: 0 15px 0;
   }
 
   .content-item-box .item {

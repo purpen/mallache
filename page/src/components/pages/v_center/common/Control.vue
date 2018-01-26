@@ -283,6 +283,7 @@
 <style scoped>
   .right-content .content-box {
     min-height: 200px;
+    padding-bottom: 0;
   }
 
   p.alert-title {
@@ -352,13 +353,6 @@
     text-align: center;
     margin-bottom: 20px;
   }
-
-  .content-item-box {
-  }
-
-  /* .content-item-box-m {
-    margin-top: 20px;
-  } */
 
   .pub {
     background: #FAFAFA;

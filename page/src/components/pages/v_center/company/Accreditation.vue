@@ -190,7 +190,7 @@
   }
 
   .item p {
-    line-height: 3;
+    line-height: 40px;
   }
 
   .item p.p-key {
@@ -217,7 +217,7 @@
   }
 
   .verify-success {
-    margin-top: 20px;
+    margin: 20px 0;
     height: auto;
     border: 1px solid #d2d2d2;
   }

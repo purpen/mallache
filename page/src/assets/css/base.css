@@ -917,7 +917,6 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .vcenter-menu-sub {
-  overflow: hidden;
   position: relative;
   padding-bottom: 20px;
 }
@@ -929,24 +928,25 @@ button.is-custom.is-outlined.is-loading:after {
   top: 27px;
   left: 0;
   border-bottom: 1px solid #d2d2d2;
+  z-index: -1;
 }
 
-.vcenter-menu-sub-list {
-  float: left;
+.vcenter-menu-sub-list:after {
+  content: '';
+  display: block;
+  clear: both
 }
 
 .vcenter-menu-sub-list .item {
-  line-height: 1;
+  float: left;
   font-size: 1.5rem;
   padding: 0 0 12px;
-  display: block;
   margin: 0 20px 0 0;
-  float: left;
 }
 
 .vcenter-menu-sub-list .item.is-active {
   color: #222222;
-  border-bottom: 0.5px solid #222222;
+  border-bottom: 1px solid #222222;
 }
 
 /**
@@ -1006,7 +1006,7 @@ button.is-custom.is-outlined.is-loading:after {
   width: 100vw;
   height: 20px;
   overflow-y: hidden;
-  margin: 20px 0 20px -15px;
+  margin: 15px 0 15px -15px;
 }
 
 .Mmenulist {
@@ -1028,9 +1028,8 @@ button.is-custom.is-outlined.is-loading:after {
 
 .right-content .content-box {
   margin-bottom: 20px;
-  clear: both;
   border: 1px solid #d2d2d2;
-  padding: 0 20px;
+  padding: 0 20px 20px;
 }
 
 .right-content .content-box-m {
@@ -1737,6 +1736,53 @@ td.fc-day.fc-widget-content.fc-today::before {
   .el-card:hover {
     transform: none;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
+  }
+
+  .blank40 {
+    margin-top: 0;
+  }
+
+  .vcenter-menu-sub::after {
+    border-color: transparent
+  }
+
+  .vcenter-menu-sub-list .item {
+    padding-bottom: 0;
+    line-height: 42px;
+  }
+
+  .vcenter-menu-sub-list-m {
+    float: none;
+    margin-bottom: -1px;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    margin: 0 -15px;
+  }
+
+  .vcenter-menu-sub-list-m:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #d2d2d2;
+  }
+
+  .vcenter-menu-sub-list-m:after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #d2d2d2;
+  }
+
+  .vcenter-menu-sub-list-m .item {
+    text-align: center;
   }
   /*767 end*/
 }

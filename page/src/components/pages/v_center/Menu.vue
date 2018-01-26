@@ -65,7 +65,7 @@
         </a>
       </div>
 
-      <div class="computer-btn" v-if="isCompany">
+      <div class="computer-btn" v-if="isCompany && !isMob">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
     </section>

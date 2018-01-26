@@ -1,7 +1,7 @@
 <template>
-  <div class="container" v-loading.fullscreen.lock="isFullLoading">
-    <div class="blank20"></div>
-    <el-row :gutter="10">
+  <div class="container blank40"
+    v-loading.fullscreen.lock="isFullLoading">
+    <el-row :gutter="20">
 
       <el-col :xs="24" :sm="6" :md="6" :lg="6">
         <div class="design-case-slide">

@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="20">
       <v-menu currentName="modify_pwd" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
