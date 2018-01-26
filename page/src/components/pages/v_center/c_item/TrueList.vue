@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
-
+  <div class="container blank40">
     <v-menu currentName="c_item" class="c_item"></v-menu>
 
     <el-col :span="isMob ? 24 : 20">
@@ -392,7 +390,6 @@
   }
 
   .item-title-box {
-    margin-top: 20px;
     border: 1px solid #d2d2d2;
     border-bottom: none;
   }

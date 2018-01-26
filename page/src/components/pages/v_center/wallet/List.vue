@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24" class="anli-elrow">
       <v-menu currentName="wallet"></v-menu>
 

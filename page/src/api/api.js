@@ -169,7 +169,7 @@ export default {
   adminCompanyStatusOk: '/admin/designCompany/okStatus', // PUT 启用
   adminCompanyStatusDisable: '/admin/designCompany/unStatus', // PUT 禁用
   adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // PUT 通过审核
-  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // PUT 取消审核
+  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // PUT 取消审核 (停用)
 
   // 订单管理
   adminPayOrderLists: '/admin/payOrder/lists', // GET 订单列表

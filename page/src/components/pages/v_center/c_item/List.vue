@@ -1,6 +1,5 @@
 <template>
-  <div class="container clearfix">
-    <div class="blank20"></div>
+  <div class="container blank40 clearfix">
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20" v-loading.body="isLoading">
       <div class="right-content">
@@ -424,7 +423,6 @@
   }
 
   .item-title-box {
-    margin-top: 20px;
     border: 1px solid #d2d2d2;
     border-bottom: none;
   }

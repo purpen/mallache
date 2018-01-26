@@ -2,7 +2,6 @@
   <el-col :span="isMob ? 24 : 4" class="left-menu">
     <section :class="['menuHide', isMob ? 'MmenuHide' : '']">
       <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
-        <span v-if="!isMob">个人中心</span>
         <a @click="alick" :to="'/vcenter/control'"
            :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板

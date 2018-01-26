@@ -63,7 +63,7 @@
             </el-table-column>
             <el-table-column
               label="内容"
-              min-width="180">
+              min-width="160">
                 <template slot-scope="scope">
                   <p>全称: <router-link :to="{name: 'companyShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.company_name }}</router-link></p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
@@ -74,7 +74,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-              label="创建人">
+              label="创建人"
+              min-width="90">
                 <template slot-scope="scope">
                   <p>
                     {{ scope.row.users.account }}[{{ scope.row.user_id }}]
@@ -82,32 +83,39 @@
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               prop="verify_status"
-              label="是否审核">
+              label="审核状态">
                 <template slot-scope="scope">
-                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">是</el-tag></p>
-                  <p v-else><el-tag type="gray">否</el-tag></p>
+                  <p v-if="scope.row.verify_status === 0"><el-tag type="gray">未审核</el-tag></p>
+                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">成功</el-tag></p>
+                  <p v-if="scope.row.verify_status === 2"><el-tag type="danger">失败</el-tag></p>
+                  <p v-if="scope.row.verify_status === 3"><el-tag type="primary">待审核</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               label="状态">
                 <template slot-scope="scope">
                   <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
-                  <p v-else><el-tag type="gray">禁用</el-tag></p>
+                  <p v-else><el-tag type="danger">禁用</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               prop="created_at"
               width="80"
               label="创建时间">
             </el-table-column>
             <el-table-column
+              align="center"
               width="100"
               label="操作">
                 <template slot-scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1" @click="setVerify(scope.$index, scope.row, 0)">取消审核</a>
-                    <a href="javascript:void(0);" v-else @click="setVerify(scope.$index, scope.row, 1)">通过审核</a>
+                  <p class="operate">
+                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 2)">不通过</a>
+                    <a href="javascript:void(0);"
+                      v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
                   </p>
@@ -190,14 +198,8 @@ export default {
     },
     setVerify(index, item, evt) {
       var id = item.id
-      var url = ''
-      if (evt === 0) {
-        url = api.adminCompanyVerifyCancel
-      } else {
-        url = api.adminCompanyVerifyOk
-      }
       var self = this
-      self.$http.put(url, {id: id})
+      self.$http.put(api.adminCompanyVerifyOk, {id: id, status: evt})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.itemList[index].verify_status = evt
@@ -208,7 +210,7 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
+        console.error(error.message)
       })
     },
     setStatus(index, item, evt) {
@@ -246,7 +248,6 @@ export default {
       if (self.query.type) {
         this.menuType = parseInt(self.query.type)
       }
-      console.log('排序', self.query.sort, 'type_verify_status', self.query.type, 'evt', self.query.evt)
       self.isLoading = true
       self.$http.get(api.adminCompanyList, {params: {page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort, type_verify_status: self.query.type, evt: self.query.evt, val: self.query.val}})
       .then (function(response) {
@@ -291,6 +292,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .operate a {
+    display: block
+  }
 
 </style>

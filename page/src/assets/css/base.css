@@ -189,23 +189,23 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 
 .blank10 {
-  margin: 10px;
+  margin-top: 10px;
 }
 
 .blank20 {
-  margin: 20px;
+  margin-top: 20px;
 }
 
 .blank40 {
-  margin: 40px;
+  margin-top: 40px;
 }
 
 .blank50 {
-  margin: 50px;
+  margin-top: 50px;
 }
 
 .blank60 {
-  margin: 60px;
+  margin-top: 60px;
 }
 
 .font-weight4 {
@@ -917,19 +917,28 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .vcenter-menu-sub {
-  height: 40px;
-  line-height: 40px;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.vcenter-menu-sub::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  top: 27px;
+  left: 0;
   border-bottom: 1px solid #d2d2d2;
 }
 
 .vcenter-menu-sub-list {
-  overflow: hidden;
   float: left;
 }
 
 .vcenter-menu-sub-list .item {
-  line-height: 39px;
+  line-height: 1;
   font-size: 1.5rem;
+  padding: 0 0 12px;
   display: block;
   margin: 0 20px 0 0;
   float: left;
@@ -937,7 +946,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .vcenter-menu-sub-list .item.is-active {
   color: #222222;
-  border-bottom: 1px solid #222222;
+  border-bottom: 0.5px solid #222222;
 }
 
 /**
@@ -962,11 +971,15 @@ button.is-custom.is-outlined.is-loading:after {
   height: auto;
   text-align: left;
   font-size: 1.5rem;
-  line-height: 1em;
+  line-height: 1;
   color: #666;
   text-transform: none;
   font-weight: 400;
-  padding: 8px 15px!important;
+  padding: 8px 15px;
+}
+
+.menu-list .item:first-child {
+  padding-top: 0;
 }
 
 .menu-list .item:hover {
@@ -993,7 +1006,7 @@ button.is-custom.is-outlined.is-loading:after {
   width: 100vw;
   height: 20px;
   overflow-y: hidden;
-  margin-left: -14px;
+  margin: 20px 0 20px -15px;
 }
 
 .Mmenulist {
@@ -1014,11 +1027,10 @@ button.is-custom.is-outlined.is-loading:after {
  */
 
 .right-content .content-box {
-  margin-top: 20px;
+  margin-bottom: 20px;
   clear: both;
   border: 1px solid #d2d2d2;
-  padding: 0 20px 20px 20px;
-  /*min-height: 350px;*/
+  padding: 0 20px;
 }
 
 .right-content .content-box-m {

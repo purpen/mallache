@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu :class="[isMob ? 'v-menu' : '']" currentName="match_case"></v-menu>
 

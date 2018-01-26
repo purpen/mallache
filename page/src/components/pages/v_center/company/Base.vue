@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
       <el-col :span="isMob ? 24 : 20">

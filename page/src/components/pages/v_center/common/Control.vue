@@ -1,6 +1,5 @@
 <template>
-  <div class="container min-height350">
-    <div class="blank20"></div>
+  <div class="container blank40 control min-height350">
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="control"></v-menu>
       <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
@@ -39,7 +38,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
 
-            <div class="item clearfix" v-show="item.design_info_status === 0">
+            <div class="item clearfix" v-if="item.design_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
               <p class="item-btn">
@@ -47,7 +46,7 @@
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_verify_status !== 1">
+            <div class="item clearfix" v-if="item.design_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
@@ -55,7 +54,7 @@
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_item_status === 0">
+            <div class="item clearfix" v-if="item.design_item_status === 0">
               <h3>公司接单设置</h3>
               <p class="item-title">设计项目接单价格</p>
               <p class="item-btn">
@@ -63,7 +62,7 @@
               </p>
             </div>
 
-            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
+            <div class="item no-line clearfix" v-if="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
@@ -205,6 +204,7 @@
           if (response.data.meta.status_code === 200) {
             let item = null
             that.item = item = response.data.data
+            console.log(response.data.data)
             let verifyStatus = 0
             if (isCompany) {
               if (item.design_info_status === 0 || item.design_verify_status !== 1 || item.design_case_status === 0 || item.design_item_status === 0) {
@@ -217,16 +217,19 @@
               }
               verifyStatus = item.demand_verify_status
             }
-
+            console.log(verifyStatus)
             switch (verifyStatus) {
               case 0:
-                item.verify_label = '待认证'
+                item.verify_label = '未认证'
                 break
               case 1:
                 item.verify_label = '已通过'
                 break
               case 2:
                 item.verify_label = '认证失败'
+                break
+              case 3:
+                item.verify_label = '等待认证'
                 break
             }
           }
@@ -279,7 +282,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .right-content .content-box {
-    margin-top: 0;
     min-height: 200px;
   }
 
@@ -297,10 +299,12 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
     padding-bottom: 10px;
+    position: relative;
   }
 
   .content-box .item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
   }
 
   .content-box .item h3 {
@@ -317,11 +321,15 @@
   }
 
   .content-box .item .item-btn {
-    float: right;
-    margin-top: 5px;
-    margin-right: 10px;
+    position: absolute;
+    right: 20px;
+    bottom: 24px;
     font-size: 1.4rem;
     line-height: 1.7;
+  }
+
+  .content-box .item:last-child .item-btn {
+    bottom: 14px;
   }
 
   .content-box .item .item-btn a {
@@ -337,7 +345,7 @@
   }
 
   .right-content.message {
-    margin: 20px 0;
+    margin: 0 0 20px;
   }
 
   .message-btn {
@@ -346,12 +354,11 @@
   }
 
   .content-item-box {
-    margin-top: 10px;
   }
 
-  .content-item-box-m {
+  /* .content-item-box-m {
     margin-top: 20px;
-  }
+  } */
 
   .pub {
     background: #FAFAFA;
