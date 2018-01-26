@@ -164,6 +164,7 @@ class DemandCompanyController extends BaseController
      *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      *          "company_property_value": ""
      *          "document_image":[],  //法人证件
+     *          "verify_summary": '',  // 审核备注
      *      },
      *      "meta": {
      *          "message": "Success",
@@ -193,7 +194,7 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {post} /demandCompany 更新需求用户信息
+     * @api {put} /demandCompany 更新需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany update
      * @apiGroup demandCompany
@@ -249,7 +250,8 @@ class DemandCompanyController extends BaseController
      *          "document_number": "",     //证件号码
      *          "company_property": 0,     //企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
      *          "company_property_value": ""
-     *          "document_image":[],  //法人证件
+     *          "document_image":[],  //法人证件，
+     *          "verify_summary": '',  // 审核备注
      *      },
      *   }
      *  }
@@ -286,6 +288,24 @@ class DemandCompanyController extends BaseController
             if(empty($v) && $v !== 0 && $v !== "0")
                 unset($all[$k]);
         }
+
+        // 判断是否修改需要审核的信息
+        $verify = [
+            'company_name',
+            'document_type',
+            'registration_number',
+            'legal_person',
+            'document_type',
+            'document_number',
+            'contact_name',
+            'position',
+            'phone',
+            'email'
+        ];
+        if(!empty(array_intersect($verify, array_keys($all)))){
+            $all['verify_status'] = 3;
+        }
+
         $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
 
         $demand->update($all);

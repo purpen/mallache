@@ -56,6 +56,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'company_property' => $demand->company_property,
             'company_property_value' => $demand->company_property_value,
             'document_image' => $demand->document_image,
+            'verify_summary' => $demand->verify_summary,
         ];
     }
 }
