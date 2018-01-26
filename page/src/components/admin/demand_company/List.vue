@@ -50,6 +50,7 @@
               width="55">
             </el-table-column>
             <el-table-column
+              align="center"
               prop="id"
               label="ID"
               width="60">
@@ -63,7 +64,7 @@
             </el-table-column>
             <el-table-column
               label="内容"
-              min-width="180">
+              min-width="160">
                 <template slot-scope="scope">
                   <p>全称: {{ scope.row.company_name }}</p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
@@ -82,12 +83,14 @@
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               width="80"
-              label="是否认证">
+              label="认证状态">
                 <template slot-scope="scope">
+                  <p v-if="scope.row.verify_status === 0"><el-tag type="gray">未认证</el-tag></p>
                   <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>
-                  <p v-else-if="scope.row.verify_status === 2"><el-tag type="gray">拒绝</el-tag></p>
-                  <p v-else><el-tag type="warning">待认证</el-tag></p>
+                  <p v-if="scope.row.verify_status === 2"><el-tag type="danger">失败</el-tag></p>
+                  <p v-if="scope.row.verify_status === 3"><el-tag type="warning">待认证</el-tag></p>
                 </template>
             </el-table-column>
 
@@ -97,16 +100,14 @@
               label="创建时间">
             </el-table-column>
             <el-table-column
+              align="center"
               width="100"
               label="操作">
                 <template slot-scope="scope">
-                  <p v-if="scope.row.verify_status === 0">
-                    <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 2)">拒绝</a>
-                    <a href="javascript:void(0);" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
-                  </p>
-                  <p v-else>
-                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1" @click="setVerify(scope.$index, scope.row, 2)">拒绝</a>
-                    <a href="javascript:void(0);" v-else @click="setVerify(scope.$index, scope.row, 1)">通过</a>
+                <p class="operate">
+                <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 2)">不通过</a>
+                    <a href="javascript:void(0);"
+                      v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
                   </p>
                   <!--
                   <p>
@@ -187,14 +188,8 @@ export default {
     },
     setVerify(index, item, evt) {
       var id = item.id
-      var url = ''
-      if (evt === 1) {
-        url = api.adminDemandCompanyVerifyOk
-      } else {
-        url = api.adminDemandCompanyVerifyNo
-      }
       var self = this
-      self.$http.put(url, {id: id})
+      self.$http.put(api.adminDemandCompanyVerifyOk, {id: id, status: evt})
       .then (function(response) {
         if (response.data.meta.status_code === 200) {
           self.itemList[index].verify_status = evt
@@ -286,6 +281,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-
+  .operate a {
+    display: block
+  }
 </style>

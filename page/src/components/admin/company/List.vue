@@ -88,9 +88,9 @@
               label="审核状态">
                 <template slot-scope="scope">
                   <p v-if="scope.row.verify_status === 0"><el-tag type="gray">未审核</el-tag></p>
-                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">成功</el-tag></p>
+                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>
                   <p v-if="scope.row.verify_status === 2"><el-tag type="danger">失败</el-tag></p>
-                  <p v-if="scope.row.verify_status === 3"><el-tag type="primary">待审核</el-tag></p>
+                  <p v-if="scope.row.verify_status === 3"><el-tag type="warning">待审核</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column

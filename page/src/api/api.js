@@ -159,8 +159,8 @@ export default {
   // 需求公司管理
   adminDemandCompanyList: '/admin/demandCompany/lists', // GET 需求公司列表
   adminDemandCompanyShow: '/admin/demandCompany/show', // GET 需求公司详情
-  adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中
-  adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过
+  adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中(停用)
+  adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过(停用)
   adminDemandCompanyVerifyOk: '/admin/demandCompany/verifyStatus', // PUT 通过审核
 
   // 设计公司管理
