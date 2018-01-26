@@ -240,4 +240,16 @@
   .is-custom {
     width: 100%;
   }
+
+  @media screen and (max-width: 767px) {
+    .verify-success {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .verify img {
+      width: 80px;
+    }
+  }
 </style>

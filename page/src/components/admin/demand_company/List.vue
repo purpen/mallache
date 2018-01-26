@@ -105,9 +105,19 @@
               label="操作">
                 <template slot-scope="scope">
                 <p class="operate">
-                <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 2)">不通过</a>
-                    <a href="javascript:void(0);"
-                      v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
+                  <!-- <el-popover
+                    ref="popover"
+                    placement="bottom"
+                    title="标题"
+                    width="200">
+                      <p>这是一段内容这是一段内容确定删除吗？</p>
+                      <div style="text-align: right; margin: 0">
+                        <el-button type="primary" size="mini" >确定</el-button>
+                      </div>
+                  </el-popover> -->
+
+                  <a @click="setVerify(scope.$index, scope.row, 2)" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3">不通过</a>
+                  <a v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
                   </p>
                   <!--
                   <p>
@@ -132,12 +142,9 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="query.totalCount">
           </el-pagination>
-
         </div>
       </el-col>
     </el-row>
-
-
   </div>
 </template>
 
@@ -166,10 +173,14 @@ export default {
 
         test: null
       },
+      visible: false,
       msg: ''
     }
   },
   methods: {
+    showPopover() {
+      this.visible
+    },
     // 查询
     onSearch() {
       this.query.page = 1
@@ -187,6 +198,9 @@ export default {
       this.$router.push({name: this.$route.name, query: this.query})
     },
     setVerify(index, item, evt) {
+      if (evt === 2) {
+        this.visible = false
+      }
       var id = item.id
       var self = this
       self.$http.put(api.adminDemandCompanyVerifyOk, {id: id, status: evt})
@@ -282,6 +296,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .operate a {
-    display: block
+    display: block;
+    cursor: pointer;
   }
 </style>

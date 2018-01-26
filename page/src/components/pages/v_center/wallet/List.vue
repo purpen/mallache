@@ -28,9 +28,11 @@
           </div>
 
           <div :class="['item-box', isMob ? 'item-box-m' : '']" v-if="tableData.length">
-            <h3 class="data-record">
-              <span @click="showTransaction" :class="{'active' : record === 'transaction'}">交易记录</span>
-              <span @click="showWithdraw" :class="{'active' : record === 'withdraw'}">提现记录</span>
+            <h3 class="vcenter-menu-sub clearfix">
+              <p class="vcenter-menu-sub-list">
+                <span @click="showTransaction" :class="['item', {'is-active' : record === 'transaction'}]">交易记录</span>
+                <span @click="showWithdraw" :class="['item', {'is-active' : record === 'withdraw'}]">提现记录</span>
+              </p>
             </h3>
 
             <article v-if="record === 'transaction'">
@@ -615,11 +617,25 @@
   .transaction-record .no-border {
     border: none;
   }
-  .data-record span {
-    cursor: pointer;
+
+  .vcenter-menu-sub::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    top: 42px;
+    left: 0;
+    border-bottom: 1px solid #d2d2d2;
+    z-index: -1;
   }
-  .active {
-    color: #222;
-    font-weight: 600;
+  @media screen and (max-width: 767px) {
+    .vcenter-menu-sub::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 47px;
+      left: 0;
+      border-bottom: 1px solid #d2d2d2;
+      z-index: -1;
+    }
   }
 </style>

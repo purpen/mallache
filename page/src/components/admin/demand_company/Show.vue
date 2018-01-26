@@ -7,7 +7,7 @@
       <el-col :span="20">
         <div class="content">
 
-        <div class="admin-menu-sub">
+        <!-- <div class="admin-menu-sub">
           <div class="admin-menu-sub-list">
             <router-link :to="{name: 'adminDemandCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
           </div>
@@ -17,7 +17,7 @@
           <div class="admin-menu-sub-list">
             <router-link :to="{name: 'adminDemandCompanyList', query: {type: 2}}" :class="{'item': true, 'is-active': menuType === 2}" active-class="false">拒绝认证</router-link>
           </div>
-        </div>
+        </div> -->
 
         <div class="content-box" v-loading.body="isLoading">
 
@@ -286,7 +286,7 @@ export default {
   }
 
   .company-show .item p {
-    line-height: 3;
+    line-height: 40px;
   }
 
   .company-show .item p.p-key {
