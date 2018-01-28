@@ -794,6 +794,101 @@ button.is-custom.is-outlined.is-loading:after {
   margin-top: -3px;
 }
 
+/*审核 认证*/
+.company-verify .el-tag--gray,
+.company-verify .el-tag--success,
+.company-verify .el-tag--danger {
+  background-color: transparent;
+  border-color: transparent
+}
+
+.company-verify .tag-pass {
+  background-color: rgba(0, 172, 132, 0.5);
+  border: 1px solid rgba(0, 172, 132, 1);
+  color: #fff;
+}
+
+.company-verify .tag-pass:hover {
+  background-color: rgba(0, 172, 132, 0.8);
+  border: 1px solid rgba(0, 172, 132, 1);
+  color: #fff;
+}
+
+.company-verify .tag-pass:active {
+  background-color: rgba(0, 172, 132, 1);
+  border: 1px solid rgba(0, 172, 132, 1);
+  color: #fff;
+}
+
+.company-verify .tag-refuse {
+  background-color: rgba(255, 130, 0, 0.5);
+  border: 1px solid rgba(255, 130, 0, 1);
+  color: #fff;
+}
+
+.company-verify .tag-refuse:hover {
+  background-color: rgba(255, 130, 0, 0.8);
+  border: 1px solid rgba(255, 130, 0, 1);
+  color: #fff;
+}
+
+.company-verify .tag-refuse:active {
+  background-color: rgba(255, 130, 0, 1);
+  border: 1px solid rgba(255, 130, 0, 1);
+  color: #fff;
+}
+
+.company-verify .tag-disable {
+  background-color: rgba(255, 90, 95, 0.5);
+  border: 1px solid rgba(255, 90, 95, 1);
+  color: #fff;
+}
+
+.company-verify .tag-disable:hover {
+  background-color: rgba(255, 90, 95, 0.8);
+  border: 1px solid rgba(255, 90, 95, 1);
+  color: #fff;
+}
+
+.company-verify .tag-disable:active {
+  background-color: rgba(255, 90, 95, 1);
+  border: 1px solid rgba(255, 90, 95, 1);
+  color: #fff;
+}
+
+.company-verify .tag-able {
+  background-color: rgba(19, 206, 102, 0.5);
+  border: 1px solid rgba(19, 206, 102, 1);
+  color: #fff;
+}
+
+.company-verify .tag-able:hover {
+  background-color: rgba(19, 206, 102, 0.8);
+  border: 1px solid rgba(19, 206, 102, 1);
+  color: #fff;
+}
+
+.company-verify .tag-able:active {
+  background-color: rgba(19, 206, 102, 1);
+  border: 1px solid rgba(19, 206, 102, 1);
+  color: #fff;
+}
+
+.company-verify .tag-view {
+  border: 1px solid rgba(153, 153, 153, 0.5);
+  color: rgba(153, 153, 153, 0.5);
+}
+
+.company-verify .tag-view:hover {
+  border: 1px solid rgba(153, 153, 153, 0.8);
+  color: rgba(153, 153, 153, 0.8);
+}
+
+.company-verify .tag-view:active {
+  border: 1px solid rgba(153, 153, 153, 1);
+  color: rgb(153, 153, 153);
+}
+
 .el-menu-info.el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 60px;
   line-height: 60px;

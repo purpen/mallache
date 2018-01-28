@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container company-verify">
     <div class="blank20"></div>
     <el-row :gutter="20">
       <v-menu selectedName="demandCompanyList"></v-menu>
@@ -105,19 +105,9 @@
               label="操作">
                 <template slot-scope="scope">
                 <p class="operate">
-                  <!-- <el-popover
-                    ref="popover"
-                    placement="bottom"
-                    title="标题"
-                    width="200">
-                      <p>这是一段内容这是一段内容确定删除吗？</p>
-                      <div style="text-align: right; margin: 0">
-                        <el-button type="primary" size="mini" >确定</el-button>
-                      </div>
-                  </el-popover> -->
-
-                  <a @click="setVerify(scope.$index, scope.row, 2)" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3">不通过</a>
-                  <a v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)">通过</a>
+                  <a @click="setRefuseRease(scope.$index, scope.row, 2)" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" class="tag-refuse">拒绝</a>
+                  <a v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)" class="tag-pass">通过</a>
+                  <router-link :to="{name: 'adminDemandCompanyShow', params: {id: scope.row.id}}" target="_blank" class="tag-view">查看</router-link>
                   </p>
                   <!--
                   <p>
@@ -125,12 +115,17 @@
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
                   -->
-                  <p>
-                    <router-link :to="{name: 'adminDemandCompanyShow', params: {id: scope.row.id}}" target="_blank">查看</router-link>
-                  </p>
                 </template>
             </el-table-column>
           </el-table>
+
+          <el-dialog title="请填写拒绝原因" :visible.sync="dialogVisible" size="tiny">
+            <el-input v-model="verify.refuseRease"></el-input>
+            <span slot="footer" class="dialog-footer">
+              <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+              <el-button size="small" type="primary" @click="setVerify(verify.index, verify.item, verify.evt, verify.refuseRease)">确 定</el-button>
+            </span>
+          </el-dialog>
 
           <el-pagination
             class="pagination"
@@ -170,17 +165,19 @@ export default {
         type: 0,
         evt: '',
         val: '',
-
         test: null
       },
-      visible: false,
+      verify: {
+        index: '',
+        item: '',
+        evt: '',
+        refuseRease: ''
+      },
+      dialogVisible: false,
       msg: ''
     }
   },
   methods: {
-    showPopover() {
-      this.visible
-    },
     // 查询
     onSearch() {
       this.query.page = 1
@@ -197,14 +194,19 @@ export default {
       this.query.page = val
       this.$router.push({name: this.$route.name, query: this.query})
     },
-    setVerify(index, item, evt) {
-      if (evt === 2) {
-        this.visible = false
-      }
+    setRefuseRease (index, item, evt) {
+      this.dialogVisible = !this.dialogVisible
+      this.verify.index = index
+      this.verify.item = item
+      this.verify.evt = evt
+    },
+    setVerify(index, item, evt, refuseRease = '') {
+      this.dialogVisible = false
       var id = item.id
       var self = this
-      self.$http.put(api.adminDemandCompanyVerifyOk, {id: id, status: evt})
+      self.$http.put(api.adminDemandCompanyVerifyOk, {id: id, status: evt, verify_summary: refuseRease})
       .then (function(response) {
+        self.verify.refuseRease = ''
         if (response.data.meta.status_code === 200) {
           self.itemList[index].verify_status = evt
           self.$message.success('操作成功')
@@ -259,7 +261,6 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.itemList = response.data.data
           self.query.totalCount = response.data.meta.pagination.total
-          console.log(response.data)
           for (var i = 0; i < self.itemList.length; i++) {
             var item = self.itemList[i]
             item.logo_url = require ('@/assets/images/df_100x100.png')
@@ -269,8 +270,6 @@ export default {
             item['created_at'] = item.created_at.date_format().format('yy-MM-dd')
             self.tableData.push(item)
           } // endfor
-
-          console.log(self.itemList)
         } else {
           self.$message.error(response.data.meta.message)
         }
@@ -296,7 +295,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .operate a {
-    display: block;
     cursor: pointer;
+    display: block;
+    margin-bottom: 8px;
+    border-radius: 4px;
   }
 </style>
