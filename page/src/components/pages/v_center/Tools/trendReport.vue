@@ -17,9 +17,8 @@
             </router-link>
           </el-col>
         </el-row>
-        <div class="pager">
+        <div class="pager" v-if="pagination.total_pages > 1">
           <el-pagination
-            v-if="reportList.length > 12"
             class="pagination"
             :current-page="pagination.current_page"
             :page-size="pagination.per_page"
@@ -58,6 +57,7 @@
       }
     },
     created () {
+      this.pagination.current_page = Number(this.$route.query.page) || 1
       this.getTrendReportList()
     },
     methods: {
@@ -96,6 +96,7 @@
       },
       handleCurrentChange (val) {
         this.pagination.current_page = val
+        this.$router.push({name: this.$route.name, query: {page: this.pagination.current_page}})
         this.getTrendReportList()
       }
     },
@@ -216,13 +217,6 @@
   .item-body .date {
     display: flex;
     align-items: center;
-  }
-
-  .pager {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
   }
 
   .pagination {

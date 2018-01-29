@@ -113,10 +113,12 @@
               label="操作">
                 <template slot-scope="scope">
                   <p class="operate">
-                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setRefuseRease(scope.$index, scope.row, 2)"
-                    class="tag-refuse">拒绝</a>
-                    <a href="javascript:void(0);"
-                      v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)" class="tag-pass">通过</a>
+                    <span class="clearfix">
+                      <a href="javascript:void(0);"
+                        v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)" class="tag-pass">通过</a>
+                      <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setRefuseRease(scope.$index, scope.row, 2)"
+                      class="tag-refuse">拒绝</a>
+                    </span>
                     <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)" class="tag-disable">禁用</a>
                     <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)"
                     class="tag-able">启用</a>

@@ -802,6 +802,21 @@ button.is-custom.is-outlined.is-loading:after {
   border-color: transparent
 }
 
+.operate span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.operate span a {
+  flex:1;
+  margin-right: 8px;
+}
+
+.operate span a:last-child {
+  margin-right: 0;
+}
+
 .company-verify .tag-pass {
   background-color: rgba(0, 172, 132, 0.5);
   border: 1px solid rgba(0, 172, 132, 1);
