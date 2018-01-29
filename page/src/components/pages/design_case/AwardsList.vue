@@ -30,7 +30,7 @@
       </el-row>
     </div>
     <div class="blank20"></div>
-    <div class="pager">
+    <div class="pager" v-if="query.totalCount">
       <el-pagination v-if="itemList.length" class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
                      :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper"
                      @current-change="handleCurrentChange">
@@ -52,7 +52,7 @@ export default {
       query: {
         page: 1,
         pageSize: 9,
-        totalPges: 1,
+        totalPges: 0,
         totalCount: 0
       },
       test: ''
@@ -64,6 +64,7 @@ export default {
   methods: {
     handleCurrentChange(page) {
       this.query.page = page
+      this.$router.push({name: this.$route.name, query: {page: this.query.page}})
       this.loadList()
     },
     loadList() {
@@ -109,6 +110,7 @@ export default {
     }
   },
   created: function() {
+    this.query.page = Number(this.$route.query.page) || 1
     this.loadList()
   },
   computed: {

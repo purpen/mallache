@@ -136,7 +136,8 @@
 
               <el-row :gutter="24">
                 <el-col :span="isMob ? 24 : 12">
-                  <el-checkbox v-model="agreement" disabled><a href="javascript:void(0);" @click="agreementBtn">已阅读并同意《铟果SaaS协议》</a>
+                  <el-checkbox v-model="agreement" disabled>
+                    阅读并同意<a href="javascript:void(0);" class="terms" @click="agreementBtn">《铟果SaaS协议》</a>
                   </el-checkbox>
                 </el-col>
               </el-row>
@@ -641,5 +642,7 @@
     color: #222;
   }
 
-
+  .terms {
+    color: #00c
+  }
 </style>
