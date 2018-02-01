@@ -9,7 +9,7 @@
           <article>
             <h3>我是客户</h3>
             <span>发布项目</span>
-            <span>找到设计服务商</span>
+            <span>找到设计公司</span>
           </article>
         </div>
       </label>
@@ -18,7 +18,7 @@
         <div class="type business">
           <p></p>
           <article>
-            <h3>我是设计服务商</h3>
+            <h3>我是设计公司</h3>
             <span>为客户提供</span>
             <span>专业设计服务</span>
           </article>

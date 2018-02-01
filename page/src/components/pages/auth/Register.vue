@@ -7,12 +7,12 @@
 
       <div class="register-tab" v-if="!isMob">
         <div :class="{'register-tab-user': true, active: uActive}" @click="selectUser">
-          <h3>我是需求方</h3>
-          <p class="des">100+专业设计服务供应商帮您实现创意需求 </p>
+          <h3>我是客户</h3>
+          <p class="des">发布项目需求</p>
         </div>
         <div :class="{'register-tab-computer': true, active: cActive}" @click="selectComputer">
-          <h3>我是服务方</h3>
-          <p class="des">大量现实设计需求等您解决</p>
+          <h3>我是设计公司</h3>
+          <p class="des">入驻平台，大量设计需求等您解决。</p>
         </div>
       </div>
 
@@ -322,7 +322,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .register-box {
-    border: 1px solid #ccc;
     width: 800px;
     height: 600px;
     text-align: center;
@@ -336,17 +335,17 @@
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    color: #222;
   }
 
   .register-tab {
     font-size: 1.8rem;
     width: 100%;
     height: 80px;
-    border-top: 1px solid #aaa;
-    border-bottom: 1px solid #aaa;
+    border: 1px solid #d2d2d2;
+    border-bottom: none;
     position: relative;
     background-color: #eee;
-
   }
 
   .register-tab-user {
@@ -355,6 +354,12 @@
     height: 80px;
     position: absolute;
     cursor: pointer;
+    border-right: 1px solid #d2d2d2;
+    border-bottom: 1px solid #d2d2d2;
+  }
+
+  .register-tab-user h3{
+    color: #222;
   }
 
   .register-tab-user.active {
@@ -373,6 +378,7 @@
     position: absolute;
     left: 50%;
     cursor: pointer;
+    border-bottom: 1px solid #d2d2d2;
   }
 
   .register-tab-computer.active {
@@ -384,20 +390,26 @@
     color: #FF5A5F;
   }
 
+  .register-content {
+    border: 1px solid #d2d2d2;
+    border-top: none;
+    padding-top: 30px;
+  }
+
   .register-tab h3 {
-    padding: 3px;
+    padding: 3px 0 6px 0;
   }
 
   p.des {
     padding: 3px;
     font-size: 0.7em;
+    color: #666;
   }
 
   form {
     width: 50%;
     text-align: left;
     margin: 0 auto;
-    margin-top: 30px;
   }
 
   .register-btn {
@@ -409,7 +421,7 @@
   }
 
   .reg {
-    margin-top: 40px;
+    margin: 32px 0;
   }
 
   .reg p {
@@ -438,6 +450,13 @@
 
     .register-tab {
       margin-bottom: 30px;
+    }
+    .register-content {
+      border: none;
+      padding-top: 0;
+    }
+    .reg {
+      margin: 20px 0
     }
   }
 </style>
