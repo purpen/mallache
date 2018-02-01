@@ -10,7 +10,7 @@
 
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m item-mAvatar' : '']">
               <el-col :span="titleSpan" class="title avatarhead">
-                <p>头像</p>
+                <p>公司logo</p>
                 <span v-if="isMob">{{ avatarStr }}</span>
               </el-col>
               <el-col :span="isMob ? 12 : 20" class="content avatarcontent">

@@ -169,11 +169,11 @@
                     <span v-else type="warning">待认证</span>
                 </p>
                 <p class="opt" v-if="item.verify_status === 0">
-                  <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" @click="setVerify(2)">拒绝</el-button>
+                  <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" @click="setRefuseRease(2)">拒绝</el-button>
                   <el-button type="primary" class="is-custom" :loading="verifyLoadingBtn" size="small" @click="setVerify(1)">通过</el-button>
                 </p>
                 <p class="opt" v-else>
-                  <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" v-if="item.verify_status === 1" @click="setVerify(2)">拒绝</el-button>
+                  <el-button class="is-custom" :loading="verifyLoadingBtn" size="small" v-if="item.verify_status === 1" @click="setRefuseRease(2)">拒绝</el-button>
                   <el-button type="primary" class="is-custom" :loading="verifyLoadingBtn" size="small" v-else @click="setVerify(1)">通过</el-button>
                 </p>
               </div>
@@ -184,7 +184,13 @@
         </div>
       </el-col>
     </el-row>
-
+    <el-dialog title="请填写拒绝原因" :visible.sync="dialogVisible" size="tiny">
+      <el-input v-model="refuseRease"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="setVerify(evt)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -200,24 +206,25 @@ export default {
     return {
       menuType: 0,
       item: '',
-      itemId: '',
       designItem: [],
       isLoading: false,
       verifyLoadingBtn: false,
-      msg: ''
+      msg: '',
+      dialogVisible: false,
+      itemId: '',
+      refuseRease: '',
+      evt: ''
     }
   },
   methods: {
+    setRefuseRease (evt) {
+      this.dialogVisible = !this.dialogVisible
+      this.evt = evt
+    },
     setVerify(evt) {
-      var url = ''
-      if (evt === 0) {
-        url = api.adminCompanyVerifyCancel
-      } else {
-        url = api.adminCompanyVerifyOk
-      }
       var self = this
       self.verifyLoadingBtn = true
-      self.$http.put(url, {id: self.itemId})
+      self.$http.put(api.adminCompanyVerifyOk, {id: self.itemId, status: evt, verify_summary: self.refuseRease})
       .then (function(response) {
         self.verifyLoadingBtn = false
         if (response.data.meta.status_code === 200) {
@@ -229,28 +236,6 @@ export default {
       })
       .catch (function(error) {
         self.verifyLoadingBtn = false
-        self.$message.error(error.message)
-      })
-    },
-    setStatus(item, evt) {
-      var id = item.id
-      var url = ''
-      if (evt === 0) {
-        url = api.adminCompanyStatusDisable
-      } else {
-        url = api.adminCompanyStatusOk
-      }
-      var self = this
-      self.$http.put(url, {id: id})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          self.item.status = evt
-          self.$message.success('操作成功')
-        } else {
-          self.$message.error(response.meta.message)
-        }
-      })
-      .catch (function(error) {
         self.$message.error(error.message)
       })
     }
