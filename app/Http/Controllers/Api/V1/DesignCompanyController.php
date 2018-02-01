@@ -478,11 +478,12 @@ class DesignCompanyController extends BaseController
             'phone',
             'email'
         ];
-        if(!empty(array_intersect($verify, $all))){
+        if(!empty(array_intersect($verify, array_keys($all)))){
             $all['verify_status'] = 3;
         }
 
-        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
+
         $design->update($all);
         if (!$design) {
             return $this->response->array($this->apiError());

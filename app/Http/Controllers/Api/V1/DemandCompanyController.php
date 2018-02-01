@@ -194,7 +194,7 @@ class DemandCompanyController extends BaseController
     }
 
     /**
-     * @api {post} /demandCompany 更新需求用户信息
+     * @api {put} /demandCompany 更新需求用户信息
      * @apiVersion 1.0.0
      * @apiName demandCompany update
      * @apiGroup demandCompany
@@ -302,11 +302,12 @@ class DemandCompanyController extends BaseController
             'phone',
             'email'
         ];
-        if(!empty(array_intersect($verify, $all))){
+        if(!empty(array_intersect($verify, array_keys($all)))){
             $all['verify_status'] = 3;
         }
 
-        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+//        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+        $demand = DemandCompany::firstOrCreate(['user_id' => $this->auth_user_id]);
 
         $demand->update($all);
         if(!$demand){
