@@ -482,7 +482,7 @@ class DesignCompanyController extends BaseController
             $all['verify_status'] = 3;
         }
 
-        $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
 
         $design->update($all);
         if (!$design) {
