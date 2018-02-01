@@ -345,7 +345,7 @@
     border: 1px solid #d2d2d2;
     border-bottom: none;
     position: relative;
-    background-color: #eee;
+    background-color: #f7f7f7;
   }
 
   .register-tab-user {
@@ -356,10 +356,6 @@
     cursor: pointer;
     border-right: 1px solid #d2d2d2;
     border-bottom: 1px solid #d2d2d2;
-  }
-
-  .register-tab-user h3{
-    color: #222;
   }
 
   .register-tab-user.active {
@@ -398,12 +394,13 @@
 
   .register-tab h3 {
     padding: 3px 0 6px 0;
+    color: #666;
   }
 
   p.des {
     padding: 3px;
     font-size: 0.7em;
-    color: #666;
+    color: #999;
   }
 
   form {
