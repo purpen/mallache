@@ -52,7 +52,14 @@ class DesignCompanyModel extends BaseModel
         'legal_person',
         'document_type',
         'document_number',
-        'open'
+        'open',
+        'company_english',
+        'revenue',
+        'weixin_id',
+        'high_tech_enterprises',
+        'Industrial_design_center',
+        'investment_product',
+        'own_brand'
     ];
 
     /**
@@ -107,7 +114,7 @@ class DesignCompanyModel extends BaseModel
     {
         $design_company = self::findOrFail($id);
         $design_company->verify_status = $verify_status;
-        if($verify_summary){
+        if ($verify_summary) {
             $design_company->verify_summary = $verify_summary;
         }
 
@@ -384,6 +391,18 @@ class DesignCompanyModel extends BaseModel
         }
 
         return true;
+    }
+
+    //公司营收
+    public function getRevenueValueAttribute()
+    {
+        $revenue = $this->revenue;
+        $revenue_value = config('constant.revenue');
+        if(!array_key_exists($revenue, $revenue_value)){
+            return null;
+        }else{
+            return $revenue_value[$revenue];
+        }
     }
 
 }
