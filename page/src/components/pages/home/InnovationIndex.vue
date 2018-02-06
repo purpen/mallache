@@ -140,7 +140,7 @@ export default {
   width: 214px;
   height: 60px;
   margin: 40px auto 0;
-  background: url('../../../assets/images/subject/innovation/button@2x.png') left
+  background: url('../../../assets/images/subject/innovation/Button@2x.png') left
     no-repeat;
   background-size: cover;
 }
