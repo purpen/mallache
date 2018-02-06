@@ -81,6 +81,14 @@ class DesignCompanyOtherIndexOpenTransformer extends TransformerAbstract
             'design_type_val' => $DesignCompany->design_type_val,
             'unique_id' => strval($DesignCompany->unique_id),
             'city_arr' => $DesignCompany->city_arr,
+            'company_english' => $DesignCompany->company_english,
+            'revenue' => $DesignCompany->revenue,
+            'revenue_value' => $DesignCompany->revenue_value,
+            'weixin_id' => $DesignCompany->weixin_id,
+            'high_tech_enterprises' => json_decode($DesignCompany->high_tech_enterprises),
+            'Industrial_design_center' => json_decode($DesignCompany->Industrial_design_center),
+            'investment_product' => $DesignCompany->investment_product,
+            'own_brand' => json_decode($DesignCompany->own_brand)
         ];
     }
 }

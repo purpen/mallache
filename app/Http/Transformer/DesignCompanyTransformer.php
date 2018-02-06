@@ -94,6 +94,14 @@ class DesignCompanyTransformer extends TransformerAbstract
             'document_number' => strval($DesignCompany->document_number),
             'document_image' => $DesignCompany->document_image,
             'verify_summary' => $DesignCompany->verify_summary,
+            'company_english' => $DesignCompany->company_english,
+            'revenue' => $DesignCompany->revenue,
+            'revenue_value' => $DesignCompany->revenue_value,
+            'weixin_id' => $DesignCompany->weixin_id,
+            'high_tech_enterprises' => json_decode($DesignCompany->high_tech_enterprises),
+            'Industrial_design_center' => json_decode($DesignCompany->Industrial_design_center),
+            'investment_product' => $DesignCompany->investment_product,
+            'own_brand' => json_decode($DesignCompany->own_brand)
         ];
     }
 }
