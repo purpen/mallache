@@ -212,6 +212,13 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-top: 60px;
 }
 
+.padding26 {
+  padding-bottom: 26px;
+}
+.text-center {
+  text-align: center
+}
+
 .font-weight4 {
   font-weight: 400;
 }

@@ -1,21 +1,35 @@
 <template>
   <div class="content-box">
-  <div class="slide" ref="slide"
-    :style="{ 'background-image': 'url(' + require ('@/assets/images/home/BG@2x.jpg') + ')', height: calcHeight}">
-      <div class="container clearfix" style="height:100%;">
-        <div class="left">
-          <h3 :class="{'m-h3' : isMob}">铟果D³INGO产品创新SaaS平台</h3>
-          <p :class="{'m-p' : isMob}">用设计重塑品质生活</p>
+    <swiper :options="swiperOption" class="banner">
+      <swiper-slide>
+        <div class="slide" :style="{ background: 'url(' + require ('assets/images/home/BG@2x.jpg') + ') no-repeat center', height: calcHeight}">
+          <div class="container clearfix" style="height:100%;">
+            <div class="left">
+              <h3 :class="{'m-h3' : isMob}">铟果D³INGO产品创新SaaS平台</h3>
+              <p :class="{'m-p' : isMob}">用设计重塑品质生活</p>
+            </div>
+            <div class="draw">
+              <img :src="require('assets/images/home/BG02@2x.png')" width="90%" alt="">
+            </div>
+          </div>
+          <div class="head-cover">
+            <p :class="[{'need': uType !== 2}]"><span>{{tags[0]}}</span>专业设计服务商，<span>{{tags[1]}}</span>成交项目，<span>{{tags[2]}}</span>成交金额</p>
+            <router-link v-if="uType !== 2" to="/item/submit_one">发布项目需求</router-link>
+          </div>
         </div>
-        <div class="draw">
-          <img :src="require('assets/images/home/BG02@2x.png')" width="90%" alt="">
-        </div>
+      </swiper-slide>
+      <swiper-slide>
+        <router-link class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.png') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination">
       </div>
-      <div class="head-cover">
-        <p :class="[{'need': uType !== 2}]"><span>{{tags[0]}}</span>专业设计服务商，<span>{{tags[1]}}</span>成交项目，<span>{{tags[2]}}</span>成交金额</p>
-        <router-link v-if="uType !== 2" to="/item/submit_one">发布项目需求</router-link>
+      <div class="swiper-button-prev" slot="button-prev">
+        <i class="el-icon-arrow-left"></i>
       </div>
-    </div>
+      <div class="swiper-button-next" slot="button-next">
+        <i class="el-icon-arrow-right"></i>
+      </div>
+    </swiper>
 
     <div class="categorie">
       <el-row class="container">
@@ -149,7 +163,6 @@
         </span>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -249,7 +262,7 @@
           pagination: '.swiper-pagination',
           paginationClickable: true,
           lazyLoading: true,
-          autoplay: 5000,
+          autoplay: 500000,
           prevButton: '.swiper-button-prev',
           nextButton: '.swiper-button-next',
           spaceBetween: 0
@@ -354,7 +367,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .banner-link {
+    display: block
+  }
+
   .slide {
+    position: relative;
     color: #475669;
     font-size: 18px;
     width: 100%;
@@ -365,8 +383,7 @@
     background-position: center;
     background-repeat: no-repeat;
     text-align: left;
-    position: relative;
-    padding-bottom: 50px;
+    /* padding-bottom: 50px; */
     overflow: hidden;
   }
 
@@ -736,7 +753,7 @@
     }
 
     .slide .head-cover {
-      padding: 0 15px;
+      /* padding: 0 15px; */
     }
 
     .slide .head-cover p {
@@ -746,7 +763,7 @@
     }
 
     .slide .head-cover p.need {
-      width: calc(100% - 106px);
+      width: calc(100% - 136px);
     }
 
    .slide .head-cover p span {
@@ -756,7 +773,7 @@
 
     .slide .head-cover a {
       font-size: 1.2rem;
-      width: 94px;
+      /* width: 94px; */
     }
 
     .title {

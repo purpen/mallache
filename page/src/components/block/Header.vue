@@ -13,6 +13,7 @@
             <el-menu-item index="article" :route="menu.article">铟果说</el-menu-item>
             <el-menu-item index="design_case" :route="menu.design_case">灵感</el-menu-item>
             <el-menu-item index="commonly_sites" :route="menu.commonly_sites">设计工具</el-menu-item>
+            <el-menu-item index="innovation_index" :route="menu.innovation_index">创新指数</el-menu-item>
           </el-menu>
         </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
@@ -88,6 +89,9 @@
             <router-link :to="menu.commonly_sites">设计工具</router-link>
           </li>
           <li @click="closeMenu">
+            <router-link :to="menu.innovation_index">创新指数</router-link>
+          </li>
+          <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
           </li>
           <li @click="closeMenu" class="m-Sign">
@@ -143,6 +147,7 @@
           article: {path: '/article/list'},
           design_case: {path: '/design_case/general_list'},
           commonly_sites: {path: '/vcenter/commonly_sites'},
+          innovation_index: {path: '/innovation_index'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},

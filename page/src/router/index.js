@@ -197,6 +197,16 @@ const routes = [
     },
     component: require('@/components/pages/subject/YuQuanGifts')
   },
+  // 创新力指数
+  {
+    path: '/innovation_index',
+    name: 'InnovationIndex',
+    meta: {
+      requireAuth: false,
+      title: '中国设计企业创新力指数'
+    },
+    component: require('@/components/pages/home/InnovationIndex')
+  },
   {
     path: '/v_center/match_case/submit',
     name: 'vcenterMatchCaseSubmit',
