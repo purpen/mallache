@@ -84,8 +84,8 @@ class DesignCaseController extends BaseController
      * @apiName designCase store
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
-     * @apiParam {string} prize_time 获奖时间
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他 (字段停用)
+     * @apiParam {string} prize_time 获奖时间 （字段停用）
      * @apiParam {integer} mass_production 是否量产:0.否；1.是；
      * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
@@ -96,6 +96,8 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {integer} cover_id 封面图ID
+     * @apiParam {json} patent 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利 [{'time':2018-1-1,'type': 1}]
+     * @apiParam {json} prizes 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他 [{'time':2018-1-1,'type': 1}]
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -124,6 +126,8 @@ class DesignCaseController extends BaseController
      *      "mass_production": 1,
      *      "cover": "",
      *      "cover_id": 2,
+     *      "patent": [{'time':2018-1-1,'type': 1}],
+     *      "prizes": [{'time':2018-1-1,'type': 1}],
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -181,6 +185,9 @@ class DesignCaseController extends BaseController
         $all['status'] = 1;
         $all['design_company_id'] = $design->id;
         $all['cover_id'] = $request->input("cover_id");
+        $all['patent'] = $request->input('patent');
+        $all['prizes'] = $request->input('prizes');
+
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -210,9 +217,9 @@ class DesignCaseController extends BaseController
      *    "data": {
      *      "id": 23,
      *      "prize": 1,
-     *      "prize_val": "德国红点设计奖",
+     *      "prize_val": "德国红点设计奖",    // 停用
      *      "title": "1",
-     *      "prize_time": "1991-01-20",
+     *      "prize_time": "1991-01-20",     // 停用
      *      "sales_volume": 1,
      *      "sales_volume_val": "100-500w",
      *      "customer": "1",
@@ -231,6 +238,8 @@ class DesignCaseController extends BaseController
      *      "mass_production": 1,
      *      "cover": "",
      *      "cover_id": 2,
+     *      "patent": [{'time':2018-1-1,'type': 1}], // 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利
+     *      "prizes": [{'time':2018-1-1,'type': 1}], // 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -280,8 +289,8 @@ class DesignCaseController extends BaseController
      * @apiName designCase update
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他
-     * @apiParam {string} prize_time 获奖时间
+     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他 (停用)
+     * @apiParam {string} prize_time 获奖时间 （停用）
      * @apiParam {integer} mass_production 是否量产:0.否；1.是；
      * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
@@ -291,6 +300,8 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
      * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
+     * @apiParam {json} patent 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利 [{'time':2018-1-1,'type': 1}]
+     * @apiParam {json} prizes 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他 [{'time':2018-1-1,'type': 1}]
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -319,6 +330,8 @@ class DesignCaseController extends BaseController
      *      "mass_production": 1,
      *      "cover": "",
      *      "cover_id": 2,
+     *      "patent": [{'time':2018-1-1,'type': 1}], // 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利
+     *      "prizes": [{'time':2018-1-1,'type': 1}], // 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他
      *      },
      *      "meta": {
      *      "message": "Success",
@@ -479,6 +492,8 @@ class DesignCaseController extends BaseController
      *      "design_company":{},
      *      "cover": "",
      *      "cover_id": 2,
+     *      "patent": [{'time':2018-1-1,'type': 1}], // 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利
+     *      "prizes": [{'time':2018-1-1,'type': 1}], // 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他
      *      "design_company": {
      *          "id":1,
      *          "company_name": "公司名称",

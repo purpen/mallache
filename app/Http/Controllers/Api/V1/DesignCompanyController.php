@@ -349,6 +349,13 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} legal_person 法人
      * @apiParam {string} document_number 证件号码
      * @apiParam {integer} document_type 证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照
+     * @apiParam {string} company_english 公司英文名
+     * @apiParam {integer} revenue 公司营收 1.100万以下 2.100-500万 3.500-1000万 4.1000-2000万 5.3000-5000万 6.5000万以上
+     * @apiParam {string} weixin_id 微信公众号ID
+     * @apiParam {json} high_tech_enterprises 高新企业：1.市级；2.省级；3.国家级 [{'time': '2018-1-1','type': 1}]
+     * @apiParam {json} Industrial_design_center 工业设计中心：1.市级；2.省级；3.国家级 [{'time': '2018-1-1','type': 1}]
+     * @apiParam {integer} investment_product 投资孵化产品 0.无；1.有；
+     * @apiParam {json} own_brand 自有产品品牌 []
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
@@ -382,6 +389,26 @@ class DesignCompanyController extends BaseController
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
      *          "verify_summary": '',  // 审核备注
+     *          "company_english": "english name",    // 公司英文名
+     *          "revenue": "1",                      // 公司营收 1.100万以下 2.100-500万 3.500-1000万 4.1000-2000万 5.3000-5000万 6.5000万以上
+     *          "revenue_value": "100万以下",         // 公司营收 1.100万以下 2.100-500万 3.500-1000万 4.1000-2000万 5.3000-5000万 6.5000万以上
+     *          "weixin_id": "weixinongzhonghao",       // 微信公众号ID
+     *          "high_tech_enterprises": [              // 高新企业：1.市级；2.省级；3.国家级
+     *          {
+     *              "time": "2018-1-1",
+     *              "type": 1
+     *          }
+     *          ],
+     *          "Industrial_design_center": [           // 工业设计中心：1.市级；2.省级；3.国家级
+     *          {
+     *          "time": "2018-1-1",
+     *          "type": 1
+     *          }
+     *          ],
+     *          "investment_product": "1",              // 投资孵化产品 0.无；1.有
+     *          "own_brand": [                          // 自有产品品牌
+     *          "se"
+     *          ]
      *      },
      *     "meta": {
      *       "message": "",
@@ -478,7 +505,7 @@ class DesignCompanyController extends BaseController
             'phone',
             'email'
         ];
-        if(!empty(array_intersect($verify, array_keys($all)))){
+        if (!empty(array_intersect($verify, array_keys($all)))) {
             $all['verify_status'] = 3;
         }
 

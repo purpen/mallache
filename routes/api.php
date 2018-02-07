@@ -21,6 +21,14 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
 
+    // 获取验证码url
+    $api->get('/captcha/getCaptcha', [
+        'as' => 'captcha.getCaptcha', 'uses' => 'ToolsController@getCaptcha'
+    ]);
+    // 验证码图片资源
+    $api->get('/captcha/{str}', [
+        'as' => 'captcha', 'uses' => 'ToolsController@captcha'
+    ]);
     //验证注册手机号
     $api->get('/auth/phoneState/{phone}', [
         'as' => 'auth.phoneState', 'uses' => 'AuthenticateController@phoneState'

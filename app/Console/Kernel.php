@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
 
         //excel导出
         Commands\designCompanyExcel::class,
+        //设计公司案例数据结构变更
+        Commands\ChangeDesignCase::class,
 
     ];
 
