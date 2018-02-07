@@ -43,7 +43,7 @@
             <el-col :span="isMob ? 24 : 8" v-for="(d, index) in fileList" :key="index">
               <el-card :body-style="{ padding: '0px' }" class="item">
                 <div class="image-box">
-                  <img :src="d.url">
+                  <img v-lazy="d.url">
                 </div>
                 <div class="content">
                   <p>{{ d.name }}</p>

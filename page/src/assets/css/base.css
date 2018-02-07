@@ -1215,7 +1215,7 @@ img.avatar {
 }
 
 .file-list .image-box {
-  height: 180px;
+  /* height: 180px; */
   overflow: hidden;
 }
 
@@ -1258,7 +1258,7 @@ img.avatar {
 }
 
 .file-list .opt {
-  margin: 10px 0 0 0;
+  /* margin: 10px 0 0 0; */
   text-align: right;
 }
 
