@@ -247,7 +247,7 @@ class Tools
 
         //可以设置图片宽高及字体
 //        $builder->build($width = 100, $height = 40, $font = null);
-        $builder->build();
+        $builder->build($width = 100, $height = 35, $font = null);
 
         // 启用失真
         $builder->setDistortion(true);
