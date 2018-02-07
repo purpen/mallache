@@ -55,6 +55,8 @@ class DesignCaseTransformer extends TransformerAbstract
             'open' => $designCase->open,
             'design_company' => $this->designCompany($designCase),
             'created_at' => $designCase->created_at,
+            'patent' => json_decode($designCase->patent),
+            'prizes' => json_decode($designCase->prizes),
         ];
     }
 

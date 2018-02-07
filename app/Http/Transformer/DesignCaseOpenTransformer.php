@@ -55,6 +55,8 @@ class DesignCaseOpenTransformer extends TransformerAbstract
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
             'design_company' => $this->designCompany($designCase),
+            'patent' => json_decode($designCase->patent),
+            'prizes' => json_decode($designCase->prizes),
         ];
     }
 
@@ -100,12 +102,6 @@ class DesignCaseOpenTransformer extends TransformerAbstract
             'unique_id' => strval($DesignCompany->unique_id),
             'created_at' => $DesignCompany->created_at,
             'city_arr' => $DesignCompany->city_arr,
-//            'legal_person' => strval($DesignCompany->legal_person),
-//            'document_type' => intval($DesignCompany->document_type),
-//            'document_type_val' => $DesignCompany->document_type_val,
-//            'document_number' => strval($DesignCompany->document_number),
-//            'document_image' => $DesignCompany->document_image,
-//            'open' => $DesignCompany->open,
         ];
     }
 }

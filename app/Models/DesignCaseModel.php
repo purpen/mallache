@@ -34,7 +34,9 @@ class DesignCaseModel extends BaseModel
         'industry',
         'other_prize',
         'design_company_id',
-        'cover_id'
+        'cover_id',
+        'patent',
+        'prizes',
     ];
 
     /**

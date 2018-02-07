@@ -24,6 +24,9 @@ class Kernel extends ConsoleKernel
         //更改veer的token
         Commands\UpdateVeerToken::class,
 
+        //设计公司案例数据结构变更
+        Commands\ChangeDesignCase::class,
+
     ];
 
     /**
