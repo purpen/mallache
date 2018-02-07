@@ -72,7 +72,7 @@ input {
 
 .markdown-body img {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 a {
@@ -1277,6 +1277,7 @@ img.avatar {
 }
 .el-card {
   transition: all ease .3s;
+  border-radius: none;
 }
 
 .el-card:hover {
@@ -1846,11 +1847,6 @@ td.fc-day.fc-widget-content.fc-today::before {
     font-size: 12px;
   }
 
-  .el-card:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
   .el-input-group--append {
     padding-left: 2px;
   }
@@ -1911,6 +1907,10 @@ td.fc-day.fc-widget-content.fc-today::before {
     margin-right: 0;
   }
 
+  .markdown-body img {
+    width: 100%;
+  }
+
   /*767 end*/
 }
 
@@ -1948,8 +1948,17 @@ td.fc-day.fc-widget-content.fc-today::before {
   width: 100%;
 }
 
+.home-banner.swiper-container {
+  padding-bottom: 0;
+}
+
+.home-banner.swiper-container .swiper-pagination-bullet {
+  background: #fff;
+  opacity: 1;
+}
+
 .swiper-pagination-bullet-active {
-  background: #FF6C70;
+  background: #FF6C70!important;
 }
 
 .swiper-container:hover .swiper-button-next, .swiper-container:hover .swiper-button-prev {

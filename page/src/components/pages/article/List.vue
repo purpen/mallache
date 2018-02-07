@@ -186,7 +186,7 @@
       height: 220px;
       overflow: hidden;
       border-bottom: 1px solid #D2D2D2;
-      border-radius: 4px 4px 0 0;
+      /* border-radius: 4px 4px 0 0; */
   }
 
   .image-box img {
@@ -198,6 +198,7 @@
   }
 
   .content p.title {
+    font-size: 1.8rem;
     color: #222;
     white-space: nowrap;
     overflow: hidden;
@@ -239,7 +240,7 @@
       height: auto;
       max-height: 300px;
       overflow: hidden;
-      border-radius: 4px 4px 0 0;
+      /* border-radius: 4px 4px 0 0; */
     }
     .image-box img {
       display: block;

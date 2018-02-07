@@ -118,7 +118,7 @@ a {
     height: 220px;
     overflow: hidden;
     border-bottom: 1px solid #D2D2D2;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
 }
 
 .image-box img {
@@ -130,24 +130,28 @@ a {
 }
 
 .content a {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   display: block;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  color: #222;
 }
 
 .des {
-  height: 28px;
+  height: 36px;
   margin: 10px 0;
-  overflow: hidden;
 }
 
 .des p {
   color: #666;
   font-size: 1.4rem;
-  line-height: 1.3;
-  text-overflow: ellipsis;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-height: 42px;
 }
 
 .company {
@@ -181,7 +185,7 @@ a {
     height: auto;
     max-height: 300px;
     overflow: hidden;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
   }
   .image-box img {
     display: block;

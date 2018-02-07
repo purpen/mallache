@@ -139,7 +139,7 @@ a {
     height: 220px;
     overflow: hidden;
     border-bottom: 1px solid #D2D2D2;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
 }
 
 .image-box img {
@@ -166,13 +166,13 @@ a {
 
 .des p {
   color: #666;
-  font-size: 1.3rem;
-  line-height: 18px;
+  font-size: 1.4rem;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  max-height: 36px;
+  max-height: 42px;
 }
 
 .company {
@@ -206,7 +206,7 @@ a {
     height: auto;
     max-height: 300px;
     overflow: hidden;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
   }
   .image-box img {
     display: block;

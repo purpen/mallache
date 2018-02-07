@@ -6,7 +6,7 @@
         <el-row :gutter="15" class="report-list">
           <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
             <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-              <div class="picture" :style="{background: 'url('+ ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+              <div class="image-box" :style="{background: 'url('+ ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                 <img :src="ele.cover.middle" :alt="ele.cover.summary">
               </div>
               <article class="item-body clearfix">
@@ -130,7 +130,7 @@
     max-width: 500px;
     margin: auto;
     border: 1px solid #D2D2D2;
-    border-radius: 4px;
+    /* border-radius: 4px; */
     display: block;
     height: 100%;
     transition: all ease .3s;
@@ -172,21 +172,21 @@
     margin-bottom: 20px;
   }
 
-  .picture {
+  .image-box {
     height: 220px;
     overflow: hidden;
     border-bottom: 1px solid #D2D2D2;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
   }
 
-  .picture img {
+  .image-box img {
     display: none
   }
 
   .item-body {
     overflow: hidden;
     padding: 10px;
-    border-radius: 0 0 4px 4px;
+    /* border-radius: 0 0 4px 4px; */
   }
 
   .item-body .title {
@@ -226,13 +226,13 @@
     align-items: center;
   }
   @media screen and (max-width: 767px) {
-  .picture {
+  .image-box {
     height: auto;
     max-height: 300px;
     overflow: hidden;
-    border-radius: 4px 4px 0 0;
+    /* border-radius: 4px 4px 0 0; */
   }
-  .picture img {
+  .image-box img {
     display: block;
     width: 100%;
   }

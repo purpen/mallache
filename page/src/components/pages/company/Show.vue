@@ -9,7 +9,7 @@
             <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100"/>
             <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100"/>
             <h3>{{ item.company_abbreviation }}</h3>
-            <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
+            <p><i class="fx-icon-location"></i><span>{{ item.province_value }}</span><span>{{ item.city_value }}</span></p>
           </div>
 
           <div class="rate">
@@ -165,12 +165,12 @@ export default {
 <style lang="stylus" scoped>
 .design-case-content {
   padding: 20px 40px 20px 40px;
-  border: 1px solid #ccc;
+  // border: 1px solid #ccc;
 }
 
 .design-case-content .title {
   text-align: center;
-  color: #5d6266;
+  color: #666;
   margin: 20px 0 20px 0;
   font-size: 2rem;
 }
@@ -178,7 +178,7 @@ export default {
 .design-case-content h2 {
   text-align: center;
   font-size: 1.8rem;
-  color: #333;
+  color: #222;
   margin: 20px;
 }
 
@@ -188,7 +188,7 @@ export default {
 
 .design-case-content .summary p {
   line-height: 1.6;
-  color: #5d6266;
+  color: #666;
 }
 
 .design-case-content .des {
@@ -209,6 +209,18 @@ export default {
   text-align: center;
 }
 
+.design-case-slide .info h3 {
+  color: #222;
+}
+
+.design-case-slide .info p {
+  color: #222;
+}
+
+.info p span, .info p i {
+  margin-right: 10px
+}
+
 .design-case-slide h3 {
   margin: 20px;
   font-size: 1.8rem;
@@ -217,7 +229,6 @@ export default {
 .design-case-slide .rate {
   padding: 10px;
   text-align: center;
-  border-top: 1px solid rgba(224, 224, 224, 0.46);
 }
 
 .design-case-slide .cate {
@@ -236,11 +247,15 @@ export default {
 }
 
 .cate p.tag span {
-  margin: 5px;
-}
-
-.cate p.tag span:nth-child(2n + 1) {
-  margin-left: 0;
+  margin-top: 10px;
+  margin-right: 10px;
+  background: rgba(0, 0, 0, 0)
+  border: 1px solid #d2d2d2;
+  padding: 7px;
+  line-height: 1;
+  font-size: 12px;
+  height: auto;
+  color: #666;
 }
 
 .design-case-slide .prize {

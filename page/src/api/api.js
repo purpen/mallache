@@ -22,6 +22,7 @@ export default {
   modifyPwd: '/auth/changePassword', // POST 修改密码
   check_account: '/auth/phoneState/{0}',  // 验证手机号是否存在
   fetch_msm_code: '/auth/sms', // 获取手机验证码
+  fetch_img_captcha: '/captcha/getCaptcha', // 获取图片验证码
   user: '/auth/user',  // 获取用户信息
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
   fundLogList: '/fundLogList', // GET 交易记录

@@ -22,6 +22,13 @@
           <el-form-item label="" prop="account">
             <el-input v-model="form.account" name="account" ref="account" placeholder="手机号"></el-input>
           </el-form-item>
+          <el-form-item label="" prop="imgCode">
+            <el-input v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
+              <template slot="append">
+                <img :src="imgCaptchaUrl" alt="">
+              </template>
+            </el-input>
+          </el-form-item>
           <el-form-item label="" prop="smsCode">
             <el-input v-model="form.smsCode" name="smsCode" ref="smsCode" placeholder="验证码">
               <template slot="append">
@@ -77,6 +84,26 @@
           callback()
         }
       }
+      let checkNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请添写手机号'))
+        } else {
+          if (!Number.isInteger(Number(value))) {
+            callback(new Error('手机号只能为数字！'))
+          } else {
+            let len = value.toString().length
+            if (len === 11) {
+              if (/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('手机号格式不正确'))
+              }
+            } else {
+              callback(new Error('手机号长度应为11位'))
+            }
+          }
+        }
+      }
       return {
         isLoadingBtn: false,
         uActive: false,
@@ -87,13 +114,16 @@
           type: 1,
           account: '',
           smsCode: '',
+          imgCode: '',
           password: '',
           checkPassword: ''
         },
         ruleForm: {
           account: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'},
-            {min: 11, max: 11, message: '手机号码位数不正确！', trigger: 'blur'}
+            {validator: checkNumber, trigger: 'blur'}
+          ],
+          imgCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'}
           ],
           smsCode: [
             {required: true, message: '请输入验证码', trigger: 'blur'},
@@ -107,7 +137,9 @@
             {validator: checkPassword, trigger: 'blur'}
           ]
         },
-        identity: ''
+        identity: '',
+        imgCaptchaUrl: '',
+        imgCaptchaStr: ''
       }
     },
     methods: {
@@ -125,9 +157,9 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            let account = this.$refs.account.value
-            let password = this.$refs.password.value
-            let smsCode = this.$refs.smsCode.value
+            let account = this.form.account
+            let password = this.form.password
+            let smsCode = this.form.smsCode
             let type = this.form.type
             if (!type) {
               that.$message.error('请选择客户或设计公司')
@@ -201,75 +233,90 @@
         })
       },
       fetchCode() {
-        let account = this.$refs.account.value
-        if (account === '') {
-          this.$message({
-            message: '请输入手机号码！',
-            type: 'error',
-            duration: 1000
-          })
-          return
-        }
-
-        if (account.length !== 11 || !/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(account)) {
-          this.$message({
-            showClose: true,
-            message: '手机号格式不正确！',
-            type: 'error',
-            duration: 1000
-          })
-          return
-        }
-
-        let url = api.check_account.format(account)
-        // 检测手机号是否存在
-        const that = this
-        that.$http.get(url, {})
-          .then(function (response) {
-            if (response.data.meta.status_code === 200) {
-              // 获取验证码
-              that.$http.post(api.fetch_msm_code, {phone: account})
-                .then(function (response) {
-                  if (response.data.meta.status_code === 200) {
-                    that.time = that.second
-                    that.timer()
-                    that.$emit('send')
-                  } else {
+        let full = 0
+        this.$refs.ruleForm.validateField('account', (err) => {
+          if (err) {
+            full++
+          } else {
+            return false
+          }
+        })
+        this.$refs.ruleForm.validateField('imgCode', (err) => {
+          if (err) {
+            full++
+          } else {
+            return false
+          }
+        })
+        if (!full) {
+          let account = this.form.account
+          let url = api.check_account.format(account)
+          // 检测手机号是否存在
+          const that = this
+          that.$http.get(url, {})
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                // 获取验证码
+                that.$http.post(api.fetch_msm_code, {
+                  phone: account,
+                  captcha: that.form.imgCode,
+                  str: that.imgCaptchaStr
+                })
+                  .then(function (response) {
+                    if (response.data.meta.status_code === 200) {
+                      that.time = that.second
+                      that.timer()
+                      that.$emit('send')
+                    } else {
+                      that.$message({
+                        showClose: true,
+                        message: '获取验证码失败！',
+                        type: 'error'
+                      })
+                    }
+                  })
+                  .catch(function (error) {
                     that.$message({
                       showClose: true,
-                      message: '获取验证码失败！',
+                      message: error.message,
                       type: 'error'
                     })
-                  }
-                })
-                .catch(function (error) {
-                  that.$message({
-                    showClose: true,
-                    message: error.message,
-                    type: 'error'
+                    console.log(error.message)
+                    return false
                   })
-                  console.log(error.message)
-                  return false
+              } else {
+                that.$message({
+                  showClose: true,
+                  message: response.data.meta.message,
+                  type: 'error'
                 })
-            } else {
+                return false
+              }
+            })
+            .catch(function (error) {
               that.$message({
                 showClose: true,
-                message: response.data.meta.message,
+                message: error.message,
                 type: 'error'
               })
               return false
-            }
-          })
-          .catch(function (error) {
-            that.$message({
-              showClose: true,
-              message: error.message,
-              type: 'error'
             })
-            return false
-          })
+        } else {
+          return
+        }
       },
-
+      fetchImgCaptcha() {
+        console.log(this.$refs)
+        this.$http.get(api.fetch_img_captcha)
+        .then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.imgCaptchaUrl = res.data.data.url
+            this.imgCaptchaStr = res.data.data.str
+          } else {
+            console.log('获取验证码失败')
+          }
+        })
+      },
       timer() {
         if (this.time > 0) {
           this.time = this.time - 1
@@ -286,13 +333,13 @@
       }
     },
     mounted() {
+      this.fetchImgCaptcha()
       const self = this
       window.addEventListener('keydown', function (e) {
         if (e.keyCode === 13) {
           self.submit('ruleForm')
         }
       })
-      console.log(this.form.type)
     },
     created() {
       this.form.type = this.$route.params.type

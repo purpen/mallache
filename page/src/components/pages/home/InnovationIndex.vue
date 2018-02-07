@@ -1,6 +1,6 @@
 <template>
   <div class="InnovationIndex">
-    <div :class="[isMob ? 'banner2': 'banner']" :style="{height : calcHeight, maxHeight:' 500px'}">
+    <div :class="[isMob ? 'banner-mob': 'banner']" :style="{height : calcHeight, maxHeight:' 500px'}">
     </div>
     <div class="giftbody">
       <a v-if="!isLogin" @click="upload" class="add-work">加入铟果</a>
@@ -89,13 +89,13 @@ export default {
     let that = this
     window.addEventListener('resize', () => {
       if (that.isMob) {
-        that.calcHeight = calcImgSize(840, 750, false)
+        that.calcHeight = calcImgSize(180, 320, false)
       } else {
         that.calcHeight = calcImgSize(1000, 2880)
       }
     })
     if (this.isMob) {
-      this.calcHeight = calcImgSize(840, 750, false)
+      this.calcHeight = calcImgSize(180, 320, false)
     } else {
       this.calcHeight = calcImgSize(1000, 2880)
     }
@@ -124,20 +124,19 @@ export default {
   background: url('../../../assets/images/subject/innovation/innovationIndex.png')
     no-repeat center;
   background-size: cover;
-  position: relative;
 }
 
-.banner2 {
-  background: url('../../../assets/images/subject/innovation/innovationIndex.png') no-repeat
-    -830px;
-  background-size: cover;
-  position: relative;
+.banner-mob {
+  background: url('../../../assets/images/subject/innovation/home_banner.jpg')
+    no-repeat center;
+  background-size: contain;
 }
 
 .add-work {
+  cursor: pointer;
   text-indent: -999em;
   display: block;
-  width: 214px;
+  width: 216px;
   height: 60px;
   margin: 40px auto 0;
   background: url('../../../assets/images/subject/innovation/Button@2x.png') left
@@ -289,6 +288,34 @@ export default {
   margin-right: 6px;
   border: 5px solid transparent;
   border-left: 10px solid #F9DA58;
+}
+
+@media screen and (max-width: 767px) {
+  .add-work {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    text-indent: -999em;
+    display: block;
+    width: 144px;
+    height: 40px;
+    margin: 20px auto -30px;
+    background: url('../../../assets/images/subject/innovation/Button@2x.png') left
+      no-repeat;
+    background-size: cover;
+  }
+
+  .add-work:hover {
+    background: url('../../../assets/images/subject/innovation/Button@2x.png') center
+      no-repeat;
+    background-size: cover;
+  }
+
+  .add-work:active {
+    background: url('../../../assets/images/subject/innovation/Button@2x.png') right
+      no-repeat;
+    background-size: cover;
+  }
 }
 
 /* 统一合作伙伴样式 */

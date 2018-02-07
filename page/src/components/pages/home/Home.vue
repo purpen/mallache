@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <swiper :options="swiperOption" class="banner">
+    <swiper :options="swiperOption" class="banner home-banner">
       <swiper-slide>
         <div class="slide" :style="{ background: 'url(' + require ('assets/images/home/BG@2x.jpg') + ') no-repeat center', height: calcHeight}">
           <div class="container clearfix" style="height:100%;">
@@ -19,14 +19,15 @@
         </div>
       </swiper-slide>
       <swiper-slide>
-        <router-link class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.png') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
+        <router-link v-if="isMob" class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/home_banner.jpg') + ') no-repeat center',backgroundSize: 'contain', height: calcHeight}"></router-link>
+        <router-link v-else class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.png') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination">
       </div>
-      <div class="swiper-button-prev" slot="button-prev">
+      <div v-if="!isMob" class="swiper-button-prev" slot="button-prev">
         <i class="el-icon-arrow-left"></i>
       </div>
-      <div class="swiper-button-next" slot="button-next">
+      <div v-if="!isMob" class="swiper-button-next" slot="button-next">
         <i class="el-icon-arrow-right"></i>
       </div>
     </swiper>
@@ -137,10 +138,10 @@
           </div>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
-        <div class="swiper-button-prev" slot="button-prev">
+        <div v-if="!isMob" class="swiper-button-prev" slot="button-prev">
           <i class="el-icon-arrow-left"></i>
         </div>
-        <div class="swiper-button-next" slot="button-next">
+        <div v-if="!isMob" class="swiper-button-next" slot="button-next">
           <i class="el-icon-arrow-right"></i>
         </div>
       </swiper>
@@ -262,7 +263,7 @@
           pagination: '.swiper-pagination',
           paginationClickable: true,
           lazyLoading: true,
-          autoplay: 500000,
+          autoplay: 5000,
           prevButton: '.swiper-button-prev',
           nextButton: '.swiper-button-next',
           spaceBetween: 0
@@ -422,6 +423,7 @@
 
   .slide .head-cover {
     position: absolute;
+    box-sizing: border-box;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -430,9 +432,10 @@
     line-height: 80px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
-    background: rgba(0, 0, 0, 0.3)
+    background: rgba(0, 0, 0, 0.3);
+    padding-top: 10px;
   }
 
   .slide .head-cover p {
@@ -569,6 +572,7 @@
     overflow: visible;
   }
 
+  .banner.swiper-container
   .banner > .swiper-pagination-bullets {
     width: 100%;
     bottom: 10px !important;
@@ -623,10 +627,10 @@
   }
 
   .image-box:not(.not-limit) {
-      height: 220px;
-      overflow: hidden;
-      border-bottom: 1px solid #D2D2D2;
-      border-radius: 4px 4px 0 0;
+    height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid #D2D2D2;
+    /* border-radius: 4px 4px 0 0; */
   }
 
   .image-box img {
@@ -754,6 +758,8 @@
 
     .slide .head-cover {
       /* padding: 0 15px; */
+      padding-top: 0;
+      align-items: center
     }
 
     .slide .head-cover p {
@@ -773,6 +779,8 @@
 
     .slide .head-cover a {
       font-size: 1.2rem;
+      position: relative;
+      z-index: 9;
       /* width: 94px; */
     }
 
@@ -817,6 +825,7 @@
 
     .categorie .list p {
       font-size: 12px;
+      height: 36px;
     }
 
     .categorie .list h3 {
@@ -837,12 +846,17 @@
       height: auto!important;
       overflow: hidden;
       max-height: 300px;
-      border-radius: 4px 4px 0 0;
+      /* border-radius: 4px 4px 0 0; */
     }
 
     .image-box img {
       display: block!important;
       width: 100%;
+    }
+
+    .el-card:hover {
+      transform: none;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
     }
   }
 
@@ -855,10 +869,12 @@
     }
   }
 
-  @media screen and (max-width: 320px) {
+  @media screen and (max-width: 330px) {
     .logo-list img {
       width: 40%;
     }
-
+    .home-banner .swiper-pagination {
+      display: none
+    }
   }
 </style>
