@@ -472,6 +472,12 @@
     border-bottom: 1px solid #ccc;
   }
 
+  .content-box .item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
   .no-border {
     border: none;
   }
