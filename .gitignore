@@ -24,3 +24,4 @@ page/deploy.sh
 /apidoc.json
 page/.idea
 *.jsbeautifyrc
+composer.lock
