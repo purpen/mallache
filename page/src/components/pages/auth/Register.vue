@@ -25,7 +25,7 @@
           <el-form-item label="" prop="imgCode">
             <el-input class="imgCodeInput" v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
               <template slot="append" class="aaaaaaa">
-                <div @click="fetchImgCaptcha" class="imgCode" :style="{'background': `url('${imgCaptchaUrl}) no-repeat`}"></div>
+                <div @click="fetchImgCaptcha" class="imgCode" :style="{'background': `url(${imgCaptchaUrl}) no-repeat`}"></div>
               </template>
             </el-input>
           </el-form-item>
@@ -260,8 +260,8 @@
                 // 获取验证码
                 that.$http.post(api.fetch_msm_code, {
                   phone: account,
-                  captcha: that.form.imgCode,
-                  str: that.imgCaptchaStr
+                  str: that.imgCaptchaStr,
+                  captcha: that.form.imgCode
                 })
                   .then(function (response) {
                     if (response.data.meta.status_code === 200) {
@@ -319,7 +319,6 @@
         // }, 1000)
         this.$http.get(api.fetch_img_captcha)
         .then((res) => {
-          this.form.imgCode = res.data.data.str
           if (res.data.meta.status_code === 200) {
             this.imgCaptchaUrl = res.data.data.url
             this.imgCaptchaStr = res.data.data.str

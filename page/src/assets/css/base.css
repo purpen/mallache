@@ -156,7 +156,12 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-right: none !important;
   border-bottom: none !important;
 }
-
+.el-input__inner {
+  color: #222;
+}
+.el-input-group__append {
+  color: #999;
+}
 
 .imgCodeInput .el-input-group__append {
   padding: 0
