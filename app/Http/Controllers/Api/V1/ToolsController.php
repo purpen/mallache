@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ToolsController extends BaseController
 {
@@ -11,6 +12,7 @@ class ToolsController extends BaseController
     public function captcha(Request $request,$str)
     {
         if ($str) {
+            Log::info("图片验证码资源" . $str);
             Tools::captchaCreate($str);
         }else{
             echo 'error';
