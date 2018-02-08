@@ -243,19 +243,22 @@ class Tools
      */
     public static function captchaCreate($str)
     {
-        $builder = new CaptchaBuilder();
+        if ($phrase = Cache::get($str)){
+            $builder = new CaptchaBuilder($phrase);
+        }else{
+            $builder = new CaptchaBuilder();
+            $phrase = $builder->getPhrase();
+
+            // 设置缓存十分钟过期
+            Cache::put($str, $phrase, 10);
+        }
+
 
         //可以设置图片宽高及字体
-//        $builder->build($width = 100, $height = 40, $font = null);
         $builder->build(100, 35);
 
         // 启用失真
         $builder->setDistortion(true);
-
-        $phrase = $builder->getPhrase();
-
-        // 设置缓存两分钟过期
-        Cache::put($str, $phrase, 10);
 
         header('Content-type: image/jpeg');
         $builder->output();
