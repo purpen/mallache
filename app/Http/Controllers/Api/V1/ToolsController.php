@@ -12,7 +12,6 @@ class ToolsController extends BaseController
     public function captcha(Request $request,$str)
     {
         if ($str) {
-            Log::info("图片验证码资源" . $str);
             Tools::captchaCreate($str);
         }else{
             echo 'error';

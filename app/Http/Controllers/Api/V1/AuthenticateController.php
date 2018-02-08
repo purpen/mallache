@@ -241,8 +241,7 @@ class AuthenticateController extends BaseController
         // 验证验证码
         $str = $request->input('str');
         $captcha = $request->input('captcha');
-        Log::info($str);
-        Log::info($captcha);
+
         if(!Tools::checkCaptcha($str, $captcha)){
             return $this->response->array($this->apiSuccess('验证码错误', 403));
         }
