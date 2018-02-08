@@ -243,6 +243,7 @@ class Tools
      */
     public static function captchaCreate($str)
     {
+        $str = trim($str);
         if ($phrase = Cache::get($str)){
             $builder = new CaptchaBuilder($phrase);
         }else{
@@ -272,6 +273,8 @@ class Tools
      */
     public static function checkCaptcha(string $str, string $captcha)
     {
+        $str = trim($str);
+        $captcha = trim($captcha);
         $result = Cache::get($str);
 
         if($result === null){
