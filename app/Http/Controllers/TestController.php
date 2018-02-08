@@ -8,6 +8,10 @@ use App\Models\DesignCaseModel;
 use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Classes\PHPExcel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TestController extends Controller
 {
@@ -78,7 +82,40 @@ class TestController extends Controller
 //        $upload_url = config('filesystems.disks.qiniu.upload_url');
 //        $token = QiniuApi::upToken();
 //        $user_id = 1;
-//        return view('test.index',compact('token' , 'upload_url' , 'random' , 'user_id'));
+        $excelObj = new PHPExcel();
+        $dir = '/tmp/';
+
+        // 给表格添加数据
+        $excelObj->setActiveSheetIndex(0); // 从0开始
+        $currentSheet = $excelObj->getActiveSheet(); // 获取当前活动sheet
+        $currentSheet->setCellValue( 'A1', 'ID' )         //给表的单元格设置数据
+        ->setCellValue( 'B1', '公司全称' )
+        ->setCellValue( 'C1', '公司简称' );
+
+        $designObj = DB::table('design_company')->select([
+            'id as ID',
+            'company_name as 公司全称',
+            'company_abbreviation as 公司简称',
+        ])->get();
+
+        $new_data = [];
+        foreach ($designObj as $k=>$v){
+            $arr = [];
+            foreach ($v as $a=>$b){
+                $arr[$a] = $b;
+            }
+            $new_data[] = $arr;
+
+        }
+
+        $j = 2;
+        foreach($new_data as $val){
+            $currentSheet->setCellValue('A'.$j,$val['ID'])->setCellValue('B'.$j,$val['公司全称'])->setCellValue('C'.$j, $val['公司简称']);
+            $j++; // 每循环一次换一行写入数据
+        }
+        $sheeetWrite = \PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
+        $sheeetWrite->save($dir.'设计公司名称.xlsx');
+
     }
 
     public function create()
@@ -93,5 +130,55 @@ class TestController extends Controller
         $user_id = 1;
         return view('test.index',compact('token' , 'upload_url' , 'random' , 'user_id'));
 
+    }
+
+    /**
+     * 设计公司导出
+     *
+     */
+    public function designCompanyExcel(Request $request)
+    {
+        //查询订单数据集合
+        $data = $this->designCompanySelect()->get();
+        //导出Excel表单
+        $this->createExcel($data, '设计公司');
+    }
+
+    /**
+     * 设计公司查询条件
+     */
+    protected function designCompanySelect()
+    {
+        $orderObj = DB::table('design_company')->select([
+            'id as ID',
+            'company_name as 公司全称',
+            'company_abbreviation as 公司简称',
+        ]);
+        return $orderObj;
+    }
+
+    /**
+     * 生成导出的excel表单
+     * @param $data 数据
+     * @param string $message 名称
+     */
+    protected function createExcel($data, $message = '表单')
+    {
+        $message = strval($message);
+        $new_data = [];
+        foreach ($data as $k=>$v){
+            $arr = [];
+            foreach ($v as $a=>$b){
+                $arr[$a] = $b;
+            }
+            $new_data[] = $arr;
+
+        }
+        //生成excel表单
+        Excel::create($message, function ($excel) use ($new_data) {
+            $excel->sheet('sheet1', function ($sheet) use ($new_data) {
+                $sheet->fromArray($new_data);
+            });
+        })->export('xlsx');
     }
 }

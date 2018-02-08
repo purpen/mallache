@@ -9,6 +9,8 @@ namespace App\Helper;
 
 use App\Models\Message;
 use App\Models\User;
+use Gregwar\Captcha\CaptchaBuilder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Mockery\Exception;
@@ -233,6 +235,61 @@ class Tools
         
         return $result;
     }
-    
 
+    /**
+     * 生成验证码图片
+     *
+     * @param $str string 随机字符串
+     */
+    public static function captchaCreate($str)
+    {
+        $builder = new CaptchaBuilder();
+
+        //可以设置图片宽高及字体
+//        $builder->build($width = 100, $height = 40, $font = null);
+        $builder->build();
+
+        // 启用失真
+        $builder->setDistortion(true);
+
+        $phrase = $builder->getPhrase();
+
+        // 设置缓存两分钟过期
+        Cache::put($str, $phrase, 10);
+
+        header('Content-type: image/jpeg');
+        $builder->output();
+    }
+
+
+    /**
+     * 验证验证码
+     * @param $str string 随机字符串
+     * @param $captcha string 验证码
+     */
+    public static function checkCaptcha(string $str, string $captcha)
+    {
+        $result = Cache::get($str);
+
+        if($result === null){
+            return false;
+        }
+        if(strtolower($result) == strtolower($captcha)){
+            Cache::forget($str);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 生成微秒级 唯一字符串
+     *
+     * @return string
+     */
+    public static function microsecondUniqueStr()
+    {
+        $str = uniqid('mallache', true);
+        return md5($str);
+    }
 }
