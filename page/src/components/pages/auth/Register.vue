@@ -23,9 +23,9 @@
             <el-input v-model="form.account" name="account" ref="account" placeholder="手机号"></el-input>
           </el-form-item>
           <el-form-item label="" prop="imgCode">
-            <el-input v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
-              <template slot="append">
-                <img :src="imgCaptchaUrl" alt="">
+            <el-input class="imgCodeInput" v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
+              <template slot="append" class="aaaaaaa">
+                <div @click="fetchImgCaptcha" class="imgCode" :style="{'background': `url('${imgCaptchaUrl}) no-repeat`}"></div>
               </template>
             </el-input>
           </el-form-item>
@@ -139,7 +139,8 @@
         },
         identity: '',
         imgCaptchaUrl: '',
-        imgCaptchaStr: ''
+        imgCaptchaStr: '',
+        timeInterval: null // 定时器
       }
     },
     methods: {
@@ -270,7 +271,7 @@
                     } else {
                       that.$message({
                         showClose: true,
-                        message: '获取验证码失败！',
+                        message: response.data.meta.message,
                         type: 'error'
                       })
                     }
@@ -306,14 +307,24 @@
         }
       },
       fetchImgCaptcha() {
-        console.log(this.$refs)
+        // let ti = 0
+        // clearInterval(this.timeInterval)
+        // this.timeInterval = setInterval(() => {
+        //   ti++
+        //   console.log(ti)
+        //   if (ti === 600) {
+        //     clearInterval(this.timeInterval)
+        //     this.fetchImgCaptcha()
+        //   }
+        // }, 1000)
         this.$http.get(api.fetch_img_captcha)
         .then((res) => {
+          this.form.imgCode = res.data.data.str
           if (res.data.meta.status_code === 200) {
             this.imgCaptchaUrl = res.data.data.url
             this.imgCaptchaStr = res.data.data.str
           } else {
-            console.log('获取验证码失败')
+            console.log(res.data.meta.message)
           }
         })
       },
@@ -474,6 +485,14 @@
 
   .reg p a {
     color: #FF5A5F;
+  }
+
+  .imgCode {
+    width: 102px;
+    height: 34px;
+    background-size: cover;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 767px) {

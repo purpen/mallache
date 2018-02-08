@@ -157,6 +157,11 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   border-bottom: none !important;
 }
 
+
+.imgCodeInput .el-input-group__append {
+  padding: 0
+}
+
 .avatarhead  .el-upload__tip {
   color: #999;
 }
@@ -1277,7 +1282,7 @@ img.avatar {
 }
 .el-card {
   transition: all ease .3s;
-  border-radius: none;
+  border-radius: 0;
 }
 
 .el-card:hover {
