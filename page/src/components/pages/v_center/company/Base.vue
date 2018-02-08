@@ -23,8 +23,7 @@
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload">
                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                  <i v-else class="el-icon-plus
-                    avatar-uploader-icon"></i>
+                  <i v-else class="avatar-uploader-icon"></i>
                   <div slot="tip" class="el-upload__tip" v-if="!isMob">{{ avatarStr }}</div>
                 </el-upload>
 
@@ -754,13 +753,15 @@
   }
 
   .avatar-uploader-icon {
-    font-size: 28px;
+    display: block;
+    border-radius: 50%;
     color: #999;
+    background: url('../../../../assets/images/avatar_default.png') no-repeat;
+    background-size: contain;
     width: 100px;
     height: 100px;
     line-height: 100px;
     text-align: center;
-    border: 1px dashed #d2d2d2;
   }
 
   .item-m .avatar-uploader-icon {

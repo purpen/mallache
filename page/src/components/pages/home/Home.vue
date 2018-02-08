@@ -370,6 +370,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .home_banner {
+    max-height: 500px
+  }
+
   .banner-link {
     display: block
   }
