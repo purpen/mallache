@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ToolsController extends BaseController
 {
