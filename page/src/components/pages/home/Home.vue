@@ -560,8 +560,8 @@
   }
 
   .el-card:hover {
-    transform: translate3d(0, -3px, 0);
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 9pt 24px rgba(10,10,10,.15);
   }
 
   .anli {

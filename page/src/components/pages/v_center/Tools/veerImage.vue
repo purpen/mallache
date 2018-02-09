@@ -270,12 +270,11 @@
     width: 100%;
     height: auto;
     padding: 6px;
-    transition: all ease .3s;
+    transition: all ease .1s;
   }
 
   img:hover {
-    transform: scale(1.05);
-    /* transform: translate3d(0, -2px, 0); */
+    transform: scale(1.05)
   }
 
   .pagination {

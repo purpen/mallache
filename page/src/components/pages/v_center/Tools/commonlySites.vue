@@ -213,11 +213,11 @@
     height: 100px;
     padding: 20px;
     border: 1px solid #DCDCDC;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 10px 0 #eee;
     border-radius: 10px;
     margin-bottom: 20px;
     cursor: pointer;
-    transition: all ease .3s;
+    transition: all ease .1s;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -225,7 +225,7 @@
 
   .item:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 9pt 24px rgba(10,10,10,.15);
   }
 
   .item a {

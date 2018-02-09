@@ -131,14 +131,15 @@
     margin: auto;
     border: 1px solid #D2D2D2;
     /* border-radius: 4px; */
+    box-shadow: 0 5px 10px 0 #eee;
     display: block;
     height: 100%;
-    transition: all ease .3s;
+    transition: all ease .1s;
   }
 
   .item:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 9pt 24px rgba(10,10,10,.15);
   }
 
   .report {

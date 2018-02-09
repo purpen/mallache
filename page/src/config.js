@@ -544,6 +544,52 @@ const COMPANY_SIZE = [
   }
 ]
 
+// 公司营收
+const COMPANY_REVENUE = [
+  {
+    id: 1,
+    name: '100万以下'
+  },
+  {
+    id: 2,
+    name: '100万-500万'
+  },
+  {
+    id: 3,
+    name: '500万-1000万'
+  },
+  {
+    id: 4,
+    name: '1000万-2000万'
+  },
+  {
+    id: 5,
+    name: '3000万-5000万'
+  },
+  {
+    id: 6,
+    name: '5000万以上'
+  }
+]
+
+// 认证状态
+const VERIFY_STATUS = ['未审核', '成功', '失败', '审核中']
+
+// 级别
+const GRADE = [
+  {
+    id: 1,
+    name: '市级'
+  },
+  {
+    id: 2,
+    name: '省级'
+  },
+  {
+    id: 3,
+    name: '国家级'
+  }
+]
 // 银行卡信息
 const BANK_OPTIONS = [
   {
@@ -830,6 +876,8 @@ module.exports = {
   CYCLE_OPTIONS,
   DESIGN_COST_OPTIONS,
   COMPANY_SIZE,
+  COMPANY_REVENUE,
+  VERIFY_STATUS,
   BANK_OPTIONS,
   DOCUMENT_TYPE,
   COMPANY_PROPERTY_TYPE,
@@ -844,6 +892,6 @@ module.exports = {
   AWARD_CASE_CATEGORY,
   NOTICE_EVT,
   BLOCK_TYPE,
-
+  GRADE,
   TEST
 }

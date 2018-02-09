@@ -162,7 +162,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .el-input-group__append {
   color: #999;
 }
-
+.el-date-editor.el-input {
+  width: auto;
+}
 .imgCodeInput .el-input-group__append {
   padding: 0
 }
@@ -1285,14 +1287,16 @@ img.avatar {
 .card {
   margin: 10px 0;
 }
+
 .el-card {
-  transition: all ease .3s;
+  transition: all ease .1s;
   border-radius: 0;
+  box-shadow: 0 5px 10px 0 #eee
 }
 
 .el-card:hover {
   transform: translate3d(0, -2px, 0);
-  box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 9pt 24px rgba(10,10,10,.15);
 }
 
 .pcCarousel .el-carousel__indicators {
