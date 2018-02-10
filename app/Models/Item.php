@@ -17,7 +17,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id','position'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id','position','design_types'];
 
     /**
      * 添加返回字段
@@ -30,6 +30,7 @@ class Item extends BaseModel
         'company_area_value',
         'status_value',
         'company_size_value',
+        'design_types_value',
     ];
 
     //一对一关联UX UI设计表
@@ -131,6 +132,8 @@ class Item extends BaseModel
                     'created_at' => $item->created_at,
                     'design_cost' => null,
                     'cycle' => null,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
                 ];
             case 1:
                 $info = $item->productDesign;
@@ -140,6 +143,8 @@ class Item extends BaseModel
                     'type_value' => $item->type_value,
                     'design_type' => $item->design_type,
                     'design_type_value' => $item->design_type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
@@ -192,6 +197,8 @@ class Item extends BaseModel
                     'type_value' => $item->type_value,
                     'design_type' => (int)$item->design_type,
                     'design_type_value' => $item->design_type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
                     'industry' => $info->industry,
                     'industry_value' => $info->industry_value,
                     'status' => $item->status,
@@ -255,7 +262,7 @@ class Item extends BaseModel
         return $type_value;
     }
 
-    //设计类别
+    //设计类别(准备停用)
     public function getDesignTypeValueAttribute()
     {
         $item_type = config('constant.item_type');
@@ -267,6 +274,24 @@ class Item extends BaseModel
         }
 
         return '';
+    }
+
+    //设计类别多选
+    public function getDesignTypesValueAttribute()
+    {
+        $item_type = config('constant.item_type');
+
+        $design_types = json_decode($this->design_types,true);
+        $arr = [];
+        if(array_key_exists($this->type, $item_type)) {
+            foreach ($design_types as $v) {
+                if(array_key_exists($v, $item_type[$this->type])){
+                    $arr[] = $item_type[$this->type][$v];
+                }
+            }
+        }
+
+        return $arr;
     }
 
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
