@@ -21,7 +21,7 @@
         </swiper-slide>
         <swiper-slide>
           <router-link v-if="isMob" class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/home_banner.jpg') + ') no-repeat center',backgroundSize: 'contain', height: calcHeight}"></router-link>
-          <router-link v-else class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.png') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
+          <router-link v-else class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.jpg') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination">
         </div>

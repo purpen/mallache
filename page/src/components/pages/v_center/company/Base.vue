@@ -62,7 +62,6 @@
               </el-col>
             </el-row>
 
-            <!--
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>联系人信息</p>
@@ -96,7 +95,6 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('contact')">编辑</a>
               </el-col>
             </el-row>
-            -->
 
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
@@ -356,30 +354,27 @@
               </el-col>
             </el-row>
 
-            <!-- <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>高新企业</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
-
                 <div v-if="element.high_tech_enterprises">
-                  <el-row :gutter="15">
-                    <el-col :span="16" v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">
-                      <el-date-picker
-                        v-model="form.high_tech_enterprises[index].time"
-                        type="date"
-                        placeholder="认定时间">
-                      </el-date-picker>
-                      <el-select v-model.number="form.high_tech_enterprises[index].type" placeholder="认定级别" v-if="element.high_tech_enterprises">
-                        <el-option
-                          v-for="item in companyGradeOptions"
-                          :label="item.label"
-                          :key="item.index"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </el-col>
-                  </el-row>
+                  <el-col :span="16" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
+                    <el-date-picker
+                      v-model="form.high_tech_enterprises[index].time"
+                      type="date"
+                      placeholder="认定时间">
+                    </el-date-picker>
+                    <el-select v-model.number="form.high_tech_enterprises[index].type" placeholder="认定级别" v-if="element.high_tech_enterprises">
+                      <el-option
+                        v-for="(item, index) in companyGradeOptions"
+                        :label="item.label"
+                        :key="index"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-col>
                 </div>
                 <p v-else v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">{{ ele.time}}{{ ele.type }}</p>
               </el-col>
@@ -388,7 +383,7 @@
                    @click="saveBtn('high_tech_enterprises', ['high_tech_enterprises'], true)">保存</a>
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('high_tech_enterprises')">编辑</a>
               </el-col>
-            </el-row> -->
+            </el-row>
           </div>
         </div>
       </el-col>
@@ -568,7 +563,6 @@
         let row = {}
         if (multi) {
           row = this.form[nameArr[0]]
-          console.log(row)
         } else {
           for (let i = 0; i < nameArr.length; i++) {
             let name = nameArr[i]
@@ -615,27 +609,27 @@
         }
 
         // 高新企业
-        // if (mark === 'high_tech_enterprises') {
-        //   let arrs = []
-        //   for (let i = 0; i < row.high_tech_enterprises.length; i++) {
-        //     let child = {}
-        //     if (row.high_tech_enterprises[i].time) {
-        //       child.time = row.high_tech_enterprises[i].time.format('yyyy-MM-dd')
-        //     } else {
-        //       this.$message.error('请完善您的公司信息！111')
-        //       return
-        //     }
-        //     if (row.high_tech_enterprises[i].type) {
-        //       child.type = row.high_tech_enterprises[i].type
-        //     } else {
-        //       this.$message.error('请完善您的公司信息！222')
-        //       return
-        //     }
-        //     arrs.push(child)
-        //   }
-        //   row = { high_tech_enterprises: JSON.stringify(arrs) }
-        //   row = { high_tech_enterprises: JSON.stringify([row]) }
-        // }
+        if (mark === 'high_tech_enterprises') {
+          let arrs = []
+          console.log(this.form.high_tech_enterprises)
+          for (let i = 0; i < row.length; i++) {
+            let child = {}
+            if (row[i].time) {
+              child.time = this.form.high_tech_enterprises[i].time.format('yyyy-MM-dd')
+            } else {
+              this.$message.error('请完善您的公司信息！111')
+              return
+            }
+            if (row[i].type) {
+              child.type = this.form.high_tech_enterprises[i].type
+            } else {
+              this.$message.error('请完善您的公司信息！222')
+              return
+            }
+          }
+          row = { high_tech_enterprises: JSON.stringify(arrs) }
+          row = { high_tech_enterprises: JSON.stringify([row]) }
+        }
         that.$http({method: 'PUT', url: api.designCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
@@ -746,7 +740,6 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
-              console.log(response.data.data)
               // 重新渲染
               that.$nextTick(function () {
                 that.form = response.data.data
@@ -775,6 +768,7 @@
                 if (response.data.data.logo_image) {
                   that.imageUrl = response.data.data.logo_image.logo
                 }
+                console.log(that.form.high_tech_enterprises)
                 if (that.form.high_tech_enterprises.length) {
                   for (let i of that.form.high_tech_enterprises) {
                     switch (i.type) {

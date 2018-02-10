@@ -94,7 +94,7 @@ export default {
 </script>
 <style scoped>
 .banner {
-  background: url('../../../assets/images/subject/innovation/innovationIndex.png')
+  background: url('../../../assets/images/subject/innovation/innovationIndex.jpg')
     no-repeat center;
   background-size: cover;
 }
@@ -181,7 +181,7 @@ export default {
 
 .innovation-foot img {
   width: 100%;
-  margin-bottom: -53px;
+  margin-bottom: -54px;
 }
 
 .icon, .icon-dot {
