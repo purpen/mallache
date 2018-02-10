@@ -239,7 +239,7 @@ export default {
   position: absolute;
   right: -20px;
   top: 50%;
-  margin-top: -5px;
+  margin-top: -4px;
   width: 10px;
   height: 10px;
   background: url('../../../assets/images/subject/innovation/dot@2x.png')
@@ -287,7 +287,7 @@ export default {
     display: block;
     width: 144px;
     height: 40px;
-    margin: 20px auto 0;
+    margin: 30px auto -10px;
     background: url('../../../assets/images/subject/innovation/Button@2x.png') left
       no-repeat;
     background-size: cover;
