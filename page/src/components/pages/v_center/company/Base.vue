@@ -356,7 +356,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+            <!-- <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>高新企业</p>
               </el-col>
@@ -364,15 +364,13 @@
 
                 <div v-if="element.high_tech_enterprises">
                   <el-row :gutter="15">
-                    <el-col :span="8">
+                    <el-col :span="16" v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">
                       <el-date-picker
-                        v-model="form.high_tech_enterprises.time"
+                        v-model="form.high_tech_enterprises[index].time"
                         type="date"
                         placeholder="认定时间">
                       </el-date-picker>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-select v-model.number="form.high_tech_enterprises.type" placeholder="认定级别" v-if="element.high_tech_enterprises">
+                      <el-select v-model.number="form.high_tech_enterprises[index].type" placeholder="认定级别" v-if="element.high_tech_enterprises">
                         <el-option
                           v-for="item in companyGradeOptions"
                           :label="item.label"
@@ -383,14 +381,14 @@
                     </el-col>
                   </el-row>
                 </div>
-                <p v-else v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">{{ ele.time}}{{ ele.type + '高新技术企业' }}</p>
+                <p v-else v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">{{ ele.time}}{{ ele.type }}</p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.high_tech_enterprises" title="保存" href="javascript:void(0)"
-                   @click="saveBtn('high_tech_enterprises', ['high_tech_enterprises'])">保存</a>
+                   @click="saveBtn('high_tech_enterprises', ['high_tech_enterprises'], true)">保存</a>
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('high_tech_enterprises')">编辑</a>
               </el-col>
-            </el-row>
+            </el-row> -->
           </div>
         </div>
       </el-col>
@@ -527,7 +525,7 @@
         for (let i = 0; i < typeData.GRADE.length; i++) {
           let item = {
             value: typeData.GRADE[i]['id'],
-            label: typeData.GRADE[i]['name'] + '高新技术企业'
+            label: typeData.GRADE[i]['name']
           }
           items.push(item)
         }
@@ -565,20 +563,25 @@
           this.form.branch_office = 0
         }
       },
-      saveBtn(mark, nameArr) {
+      saveBtn(mark, nameArr, multi = false) {
         let that = this
         let row = {}
-        for (let i = 0; i < nameArr.length; i++) {
-          let name = nameArr[i]
-          row[name] = this.form[name]
-          if (!row[name]) {
-            if (name === 'area') {
-              row['area'] = 0
-            } else if (mark === 'branch') {
-              continue
-            } else {
-              this.$message.error('请完善您的公司信息！')
-              return false
+        if (multi) {
+          row = this.form[nameArr[0]]
+          console.log(row)
+        } else {
+          for (let i = 0; i < nameArr.length; i++) {
+            let name = nameArr[i]
+            row[name] = this.form[name]
+            if (!row[name]) {
+              if (name === 'area') {
+                row['area'] = 0
+              } else if (mark === 'branch') {
+                continue
+              } else {
+                this.$message.error('请完善您的公司信息！')
+                return false
+              }
             }
           }
         }
@@ -610,13 +613,29 @@
             return false
           }
         }
+
         // 高新企业
-        if (mark === 'high_tech_enterprises') {
-          row.time = row.high_tech_enterprises.time.format('yyyy-MM-dd')
-          row.type = row.high_tech_enterprises.type
-          delete row.high_tech_enterprises
-          row = { high_tech_enterprises: JSON.stringify([row]) }
-        }
+        // if (mark === 'high_tech_enterprises') {
+        //   let arrs = []
+        //   for (let i = 0; i < row.high_tech_enterprises.length; i++) {
+        //     let child = {}
+        //     if (row.high_tech_enterprises[i].time) {
+        //       child.time = row.high_tech_enterprises[i].time.format('yyyy-MM-dd')
+        //     } else {
+        //       this.$message.error('请完善您的公司信息！111')
+        //       return
+        //     }
+        //     if (row.high_tech_enterprises[i].type) {
+        //       child.type = row.high_tech_enterprises[i].type
+        //     } else {
+        //       this.$message.error('请完善您的公司信息！222')
+        //       return
+        //     }
+        //     arrs.push(child)
+        //   }
+        //   row = { high_tech_enterprises: JSON.stringify(arrs) }
+        //   row = { high_tech_enterprises: JSON.stringify([row]) }
+        // }
         that.$http({method: 'PUT', url: api.designCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
@@ -644,7 +663,20 @@
                   that.form.branch = '无'
                 }
               } else if (mark === 'high_tech_enterprises') {
-                that.form.high_tech_enterprises.time = that.form.high_tech_enterprises.time.format('yyyy-MM-dd')
+                for (let i = 0; i < item.high_tech_enterprises.length; i++) {
+                  that.form.high_tech_enterprises[i].time = item.high_tech_enterprises.length[i].time.format('yyyy-MM-dd')
+                  switch (item.high_tech_enterprises.length[i].type) {
+                    case 1:
+                      that.form.high_tech_enterprises.length[i].type = '市级'
+                      break
+                    case 2:
+                      that.form.high_tech_enterprises.length[i].type = '省级'
+                      break
+                    case 3:
+                      that.form.high_tech_enterprises.length[i].type = '国家级'
+                      break
+                  }
+                }
               }
             } else {
               that.$message.error(response.data.meta.message)
@@ -743,18 +775,17 @@
                 if (response.data.data.logo_image) {
                   that.imageUrl = response.data.data.logo_image.logo
                 }
-                if (that.form.high_tech_enterprises !== null) {
+                if (that.form.high_tech_enterprises.length) {
                   for (let i of that.form.high_tech_enterprises) {
-                    console.log(i.type)
                     switch (i.type) {
                       case 1:
-                        i.type = '市级'
+                        i.type = '市级高新技术企业'
                         break
                       case 2:
-                        i.type = '省级'
+                        i.type = '省级高新技术企业'
                         break
                       case 3:
-                        i.type = '国家级'
+                        i.type = '国家级高新技术企业'
                         break
                     }
                   }

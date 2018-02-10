@@ -4,53 +4,31 @@
     </div>
     <div class="giftbody">
       <a v-if="!isLogin" @click="upload" class="add-work">加入铟果</a>
-      <h2><span class="icon">榜单说明</span></h2>
-      <p class="padding26">进入21世纪第二个10年后，“科技创新”“技术创新”成为国家自上而下着力推动的国力发展重要方向之一，“创新设计”被提升到决胜未来的战略地位。与此同时，在全民消费升级和新中产崛起的时代背景下，北京太火鸟科技有限公司（简称“太火鸟”）全新推出了“铟果D³INGO”创新产品投资孵化平台（简称铟果），针对我国现有设计企业与机构进行了全面、客观的分析，结合自有大数据、云平台算法，以季度为单位，生成最能够体现我国当前设计、创新机构各方面能力与综合实力的榜单，也就是太火鸟·铟果D³INGO中国设计企业创新力指数。</p>
+      <h2><span class="icon">铟果D³IN Index指数说明</span></h2>
+      <p class="padding26">太火鸟·铟果D³IN Index“中国设计企业创新力指数”是全球首个基于人工智能的设计创新企业综合实力指数排行榜，由太火鸟科技旗下的产品创新引擎——铟果D³INGO（简称铟果）于2018年初正式推出。</p>
 
-      <h2><span class="icon">评选目的</span></h2>
-      <p>从第三方的角度，综合多平台资源与数据，通过精确、科学的分析、计算推倒出最终结果，更加直观地体现中国设计力量，让外界对我国设计机构的总体情况与各自特色有更加系统、直观、快速的认识，给需求方与品牌方在实际工作中提供一定的指导与参考素材，也让设计机构明确自身优劣，在进行下阶段规划时能够更加明确自身情况。</p>
+      <p class="padding26">太火鸟·铟果D³IN 太火鸟科技作为中国领先的产品创新引擎以及智能分发平台，以中国创新产品策源地为愿景，致力于打通设计创新、优质制造、消费零售为一体的全新创新价值链，在消费升级的大时代趋势下助力我国传统产业高效转型。</p>
 
-      <h2><span class="icon">调查目标</span></h2>
-      <p class="padding26 text-center">设计领域，主要是工业设计与交互设计领域的所有从业机构。</p>
+      <p class="padding26">如今，设计创新与科技创新与成为驱动全球经济发展的新主流，“设计创新”更是决胜全人类的未来的战略关键。基于此时代背景，太火鸟旗下“D³IN铟立方未来实验室”历时一年，运用人工智能技术、大数据、云计算及深度学习算法，自主研发推出了核心指数算法，形成了太火鸟·铟果D³IN Index“中国设计企业创新力指数”排行产品。</p>
 
-      <h2><span class="icon">算法说明</span></h2>
-      <h3 class="first-icon-dot"><span class="icon-dot">维度</span></h3>
-      <el-row class="latitude">
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/information@2x.png')" alt="基本信息">
-          <p>基本信息</p>
-        </el-col>
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/design@2x.png')" alt="设计力">
-          <p>设计力</p>
-        </el-col>
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/innovate@2x.png')" alt="创新力">
-          <p>创新力</p>
-        </el-col>
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/business@2x.png')" alt="商业力">
-          <p>商业力</p>
-        </el-col>
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/effect@2x.png')" alt="影响力">
-          <p>影响力</p>
-        </el-col>
-        <el-col :xs="8" :sm="4" :lg="4">
-          <img v-lazy="require('assets/images/subject/innovation/evaluate@2x.png')" alt="客户评价">
-          <p>客户评价</p>
-        </el-col>
-      </el-row>
+      <p>太火鸟·铟果D³IN Index“中国设计企业创新力指数”整合了设计创意产业各环节资源，对全国数千家设计机构的企业规模、市场份额、获奖数量、品牌影响等数据进行深度筛选、分析，划分为基础能力、创新能力、设计能力、商业能力、社会信誉、行业影响力六大评级维度，以季度为单位，生成最能够体现中国设计创新机构综合实力的综合性指数榜单。</p>
+
+      <h2><span class="icon">铟果D³IN Index指数排行目标</span></h2>
+      <p class="text-center">设计创新领域，主要是工业设计与交互设计领域的所有从业机构。</p>
+
+      <h2><span class="icon">铟果D³IN Index指数算法说明</span></h2>
       <h3 class="first-icon-dot"><span class="icon-dot">数据来源</span></h3>
-      <p class="data-origin"><i></i>设计公司在铟果平台填写的公司资料；</p>
-      <p class="data-origin"><i></i>技术爬虫从其他第三方平台抓取；</p>
-      <p class="data-origin"><i></i>设计公司主动提供。</p>
+      <p class="data-origin"><i></i><span>设计机构在铟果D³INGO产品创新SaaS平台提交的真实有效数据；</span>
+      <p class="data-origin"><i></i><span>设计企业官方网站、微信公众号，以及百度指数、微信指数等互联网开放数据；</span></p>
+      <p class="data-origin"><i></i><span>来自京东商城、淘宝、天猫、小米、亚马逊等创新产品销售平台的开放数据；</span></p>
+      <p class="data-origin"><i></i><span>包括所有全球设计类奖项、展览、媒体、设计类行业协会、设计院校、设计机构的授权以及公开数据；</span></p>
+      <p class="data-origin"><i></i><span>国家统计局、工信部、工商局、专利局等第三方公开数据。</span>
 
       <h3><span class="icon-dot">权重分析</span></h3>
-      <p class="text-center">本榜单在设计企业基础信息之上，突出互联网影响力和社会化（用户点评）指数所占权重。</p>
+      <p class="text-center">本指数在设计企业的基础条件上，相对看重企业的商业变现实力、创新力、设计力与客户服务反馈情况，针对不同信息分配不同的权重，以求最科学合理地体现企业在不同层面上的实力与潜能。</p>
 
       <h3><span class="icon-dot">发布密度</span></h3>
-      <p class="text-center">每个季度发布一次，以及所有目标机构的排名总榜单。</p>
+      <p class="text-center">指数根据企业具体操作实时更新，按季度公布季度指数情况 。</p>
 
       <h3><span class="icon-dot">数据采集周期</span></h3>
       <p class="text-center">每个季度的第一天至第二个季度的前两天。</p>
@@ -58,13 +36,8 @@
 
       <h2><span class="icon">支持单位</span></h2>
       <section class="img-list clearfix">
-        <img v-lazy="require(`assets/images/subject/logo/CIDA@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/haiquan@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/InnovationWorks@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/JD@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/mi@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/zhejiang@2x.png`)">
-        <img v-lazy="require(`assets/images/subject/logo/zhenfund@2x.png`)">
+        <img v-for="(ele, index) in 14" :key="index"
+          v-lazy="require(`assets/images/subject/logo/${ele}.jpg`)">
       </section>
     </div>
     <div class="innovation-foot">
@@ -186,7 +159,7 @@ export default {
 }
 
 .img-list {
-  max-width: 666px;
+  max-width: 840px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -202,7 +175,7 @@ export default {
   margin-bottom: 18px;
 }
 
-.img-list img:nth-child(4) {
+.img-list img:nth-child(5n) {
   margin-right: 0;
 }
 
@@ -278,11 +251,18 @@ export default {
   padding: 10px 0 40px;
 }
 .data-origin {
-  width: 260px;
+  max-width: 512px;
   margin: 0 auto;
+  padding-left: 20px;
 }
-.data-origin i {
-  display: inline-block;
+.data-origin span {
+  position: relative;
+}
+.data-origin span::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 5px;
   width: 0;
   height: 0;
   margin-right: 6px;
@@ -316,6 +296,55 @@ export default {
       no-repeat;
     background-size: cover;
   }
+  .giftbody h2 {
+    font-size: 18px;
+    padding: 40px 0 20px;
+  }
+
+  .icon:before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .icon:after {
+    content: '';
+    position: absolute;
+    right: -28px;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+  }
+  .giftbody h3 {
+    font-size: 16px;
+    padding:  20px 0
+  }
+  .icon-dot::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+  }
+  .icon-dot::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .giftbody .first-icon-dot {
+    padding: 0 0 20px;
+  }
+  .img-list {
+    padding-top: 6px
+  }
 }
 
 /* 统一合作伙伴样式 */
@@ -332,7 +361,7 @@ export default {
     margin-right: 0;
   }
 
-  .img-list img:nth-child(4) {
+  .img-list img:nth-child(5n) {
     margin-right: 30px;
   }
 }
@@ -345,9 +374,11 @@ export default {
     flex-wrap: wrap;
     justify-content: flex-start
   }
-  .img-list img {
+
+  .img-list img:nth-child(n) {
     margin-right: 18px;
   }
+
   .img-list img:nth-child(2n) {
     margin-right: 0;
   }
@@ -355,6 +386,7 @@ export default {
 
 
 @media screen and (max-width: 353px) {
+
   .img-list {
     max-width: 228px;
     margin: 0 auto;
@@ -362,7 +394,8 @@ export default {
     flex-wrap: wrap;
     justify-content: flex-start
   }
-  .img-list img {
+
+  .img-list img:nth-child(n) {
     width: 96px;
     height: 40px;
     margin-right: 18px;

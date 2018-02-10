@@ -1714,6 +1714,9 @@ td.fc-day.fc-widget-content.fc-today::before {
     margin-bottom: 8px;
     margin-right: 5px;
   }
+  .el-row.item .el-select {
+    margin-right: 0;
+  }
 
   /*ui设计选择框*/
   .el-radio {
