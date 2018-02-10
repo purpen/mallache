@@ -4,19 +4,19 @@
     </div>
     <div class="giftbody">
       <a v-if="!isLogin" @click="upload" class="add-work">加入铟果</a>
-      <h2><span class="icon">铟果D³IN Index指数说明</span></h2>
-      <p class="padding26">太火鸟·铟果D³IN Index“中国设计企业创新力指数”是全球首个基于人工智能的设计创新企业综合实力指数排行榜，由太火鸟科技旗下的产品创新引擎——铟果D³INGO（简称铟果）于2018年初正式推出。</p>
+      <h2><span class="icon">铟果D³INGO Index指数说明</span></h2>
+      <p class="padding26">太火鸟·铟果D³INGO Index“中国设计企业创新力指数”是全球首个基于人工智能的设计创新企业综合实力指数排行榜，由太火鸟科技旗下的产品创新引擎——铟果D³INGO（简称铟果）于2018年初正式推出。</p>
 
-      <p class="padding26">太火鸟·铟果D³IN 太火鸟科技作为中国领先的产品创新引擎以及智能分发平台，以中国创新产品策源地为愿景，致力于打通设计创新、优质制造、消费零售为一体的全新创新价值链，在消费升级的大时代趋势下助力我国传统产业高效转型。</p>
+      <p class="padding26">太火鸟·铟果D³INGO 作为中国领先的产品创新引擎以及智能分发平台，以中国创新产品策源地为愿景，致力于打通设计创新、优质制造、消费零售为一体的全新创新价值链，在消费升级的大时代趋势下助力我国传统产业高效转型。</p>
 
-      <p class="padding26">如今，设计创新与科技创新与成为驱动全球经济发展的新主流，“设计创新”更是决胜全人类的未来的战略关键。基于此时代背景，太火鸟旗下“D³IN铟立方未来实验室”历时一年，运用人工智能技术、大数据、云计算及深度学习算法，自主研发推出了核心指数算法，形成了太火鸟·铟果D³IN Index“中国设计企业创新力指数”排行产品。</p>
+      <p class="padding26">如今，设计创新与科技创新与成为驱动全球经济发展的新主流，“设计创新”更是决胜全人类的未来的战略关键。基于此时代背景，太火鸟旗下“D³IN铟立方未来实验室”历时一年，运用人工智能技术、大数据、云计算及深度学习算法，自主研发推出了核心指数算法，形成了太火鸟·铟果D³INGO Index“中国设计企业创新力指数”排行产品。</p>
 
-      <p>太火鸟·铟果D³IN Index“中国设计企业创新力指数”整合了设计创意产业各环节资源，对全国数千家设计机构的企业规模、市场份额、获奖数量、品牌影响等数据进行深度筛选、分析，划分为基础能力、创新能力、设计能力、商业能力、社会信誉、行业影响力六大评级维度，以季度为单位，生成最能够体现中国设计创新机构综合实力的综合性指数榜单。</p>
+      <p>太火鸟·铟果D³INGO Index“中国设计企业创新力指数”整合了设计创意产业各环节资源，对全国数千家设计机构的企业规模、市场份额、获奖数量、品牌影响等数据进行深度筛选、分析，划分为基础能力、创新能力、设计能力、商业能力、社会信誉、行业影响力六大评级维度，以季度为单位，生成最能够体现中国设计创新机构综合实力的综合性指数榜单。</p>
 
-      <h2><span class="icon">铟果D³IN Index指数排行目标</span></h2>
+      <h2><span class="icon">铟果D³INGO Index指数排行目标</span></h2>
       <p class="text-center">设计创新领域，主要是工业设计与交互设计领域的所有从业机构。</p>
 
-      <h2><span class="icon">铟果D³IN Index指数算法说明</span></h2>
+      <h2><span class="icon">铟果D³INGO Index指数算法说明</span></h2>
       <h3 class="first-icon-dot"><span class="icon-dot">数据来源</span></h3>
       <p class="data-origin"><i></i><span>设计机构在铟果D³INGO产品创新SaaS平台提交的真实有效数据；</span>
       <p class="data-origin"><i></i><span>设计企业官方网站、微信公众号，以及百度指数、微信指数等互联网开放数据；</span></p>
@@ -297,26 +297,26 @@ export default {
     background-size: cover;
   }
   .giftbody h2 {
-    font-size: 18px;
+    font-size: 17px;
     padding: 40px 0 20px;
   }
 
   .icon:before {
     content: '';
     position: absolute;
-    left: -28px;
+    left: -24px;
     top: 4px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .icon:after {
     content: '';
     position: absolute;
-    right: -28px;
+    right: -24px;
     top: 4px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
   .giftbody h3 {
     font-size: 16px;
