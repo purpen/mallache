@@ -137,19 +137,23 @@ export default {
 
 .giftbody h2 {
   font-size: 24px;
+  line-height: 1;
   color: #222;
-  padding: 60px 0 30px;
+  margin-top: 30px;
+  padding: 30px 0;
   text-align: center
 }
 
 .giftbody h3 {
   font-size: 22px;
+  line-height: 1;
   color: #222;
   padding: 50px 0 20px;
   text-align: center
 }
 .giftbody .first-icon-dot {
-  padding: 0 0 30px;
+  padding: 0;
+  margin-bottom: 30px;
 }
 
 .giftbody p {
@@ -192,7 +196,8 @@ export default {
   content: '';
   position: absolute;
   left: -30px;
-  top: 7px;
+  top: 50%;
+  margin-top: -10px;
   width: 20px;
   height: 20px;
   background: url('../../../assets/images/subject/innovation/left@2x.png')
@@ -205,7 +210,8 @@ export default {
   content: '';
   position: absolute;
   right: -30px;
-  top: 7px;
+  top: 50%;
+  margin-top: -10px;
   width: 20px;
   height: 20px;
   background: url('../../../assets/images/subject/innovation/right@2x.png')
@@ -218,7 +224,8 @@ export default {
   content: '';
   position: absolute;
   left: -20px;
-  top: 10px;
+  top: 50%;
+  margin-top: -5px;
   width: 10px;
   height: 10px;
   background: url('../../../assets/images/subject/innovation/dot@2x.png')
@@ -231,7 +238,8 @@ export default {
   content: '';
   position: absolute;
   right: -20px;
-  top: 10px;
+  top: 50%;
+  margin-top: -5px;
   width: 10px;
   height: 10px;
   background: url('../../../assets/images/subject/innovation/dot@2x.png')
@@ -279,7 +287,7 @@ export default {
     display: block;
     width: 144px;
     height: 40px;
-    margin: 20px auto -30px;
+    margin: 20px auto 0;
     background: url('../../../assets/images/subject/innovation/Button@2x.png') left
       no-repeat;
     background-size: cover;
@@ -298,14 +306,17 @@ export default {
   }
   .giftbody h2 {
     font-size: 17px;
-    padding: 40px 0 20px;
+    line-height: 1;
+    padding: 20px 0;
+    margin-top: 20px;
   }
 
   .icon:before {
     content: '';
     position: absolute;
     left: -24px;
-    top: 4px;
+    top: 50%;
+    margin-top: -8px;
     width: 16px;
     height: 16px;
   }
@@ -314,19 +325,22 @@ export default {
     content: '';
     position: absolute;
     right: -24px;
-    top: 4px;
+    top: 50%;
+    margin-top: -8px;
     width: 16px;
     height: 16px;
   }
   .giftbody h3 {
     font-size: 16px;
+    line-height: 1;
     padding:  20px 0
   }
   .icon-dot::before {
     content: '';
     position: absolute;
     left: -20px;
-    top: 6px;
+    top: 50%;
+    margin-top: -4px;
     width: 10px;
     height: 10px;
   }
@@ -334,13 +348,15 @@ export default {
     content: '';
     position: absolute;
     right: -20px;
-    top: 6px;
+    top: 50%;
+    margin-top: -4px;
     width: 10px;
     height: 10px;
   }
 
   .giftbody .first-icon-dot {
-    padding: 0 0 20px;
+    padding: 0;
+    margin-bottom: 20px;
   }
   .img-list {
     padding-top: 6px
