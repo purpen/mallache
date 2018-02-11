@@ -575,8 +575,8 @@ const COMPANY_REVENUE = [
 // 认证状态
 const VERIFY_STATUS = ['未审核', '成功', '失败', '审核中']
 
-// 级别
-const GRADE = [
+// 高新企业级别
+const HIGH_TECH_ENTERPRISE = [
   {
     id: 1,
     name: '市级高新技术企业'
@@ -590,6 +590,23 @@ const GRADE = [
     name: '国家级高新技术企业'
   }
 ]
+
+// 工业设计级别
+const INDUSTRIAL_DESIGN_GRADE = [
+  {
+    id: 1,
+    name: '市级工业设计中心'
+  },
+  {
+    id: 2,
+    name: '省级工业设计中心'
+  },
+  {
+    id: 3,
+    name: '国家级工业设计中心'
+  }
+]
+
 // 银行卡信息
 const BANK_OPTIONS = [
   {
@@ -892,6 +909,7 @@ module.exports = {
   AWARD_CASE_CATEGORY,
   NOTICE_EVT,
   BLOCK_TYPE,
-  GRADE,
+  HIGH_TECH_ENTERPRISE,
+  INDUSTRIAL_DESIGN_GRADE,
   TEST
 }

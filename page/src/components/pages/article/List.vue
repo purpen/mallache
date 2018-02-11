@@ -215,7 +215,7 @@
     color: #666;
     font-size: 1.4rem;
     line-height: 1.5;
-    max-height: 42px;
+    height: 42px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

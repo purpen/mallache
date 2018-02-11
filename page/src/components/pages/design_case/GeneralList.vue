@@ -139,11 +139,7 @@ a {
 }
 
 .des {
-  height: 36px;
   margin: 10px 0;
-}
-
-.des p {
   color: #666;
   font-size: 1.4rem;
   line-height: 1.5;
@@ -151,7 +147,7 @@ a {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  max-height: 42px;
+  height: 42px;
 }
 
 .company {
