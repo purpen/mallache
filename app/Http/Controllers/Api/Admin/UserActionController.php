@@ -71,7 +71,7 @@ class UserActionController extends BaseController
         if($role_id !== null){
             $query->where('role_id', (int)$role_id);
         }
-        if($type){
+        if($type !==0 ){
             $query->where('type', (int)$type);
         }
 

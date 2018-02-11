@@ -40,30 +40,31 @@ class TrendReportsController extends BaseController
      */
     public function show(Request $request)
     {
-        //
-        $type = $this->auth_user->type;
-        if($type == 2){
-            $design_company = $this->auth_user->design_company_id;
-            if(!$design_company){
-                return $this->response->array($this->apiError('not found design_company', 404));
-            }
-            $design_company = DesignCompanyModel::where('id' , $design_company)->first();
-            $verify_status = $design_company->verify_status;
-        }else{
-            $demand_company = $this->auth_user->demand_company_id;
-            if(!$demand_company){
-                return $this->response->array($this->apiError('not found demand_company', 404));
-            }
-            $demand_company = DemandCompany::where('id' , $demand_company)->first();
-            $verify_status = $demand_company->verify_status;
-
-        }
+//        //
+//        $type = $this->auth_user ? $this->auth_user->type : 0;
+//        dd($type);
+//        if($type == 2){
+//            $design_company = $this->auth_user ? $this->auth_user->design_company_id : 0;
+//            if($design_company == 0){
+//                return $this->response->array($this->apiError('not found design_company', 404));
+//            }
+//            $design_company = DesignCompanyModel::where('id' , $design_company)->first();
+//            $verify_status = $design_company->verify_status;
+//        }else{
+//            $demand_company = $this->auth_user ? $this->auth_user->demand_company_id : 0;
+//            if($demand_company == 0){
+//                return $this->response->array($this->apiError('not found demand_company', 404));
+//            }
+//            $demand_company = DemandCompany::where('id' , $demand_company)->first();
+//            $verify_status = $demand_company->verify_status;
+//
+//        }
         $id = $request->input('id');
 
         $trendReports = TrendReports::find($id);
         $trendReports->hits += 1;
         $trendReports->save();
-        $trendReports->verify_status = $verify_status;
+//        $trendReports->verify_status = $verify_status;
         if (!$trendReports) {
             return $this->response->array($this->apiError('not found', 404));
         }

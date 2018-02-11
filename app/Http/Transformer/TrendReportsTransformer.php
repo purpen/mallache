@@ -16,7 +16,7 @@ class TrendReportsTransformer extends TransformerAbstract
             'cover' => $trendReports->cover,
             'image' => $trendReports->image,
             'created_at' => $trendReports->created_at,
-            'verify_status' => $trendReports->verify_status,
+//            'verify_status' => $trendReports->verify_status,
             'pdf_id' => $trendReports->pdf_id,
             'status' => $trendReports->status,
             'summary' => $trendReports->summary,
