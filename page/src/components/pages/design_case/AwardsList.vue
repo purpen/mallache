@@ -14,9 +14,7 @@
               <div class="content">
                 <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}" target="_blank">{{ d.title }}
                 </router-link>
-                <div class="des">
-                  <p>{{ d.summary }}</p>
-                </div>
+                <p class="des">{{d.summary}}</p>
 
                 <p class="company">
                   <img class="avatar" :src="d.img"
@@ -159,12 +157,8 @@ a {
   white-space: nowrap;
 }
 
-.des {
-  height: 36px;
+.des{
   margin: 10px 0;
-}
-
-.des p {
   color: #666;
   font-size: 1.4rem;
   line-height: 1.5;
@@ -172,7 +166,7 @@ a {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  max-height: 42px;
+  height: 42px;
 }
 
 .company {

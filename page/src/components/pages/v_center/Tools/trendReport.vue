@@ -192,7 +192,7 @@
 
   .item-body .title {
     font-size: 15px;
-    max-height: 42px;
+    height: 42px;
     line-height: 1.4;
     margin-bottom: 10px;
     display: -webkit-box;

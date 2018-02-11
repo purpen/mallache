@@ -620,7 +620,7 @@
     color: #666;
     line-height: 1.5;
     overflow: hidden;
-    max-height: 42px;
+    height: 42px;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
