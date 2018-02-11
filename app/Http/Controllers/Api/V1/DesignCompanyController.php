@@ -500,10 +500,6 @@ class DesignCompanyController extends BaseController
             'legal_person',
             'document_type',
             'document_number',
-            'contact_name',
-            'position',
-            'phone',
-            'email'
         ];
         if (!empty(array_intersect($verify, array_keys($all)))) {
             $all['verify_status'] = 3;

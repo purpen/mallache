@@ -185,7 +185,7 @@ class DesignCaseController extends BaseController
         $all['status'] = 1;
         $all['design_company_id'] = $design->id;
         $all['cover_id'] = $request->input("cover_id");
-        $all['patent'] = $request->input('patent');
+        $all['patent'] = $request->input('patent') ?? '[]';
         $all['prizes'] = $request->input('prizes');
 
         $validator = Validator::make($all, $rules, $messages);
