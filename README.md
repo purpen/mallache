@@ -102,3 +102,6 @@ git@github.com:purpen/mallache.git
  
  ###### 更新veerToken
  php artisan Update:token
+ 
+ ###### 更新设计公司案例数据结构迁移
+ php artisan designCase:change
