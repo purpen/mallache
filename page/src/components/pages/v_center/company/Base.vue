@@ -354,19 +354,19 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+            <!-- <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>高新企业</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
                 <div v-if="element.high_tech_enterprises">
-                  <el-col :span="16" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
+                  <el-col :span="16">
                     <el-date-picker
-                      v-model="form.high_tech_enterprises[index].time"
+                      v-model="form.high_tech_enterprises[0].time"
                       type="date"
                       placeholder="认定时间">
                     </el-date-picker>
-                    <el-select v-model.number="form.high_tech_enterprises[index].type" placeholder="认定级别" v-if="element.high_tech_enterprises">
+                    <el-select v-model.number="form.high_tech_enterprises[0].type" placeholder="认定级别" v-if="element.high_tech_enterprises">
                       <el-option
                         v-for="(item, index) in companyGradeOptions"
                         :label="item.label"
@@ -376,19 +376,18 @@
                     </el-select>
                   </el-col>
                 </div>
-                <p v-else v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">{{ ele.time}}{{ ele.type }}</p>
+                <p v-if="!element.high_tech_enterprises && form.high_tech_enterprises.length" v-for="(ele, index) in form.high_tech_enterprises" :key="ele.time + index">{{ ele.time}}{{ ele.val }}</p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.high_tech_enterprises" title="保存" href="javascript:void(0)"
                    @click="saveBtn('high_tech_enterprises', ['high_tech_enterprises'], true)">保存</a>
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('high_tech_enterprises')">编辑</a>
               </el-col>
-            </el-row>
+            </el-row> -->
           </div>
         </div>
       </el-col>
     </el-row>
-
   </div>
 
 </template>
@@ -548,6 +547,9 @@
           return false
         }
         this.element[mark] = true
+        // if (mark === 'high_tech_enterprises') {
+        //   this.form.high_tech_enterprises.push({time: '', type: ''})
+        // }
       },
       isBranch(val) {
         if (val === true) {
@@ -610,25 +612,19 @@
 
         // 高新企业
         if (mark === 'high_tech_enterprises') {
-          let arrs = []
-          console.log(this.form.high_tech_enterprises)
           for (let i = 0; i < row.length; i++) {
-            let child = {}
-            if (row[i].time) {
-              child.time = this.form.high_tech_enterprises[i].time.format('yyyy-MM-dd')
-            } else {
+            if (!row[i].time) {
               this.$message.error('请完善您的公司信息！111')
               return
-            }
-            if (row[i].type) {
-              child.type = this.form.high_tech_enterprises[i].type
             } else {
+              row[i].time = row[i].time.format('yyyy-MM-dd')
+            }
+            if (!row[i].type) {
               this.$message.error('请完善您的公司信息！222')
               return
             }
           }
-          row = { high_tech_enterprises: JSON.stringify(arrs) }
-          row = { high_tech_enterprises: JSON.stringify([row]) }
+          row = {'high_tech_enterprises': JSON.stringify(row)}
         }
         that.$http({method: 'PUT', url: api.designCompany, data: row})
           .then(function (response) {
@@ -657,17 +653,17 @@
                   that.form.branch = '无'
                 }
               } else if (mark === 'high_tech_enterprises') {
-                for (let i = 0; i < item.high_tech_enterprises.length; i++) {
-                  that.form.high_tech_enterprises[i].time = item.high_tech_enterprises.length[i].time.format('yyyy-MM-dd')
-                  switch (item.high_tech_enterprises.length[i].type) {
+                for (let i = 0; i < that.form.high_tech_enterprises.length; i++) {
+                  that.form.high_tech_enterprises[i].time = that.form.high_tech_enterprises[i].time.format('yyyy-MM-dd')
+                  switch (that.form.high_tech_enterprises[i].type) {
                     case 1:
-                      that.form.high_tech_enterprises.length[i].type = '市级'
+                      that.form.high_tech_enterprises[i].val = '市级高新技术企业'
                       break
                     case 2:
-                      that.form.high_tech_enterprises.length[i].type = '省级'
+                      that.form.high_tech_enterprises[i].val = '省级高新技术企业'
                       break
                     case 3:
-                      that.form.high_tech_enterprises.length[i].type = '国家级'
+                      that.form.high_tech_enterprises[i].val = '国家级高新技术企业'
                       break
                   }
                 }
@@ -768,18 +764,17 @@
                 if (response.data.data.logo_image) {
                   that.imageUrl = response.data.data.logo_image.logo
                 }
-                console.log(that.form.high_tech_enterprises)
                 if (that.form.high_tech_enterprises.length) {
                   for (let i of that.form.high_tech_enterprises) {
                     switch (i.type) {
                       case 1:
-                        i.type = '市级高新技术企业'
+                        i.val = '市级高新技术企业'
                         break
                       case 2:
-                        i.type = '省级高新技术企业'
+                        i.val = '省级高新技术企业'
                         break
                       case 3:
-                        i.type = '国家级高新技术企业'
+                        i.val = '国家级高新技术企业'
                         break
                     }
                   }

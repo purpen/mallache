@@ -579,15 +579,15 @@ const VERIFY_STATUS = ['未审核', '成功', '失败', '审核中']
 const GRADE = [
   {
     id: 1,
-    name: '市级'
+    name: '市级高新技术企业'
   },
   {
     id: 2,
-    name: '省级'
+    name: '省级高新技术企业'
   },
   {
     id: 3,
-    name: '国家级'
+    name: '国家级高新技术企业'
   }
 ]
 // 银行卡信息
