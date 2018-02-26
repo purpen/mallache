@@ -57,7 +57,7 @@ class DesignCompanyModel extends BaseModel
         'revenue',
         'weixin_id',
         'high_tech_enterprises',
-        'Industrial_design_center',
+        'industrial_design_center',
         'investment_product',
         'own_brand'
     ];
