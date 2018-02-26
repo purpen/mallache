@@ -143,7 +143,7 @@ class DemandCompany extends BaseModel
     //企业类型
     public function getCompanyTypeValueAttribute()
     {
-        switch ($this->attributes['company_type']){
+        switch ($this->company_type){
             case 1:
                 $company_type_val = '普通';
                 break;
