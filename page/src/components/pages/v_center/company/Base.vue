@@ -326,16 +326,15 @@
               <el-col :span="titleSpan" class="title">
                 <p>分公司</p>
               </el-col>
-              <el-col :span="contentSpan" class="content">
+              <el-col :span="contentSpan" class="content subsidiary">
 
                 <div v-if="element.branch">
                   <el-col :xs="4" :sm="2" :md="2" :lg="2">
                     <el-switch
-                      style="height: 40px; line-height: 50px;"
                       @change="isBranch"
                       v-model="is_branch"
-                      on-text=""
-                      off-text="">
+                      on-text="有"
+                      off-text="无">
                     </el-switch>
                   </el-col>
                   <el-col :xs="6" :sm="3" :md="3" :lg="3" v-show="is_branch">
@@ -360,23 +359,32 @@
               </el-col>
               <el-col :span="contentSpan" class="content">
                 <div v-if="element.high_tech_enterprises">
-                  <el-col :span="16" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
-                    <el-date-picker
-                      v-model="ele.time"
-                      type="date"
-                      placeholder="认定时间">
-                    </el-date-picker>
-                    <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.high_tech_enterprises">
-                      <el-option
-                        v-for="(item, index) in companyHighTechGradeOptions"
-                        :label="item.label"
-                        :key="index"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
+                  <el-col :span="20" class="margin-bottom10" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
+                    <el-row :gutter="10">
+                      <el-col :span="10">
+                        <el-date-picker
+                          v-model="ele.time"
+                          type="date"
+                          placeholder="认定时间">
+                        </el-date-picker>
+                      </el-col>
+                      <el-col :span="10">
+                        <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.high_tech_enterprises">
+                          <el-option
+                            v-for="(item, index) in companyHighTechGradeOptions"
+                            :label="item.label"
+                            :key="index"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-button class="del-btn" type="danger" size="small" @click="delType(index, 'high_tech_enterprises')">删除</el-button>
+                      </el-col>
+                    </el-row>
                   </el-col>
-                  <el-col :span="4">
-                    <el-button type="primary" @click="addType('high_tech_enterprises')">添加</el-button>
+                  <el-col :span="2">
+                    <el-button class="add-btn" type="primary" size="small" @click="addType('high_tech_enterprises')">添加</el-button>
                   </el-col>
                 </div>
                 <p v-if="!element.high_tech_enterprises && form.high_tech_enterprises.length" v-for="(e, index) in form.high_tech_enterprises" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
@@ -388,30 +396,38 @@
               </el-col>
             </el-row>
 
-
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>工业设计中心</p>
               </el-col>
               <el-col :span="contentSpan" class="content">
                 <div v-if="element.industrial_design_center">
-                  <el-col :span="16" v-for="(ele, index) in form.industrial_design_center" :key="index">
-                    <el-date-picker
-                      v-model="ele.time"
-                      type="date"
-                      placeholder="认定时间">
-                    </el-date-picker>
-                    <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.industrial_design_center">
-                      <el-option
-                        v-for="(item, index) in companyIndustrialDesignGradeOptions"
-                        :label="item.label"
-                        :key="index"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
+                  <el-col  class="margin-bottom10" :span="20" v-for="(ele, index) in form.industrial_design_center" :key="index">
+                    <el-row :gutter="10">
+                      <el-col :span="10">
+                        <el-date-picker
+                          v-model="ele.time"
+                          type="date"
+                          placeholder="认定时间">
+                        </el-date-picker>
+                      </el-col>
+                      <el-col :span="10">
+                      <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.industrial_design_center">
+                        <el-option
+                          v-for="(item, index) in companyIndustrialDesignGradeOptions"
+                          :label="item.label"
+                          :key="index"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-button class="del-btn" type="danger" size="small" @click="delType(index, 'industrial_design_center')">删除</el-button>
+                      </el-col>
+                    </el-row>
                   </el-col>
                   <el-col :span="4">
-                    <el-button type="primary" @click="addType('industrial_design_center')">添加</el-button>
+                    <el-button class="add-btn" type="primary" size="small" @click="addType('industrial_design_center')">添加</el-button>
                   </el-col>
                 </div>
                 <p v-if="!element.industrial_design_center && form.industrial_design_center.length" v-for="(e, index) in form.industrial_design_center" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
@@ -420,6 +436,65 @@
                 <a v-if="element.industrial_design_center" title="保存" href="javascript:void(0)"
                    @click="saveBtn('industrial_design_center', ['industrial_design_center'], true)">保存</a>
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('industrial_design_center')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>投资孵化产品</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+                <el-switch
+                  v-if="element.investment_product"
+                  v-model="form.investment_product"
+                  on-text="有"
+                  off-text="无">
+                </el-switch>
+              <p v-else>{{ hasProduct }}</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.investment_product" title="保存" href="javascript:void(0)" @click="saveBtn('investment_product', ['investment_product'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('investment_product')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>自有产品品牌</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content subsidiary">
+                <div v-if="element.own_brand">
+                  <el-row :gutter="10">
+                    <el-col :xs="4" :sm="2" :md="2" :lg="2">
+                      <el-switch
+                        @change="changeBrand"
+                        v-model="hasBrand"
+                        on-text="有"
+                        off-text="无">
+                      </el-switch>
+                    </el-col>
+                    <el-col :xs="4" :sm="3" :md="3" :lg="3" v-if="hasBrand">
+                      <p>品牌名称:</p>
+                    </el-col>                    
+                    <el-col v-if="hasBrand" v-for="(ele, index) in form.own_brand" :key="index" :xs="6" :sm="3" :md="3" :lg="3">
+                      <el-input v-model="form.own_brand[index]">
+                      </el-input>
+                    </el-col>
+                    <el-col v-if="ownBrand" :xs="6" :sm="3" :md="3" :lg="3">
+                      <el-button type="primary" size="mini" @click="addOwnBrand">添加</el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+
+                <p v-else>
+                  <span class="own-brand" v-if="hasBrand" v-for="(e, index) in form.own_brand" :key="e + index">{{ e }}</span>
+                  <span v-if="!hasBrand">无</span>
+                </p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.own_brand" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('own_brand', ['own_brand'], true)">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('own_brand')">编辑</a>
               </el-col>
             </el-row>
           </div>
@@ -458,6 +533,9 @@
         avatarStr: '点击图像上传Logo，只能上传jpg/gif/png文件，且不超过2M',
         isFirst: false,
         is_branch: false,
+        hasProduct: '无',
+        hasBrand: false,
+        ownBrand: false,
         companyId: '',
         province: '',
         city: '',
@@ -489,7 +567,9 @@
           contact_name: '',
           email: '',
           phone: '',
-          position: ''
+          position: '',
+          investment_product: false,
+          own_brand: []
         },
         element: {
           company_abbreviation: false,
@@ -505,8 +585,10 @@
           web: false,
           weixin_id: false,
           branch: false,
+          investment_product: false,
           high_tech_enterprises: false,
           industrial_design_center: false,
+          own_brand: false,
           test: false
         },
         uploadParam: {
@@ -604,9 +686,6 @@
           return false
         }
         this.element[mark] = true
-        // if (mark === 'high_tech_enterprises') {
-        //   this.form.high_tech_enterprises.push({time: '', type: ''})
-        // }
       },
       isBranch(val) {
         if (val === true) {
@@ -651,6 +730,14 @@
               }
             }
             row = {'industrial_design_center': JSON.stringify(row)}
+          } else if (mark === 'own_brand') {
+            for (let i of row) {
+              if (i === '') {
+                this.$message.error('请完善您的公司信息！')
+                return
+              }
+            }
+            row = {'own_brand': JSON.stringify(row)}
           }
         } else {
           for (let i = 0; i < nameArr.length; i++) {
@@ -659,7 +746,7 @@
             if (!row[name]) {
               if (name === 'area') {
                 row['area'] = 0
-              } else if (mark === 'branch') {
+              } else if (mark === 'branch' || mark === 'investment_product') {
                 continue
               } else {
                 this.$message.error('请完善您的公司信息！')
@@ -696,11 +783,20 @@
             return false
           }
         }
+        if (mark === 'investment_product') {
+          if (row[mark] === true) {
+            row[mark] = 1
+          } else {
+            row[mark] = 0
+          }
+        }
+
         that.$http({method: 'PUT', url: api.designCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.element[mark] = false
               let item = response.data.data
+              console.log(item)
               if (mark === 'address') {
                 that.form.province_value = item.province_value
                 that.form.city_value = item.city_value
@@ -752,6 +848,12 @@
                       break
                   }
                 }
+              } else if (mark === 'investment_product') {
+                if (that.form.investment_product) {
+                  that.hasProduct = '有'
+                } else {
+                  that.hasProduct = '无'
+                }
               }
             } else {
               that.$message.error(response.data.meta.message)
@@ -764,7 +866,22 @@
       addType(e) {
         this.form[e].push({time: '', type: '', val: ''})
       },
-      change: function (obj) {
+      addOwnBrand() {
+        this.form.own_brand.push('')
+      },
+      delType(e, type) {
+        this.form[type].splice(e, 1)
+      },
+      changeBrand() {
+        if (this.hasBrand) {
+          this.ownBrand = true
+          this.addOwnBrand()
+        } else {
+          this.ownBrand = false
+          this.form.own_brand = []
+        }
+      },
+      change(obj) {
         this.province = this.form.province = obj.province
         this.city = this.form.city = obj.city
         this.district = this.form.area = obj.district
@@ -808,7 +925,8 @@
         this.$router.push({name: 'vcenterComputerIdentification'})
       }
     },
-    watch: {},
+    watch: {
+    },
     created: function () {
       let uType = this.$store.state.event.user.type
       // 如果是需求方，跳转到相应页面
@@ -824,10 +942,10 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
+              console.log(response.data.data)
               // 重新渲染
               that.$nextTick(function () {
                 that.form = response.data.data
-                console.log(that.form)
                 that.form.company_size = that.form.company_size === 0 ? '' : that.form.company_size
                 that.companyId = response.data.data.id
                 that.uploadParam['x:target_id'] = response.data.data.id
@@ -887,8 +1005,24 @@
                 } else {
                   that.form.industrial_design_center = []
                 }
+                if (that.form.investment_product) {
+                  that.form.investment_product = true
+                  that.hasProduct = '有'
+                } else {
+                  that.form.investment_product = false
+                  that.hasProduct = '无'
+                }
+                if (!that.form.own_brand || !that.form.own_brand.length) {
+                  that.form.own_brand = []
+                  that.hasBrand = false
+                } else {
+                  that.hasBrand = true
+                  that.ownBrand = true
+                }
               })
             }
+          } else {
+            that.$message.error(response.data.meta.message)
           }
         })
         .catch(function (error) {
@@ -1105,6 +1239,28 @@
 
   .el-upload__tip {
     color: #999;
+  }
+  .del-box {
+    display: inline-block;
+    /* padding-top: 7px; */
+  }
+  .del-btn, .add-btn {
+    margin-top: 4px;
+  }
+
+  .margin-bottom10 {
+    margin-bottom: 10px
+  }
+
+  .own-brand {
+    position: relative;
+    margin-right: 10px;
+  }
+  .own-brand::after {
+    content: ",";
+  }
+  .own-brand:last-child::after {
+    content: "";
   }
   @media screen and (max-width: 767px) {
     .item-m .content {
