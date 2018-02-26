@@ -57,7 +57,7 @@ class DesignCompanyModel extends BaseModel
         'revenue',
         'weixin_id',
         'high_tech_enterprises',
-        'Industrial_design_center',
+        'industrial_design_center',
         'investment_product',
         'own_brand'
     ];
@@ -385,12 +385,14 @@ class DesignCompanyModel extends BaseModel
         $all['user_id'] = $user_id;
         $user = User::where('id', $user_id)->first();
         $design = DesignCompanyModel::create($all);
-        $user->design_company_id = $design->id;
-        if ($design) {
-            $user->save();
-        }
 
-        return true;
+        if ($design) {
+            $user->design_company_id = $design->id;
+            $user->save();
+            return $design;
+        }else{
+            return false;
+        }
     }
 
     //公司营收

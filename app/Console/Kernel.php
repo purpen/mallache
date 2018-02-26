@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
         //更改veer的token
         Commands\UpdateVeerToken::class,
 
+        //excel导出
+        Commands\designCompanyExcel::class,
         //设计公司案例数据结构变更
         Commands\ChangeDesignCase::class,
 
