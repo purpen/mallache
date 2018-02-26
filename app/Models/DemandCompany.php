@@ -143,7 +143,7 @@ class DemandCompany extends BaseModel
     //企业类型
     public function getCompanyTypeValueAttribute()
     {
-        switch ($this->attributes['company_type']){
+        switch ($this->company_type){
             case 1:
                 $company_type_val = '普通';
                 break;
@@ -226,11 +226,15 @@ class DemandCompany extends BaseModel
 
         $user = User::where('id' , $user_id)->first();
         $demand = DemandCompany::create($all);
-        $user->demand_company_id = $demand->id;
+
         if($demand){
+            $user->demand_company_id = $demand->id;
             $user->save();
+            return $demand;
+        }else{
+            return false;
         }
 
-        return true;
+
     }
 }

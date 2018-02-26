@@ -297,18 +297,15 @@ class DemandCompanyController extends BaseController
             'legal_person',
             'document_type',
             'document_number',
-            'contact_name',
-            'position',
-            'phone',
-            'email'
         ];
         if(!empty(array_intersect($verify, array_keys($all)))){
             $all['verify_status'] = 3;
         }
 
-//        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
-        $demand = DemandCompany::firstOrCreate(['user_id' => $this->auth_user_id]);
-
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+        if(!$demand){
+            $demand = DemandCompany::createCompany($this->auth_user_id);
+        }
         $demand->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());
