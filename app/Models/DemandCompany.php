@@ -226,11 +226,15 @@ class DemandCompany extends BaseModel
 
         $user = User::where('id' , $user_id)->first();
         $demand = DemandCompany::create($all);
-        $user->demand_company_id = $demand->id;
+
         if($demand){
+            $user->demand_company_id = $demand->id;
             $user->save();
+            return $demand;
+        }else{
+            return false;
         }
 
-        return true;
+
     }
 }
