@@ -302,9 +302,10 @@ class DemandCompanyController extends BaseController
             $all['verify_status'] = 3;
         }
 
-//        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
-        $demand = DemandCompany::firstOrCreate(['user_id' => $this->auth_user_id]);
-
+        $demand = DemandCompany::where('user_id', $this->auth_user_id)->first();
+        if(!$demand){
+            $demand = DemandCompany::createCompany($this->auth_user_id);
+        }
         $demand->update($all);
         if(!$demand){
             return $this->response->array($this->apiError());
