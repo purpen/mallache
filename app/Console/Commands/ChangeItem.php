@@ -40,7 +40,7 @@ class ChangeItem extends Command
     {
         Item::chunk(100, function($items){
             foreach ($items as $item){
-                if(0 != $item->design_type && 'null' == $item->design_types){
+                if(0 != $item->design_type && null == $item->design_types){
                     $item->design_types = json_encode([$item->design_type]);
                     $item->save();
                 }

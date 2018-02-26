@@ -14,7 +14,7 @@ class AddDesignTypesToItem extends Migration
     public function up()
     {
         Schema::table('item', function (Blueprint $table) {
-            $table->json('design_types');
+            $table->json('design_types')->nullable();
         });
     }
 
