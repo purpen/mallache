@@ -83,25 +83,34 @@
                 </el-col>
               </el-row>
 
-              <el-form-item label="获得奖项" prop="" class="fullwidth">
-                <el-date-picker
-                  v-model="form.prize_time"
-                  type="month"
-                  placeholder="获奖日期"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
-
-                <el-select v-model.number="form.prize" placeholder="所属奖项">
-                  <el-option
-                    v-for="item in prizeOptions"
-                    :label="item.label"
-                    :key="item.index"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
+              <el-form-item label="获得奖项" class="fullwidth">
+                <el-row>
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
+                    <el-form-item prop="">
+                      <el-date-picker
+                        class="fullwidth"
+                        v-model="form.prize_time"
+                        type="month"
+                        placeholder="获奖日期">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
+                    <el-form-item prop="prize">
+                      <el-select v-model.number="form.prize" placeholder="所属奖项">
+                        <el-option
+                          v-for="item in prizeOptions"
+                          :label="item.label"
+                          :key="item.index"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form-item>
 
-              <el-form-item label="产品量产" prop="">
+              <el-form-item label="产品量产">
                 <el-radio-group v-model.number="form.mass_production" @change="isProduction">
                   <el-radio class="radio" :label="0">否</el-radio>
                   <el-radio class="radio" :label="1">是</el-radio>
@@ -115,6 +124,33 @@
                     :value="item.value">
                   </el-option>
                 </el-select>
+              </el-form-item>
+              
+              <el-form-item label="是否申请专利" class="fullwidth">
+                <el-row>
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
+                    <el-form-item>
+                      <el-date-picker
+                      class="fullwidth"
+                      v-model="form.patent_time"
+                      type="month"
+                      placeholder="选择日期">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
+                    <el-form-item prop="patentInfo">
+                      <el-select v-model.number="form.patentInfo" placeholder="选择申请专利类型">
+                        <el-option
+                          v-for="item in patentOptions"
+                          :label="item.label"
+                          :key="item.index"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form-item>
 
               <el-row :gutter="0">
@@ -239,7 +275,6 @@
           'x:type': 5
         },
         uploadMsg: '只能上传jpg/png文件，且不超过5M',
-        pickerOptions: {},
         imageUrl: '',
         coverId: '',
         form: {
@@ -250,6 +285,8 @@
           design_type: '',
           prize_time: '',
           prize: '',
+          patent_time: '',
+          patentInfo: '',
           customer: '',
           mass_production: 0,
           sales_volume: '',
@@ -278,6 +315,18 @@
           profile: [
             {required: true, message: '请添写案例描述', trigger: 'blur'},
             {min: 10, max: 500, message: '长度在 10 到 500 个字符', trigger: 'blur'}
+          ],
+          prize: [
+            {required: true, type: 'number', message: '请选择获奖名称', trigger: 'blur'}
+          ],
+          prize_time: [
+            {required: true, type: 'date', message: '请选择获奖时间', trigger: 'blur'}
+          ],
+          patentInfo: [
+            {required: true, type: 'number', message: '请选择专利类型', trigger: 'blur'}
+          ],
+          patent_time: [
+            {required: true, type: 'date', message: '请选择申请时间', trigger: 'blur'}
           ]
         }
       }
@@ -299,14 +348,15 @@
               industry: that.form.industry,
               title: that.form.title,
               customer: that.form.customer,
-              prize_time: that.form.prize_time,
-              prize: that.form.prize,
               mass_production: that.form.mass_production,
               sales_volume: that.form.sales_volume,
               profile: that.form.profile
             }
             row.cover_id = that.coverId
-            row.prize_time = row.prize_time.format ('yyyy-MM-dd')
+            // 奖项
+            row.prizes = JSON.stringify({time: that.form.prize_time.format ('yyyy-MM-dd'), type: that.form.prize})
+            // 专利
+            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patentInfo})
             let apiUrl = null
             let method = null
 
@@ -466,7 +516,7 @@
           }
         }
         this.fileList.push (item)
-//        console.log(this.fileList)
+      //        console.log(this.fileList)
       },
       beforeUpload(file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png']
@@ -556,6 +606,17 @@
         }
         return items
       },
+      patentOptions() {
+        let items = []
+        for (let i = 0; i < typeData.PATENT_FOR_INVENTION.length; i++) {
+          let item = {
+            value: typeData.PATENT_FOR_INVENTION[i]['id'],
+            label: typeData.PATENT_FOR_INVENTION[i]['name']
+          }
+          items.push (item)
+        }
+        return items
+      },
       saleOptions() {
         let items = []
         for (let i = 0; i < typeData.DESIGN_CASE_SALE_OPTIONS.length; i++) {
@@ -572,10 +633,8 @@
       }
     },
     watch: {
-      fileList: {
-        handler: function (newVal) {
-//          console.log('aaaaa')
-//          console.log(newVal)
+      form: {
+        handler: function () {
         },
         deep: true
       }
@@ -590,6 +649,14 @@
           .then (function (response) {
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
+              if (that.form.patent) {
+                that.form.patent_time = that.form.patent.time
+                that.form.patentInfo = that.form.patent.type
+              }
+              if (that.form.prizes) {
+                that.form.prize_time = that.form.prizes.time
+                that.form.prize = that.form.prizes.type
+              }
               if (that.form.cover_id) {
                 that.coverId = that.form.cover_id
               }

@@ -232,21 +232,52 @@ const DESIGN_CASE_PRICE_OPTIONS = [
   },
   {
     id: 10,
-    name: '香港DFA设计奖 '
-  },
-  {
-    id: 11,
     name: '新加坡设计奖'
   },
   {
-    id: 12,
+    id: 11,
     name: '意大利—Compasso d`Oro设计奖'
   },
   {
-    id: 13,
+    id: 12,
     name: '英国设计奖'
+  },
+  {
+    id: 13,
+    name: '中国优秀工业设计奖'
+  },
+  {
+    id: 14,
+    name: 'DIA中国设计智造大奖'
+  },
+  {
+    id: 15,
+    name: '中国好设计奖'
+  },
+  {
+    id: 16,
+    name: '澳大利亚国际设计奖'
+  },
+  {
+    id: 20,
+    name: '其他'
   }
+]
 
+// 专利
+const PATENT_FOR_INVENTION = [
+  {
+    id: 1,
+    name: '发明专利'
+  },
+  {
+    id: 2,
+    name: '实用新型专利'
+  },
+  {
+    id: 3,
+    name: '外观设计专利'
+  }
 ]
 
 // 擅长领域
@@ -911,5 +942,6 @@ module.exports = {
   BLOCK_TYPE,
   HIGH_TECH_ENTERPRISE,
   INDUSTRIAL_DESIGN_GRADE,
+  PATENT_FOR_INVENTION,
   TEST
 }

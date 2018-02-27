@@ -145,10 +145,7 @@
   .content-box-m .form-title {
     margin: 10px 0 6px;
     }
-
-  .design-case-list {
-    }
-
+    
   .design-case-list .item {
     height: 240px;
     }

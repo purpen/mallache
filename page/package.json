@@ -17,7 +17,7 @@
     "babel-runtime": "^6.23.0",
     "caniuse-lite": "^1.0.30000746",
     "china-area-data": "^3.0.0",
-    "element-ui": "^1.2.8",
+    "element-ui": "^1.4.13",
     "jr-qrcode": "^1.1.0",
     "markdown-it": "^8.4.0",
     "markdown-it-container": "^2.0.0",

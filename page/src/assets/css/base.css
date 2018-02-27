@@ -1723,6 +1723,10 @@ td.fc-day.fc-widget-content.fc-today::before {
   .el-dialog--small, .bank-dialog .el-dialog--small, .withdraw .el-dialog--small, .taking-dialog .el-dialog--small, .el-dialog--tiny {
     width: 90%;
   }
+  
+  .fullwidth.el-date-editor {
+    width: 100%;
+  }
 
   .fullwidth .el-form-item__content {
     display: flex;
