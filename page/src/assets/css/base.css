@@ -32,7 +32,7 @@ body {
 }
 
 .el-input-group--append {
-  padding-left: 14px;
+  padding-left: 2px;
   min-width: 110px;
 }
 
@@ -40,6 +40,9 @@ body {
   padding-left: 0;
 }
 
+.subsidiary .el-input-group--append {
+  min-width: auto;
+}
 .container {
   /* overflow: hidden; */
   margin: 0 auto;
@@ -159,6 +162,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .el-input__inner {
   color: #222;
 }
+.subsidiary .el-input__inner {
+  height: auto;
+}
+
 .el-input-group__append {
   color: #999;
 }
@@ -167,6 +174,23 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 .imgCodeInput .el-input-group__append {
   padding: 0
+}
+
+.input-brand .el-input-group__append {
+  background: #ff4949;
+  border: none;
+}
+
+.input-brand .el-input-group__append:hover {
+  background: #ff6d6d;  
+}
+
+.input-brand .el-input-group__append:active {
+  background: #e64242;  
+}
+
+.input-brand .el-input__inner {
+  border-right: none
 }
 
 .avatarhead  .el-upload__tip {
@@ -1862,10 +1886,6 @@ td.fc-day.fc-widget-content.fc-today::before {
 
   .fc-content .fc-title {
     font-size: 12px;
-  }
-
-  .el-input-group--append {
-    padding-left: 2px;
   }
 
   .el-card:hover {
