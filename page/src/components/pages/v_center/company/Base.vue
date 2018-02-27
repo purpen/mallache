@@ -477,8 +477,13 @@
                       <p>品牌名称:</p>
                     </el-col>                    
                     <el-col v-if="hasBrand" v-for="(ele, index) in form.own_brand" :key="index" :xs="6" :sm="3" :md="3" :lg="3">
-                      <el-input v-model="form.own_brand[index]">
-                      </el-input>
+                      <el-col :span="20">
+                        <el-input v-model="form.own_brand[index]">
+                        </el-input>
+                      </el-col>
+                      <el-col :span="4">
+                        <i class="fx-icon-nothing-close-error" @click="delType(index, 'own_brand')"></i>
+                      </el-col>
                     </el-col>
                     <el-col v-if="ownBrand" :xs="6" :sm="3" :md="3" :lg="3">
                       <el-button type="primary" size="mini" @click="addOwnBrand">添加</el-button>
@@ -1261,6 +1266,10 @@
   }
   .own-brand:last-child::after {
     content: "";
+  }
+  .subsidiary .fx-icon-nothing-close-error {
+    line-height: 24px;
+    cursor: pointer;
   }
   @media screen and (max-width: 767px) {
     .item-m .content {
