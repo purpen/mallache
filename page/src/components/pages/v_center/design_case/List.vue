@@ -18,7 +18,7 @@
                     <div class="image-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">
-                        <img :src="d.cover.middle">
+                        <img v-if="d.cover" :src="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">

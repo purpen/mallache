@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div v-if="!isMob" class="blank20"></div>
     <el-row :gutter="24">
       <v-menu currentName="design_case"></v-menu>
 
