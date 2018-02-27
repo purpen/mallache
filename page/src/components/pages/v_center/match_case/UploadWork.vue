@@ -183,7 +183,8 @@
         })
       },
       returnGifts() {
-        this.$router.push ({name: 'YuQuanGifts'})
+        // this.$router.push ({name: 'YuQuanGifts'})
+        this.$router.go(-1)
       },
       beforeUpload (file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png']
@@ -480,6 +481,14 @@
   }
 
   @media screen and (max-width: 767px) {
+    .upload {
+      margin-top: 0;
+    }
+
+    .upload h2{
+      padding: 30px 0;
+    }
+
     .upload, .buttons {
       border: none
     }

@@ -1,8 +1,7 @@
 <template>
   <div class="container">
-    <div class="blank20"></div>
     <el-row :gutter="24">
-      <v-menu></v-menu>
+      <v-menu currentName="design_case"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
@@ -108,7 +107,7 @@
                   <el-radio class="radio" :label="1">是</el-radio>
                 </el-radio-group>
                 <span>&nbsp;&nbsp;&nbsp;</span>
-                <el-select v-model.number="form.sales_volume" :disabled="isDisabledProduct" placeholder="销售额">
+                <el-select v-model.number="form.sales_volume" v-if="!isDisabledProduct" placeholder="销售额">
                   <el-option
                     v-for="item in saleOptions"
                     :label="item.label"
