@@ -140,8 +140,8 @@
                     </el-form-item>
                   </el-col>
                   <el-col :xs="24" :sm="6" :md="6" :lg="6">
-                    <el-form-item prop="patentInfo">
-                      <el-select v-model.number="form.patentInfo" placeholder="选择申请专利类型">
+                    <el-form-item prop="patent">
+                      <el-select v-model.number="form.patent" placeholder="选择申请专利类型">
                         <el-option
                           v-for="item in patentOptions"
                           :label="item.label"
@@ -287,7 +287,7 @@
           prize_time: '',
           prize: '',
           patent_time: '',
-          patentInfo: '',
+          patent: '',
           customer: '',
           mass_production: 0,
           sales_volume: '',
@@ -323,7 +323,7 @@
           prize_time: [
             {required: true, type: 'date', message: '请选择获奖时间', trigger: 'blur'}
           ],
-          patentInfo: [
+          patent: [
             {required: true, type: 'number', message: '请选择专利类型', trigger: 'blur'}
           ],
           patent_time: [
@@ -357,7 +357,7 @@
             // 奖项
             row.prizes = JSON.stringify({time: that.form.prize_time.format ('yyyy-MM-dd'), type: that.form.prize})
             // 专利
-            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patentInfo})
+            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patent})
             let apiUrl = null
             let method = null
 
@@ -650,13 +650,13 @@
           .then (function (response) {
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
-              if (that.form.patent) {
-                that.form.patent_time = that.form.patent.time
-                that.form.patentInfo = that.form.patent.type
-              }
               if (that.form.prizes) {
                 that.form.prize_time = that.form.prizes.time
                 that.form.prize = that.form.prizes.type
+              }
+              if (that.form.patent) {
+                that.form.patent_time = that.form.patent.time
+                that.form.patent = that.form.patent.type
               }
               if (that.form.cover_id) {
                 that.coverId = that.form.cover_id
@@ -682,8 +682,7 @@
                 }
                 that.fileList = files
               }
-
-//              console.log(that.fileList)
+              console.log(that.form)
             }
           })
           .catch (function (error) {
