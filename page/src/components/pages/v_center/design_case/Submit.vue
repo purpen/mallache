@@ -89,6 +89,7 @@
                   <el-col :xs="24" :sm="6" :md="6" :lg="6">
                     <el-form-item prop="">
                       <el-date-picker
+                        key="prize_time"
                         class="fullwidth"
                         v-model="form.prize_time"
                         type="month"
@@ -132,10 +133,11 @@
                   <el-col :xs="24" :sm="6" :md="6" :lg="6">
                     <el-form-item>
                       <el-date-picker
-                      class="fullwidth"
-                      v-model="form.patent_time"
-                      type="month"
-                      placeholder="选择日期">
+                        key="patent_time"
+                        class="fullwidth"
+                        v-model="form.patent_time"
+                        type="month"
+                        placeholder="选择日期">
                       </el-date-picker>
                     </el-form-item>
                   </el-col>
