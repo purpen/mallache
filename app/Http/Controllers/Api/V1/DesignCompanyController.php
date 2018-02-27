@@ -262,6 +262,9 @@ class DesignCompanyController extends BaseController
         $user_id = intval($this->auth_user_id);
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
+        if(!$design){
+            $design = DesignCompanyModel::createDesign($user_id);
+        }
 
         if (!$design) {
             return $this->response->array($this->apiError('没有找到', 404));
@@ -500,16 +503,16 @@ class DesignCompanyController extends BaseController
             'legal_person',
             'document_type',
             'document_number',
-            'contact_name',
-            'position',
-            'phone',
-            'email'
         ];
         if (!empty(array_intersect($verify, array_keys($all)))) {
             $all['verify_status'] = 3;
         }
 
-        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
+//        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
+        $design = DesignCompanyModel::where(['user_id' => $user_id])->first();
+        if(!$design){
+            $design = DesignCompanyModel::createDesign($user_id);
+        }
 
         $design->update($all);
         if (!$design) {
