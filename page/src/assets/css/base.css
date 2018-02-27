@@ -176,6 +176,23 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   padding: 0
 }
 
+.input-brand .el-input-group__append {
+  background: #ff4949;
+  border: none;
+}
+
+.input-brand .el-input-group__append:hover {
+  background: #ff6d6d;  
+}
+
+.input-brand .el-input-group__append:active {
+  background: #e64242;  
+}
+
+.input-brand .el-input__inner {
+  border-right: none
+}
+
 .avatarhead  .el-upload__tip {
   color: #999;
 }

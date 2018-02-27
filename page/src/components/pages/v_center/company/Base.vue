@@ -329,7 +329,7 @@
               <el-col :span="contentSpan" class="content subsidiary">
 
                 <div v-if="element.branch">
-                  <el-col :xs="4" :sm="2" :md="2" :lg="2">
+                  <el-col :xs="6" :sm="2" :md="2" :lg="2">
                     <el-switch
                       @change="isBranch"
                       v-model="is_branch"
@@ -337,7 +337,7 @@
                       off-text="无">
                     </el-switch>
                   </el-col>
-                  <el-col :xs="6" :sm="3" :md="3" :lg="3" v-show="is_branch">
+                  <el-col :xs="10" :sm="3" :md="3" :lg="3" v-show="is_branch">
                     <el-input v-model.number="form.branch_office" :disabled="!is_branch" placeholder="">
                       <template slot="append">家</template>
                     </el-input>
@@ -357,18 +357,18 @@
               <el-col :span="titleSpan" class="title">
                 <p>高新企业</p>
               </el-col>
-              <el-col :span="contentSpan" class="content">
+              <el-col v-if="form.high_tech_enterprises.length||element.high_tech_enterprises" :span="contentSpan" class="content">
                 <div v-if="element.high_tech_enterprises">
                   <el-col :span="20" class="margin-bottom10" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
                     <el-row :gutter="10">
-                      <el-col :span="10">
+                      <el-col class="margin-bottom10" :xs="20" :sm="10" :md="10" :lg="10">
                         <el-date-picker
                           v-model="ele.time"
                           type="date"
                           placeholder="认定时间">
                         </el-date-picker>
                       </el-col>
-                      <el-col :span="10">
+                      <el-col :xs="20" :sm="10" :md="10" :lg="10">
                         <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.high_tech_enterprises">
                           <el-option
                             v-for="(item, index) in companyHighTechGradeOptions"
@@ -383,11 +383,14 @@
                       </el-col>
                     </el-row>
                   </el-col>
-                  <el-col :span="2">
+                  <el-col :xs="24" :sm="4" :md="4" :lg="4">
                     <el-button class="add-btn" type="primary" size="small" @click="addType('high_tech_enterprises')">添加</el-button>
                   </el-col>
                 </div>
                 <p v-if="!element.high_tech_enterprises && form.high_tech_enterprises.length" v-for="(e, index) in form.high_tech_enterprises" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
+              </el-col>
+              <el-col :xs="24" :sm="19" :md="19" :lg="19" class="content" v-else>
+                <p>无</p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.high_tech_enterprises" title="保存" href="javascript:void(0)"
@@ -400,18 +403,18 @@
               <el-col :span="titleSpan" class="title">
                 <p>工业设计中心</p>
               </el-col>
-              <el-col :span="contentSpan" class="content">
+              <el-col v-if="form.industrial_design_center.length||element.industrial_design_center" :span="contentSpan" class="content">
                 <div v-if="element.industrial_design_center">
-                  <el-col  class="margin-bottom10" :span="20" v-for="(ele, index) in form.industrial_design_center" :key="index">
+                  <el-col class="margin-bottom10" :span="20" v-for="(ele, index) in form.industrial_design_center" :key="index">
                     <el-row :gutter="10">
-                      <el-col :span="10">
+                      <el-col class="margin-bottom10" :xs="20" :sm="10" :md="10" :lg="10">
                         <el-date-picker
                           v-model="ele.time"
                           type="date"
                           placeholder="认定时间">
                         </el-date-picker>
                       </el-col>
-                      <el-col :span="10">
+                      <el-col :xs="20" :sm="10" :md="10" :lg="10">
                       <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.industrial_design_center">
                         <el-option
                           v-for="(item, index) in companyIndustrialDesignGradeOptions"
@@ -426,11 +429,14 @@
                       </el-col>
                     </el-row>
                   </el-col>
-                  <el-col :span="4">
+                  <el-col :xs="24" :sm="4" :md="4" :lg="4">
                     <el-button class="add-btn" type="primary" size="small" @click="addType('industrial_design_center')">添加</el-button>
                   </el-col>
                 </div>
                 <p v-if="!element.industrial_design_center && form.industrial_design_center.length" v-for="(e, index) in form.industrial_design_center" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
+              </el-col>
+              <el-col :xs="24" :sm="19" :md="19" :lg="19" class="content" v-else>
+                <p>无</p>
               </el-col>
               <el-col :span="editSpan" class="edit">
                 <a v-if="element.industrial_design_center" title="保存" href="javascript:void(0)"
@@ -465,7 +471,7 @@
               <el-col :span="contentSpan" class="content subsidiary">
                 <div v-if="element.own_brand">
                   <el-row :gutter="10">
-                    <el-col :xs="4" :sm="2" :md="2" :lg="2">
+                    <el-col :xs="4" :sm="2" :md="2" :lg="2" class="margin-bottom10">
                       <el-switch
                         @change="changeBrand"
                         v-model="hasBrand"
@@ -473,19 +479,17 @@
                         off-text="无">
                       </el-switch>
                     </el-col>
-                    <el-col :xs="4" :sm="3" :md="3" :lg="3" v-if="hasBrand">
+                    <el-col :xs="24" :sm="3" :md="3" :lg="3" class="margin-bottom10" v-if="hasBrand">
                       <p>品牌名称:</p>
                     </el-col>                    
-                    <el-col v-if="hasBrand" v-for="(ele, index) in form.own_brand" :key="index" :xs="6" :sm="3" :md="3" :lg="3">
-                      <el-col :span="20">
-                        <el-input v-model="form.own_brand[index]">
-                        </el-input>
-                      </el-col>
-                      <el-col :span="4">
-                        <i class="fx-icon-nothing-close-error" @click="delType(index, 'own_brand')"></i>
-                      </el-col>
+                    <el-col class="input-brand margin-bottom10" v-if="hasBrand" v-for="(ele, index) in form.own_brand" :key="index" :xs="12" :sm="3" :md="3" :lg="3">
+                      <el-input v-model="form.own_brand[index]">
+                        <template slot="append">
+                          <i class="fx-icon-nothing-close-error" @click="delType(index, 'own_brand')"></i>
+                        </template>
+                      </el-input>
                     </el-col>
-                    <el-col v-if="ownBrand" :xs="6" :sm="3" :md="3" :lg="3">
+                    <el-col v-if="ownBrand" :xs="24" :sm="3" :md="3" :lg="3">
                       <el-button type="primary" size="mini" @click="addOwnBrand">添加</el-button>
                     </el-col>
                   </el-row>
@@ -1257,6 +1261,13 @@
     margin-bottom: 10px
   }
 
+  .margin-bottom10:last-child {
+    margin-bottom: 0;
+  }
+
+  .input-brand.margin-bottom10:nth-child(2n+1) {
+    padding-left: 0!important;
+  }
   .own-brand {
     position: relative;
     margin-right: 10px;
@@ -1268,9 +1279,12 @@
     content: "";
   }
   .subsidiary .fx-icon-nothing-close-error {
-    line-height: 24px;
+    font-size: 12px;
     cursor: pointer;
+    color: #fff;
+    margin-right: 0;
   }
+
   @media screen and (max-width: 767px) {
     .item-m .content {
       border: none;
