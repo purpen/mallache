@@ -105,3 +105,6 @@ git@github.com:purpen/mallache.git
  
  ###### 更新设计公司案例数据结构迁移
  php artisan designCase:change
+ 
+ ###### 注销账户
+ php artisan unset:user --account=

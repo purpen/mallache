@@ -253,4 +253,17 @@ class User extends Authenticatable implements JWTSubject
         }
         return $is_admin;
     }
+
+    /**
+     * 注销账户
+     */
+    public function unsetUser()
+    {
+        $account = '2' . substr($this->account,1);
+        $this->account = $account;
+        $this->phone = $account;
+        $this->email = null;
+        $this->status = -1;
+        $this->save();
+    }
 }
