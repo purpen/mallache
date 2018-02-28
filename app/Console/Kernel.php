@@ -29,6 +29,13 @@ class Kernel extends ConsoleKernel
         //设计公司案例数据结构变更
         Commands\ChangeDesignCase::class,
 
+
+        // 注销账户
+        Commands\UnsetUser::class,
+
+        // 项目类型多选数据结构变更
+        Commands\ChangeItem::class
+
     ];
 
     /**
