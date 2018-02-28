@@ -524,13 +524,13 @@
 <style scoped>
   .content-item-box {
     min-height: 500px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 
   .pub {
     background: #FAFAFA;
     height: 150px;
-    margin: 20px 0 10px 0;
+    margin: 0 0 20px 0;
     position: relative;
     display: flex;
     justify-content: center;
@@ -616,7 +616,7 @@
 
   .item-title-box {
     margin-top: 20px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     border: 1px solid #d2d2d2;
     border-bottom: none;
   }

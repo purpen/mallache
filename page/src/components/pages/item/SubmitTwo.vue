@@ -30,18 +30,14 @@
               <div class="type-content" v-show="form.type === 1">
 
                 <p>设计类别</p>
-                <div class="category-box">
-                  <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index"
-                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions"
-                             size="small">{{ d.name
-                    }}
+                <div class="category-box" v-if="typeDesignOptions.length">
+                  <el-button @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions"  :key="index" :class="{ 'tag': true, active: d.active}"  size="small">{{ d.name }}
                   </el-button>
                 </div>
 
                 <p class="classify">产品类别</p>
                 <div class="category-box">
-                  <el-button :class="{ 'tag': true, active: d.id === form.field ? true : false }" :key="index"
-                             @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions" size="small">{{ d.name }}
+                  <el-button @click="fieldBtn(d.id)" v-for="(d, index) in fieldOptions" :key="index"  :class="{ 'tag': true, active: d.id === form.field ? true : false }" size="small">{{ d.name }}
                   </el-button>
                 </div>
 
@@ -53,7 +49,6 @@
                   -->
 
               </div>
-
             </transition>
           </div>
 
@@ -73,13 +68,10 @@
               <div class="type-content" v-show="form.type === 2">
 
                 <p>设计类别</p>
-                <div class="category-box">
-                  <el-button :class="{ 'tag': true, active: d.id === form.design_type ? true : false }" :key="index"
-                             @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions" size="small">{{ d.name
-                    }}
+                <div class="category-box" v-if="typeDesignOptions.length">
+                  <el-button :class="{ 'tag': true, active: d.id === form.design_types ? true : false }" :key="index" @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions" size="small">{{ d.name }}
                   </el-button>
                 </div>
-
               </div>
 
             </transition>
@@ -123,7 +115,7 @@
         matchCount: '',
         form: {
           type: '',
-          design_type: '',
+          design_types: [],
           field: '',
           industry: ''
         },
@@ -135,23 +127,23 @@
         const that = this
         var row = {}
         if (that.form.type === 1) {
-          if (!that.form.design_type || !that.form.field) {
+          if (!that.form.design_types.length || !that.form.field) {
             that.$message.error('添写信息不完整!')
             return false
           }
           row = {
             type: that.form.type,
-            design_type: that.form.design_type,
+            design_types: JSON.stringify(that.form.design_types),
             field: that.form.field
           }
         } else if (that.form.type === 2) {
-          if (!that.form.design_type) {
+          if (!that.form.design_types.lgnth) {
             that.$message.error('添写信息不完整!')
             return false
           }
           row = {
             type: that.form.type,
-            design_type: that.form.design_type
+            design_types: JSON.stringify(that.form.design_types)
           }
         } else {
           that.$message.error('请选择设计类型!')
@@ -164,13 +156,8 @@
         var apiUrl = null
         var method = null
 
-        if (that.itemId) {
-          method = 'put'
-          apiUrl = api.demandId.format(that.itemId)
-        } else {
-          method = 'post'
-          apiUrl = api.demand
-        }
+        method = 'put'
+        apiUrl = api.demandId.format(that.itemId)
 
         that.isLoadingBtn = true
         that.$http({method: method, url: apiUrl, data: row})
@@ -217,17 +204,26 @@
       },
       // 点击分类按钮
       openTypeBtn(typeId) {
+        this.form.design_types = []
+        this.form.field = ''
         if (typeId === this.form.type) {
           this.form.type = ''
         } else {
           this.form.type = typeId
           // 清空已选子类
-          // this.form.design_type = ''
-          // this.form.field = ''
+          for (let i of this.typeDesignOptions) {
+            i.active = false
+          }
         }
       },
       designTypeBtn(typeId) {
-        this.form.design_type = typeId
+        if (this.form.design_types.indexOf(typeId) === -1) {
+          this.form.design_types.push(typeId)
+        } else {
+          this.form.design_types.splice(this.form.design_types.indexOf(typeId), 1)
+        }
+        this.typeDesignOptions[typeId - 1].active = !this.typeDesignOptions[typeId - 1].active
+        console.log(this.form.design_types, this.typeDesignOptions)
       },
       fieldBtn(typeId) {
         this.form.field = typeId
@@ -292,10 +288,16 @@
               var row = response.data.data.item
               that.form.id = row.id
               that.form.type = row.type
-              that.form.design_type = row.design_type
+              if (row.design_types) {
+                that.form.design_types = row.design_types
+              } else {
+                that.form.design_types = []
+              }
+              for (let i of row.design_types) {
+                that.typeDesignOptions[i - 1].active = true
+              }
               that.form.field = row.field
               that.form.stage_status = row.stage_status
-//              console.log(response.data.data)
             } else {
               that.$message.error(response.data.meta.message)
               console.log(response.data.meta.message)
@@ -374,12 +376,18 @@
 
   .tag {
     margin: 5px 3px 5px 3px;
+    color: #222;
   }
 
-  .tag:hover {
-    border: 1px solid #FF5A5F;
-    color: #FF5A5F;
+  .tag:hover,.tag:focus {
+    border: 1px solid #999;
+    color: #222;
   }
+
+   .tag:active {
+    border: 1px solid #666;
+    color: #222;
+   }
 
   .tag.active {
     border: 1px solid #FF5A5F;

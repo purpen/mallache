@@ -440,7 +440,7 @@
   .my-wallet {
     background: #FAFAFA;
     height: 190px;
-    margin: 0 0 10px 0;
+    margin: 0;
     position: relative;
   }
 

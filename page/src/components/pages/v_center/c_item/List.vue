@@ -301,8 +301,6 @@
           } else {
             self.$message.error(response.data.meta.message)
           }
-
-//          console.log(response.data)
         })
         .catch(function (error) {
           self.$message.error(error.message)
