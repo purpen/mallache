@@ -130,7 +130,13 @@
               
               <el-form-item label="是否申请专利" class="fullwidth">
                 <el-row>
-                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
+                  <el-col :xs="24" :sm="3" :md="3" :lg="3">
+                    <el-radio-group v-model="is_apply" @change="isApplication">
+                      <el-radio :label="false">否</el-radio>
+                      <el-radio :label="true">是</el-radio>
+                    </el-radio-group>
+                  </el-col>
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6" v-if="is_apply">
                     <el-form-item>
                       <el-date-picker
                         key="patent_time"
@@ -141,8 +147,8 @@
                       </el-date-picker>
                     </el-form-item>
                   </el-col>
-                  <el-col :xs="24" :sm="6" :md="6" :lg="6">
-                    <el-form-item prop="patent_info">
+                  <el-col :xs="24" :sm="6" :md="6" :lg="6" v-if="is_apply">
+                    <el-form-item>
                       <el-select v-model.number="form.patent_info" placeholder="选择申请专利类型" 
                         key="patent_info">
                         <el-option
@@ -269,6 +275,7 @@
         fileList: [],
         uploadUrl: '',
         isDisabledProduct: true,
+        is_apply: false,
         typeSwitch1: false,
         typeSwitch2: false,
         uploadParam: {
@@ -357,10 +364,14 @@
               profile: that.form.profile
             }
             row.cover_id = that.coverId
-            // 奖项
-            row.prizes = JSON.stringify({time: that.form.prize_time.format ('yyyy-MM-dd'), type: that.form.prize})
-            // 专利
-            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patent_info})
+            if (that.form.prize_time) {
+              that.form.prize_time = that.form.prize_time.format ('yyyy-MM-dd')
+            }
+            if (that.form.patent_time) {
+              that.form.patent_time = that.form.patent_time.format ('yyyy-MM-dd')
+            }
+            row.prizes = JSON.stringify({time: that.form.prize_time, type: that.form.prize})
+            row.patent = JSON.stringify({time: that.form.patent_time, type: that.form.patent_info})
             let apiUrl = null
             let method = null
 
@@ -411,13 +422,21 @@
           this.typeSwitch1 = false
         }
       },
-      // 是否量产方法
+      // 是否量产
       isProduction(val) {
         if (val === 0) {
           this.isDisabledProduct = true
           this.form.sales_volume = null
         } else if (val === 1) {
           this.isDisabledProduct = false
+        }
+      },
+      // 是否申请专利
+      isApplication(val) {
+        this.is_apply = val
+        if (!val) {
+          this.form.patent_time = null
+          this.form.patent_info = ''
         }
       },
       // 删除附件
@@ -653,13 +672,16 @@
           .then (function (response) {
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
-              if (that.form.prizes) {
+              if (that.form.prizes && that.form.prizes.time) {
                 that.$set(that.form, 'prize_time', that.form.prizes.time)
                 that.$set(that.form, 'prize', that.form.prizes.type)
               }
-              if (that.form.patent) {
+              if (that.form.patent && that.form.patent.time) {
+                that.$set(that, 'is_apply', true)
                 that.$set(that.form, 'patent_time', that.form.patent.time)
                 that.$set(that.form, 'patent_info', that.form.patent.type)
+              } else {
+                that.$set(that, 'is_apply', false)
               }
               if (that.form.cover_id) {
                 that.coverId = that.form.cover_id
@@ -685,7 +707,6 @@
                 }
                 that.fileList = files
               }
-              console.log(that.form)
             }
           })
           .catch (function (error) {
