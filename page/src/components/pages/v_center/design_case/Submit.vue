@@ -15,7 +15,7 @@
 
 
               <el-form-item label="设计类型" prop="type">
-                <el-radio-group v-model.number="form.type" @change="typeChange">
+                <el-radio-group v-model.number="form.type" @change="typeChange" size="small">
                   <el-radio-button
                     v-for="item in typeOptions"
                     :key="item.index"
