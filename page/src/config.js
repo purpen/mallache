@@ -7,20 +7,17 @@ const COMPANY_TYPE = [
       {
         id: 1,
         key: 'item_1_1',
-        name: '产品策略',
-        active: false
+        name: '产品策略'
       },
       {
         id: 2,
         key: 'item_1_2',
-        name: '产品外观设计',
-        active: false
+        name: '产品外观设计'
       },
       {
         id: 3,
         key: 'item_1_3',
-        name: '结构设计',
-        active: false
+        name: '结构设计'
       }
     ],
     field: [
@@ -165,32 +162,27 @@ const COMPANY_TYPE = [
       {
         id: 1,
         key: 'item_2_1',
-        name: 'App设计',
-        active: false
+        name: 'App设计'
       },
       {
         id: 2,
         key: 'item_2_2',
-        name: '网页设计',
-        active: false
+        name: '网页设计'
       },
       {
         id: 3,
         key: 'item_2_3',
-        name: '界面设计',
-        active: false
+        name: '界面设计'
       },
       {
         id: 4,
         key: 'item_2_4',
-        name: '服务设计',
-        active: false
+        name: '服务设计'
       },
       {
         id: 5,
         key: 'item_2_5',
-        name: '用户体验咨询',
-        active: false
+        name: '用户体验咨询'
       }
     ],
     field: [
