@@ -129,9 +129,9 @@
 
                 <el-select v-model.number="form.company_size" placeholder="请选择" v-if="element.company_size">
                   <el-option
-                    v-for="item in sizeOptions"
+                    v-for="(item, index) in sizeOptions"
                     :label="item.label"
-                    :key="item.index"
+                    :key="index"
                     :value="item.value">
                   </el-option>
                 </el-select>

@@ -142,8 +142,9 @@
                     </el-form-item>
                   </el-col>
                   <el-col :xs="24" :sm="6" :md="6" :lg="6">
-                    <el-form-item prop="patent">
-                      <el-select v-model.number="form.patent" placeholder="选择申请专利类型">
+                    <el-form-item prop="patent_info">
+                      <el-select v-model.number="form.patent_info" placeholder="选择申请专利类型" 
+                        key="patent_info">
                         <el-option
                           v-for="item in patentOptions"
                           :label="item.label"
@@ -289,7 +290,7 @@
           prize_time: '',
           prize: '',
           patent_time: '',
-          patent: '',
+          patent_info: '',
           customer: '',
           mass_production: 0,
           sales_volume: '',
@@ -325,7 +326,7 @@
           prize_time: [
             {required: true, type: 'date', message: '请选择获奖时间', trigger: 'blur'}
           ],
-          patent: [
+          patent_info: [
             {required: true, type: 'number', message: '请选择专利类型', trigger: 'blur'}
           ],
           patent_time: [
@@ -359,7 +360,7 @@
             // 奖项
             row.prizes = JSON.stringify({time: that.form.prize_time.format ('yyyy-MM-dd'), type: that.form.prize})
             // 专利
-            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patent})
+            row.patent = JSON.stringify({time: that.form.patent_time.format ('yyyy-MM-dd'), type: that.form.patent_info})
             let apiUrl = null
             let method = null
 
@@ -653,12 +654,12 @@
             if (response.data.meta.status_code === 200) {
               that.form = response.data.data
               if (that.form.prizes) {
-                that.form.prize_time = that.form.prizes.time
-                that.form.prize = that.form.prizes.type
+                that.$set(that.form, 'prize_time', that.form.prizes.time)
+                that.$set(that.form, 'prize', that.form.prizes.type)
               }
               if (that.form.patent) {
-                that.form.patent_time = that.form.patent.time
-                that.form.patent = that.form.patent.type
+                that.$set(that.form, 'patent_time', that.form.patent.time)
+                that.$set(that.form, 'patent_info', that.form.patent.type)
               }
               if (that.form.cover_id) {
                 that.coverId = that.form.cover_id
