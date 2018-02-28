@@ -40,7 +40,7 @@ class ChangeDesignCase extends Command
     {
         DesignCaseModel::chunk(100, function ($cases){
             foreach ($cases as $case){
-                if($case->prizes == 'null'){
+                if($case->prizes == null){
                     $prize = $case->prize;
                     $prize_time = $case->prize_time;
                     if(!empty($prize) && !empty($prize_time)){

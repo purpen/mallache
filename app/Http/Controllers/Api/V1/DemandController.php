@@ -65,7 +65,7 @@ class DemandController extends BaseController
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {post} /demand 添加项目类型、领域
+     * @api {post} /demand 添加项目类型、领域 (停用)
      * @apiVersion 1.0.0
      * @apiName demand store
      * @apiGroup demandType
@@ -216,8 +216,14 @@ class DemandController extends BaseController
      * "id": 13,
      * "type": 1,
      * "type_value": "产品设计类型",
-     * "design_type": 2,
-     * "design_type_value": "产品设计",
+     * "design_type": 2, (停用)
+     * "design_type_value": "产品设计", （停用）
+     * "design_types": [
+     *      2
+     *  ],
+     * "design_types_value": [
+     *      "网页设计"
+     *  ],
      * "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。；22.已评价
      * "field": 2,
      * "field_value": "消费电子",
@@ -298,7 +304,8 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
      * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
-     * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）（停用）
+     * @apiParam {json} design_types 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）[1,2,3]
      * @apiParam {integer} field 所属领域
      * @apiParam {string} company_name 公司名称
      * @apiParam {string} company_abbreviation 公司简称
@@ -319,8 +326,14 @@ class DemandController extends BaseController
      * "id": 13,
      * "type": 1,
      * "type_value": "产品设计类型",
-     * "design_type": 2,
-     * "design_type_value": "产品设计",
+     * "design_type": 2,（停用）
+     * "design_type_value": "产品设计", （停用）
+     * "design_types": [
+     *      2
+     *  ],
+     * "design_types_value": [
+     *      "网页设计"
+     *  ],
      * "status": 5,
      * "field": 2,
      * "field_value": "消费电子",
@@ -374,12 +387,12 @@ class DemandController extends BaseController
 
             $rules = [
                 'type' => 'required|integer',
-                'design_type' => 'required|integer',
+                'design_types' => 'required|JSON',
                 'field' => 'required|integer',
 //                'industry' => 'required|integer',
             ];
 
-            $all = $request->only(['stage_status', 'type', 'design_type', 'field']);
+            $all = $request->only(['stage_status', 'type', 'design_types', 'field']);
 
             $validator = Validator::make($all, $rules);
             if ($validator->fails()) {
@@ -416,9 +429,9 @@ class DemandController extends BaseController
         elseif ($type === 2) {
             $rules = [
                 'type' => 'required|integer',
-                'design_type' => ['required', 'integer'],
+                'design_types' => ['required', 'JSON'],
             ];
-            $all = $request->only(['stage_status', 'type', 'design_type']);
+            $all = $request->only(['stage_status', 'type', 'design_types']);
 
             $validator = Validator::make($all, $rules);
             if ($validator->fails()) {
@@ -525,7 +538,7 @@ class DemandController extends BaseController
     {
         $item = $this->checkItemStatusAndAuth($id);
 
-        if($item->status != -2){
+        if ($item->status != -2) {
             return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
         }
 
@@ -1199,7 +1212,7 @@ class DemandController extends BaseController
      * @param $item_id
      * @return Item
      */
-    protected function checkItemStatusAndAuth ($item_id)
+    protected function checkItemStatusAndAuth($item_id)
     {
         if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found item', 404));
@@ -1303,7 +1316,8 @@ class DemandController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；
-     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {integer} design_type 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）(停用)
+     * @apiParam {json} design_types 设计类别：产品设计（1.产品策略；2.产品外观设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）[1,2]
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} province 省份ID
@@ -1324,7 +1338,7 @@ class DemandController extends BaseController
     public function matchingCount(Request $request)
     {
         $type = $request->input('type') ?? null;
-        $design_type = $request->input('design_type') ?? null;
+        $design_types = $request->input('design_types') ?? null;
         $design_cost = $request->input('design_cost') ?? null;
         $cycle = $request->input('cycle') ?? null;
         $province = $request->input('province') ?? null;
@@ -1336,8 +1350,9 @@ class DemandController extends BaseController
             $query->where('type', $type);
         }
 
-        if ($design_type) {
-            $query->where('design_type', $design_type);
+        if ($design_types) {
+            $design_types = json_encode($design_types,true);
+            $query->whereIn('design_type', $design_types);
         }
 
         if ($design_cost) {
