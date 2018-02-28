@@ -31,7 +31,7 @@
 
                 <p>设计类别</p>
                 <div class="category-box" v-if="typeDesignOptions.length">
-                  <el-button @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions"  :key="index" :class="{ 'tag': true, active: d.active}"  size="small">{{ d.name }}
+                  <el-button @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions"  :key="index" :class="{ 'tag': true, active: form.design_types.indexOf(d.id) !== -1  }"  size="small">{{ d.name }}
                   </el-button>
                 </div>
 
@@ -69,7 +69,7 @@
 
                 <p>设计类别</p>
                 <div class="category-box" v-if="typeDesignOptions.length">
-                  <el-button :class="{ 'tag': true, active: d.id === form.design_types ? true : false }" :key="index" @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions" size="small">{{ d.name }}
+                  <el-button :class="{ 'tag': true, active: form.design_types.indexOf(d.id) !== -1  }" :key="index" @click="designTypeBtn(d.id)" v-for="(d, index) in typeDesignOptions" size="small">{{ d.name }}
                   </el-button>
                 </div>
               </div>
@@ -137,7 +137,7 @@
             field: that.form.field
           }
         } else if (that.form.type === 2) {
-          if (!that.form.design_types.lgnth) {
+          if (!that.form.design_types.length) {
             that.$message.error('添写信息不完整!')
             return false
           }
@@ -222,8 +222,6 @@
         } else {
           this.form.design_types.splice(this.form.design_types.indexOf(typeId), 1)
         }
-        this.typeDesignOptions[typeId - 1].active = !this.typeDesignOptions[typeId - 1].active
-        console.log(this.form.design_types, this.typeDesignOptions)
       },
       fieldBtn(typeId) {
         this.form.field = typeId
@@ -236,17 +234,20 @@
       typeOptions() {
         return typeData.COMPANY_TYPE
       },
-      typeDesignOptions() {
-        var index = 0
-        if (this.form.type === 1) {
-          index = 0
-        } else if (this.form.type === 2) {
-          index = 1
-        } else {
-          return []
+      typeDesignOptions: {
+        get() {
+          var index = 0
+          if (this.form.type === 1) {
+            index = 0
+          } else if (this.form.type === 2) {
+            index = 1
+          } else {
+            return []
+          }
+          return typeData.COMPANY_TYPE[index].designType
+        },
+        set() {
         }
-
-        return typeData.COMPANY_TYPE[index].designType
       },
       fieldOptions() {
         var index
@@ -276,7 +277,6 @@
         return this.$store.state.event.isMob
       }
     },
-    mounted: function () {},
     created: function () {
       const that = this
       var id = this.$route.params.id
@@ -293,7 +293,7 @@
               } else {
                 that.form.design_types = []
               }
-              for (let i of row.design_types) {
+              for (let i of that.form.design_types) {
                 that.typeDesignOptions[i - 1].active = true
               }
               that.form.field = row.field
