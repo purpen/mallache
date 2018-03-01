@@ -74,30 +74,41 @@
             <el-collapse v-model="selectCompanyCollapse" @change="selectCompanyboxChange">
               <el-collapse-item title="选择系统推荐的设计公司" name="3">
                 <div class="select-company-item clearfix" v-for="(d, index) in stickCompany" :key="index">
-                  <el-checkbox :class="['check-box',{'height220': d.cases.length}]" v-model="stickCompanyIds" :label="d.id">&nbsp;</el-checkbox>
-                  <div class="content">
-                    <div class="img">
-                      <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">
-                        <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50"/>
-                        <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="50"/>
-                      </router-link>
-                    </div>
-                    <div class="company-title">
-                      <h3 class="company-name">
-                        <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name
-                          }}
-                        </router-link>
-                      </h3>
-                      <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
-                      <p class="des company-padding" v-if="d.item_type"><span>类型: </span>{{ d.item_type_label }}</p>
-                      <p class="des company-padding"><span>优势: </span>{{ d.professional_advantage }}</p>
-                    </div>
-                    <div class="case-box">
-                      <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank"
-                                   :title="m.title" v-for="(m, index) in d.cases" :key="index">
-                        <img width="150" :src="m.cover_url"/></router-link>
-                    </div>
-                  </div>
+                  <el-checkbox class="check-box" v-model="stickCompanyIds" :label="d.id">
+                    <el-row class="content">
+                      <el-col :xs="24" :sm="2" :md="2" :lg="2">
+                        <div class="img">
+                          <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">
+                            <img class="avatar" v-if="d.logo_url" :src="d.logo_url" width="50"/>
+                            <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="50"/>
+                          </router-link>
+                        </div>
+                      </el-col>
+                      <el-col
+                        :xs="24" 
+                        :sm="d.cases.length ? 12 : 10" 
+                        :md="d.cases.length ? 12 : 10" 
+                        :lg="d.cases.length ? 12 : 10">
+                        <div class="company-title">
+                          <h3 class="company-name">
+                            <router-link :to="{name: 'companyShow', params: {id: d.id}}" target="_blank">{{ d.company_name
+                              }}
+                            </router-link>
+                          </h3>
+                          <p class="company-addr"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ d.city_arr.join(',') }}</p>
+                          <p class="des company-padding" v-if="d.item_type"><span>类型: </span>{{ d.item_type_label }}</p>
+                          <p class="des company-padding"><span>优势: </span>{{ d.professional_advantage }}</p>
+                        </div>
+                      </el-col>
+                      <el-col :xs="24" :sm="10" :md="10" :lg="10" v-if="d.cases.length">
+                        <div class="case-box">
+                          <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: m.id}}" target="_blank"
+                                      :title="m.title" v-for="(m, index) in d.cases" :key="index">
+                            <img width="120" :src="m.cover_url"/></router-link>
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </el-checkbox>
                 </div>
                 <div class="clear"></div>
                 <div class="pub-btn clearfix" v-if="item.status === 3">
@@ -291,7 +302,7 @@
                     <p class="wait-begin">等待设计公司提交资料</p>
                   </div>
                   <div class="clearfix" v-else>
-                    <div class="stage-item clearfix" v-for="(d, index) in stages">
+                     <div class="stage-item clearfix" v-for="(d, index) in stages" :key="index">
                       <div class="stage-title clearfix">
                         <h3>第{{ d.no }}阶段: {{ d.title }}</h3>
 
@@ -304,7 +315,7 @@
                           <span v-if="d.confirm === 1">已确认</span>
                         </p>
                       </div>
-                      <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image">
+                      <div class="stage-asset-box clearfix" v-for="(asset, asset_index) in d.item_stage_image" :key="asset_index">
                         <div class="contract-left">
                           <img :src="require('assets/images/icon/pdf2x.png')" width="30"/>
                           <div class="contract-content">
@@ -977,7 +988,6 @@ export default {
             self.$http
               .get(api.recommendListId.format(self.item.id), {})
               .then(function(stickCompanyResponse) {
-                console.log(stickCompanyResponse)
                 if (stickCompanyResponse.data.meta.status_code === 200) {
                   self.stickCompany = stickCompanyResponse.data.data
                   for (let i = 0; i < self.stickCompany.length; i++) {
@@ -991,8 +1001,13 @@ export default {
                       self.stickCompany[i].item_type_label = item.item_type.join('／')
                     }
                     let cases = []
+                    let num = 0
                     if (item.design_case && item.design_case.length > 0) {
                       for (let j = 0; j < item.design_case.length; j++) {
+                        num++
+                        if (num > 2) {
+                          return
+                        }
                         let c = item.design_case[j]
                         if (j > 1) break
                         let obj = {}
@@ -1134,9 +1149,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.content {
-}
-
 .banner {
   height: 200px;
   text-align: center;
@@ -1161,9 +1173,6 @@ export default {
   margin: 10px;
 }
 
-.base_info {
-}
-
 .el-step__title.is-finish {
   font-size: 3rem;
 }
@@ -1181,15 +1190,13 @@ export default {
 }
 
 .select-company-item .check-box {
+  width: 100%;
   margin: 10px;
-  float: left;
+  display: flex;
+  align-items: center
 }
-
-.select-company-item .check-box.height220 {
-  line-height: 220px;
-}
-
 .select-company-item .content {
+  width: 100%;
   display: flex;
   align-items: center
 }
@@ -1208,6 +1215,7 @@ export default {
 .select-company-item .content p {
   color: #666;
   font-size: 1rem;
+  white-space: normal
 }
 
 .select-company-item .content p span {
@@ -1221,11 +1229,8 @@ export default {
 }
 
 .select-company-item .case-box {
-  /*height: 100px;*/
   margin: 10px;
   float: left;
-  padding-top: 45px;
-  padding-left: 56px;
   overflow: hidden;
 }
 
@@ -1306,7 +1311,6 @@ export default {
   height: 60px;
   margin: 15px 0 10px 0;
   padding: 10px 0 5px 0;
-  /*border-top: 1px solid #ccc;*/
   border-bottom: 1px solid #ccc;
 }
 
@@ -1397,10 +1401,6 @@ export default {
   min-height: 80px;
   text-align: left;
 }
-
-.add-stage p {
-}
-
 .finish-item-btn {
   margin-top: 30px;
   margin-bottom: 20px;
@@ -1491,21 +1491,12 @@ p.ev-c-content {
   padding: 10px 50px;
 }
 
-p.ev-c-btn {
-}
-
 p.ev-c-btn button {
   padding: 10px 50px;
 }
 
-.evaluate-report .ev-c-ava {
-}
-
 .evaluate-report .ev-c-name {
   line-height: 2;
-}
-
-.evaluate-result {
 }
 
 .eva-content {
@@ -1581,9 +1572,7 @@ section ul li a {
   .stage-asset-box {
     padding: 10px 0;
   }
-  .select-company-item .check-box .select-company-item .check-box.height220 {
-    line-height: 1;
-  }
+
   .select-company-item .case-box {
     width: 100%;
     display: flex;
@@ -1600,11 +1589,15 @@ section ul li a {
     text-align: center;
   }
   .select-company-item .content p.company-padding {
-    padding-left: 47px;
+    padding-left: 10px;
   }
   .select-company-item .case-box {
     padding-left: 0;
   }
+  .select-company-item .content {
+  width: 100%;
+  display: block;
+}
 }
 
 @media screen and (max-width: 350px) {
@@ -1623,3 +1616,9 @@ section ul li a {
   }
 }
 </style>
+<style>
+  .select-company-item .check-box .el-checkbox__label {
+    width: 100%;
+  }
+</style>
+

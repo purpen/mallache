@@ -101,9 +101,9 @@
                 <p class="slide-str error"><img src="../../../assets/images/icon/item_stick_fail.png" width="25"/> 匹配失败
                 </p>
                 <p class="slide-des error">可能出现的原因：</p>
-                <p class="slide-des error">当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
-                <p class="slide-des error">当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p>
-                <p class="slide-des error">选择当前的城市没有对应的设计公司。</p>
+                <p class="slide-des error">1.当前项目设计周期太短，无法匹配有效的设计服务供应商，请重新设置项目周期。</p>
+                <p class="slide-des error">2.当前项目设计项目设计服务费预算过低，无法匹配有效的设计服务供应商，请重新设置项目设计服务费。</p>
+                <p class="slide-des error">3.选择当前的城市没有对应的设计公司。</p>
               </div>
               <div v-else-if="matchCount > 0">
                 <p class="slide-str success"><img src="../../../assets/images/icon/item_stick.png" width="25"/>
