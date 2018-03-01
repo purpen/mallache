@@ -3,7 +3,7 @@
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="item"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20"  v-loading.body="isLoading">
+      <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-item-box">
@@ -52,7 +52,7 @@
                 </div>
               </div>
 
-              <el-row class="item-title-box list-box" v-if="!isMob">
+              <el-row class="item-title-box list-box" v-if="!isMob" v-loading.body="isLoading">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -68,7 +68,6 @@
               </el-row>
 
               <div class="item" v-for="(d, index) in itemList" :key="d + index" v-if="!isMob">
-
                 <el-row class="banner list-box">
                   <el-col :span="24">
                     <p>{{ d.item.created_at }}</p>
@@ -115,7 +114,7 @@
                         </el-tooltip>
                       </p>
                     </div>
-                    <p class="btn" v-show="d.item.status === -1">
+                    <p class="btn" v-if="false" v-show="d.item.status === -1">
                       <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small" type="primary">
                         删除项目
                       </el-button>
@@ -219,7 +218,7 @@
                           </el-tooltip>
                         </p>
                       </div>
-                      <p class="btn" v-show="d.item.status === -1">
+                      <p class="btn" v-if="false" v-show="d.item.status === -1">
                         <el-button class="is-custom" @click="delItemBtn" :item_id="d.item.id" size="small"
                                    type="primary">
                           删除项目
@@ -346,10 +345,8 @@
         that.isLoading = true
         that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
           .then(function (response) {
-            that.isLoading = false
             if (response.data.meta.status_code === 200) {
               if (!response.data.data) {
-                // console.log(that)
                 return false
               }
               let data = response.data.data
@@ -382,10 +379,12 @@
                 data[i]['item']['show_offer'] = showOffer
                 data[i]['item']['created_at'] = d.item.created_at.date_format().format('yyyy-MM-dd')
               } // endfor
+
               if (type === 1) {
                 that.itemIngList = data
               } else if (type === 2) {
                 that.itemList = data
+                that.isLoading = false
               }
               if (that.itemList.length || that.itemIngList.length) {
                 that.isEmpty = false
@@ -501,8 +500,8 @@
         this.$router.replace({name: 'vcenterCItemList'})
         return
       }
-      this.loadList(1)
-      this.loadList(2)
+      this.loadList(1) // 填写资料中
+      this.loadList(2) // 进行中
     },
     watch: {
       '$route' (to, from) {

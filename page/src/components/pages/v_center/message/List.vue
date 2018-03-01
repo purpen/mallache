@@ -93,6 +93,7 @@
             self.isLoading = false
             if (response.data.meta.status_code === 200) {
               let data = response.data.data
+              console.log(data)
               self.query.totalCount = response.data.meta.pagination.total
               for (let i = 0; i < data.length; i++) {
                 let item = data[i]
@@ -105,7 +106,6 @@
               } else {
                 self.isEmpty = true
               }
-//              console.log(data)
             }
           })
           .catch(function (error) {
@@ -131,6 +131,7 @@
           this.itemList[index].is_show = false
         } else {
           this.itemList[index].is_show = true
+          this.itemList[index].status = 1
           // 确认已读状态
           if (d.status === 0) {
             self.$http.put(api.messageTrueRead, {id: d.id})

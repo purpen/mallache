@@ -7,7 +7,7 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
-            <div class="item clearfix" v-for="(d, index) in itemList" :key="index">
+            <div class="item clearfix" v-for="(d, index) in itemList" :key="index" @click="removeRedDot(index)">
               <div class="left">
                 <p class="logo"></p>
               </div>
@@ -112,6 +112,9 @@
             self.$message.error(error.message)
           })
       },
+      removeRedDot(index) {
+        this.itemList[index]['not_read'] = false
+      },
       handleCurrentChange(val) {
         this.query.page = val
         this.$router.push({name: this.$route.name, query: {page: val}})
@@ -207,7 +210,7 @@
 
   .item p {
     line-height: 24px
-  }
+  } 
 
   .item .banner2 {
     height: 30px;
@@ -300,7 +303,9 @@
 </style>
 <style>
   .item p.title .el-badge__content.is-fixed {
-    top: 3px;
-    left: -84px;
+    top: 10px;
+    left: -88px;
+    width: 7px;
+    height: 7px;
   }
 </style>

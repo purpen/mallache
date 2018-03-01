@@ -217,7 +217,7 @@
   }
 
   .verify-success {
-    margin: 20px 0;
+    margin-bottom: 20px;
     height: auto;
     border: 1px solid #d2d2d2;
   }
