@@ -711,6 +711,10 @@ button.is-custom.is-outlined.is-loading:after {
   padding: 6px 20px 6px 9px;
 }
 
+.nav-header .nav-item:hover span.icon i {
+  color: #FF5A5F
+}
+
 .nav-header .nav-item:hover .view-msg {
     display: block
 }
@@ -739,33 +743,31 @@ button.is-custom.is-outlined.is-loading:after {
   line-height: 20px;
   color: #999999;
   padding: 10px 15px 10px 40px;
-  transition: 0.3s;
+  transition: all 86ms ease;
+  position: relative;
 }
 
-.view-msg .news {
-  background: url("../images/icon/News@2x.png") no-repeat 10px center;
-  background-size: 20px;
+.view-msg i {
+  position: absolute;
+  left: 10px;
+  top: 10px;
 }
 
-.view-msg .news:hover {
-  color:#222;
-  background: url("../images/icon/NewsHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
-  background-size: 20px;
+.nav-item .view-msg a i[class*="hover"] {
+  opacity: 0;
 }
 
-.view-msg .notice {
-  background: url("../images/icon/Notice@2x.png") no-repeat 10px center;
-  background-size: 20px;
-}
-
-.view-msg .notice:hover {
-  color: #222;
-  background: url("../images/icon/NoticeHover@2x.png") no-repeat 10px center rgba(0, 0, 0, 0.051);
-  background-size: 20px;
-}
-
-.nav-item .view-msg a i{
+.nav-item .view-msg a:hover i {
   color: #FF5A5F
+}
+
+.nav-item .view-msg a:hover i[class*="hover"] {
+  opacity: 1
+}
+
+.nav-item .view-msg a:hover i.fx-icon-notice,
+.nav-item .view-msg a:hover i.fx-icon-sound-loudly {
+  opacity: 0
 }
 
 .nav-item .view-msg a:last-child {
@@ -790,9 +792,7 @@ button.is-custom.is-outlined.is-loading:after {
   width: 18px;
   min-height: 18px;
   border: 1px solid #FF5A5F;
-  /*设置红色*/
   border-radius: 50%;
-  /*设置圆角*/
   overflow: hidden;
   background-color: #FF5A5F;
   position: absolute;
@@ -801,8 +801,8 @@ button.is-custom.is-outlined.is-loading:after {
   margin-right: -10px;
   margin-top: -10px;
   color: #FFFFFF;
-  font-size: 10px;
-  line-height: 18px;
+  font-size: 14px;
+  text-align: center
 }
 
 .nav-header .fa {
@@ -969,6 +969,7 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 .el-menu-info .el-menu .el-menu-item {
+  position: relative;
   z-index: 999;
   display: block;
   cursor: pointer;
@@ -982,23 +983,21 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 0;
   padding: 0 1.5rem;
   text-align: center;
-  -webkit-transition: none 86ms ease-out;
-  transition: none 86ms ease-out;
+  -webkit-transition: all 86ms ease-out;
+  transition: all 86ms ease-out;
 }
 
-.el-menu-info .el-menu .el-menu-item.menu-control {
-  background: url("../images/icon/Console@2x.png") no-repeat 24px;
-  background-size: 22px;
-}
 
-.el-menu-info .el-menu .el-menu-item.menu-admin {
-  background: url("../images/icon/PersonalCenter@2x.png") no-repeat 24px;
-  background-size: 22px;
+.el-menu-info .el-menu .el-menu-item i {
+  position: absolute;
+  left: 25px;
+  top: 10px;
+  -webkit-transition: all 86ms ease-out;
+  transition: all 86ms ease-out;
 }
-
-.el-menu-info .el-menu .el-menu-item.menu-sign-out {
-  background: url("../images/icon/logout@2x.png") no-repeat 27px;
-  background-size: 22px;
+.el-menu-info .el-menu .el-menu-item i.fx-icon-logout,
+.el-menu-info .el-menu .el-menu-item i.fx-icon-logout-hover {
+  left: 28px
 }
 
 .el-menu-info .el-menu .el-menu-item:first-child {
@@ -1009,22 +1008,25 @@ button.is-custom.is-outlined.is-loading:after {
     border-radius: 0 0 4px 4px
 }
 
-.el-menu-info .el-menu .el-menu-item.menu-control:hover {
-  background: url("../images/icon/ConsoleHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
-  background-size: 22px;
+.el-menu-info .el-menu .el-menu-item:hover {
   color: #222222;
 }
 
-.el-menu-info .el-menu .el-menu-item.menu-admin:hover {
-  background: url("../images/icon/PersonalCenterHover@2x.png") no-repeat 24px rgba(0, 0, 0, 0.051);
-  background-size: 22px;
-  color: #222222;
+.el-menu-info .el-menu .el-menu-item:hover i {
+  color: #FF5A5F;
 }
 
-.el-menu-info .el-menu .el-menu-item.menu-sign-out:hover {
-  background: url("../images/icon/logoutHover@2x.png") no-repeat 27px rgba(0, 0, 0, 0.051);
-  background-size: 22px;
-  color: #222222;
+.el-menu-info .el-menu .el-menu-item i[class*="hover"] {
+  opacity: 0;
+}
+
+.el-menu-info .el-menu .el-menu-item:hover i[class*="center"],
+.el-menu-info .el-menu .el-menu-item:hover i.fx-icon-logout {
+  opacity: 0;
+}
+
+.el-menu-info .el-menu .el-menu-item:hover i[class*="hover"] {
+  opacity: 1;
 }
 
 .el-menu-info .el-submenu .el-submenu__title img {

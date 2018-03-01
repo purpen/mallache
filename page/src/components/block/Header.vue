@@ -22,17 +22,19 @@
           </div>
           <a class="nav-item is-hidden-mobile" @click="viewMsg" ref="msgList">
               <span class="icon active">
-                <i class="fa fa-bell-o" aria-hidden="true">
+                <i class="fx-4 fx-icon-notice">
                   <span v-if="messageCount > 0">{{ messageCount }}</span>
                 </i>
               </span>
               <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
                 <router-link :to="{name: 'vcenterMessageList'}" class="news">
-                  <span v-if="msg.message"><i>{{msg.message}}</i>条[项目提醒]未查看</span>
+                  <i class="fx-4 fx-icon-notice"></i><i class="fx-4 fx-icon-news-hover"></i>
+                  <span v-if="msg.message"><b>{{msg.message}}</b>条[项目提醒]未查看</span>
                   <span v-else>[项目提醒]</span>
                 </router-link>
                 <router-link :to="{name: 'systemMessageList'}" class="notice">
-                  <span v-if="msg.notice"><i>{{msg.notice}}</i>条[系统通知]未查看</span>
+                  <i class="fx-4 fx-icon-sound-loudly"></i><i class="fx-4 fx-icon-notice-hover"></i>
+                  <span v-if="msg.notice"><b>{{msg.notice}}</b>条[系统通知]未查看</span>
                   <span v-else>[系统通知]</span>
                 </router-link>
               </div>
@@ -44,9 +46,10 @@
                 <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
                 <span class="b-nickname">{{ eventUser.account }}</span>
               </template>
-              <el-menu-item class="menu-control" index="/vcenter/control">个人中心</el-menu-item>
-              <el-menu-item class="menu-admin" index="/admin" v-if="isAdmin > 0 ? true : false">后台管理</el-menu-item>
-              <el-menu-item index="" class="menu-sign-out" @click="logout">安全退出</el-menu-item>
+              <el-menu-item index="/vcenter/control"><i class="fx-4 fx-icon-control-center"></i><i class="fx-4 fx-icon-console-hover"></i>个人中心</el-menu-item>
+              <el-menu-item index="/admin" v-if="isAdmin > 0 ? true : false"><i class="fx-4 fx-icon-personal-center"></i><i class="fx-4 fx-icon-combined-shape-hover"></i>后台管理</el-menu-item>
+              <el-menu-item index="" @click="logout">
+<i class="fx-4 fx-icon-logout"></i><i class="fx-4 fx-icon-logout-hover"></i>安全退出</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>
