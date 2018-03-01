@@ -31,8 +31,8 @@ class DesignCaseOpenTransformer extends TransformerAbstract
     {
         return [
             'id' => intval($designCase->id),
-            'prize' => intval($designCase->prize),
-            'prize_val' => $designCase->prize_val,
+//            'prize' => intval($designCase->prize),
+//            'prize_val' => $designCase->prize_val,
             'title' => strval($designCase->title),
             'prize_time' => strval($designCase->prize_time),
             'sales_volume' => intval($designCase->sales_volume),

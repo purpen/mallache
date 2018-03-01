@@ -20,13 +20,13 @@ class Recommend
     {
         //设计类型
         $type = (int)$this->item->type;
-        $design_type = (int)$this->item->design_type;
+        $design_types = json_decode($this->item->design_types, true);
 
         //产品设计
         if ($type == 1) {
-            $design = $this->productDesign($type, $design_type);
+            $design = $this->productDesign($type, $design_types);
         } else if ($type == 2) {
-            $design = $this->uDesign($type, $design_type);
+            $design = $this->uDesign($type, $design_types);
         }
 
 
@@ -144,7 +144,7 @@ class Recommend
      * @param $design_type
      * @return array
      */
-    protected function productDesign($type, $design_type)
+    protected function productDesign($type, array $design_types)
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($this->item->productDesign->design_cost);
@@ -158,14 +158,26 @@ class Recommend
         $province = $item_info['province'];
         $city = $item_info['city'];
 
-        //获取符合设计类型和设计费用的设计公司ID数组
-        $design_id_arr = DesignItemModel::select('user_id')
-            ->where('type', $type)
-            ->where('design_type', $design_type)
-            ->where('min_price', '<=', $max)
-            ->where('project_cycle', $cycle)
-            ->get()
-            ->pluck('user_id')->all();
+
+        $arr = [];
+        foreach ($design_types as $design_type){
+            //获取符合设计类型和设计费用的设计公司ID数组
+            $design_id_arr = DesignItemModel::select('user_id')
+                ->where('type', $type)
+                ->where('design_type', $design_type)
+                ->where('min_price', '<=', $max)
+                ->where('project_cycle', $cycle)
+                ->get()
+                ->pluck('user_id')->all();
+
+            if(empty($arr)){
+                $arr =  $design_id_arr;
+            }else{
+                $arr = array_intersect($arr, $design_id_arr);
+            }
+        }
+        $design_id_arr = $arr;
+
 
 //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
@@ -188,7 +200,7 @@ class Recommend
     }
 
     //UI UX 设计 推荐设计公司ID数组
-    protected function uDesign($type, $design_type)
+    protected function uDesign($type, array $design_types)
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = $this->cost($this->item->uDesign->design_cost);
@@ -203,14 +215,24 @@ class Recommend
         $province = $item_info['province'];
         $city = $item_info['city'];
 
-        //获取符合 设计类型 和 设计费用 的设计公司ID数组
-        $design_id_arr = DesignItemModel::select('user_id')
-            ->where('type', $type)
-            ->where('design_type', $design_type)
-            ->where('min_price', '<=', $max)
-            ->where('project_cycle', $cycle)
-            ->get()
-            ->pluck('user_id')->all();
+        $arr = [];
+        foreach ($design_types as $design_type){
+            //获取符合 设计类型 和 设计费用 的设计公司ID数组
+            $design_id_arr = DesignItemModel::select('user_id')
+                ->where('type', $type)
+                ->where('design_type', $design_type)
+                ->where('min_price', '<=', $max)
+                ->where('project_cycle', $cycle)
+                ->get()
+                ->pluck('user_id')->all();
+
+            if(empty($arr)){
+                $arr =  $design_id_arr;
+            }else{
+                $arr = array_intersect($arr, $design_id_arr);
+            }
+        }
+        $design_id_arr = $arr;
 
 //Log::info($design_id_arr);
         //获取 擅长 的设计公司ID数组
