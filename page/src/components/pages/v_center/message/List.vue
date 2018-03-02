@@ -93,7 +93,6 @@
             self.isLoading = false
             if (response.data.meta.status_code === 200) {
               let data = response.data.data
-              console.log(data)
               self.query.totalCount = response.data.meta.pagination.total
               for (let i = 0; i < data.length; i++) {
                 let item = data[i]
@@ -127,23 +126,24 @@
       // 下拉展开
       showDes(d, index) {
         const self = this
+        console.log(d)
         if (d.is_show) {
           this.itemList[index].is_show = false
         } else {
           this.itemList[index].is_show = true
           this.itemList[index].status = 1
-          // 确认已读状态
-          if (d.status === 0) {
-            self.$http.put(api.messageTrueRead, {id: d.id})
-              .then(function (response) {
-                if (response.data.meta.status_code === 200) {
-                  self.itemList[index].status = 1
-                }
-              })
-              .catch(function (error) {
-                self.$message.error(error.message)
-              })
-          }
+        }
+        // 确认已读状态
+        if (d.status === 0) {
+          self.$http.put(api.messageTrueRead, {id: d.id})
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                self.itemList[index].status = 1
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+            })
         }
       },
       // 根据类型跳转

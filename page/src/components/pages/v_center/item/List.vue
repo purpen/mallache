@@ -6,7 +6,7 @@
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-item-box">
+          <div class="content-item-box" v-loading.body="isLoading">
             <div class="pub">
               <router-link :to="{name: 'itemSubmitOne'}">
                 <el-button class="pub-btn is-custom" type="primary" size="large"><i class="el-icon-plus"></i> 发布项目
@@ -52,7 +52,7 @@
                 </div>
               </div>
 
-              <el-row class="item-title-box list-box" v-if="!isMob" v-loading.body="isLoading">
+              <el-row class="item-title-box list-box" v-if="!isMob">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -126,8 +126,9 @@
                           选择设计服务供应商
                         </el-button>
                       </p>
+                      <p>
                         <el-tooltip class="item" effect="dark" content="关闭项目后，预付款自动转入我的钱包" placement="right-end">
-                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small"type="gray">
+                          <el-button class="" @click="closeItemBtn" :item_id="d.item.id" :index="index" size="small" type="gray">
                             关闭项目
                           </el-button>
                         </el-tooltip>
@@ -346,52 +347,48 @@
         that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
-              if (!response.data.data) {
-                return false
-              }
-              let data = response.data.data
-              for (let i = 0; i < data.length; i++) {
-                let d = data[i]
-                let status = d.item.status
-                let progress = d.item.stage_status
-                switch (progress) {
-                  case 1:
-                    data[i]['item']['progress'] = 20
-                    break
-                  case 2:
-                    data[i]['item']['progress'] = 60
-                    break
-                  case 3:
-                    data[i]['item']['progress'] = 90
-                    break
-                  default:
-                    data[i]['item']['progress'] = 0
-                }
-                let showOffer = false
-                if (d.item.status === 4 && d.purpose_count > 0) {
-                  showOffer = true
-                }
-                let showView = false
-                if (status === 2 || status === 5 || status === 9 || status === 11 || status === 20 || status === 22) {
-                  showView = true
-                }
-                data[i]['item']['is_view_show'] = showView
-                data[i]['item']['show_offer'] = showOffer
-                data[i]['item']['created_at'] = d.item.created_at.date_format().format('yyyy-MM-dd')
-              } // endfor
+              if (response.data.data) {
+                let data = response.data.data
+                for (let i = 0; i < data.length; i++) {
+                  let d = data[i]
+                  let status = d.item.status
+                  let progress = d.item.stage_status
+                  switch (progress) {
+                    case 1:
+                      data[i]['item']['progress'] = 20
+                      break
+                    case 2:
+                      data[i]['item']['progress'] = 60
+                      break
+                    case 3:
+                      data[i]['item']['progress'] = 90
+                      break
+                    default:
+                      data[i]['item']['progress'] = 0
+                  }
+                  let showOffer = false
+                  if (d.item.status === 4 && d.purpose_count > 0) {
+                    showOffer = true
+                  }
+                  let showView = false
+                  if (status === 2 || status === 5 || status === 9 || status === 11 || status === 20 || status === 22) {
+                    showView = true
+                  }
+                  data[i]['item']['is_view_show'] = showView
+                  data[i]['item']['show_offer'] = showOffer
+                  data[i]['item']['created_at'] = d.item.created_at.date_format().format('yyyy-MM-dd')
+                } // endfor
 
-              if (type === 1) {
-                that.itemIngList = data
-              } else if (type === 2) {
-                that.itemList = data
-                that.isLoading = false
-              }
-              if (that.itemList.length || that.itemIngList.length) {
-                that.isEmpty = false
+                if (type === 1) {
+                  that.itemIngList = data
+                } else if (type === 2) {
+                  that.itemList = data
+                  that.isLoading = false
+                }
               } else {
-                that.isEmpty = true
+                console.log('暂无项目')
+                that.isEmpty = false
               }
-//              console.log(data)
             }
           })
           .catch(function (error) {

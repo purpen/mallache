@@ -43,7 +43,7 @@
               </el-form-item>
 
               <el-form-item label="所属行业" prop="industry" class="fullwidth">
-                <el-select v-model.number="form.industry" placeholder="请选择行业">
+                <el-select v-model.number="form.industry" placeholder="请选择行业" @change="matchCompany">
                   <el-option
                     v-for="item in industryOptions"
                     :label="item.label"
@@ -272,16 +272,8 @@ export default {
               // row.competing_product[i] = that.form.cProducts[i]['value']
             }
           }
-          var apiUrl = null
-          var method = null
-
-          if (that.itemId) {
-            method = 'put'
-            apiUrl = api.ProductDesignId.format(that.itemId)
-          } else {
-            method = 'post'
-            apiUrl = api.ProductDesignId
-          }
+          var apiUrl = api.ProductDesignId.format(that.itemId)
+          var method = 'put'
           that
             .$http({ method: method, url: apiUrl, data: row })
             .then(function(response) {
@@ -320,7 +312,7 @@ export default {
       var mRow = {
         item_id: this.itemId,
         type: this.form.type,
-        design_type: this.form.design_type,
+        design_types: JSON.stringify(this.form.design_types),
         cycle: this.form.cycle,
         design_cost: this.form.design_cost,
         province: this.province,
@@ -329,6 +321,7 @@ export default {
       const that = this
       that.matchCount = ''
       that.matchLoading = true
+      console.log(mRow)
       that
         .$http({ url: api.demandMatchingCount, method: 'POST', data: mRow })
         .then(function(response) {
@@ -467,7 +460,7 @@ export default {
             }
             that.form.id = row.id
             that.form.type = row.type
-            that.form.design_type = row.design_type
+            that.form.design_types = row.design_types
             that.form.name = row.name
             that.form.industry = row.industry === 0 ? '' : row.industry
             that.form.product_features = row.product_features
@@ -505,7 +498,6 @@ export default {
 
             // 获取已匹配公司数量
             that.matchRequest()
-            console.log(response.data.data.item)
           } else {
             that.$message.error(response.data.meta.message)
             that.$router.push({ name: 'home' })

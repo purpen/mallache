@@ -37,9 +37,9 @@
               <el-form-item label="项目周期" prop="cycle" class="fullwidth">
                 <el-select v-model.number="form.cycle" placeholder="请选择项目周期" @change="matchCompany">
                   <el-option
-                    v-for="item in cycleOptions"
+                    v-for="(item, index) in cycleOptions"
                     :label="item.label"
-                    :key="item.index"
+                    :key="index"
                     :value="item.value">
                   </el-option>
                 </el-select>
@@ -48,20 +48,20 @@
               <el-form-item label="设计费用预算" prop="design_cost" class="fullwidth">
                 <el-select v-model.number="form.design_cost" placeholder="请选择设计费用预算" @change="matchCompany">
                   <el-option
-                    v-for="item in costOptions"
+                    v-for="(item, index) in costOptions"
                     :label="item.label"
-                    :key="item.index"
+                    :key="index"
                     :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
 
               <el-form-item label="所属行业" prop="industry" class="fullwidth">
-                <el-select v-model.number="form.industry" placeholder="请选择行业">
+                <el-select v-model.number="form.industry" placeholder="请选择行业" @change="matchCompany">
                   <el-option
-                    v-for="item in industryOptions"
+                    v-for="(item, index) in industryOptions"
                     :label="item.label"
-                    :key="item.index"
+                    :key="index"
                     :value="item.value">
                   </el-option>
                 </el-select>
@@ -277,17 +277,8 @@
               row.stage_status = 2
             }
             that.isLoadingBtn = true
-            console.log(row)
-            let apiUrl = null
-            let method = null
-
-            if (that.itemId) {
-              method = 'put'
-              apiUrl = api.UDesignId.format(that.itemId)
-            } else {
-              method = 'post'
-              apiUrl = api.UDesignId
-            }
+            let apiUrl = api.UDesignId.format(that.itemId)
+            let method = 'put'
             that.$http({method: method, url: apiUrl, data: row})
               .then(function (response) {
                 if (response.data.meta.status_code === 200) {
@@ -322,7 +313,7 @@
         let mRow = {
           item_id: this.itemId,
           type: this.form.type,
-          design_type: this.form.design_type,
+          design_types: JSON.stringify(this.form.design_types),
           cycle: this.form.cycle,
           design_cost: this.form.design_cost,
           province: this.province,
@@ -464,14 +455,13 @@
             that.isFirst = true
             if (response.data.meta.status_code === 200) {
               let row = response.data.data.item
-//              console.log('aaaa')
 //              console.log(row)
               if (row.type === 1) {
                 that.$router.replace({name: 'itemSubmitThree', params: {id: row.id}})
               }
               that.form.id = row.id
               that.form.type = row.type
-              that.form.design_type = row.design_type
+              that.form.design_types = row.design_types
               that.form.name = row.name
               that.form.stage = row.stage
               that.form.industry = row.industry === 0 ? '' : row.industry

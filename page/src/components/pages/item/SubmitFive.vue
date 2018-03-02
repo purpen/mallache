@@ -194,7 +194,7 @@
                   {
                     name: '',
                     key: '设计类别',
-                    value: row.design_type_value
+                    value: row.design_types_value.join(', ')
                   },
                   {
                     name: '',
@@ -226,7 +226,7 @@
                   {
                     name: '',
                     key: '设计类别',
-                    value: row.design_type_value
+                    value: row.design_types_value
                   },
                   {
                     name: '',
@@ -383,10 +383,6 @@
 
   .slide-img {
     padding-top: 20px;
-  }
-
-  .slide-img img {
-
   }
 
   .slide-str {
