@@ -19,6 +19,6 @@ class PayOrderTransformer extends TransformerAbstract
         $payOrder->item_name = $name;
         $payOrder->company_name =  $company_name;
         unset($payOrder->item);
-        return $payOrder;
+        return $payOrder->toArray();
     }
 }
