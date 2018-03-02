@@ -1814,7 +1814,7 @@ td.fc-day.fc-widget-content.fc-today::before {
     left: 20px;
   }
 
-  .el-step__icon {
+  .el-step__head .el-step__icon {
     line-height: 18px
   }
 

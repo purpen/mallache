@@ -101,7 +101,9 @@
               }
               let noticeCount = sessionStorage.getItem('noticeCount')
               for (let j = 0; j < noticeCount; j++) {
-                self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                if (self.itemList[j]) {
+                  self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                }
               }
             } else {
               self.$message.error(response.data.meta.message)

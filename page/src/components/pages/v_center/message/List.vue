@@ -126,15 +126,13 @@
       // 下拉展开
       showDes(d, index) {
         const self = this
-        console.log(d)
         if (d.is_show) {
           this.itemList[index].is_show = false
         } else {
           this.itemList[index].is_show = true
-          this.itemList[index].status = 1
         }
         // 确认已读状态
-        if (d.status === 0) {
+        if (self.itemList[index].status === 0) {
           self.$http.put(api.messageTrueRead, {id: d.id})
             .then(function (response) {
               if (response.data.meta.status_code === 200) {

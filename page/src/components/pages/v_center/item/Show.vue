@@ -691,6 +691,8 @@ export default {
               }
             } // endfor
             self.offerCompany = offerCompany
+          } else {
+            self.$message.error(response.data.meta.message)
           }
         })
         .catch(function(error) {
@@ -807,6 +809,8 @@ export default {
                   }
                 } // endfor
                 self.offerCompany = offerCompany
+              } else {
+                self.$message.error(response.data.meta.message)
               }
             })
             .catch(function(error) {
@@ -1023,6 +1027,8 @@ export default {
                     self.stickCompany[i].cases = cases
                   } // endfor
                   // console.log(self.stickCompany)
+                } else {
+                  self.$message.error(stickCompanyResponse.data.meta.message)
                 }
               })
               .catch(function(error) {
@@ -1077,13 +1083,15 @@ export default {
                     // self.sureFinishBtn = true
                   }
                   self.stages = items
+                } else {
+                  self.$message.error(response.data.meta.message)
                 }
               })
               .catch(function(error) {
                 self.$message.error(error.message)
               })
           }
-
+          console.log(self.item)
           let tab = []
           if (self.item.type === 1) {
             tab = [
@@ -1093,7 +1101,7 @@ export default {
               },
               {
                 name: '设计类别',
-                title: self.item.design_type_value
+                title: self.item.design_types_value.join(', ')
               },
               {
                 name: '产品领域',
@@ -1112,7 +1120,7 @@ export default {
               },
               {
                 name: '设计类别',
-                title: self.item.design_type_value
+                title: self.item.design_types_value.join(', ')
               }
             ]
           }
@@ -1137,11 +1145,12 @@ export default {
           ]
 
           self.tableData = tab.concat(itemTab)
+        } else {
+          self.$message.error(response.data.meta.message) // not found ?????
         }
       })
       .catch(function(error) {
         self.$message.error(error.message)
-        // console.log(error.message)
       })
   }
 }

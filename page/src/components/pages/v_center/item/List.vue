@@ -347,6 +347,7 @@
         that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
+              that.isLoading = false
               if (response.data.data) {
                 let data = response.data.data
                 for (let i = 0; i < data.length; i++) {
@@ -383,16 +384,19 @@
                   that.itemIngList = data
                 } else if (type === 2) {
                   that.itemList = data
-                  that.isLoading = false
                 }
               } else {
                 console.log('暂无项目')
                 that.isEmpty = false
               }
+            } else {
+              that.$message.error(response.data.meta.message)
+              that.isLoading = false
             }
           })
           .catch(function (error) {
             that.$message.error(error.message)
+            that.isLoading = false
             return false
           })
       },
@@ -497,6 +501,7 @@
         this.$router.replace({name: 'vcenterCItemList'})
         return
       }
+      console.log('请求')
       this.loadList(1) // 填写资料中
       this.loadList(2) // 进行中
     },

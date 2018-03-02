@@ -167,7 +167,7 @@
     },
     methods: {
       // 进入详情
-      showView() {
+      showView(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       },
@@ -292,13 +292,14 @@
                 designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
               } // endfor
               self.designItems = designItems
-              self.isLoading = false
             }
           } else {
             self.$message.error(response.data.meta.message)
+            self.isLoading = false
           }
         })
         .catch(function (error) {
+          self.isLoading = false
           self.$message.error(error.message)
           return false
         })

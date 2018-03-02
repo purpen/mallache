@@ -212,7 +212,7 @@
           })
       },
       // 进入详情
-      showView() {
+      showView(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       }
