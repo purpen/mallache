@@ -34,7 +34,7 @@
                   <p class="contact">邮箱: {{ d.item.email }}</p>
                   <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i>
                     {{ d.item.company_name }}</p>
-                  <p>产品功能：{{d.item.product_features}}</p>
+                  <!-- <p>产品功能：{{d.item.product_features}}</p> -->
                 </el-popover>
               </el-col>
             </el-row>

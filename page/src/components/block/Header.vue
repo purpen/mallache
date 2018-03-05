@@ -214,13 +214,13 @@
         // 定时请求消息数量
         var limitTimes = 0
         self.requestMessageTask = setInterval(function () {
-          if (limitTimes >= 12) {
+          if (limitTimes >= 36) {
             return
           } else {
             self.fetchMessageCount()
             limitTimes += 1
           }
-        }, 30000)
+        }, 10000)
       },
       // 查看消息
       viewMsg() {

@@ -1342,7 +1342,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
   if (to.meta.title) {
     if (to.meta.title === '首页') {
       document.title = '铟果-中国领先的产品创新SaaS平台'
