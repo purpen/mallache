@@ -384,6 +384,9 @@
                 }
               } else {
                 console.log('暂无项目')
+                if (type === 2) {
+                  that.isLoading = false
+                }
               }
             } else {
               that.$message.error(response.data.meta.message)
