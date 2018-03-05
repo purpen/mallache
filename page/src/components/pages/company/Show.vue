@@ -281,7 +281,10 @@ p.web {
 .content a {
   font-size: 1.5rem;
 }
-
+.image-box {
+  height: 150px;
+  overflow: hidden;
+}
 @media screen and (max-width: 767px) {
   .design-case-slide {
     border: none;
