@@ -107,9 +107,14 @@ class Recommend
             ->get()
             ->pluck('id')->all();
 
-        $design_id_arr = array_rand($design_id_arr, 2);
+        $key_arr = array_rand($design_id_arr, 2);
 
-        $recommend = implode(',', $design_id_arr);
+        $design_id_arr_rand = [];
+        foreach ($key_arr as $value){
+            $design_id_arr_rand[] = $design_id_arr[$value];
+        }
+
+        $recommend = implode(',', $design_id_arr_rand);
         $this->item->recommend = $recommend;
 
         //判断需求公司资料是否审核
