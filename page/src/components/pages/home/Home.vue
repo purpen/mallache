@@ -188,7 +188,7 @@
             image: require ('@/assets/images/home/case_swdk.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/25',
             company: '',
             companyLogo: require('@/assets/images/home/micoe&WOW@2x.png'),
             title: '四季沐歌不插电的WOW净水机',
@@ -197,7 +197,7 @@
             image: require ('@/assets/images/home/micoe&WOW.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/24',
             company: '小蚁',
             companyLogo: require('@/assets/images/home/xiaoyi@2x.png'),
             title: '小蚁智能行车记录仪',
@@ -206,7 +206,7 @@
             image: require ('@/assets/images/home/yi.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/23',
             company: '婴萌科技',
             companyLogo: require('@/assets/images/home/ingmeng.png'),
             title: '婴萌智能配奶机',
@@ -215,7 +215,7 @@
             image: require ('@/assets/images/home/ingmeng.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/22',
             company: '',
             companyLogo: require('@/assets/images/home/fifish@2x.png'),
             title: '飞行鱼-亚特兰蒂斯号FiFish Atlantis',
@@ -233,7 +233,7 @@
             image: require ('@/assets/images/home/case_ss.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/20',
             company: 'WOWSTICK',
             companyLogo: require('@/assets/images/home/WOWSTICK@2x.png'),
             title: 'WOWSTICK 1fs电动螺丝刀',
@@ -242,7 +242,7 @@
             image: require ('@/assets/images/home/case_lsd.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/19',
             company: '',
             companyLogo: require('@/assets/images/home/AMIRP_LUX@2x.png'),
             title: 'AMIRO LUX日光镜',
@@ -251,7 +251,7 @@
             image: require ('@/assets/images/home/AMIRO_LUX.jpg')
           },
           {
-            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/21',
+            clickUrl: 'http://d3ingo.taihuoniao.com/article/show/18',
             company: '云马',
             companyLogo: require('@/assets/images/home/uma.png'),
             title: '云马C1智能电单车',

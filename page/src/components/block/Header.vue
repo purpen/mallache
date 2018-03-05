@@ -23,18 +23,18 @@
           <a class="nav-item is-hidden-mobile" @click="viewMsg" ref="msgList">
               <span class="icon active">
                 <i class="fx-4 fx-icon-notice">
-                  <span v-if="messageCount > 0">{{ messageCount }}</span>
+                  <span v-if="messageCount.quantity">{{ messageCount.quantity }}</span>
                 </i>
               </span>
               <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
                 <router-link :to="{name: 'vcenterMessageList'}" class="news">
                   <i class="fx-4 fx-icon-notice"></i><i class="fx-4 fx-icon-news-hover"></i>
-                  <span v-if="msg.message"><b>{{msg.message}}</b>条[项目提醒]未查看</span>
+                  <span v-if="messageCount.message"><b>{{messageCount.message}}</b>条[项目提醒]未查看</span>
                   <span v-else>[项目提醒]</span>
                 </router-link>
                 <router-link :to="{name: 'systemMessageList'}" class="notice">
                   <i class="fx-4 fx-icon-sound-loudly"></i><i class="fx-4 fx-icon-notice-hover"></i>
-                  <span v-if="msg.notice"><b>{{msg.notice}}</b>条[系统通知]未查看</span>
+                  <span v-if="messageCount.notice"><b>{{messageCount.notice}}</b>条[系统通知]未查看</span>
                   <span v-else>[系统通知]</span>
                 </router-link>
               </div>
@@ -198,9 +198,10 @@
             self.msg.message = parseInt(response.data.data.message)
             self.msg.notice = parseInt(response.data.data.notice)
             sessionStorage.setItem('noticeCount', self.msg.notice)
-            let messageCount = parseInt(response.data.data.quantity)
+            let quantity = parseInt(response.data.data.quantity)
+            let msgCount = {message: self.msg.message, notice: self.msg.notice, quantity: quantity}
             // 写入localStorage
-            self.$store.commit(MSG_COUNT, messageCount)
+            self.$store.commit(MSG_COUNT, msgCount)
           } else {
             self.$message.error(response.data.meta.message)
           }
@@ -214,13 +215,13 @@
         // 定时请求消息数量
         var limitTimes = 0
         self.requestMessageTask = setInterval(function () {
-          if (limitTimes >= 12) {
+          if (limitTimes >= 36) {
             return
           } else {
             self.fetchMessageCount()
             limitTimes += 1
           }
-        }, 30000)
+        }, 10000)
       },
       // 查看消息
       viewMsg() {

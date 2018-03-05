@@ -128,18 +128,6 @@
           return
         }
         window.open(link)
-      },
-      // 请求消息数量
-      fetchMessageCount() {
-        this.$http.get(api.messageGetMessageQuantity, {}).then((response) => {
-          if (response.data.meta.status_code === 200) {
-            this.notice = parseInt(response.data.data.notice)
-          } else {
-            this.$message.error(response.data.meta.message)
-          }
-        }).catch((error) => {
-          console.error(error)
-        })
       }
     },
     computed: {

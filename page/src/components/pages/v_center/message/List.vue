@@ -47,6 +47,7 @@
   import vMenu from '@/components/pages/v_center/Menu'
   import vMenuSub from '@/components/pages/v_center/message/MenuSub'
   import api from '@/api/api'
+  import { MSG_COUNT } from '@/store/mutation-types'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
 
@@ -129,6 +130,7 @@
         if (d.is_show) {
           this.itemList[index].is_show = false
         } else {
+          this.fetchMessageCount()
           this.itemList[index].is_show = true
         }
         // 确认已读状态
@@ -151,6 +153,36 @@
         } else if (d.type === 3) {
           this.$router.push({name: 'vcenterWalletList'})
         }
+      },
+      // 请求消息数量
+      fetchMessageCount() {
+        const self = this
+        this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            var message = 0
+            var notice = 0
+            var quantity = 0
+            if (parseInt(response.data.data.message)) {
+              message = parseInt(response.data.data.message) - 1
+            } else {
+              message = parseInt(response.data.data.message)
+            }
+            notice = parseInt(response.data.data.notice)
+            sessionStorage.setItem('noticeCount', notice)
+            if (parseInt(response.data.data.quantity)) {
+              quantity = parseInt(response.data.data.quantity) - 1
+            } else {
+              quantity = parseInt(response.data.data.quantity)
+            }
+            var msgCount = {message: message, notice: notice, quantity: quantity}
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, msgCount)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     computed: {

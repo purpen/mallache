@@ -84,8 +84,10 @@
                         <p class="contact">职位: {{ item.position }}</p>
                         <p class="contact">电话: {{ item.phone }}</p>
                         <p class="contact">邮箱: {{ item.email }}</p>
-                        <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone"
-                                                                                 aria-hidden="true"></i> 联系我们</p>
+                        <p slot="reference" class="name-wrapper contact-user">
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                          联系我们
+                        </p>
                       </el-popover>
 
                       <el-popover class="contact-popover fl contact-us" trigger="hover" placement="top" v-if="isMob">
@@ -773,7 +775,7 @@
       self.$http.get(api.designItemId.format(id), {})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-            // console.log(response.data.data)
+            console.log(response.data.data.item)
             self.item = response.data.data.item
             // self.info = response.data.data.info
             if (response.data.data.evaluate) {
@@ -1016,7 +1018,7 @@
                 },
                 {
                   name: '设计类别',
-                  title: self.item.design_type_value
+                  title: self.item.design_types_value.join(', ')
                 },
                 {
                   name: '产品领域',
@@ -1035,7 +1037,7 @@
                 },
                 {
                   name: '设计类别',
-                  title: self.item.design_type_value
+                  title: self.item.design_types_value.join(', ')
                 }
               ]
             }

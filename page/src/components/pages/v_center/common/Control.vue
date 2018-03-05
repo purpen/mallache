@@ -104,8 +104,8 @@
             <div class="form-title">
               <span>待处理事项</span>
             </div>
-            <p class="alert-title clearfix" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
-            <div class="message-btn" v-if="messageCount === 0">
+            <p class="alert-title clearfix" v-if="messageCount.quantity">{{ messageCount.quantity }} 条消息</p>
+            <div class="message-btn" v-if="!messageCount.quantity">
               <img src="../../../../assets/images/icon/control_icon.png"/>
               <p>当前无待处理事项</p>
             </div>
@@ -127,6 +127,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
+  import { MSG_COUNT } from '@/store/mutation-types'
   import api from '@/api/api'
 
   export default {
@@ -180,6 +181,36 @@
             break
         }
         this.$router.push({name: name, params: {id: itemId}})
+      },
+      // 请求消息数量
+      fetchMessageCount() {
+        const self = this
+        this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            var message = 0
+            var notice = 0
+            var quantity = 0
+            if (parseInt(response.data.data.message)) {
+              message = parseInt(response.data.data.message) - 1
+            } else {
+              message = parseInt(response.data.data.message)
+            }
+            notice = parseInt(response.data.data.notice)
+            sessionStorage.setItem('noticeCount', notice)
+            if (parseInt(response.data.data.quantity)) {
+              quantity = parseInt(response.data.data.quantity) - 1
+            } else {
+              quantity = parseInt(response.data.data.quantity)
+            }
+            var msgCount = {message: message, notice: notice, quantity: quantity}
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, msgCount)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     computed: {
@@ -191,6 +222,7 @@
       }
     },
     created: function () {
+      this.fetchMessageCount()
       const that = this
       let isCompany = that.isCompany()
       let url = null
