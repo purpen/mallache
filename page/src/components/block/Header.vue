@@ -218,7 +218,7 @@
           if (limitTimes >= 36) {
             return
           } else {
-            // self.fetchMessageCount()
+            self.fetchMessageCount()
             limitTimes += 1
           }
         }, 10000)
