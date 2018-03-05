@@ -52,7 +52,7 @@
                 </div>
               </div>
 
-              <el-row class="item-title-box list-box" v-if="!isMob">
+              <el-row class="item-title-box list-box" v-show="itemList.length" v-if="!isMob">
                 <el-col :span="10">
                   <p>项目名称</p>
                 </el-col>
@@ -501,7 +501,6 @@
         this.$router.replace({name: 'vcenterCItemList'})
         return
       }
-      console.log('请求')
       this.loadList(1) // 填写资料中
       this.loadList(2) // 进行中
     },
