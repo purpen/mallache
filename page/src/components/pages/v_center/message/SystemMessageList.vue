@@ -7,7 +7,7 @@
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
           <div class="content-box">
-            <div class="item clearfix" v-for="(d, index) in itemList" :key="index">
+            <div class="item clearfix" v-for="(d, index) in itemList" :key="index" @click="removeRedDot(index)">
               <div class="left">
                 <p class="logo"></p>
               </div>
@@ -101,7 +101,9 @@
               }
               let noticeCount = sessionStorage.getItem('noticeCount')
               for (let j = 0; j < noticeCount; j++) {
-                self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                if (self.itemList[j]) {
+                  self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                }
               }
             } else {
               self.$message.error(response.data.meta.message)
@@ -111,6 +113,9 @@
             self.isLoading = false
             self.$message.error(error.message)
           })
+      },
+      removeRedDot(index) {
+        this.itemList[index]['not_read'] = false
       },
       handleCurrentChange(val) {
         this.query.page = val
@@ -207,7 +212,7 @@
 
   .item p {
     line-height: 24px
-  }
+  } 
 
   .item .banner2 {
     height: 30px;
@@ -300,7 +305,9 @@
 </style>
 <style>
   .item p.title .el-badge__content.is-fixed {
-    top: 3px;
-    left: -84px;
+    top: 10px;
+    left: -88px;
+    width: 7px;
+    height: 7px;
   }
 </style>

@@ -46,7 +46,6 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('company_abbreviation')">编辑</a>
               </el-col>
             </el-row>
-
             <el-row :gutter="gutter" class="item">
               <el-col :span="titleSpan" class="title">
                 <p>联系人信息</p>
@@ -80,7 +79,6 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('contact')">编辑</a>
               </el-col>
             </el-row>
-
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>地址</p>

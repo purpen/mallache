@@ -5,7 +5,7 @@
     <el-row :gutter="24" type="flex" justify="center">
 
       <el-col :span="24">
-        <div class="content">
+        <div class="content" v-loading="isLoading">
           <el-form :label-position="labelPosition" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
             <div class="input">
               <el-row :gutter="24">
@@ -82,13 +82,9 @@
               </el-button>
             </div>
             <div class="clear"></div>
-
           </el-form>
-
-
         </div>
       </el-col>
-
     </el-row>
   </div>
 </template>
@@ -109,6 +105,7 @@ export default {
   data() {
     return {
       itemId: '',
+      isLoading: false,
       isLoadingBtn: false,
       typeSwitch1: false,
       typeSwitch2: false,
@@ -193,16 +190,8 @@ export default {
           if (that.form.stage_status < 3) {
             row.stage_status = 3
           }
-          let apiUrl = null
-          let method = null
-
-          if (that.itemId) {
-            method = 'put'
-            apiUrl = api.demandId.format(that.itemId)
-          } else {
-            method = 'post'
-            apiUrl = api.demand
-          }
+          let apiUrl = api.demandId.format(that.itemId)
+          let method = 'put'
 
           that.isLoadingBtn = true
           that
@@ -263,6 +252,7 @@ export default {
     }
   },
   created: function() {
+    this.isLoading = true
     const that = this
     let id = this.$route.params.id
     if (id) {
@@ -272,6 +262,7 @@ export default {
         .then(function(response) {
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
+            that.isLoading = false
             let row = response.data.data.item
             let web = row.company_web
             if (web) {
@@ -384,9 +375,6 @@ export default {
 
 .slide-img {
   padding-top: 20px;
-}
-
-.slide-img img {
 }
 
 .slide-str {

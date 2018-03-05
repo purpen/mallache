@@ -207,7 +207,6 @@
           position: '',
           phone: '',
           email: '',
-
           test: ''
         },
 

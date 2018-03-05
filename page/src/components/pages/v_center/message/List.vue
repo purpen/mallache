@@ -105,7 +105,6 @@
               } else {
                 self.isEmpty = true
               }
-//              console.log(data)
             }
           })
           .catch(function (error) {
@@ -131,18 +130,18 @@
           this.itemList[index].is_show = false
         } else {
           this.itemList[index].is_show = true
-          // 确认已读状态
-          if (d.status === 0) {
-            self.$http.put(api.messageTrueRead, {id: d.id})
-              .then(function (response) {
-                if (response.data.meta.status_code === 200) {
-                  self.itemList[index].status = 1
-                }
-              })
-              .catch(function (error) {
-                self.$message.error(error.message)
-              })
-          }
+        }
+        // 确认已读状态
+        if (self.itemList[index].status === 0) {
+          self.$http.put(api.messageTrueRead, {id: d.id})
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                self.itemList[index].status = 1
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+            })
         }
       },
       // 根据类型跳转

@@ -1,12 +1,10 @@
 <template>
   <div class="container blank40 clearfix">
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
-    <el-col :span="isMob ? 24 :20" v-loading.body="isLoading">
+    <el-col :span="isMob ? 24 :20">
       <div class="right-content">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
-
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]">
-
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-loading="isLoading">
           <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
               <p>项目名称</p>
@@ -169,7 +167,7 @@
     },
     methods: {
       // 进入详情
-      showView() {
+      showView(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       },
@@ -274,35 +272,34 @@
       }
       self.$http.get(api.designItemList, {})
         .then(function (response) {
-          self.isLoading = false
           if (response.data.meta.status_code === 200) {
+            self.isLoading = false
             if (!response.data.data) {
-              return false
-            }
-            self.waitCount = response.data.meta.pagination.total
-            let designItems = response.data.data
-            for (let i = 0; i < designItems.length; i++) {
-              let item = designItems[i]
-              let typeLabel = ''
-              if (item.item.type === 1) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
-              } else if (item.item.type === 2) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value
-              }
-              designItems[i].item.type_label = typeLabel
-              designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
-            } // endfor
-            self.designItems = designItems
-            if (self.designItems.length) {
-              self.isEmpty = false
-            } else {
               self.isEmpty = true
+            } else {
+              self.isEmpty = false
+              self.waitCount = response.data.meta.pagination.total
+              let designItems = response.data.data
+              for (let i = 0; i < designItems.length; i++) {
+                let item = designItems[i]
+                let typeLabel = ''
+                if (item.item.type === 1) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+                } else if (item.item.type === 2) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value
+                }
+                designItems[i].item.type_label = typeLabel
+                designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
+              } // endfor
+              self.designItems = designItems
             }
           } else {
             self.$message.error(response.data.meta.message)
+            self.isLoading = false
           }
         })
         .catch(function (error) {
+          self.isLoading = false
           self.$message.error(error.message)
           return false
         })
