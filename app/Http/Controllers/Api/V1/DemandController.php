@@ -1351,7 +1351,7 @@ class DemandController extends BaseController
         }
 
         if ($design_types) {
-            $design_types = json_encode($design_types,true);
+            $design_types = json_decode($design_types,true);
             $query->whereIn('design_type', $design_types);
         }
 
