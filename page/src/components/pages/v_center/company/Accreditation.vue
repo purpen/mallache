@@ -60,6 +60,7 @@
                     <p class="p-val">{{ item.document_number }}</p>
                   </div>
 
+                  <!--
                   <div class="item">
                     <p class="p-key">联系人</p>
                     <p class="p-val">{{ item.contact_name }}</p>
@@ -79,6 +80,7 @@
                     <p class="p-key">邮箱</p>
                     <p class="p-val">{{ item.email }}</p>
                   </div>
+                  -->
                 </div>
               </section>
             </div>
