@@ -347,7 +347,6 @@
         that.$http.get(api.itemList, {params: {type: type, per_page: 50}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
-              that.isLoading = false
               if (response.data.data) {
                 let data = response.data.data
                 for (let i = 0; i < data.length; i++) {
@@ -384,6 +383,7 @@
                   that.itemIngList = data
                 } else if (type === 2) {
                   that.itemList = data
+                  that.isLoading = false
                 }
               } else {
                 console.log('暂无项目')

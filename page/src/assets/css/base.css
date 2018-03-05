@@ -790,7 +790,7 @@ button.is-custom.is-outlined.is-loading:after {
 
 .nav-header .icon.active span {
   width: 18px;
-  min-height: 18px;
+  height: 18px;
   border: 1px solid #FF5A5F;
   border-radius: 50%;
   overflow: hidden;
@@ -798,10 +798,12 @@ button.is-custom.is-outlined.is-loading:after {
   position: absolute;
   z-index: 1000;
   right: 0;
+  top: 0;
   margin-right: -10px;
   margin-top: -10px;
   color: #FFFFFF;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 16px;
   text-align: center
 }
 
