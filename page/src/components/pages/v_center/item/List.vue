@@ -45,12 +45,20 @@
                         关闭项目
                       </el-button>
                     </el-tooltip>
-
                   </p>
                 </div>
               </div>
             </div>
 
+            <!-- <el-pagination
+              class="pagination"
+              v-if="query.totalCount > 1"
+              @current-change="handleCurrentChange"
+              :current-page="query.page"
+              :page-size="query.pageSize"
+              layout="prev, pager, next"
+              :total="query.totalCount">
+            </el-pagination> -->
             <el-row class="item-title-box list-box" v-show="itemList.length" v-if="!isMob">
               <el-col :span="10">
                 <p>项目名称</p>
@@ -176,7 +184,7 @@
               </el-row>
             </div>
 
-            <div v-if="isMob" class="item" v-for="(d, index) in itemList" :key="index">
+            <div v-if="isMob" class="item" v-for="(d, index) in itemList" :key="d + index">
               <div class="banner list-box">
                 <p>{{ d.item.created_at }}</p>
               </div>
@@ -330,13 +338,22 @@
         itemList: [],
         itemIngList: [],
         pagination: {},
-        userId: this.$store.state.event.user.id
+        userId: this.$store.state.event.user.id,
+        query: {
+          page: 1,
+          pageSize: 1,
+          totalCount: 2
+        }
       }
     },
     methods: {
       viewShow(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterItemShow', params: {id: itemId}})
+      },
+      handleCurrentChange(val) {
+        this.query.page = val
+        this.$router.push ({name: this.$route.name, query: {page: val}})
       },
       loadList(type) {
         const that = this
