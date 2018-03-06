@@ -31,7 +31,11 @@ const routes = [
   },
   {
     path: '/test',
-    redirect: '/home'
+    name: 'test',
+    meta: {
+      title: '测试'
+    },
+    component: require('@/components/pages/home/test')
   },
   {
     path: '/about',
