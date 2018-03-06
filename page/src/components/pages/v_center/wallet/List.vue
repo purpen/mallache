@@ -138,6 +138,7 @@
 
             <el-pagination
               class="pagination"
+              v-if="query.totalCount > 1"
               @current-change="handleCurrentChange"
               :current-page="query.page"
               :page-size="query.pageSize"
@@ -242,7 +243,7 @@
             self.tableData = []
             if (response.data.meta.status_code === 200) {
               self.itemList = response.data.data
-              self.query.totalCount = response.data.meta.pagination.total
+              self.query.totalCount = response.data.meta.pagination.total_pages
 
               for (let i = 0; i < self.itemList.length; i++) {
                 let item = self.itemList[i]
@@ -272,7 +273,7 @@
         }}).then((res) => {
           this.isLoading = false
           if (res.data.meta.status_code === 200) {
-            this.query.totalCount = res.data.meta.pagination.total
+            this.query.totalCount = res.data.meta.pagination.total_pages
             this.WithdrawList = res.data.data
             for (let i of this.WithdrawList) {
               i.created_at = i.created_at.date_format().format('yyyy-MM-dd hh:mm')
@@ -404,7 +405,7 @@
             if (wallet) {
               self.wallet = wallet
             }
-            console.log(self.wallet)
+            // console.log(self.wallet)
           }
         })
         .catch (function (error) {
