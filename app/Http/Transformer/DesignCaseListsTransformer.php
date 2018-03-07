@@ -55,7 +55,6 @@ class DesignCaseListsTransformer extends TransformerAbstract
             'design_type_val' => $designCase->design_type_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
-            'random' => $designCase->random,
             'design_company' => $this->designCompany($designCase),
             'patent' => json_decode($designCase->patent),
             'prizes' => json_decode($designCase->prizes),

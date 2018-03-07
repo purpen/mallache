@@ -62,7 +62,7 @@ class UpdateRandom extends Command
                 $random = random_int(1000, 9999);
                 $id = $list[$i]->id;
                 echo "set designCase[". $id ."]..........\n";
-                $ok = DesignCaseModel::find($id)->update(['random'=>$random]);
+                $ok = DesignCaseModel::where('id', $id)->update(['random'=>$random]);
                 if($ok) $total++;
             }
             if($max < $size){
@@ -97,7 +97,7 @@ class UpdateRandom extends Command
                 $random = random_int(1000, 9999);
                 $id = $list[$i]->id;
                 echo "set awardCase[". $id ."]..........\n";
-                $ok = AwardCase::find($id)->update(['random'=>$random]);
+                $ok = AwardCase::where('id', $id)->update(['random'=>$random]);
                 if($ok) $total1++;
             }
             if($max < $size1){
