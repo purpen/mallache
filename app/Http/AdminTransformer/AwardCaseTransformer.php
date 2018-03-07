@@ -30,7 +30,6 @@ class AwardCaseTransformer extends TransformerAbstract
             'grade' => $awardCase->grade,
             'status' => $awardCase->status,
             'created_at' => $awardCase->created_at,
-            'random' => $awardCase->random,
         ];
     }
 }

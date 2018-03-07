@@ -57,7 +57,6 @@ class DesignCaseOpenTransformer extends TransformerAbstract
             'design_company' => $this->designCompany($designCase),
             'patent' => json_decode($designCase->patent),
             'prizes' => json_decode($designCase->prizes),
-            'random' => intval($designCase->random),
         ];
     }
 
