@@ -2,7 +2,9 @@
   <div class="test">
     <figure>
       <chart
+        class="chart"
         :options="scoreRadar"
+        :init-options="initOptions"
         auto-resize
       />
     </figure>
@@ -12,6 +14,7 @@
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/component/tooltip'
+// import 'echarts/lib/component/title'
 import 'echarts/lib/chart/radar'
 export default {
   name: 'test',
@@ -26,9 +29,6 @@ export default {
     ]
     return {
       scoreRadar: {
-        title: {
-          text: '能力雷达图'
-        },
         tooltip: {},
         radar: {
           indicator: scores.map(({name, max}) => {
@@ -40,6 +40,13 @@ export default {
           type: 'radar',
           data: [{value: scores.map(({value}) => value)}]
         }]
+      },
+      initOptions: {
+        opts: {
+          width: 100,
+          height: 100,
+          renderer: 'canvas'
+        }
       }
     }
   },
@@ -48,6 +55,9 @@ export default {
   }
 }
 </script>
-<style>
-
+<style scoped>
+ .test .chart {
+   width: 200px;
+   height: 100px;
+ }
 </style>
