@@ -37,7 +37,6 @@ class DesignCaseModel extends BaseModel
         'cover_id',
         'patent',
         'prizes',
-        'random',
     ];
 
     /**

@@ -50,6 +50,7 @@ export default {
       query: {
         page: 1,
         pageSize: 9,
+        sort: 5,
         totalPges: 0,
         totalCount: 0
       },
@@ -68,9 +69,10 @@ export default {
     loadList() {
       const self = this
       self.isLoading = true
+      self.query.sort = this.$route.query.sort || 5
       self.$http
         .get(api.awardCaseList, {
-          params: { page: self.query.page, per_page: self.query.pageSize }
+          params: { page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort }
         })
         .then(function(response) {
           self.isLoading = false
