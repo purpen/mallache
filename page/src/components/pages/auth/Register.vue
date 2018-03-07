@@ -24,7 +24,7 @@
           </el-form-item>
           <el-form-item label="" prop="imgCode">
             <el-input class="imgCodeInput" v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
-              <template slot="append" class="aaaaaaa">
+              <template slot="append">
                 <div @click="fetchImgCaptcha" class="imgCode" :style="{'background': `url(${imgCaptchaUrl}) no-repeat`}"></div>
               </template>
             </el-input>
