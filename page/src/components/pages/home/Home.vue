@@ -325,7 +325,7 @@
       },
       getDesignCase() {
         this.$http.get(api.designCaseOpenLists,
-        {params: {per_page: 6}})
+        {params: {per_page: 6, sort: 5}})
         .then((res) => {
           this.designCaseList = res.data.data
           for (let i = 0; i < res.data.data.length; i++) {

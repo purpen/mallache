@@ -328,10 +328,10 @@
             {min: 10, max: 500, message: '长度在 10 到 500 个字符', trigger: 'blur'}
           ],
           prize: [
-            {required: true, type: 'number', message: '请选择获奖名称', trigger: 'blur'}
+            // {required: true, type: 'number', message: '请选择获奖名称', trigger: 'blur'}
           ],
           prize_time: [
-            {required: true, type: 'date', message: '请选择获奖时间', trigger: 'blur'}
+            // {required: true, type: 'date', message: '请选择获奖时间', trigger: 'blur'}
           ],
           patent_info: [
             {required: true, type: 'number', message: '请选择专利类型', trigger: 'blur'}

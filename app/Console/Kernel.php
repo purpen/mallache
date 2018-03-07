@@ -34,7 +34,10 @@ class Kernel extends ConsoleKernel
         Commands\UnsetUser::class,
 
         // 项目类型多选数据结构变更
-        Commands\ChangeItem::class
+        Commands\ChangeItem::class,
+
+        // 每日定时更新内容的随机数，用于内容随机排序
+        Commands\UpdateRandom::class
 
     ];
 
@@ -53,6 +56,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('payOrder:drop')->everyFiveMinutes();
 
         $schedule->command('Update:token')->everyFiveMinutes();
+        // 每日定时更新内容的随机数，用于内容随机排序
+        $schedule->command('random:update')->daily();
     }
 
     /**
