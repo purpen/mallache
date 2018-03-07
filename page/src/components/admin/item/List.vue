@@ -64,12 +64,10 @@
               label="内容"
               min-width="140">
               <template slot-scope="scope">
-                <p>
-                  标题: {{ scope.row.info.name }}
-                  类型: {{ scope.row.item.type_label }}
-                  预算: {{ scope.row.info.design_cost_value }}
-                  周期: {{ scope.row.info.cycle_value }}
-                </p>
+                <p>标题: {{ scope.row.info.name }}</p>
+                <p>类型: {{ scope.row.item.type_label }}</p>
+                <p>预算: {{ scope.row.info.design_cost_value }}</p>
+                <p>周期: {{ scope.row.info.cycle_value }}</p>
               </template>
             </el-table-column>
             <el-table-column
