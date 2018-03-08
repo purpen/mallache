@@ -266,4 +266,23 @@ class User extends Authenticatable implements JWTSubject
         $this->status = -1;
         $this->save();
     }
+
+    /**
+     * 根据用户id来获取设计公司id
+     */
+    public function designCompanyId(int $user_id)
+    {
+        $user = self::find($user_id);
+        if($user){
+            $invite_company_id = $user->invite_company_id;
+            //被邀请的设计公司等于0的话，就返回主账户的设计公司id
+            if($invite_company_id == 0){
+                $design_company_id = $user->design_company_id;
+                return $design_company_id;
+            }else{
+                return $invite_company_id;
+            }
+        }
+
+    }
 }

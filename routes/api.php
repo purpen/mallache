@@ -369,5 +369,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 列表
         $api->get('/notice/list', 'NoticeController@lists');
 
+
+        /**
+         * 客户接口
+         */
+        $api->resource('/customers', 'CustomerController');
+        //检测客户是否存在
+        $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
+
     });
 });
