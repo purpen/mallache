@@ -702,6 +702,15 @@ const routes = [
     },
     component: require('@/components/pages/v_center/c_item/TrueList')
   },
+  {
+    path: '/vcenter/cloud_drive/list',
+    name: 'vcenterTrueCItemList',
+    meta: {
+      title: '铟果云盘',
+      requireAuth: true
+    },
+    component: require('@/components/pages/v_center/cloud_drive/List')
+  },
   // 在线合同预览
   {
     path: '/vcenter/contract/show/:unique_id',

@@ -86,7 +86,7 @@
             {min: 6, max: 6, message: '验证码格式不正确！', trigger: 'blur'}
           ],
           password: [
-            {required: true, message: '请输入密码', trigger: 'change'},
+            {required: true, message: '请输入密码', trigger: 'blur'},
             {min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur'}
           ],
           checkPassword: [

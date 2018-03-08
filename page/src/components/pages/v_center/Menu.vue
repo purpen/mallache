@@ -14,6 +14,10 @@
            :class="{'item': true, 'is-active': currentName === 'c_item'}">
           项目订单
         </a>
+        <a @click="alick" :to="'/vcenter/cloud_drive/list'"
+           :class="{'item': true, 'is-active': currentName === 'cloud_drive'}">
+          项目云盘
+        </a>
         <a @click="alick" :to="'/vcenter/design_case'"
            :class="{'item': true, 'is-active': currentName === 'design_case'}">
           作品案例
