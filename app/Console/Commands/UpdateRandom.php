@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\DesignCaseModel;
+use App\Models\AwardCase;
 use Illuminate\Console\Command;
 
 class UpdateRandom extends Command
@@ -39,6 +40,7 @@ class UpdateRandom extends Command
     public function handle()
     {
 
+        // 案例作品
         $page = 1;
         $size = 200;
         $is_end = false;
@@ -60,7 +62,7 @@ class UpdateRandom extends Command
                 $random = random_int(1000, 9999);
                 $id = $list[$i]->id;
                 echo "set designCase[". $id ."]..........\n";
-                $ok = DesignCaseModel::find($id)->update(['random'=>$random]);
+                $ok = DesignCaseModel::where('id', $id)->update(['random'=>$random]);
                 if($ok) $total++;
             }
             if($max < $size){
@@ -70,7 +72,42 @@ class UpdateRandom extends Command
             $page++;
             echo "page [$page] updated---------\n";
         }
-        echo "update count: $total.....";
+        echo "designCase update count: $total.....";
+
+
+        // 奖项作品
+        $page1 = 1;
+        $size1 = 200;
+        $is_end1 = false;
+        $total1 = 0;
+        while(!$is_end1){
+            $offset = ($page1 - 1) * $size1;
+            $list = AwardCase::select('id','random','status')
+                ->where('status', 1)
+                ->skip($offset)
+                ->limit($size1)
+                ->get();
+
+            if(empty($list)){
+                echo "get awardCase list is null,exit......\n";
+                break;
+            }
+            $max = count($list);
+            for ($i=0; $i < $max; $i++) {
+                $random = random_int(1000, 9999);
+                $id = $list[$i]->id;
+                echo "set awardCase[". $id ."]..........\n";
+                $ok = AwardCase::where('id', $id)->update(['random'=>$random]);
+                if($ok) $total1++;
+            }
+            if($max < $size1){
+                echo "awardCase list is end!!!!!!!!!,exit.\n";
+                break;
+            }
+            $page1++;
+            echo "page1 [$page1] updated---------\n";
+        }
+        echo "awardCase update count: $total1.....";
 
     }
 }

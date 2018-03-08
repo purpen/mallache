@@ -23,7 +23,6 @@ class AwardCase extends BaseModel
         'summary',
         'content',
         'url',
-        'random',
         'time_at',
       ];
 
