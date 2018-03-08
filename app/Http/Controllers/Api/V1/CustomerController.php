@@ -102,8 +102,7 @@ class CustomerController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $user_id = $this->auth_user_id;
-        $user = new User();
-        $design_company_id = $user->designCompanyId($user_id);
+        $design_company_id = User::designCompanyId($user_id);
         $params['design_company_id'] = $design_company_id;
 
         try{
@@ -150,8 +149,7 @@ class CustomerController extends BaseController
     public function index()
     {
         $user_id = $this->auth_user_id;
-        $user = new User();
-        $design_company_id = $user->designCompanyId($user_id);
+        $design_company_id = User::designCompanyId($user_id);
 
         $customers = Customer::where('design_company_id' , $design_company_id)->orderBy('id', 'desc')->get();
         return $this->response->collection($customers, new CustomerTransformer())->setMeta($this->apiMeta());

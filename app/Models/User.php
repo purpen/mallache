@@ -270,7 +270,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * 根据用户id来获取设计公司id
      */
-    public function designCompanyId(int $user_id)
+    public static function designCompanyId(int $user_id)
     {
         $user = self::find($user_id);
         if($user){
