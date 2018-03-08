@@ -704,7 +704,7 @@ const routes = [
   },
   {
     path: '/vcenter/cloud_drive/list',
-    name: 'vcenterTrueCItemList',
+    name: 'vcenterCloudDriveList',
     meta: {
       title: '铟果云盘',
       requireAuth: true
