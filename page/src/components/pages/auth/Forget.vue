@@ -164,7 +164,7 @@
         const that = this
         that.$http.get(url, {})
           .then(function (response) {
-            if (response.data.meta.status_code !== 200) {
+            if (response.data.meta.status_code === 412) {
               // 获取验证码
               that.$http.post(api.fetch_msm_code, {
                 phone: account,
@@ -184,7 +184,7 @@
                   that.$message.error(error.message)
                 })
             } else {
-              that.$message.error(response.data.meta.message)
+              that.$message.error('该手机号尚未注册')
             }
           })
           .catch(function (error) {
