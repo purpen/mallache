@@ -37,6 +37,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
     ]);
+    //设计公司子用户注册
+    $api->post('/auth/childRegister', [
+        'as' => 'auth.childRegister', 'uses' => 'AuthenticateController@childRegister'
+    ]);
     //用户登录
     $api->post('/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
@@ -364,6 +368,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/notice', 'NoticeController@show');
         // 列表
         $api->get('/notice/list', 'NoticeController@lists');
+
+
+        /**
+         * 客户接口
+         */
+        $api->resource('/customers', 'CustomerController');
+        //检测客户是否存在
+        $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
 
     });
 });
