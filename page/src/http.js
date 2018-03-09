@@ -5,7 +5,7 @@
 
 import axios from 'axios'
 import store from './store/index'
-import * as types from './store/mutation-types'
+// import * as types from './store/mutation-types'
 import router from './router'
 
 // npm install axios的时候默认会安装qs
@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 401 清除token信息并跳转到登录页面
-          store.commit(types.USER_SIGNOUT)
+          // store.commit(types.USER_SIGNOUT)
           router.replace({
             path: '/login',
             query: {

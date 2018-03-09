@@ -156,6 +156,7 @@ export default {
   adminItemShow: '/admin/item/show', // GET 项目详情
   addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
   ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
+  forceCloseSubmit: '/admin/item/closeItem',  // POST 强制关闭项目并返还款项
 
   // 需求公司管理
   adminDemandCompanyList: '/admin/demandCompany/lists', // GET 需求公司列表
