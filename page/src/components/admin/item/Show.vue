@@ -372,7 +372,7 @@ export default {
   computed: {
     isSystem() {
       var user = this.$store.state.event.user
-      if (user.role_id === 15) {
+      if (user.role_id === 15 || user.role_id === 20) {
         return true
       }
       return false
