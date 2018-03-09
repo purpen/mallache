@@ -73,4 +73,12 @@ class QiniuApi
         return $signedUrl;
     }
 
+    // 生成七牛处理对象
+    public static function auth()
+    {
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
+        return new Auth($accessKey, $secretKey);
+    }
+
 }

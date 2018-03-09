@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\QiniuApi;
+use App\Models\PanDirector;
 use App\Models\PanFile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Qiniu\Auth;
 
@@ -78,6 +80,7 @@ class YunpianUploadController extends BaseController
             $open_set = $request->input('open_set');
             $pan_director_id = $request->input('pan_director_id');
             $group_id = $request->input('group_id');
+            $user_id = $request->input('uid');
 
             if (!in_array($open_set, [1, 2])) {
                 $callBackDate = [
@@ -87,43 +90,61 @@ class YunpianUploadController extends BaseController
                 return $this->response->array($callBackDate);
             }
 
-            /**
-             * name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&type=$(x:type)&pan_director_id=$(x:pan_director_id)&open_set=$(x:open_set)&group_id=$(x:group_id)&uid=
-             */
+
+            $design_company_id = User::designCompanyId($user_id);
+            // 判断上传参数是否正确
+            if (!PanDirector::isCreate($user_id, $pan_director_id, $open_set, $design_company_id, $group_id)) {
+                $callBackDate = [
+                    'error' => 1,
+                    'message' => '上传文件参数不合法'
+                ];
+                return $this->response->array($callBackDate);
+            }
+
             $key = uniqid();
             $path = config('filesystems.disks.yunpan_qiniu.domain') . '/' . date("Ymd") . '/' . $key;
 
+            // 保存源文件
             $pan_file = new PanFile();
             $pan_file->name = $request->input('name');
             $pan_file->size = $request->input('size');
             $pan_file->width = $request->input('width');
             $pan_file->height = $request->input('height');
             $pan_file->mime_type = $request->input('mime');
-            $pan_file->user_id = $request->input('uid');
+            $pan_file->user_id = $user_id;
             $pan_file->count = 1;
             $pan_file->status = 0;
             $pan_file->url = $path;
             $pan_file->save();
 
-            if($open_set == 1){  //公开文件
+            // 保存目录文件
+            $pan_director = new PanDirector();
+            $pan_director->open_set = $open_set;
+            $pan_director->group_id = $group_id;
+            $pan_director->company_id = $design_company_id;
+            $pan_director->pan_director_id = $pan_director_id;
+            $pan_director->type = 2;
+            $pan_director->name = $pan_file->name;
+            $pan_director->size = $pan_file->size;
+            $pan_director->sort = 0;
+            $pan_director->mime_type = $pan_file->mime_type;
+            $pan_director->pan_file_id = $pan_file->id;
+            $pan_director->user_id = $user_id;
+            $pan_director->status = 1;
+            $pan_director->url = $pan_file->url;
+            $pan_director->save();
 
-
-
-            }elseif($open_set == 2){ // 个人文件
-
-            }
 
             $callBackDate = [
                 'key' => $pan_file->url,
                 'payload' => [
                     'success' => 1,
-                    'name' => $pan_file->name,
-                    'file' => config('filesystems.disks.yunpan_qiniu.url') . $pan_file->url,
-
-                    'created_at' => $asset->created_at,
+                    'info' => $pan_director->info(),
 
                 ]
             ];
+
+            return $this->response->array($callBackDate);
         }
     }
 

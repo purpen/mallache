@@ -84,7 +84,10 @@ return [
             'bucket' => 'yunpanmallache',
             'domain' => 'saas_yunpan',
             'call_back_url' => env('QINIU_YUNPAN_CALL_BACK_URL', ''),
-            'url' => 'p593eqdrg.bkt.clouddn.com', //图片服务器
+            'url' => 'p593eqdrg.bkt.clouddn.com/', //图片服务器
+            'small' => '-small',       //缩略图
+
+            'video_small' => '?vframe/png/offset/1/w/60/h/60',  // 视频缩略图
         ],
 
     ],

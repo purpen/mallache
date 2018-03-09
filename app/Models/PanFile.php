@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PanFile extends Model
+class PanFile extends BaseModel
 {
     protected $table = 'pan_file';
 
