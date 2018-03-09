@@ -1,79 +1,79 @@
 <template>
-<el-col :xs="24" :sm="4" :md="4" :lg="4">
-  <h3><router-link class="clearfix" to="/vcenter/control"><i class="fx fx-icon-nothing-left"></i>设计云盘</router-link></h3>
-  <el-collapse v-model="activeNames" class="cloud-menu">
-    <el-collapse-item title="设计云盘" name="1">
-      <ul class="cloud-classify">
-        <li>
-          <router-link to="" class="files">
-            <span>全部文件</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="project">
-            <span>项目</span>
-            </router-link>
-        </li>
-        <li>
-          <router-link to="" class="recently">
-            <span>最近使用</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="recycle">
-            <span>回收站</span>
-          </router-link>
-        </li>
-      </ul>
-    </el-collapse-item>
-    <el-collapse-item title="项目" name="2">
-    </el-collapse-item>
-    <el-collapse-item title="文件类型" name="3">
-      <ul class="cloud-classify">
-        <li>
-          <router-link to="" class="image">
-            <span>图片</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="artboard">
-            <span>PDF</span>
-            </router-link>
-        </li>
-        <li>
-          <router-link to="" class="document">
-            <span>文档</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="spreadsheet">
-            <span>电子表格</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="powerpoint">
-            <span>演示文稿</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="folder">
-            <span>文件夹</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="video">
-            <span>视频</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" class="audio">
-            <span>音频</span>
-          </router-link>
-        </li>
-      </ul>
-    </el-collapse-item>
-  </el-collapse>
-</el-col>
+  <div class="menu">
+    <h3><router-link class="clearfix" to="/vcenter/control"><i class="fx fx-icon-nothing-left"></i>设计云盘</router-link></h3>
+    <el-collapse v-model="activeNames" class="cloud-menu">
+      <el-collapse-item title="设计云盘" name="1">
+        <ul class="cloud-classify">
+          <li>
+            <a :class="['files', {'active': isActive === '全部文件'}]" @click="changeTitle('全部文件')">
+              <span>全部文件</span>
+            </a>
+          </li>
+          <li>
+            <a :class="['project', {'active': isActive === '项目'}]" @click="changeTitle('项目')">
+              <span>项目</span>
+              </a>
+          </li>
+          <li>
+            <a :class="['recently', {'active': isActive === '最近使用'}]" @click="changeTitle('最近使用')">
+              <span>最近使用</span>
+            </a>
+          </li>
+          <li>
+            <a :class="['recycle', {'active': isActive === '回收站'}]" @click="changeTitle('回收站')">
+              <span>回收站</span>
+            </a>
+          </li>
+        </ul>
+      </el-collapse-item>
+      <el-collapse-item title="项目" name="2">
+      </el-collapse-item>
+      <el-collapse-item title="文件类型" name="3">
+        <ul class="cloud-classify">
+          <li>
+            <a class="image">
+              <span>图片</span>
+            </a>
+          </li>
+          <li>
+            <a class="artboard">
+              <span>PDF</span>
+              </a>
+          </li>
+          <li>
+            <a class="document">
+              <span>文档</span>
+            </a>
+          </li>
+          <li>
+            <a class="spreadsheet">
+              <span>电子表格</span>
+            </a>
+          </li>
+          <li>
+            <a class="powerpoint">
+              <span>演示文稿</span>
+            </a>
+          </li>
+          <li>
+            <a class="folder">
+              <span>文件夹</span>
+            </a>
+          </li>
+          <li>
+            <a class="video">
+              <span>视频</span>
+            </a>
+          </li>
+          <li>
+            <a class="audio">
+              <span>音频</span>
+            </a>
+          </li>
+        </ul>
+      </el-collapse-item>
+    </el-collapse>
+  </div>
 </template>
 <script>
   export default {
@@ -81,7 +81,14 @@
     data() {
       return {
         test: 'test',
-        activeNames: ['1', '3']
+        activeNames: ['1', '3'],
+        isActive: '全部文件'
+      }
+    },
+    methods: {
+      changeTitle(e) {
+        this.$emit('getTitle', e)
+        this.isActive = e
       }
     }
   }
@@ -90,8 +97,9 @@
   h3 {
     color: #666;
     padding-left: 15px;
-    font-size: 16px;
-    line-height: 2;
+    font-size: 14px;
+    line-height: 30px;
+    height: 30px;
     border-bottom: 1px solid #D2D2D2;
   }
   h3 i {
@@ -108,6 +116,7 @@
     display: block;
     position: relative;
     padding-left: 38px;
+    cursor: pointer;
   }
   .cloud-classify li a:before {
     content: '';
@@ -180,8 +189,10 @@
     font-size: 16px;
     line-height: 40px;
   }
-  .cloud-classify li:hover a {
+  .cloud-classify li:hover a, .active {
     background: #f7f7f7;
+  }
+  .active {
     color: #ff5a5f
   }
 </style>
