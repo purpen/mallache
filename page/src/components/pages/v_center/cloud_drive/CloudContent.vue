@@ -1,27 +1,39 @@
 <template>
   <div class="cloud-content">
-    <ul>
-      <li v-for="(ele, index) in list" :key="index" @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}]">
-        <el-col :span="2" v-if="chooseStatus">
-          <p :class="['file-radio', ele]">file-radio</p>
+    <section>
+      <el-row :gutter="20">
+        <el-col v-for="(ele, index) in list" :key="index" :span="24" v-if="!isChunk">
+          <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item']">
+            <el-col :span="2" v-if="chooseStatus">
+              <p :class="['file-radio', ele]">file-radio</p>
+            </el-col>
+            <el-col :span="2">
+              <p :class="['file-icon', ele]">file-icon</p>
+            </el-col>
+            <el-col :span="8">
+            <p class="file-name">{{ele}}</p>
+            </el-col>
+            <el-col :span="2">
+              <p class="file-size">{{index}}px</p>
+            </el-col>
+            <el-col :span="5">
+              <p class="file-uploader">file-uploader</p>
+            </el-col>
+            <el-col :span="5">
+              <p class="upload-date">{{date}}</p>
+            </el-col>
+          </div>
         </el-col>
-        <el-col :span="2">
-          <p :class="['file-icon', ele]">file-icon</p>
+        <el-col v-for="(ele, index) in list" :key="ele + index" :span="4" v-if="isChunk">
+          <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item2']">
+            <p v-if="chooseStatus" :class="['file-radio', ele]">file-radio</p>
+            <p :class="['file-icon', ele]">file-icon</p>
+            <p class="file-name">{{ele}}</p>
+            <p class="upload-date">{{date}}</p>
+          </div>
         </el-col>
-        <el-col :span="8">
-        <span class="file-name">{{ele}}</span>
-        </el-col>
-        <el-col :span="2">
-          <p class="file-size">{{index}}px</p>
-        </el-col>
-        <el-col :span="5">
-          <p class="file-uploader">file-uploader</p>
-        </el-col>
-        <el-col :span="5">
-          <p class="upload-date">{{date}}</p>
-        </el-col>
-      </li>
-    </ul>
+      </el-row>
+    </section>
   </div>
 </template>
 <script>
@@ -82,28 +94,35 @@ export default {
     },
     isChooseAll: {
       type: String
+    },
+    isChunk: {
+      type: Boolean
     }
   }
 }
 </script>
 <style scoped>
-  ul {
-    border-bottom: 1px solid #d2d2d2;    
-  }
-  ul li {
+  section div.item {
     height: 70px;
     line-height: 70px;
-    border-top: 1px solid #d2d2d2;
+    border-bottom: 1px solid #d2d2d2;
     background: #fff;
     cursor: pointer;
   }
-  
-  ul li:first-child {
-    border-top: none;
+  section div.item2 {
+    height: 160px;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    margin: 10px 0;
+    position: relative;
+    cursor: pointer;
+  }
+  section div.item:hover, section div.item.active {
+    background: #f7f7f7
   }
 
-  ul li:hover, ul li.active {
-    background: #f7f7f7
+  section div.item2:hover, section div.item2.active {
+    border: 1px solid #d2d2d2;
   }
 
   p.file-radio {
@@ -117,6 +136,12 @@ export default {
     position: relative;
   }
   
+  .item2 p.file-radio {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    margin: 0;
+  }
   p.file-radio:before {
     content: '';
     position: absolute;
@@ -134,6 +159,7 @@ export default {
     border: 1px solid #999;
     background: #999;
   }
+
   p.file-icon {
     display: block;
     width: 30px;
@@ -141,7 +167,11 @@ export default {
     margin-top: 20px;
     text-indent: -999em;
   }
-  
+  .item2 p.file-icon {
+    width: 60px;
+    height: 60px;
+    margin: 16px auto 20px; 
+  }
   p.file-icon.artboard {
     background: url('../../../../assets/images/tools/cloud_drive/type/artboard@2x.png') 0 0 no-repeat;
     background-size: contain;
@@ -188,5 +218,16 @@ export default {
   }
   p.upload-date {
     text-align: right;
+  }
+  
+  .item2 .file-name, .item2 .upload-date {
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+  }
+
+  .item2 .upload-date{
+    color: #999;
+    font-size: 12px;
   }
 </style>

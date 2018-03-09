@@ -20,14 +20,14 @@
                 </span>
               </p>
               <p class="search"></p>
-              <p class="chunk"></p>
+              <p class="chunk" @click="changeFileView"></p>
               <p class="sequence"></p>
               <p class="edit" @click="changeChooseStatus"></p>
             </div>
 
             <p class="edit-menu" v-if="isChoose">
               <el-col :span="2">
-                <i :class="['file-radio', {'active': isChooseAll === 'all'}]" @click="changeChooseAll">file-icon</i>
+                <i :class="['file-radio', {'active': isChooseAll === 'all'}, {'isChunk': isChunk}]" @click="changeChooseAll">file-icon</i>
               </el-col>
               <el-col :span="6" class="choose-info">
                 <span class="already-choose">已选择{{alreadyChoose}}项</span>
@@ -45,7 +45,7 @@
           </div>
 
           <!-- 文件列表 -->
-          <vContent :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll"></vContent>
+          <vContent :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :isChunk="isChunk"></vContent>
         </div>
       </el-col>
     </el-row>
@@ -62,7 +62,8 @@
         title: '全部文件',
         isChoose: false, // 切换为选择状态
         alreadyChoose: 0, // 已选择数目
-        isChooseAll: '' // 是否全选
+        isChooseAll: '', // 是否全选,
+        isChunk: false  // 是否为九宫格视图
       }
     },
     components: {
@@ -89,6 +90,9 @@
         } else if (this.isChooseAll === 'all') {
           this.isChooseAll = 'empty'
         }
+      },
+      changeFileView() {
+        this.isChunk = !this.isChunk
       }
     }
   }
@@ -245,6 +249,10 @@
     margin: 3px auto 0;
   }
 
+  i.file-radio.isChunk {
+    margin: 3px 0 0;
+  }
+  
   i.file-radio:before {
     content: '';
     position: absolute;
