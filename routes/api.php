@@ -49,8 +49,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/sms', ['as' => 'auth.sms', 'uses' => 'AuthenticateController@getSmsCode']);
 
     // 七牛图片上传回调地址
-    $api->post('/asset/callback',[
+    $api->post('/asset/callback', [
         'as' => 'upload.callback', 'uses' => 'UploadController@callback'
+    ]);
+
+    // 云盘七牛上传回调地址
+    $api->post('/yunpanCallback', [
+        'as' => 'yunpanCallback', 'uses' => 'YunpianUploadController@yunpanCallback'
     ]);
 
     //支付宝异步回调接口
@@ -61,7 +66,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/pay/jdPayNotify', 'PayController@jdPayNotify');
 
     //忘记密码修改密码
-    $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
+    $api->post('/auth/forgetPassword', ['uses' => 'AuthenticateController@forgetPassword']);
 
     // 设计案例推荐列表
     $api->get('/designCase/openLists', 'DesignCaseController@openLists');
@@ -143,7 +148,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     /**
      * 需验证用户token
      */
-    $api->group(['middleware' => ['jwt.auth']], function ($api){
+    $api->group(['middleware' => ['jwt.auth']], function ($api) {
         //用户退出
         $api->post('/auth/logout', [
             'as' => 'auth.logout', 'uses' => 'AuthenticateController@logout'
@@ -160,8 +165,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/auth/user', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
         //修改用户资料
-        $api->post('/auth/updateUser/{id}' , [
-            'as' => 'auth.updateUser' , 'uses' => 'AuthenticateController@updateUser'
+        $api->post('/auth/updateUser/{id}', [
+            'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
         ]);
 
         //用户钱包信息
@@ -175,8 +180,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
         //生产七牛token
-        $api->get('/upload/upToken' , [
-            'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
+        $api->get('/upload/upToken', [
+            'as' => 'upload.token', 'uses' => 'UploadController@upToken'
         ]);
         //删除图片
         $api->delete('/upload/deleteFile/{asset_id}', ['as' => 'upload.deleteFile', 'uses' => 'UploadController@deleteFile']);
@@ -273,7 +278,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
 
 
-
         // 设计案例图片添加描述
         $api->put('/designCase/imageSummary', 'DesignCaseController@imageSummary');
         $api->resource('/designCase', 'DesignCaseController');
@@ -331,7 +335,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 资金流水记录列表
          */
-        $api->resource('/fundLogList' , 'FundLogController');
+        $api->resource('/fundLogList', 'FundLogController');
 
         /**
          * 银行
@@ -344,7 +348,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/bank/un/status', [
             'as' => 'bank.unStatus', 'uses' => 'BankController@unStatus'
         ]);
-        $api->resource('/bank' , 'BankController');
+        $api->resource('/bank', 'BankController');
 
 
         /**
@@ -376,6 +380,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/customers', 'CustomerController');
         //检测客户是否存在
         $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
+
+
+        /**
+         * 云盘
+         */
+        // 获取云盘上传文件token
+
+        $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
+
 
     });
 });
