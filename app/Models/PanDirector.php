@@ -112,9 +112,9 @@ class PanDirector extends BaseModel
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = null;
-        if (strpos($this->mime_type, 'image')) {
+        if (strpos($this->mime_type, 'image') !== false) {
             $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . config('filesystems.disks.yunpan_qiniu.small');
-        } else if (strpos($this->mime_type, 'video')) {
+        } else if (strpos($this->mime_type, 'video') !== false) {
             $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . config('filesystems.disks.yunpan_qiniu.video_small');
         }
 

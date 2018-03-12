@@ -22,6 +22,24 @@ class YunpianUploadController extends BaseController
      * @apiParam {string} x:pan_director_id 上级文件目录ID （顶层文件传'0'）
      * @apiParam {integer} x:open_set 文件设置：1.公开 2.个人
      * @apiParam {integer} x:group_id 所属项目ID （没有传'0'）
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "info": {
+     *      "created_at": 1520825077,   // 创建时间
+     *      "group_id": "0",            // 分组ID
+     *      "id": 1,                    //
+     *      "mime_type": "image/jpeg",  // 文件类型
+     *      "name": "路飞.jpg",
+     *      "pan_director_id": "0",     //上级文件ID
+     *      "size": "18863",            // 大小 （字节byte）
+     *      "type": 2,                  // 类型：1.文件夹、2.文件
+     *      "url": "?e=1520828677&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:zh_0glW22GT9S2DBZacMLC4Dp24=",
+     *      "user_id": "2",
+     *      "user_name": ""
+     * },
+     * "success": 1
+     * }
      */
 
 
