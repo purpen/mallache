@@ -79,6 +79,17 @@ return [
             'middle' => '-p450x255',        // 中图
         ],
 
+        // 云盘配置
+        'yunpan_qiniu' => [
+            'bucket' => 'yunpanmallache',
+            'domain' => 'saas_yunpan',
+            'call_back_url' => env('QINIU_YUNPAN_CALL_BACK_URL', 'http://sa.taihuoniao.com/yunpanCallback'),
+            'url' => 'http://p593eqdrg.bkt.clouddn.com/', //图片服务器
+            'small' => '-small',       //缩略图
+
+            'video_small' => '?vframe/png/offset/1/w/60/h/60',  // 视频缩略图
+        ],
+
     ],
 
 ];

@@ -129,6 +129,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\WithdrawOrder', 'user_id');
     }
 
+    /*
+     * 一对多关联云盘文件目录表
+     */
+    public function panDirector()
+    {
+        return $this->hasMany('App\Models\PanDirector', 'user_id');
+    }
+
     /**
      * 增加用户账户金额（总金额、冻结金额）
      *

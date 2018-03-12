@@ -76,7 +76,6 @@ class AuthenticateController extends BaseController
             'phone' => $payload['account'],
             'username' => $payload['account'],
             'type' => $payload['type'],
-            'status' => 1,
             'password' => bcrypt($payload['password']),
         ]);
         if($user->type == 1){

@@ -107,11 +107,24 @@ class Recommend
             ->get()
             ->pluck('id')->all();
 
-        $design_id_arr = array_rand($design_id_arr, 2);
+        $key_arr = array_rand($design_id_arr, 2);
 
-        $recommend = implode(',', $design_id_arr);
+        $design_id_arr_rand = [];
+        foreach ($key_arr as $value){
+            $design_id_arr_rand[] = $design_id_arr[$value];
+        }
+
+        $recommend = implode(',', $design_id_arr_rand);
         $this->item->recommend = $recommend;
-        $this->item->status = 3;   //已匹配设计公司
+
+        //判断需求公司资料是否审核
+        $demand_company = $this->item->user->demandCompany;
+        if ($demand_company->verify_status == 1) {
+            $this->item->status = 3;   //已匹配设计公司
+        } else {
+            $this->item->status = 2;  //2.人工干预
+        }
+
         $this->item->save();
 
         // 特殊用户处理
@@ -122,7 +135,7 @@ class Recommend
 
     }
 
-    // 未测试账号默认匹配固定设计公司
+    // 为测试账号默认匹配固定设计公司
     protected function PSTestAction()
     {
         // 特定需求公司user_id
