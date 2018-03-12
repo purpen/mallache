@@ -141,6 +141,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/dateOfAward/month', 'DateOfAwardController@month');
 
     /**
+     * 没登录前，根据字符串，查看用户id和设计公司id
+     */
+    //根据随机字符串查看用户id
+    $api->get('/urlValue', 'UrlKeyValueController@urlValue');
+
+    /**
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api){
@@ -376,6 +382,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/customers', 'CustomerController');
         //检测客户是否存在
         $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
+
+        /**
+         * 用户id生成string
+         */
+        //根据用户id为key查看随机字符串
+        $api->get('/urlKey', 'UrlKeyValueController@urlKey');
+
 
     });
 });

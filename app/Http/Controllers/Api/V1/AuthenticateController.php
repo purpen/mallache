@@ -499,6 +499,7 @@ class AuthenticateController extends BaseController
      * @apiParam {integer} invite_user_id 邀请用户id
      * @apiParam {integer} invite_company_id 邀请公司的id
      * @apiParam {string} account 子账户账号(手机号)
+     * @apiParam {string} realname 姓名
      * @apiParam {string} password 设置密码
      * @apiParam {integer} sms_code 短信验证码
      *
@@ -542,9 +543,10 @@ class AuthenticateController extends BaseController
             'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+            'realname' => ['required'],
         ];
 
-        $payload = $request->only('account', 'password', 'sms_code');
+        $payload = $request->only('account', 'password', 'sms_code', 'realname');
         $validator = Validator::make($payload, $rules);
         if($validator->fails()){
             throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
@@ -565,6 +567,7 @@ class AuthenticateController extends BaseController
             'account' => $payload['account'],
             'phone' => $payload['account'],
             'username' => $payload['account'],
+            'realname' => $payload['realname'],
             'password' => bcrypt($payload['password']),
             'invite_company_id' => $invite_company_id,
             'child_account' => 1,
