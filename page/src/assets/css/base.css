@@ -271,6 +271,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-right: 6px;
 }
 
+.fx-0 {
+  font-size: 12px;
+}
+
 .fx {
   font-size: 14px;
 }
@@ -1658,6 +1662,56 @@ td.fc-day.fc-widget-content.fc-today::before {
   font-size: 16px;
   padding: 6px;
 }
+
+/* 云盘上传 */
+
+p.file-icon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    text-indent: -999em;
+  }
+  p.file-icon.artboard {
+    background: url('../images/tools/cloud_drive/type/artboard@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.audio {
+    background: url('../images/tools/cloud_drive/type/audio@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.compress {
+    background: url('../images/tools/cloud_drive/type/compress@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.document {
+    background: url('../images/tools/cloud_drive/type/document@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.folder {
+    background: url('../images/tools/cloud_drive/type/folder@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.image {
+    background: url('../images/tools/cloud_drive/type/image@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.other {
+    background: url('../images/tools/cloud_drive/type/other@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.powerpoint {
+    background: url('../images/tools/cloud_drive/type/powerpoint@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.spreadsheet {
+    background: url('../images/tools/cloud_drive/type/spreadsheet@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.video {
+    background: url('../images/tools/cloud_drive/type/video@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
 
 /* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
 

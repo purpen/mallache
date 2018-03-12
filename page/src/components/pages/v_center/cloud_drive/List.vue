@@ -15,19 +15,34 @@
                     <span>新建文件夹</span>
                   </a>
                   <a class="upload-files">
-                    <span>上传文件</span>
+                    <el-upload
+                      class="upload-button"
+                      :action="uploadUrl"
+                      :multiple="true"
+                      list-type="picture"
+                      :data="uploadParams"
+                      :on-success="uploadSuccess"
+                      :on-progress="uploadProgress"
+                      :on-error="uploadError"
+                      :before-upload="beforeUpload"
+                      :on-change="uploadChange"
+                      :show-file-list="false">
+                      <span>上传文件</span>
+                    </el-upload>
                   </a>
                 </span>
               </p>
-              <p class="search"></p>
-              <p class="chunk" @click="changeFileView"></p>
+              <p class="search" title="搜索"></p>
+              <p :class="[{'chunk': curView === 'list','list': curView === 'chunk'}]" 
+                 :title="chunkTitle"
+                 @click="changeFileView"></p>
               <p class="sequence"></p>
-              <p class="edit" @click="changeChooseStatus"></p>
+              <p class="edit" title="编辑模式" @click="changeChooseStatus"></p>
             </div>
 
             <p class="edit-menu" v-if="isChoose">
               <el-col :span="2">
-                <i :class="['file-radio', {'active': isChooseAll === 'all'}, {'isChunk': isChunk}]" @click="changeChooseAll">file-icon</i>
+                <i :class="['file-radio', {'active': isChooseAll === 'all'}, {'chunk-view': curView === 'chunk'}]" @click="changeChooseAll">file-icon</i>
               </el-col>
               <el-col :span="6" class="choose-info">
                 <span class="already-choose">已选择{{alreadyChoose}}项</span>
@@ -45,13 +60,38 @@
           </div>
 
           <!-- 文件列表 -->
-          <vContent :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :isChunk="isChunk"></vContent>
+          <vContent :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :curView="curView"></vContent>
         </div>
       </el-col>
     </el-row>
+    <footer class="drive-footer clearfix">
+      <span class="fl">正在上传文件{{uploadingNumber}}/{{totalNumber}}</span>
+      <span class="fr"><i class="fx-0 fx-icon-nothing-close-error"></i></span>
+    </footer>
+
+    <div class="web-uploader">
+      <div class="web-uploader-header clearfix">
+        上传进度<i class="fr fx-0 fx-icon-nothing-close-error"></i>
+      </div>
+      <div class="web-uploader-body">
+        <el-row v-for="(ele, index) in fileList" :key="ele.name + index" class="upload-list">
+          <el-col :span="3" class="upload-list-logo">
+            <p :class="['file-icon', 'image']">file-icon</p>
+          </el-col>
+          <el-col :span="10" class="upload-list-title">
+            <span :title="ele.name">{{ele.name}}</span>
+            <span :title="ele.status">{{ele.percentage}}%</span>
+          </el-col>
+          <el-col :span="10">
+            <span>{{ele.size}}</span>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+  import api from '@/api/api'
   import vMenu from '@/components/pages/v_center/cloud_drive/Menu'
   import vContent from '@/components/pages/v_center/cloud_drive/CloudContent'
   export default {
@@ -63,7 +103,16 @@
         isChoose: false, // 切换为选择状态
         alreadyChoose: 0, // 已选择数目
         isChooseAll: '', // 是否全选,
-        isChunk: false  // 是否为九宫格视图
+        curView: 'list', // 当前视图: 列表: list, 九宫格: chunk, 搜索: search
+        uploadUrl: '', // 上传地址
+        uploadParams: {
+          'token': '',
+          'x:pan_director_id': 0,
+          'x:open_set': 1,
+          'x:group_id': 0
+        },
+        fileList: [],
+        totalNumber: 0
       }
     },
     components: {
@@ -92,7 +141,61 @@
         }
       },
       changeFileView() {
-        this.isChunk = !this.isChunk
+        if (this.curView === 'list') {
+          this.curView = 'chunk'
+        } else {
+          this.curView = 'list'
+        }
+      },
+      getUploadUrl(e) {
+        this.$http.get(api.yunpanUpToken).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.uploadUrl = res.data.data.upload_url
+            this.uploadParams['token'] = res.data.data.upToken
+          }
+        })
+      },
+      uploadSuccess(res, file, fileList) {
+      },
+      uploadError(err, file, fileList) {
+        console.error(err)
+      },
+      uploadProgress(event, file, fileList) {
+        this.fileList = fileList
+        this.totalNumber = this.fileList.length
+      },
+      beforeUpload(file) {
+      },
+      uploadChange(file, fileList) {
+      }
+    },
+    created() {
+      this.getUploadUrl()
+    },
+    computed: {
+      chunkTitle() {
+        if (this.curView === 'list') {
+          return '缩略图显示'
+        } else {
+          return '列表显示'
+        }
+      },
+      uploadingNumber() {
+        let num = 0
+        for (let i of this.fileList) {
+          if (i.percentage === 100) {
+            num++
+          }
+        }
+        return num
+      }
+    },
+    watch: {
+      fileList: {
+        handler(val) {
+          console.log(this.fileList)
+        },
+        deep: true
       }
     }
   }
@@ -113,6 +216,8 @@
     border-bottom: 1px solid #D2D2D2;
     height: 30px;
     line-height: 30px;
+    position: relative;
+    z-index: 10;
   }
   .operate {
     height: 30px;
@@ -127,7 +232,7 @@
   }
   
   .operate p:hover {
-    transform: scale(1.1)
+    background-size: 26px!important
   }
   .operate p.add:hover .add-option {
     display: block;
@@ -143,6 +248,10 @@
   }
   .operate p.chunk {
     background: url('../../../../assets/images/tools/cloud_drive/operate/chunk@2x.png') top no-repeat;
+    background-size: 24px
+  }
+  .operate p.list {
+    background: url('../../../../assets/images/tools/cloud_drive/operate/list@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.sequence {
@@ -166,8 +275,8 @@
     height: 82px;
     border: 1px solid #d2d2d2;
     animation: slowShow 0.3s;
-    display: none;
-    overflow: hidden;
+    /* display: none; */
+    /* overflow: hidden; */
   }
   .already-choose {
     color: #222;
@@ -249,7 +358,7 @@
     margin: 3px auto 0;
   }
 
-  i.file-radio.isChunk {
+  i.file-radio.chunk-view {
     margin: 3px 0 0;
   }
   
@@ -269,5 +378,73 @@
   i.file-radio.active {    
     border: 1px solid #999;
     background: #999;
+  }
+
+  .drive-footer {
+    width: 100%;
+    height: 60px;
+    background: #f7f7f7;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0 30px;
+    line-height: 60px;
+    font-size: 14px;
+  }
+
+  .web-uploader {
+    position: fixed;
+    z-index: 3;
+    right: 0;
+    bottom: 60px;
+    width: 580px;
+    border: 1px solid #d2d2d2
+  }
+  .web-uploader-header {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #f7f7f7;
+    padding-right: 30px;
+    font-size: 16px;
+    border-bottom: 1px solid #d2d2d2;
+  }
+  .web-uploader-body {
+    overflow-y: scroll;
+    background: #fff;
+    padding: 15px 0;
+    max-height: 300px;
+    line-height: 1.5;
+  }
+  .upload-list {
+    padding: 15px 10px;
+    height: 69px;
+    border-bottom: 1px solid #d2d2d2;
+  }
+  .upload-list-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center
+  }
+  .upload-list-logo p.file-icon {
+    margin: 0;
+  }
+  .upload-list-title {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .upload-list-title span {
+    display: block;
+    padding-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .web-uploader-header i {
+    margin-top: 23px;
   }
 </style>

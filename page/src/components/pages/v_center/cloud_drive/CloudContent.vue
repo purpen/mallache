@@ -2,7 +2,7 @@
   <div class="cloud-content">
     <section>
       <el-row :gutter="20">
-        <el-col v-for="(ele, index) in list" :key="index" :span="24" v-if="!isChunk">
+        <el-col v-for="(ele, index) in list" :key="index" :span="24" v-if="curView === 'list'">
           <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item']">
             <el-col :span="2" v-if="chooseStatus">
               <p :class="['file-radio', ele]">file-radio</p>
@@ -14,17 +14,17 @@
             <p class="file-name">{{ele}}</p>
             </el-col>
             <el-col :span="2">
-              <p class="file-size">{{index}}px</p>
+              <p :class="['file-size', {'hidden': ele === 'folder'}]">{{index}}px</p>
             </el-col>
             <el-col :span="5">
-              <p class="file-uploader">file-uploader</p>
+              <p :class="['file-uploader', {'hidden': ele === 'folder'}]">file-uploader</p>
             </el-col>
             <el-col :span="5">
               <p class="upload-date">{{date}}</p>
             </el-col>
           </div>
         </el-col>
-        <el-col v-for="(ele, index) in list" :key="ele + index" :span="4" v-if="isChunk">
+        <el-col v-for="(ele, index) in list" :key="ele + index" :span="4" v-if="curView === 'chunk'">
           <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item2']">
             <p v-if="chooseStatus" :class="['file-radio', ele]">file-radio</p>
             <p :class="['file-icon', ele]">file-icon</p>
@@ -41,7 +41,7 @@ export default {
   name: 'cloud_content',
   data() {
     return {
-      list: ['artboard', 'audio', 'compress', 'document', 'folder', 'image', 'other', 'powerpoint', 'spreadsheet', 'video'],
+      list: ['folder', 'artboard', 'audio', 'compress', 'document', 'image', 'other', 'powerpoint', 'spreadsheet', 'video'],
       date: '2017-03-09',
       chooseList: []
     }
@@ -95,8 +95,8 @@ export default {
     isChooseAll: {
       type: String
     },
-    isChunk: {
-      type: Boolean
+    curView: {
+      type: String
     }
   }
 }
@@ -160,57 +160,10 @@ export default {
     background: #999;
   }
 
-  p.file-icon {
-    display: block;
-    width: 30px;
-    height: 30px;
-    margin-top: 20px;
-    text-indent: -999em;
-  }
   .item2 p.file-icon {
     width: 60px;
     height: 60px;
     margin: 16px auto 20px; 
-  }
-  p.file-icon.artboard {
-    background: url('../../../../assets/images/tools/cloud_drive/type/artboard@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.audio {
-    background: url('../../../../assets/images/tools/cloud_drive/type/audio@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.compress {
-    background: url('../../../../assets/images/tools/cloud_drive/type/compress@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.document {
-    background: url('../../../../assets/images/tools/cloud_drive/type/document@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.folder {
-    background: url('../../../../assets/images/tools/cloud_drive/type/folder@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.image {
-    background: url('../../../../assets/images/tools/cloud_drive/type/image@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.other {
-    background: url('../../../../assets/images/tools/cloud_drive/type/other@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.powerpoint {
-    background: url('../../../../assets/images/tools/cloud_drive/type/powerpoint@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.spreadsheet {
-    background: url('../../../../assets/images/tools/cloud_drive/type/spreadsheet@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.video {
-    background: url('../../../../assets/images/tools/cloud_drive/type/video@2x.png') 0 0 no-repeat;
-    background-size: contain;
   }
 
   p.file-uploader {
@@ -229,5 +182,9 @@ export default {
   .item2 .upload-date{
     color: #999;
     font-size: 12px;
+  }
+
+  .hidden {
+    opacity: 0;
   }
 </style>

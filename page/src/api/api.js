@@ -248,12 +248,14 @@ export default {
   adminBlockSetStatus: '/admin/block/changeStatus', // PUT 启用 | 禁用
 
   // 附件管理
-  adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
+  adminAssetUrlUpload: '/admin/urlUpload', // GET 图片地址上传
 
   // veer图片列表
   veerImage: '/veerImage/list',
   block: '/block',
 
+  // 云盘
+  yunpanUpToken: '/upload/yunpanUpToken', // 云盘上传upToken
   // test
   test: '/'  // End
 }
