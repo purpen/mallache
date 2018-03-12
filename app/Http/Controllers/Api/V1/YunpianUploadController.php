@@ -73,8 +73,10 @@ class YunpianUploadController extends BaseController
 
         if (!$isQiniuCallback) {  //验证失败
             $callBackDate = [
-                'error' => 1,
-                'message' => '回调签名验证失败'
+                'payload' => [
+                    'success' => 0,
+                    'message' => '回调签名验证失败',
+                ]
             ];
             Log::info($callBackDate);
             return $this->response->array($callBackDate);
@@ -86,8 +88,10 @@ class YunpianUploadController extends BaseController
 
             if (!in_array($open_set, [1, 2])) {
                 $callBackDate = [
-                    'error' => 1,
-                    'message' => 'open_set参数不正确'
+                    'payload' => [
+                        'success' => 0,
+                        'message' => 'open_set参数不正确',
+                    ]
                 ];
                 Log::info($callBackDate);
                 return $this->response->array($callBackDate);
@@ -98,8 +102,10 @@ class YunpianUploadController extends BaseController
             // 判断上传参数是否正确
             if (!PanDirector::isCreate($user_id, $pan_director_id, $open_set, $design_company_id, $group_id)) {
                 $callBackDate = [
-                    'error' => 1,
-                    'message' => '上传文件参数不合法'
+                    'payload' => [
+                        'success' => 0,
+                        'message' => '上传文件参数不合法',
+                    ]
                 ];
                 Log::info($callBackDate);
                 return $this->response->array($callBackDate);

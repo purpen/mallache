@@ -41,7 +41,7 @@ class PanDirector extends BaseModel
     public static function isCreate(int $user_id, int $pan_director_id, int $open_set, int $company_id, int $group_id)
     {
         // 个人文件
-        if ($open_set === 2 && $group_id === 0 && $company_id === 0) {
+        if ($open_set === 2 && $group_id === 0) {
             if ($pan_director_id === 0) {   // 一级目录
                 return true;
             } else {
