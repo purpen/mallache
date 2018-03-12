@@ -50,7 +50,7 @@ class QiniuApi
         $policy = array(
             'callbackUrl' => config('filesystems.disks.yunpan_qiniu.call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&type=$(x:type)&pan_director_id=$(x:pan_director_id)&open_set=$(x:open_set)&group_id=$(x:group_id)&uid=' . $uid,
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&pan_director_id=$(x:pan_director_id)&open_set=$(x:open_set)&group_id=$(x:group_id)&uid=' . $uid,
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         return $upToken;

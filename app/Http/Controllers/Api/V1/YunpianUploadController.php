@@ -7,6 +7,7 @@ use App\Models\PanDirector;
 use App\Models\PanFile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 
 class YunpianUploadController extends BaseController
@@ -75,6 +76,7 @@ class YunpianUploadController extends BaseController
                 'error' => 1,
                 'message' => '回调签名验证失败'
             ];
+            Log::info($callBackDate);
             return $this->response->array($callBackDate);
         } else {
             $open_set = $request->input('open_set');
@@ -87,6 +89,7 @@ class YunpianUploadController extends BaseController
                     'error' => 1,
                     'message' => 'open_set参数不正确'
                 ];
+                Log::info($callBackDate);
                 return $this->response->array($callBackDate);
             }
 
@@ -98,6 +101,7 @@ class YunpianUploadController extends BaseController
                     'error' => 1,
                     'message' => '上传文件参数不合法'
                 ];
+                Log::info($callBackDate);
                 return $this->response->array($callBackDate);
             }
 
@@ -143,7 +147,7 @@ class YunpianUploadController extends BaseController
 
                 ]
             ];
-
+            Log::info($callBackDate);
             return $this->response->array($callBackDate);
         }
     }
