@@ -83,7 +83,7 @@
             <span :title="ele.status">{{ele.percentage}}%</span>
           </el-col>
           <el-col :span="10">
-            <span>{{ele.size}}</span>
+            <span>{{ele.format_size}}</span>
           </el-col>
         </el-row>
       </div>
@@ -92,8 +92,8 @@
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/cloud_drive/Menu'
-  import vContent from '@/components/pages/v_center/cloud_drive/CloudContent'
+  import vMenu from '@/components/pages/v_center/Tools/cloud_drive/Menu'
+  import vContent from '@/components/pages/v_center/Tools/cloud_drive/CloudContent'
   export default {
     name: 'cloud_drive',
     data() {
@@ -193,7 +193,9 @@
     watch: {
       fileList: {
         handler(val) {
-          console.log(this.fileList)
+          for (let i of this.fileList) {
+            i['format_size'] = Math.round(i['size'] / 1024) + 'KB'
+          }
         },
         deep: true
       }
@@ -239,27 +241,27 @@
   }
 
   .operate p.add {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/add@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/add@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.search {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/search@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/search@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.chunk {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/chunk@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/chunk@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.list {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/list@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/list@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.sequence {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/sequence@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/sequence@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p.edit {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/edit@2x.png') top no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/edit@2x.png') top no-repeat;
     background-size: 24px
   }
   .operate p:last-child {
@@ -309,11 +311,11 @@
     height: 24px;
   }
   .add-option .new-folder span:before {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/add_folder@2x.png') no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/add_folder@2x.png') no-repeat;
     background-size: contain
   }
   .add-option .upload-files span:before {
-    background: url('../../../../assets/images/tools/cloud_drive/operate/upload@2x.png') no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/upload@2x.png') no-repeat;
     background-size: contain
   }
   .edit-menu {

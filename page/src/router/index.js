@@ -709,7 +709,7 @@ const routes = [
       title: '铟果云盘',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/cloud_drive/List')
+    component: require('@/components/pages/v_center/Tools/cloud_drive/List')
   },
   // 在线合同预览
   {

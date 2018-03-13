@@ -125,62 +125,62 @@
     height: 24px;
     left: 0;
     top: 8px;
-    background: url('../../../../assets/images/tools/cloud_drive/file@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/file@2x.png') 2px 0 no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.project:before {
-    background: url('../../../../assets/images/tools/cloud_drive/project@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/project@2x.png') 2px 0 no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.recently:before {
-    background: url('../../../../assets/images/tools/cloud_drive/recently@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/recently@2x.png') 2px 0 no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.recycle:before {
-    background: url('../../../../assets/images/tools/cloud_drive/recycle@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/recycle@2x.png') 2px 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.image:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/image@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/image@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.artboard:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/artboard@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/artboard@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.document:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/document@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/document@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.spreadsheet:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/spreadsheet@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/spreadsheet@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.powerpoint:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/powerpoint@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/powerpoint@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.folder:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/folder@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/folder@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.video:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/video@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/video@2x.png') 0 0 no-repeat;
     background-size: contain
   }
 
   .cloud-classify li a.audio:before {
-    background: url('../../../../assets/images/tools/cloud_drive/type_menu/audio@2x.png') 0 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/type_menu/audio@2x.png') 0 0 no-repeat;
     background-size: contain
   }
   
