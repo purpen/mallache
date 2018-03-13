@@ -269,6 +269,11 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 [class^="fx-icon-"], [class*=" fx-icon-"] {
   margin-right: 6px;
+  cursor: pointer;
+}
+
+.fx-0 {
+  font-size: 12px;
 }
 
 .fx {
@@ -1575,6 +1580,26 @@ td.fc-day.fc-widget-content.fc-today::before {
 }
 /*日历 end*/
 
+.cloud-menu.el-collapse {
+  border: none
+}
+.cloud-menu .el-collapse-item__content {
+  padding: 0;
+}
+.cloud-menu .el-collapse-item__header {
+  border-bottom: none;
+  color: #999;
+  font-size: 14px;
+  line-height: 40px;
+}
+.cloud-menu .el-collapse-item__wrap {
+  background-color: #FFFFFF;
+  border-bottom: none
+}
+.cloud-menu .el-collapse-item__header__arrow {
+  float: right;
+  line-height: 40px;
+}
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 
 @media screen and (min-width: 1180px) {
@@ -1638,6 +1663,56 @@ td.fc-day.fc-widget-content.fc-today::before {
   font-size: 16px;
   padding: 6px;
 }
+
+/* 云盘上传 */
+
+p.file-icon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    text-indent: -999em;
+  }
+  p.file-icon.artboard {
+    background: url('../images/tools/cloud_drive/type/artboard@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.audio {
+    background: url('../images/tools/cloud_drive/type/audio@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.compress {
+    background: url('../images/tools/cloud_drive/type/compress@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.document {
+    background: url('../images/tools/cloud_drive/type/document@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.folder {
+    background: url('../images/tools/cloud_drive/type/folder@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.image {
+    background: url('../images/tools/cloud_drive/type/image@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.other {
+    background: url('../images/tools/cloud_drive/type/other@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.powerpoint {
+    background: url('../images/tools/cloud_drive/type/powerpoint@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.spreadsheet {
+    background: url('../images/tools/cloud_drive/type/spreadsheet@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  p.file-icon.video {
+    background: url('../images/tools/cloud_drive/type/video@2x.png') 0 0 no-repeat;
+    background-size: contain;
+  }
 
 /* 设置了浏览器宽度不大于768, footer,关注部分竖列显示 */
 
