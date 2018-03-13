@@ -269,6 +269,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 [class^="fx-icon-"], [class*=" fx-icon-"] {
   margin-right: 6px;
+  cursor: pointer;
 }
 
 .fx-0 {

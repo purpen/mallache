@@ -16,6 +16,7 @@
                   </a>
                   <a class="upload-files">
                     <el-upload
+                      ref="upload"
                       class="upload-button"
                       :action="uploadUrl"
                       :multiple="true"
@@ -64,14 +65,14 @@
         </div>
       </el-col>
     </el-row>
-    <footer class="drive-footer clearfix">
+    <footer class="drive-footer clearfix" v-if="webUploader" @click="isShowProgress = true">
       <span class="fl">正在上传文件{{uploadingNumber}}/{{totalNumber}}</span>
-      <span class="fr"><i class="fx-0 fx-icon-nothing-close-error"></i></span>
+      <span class="fr"><i class="fx-0 fx-icon-nothing-close-error" @click="showConfirm = true"></i></span>
     </footer>
 
-    <div class="web-uploader">
+    <div class="web-uploader" v-if="webUploader && isShowProgress">
       <div class="web-uploader-header clearfix">
-        上传进度<i class="fr fx-0 fx-icon-nothing-close-error"></i>
+        上传进度<i class="fr fx-0 fx-icon-nothing-close-error" @click="isShowProgress = !isShowProgress"></i>
       </div>
       <div class="web-uploader-body">
         <el-row v-for="(ele, index) in fileList" :key="ele.name + index" class="upload-list">
@@ -80,7 +81,7 @@
           </el-col>
           <el-col :span="10" class="upload-list-title">
             <span :title="ele.name">{{ele.name}}</span>
-            <span :title="ele.status">{{ele.percentage}}%</span>
+            <span :title="ele.status"><el-progress :percentage="ele.format_percentage"></el-progress></span>
           </el-col>
           <el-col :span="10">
             <span>{{ele.format_size}}</span>
@@ -88,6 +89,23 @@
         </el-row>
       </div>
     </div>
+    <section class="dialog-bg" v-if="showConfirm" @click="showConfirm = false"></section>
+    <section class="dialog-body" v-if="showConfirm">
+      <h3 class="dialog-header clearfix">
+        放弃上传
+        <i class="fr fx fx-icon-nothing-close-error" @click="showConfirm = !showConfirm"></i>
+      </h3>
+      <div class="dialog-conetent">
+        <div class="dialog-article">
+          <p>列表中有未上传完成的文件</p>
+          <p>确定要放弃上传吗？</p>
+        </div>
+        <p class="buttons">
+          <button class="cancel-btn" @click="showConfirm = false">取消</button>
+          <button  class="confirm-btn" @click="clearUpload">确定</button>
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 <script>
@@ -112,7 +130,10 @@
           'x:group_id': 0
         },
         fileList: [],
-        totalNumber: 0
+        totalNumber: 0,
+        webUploader: false, // 上传状态
+        isShowProgress: false,
+        showConfirm: false
       }
     },
     components: {
@@ -161,12 +182,17 @@
         console.error(err)
       },
       uploadProgress(event, file, fileList) {
+        this.webUploader = true
         this.fileList = fileList
         this.totalNumber = this.fileList.length
       },
       beforeUpload(file) {
       },
       uploadChange(file, fileList) {
+      },
+      clearUpload() {
+        this.$refs.upload.clearFiles()
+        this.showConfirm = false
       }
     },
     created() {
@@ -193,8 +219,22 @@
     watch: {
       fileList: {
         handler(val) {
+          let a = 0
+          console.log(this.fileList)
           for (let i of this.fileList) {
-            i['format_size'] = Math.round(i['size'] / 1024) + 'KB'
+            let size = Math.round(i['size'] / 1024)
+            if (size > 1024) {
+              i['format_size'] = Math.round(i['size'] / 1024 / 1024) + 'MB'
+            } else {
+              i['format_size'] = size + 'KB'
+            }
+            i['format_percentage'] = i.percentage.toFixed(2)
+            if (i.percentage === 100) {
+              a++
+            }
+          }
+          if (a === this.fileList.length) {
+            this.webUploader = false
           }
         },
         deep: true
@@ -277,8 +317,8 @@
     height: 82px;
     border: 1px solid #d2d2d2;
     animation: slowShow 0.3s;
-    /* display: none; */
-    /* overflow: hidden; */
+    display: none;
+    overflow: hidden;
   }
   .already-choose {
     color: #222;
@@ -415,8 +455,7 @@
   .web-uploader-body {
     overflow-y: scroll;
     background: #fff;
-    padding: 15px 0;
-    max-height: 300px;
+    max-height: 275px;
     line-height: 1.5;
   }
   .upload-list {
@@ -448,5 +487,80 @@
   }
   .web-uploader-header i {
     margin-top: 23px;
+  }
+  .dialog-bg {
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    transform:  translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.30)
+  }
+  .dialog-body {
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    transform:  translate(-50%, -50%);
+    width: 380px;
+    height: 208px;
+    margin: auto;
+    background: #FFFFFF;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.10);
+    border-radius: 4px;
+  }
+  .dialog-header {
+    font-size: 16px;
+    color: #222;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #F7F7F7;
+    border-radius: 4px 4px 0 0;
+  }
+  .dialog-header i {
+    margin-right: 20px;
+    margin-top: 18px;
+    color: #666;
+  }
+  .dialog-header i:hover {
+    color: #222;
+  }
+  .dialog-conetent {
+    text-align: center
+  }
+  .dialog-article {
+    margin: 32px 0;
+    color: #666;
+    line-height: 20px;
+    font-size: 14px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center
+  }
+
+  .buttons button {
+    width: 118px;
+    height: 32px;
+    border: 1px solid #d2d2d2;
+    margin-right: 25px;
+    border-radius: 4px;
+    background: #fff;
+    color: #666;
+    cursor: pointer;
+  }
+  
+  .buttons button:last-child {
+    margin-right: 0;
+  }
+  .buttons button.confirm-btn {
+    color: #fff;
+    border-color: #ff5a5f;
+    background-color: #ff5a5f
   }
 </style>

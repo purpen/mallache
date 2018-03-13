@@ -96,7 +96,7 @@
 <style scoped>
   h3 {
     color: #666;
-    padding-left: 15px;
+    /* padding-left: 15px; */
     font-size: 14px;
     line-height: 30px;
     height: 30px;
@@ -115,7 +115,7 @@
   .cloud-classify li a {
     display: block;
     position: relative;
-    padding-left: 38px;
+    padding-left: 44px;
     cursor: pointer;
   }
   .cloud-classify li a:before {
@@ -123,24 +123,24 @@
     position: absolute;
     width: 24px;
     height: 24px;
-    left: 0;
+    left: 10px;
     top: 8px;
-    background: url('../../../../../assets/images/tools/cloud_drive/file@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/file@2x.png') center no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.project:before {
-    background: url('../../../../../assets/images/tools/cloud_drive/project@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/project@2x.png') center no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.recently:before {
-    background: url('../../../../../assets/images/tools/cloud_drive/recently@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/recently@2x.png') center no-repeat;
     background-size: contain
   }
   
   .cloud-classify li a.recycle:before {
-    background: url('../../../../../assets/images/tools/cloud_drive/recycle@2x.png') 2px 0 no-repeat;
+    background: url('../../../../../assets/images/tools/cloud_drive/recycle@2x.png') center no-repeat;
     background-size: contain
   }
 
