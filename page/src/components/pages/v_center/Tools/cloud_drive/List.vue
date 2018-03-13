@@ -65,8 +65,8 @@
         </div>
       </el-col>
     </el-row>
-    <footer class="drive-footer clearfix" v-if="webUploader" @click="isShowProgress = true">
-      <span class="fl">正在上传文件{{uploadingNumber}}/{{totalNumber}}</span>
+    <footer class="drive-footer clearfix" v-if="webUploader">
+      <span class="fl" @click="isShowProgress = true">正在上传文件{{uploadingNumber}}/{{totalNumber}}</span>
       <span class="fr"><i class="fx-0 fx-icon-nothing-close-error" @click="showConfirm = true"></i></span>
     </footer>
 
@@ -81,7 +81,7 @@
           </el-col>
           <el-col :span="10" class="upload-list-title">
             <span :title="ele.name">{{ele.name}}</span>
-            <span :title="ele.status"><el-progress :percentage="ele.format_percentage"></el-progress></span>
+            <span title=""><el-progress :percentage="ele.format_percentage"></el-progress></span>
           </el-col>
           <el-col :span="10">
             <span>{{ele.format_size}}</span>
@@ -110,8 +110,8 @@
 </template>
 <script>
   import api from '@/api/api'
-  import vMenu from '@/components/pages/v_center/Tools/cloud_drive/Menu'
-  import vContent from '@/components/pages/v_center/Tools/cloud_drive/CloudContent'
+  import vMenu from '@/components/pages/v_center/tools/cloud_drive/Menu'
+  import vContent from '@/components/pages/v_center/tools/cloud_drive/CloudContent'
   export default {
     name: 'cloud_drive',
     data() {
@@ -433,6 +433,10 @@
     padding: 0 30px;
     line-height: 60px;
     font-size: 14px;
+  }
+
+  .drive-footer span {
+    cursor: pointer;
   }
 
   .web-uploader {

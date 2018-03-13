@@ -709,7 +709,7 @@ const routes = [
       title: '铟果云盘',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/Tools/cloud_drive/List')
+    component: require('@/components/pages/v_center/tools/cloud_drive/List')
   },
   // 在线合同预览
   {
@@ -868,7 +868,7 @@ const routes = [
       title: '图片素材',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/veerImage')
+    component: require('@/components/pages/v_center/tools/veerImage')
   },
   // 公司工具 => 趋势/报告
   {
@@ -878,7 +878,7 @@ const routes = [
       title: '趋势/报告',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/trendReport')
+    component: require('@/components/pages/v_center/tools/trendReport')
   },
   {
     path: '/vcenter/trend_report/show/:id',
@@ -888,7 +888,7 @@ const routes = [
       requireAuth: false
     },
     component: (resolve) => {
-      require(['@/components/pages/v_center/Tools/trendReportShow'], resolve)
+      require(['@/components/pages/v_center/tools/trendReportShow'], resolve)
     }
   },
   // 公司工具 => 常用网站
@@ -899,7 +899,7 @@ const routes = [
       title: '常用网站',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/commonlySites')
+    component: require('@/components/pages/v_center/tools/commonlySites')
   },
   // 公司工具 => 展览
   {
@@ -910,7 +910,7 @@ const routes = [
       requireAuth: false
     },
     component: (resolve) => {
-      require(['@/components/pages/v_center/Tools/exhibition'], resolve)
+      require(['@/components/pages/v_center/tools/exhibition'], resolve)
     }
   },
   {
