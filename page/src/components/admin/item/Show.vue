@@ -141,6 +141,10 @@
               <p class="p-key">项目报价</p>
               <p class="p-val">{{ item.price }}</p>
             </div>
+            <div class="item">
+              <p class="p-key">项目剩余金额</p>
+              <p class="p-val">{{ item.rest_fund }}</p>
+            </div>
           </div>
 
           <div class="form-title">
@@ -153,16 +157,31 @@
               <p class="p-val">
                 {{ item.status_value }}
               </p>
+
+              <p class="opt" v-if="isSystem">
+                <el-button class="is-custom" size="small" @click="forceCloseBtn">关闭项目并退款</el-button>
+              </p>
             </div>
           </div>
 
         </div>
 
-
-
         </div>
       </el-col>
     </el-row>
+
+    <el-dialog
+      title="提示"
+      v-model="comfirmDialog"
+      size="tiny">
+      <span>{{ comfirmMessage }}</span>
+      <span slot="footer" class="dialog-footer">
+        <input type="hidden" ref="comfirmType" value="1" />
+        <el-button @click="comfirmDialog = false">取 消</el-button>
+        <el-button type="primary" @click="sureDialogSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
 
     <el-dialog title="匹配公司" v-model="matchCompanyDialog">
       <el-form label-position="top">
@@ -185,6 +204,21 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="关闭项目并返款" v-model="forceCloseDialog">
+      <el-form label-position="left">
+        <el-form-item label="需求公司返款金额">
+          <el-input v-model="matchCompanyForm.demandAmount" placeholder="" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="设计公司返款金额">
+          <el-input v-model="matchCompanyForm.designAmount" placeholder="" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="forceCloseDialog = false">取 消</el-button>
+        <el-button type="primary" :loading="isForceCloseLoadingBtn" @click="forceCloseSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -200,6 +234,8 @@ export default {
     return {
       menuType: 0,
       matchCompanyDialog: false,
+      forceCloseDialog: false,
+      isForceCloseLoadingBtn: false,
       item: '',
       info: '',
       itemId: '',
@@ -210,6 +246,13 @@ export default {
         itemName: '',
         companyIds: ''
       },
+      forceCloseForm: {
+        itemId: '',
+        demandAmount: 0,
+        designAmount: 0
+      },
+      comfirmDialog: false,
+      comfirmMessage: '确认执行此操作?',
       msg: ''
     }
   },
@@ -261,6 +304,42 @@ export default {
       .catch (function(error) {
         self.$message.error(error.message)
       })
+    },
+    // 强制关闭项目按钮
+    forceCloseBtn() {
+      this.$refs.comfirmType.value = 1
+      this.comfirmMessage = '确认与双方达成一致，关闭项目并退款？'
+      this.comfirmDialog = true
+    },
+    sureDialogSubmit() {
+      let comfirmType = parseInt(this.$refs.comfirmType.value)
+      if (comfirmType === 1) {
+        this.forceCloseDialog = true
+      }
+      this.comfirmDialog = false
+    },
+    // 强制关闭项目提交
+    forceCloseSubmit() {
+      const self = this
+      self.isForceCloseLoadingBtn = true
+      var demandAmount = parseFloat(self.matchCompanyForm.demandAmount).toFixed(2)
+      var designAmount = parseFloat(self.matchCompanyForm.designAmount).toFixed(2)
+      self.$http.post(api.forceCloseSubmit, { item_id: self.itemId, demand_amount: demandAmount, design_amount: designAmount })
+      .then (function(response) {
+        self.isForceCloseLoadingBtn = false
+        if (response.data.meta.status_code === 200) {
+          self.forceCloseDialog = false
+          var rs = response.data.data
+          console.log(rs)
+          self.$message.error('操作成功！')
+        } else {
+          self.$message.error(response.data.meta.message)
+        }
+      })
+      .catch (function(error) {
+        self.$message.error(error.message)
+        self.isForceCloseLoadingBtn = false
+      })
     }
   },
   created: function() {
@@ -289,6 +368,15 @@ export default {
       self.$message.error(error.message)
       self.isLoading = false
     })
+  },
+  computed: {
+    isSystem() {
+      var user = this.$store.state.event.user
+      if (user.role_id === 15 || user.role_id === 20) {
+        return true
+      }
+      return false
+    }
   },
   watch: {
     '$route' (to, from) {

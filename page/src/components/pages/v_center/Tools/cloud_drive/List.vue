@@ -25,6 +25,7 @@
                       :on-success="uploadSuccess"
                       :on-progress="uploadProgress"
                       :on-error="uploadError"
+                      :on-remove="uploadRemove"
                       :before-upload="beforeUpload"
                       :on-change="uploadChange"
                       :show-file-list="false">
@@ -132,8 +133,8 @@
         fileList: [],
         totalNumber: 0,
         webUploader: false, // 上传状态
-        isShowProgress: false,
-        showConfirm: false
+        isShowProgress: false, // 是否显示上传列表
+        showConfirm: false // 确认删除?
       }
     },
     components: {
@@ -181,17 +182,29 @@
       uploadError(err, file, fileList) {
         console.error(err)
       },
+      uploadRemove(file, fileList) {
+        console.log(file)
+        console.log(fileList)
+      },
       uploadProgress(event, file, fileList) {
         this.webUploader = true
         this.fileList = fileList
         this.totalNumber = this.fileList.length
       },
       beforeUpload(file) {
+        const size = file.size / 1024 / 1024 < 100
+        if (!size) {
+          this.$message.error('文件大小不能超过 100MB!')
+        }
+        return size
       },
       uploadChange(file, fileList) {
       },
       clearUpload() {
         this.$refs.upload.clearFiles()
+        for (let i of this.fileList) {
+          this.$refs.upload.handleRemove(i)
+        }
         this.showConfirm = false
       }
     },
@@ -220,7 +233,6 @@
       fileList: {
         handler(val) {
           let a = 0
-          console.log(this.fileList)
           for (let i of this.fileList) {
             let size = Math.round(i['size'] / 1024)
             if (size > 1024) {
@@ -228,7 +240,7 @@
             } else {
               i['format_size'] = size + 'KB'
             }
-            i['format_percentage'] = i.percentage.toFixed(2)
+            i['format_percentage'] = Number(i.percentage.toFixed(2))
             if (i.percentage === 100) {
               a++
             }
