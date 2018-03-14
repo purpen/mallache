@@ -5,6 +5,7 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Transformer\ItemLevelTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Models\ItemLevel;
 use App\Models\User;
@@ -69,7 +70,7 @@ class ItemLevelController extends BaseController
             throw new HttpException($e->getMessage());
         }
 
-        return $this->response->item($itemLevels, new ItemListTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -89,7 +90,7 @@ class ItemLevelController extends BaseController
         }
         $itemLevels = ItemLevel::orderBy('id', 'desc')->get();
 
-        return $this->response->collection($itemLevels, new ItemListTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
 
     }
 
@@ -114,7 +115,7 @@ class ItemLevelController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        return $this->response->item($itemLevels, new ItemListTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
 
 
     }
@@ -173,7 +174,7 @@ class ItemLevelController extends BaseController
         if (!$itemLevels) {
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($itemLevels, new ItemListTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
     }
 
     /**
