@@ -267,7 +267,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function unsetUser()
     {
-        $account = '2' . substr($this->account,1);
+        $account = '2' . substr($this->account, 1);
         $this->account = $account;
         $this->phone = $account;
         $this->email = null;
@@ -281,16 +281,28 @@ class User extends Authenticatable implements JWTSubject
     public static function designCompanyId(int $user_id)
     {
         $user = self::find($user_id);
-        if($user){
+        if ($user) {
             $invite_company_id = $user->invite_company_id;
             //被邀请的设计公司等于0的话，就返回主账户的设计公司id
-            if($invite_company_id == 0){
+            if ($invite_company_id == 0) {
                 $design_company_id = $user->design_company_id;
                 return $design_company_id;
-            }else{
+            } else {
                 return $invite_company_id;
             }
         }
 
+    }
+
+    /**
+     * 判断用户是否是主账号
+     */
+    public function isMaster()
+    {
+        if ($this->child_account == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\QiniuApi;
+use App\Http\Transformer\YunpanListTransformer;
 use App\Models\PanDirector;
 use App\Models\PanFile;
 use App\Models\User;
@@ -177,4 +178,31 @@ class YunpianUploadController extends BaseController
     }
 
 
+    // 公共网盘列表
+    public function openList(Request $request)
+    {
+        $pan_director_id = (int)$request->input('pan_director_id');
+
+        $user_id = $this->auth_user_id;
+        $company_id = User::designCompanyId($user_id);
+        // 用户所有用户组集合
+        $group_id_arr = [];  // 暂缺
+
+        if ($pan_director_id != 0) {
+            $dir = PanDirector::find($pan_director_id);
+            if (!$dir || !in_array($dir->group_id, $group_id_arr)) {
+                return $this->response->array($this->apiError('not found dir!', 404));
+            }
+        }
+
+        $list = PanDirector::query()
+            ->where('status', 1)
+            ->where('open_set', 1)
+            ->where('company_id', $company_id)
+            ->whereIn('group_id', $group_id_arr)
+            ->where('pan_director_id', $pan_director_id)
+            ->get();
+
+        return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiSuccess());
+    }
 }
