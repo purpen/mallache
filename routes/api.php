@@ -146,6 +146,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/dateOfAward/month', 'DateOfAwardController@month');
 
     /**
+     * 没登录前，根据字符串，查看用户id和设计公司id
+     */
+    //根据随机字符串查看用户id
+    $api->get('/urlValue', 'UrlKeyValueController@urlValue');
+
+    /**
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
@@ -321,6 +327,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
         // 确认项目已完成
         $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
+        //设计公司成员列表
+        $api->get('/design/members', 'DesignController@members');
+        //设计公司设置成管理员
+        $api->get('/design/is_admin', 'DesignController@is_admin');
+        //设计公司设置成成员
+        $api->get('/design/no_admin', 'DesignController@no_admin');
+
 
         /**
          * 通知消息相关路由
@@ -383,6 +396,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
 
         /**
+         * 用户id生成string
+         */
+        //根据用户id为key查看随机字符串
+        $api->get('/urlKey', 'UrlKeyValueController@urlKey');
+
+
+        /**
          * 云盘
          */
         // 获取云盘上传文件token
@@ -406,6 +426,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/group/userGroupLists', 'GroupController@userGroupLists');
         // {get} /group/groupUserLists  获取一个群组的成员信息
         $api->get('/group/groupUserLists', 'GroupController@groupUserLists');
+
+
+        /**
+         * 项目级别配置
+         */
+        $api->resource('/itemLevels', 'ItemLevelController');
+
 
     });
 });

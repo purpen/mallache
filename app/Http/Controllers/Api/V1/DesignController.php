@@ -10,10 +10,12 @@ use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\DesignShowItemTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\UserTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ItemStage;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -428,6 +430,148 @@ class DesignController extends BaseController
         event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {get} /design/members 设计公司查看成员列表
+     *
+     * @apiVersion 1.0.0
+     * @apiName design members
+     * @apiGroup design
+     *
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                "id": 2,
+                "type": 2,
+                "account": "18132382134",
+                "username": "",
+                "email": null,
+                "phone": "18132382134",
+                "status": 0,
+                "item_sum": 0,
+                "price_total": "0.00",
+                "price_frozen": "0.00",
+                "cash": "0.00",
+                "logo_image": null,
+                "design_company_id": 51,
+                "role_id": 0,
+                "demand_company_id": 0,
+                "realname": null,
+                "design_company_name": "222"
+                }
+            ],
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function members()
+    {
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if($user->child_account == 1){
+            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->company_role,[10,20])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+        $design_company_id = $user->design_company_id;
+        if($design_company_id == 0){
+            return $this->response->array($this->apiError('该用户不是设计公司', 404));
+        }
+        $users = User::where('invite_company_id' , $design_company_id)->get();
+
+        return $this->response->collection($users, new UserTransformer())->setMeta($this->apiMeta());
+
+    }
+
+    /**
+     * @api {get} /design/is_admin 设计公司设置成管理员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design is_admin
+     * @apiGroup design
+     *
+     * @apiParam {integer} set_user_id 被设置的用户id
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function is_admin(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if(!$user){
+            return $this->response->array($this->apiError('没有找到主账户', 404));
+        }
+        if($user->child_account == 1){
+            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        $set_user_id = $request->input('set_user_id');
+        $set_user = User::where('id' , $set_user_id)->first();
+        if(!$set_user){
+            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+        }
+        $set_user->company_role = 10;
+        $set_user->save();
+
+        return $this->response->array($this->apiSuccess());
+
+    }
+
+
+    /**
+     * @api {get} /design/no_admin 设计公司设置成成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design no_admin
+     * @apiGroup design
+     *
+     * @apiParam {integer} set_user_id 被设置的用户id
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function no_admin(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if(!$user){
+            return $this->response->array($this->apiError('没有找到主账户', 404));
+        }
+        if($user->child_account == 1){
+            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        $set_user_id = $request->input('set_user_id');
+        $set_user = User::where('id' , $set_user_id)->first();
+        if(!$set_user){
+            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+        }
+        $set_user->company_role = 20;
+        $set_user->save();
+
+        return $this->response->array($this->apiSuccess());
+
     }
 
 }

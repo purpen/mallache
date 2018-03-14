@@ -30,6 +30,9 @@ class UserTransformer extends TransformerAbstract
             'design_company_id' =>$user->design_company_id,
             'role_id' => $user->role_id,
             'demand_company_id' => $user->demand_company_id,
+            'realname' => $user->realname,
+            'design_company_name' => $user->designCompany ? $user->designCompany->contact_name : '',
+
         ];
     }
 }
