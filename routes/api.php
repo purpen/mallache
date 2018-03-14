@@ -331,9 +331,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/members', 'DesignController@members');
         //设计公司设置成管理员
         $api->get('/design/is_admin', 'DesignController@is_admin');
-        //设计公司设置成成员
-        $api->get('/design/no_admin', 'DesignController@no_admin');
-
 
         /**
          * 通知消息相关路由
