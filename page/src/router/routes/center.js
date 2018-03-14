@@ -104,7 +104,7 @@ module.exports = [
       title: '图片素材',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/veerImage')
+    component: require('@/components/pages/v_center/Tools/VeerImage')
   },
   // 公司工具 => 趋势/报告
   {
@@ -114,7 +114,7 @@ module.exports = [
       title: '趋势/报告',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/trendReport')
+    component: require('@/components/pages/v_center/Tools/TrendReport')
   },
   {
     path: '/vcenter/trend_report/show/:id',
@@ -124,7 +124,7 @@ module.exports = [
       requireAuth: false
     },
     component: (resolve) => {
-      require(['@/components/pages/v_center/Tools/trendReportShow'], resolve)
+      require(['@/components/pages/v_center/Tools/TrendReportShow'], resolve)
     }
   },
   // 公司工具 => 常用网站
@@ -135,7 +135,7 @@ module.exports = [
       title: '常用网站',
       requireAuth: false
     },
-    component: require('@/components/pages/v_center/Tools/commonlySites')
+    component: require('@/components/pages/v_center/Tools/CommonlySites')
   },
   // 公司工具 => 展览
   {
@@ -146,7 +146,7 @@ module.exports = [
       requireAuth: false
     },
     component: (resolve) => {
-      require(['@/components/pages/v_center/Tools/exhibition'], resolve)
+      require(['@/components/pages/v_center/Tools/Exhibition'], resolve)
     }
   },
   {
