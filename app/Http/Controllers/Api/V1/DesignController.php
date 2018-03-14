@@ -501,6 +501,13 @@ class DesignController extends BaseController
      * @apiParam {integer} set_user_id 被设置的用户id
      * @apiParam {token} token
      *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
      *
      */
     public function is_admin(Request $request)
@@ -536,6 +543,13 @@ class DesignController extends BaseController
      * @apiParam {integer} set_user_id 被设置的用户id
      * @apiParam {token} token
      *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
      *
      */
     public function no_admin(Request $request)

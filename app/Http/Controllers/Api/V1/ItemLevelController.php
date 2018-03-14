@@ -25,6 +25,23 @@ class ItemLevelController extends BaseController
      * @apiParam {string} name 名称
      * @apiParam {string} summary 描述
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 2,
+                "name": "test1",
+                "summary": "test1",
+                "user_id": 5,
+                "type": 1,
+                "status": 1,
+                "created_at": 1521018316
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     public function store(Request $request)
     {
@@ -80,6 +97,23 @@ class ItemLevelController extends BaseController
      * @apiGroup itemLevels
      *
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 2,
+                "name": "test1",
+                "summary": "test1",
+                "user_id": 5,
+                "type": 1,
+                "status": 1,
+                "created_at": 1521018316
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     public function index()
     {
@@ -101,6 +135,24 @@ class ItemLevelController extends BaseController
      * @apiGroup itemLevels
      *
      * @apiParam {string} token
+     *
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 2,
+                    "name": "test1",
+                    "summary": "test1",
+                    "user_id": 5,
+                    "type": 1,
+                    "status": 1,
+                    "created_at": 1521018316
+                },
+                "meta": {
+                    "message": "Success",
+                    "status_code": 200
+            }
+        }
      */
     public function show($id)
     {
@@ -128,6 +180,24 @@ class ItemLevelController extends BaseController
      * @apiParam {string} name 名称
      * @apiParam {string} summary 描述
      * @apiParam {string} token
+     *
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 2,
+                "name": "test1",
+                "summary": "test1",
+                "user_id": 5,
+                "type": 1,
+                "status": 1,
+                "created_at": 1521018316
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     public function update(Request $request , $id)
     {
@@ -182,6 +252,15 @@ class ItemLevelController extends BaseController
      * @apiVersion 1.0.0
      * @apiName itemLevels delete
      * @apiGroup itemLevels
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
      */
     public function destroy($id)
     {
