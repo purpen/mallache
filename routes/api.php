@@ -389,6 +389,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
 
+        /**
+         * 用户群组
+         */
+        // {get} /group/lists  获取公司所有自己创建的群组列表（主账号）
+        $api->get('/group/lists', 'GroupController@lists');
+        // {post} /group/create  创建群组（主账号）
+        $api->post('/group/create', 'GroupController@create');
+        // {put} /group/addUser  向群组添加用户（主账号）
+        $api->put('/group/addUser', 'GroupController@addUser');
+        // {put} /group/removeUser  群组移除用户（主账号）
+        $api->put('/group/removeUser', 'GroupController@removeUser');
+        // {delete} /group/delete  删除群组（主账号）
+        $api->delete('/group/delete', 'GroupController@delete');
+        // {get} /group/userGroupLists  获取某用户所在的群组列表
+        $api->get('/group/userGroupLists', 'GroupController@userGroupLists');
+        // {get} /group/groupUserLists  获取一个群组的成员信息
+        $api->get('/group/groupUserLists', 'GroupController@groupUserLists');
 
     });
 });

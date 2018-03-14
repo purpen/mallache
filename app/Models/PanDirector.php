@@ -86,6 +86,44 @@ class PanDirector extends BaseModel
     }
 
 
+    /**
+     * 判断用户是否可以创建当前文件\文件夹
+     *
+     * @param int $user_id
+     * @param int $pan_director_id
+     * @param int $group_id
+     * @return bool
+     */
+    public function isCreate2(int $user_id, int $pan_director_id, int $group_id, int $open_set): bool
+    {
+        // 公共网盘
+        if (yunpan::isItem($user_id, $group_id) && $open_set === 1) {
+            if ($pan_director_id === 0) {  // 顶层目录时
+                return true;
+            }
+
+            $dir = PanDirector::find($pan_director_id);
+            if ($dir) {
+                if (yunpan::isItem($user_id, $dir->group_id)) {
+                    return true;
+                }
+            }
+        } else if ($group_id === 0 && $open_set === 2) {  // 个人网盘
+            if ($pan_director_id === 0) {  // 顶层目录时
+                return true;
+            }
+            $dir = PanDirector::find($pan_director_id);
+            if ($dir) {
+                if ($dir->user_id === $user_id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
     // 返回文件/文件夹详细信息
     public function info()
     {
@@ -96,11 +134,13 @@ class PanDirector extends BaseModel
             'name' => $this->name,
             'size' => $this->size,
             'mime_type' => $this->mime_type,
-            'url' => $this->url_small,
+            'url_small' => $this->url_small,
+            'url_file' => $this->url_file,
             'user_id' => $this->user_id,
             'user_name' => $this->user->username,
             'group_id' => $this->group_id,
             'created_at' => $this->created_at,
+            'open_set' => $this->open_set,
         ];
     }
 
@@ -118,6 +158,19 @@ class PanDirector extends BaseModel
             $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . config('filesystems.disks.yunpan_qiniu.video_small');
         }
 
+        // 对链接进行签名
+        $signedUrl = $auth->privateDownloadUrl($baseUrl);
+        return $signedUrl;
+    }
+
+    /**
+     * 资源访问修改器
+     */
+    public function getUrlFileAttribute()
+    {
+        $auth = QiniuApi::auth();
+        // 私有空间中的外链 http://<domain>/<file_key>
+        $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url;
         // 对链接进行签名
         $signedUrl = $auth->privateDownloadUrl($baseUrl);
         return $signedUrl;
