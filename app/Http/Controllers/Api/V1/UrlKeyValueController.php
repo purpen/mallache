@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
 use App\Http\Transformer\UserTransformer;
+use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -117,6 +118,14 @@ class UrlKeyValueController extends BaseController
             return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 403));
         }
         $user = User::where('id' , $user_id)->first();
+        $realName = $user->realname;
+        //如果设计公司用户表的真实姓名没有，把设计公司表的联系人姓名更新的用户表
+        if($realName == null) {
+            $design_company_id = $user->design_company_id;
+            $design_company = DesignCompanyModel::where('id' , $design_company_id)->first();
+            $user->realname = $design_company->contact_name;
+            $user->save();
+        }
 
         return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
 

@@ -121,6 +121,9 @@ class CustomerController extends BaseController
      * @apiName customers index
      * @apiGroup customers
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
         {
@@ -146,13 +149,18 @@ class CustomerController extends BaseController
             }
         }
      */
-    public function index()
+    public function index(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
-
-        $customers = Customer::where('design_company_id' , $design_company_id)->orderBy('id', 'desc')->get();
-        return $this->response->collection($customers, new CustomerTransformer())->setMeta($this->apiMeta());
+        if($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $customers = Customer::where('design_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
+        return $this->response->paginator($customers, new CustomerTransformer())->setMeta($this->apiMeta());
     }
 
     /**

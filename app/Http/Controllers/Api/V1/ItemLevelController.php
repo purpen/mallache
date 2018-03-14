@@ -96,6 +96,9 @@ class ItemLevelController extends BaseController
      * @apiName itemLevels index
      * @apiGroup itemLevels
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -115,16 +118,22 @@ class ItemLevelController extends BaseController
             }
         }
      */
-    public function index()
+    public function index(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
+        if($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
         if($user->child_account == 1){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
         }
-        $itemLevels = ItemLevel::orderBy('id', 'desc')->get();
+        $itemLevels = ItemLevel::orderBy('id', $sort)->paginate($per_page);
 
-        return $this->response->collection($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($itemLevels, new ItemLevelTransformer())->setMeta($this->apiMeta());
 
     }
 
@@ -173,7 +182,7 @@ class ItemLevelController extends BaseController
     }
 
     /**
-     * @api {put} /works/{id} 更新
+     * @api {put} /itemLevels/{id} 更新
      * @apiVersion 1.0.0
      * @apiName  itemLevels update
      * @apiGroup itemLevels
@@ -252,6 +261,8 @@ class ItemLevelController extends BaseController
      * @apiVersion 1.0.0
      * @apiName itemLevels delete
      * @apiGroup itemLevels
+     *
+     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *   {

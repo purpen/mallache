@@ -440,6 +440,9 @@ class DesignController extends BaseController
      * @apiName design members
      * @apiGroup design
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
      * @apiParam {token} token
      *
      * @apiSuccessExample 成功响应:
@@ -471,8 +474,14 @@ class DesignController extends BaseController
             }
         }
      */
-    public function members()
+    public function members(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        if($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
         if($user->child_account == 1){
@@ -485,9 +494,9 @@ class DesignController extends BaseController
         if($design_company_id == 0){
             return $this->response->array($this->apiError('该用户不是设计公司', 404));
         }
-        $users = User::where('invite_company_id' , $design_company_id)->get();
+        $users = User::where('invite_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
 
-        return $this->response->collection($users, new UserTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($users, new UserTransformer())->setMeta($this->apiMeta());
 
     }
 
