@@ -519,7 +519,7 @@ class AuthenticateController extends BaseController
         $invite_user_id = $request->input('invite_user_id');
         $user = User::where('id', $invite_user_id)->first();
         if($user){
-            if($user->company_role == 1){
+            if($user->company_role == 20){
                 return $this->response->array($this->apiError('邀请的用户不是管理员', 403));
             }
             if($user->child_account == 1){
@@ -570,7 +570,7 @@ class AuthenticateController extends BaseController
             'password' => bcrypt($payload['password']),
             'invite_company_id' => $invite_company_id,
             'child_account' => 1,
-            'company_role' => 1,
+            'company_role' => 20,
             'type' => 2
         ]);
 
@@ -581,5 +581,6 @@ class AuthenticateController extends BaseController
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
     }
+
 
 }

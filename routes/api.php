@@ -327,6 +327,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
         // 确认项目已完成
         $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
+        //设计公司成员列表
+        $api->get('/design/members', 'DesignController@members');
+        //设计公司设置成管理员
+        $api->get('/design/is_admin', 'DesignController@is_admin');
+        //设计公司设置成成员
+        $api->get('/design/no_admin', 'DesignController@no_admin');
+
 
         /**
          * 通知消息相关路由
@@ -401,6 +408,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 获取云盘上传文件token
 
         $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
+
+        /**
+         * 项目级别配置
+         */
+        $api->resource('/itemLevels', 'ItemLevelController');
+
 
 
     });
