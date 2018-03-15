@@ -201,6 +201,16 @@ const routes = [
     },
     component: require('@/components/pages/subject/YuQuanGifts')
   },
+  // 小米众生相
+  {
+    path: '/subject/xiaomiInterview',
+    name: 'xiaomiInterview',
+    meta: {
+      requireAuth: false,
+      title: '2018iF季-小米生态链企业-众生相'
+    },
+    component: require('@/components/pages/subject/xiaomiInterview')
+  },
   // 创新力指数
   {
     path: '/innovation_index',
