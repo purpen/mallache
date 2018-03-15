@@ -418,7 +418,7 @@ export default {
   }
 
   .more-list:hover ul {
-    display: block
+    display: block;
   }
 
   .more-list ul {
