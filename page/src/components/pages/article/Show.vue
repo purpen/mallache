@@ -177,8 +177,9 @@ p.title-menu a {
   width: 2%;
   vertical-align: middle;
 }
+
 .markdown-body {
   color: #666;
-  line-height: 22.5px;
+  line-height: 1.5
 }
 </style>

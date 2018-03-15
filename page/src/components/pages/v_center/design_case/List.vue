@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu :class="[isMob ? 'v-menu' : '']" currentName="design_case"></v-menu>
 
@@ -19,7 +18,7 @@
                     <div class="image-box">
                       <router-link :to="{name: 'vcenterDesignCaseShow', params: {id: d.id}}"
                                    :target="isMob ? '_self' : '_blank'">
-                        <img :src="d.cover.middle">
+                        <img v-if="d.cover" :src="d.cover.middle">
                       </router-link>
                     </div>
                     <div class="content">
@@ -139,17 +138,14 @@
 
   .right-content .content-box-m {
     border-top: 1px solid #E6E6E6;
-    margin: 14px 0 0 0;
+    margin: 0;
     padding: 0 15px;
     }
 
   .content-box-m .form-title {
     margin: 10px 0 6px;
     }
-
-  .design-case-list {
-    }
-
+    
   .design-case-list .item {
     height: 240px;
     }

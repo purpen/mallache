@@ -111,7 +111,7 @@
                 </el-col>
               </el-row>
 
-              <el-row :gutter="10">
+              <!-- <el-row :gutter="10">
                 <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
@@ -132,11 +132,12 @@
                     <el-input v-model="form.email" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>
-              </el-row>
+              </el-row> -->
 
               <el-row :gutter="24">
                 <el-col :span="isMob ? 24 : 12">
-                  <el-checkbox v-model="agreement" disabled><a href="javascript:void(0);" @click="agreementBtn">已阅读并同意《铟果SaaS协议》</a>
+                  <el-checkbox v-model="agreement" disabled>
+                    阅读并同意<a href="javascript:void(0);" class="terms" @click="agreementBtn">《铟果SaaS协议》</a>
                   </el-checkbox>
                 </el-col>
               </el-row>
@@ -336,19 +337,6 @@
           ],
           document_type: [
             {type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change'}
-          ],
-          contact_name: [
-            {required: true, message: '请添写联系人', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '请添写联系电话', trigger: 'blur'}
-          ],
-          email: [
-            {required: true, message: '请添写联系人邮箱', trigger: 'blur'},
-            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur'}
-          ],
-          position: [
-            {required: true, message: '请添写联系人职位', trigger: 'blur'}
           ]
         }
       }
@@ -363,17 +351,26 @@
         that.$refs[formName].validate((valid) => {
           // 验证通过，提交
           if (valid) {
+            // let row = {
+            //   registration_number: that.form.registration_number,
+            //   company_name: that.form.company_name,
+            //   company_type: that.form.company_type,
+            //   legal_person: that.form.legal_person,
+            //   document_number: that.form.document_number,
+            //   document_type: that.form.document_type,
+            //   contact_name: that.form.contact_name,
+            //   position: that.form.position,
+            //   email: that.form.email,
+            //   phone: that.form.phone
+            // }
+
             let row = {
               registration_number: that.form.registration_number,
               company_name: that.form.company_name,
               company_type: that.form.company_type,
               legal_person: that.form.legal_person,
               document_number: that.form.document_number,
-              document_type: that.form.document_type,
-              contact_name: that.form.contact_name,
-              position: that.form.position,
-              email: that.form.email,
-              phone: that.form.phone
+              document_type: that.form.document_type
             }
 
             if (that.companyId) {
@@ -383,7 +380,7 @@
               }
             }
             that.isLoadingBtn = true
-            that.$http({method: 'POST', url: api.designCompany, data: row})
+            that.$http({method: 'PUT', url: api.designCompany, data: row})
               .then(function (response) {
                 that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {
@@ -641,5 +638,7 @@
     color: #222;
   }
 
-
+  .terms {
+    color: #00c
+  }
 </style>

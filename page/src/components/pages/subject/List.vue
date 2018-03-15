@@ -185,6 +185,7 @@
     color: #666666;
     font-size: 1.4rem;
     line-height: 1.5;
+    height: 42px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

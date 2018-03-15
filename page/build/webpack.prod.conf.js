@@ -53,11 +53,12 @@ var webpackConfig = merge(baseWebpackConfig, {
       uglifyOptions: {
         ecma: 8,
         mangle: true,
-        output: { comments: false },
+        output: { comments: false, beautify	: false },
         compress: {
-          warnings: false,
-          drop_console: true
-        }
+          drop_console: true,
+          dead_code: true
+        },
+        warnings: false
       },
       sourceMap: false,
       cache: true,
@@ -82,7 +83,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     new AddAssetHtmlPlugin([{
       filepath: path.resolve(__dirname,'../static/js/vendor/core.dll.*.js'), // 同webpack.dll.conf.js output
       outputPath: utils.assetsPath(''),
-      publicPath: path.posix.join(config.build.assetsPublicPath, '/static/js/vendor'),
+      publicPath: config.build.assetsPublicPath + 'static/js/vendor',
       includeSourcemap: false,
       hash: false,
     }]),

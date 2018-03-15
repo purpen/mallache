@@ -12,7 +12,9 @@
             <p>{{ item.content }}</p>
           </div>
           <div class="des">
-            <p v-for="d in item.item_stage_image"><img :src="d.big" :alt="d.name" :title="d.name" /></p>
+            <p v-for="(d, index) in item.item_stage_image" :key="index">
+              <img :src="d.big" :alt="d.name" :title="d.name" />
+            </p>
           </div>
         </div>
       </el-col>
@@ -45,12 +47,12 @@
           <div class="prize" v-if="item.prize_val">
             <p>获得奖项: {{ item.prize_val }}</p>
           </div>
-        
+
         </div>
       </el-col>
 
     </el-row>
-    
+
   </div>
 </template>
 
@@ -116,7 +118,7 @@
   }
   .design-case-slide {
     padding: 20px 20px 20px 20px;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
   }
   .design-case-slide .info {
     margin: 10px;
@@ -130,7 +132,7 @@
   }
   .design-case-slide h3 {
     margin: 10px;
-    font-size: 2rem;   
+    font-size: 2rem;
   }
   .design-case-slide .rate {
     padding: 10px;

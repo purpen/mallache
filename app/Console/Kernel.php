@@ -37,8 +37,13 @@ class Kernel extends ConsoleKernel
         Commands\ChangeItem::class,
 
 
+
         // 修改设计公司主账号信息（子账户正式上线后不可使用）
         Commands\ChangeDesignUserInfo::class,
+
+        // 每日定时更新内容的随机数，用于内容随机排序
+        Commands\UpdateRandom::class
+
 
     ];
 
@@ -57,6 +62,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('payOrder:drop')->everyFiveMinutes();
 
         $schedule->command('Update:token')->everyFiveMinutes();
+        // 每日定时更新内容的随机数，用于内容随机排序
+        $schedule->command('random:update')->daily();
     }
 
     /**

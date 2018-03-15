@@ -35,22 +35,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .vcenter-menu-sub-m {
-    padding: 15px 0 0;
-    height: auto;
-  }
-
-  .vcenter-menu-sub-list-m {
-    /*padding: 0 10px;*/
-    float: none;
-    margin-bottom: -1px;
-    border-top: 1px solid #ccc;
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .vcenter-menu-sub-list-m .item {
-    text-align: center;
-    line-height: 42px;
-  }
 </style>

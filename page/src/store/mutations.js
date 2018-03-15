@@ -39,8 +39,8 @@ let prevUrlName = function () {
 }
 
 // 消息数量
-let msgCount = function () {
-  let messageCount = localStorage.getItem('msgCount')
+let getMsgCount = function () {
+  let messageCount = JSON.parse(localStorage.getItem('msgCount'))
   if (messageCount) {
     return messageCount
   } else {
@@ -65,7 +65,7 @@ const state = {
   apiUrl: 'http://sa.taihuoniao.com', // 接口base url
   imgUrl: 'http://sa.taihuoniao.com', // 图片base url
   prevUrlName: prevUrlName(),
-  msgCount: msgCount(),
+  msgCount: getMsgCount(),
   indexConf: {
     isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
@@ -106,7 +106,7 @@ const mutations = {
   [USER_SIGNOUT](state) {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.setItem('msgCount', 0)
+    localStorage.setItem('msgCount', JSON.stringify({ message: 0, notice: 0, quantity: 0 }))
     state.token = false
   },
   [USER_INFO](state, user) {
@@ -115,9 +115,6 @@ const mutations = {
     state.user = user
   },
   [MSG_COUNT](state, msgCount) {
-    if (msgCount < 0) {
-      msgCount = 0
-    }
     localStorage.setItem('msgCount', JSON.stringify(msgCount))
     state.msgCount = msgCount
   },

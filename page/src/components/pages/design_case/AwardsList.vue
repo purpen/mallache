@@ -8,15 +8,13 @@
           <el-card :body-style="{ padding: '0px' }" class="card">
             <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}"
                         :target="BMob ? '_self' : '_blank'">
-              <div class="image-box">
+              <div class="image-box" :style="{background: 'url('+ d.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
                   <img v-lazy="d.cover.middle">
               </div>
               <div class="content">
                 <router-link :to="{name: 'designAwardsShow', params: {id: d.id}}" target="_blank">{{ d.title }}
                 </router-link>
-                <div class="des">
-                  <p>{{ d.summary }}</p>
-                </div>
+                <p class="des">{{d.summary}}</p>
 
                 <p class="company">
                   <img class="avatar" :src="d.img"
@@ -30,7 +28,7 @@
       </el-row>
     </div>
     <div class="blank20"></div>
-    <div class="pager">
+    <div class="pager" v-if="query.totalCount">
       <el-pagination v-if="itemList.length" class="pagination" :small="BMob" :current-page="query.page" :page-size="query.pageSize"
                      :total="query.totalCount" :page-count="query.totalPges" layout="total, prev, pager, next, jumper"
                      @current-change="handleCurrentChange">
@@ -52,7 +50,8 @@ export default {
       query: {
         page: 1,
         pageSize: 9,
-        totalPges: 1,
+        sort: 5,
+        totalPges: 0,
         totalCount: 0
       },
       test: ''
@@ -64,14 +63,16 @@ export default {
   methods: {
     handleCurrentChange(page) {
       this.query.page = page
+      this.$router.push({name: this.$route.name, query: {page: this.query.page}})
       this.loadList()
     },
     loadList() {
       const self = this
       self.isLoading = true
+      self.query.sort = this.$route.query.sort || 5
       self.$http
         .get(api.awardCaseList, {
-          params: { page: self.query.page, per_page: self.query.pageSize }
+          params: { page: self.query.page, per_page: self.query.pageSize, sort: self.query.sort }
         })
         .then(function(response) {
           self.isLoading = false
@@ -109,6 +110,7 @@ export default {
     }
   },
   created: function() {
+    this.query.page = Number(this.$route.query.page) || 1
     this.loadList()
   },
   computed: {
@@ -134,14 +136,16 @@ a {
 }
 
 .image-box {
-  height: 220px;
-  overflow: hidden;
+    height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid #D2D2D2;
+    /* border-radius: 4px 4px 0 0; */
 }
 
 .image-box img {
-  width: 100%;
-  max-height: 360px;
+  display: none
 }
+
 
 .content {
   padding: 20px;
@@ -155,19 +159,16 @@ a {
   white-space: nowrap;
 }
 
-.des {
-  height: 36px;
+.des{
   margin: 10px 0;
-}
-
-.des p {
   color: #666;
-  font-size: 1.3rem;
-  line-height: 18px;
+  font-size: 1.4rem;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  height: 42px;
 }
 
 .company {
@@ -192,15 +193,20 @@ a {
   text-align: center;
 }
 
-@media screen and (max-width: 1199px) and (min-width: 768px) {
-  .image-box {
-    height: 136px;
-  }
-}
-
 @media screen and (max-width: 767px) {
+  .card {
+    max-width: 500px;
+    margin: 10px auto;
+  }
   .image-box {
     height: auto;
+    max-height: 300px;
+    overflow: hidden;
+    /* border-radius: 4px 4px 0 0; */
+  }
+  .image-box img {
+    display: block;
+    width: 100%;
   }
 }
 </style>

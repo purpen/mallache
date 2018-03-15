@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
-
+  <div class="container blank40">
     <v-menu currentName="c_item" class="c_item"></v-menu>
 
     <el-col :span="isMob ? 24 : 20">
@@ -214,7 +212,7 @@
           })
       },
       // 进入详情
-      showView() {
+      showView(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       }
@@ -228,38 +226,34 @@
       let self = this
       self.$http.get(api.designCooperationLists, {})
         .then(function (response) {
-          self.isLoading = false
           if (response.data.meta.status_code === 200) {
             if (!response.data.data) {
-              return false
-            }
-            self.ingCount = response.data.meta.pagination.total
-            let designItems = response.data.data
-            for (let i = 0; i < designItems.length; i++) {
-              let item = designItems[i]
-              let typeLabel = ''
-              if (item.item.type === 1) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
-              } else if (item.item.type === 2) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value
-              }
-              let showPrice = false
-              let showView = false
-              let status = item.item.status
-              if (item.item.status >= 5) showPrice = true
-              if (status === 7 || status === 8 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
-                showView = true
-              }
-              designItems[i].item.show_price = showPrice
-              designItems[i].item.is_show_view = showView
-              designItems[i].item.type_label = typeLabel
-              designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
-            } // endfor
-            self.designItems = designItems
-            if (self.designItems.length) {
-              self.isEmpty = false
-            } else {
               self.isEmpty = true
+            } else {
+              self.ingCount = response.data.meta.pagination.total
+              let designItems = response.data.data
+              for (let i = 0; i < designItems.length; i++) {
+                let item = designItems[i]
+                let typeLabel = ''
+                if (item.item.type === 1) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+                } else if (item.item.type === 2) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value
+                }
+                let showPrice = false
+                let showView = false
+                let status = item.item.status
+                if (item.item.status >= 5) showPrice = true
+                if (status === 7 || status === 8 || status === 11 || status === 15 || status === 18 || status === 20 || status === 22) {
+                  showView = true
+                }
+                designItems[i].item.show_price = showPrice
+                designItems[i].item.is_show_view = showView
+                designItems[i].item.type_label = typeLabel
+                designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
+              } // endfor
+              self.designItems = designItems
+              self.isLoading = false
             }
           } else {
             self.$message.error(response.data.meta.message)
@@ -298,7 +292,7 @@
   }
 
   .content-item-box-m {
-    margin: 15px 15px 0;
+    margin: 0 15px 0;
   }
 
   .content-item-box .item {
@@ -392,8 +386,7 @@
   }
 
   .item-title-box {
-    margin-top: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #d2d2d2;
     border-bottom: none;
   }
 
@@ -462,12 +455,13 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/\tools/report/NoContent.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 </style>

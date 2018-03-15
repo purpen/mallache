@@ -110,7 +110,7 @@
                 </el-col>
               </el-row>
 
-              <el-row :gutter="10">
+              <!-- <el-row :gutter="10">
                 <el-col :span="isMob ? 24 : 6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
@@ -131,7 +131,7 @@
                     <el-input v-model="form.email" placeholder=""></el-input>
                   </el-form-item>
                 </el-col>
-              </el-row>
+              </el-row> -->
 
 
               <div class="form-btn">
@@ -207,7 +207,6 @@
           position: '',
           phone: '',
           email: '',
-
           test: ''
         },
 
@@ -230,19 +229,6 @@
           ],
           document_type: [
             {type: 'number', required: true, message: '请选择法人证件类型', trigger: 'change'}
-          ],
-          contact_name: [
-            {required: true, message: '请添写联系人', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '请添写联系电话', trigger: 'blur'}
-          ],
-          email: [
-            {required: true, message: '请添写联系人邮箱', trigger: 'blur'},
-            {type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur'}
-          ],
-          position: [
-            {required: true, message: '请添写联系人职位', trigger: 'blur'}
           ]
         }
       }
@@ -259,11 +245,7 @@
               company_type: that.form.company_type,
               legal_person: that.form.legal_person,
               document_number: that.form.document_number,
-              document_type: that.form.document_type,
-              contact_name: that.form.contact_name,
-              position: that.form.position,
-              email: that.form.email,
-              phone: that.form.phone
+              document_type: that.form.document_type
             }
 
             if (that.companyId) {
@@ -273,7 +255,7 @@
               }
             }
             that.isLoadingBtn = true
-            that.$http({method: 'POST', url: api.demandCompany, data: row})
+            that.$http({method: 'PUT', url: api.demandCompany, data: row})
               .then(function (response) {
                 that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {

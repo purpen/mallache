@@ -127,6 +127,7 @@ class AwardCaseController extends BaseController
      *
      * @apiParam {integer} type 类型；0.全部；
      * @apiParam {integer} category_id 奖项分类：0.全部；1.--; 2.--;
+     * @apiParam {integer} sort 创建时间排序 0.创建时间倒序；1.创建时间正序；2.推荐倒序；5.随机数正序；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      *
@@ -143,6 +144,7 @@ class AwardCaseController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->input('type') ? (int)$request->input('type') : 0;
+        $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $status = $request->input('status') ? (int)$request->input('status') : 1;
         $category_id = $request->input('category_id') ? (int)$request->input('category_id') : 0;
 
@@ -151,11 +153,29 @@ class AwardCaseController extends BaseController
         if ($category_id) $query['category_id'] = $category_id;
         if ($status) $query['status'] = $status;
 
-        $lists = AwardCase::where($query)
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
+        $condition = AwardCase::where($query);
 
-        return $this->response->paginator($lists, new AwardCaseListTransformer)->setMeta($this->apiMeta());
+        //排序
+        switch ($sort) {
+            case 0:
+                $condition->orderBy('id', 'desc');
+                break;
+            case 1:
+                $condition->orderBy('id', 'asc');
+                break;
+            case 2:
+                $condition->orderBy('recommended_on', 'desc');
+                break;
+            case 5:
+                $condition->orderBy('random', 'asc');
+                break;
+            default:
+                $condition->orderBy('id', 'desc');
+        }
+
+        $list = $condition->paginate($per_page);
+
+        return $this->response->paginator($list, new AwardCaseListTransformer)->setMeta($this->apiMeta());
     }
 
 }

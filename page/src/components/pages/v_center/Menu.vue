@@ -2,7 +2,6 @@
   <el-col :span="isMob ? 24 : 4" class="left-menu">
     <section :class="['menuHide', isMob ? 'MmenuHide' : '']">
       <div :class="['menu-list', 'clearfix', isMob ? 'Mmenulist' : '']" ref="Mmenulist" v-if="isCompany">
-        <span v-if="!isMob">个人中心</span>
         <a @click="alick" :to="'/vcenter/control'"
            :class="{'item': true, 'is-active': currentName === 'control'}">
           控制面板
@@ -14,6 +13,10 @@
         <a @click="alick" :to="'/vcenter/citem/list'"
            :class="{'item': true, 'is-active': currentName === 'c_item'}">
           项目订单
+        </a>
+        <a @click="alick" :to="'/vcenter/cloud_drive/list'"
+           :class="{'item': true, 'is-active': currentName === 'cloud_drive'}">
+          项目云盘
         </a>
         <a @click="alick" :to="'/vcenter/design_case'"
            :class="{'item': true, 'is-active': currentName === 'design_case'}">
@@ -66,7 +69,7 @@
         </a>
       </div>
 
-      <div class="computer-btn" v-if="isCompany">
+      <div class="computer-btn" v-if="isCompany && !isMob">
         <el-button @click="redirectCompany" class="companyBtn">查看公司主页</el-button>
       </div>
     </section>

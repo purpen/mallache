@@ -3,24 +3,22 @@
     <div class="trend-report">
       <ToolsMenu currentName="trendReport"></ToolsMenu>
       <div :class="['report', {isMob : 'm-report'}]" v-loading.body="isLoading">
-        <el-row :gutter="20" class="report-list">
-          <el-col :span="isMob ? 24 : 8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
+        <el-row :gutter="15" class="report-list">
+          <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(ele, index) in reportList" :key="index" class="item-cover">
             <router-link :to="{name: 'trendReportShow', params: {id: ele.id}}" class="item">
-              <div class="picture"
-                    :style="{background: 'url('+ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
-                {{ele.cover.summary}}
+              <div class="image-box" :style="{background: 'url('+ ele.cover.middle + ') no-repeat center', backgroundSize: 'cover'}">
+                <img :src="ele.cover.middle" :alt="ele.cover.summary">
               </div>
               <article class="item-body clearfix">
                 <p class="title">{{ele.title}}</p>
-                <p class="view fl"><i class="fx-4 fx-icon-see"></i>{{ele.hits}}</p>
-                <p class="date fr"><i class="fx-2 fx-icon-time"></i>{{ele.created_at}}</p>
+                <p class="view fl"><i class="fx-4 fx-icon-browse-sm"></i>{{ele.hits}}</p>
+                <p class="date fr"><i class="fx-2 fx-icon-time-orange-sm"></i>{{ele.created_at}}</p>
               </article>
             </router-link>
           </el-col>
         </el-row>
-        <div class="pager">
+        <div class="pager" v-if="pagination.total_pages > 1">
           <el-pagination
-            v-if="reportList.lgnth"
             class="pagination"
             :current-page="pagination.current_page"
             :page-size="pagination.per_page"
@@ -52,13 +50,14 @@
         reportList: [],
         pagination: {
           current_page: 1,
-          per_page: 10,
+          per_page: 12,
           total: 0,
           total_pages: 0
         }
       }
     },
     created () {
+      this.pagination.current_page = Number(this.$route.query.page) || 1
       this.getTrendReportList()
     },
     methods: {
@@ -97,6 +96,7 @@
       },
       handleCurrentChange (val) {
         this.pagination.current_page = val
+        this.$router.push({name: this.$route.name, query: {page: this.pagination.current_page}})
         this.getTrendReportList()
       }
     },
@@ -125,17 +125,21 @@
   .item-cover {
     margin: 10px 0;
   }
+
   .item {
+    max-width: 500px;
+    margin: auto;
     border: 1px solid #D2D2D2;
-    border-radius: 4px;
+    /* border-radius: 4px; */
+    box-shadow: 0 5px 10px 0 #eee;
     display: block;
     height: 100%;
-    transition: all ease .3s;
+    transition: all ease .1s;
   }
 
   .item:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 5px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 9pt 24px rgba(10,10,10,.15);
   }
 
   .report {
@@ -169,21 +173,26 @@
     margin-bottom: 20px;
   }
 
-  .picture {
-    height: 180px;
-    border-radius: 4px 4px 0 0;
+  .image-box {
+    height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid #D2D2D2;
+    /* border-radius: 4px 4px 0 0; */
+  }
+
+  .image-box img {
+    display: none
   }
 
   .item-body {
     overflow: hidden;
     padding: 10px;
-    border-top: 1px solid #D2D2D2;
-    border-radius: 0 0 4px 4px;
+    /* border-radius: 0 0 4px 4px; */
   }
 
   .item-body .title {
     font-size: 15px;
-    height: 40px;
+    height: 42px;
     line-height: 1.4;
     margin-bottom: 10px;
     display: -webkit-box;
@@ -211,17 +220,22 @@
     align-items: center;
   }
 
-  .pager {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-  }
-
   .pagination {
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  @media screen and (max-width: 767px) {
+  .image-box {
+    height: auto;
+    max-height: 300px;
+    overflow: hidden;
+    /* border-radius: 4px 4px 0 0; */
+  }
+  .image-box img {
+    display: block;
+    width: 100%;
+  }
   }
 </style>

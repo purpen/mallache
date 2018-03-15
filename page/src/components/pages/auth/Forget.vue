@@ -11,6 +11,13 @@
             <el-input v-model="form.account" name="account" ref="account" auto-complete="on"
                       placeholder="手机号"></el-input>
           </el-form-item>
+          <el-form-item label="" prop="imgCode">
+            <el-input class="imgCodeInput" v-model="form.imgCode" name="imgCode" ref="imgCode" placeholder="图形验证码">
+              <template slot="append">
+                <div @click="fetchImgCaptcha" class="imgCode" :style="{'background': `url(${imgCaptchaUrl}) no-repeat`}"></div>
+              </template>
+            </el-input>
+          </el-form-item>
           <el-form-item label="" prop="smsCode">
             <el-input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
               <template slot="append">
@@ -66,8 +73,8 @@
           account: '',
           smsCode: '',
           password: '',
-          checkPassword: ''
-
+          checkPassword: '',
+          imgCode: ''
         },
         ruleForm: {
           account: [
@@ -79,14 +86,18 @@
             {min: 6, max: 6, message: '验证码格式不正确！', trigger: 'blur'}
           ],
           password: [
-            {required: true, message: '请输入密码', trigger: 'change'},
+            {required: true, message: '请输入密码', trigger: 'blur'},
             {min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur'}
           ],
           checkPassword: [
             {validator: checkPassword, trigger: 'blur'}
+          ],
+          imgCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'}
           ]
-        }
-
+        },
+        imgCaptchaUrl: '',
+        imgCaptchaStr: ''
       }
     },
     methods: {
@@ -153,9 +164,13 @@
         const that = this
         that.$http.get(url, {})
           .then(function (response) {
-            if (response.data.meta.status_code !== 200) {
+            if (response.data.meta.status_code === 412) {
               // 获取验证码
-              that.$http.post(api.fetch_msm_code, {phone: account})
+              that.$http.post(api.fetch_msm_code, {
+                phone: account,
+                str: that.imgCaptchaStr,
+                captcha: that.form.imgCode
+              })
                 .then(function (response) {
                   if (response.data.meta.status_code === 200) {
                     that.time = that.second
@@ -169,14 +184,24 @@
                   that.$message.error(error.message)
                 })
             } else {
-              that.$message.error(response.data.meta.message)
+              that.$message.error('该手机号尚未注册')
             }
           })
           .catch(function (error) {
             that.$message.error(error.message)
           })
       },
-
+      fetchImgCaptcha() {
+        this.$http.get(api.fetch_img_captcha)
+        .then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.imgCaptchaUrl = res.data.data.url
+            this.imgCaptchaStr = res.data.data.str
+          } else {
+            console.log(res.data.meta.message)
+          }
+        })
+      },
       timer() {
         if (this.time > 0) {
           this.time = this.time - 1
@@ -202,8 +227,8 @@
         this.$message.error('已经登录!')
         this.$router.replace({name: 'home'})
       }
+      this.fetchImgCaptcha()
     }
-
   }
 </script>
 
@@ -212,7 +237,6 @@
   .register-box {
     border: 1px solid #aaa;
     width: 800px;
-    height: 450px;
     text-align: center;
     margin: 30px auto 30px auto;
   }
@@ -240,9 +264,18 @@
 
   .register-btn {
     width: 100%;
+    margin-bottom: 30px;
   }
 
   .code-btn {
+    cursor: pointer;
+  }
+
+  .imgCode {
+    width: 102px;
+    height: 34px;
+    background-size: cover;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
   }
 

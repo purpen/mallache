@@ -4,18 +4,18 @@
       <ToolsMenu currentName="commonlySites"></ToolsMenu>
       <div class="commonly-sites" v-loading.body="loading">
         <section class="lists design-info" v-if="designInfo.length">
-          <h2><span class="fx-3 fx-icon-information"></span>设计资讯</h2>
+          <h2><span class="fx-4 fx-icon-information"></span>设计资讯</h2>
           <article>
             <el-row :gutter="isMob ? 10 : 20">
-              <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designInfo" :key="index">
-                <div class="item clearfix" @click="aClick(ele.url)">
+              <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in designInfo" :key="index">
+                <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                   <div class="left fl"
                         :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                     {{ele.cover.name}}
                   </div>
-                  <div class="right hide2lines fl">
+                  <div class="right fl">
                     <p class="title">{{ele.title}}</p>
-                    <p class="summary hide2lines">{{ele.summary}}</p>
+                    <p class="summary">{{ele.summary}}</p>
                   </div>
                 </div>
               </el-col>
@@ -24,19 +24,19 @@
         </section>
 
         <section class="lists originality" v-if="originality.length">
-          <h2><span class="fx-icon-inspiration2"></span>创意灵感</h2>
+          <h2><span class="fx-6 fx-icon-inspiration2"></span>创意灵感</h2>
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in originality" :key="index">
-                  <div class="item clearfix" @click="aClick(ele.url)">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in originality" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                       {{ele.cover.name}}
                     </div>
                     <div class="right fl">
                       <p class="title">{{ele.title}}</p>
-                      <p class="summary hide2lines">{{ele.summary}}</p>
+                      <p class="summary">{{ele.summary}}</p>
                     </div>
                   </div>
                 </el-col>
@@ -49,15 +49,15 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in crowdFunding" :key="index">
-                  <div class="item clearfix" @click="aClick(ele.url)">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in crowdFunding" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                       {{ele.cover.name}}
                     </div>
                     <div class="right fl">
                       <p class="title">{{ele.title}}</p>
-                      <p class="summary hide2lines">{{ele.summary}}</p>
+                      <p class="summary">{{ele.summary}}</p>
                     </div>
                   </div>
                 </el-col>
@@ -70,15 +70,15 @@
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in businessConsult" :key="index">
-                  <div class="item clearfix" @click="aClick(ele.url)">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in businessConsult" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                       {{ele.cover.name}}
                     </div>
                     <div class="right fl">
                       <p class="title">{{ele.title}}</p>
-                      <p class="summary hide2lines">{{ele.summary}}</p>
+                      <p class="summary">{{ele.summary}}</p>
                     </div>
                   </div>
                 </el-col>
@@ -87,19 +87,19 @@
           </article>
         </section>
         <section class="lists design-awards" v-if="designAwards.length">
-          <h2><span class="fx-icon-prize"></span>设计奖项</h2>
+          <h2><span class="fx-5 fx-icon-prize"></span>设计奖项</h2>
           <article>
             <article>
               <el-row :gutter="isMob ? 10 : 20">
-                <el-col :span="isMob ? 12 : 6" v-for="(ele, index) in designAwards" :key="index">
-                  <div class="item clearfix" @click="aClick(ele.url)">
+                <el-col :xs="12" :sm="6" :md="6" :lg="6" v-for="(ele, index) in designAwards" :key="index">
+                  <div class="item clearfix" @click="aClick(ele.url)" :title="ele.summary">
                     <div class="left fl"
                           :style="{background: 'url('+ele.cover.logo+')', backgroundSize :'contain'}">
                       {{ele.cover.name}}
                     </div>
                     <div class="right fl">
                       <p class="title">{{ele.title}}</p>
-                      <p class="summary hide2lines">{{ele.summary}}</p>
+                      <p class="summary">{{ele.summary}}</p>
                     </div>
                   </div>
                 </el-col>
@@ -196,24 +196,28 @@
   .lists h2 {
     font-size: 20px;
     color: #222222;
-    margin: 40px 0 20px;
+    margin: 30px 0 20px;
     display: flex;
     align-items: center;
   }
 
-  .lists h2:first-child {
+  .design-info h2 {
     margin: 10px 0 20px;
+  }
+
+  .fx-icon-business-consulting {
+    font-size: 19px;
   }
 
   .item {
     height: 100px;
     padding: 20px;
     border: 1px solid #DCDCDC;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 10px 0 #eee;
     border-radius: 10px;
     margin-bottom: 20px;
     cursor: pointer;
-    transition: all ease .3s;
+    transition: all ease .1s;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,7 +225,7 @@
 
   .item:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 9pt 24px rgba(10,10,10,.15);
   }
 
   .item a {
@@ -247,13 +251,19 @@
   .right .title {
     font-size: 16px;
     color: #222;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
   }
 
   .right .summary {
     font-size: 14px;
     color: #666;
     line-height: 18px;
+    max-height: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   @media screen and (max-width: 600px) {
@@ -284,15 +294,16 @@
 
     .right .summary {
       font-size: 12px;
+      line-height: 14px;
     }
 
     .lists h2 {
-      margin: 20px 0;
+      margin: 15px 0;
       font-size: 17px;
     }
 
-    .lists h2:first-child {
-      margin: 0 0 20px;
+    .design-info h2 {
+      margin: 0 0 15px;
     }
   }
 </style>
