@@ -9,6 +9,6 @@ module.exports = [
       title: '铟果云盘',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/Tools/cloud_drive/List')
+    component: require('@/components/pages/v_center/tools/cloud_drive/List')
   }
 ]
