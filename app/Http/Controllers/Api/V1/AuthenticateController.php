@@ -77,6 +77,8 @@ class AuthenticateController extends BaseController
             'username' => $payload['account'],
             'type' => $payload['type'],
             'password' => bcrypt($payload['password']),
+            'child_account' => 10,
+            'company_role' => 20,
         ]);
         if($user->type == 1){
             DemandCompany::createCompany($user->id);
@@ -496,7 +498,6 @@ class AuthenticateController extends BaseController
      * @apiGroup User
      *
      * @apiParam {integer} invite_user_id 邀请用户id
-     * @apiParam {integer} invite_company_id 邀请公司的id
      * @apiParam {string} account 子账户账号(手机号)
      * @apiParam {string} realname 姓名
      * @apiParam {string} password 设置密码
@@ -519,10 +520,10 @@ class AuthenticateController extends BaseController
         $invite_user_id = $request->input('invite_user_id');
         $user = User::where('id', $invite_user_id)->first();
         if($user){
-            if($user->company_role == 20){
-                return $this->response->array($this->apiError('邀请的用户不是管理员', 403));
+            if($user->company_role == 0){
+                return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
-            if($user->child_account == 1){
+            if($user->child_account == 0){
                 return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
             }
         }else{
@@ -530,8 +531,8 @@ class AuthenticateController extends BaseController
         }
 
         //检测邀请的设计公司是否存在
-        $invite_company_id = $request->input('invite_company_id');
-        $design_company = DesignCompanyModel::where('id' , $invite_company_id)->first();
+        $design_company_id = $user->designCompanyId($invite_user_id);
+        $design_company = DesignCompanyModel::where('id' , $design_company_id)->first();
         if(!$design_company){
             return $this->response->array($this->apiError('没有找到设计公司', 404));
         }
@@ -568,9 +569,7 @@ class AuthenticateController extends BaseController
             'username' => $payload['account'],
             'realname' => $payload['realname'],
             'password' => bcrypt($payload['password']),
-            'invite_company_id' => $invite_company_id,
-            'child_account' => 1,
-            'company_role' => 20,
+            'invite_company_id' => $design_company_id,
             'type' => 2
         ]);
 

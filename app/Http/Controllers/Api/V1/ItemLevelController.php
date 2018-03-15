@@ -47,8 +47,11 @@ class ItemLevelController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->child_account == 1){
+        if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->child_account , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         // 验证规则
         $rules = [
@@ -128,8 +131,11 @@ class ItemLevelController extends BaseController
         } else {
             $sort = 'desc';
         }
-        if($user->child_account == 1){
+        if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->child_account , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $itemLevels = ItemLevel::orderBy('id', $sort)->paginate($per_page);
 
@@ -167,8 +173,11 @@ class ItemLevelController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->child_account == 1){
+        if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->child_account , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $itemLevels = ItemLevel::find($id);
 
@@ -212,8 +221,11 @@ class ItemLevelController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->child_account == 1){
+        if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->child_account , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         // 验证规则
         $rules = [
@@ -277,8 +289,11 @@ class ItemLevelController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->child_account == 1){
+        if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->child_account , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         //检验是否存在
         $itemLevels = ItemLevel::find($id);

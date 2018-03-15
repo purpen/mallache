@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Helper\Tools;
-use App\Http\Transformer\UserTransformer;
+use App\Http\Transformer\ChildUserTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -73,42 +73,24 @@ class UrlKeyValueController extends BaseController
      * @apiParam {string} rand_string 随机字符串
      *
      * @apiSuccessExample 成功响应:
-        {
-            "data": {
-            "id": 5,
-            "type": 1,
-            "account": "15810295774",
+    {
+        "data": {
+            "id": 1,
             "username": "",
-            "email": null,
             "phone": "15810295774",
             "status": 0,
-            "item_sum": 0,
-            "price_total": "0.00",
-            "price_frozen": "0.00",
-            "cash": "0.00",
-            "logo_image": {
-                "id": 755,
-                "name": "1.png",
-                "created_at": 1514194092,
-                "summary": null,
-                "file": "https://d3g.taihuoniao.com/saas/20171225/5a40c4ac8d6aa",
-                "small": "https://d3g.taihuoniao.com/saas/20171225/5a40c4ac8d6aa-p280x210.jpg",
-                "big": "https://d3g.taihuoniao.com/saas/20171225/5a40c4ac8d6aa-p800.jpg",
-                "logo": "https://d3g.taihuoniao.com/saas/20171225/5a40c4ac8d6aa-p180x180.jpg",
-                "middle": "https://d3g.taihuoniao.com/saas/20171225/5a40c4ac8d6aa-p450x255"
-            },
-            "design_company_id": 18,
-            "role_id": 20,
-            "demand_company_id": 12,
-            "realname": "蔡测试账号",
-            "design_company_name": "1"
-
-            },
-            "meta": {
-                "message": "Success",
-                "status_code": 200
-            }
+            "logo_image": "",
+            "realname": "1",    //邀请人姓名
+            "child_account": 0,     //0。子账户； 10。主账户
+            "company_role": 0,      //0。成员；10。管理员； 20。超级管理员
+            "design_company_name": "1", //设计公司全称
+            "design_company_abbreviation": "1"  //设计公司简称
+        },
+        "meta": {
+            "message": "Success",
+            "status_code": 200
         }
+    }
      */
     public function urlValue(Request $request)
     {
@@ -127,7 +109,7 @@ class UrlKeyValueController extends BaseController
             $user->save();
         }
 
-        return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($user, new ChildUserTransformer())->setMeta($this->apiMeta());
 
     }
 

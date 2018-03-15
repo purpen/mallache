@@ -34,7 +34,10 @@ class Kernel extends ConsoleKernel
         Commands\UnsetUser::class,
 
         // 项目类型多选数据结构变更
-        Commands\ChangeItem::class
+        Commands\ChangeItem::class,
+
+        //更改设计公司为超级管理员和主账号
+        Commands\UpdateCompanyRole::class,
 
     ];
 
