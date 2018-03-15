@@ -19,7 +19,7 @@ class ChildUserTransformer extends TransformerAbstract
             'username' => $user->username,
             'phone' => $user->phone,
             'status' => $user->status,
-            'logo_image' => $user->logo_image,
+            'logo_image' => $user->logo_image ? $user->logo_image->logo : '',
             'realname' => $user->realname,
             'child_account' => $user->child_account,
             'company_role' => $user->company_role,
