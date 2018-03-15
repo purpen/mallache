@@ -299,7 +299,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isDesignAdmin()
     {
-        if ($this->company_role > 0) {
+        if ($this->type == 2 && $this->company_role > 0) {
             return true;
         } else {
             return false;
@@ -312,7 +312,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isDesignSuperAdmin()
     {
-        if ($this->company_role == 20) {
+        if ($this->type == 2 && $this->company_role == 20) {
             return true;
         } else {
             return false;
