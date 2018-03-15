@@ -33,7 +33,18 @@
               <p class="upload-date">{{date}}</p>
             </el-col>
             <el-col :span="2">
-              <p class="more-list"></p>
+              <div class="more-list">
+                <i></i>
+                <ul>
+                  <li>查看权限</li>
+                  <li>分享</li>
+                  <li>下载</li>
+                  <li>复制</li>
+                  <li>移动</li>
+                  <li>重命名</li>
+                  <li>删除</li>
+                </ul>
+              </div>
             </el-col>
           </div>
         </el-col>
@@ -43,6 +54,18 @@
             <p :class="['file-icon', ele]">file-icon</p>
             <p class="file-name">{{ele}}</p>
             <p class="upload-date">{{date}}</p>
+            <div class="more-list">
+              <i></i>
+              <ul>
+                <li>查看权限</li>
+                <li>分享</li>
+                <li>下载</li>
+                <li>复制</li>
+                <li>移动</li>
+                <li>重命名</li>
+                <li>删除</li>
+              </ul>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -291,11 +314,26 @@ export default {
     text-align: right;
   }
 
-  p.more-list {
+  div.more-list i {
+    display: block;
     height: 70px;
-    background: url('../../../../../assets/images/tools/cloud_drive/operate/edit@2x.png') center no-repeat;
-    background-size: 24px
+    background: url('../../../../../assets/images/tools/cloud_drive/jurisdiction/more@2x.png') center no-repeat;
+    background-size: 25px
   }
+  
+  .item2 div.more-list i {
+    height: 30px;
+    background: url('../../../../../assets/images/tools/cloud_drive/jurisdiction/more@2x.png') top no-repeat;
+    background-size: 25px
+  }
+  .item2 div.more-list ul {
+    left: 50%;
+    top: 30px;
+  }
+  div.more-list {
+    position: relative;
+  }
+
   .item2 .file-name, .item2 .upload-date {
     text-align: center;
     line-height: 20px;
@@ -375,14 +413,31 @@ export default {
     font-size: 14px;
     right: 25px;
     top: 60px;
-    line-height: 40px;
     width: 168px;
     box-shadow: 0 0 10px rgba(10, 10, 10, .3);
   }
-  
-  .more ul li {
+
+  .more-list:hover ul {
+    display: block
+  }
+
+  .more-list ul {
+    display: none;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    top: 50px;
+    left: 0;
+    width: 140px;
+    background: #fff;
+    color: #666;
+    box-shadow: 0 0 10px rgba(10, 10, 10, .3);
+   }
+  .more ul li, .more-list ul li {
     padding: 0 20px;
     color: #999;
+    line-height: 40px;
+    height: 40px;
   }
   
   .more ul li:first-child {
@@ -391,7 +446,7 @@ export default {
   .more ul li:last-child {
     border-radius: 0 0 4px 4px
   }
-  .more ul li:hover {
+  .more ul li:hover, .more-list ul li:hover {
     color: #222;
     background: #f7f7f7
   }
@@ -457,7 +512,7 @@ export default {
     max-width: 980px;
     margin: 0 auto;
   }
-  .swiper-slide {w
+  .swiper-slide {
     display: flex;
     justify-content: center;
     align-items: center;
