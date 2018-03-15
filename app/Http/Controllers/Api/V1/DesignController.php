@@ -494,7 +494,7 @@ class DesignController extends BaseController
         if($design_company_id == 0){
             return $this->response->array($this->apiError('该用户不是设计公司', 404));
         }
-        $users = User::where('invite_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
+        $users = User::where('design_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($users, new UserTransformer())->setMeta($this->apiMeta());
 
@@ -508,7 +508,7 @@ class DesignController extends BaseController
      * @apiGroup design
      *
      * @apiParam {integer} set_user_id 被设置的用户id
-     * @apiParam {integer} company_role 10.管理员；20.成员；
+     * @apiParam {integer} company_role 10.管理员；0.成员；
      * @apiParam {token} token
      *
      * @apiSuccessExample 成功响应:
@@ -530,7 +530,7 @@ class DesignController extends BaseController
         if($user->child_account == 0){
             return $this->response->array($this->apiError('该用户不是主账户', 403));
         }
-        if(in_array($user->child_account , [0 , 10])){
+        if(in_array($user->company_role , [0 , 10])){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $set_user_id = $request->input('set_user_id');
