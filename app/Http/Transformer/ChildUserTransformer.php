@@ -23,6 +23,8 @@ class ChildUserTransformer extends TransformerAbstract
             'realname' => $user->realname,
             'child_account' => $user->child_account,
             'company_role' => $user->company_role,
+            'invite_user_id' => $user->invite_user_id,
+            'design_company_id' => $user->design_company_id,
             'design_company_name' => $user->designCompany ? $user->designCompany->company_name : '',
             'design_company_abbreviation' => $user->designCompany ? $user->designCompany->company_abbreviation : '',
 
