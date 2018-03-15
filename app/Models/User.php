@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account', 'username', 'email', 'phone', 'password', 'type' , 'realname' , 'child_account' , 'company_role' , 'invite_company_id'
+        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_company_id'
     ];
 
     /**
@@ -295,7 +295,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 判断用户是否是管理员
+     * 判断用户是否是设计公司管理员
      */
     public function isDesignAdmin()
     {
@@ -307,7 +307,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 判断用户是否是超级管理员
+     * 判断用户是否是设计公司超级管理员
      * @return bool
      */
     public function isDesignSuperAdmin()
