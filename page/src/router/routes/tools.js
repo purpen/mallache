@@ -10,7 +10,7 @@ module.exports = [
       title: '铟果云盘',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/Tools/cloud_drive/List')
+    component: require('@/components/pages/v_center/tools/cloud_drive/List')
   },
   // 成员管理列表
   {
@@ -20,6 +20,6 @@ module.exports = [
       title: '成员管理列表',
       requireAuth: true
     },
-    component: require('@/components/pages/v_center/Tools/member/List')
+    component: require('@/components/pages/v_center/tools/member/List')
   }
 ]

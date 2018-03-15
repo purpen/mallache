@@ -246,7 +246,6 @@
         this.closeMenu(e)
       },
       addScroll() {
-        // this.$refs.mCover.style.width = '100%'
         this.$refs.mNav.style.marginLeft = 0
         this.$refs.mMenu.style.width = '100%'
         document.body.setAttribute('class', 'disableScroll')
