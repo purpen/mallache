@@ -295,11 +295,24 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 判断用户是否是主账号
+     * 判断用户是否是管理员
      */
-    public function isMaster()
+    public function isDesignAdmin()
     {
-        if ($this->child_account == 0) {
+        if ($this->type == 2 && $this->company_role > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断用户是否是超级管理员
+     * @return bool
+     */
+    public function isDesignSuperAdmin()
+    {
+        if ($this->type == 2 && $this->company_role == 20) {
             return true;
         } else {
             return false;

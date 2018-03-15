@@ -409,15 +409,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 用户群组
          */
-        // {get} /group/lists  获取公司所有自己创建的群组列表（主账号）
+        // {get} /group/lists  获取公司所有自己创建的群组列表（设计公司管理员）
         $api->get('/group/lists', 'GroupController@lists');
-        // {post} /group/create  创建群组（主账号）
+        // {post} /group/create  创建群组（设计公司管理员）
         $api->post('/group/create', 'GroupController@create');
-        // {put} /group/addUser  向群组添加用户（主账号）
+        // {put} /group/addUser  向群组添加用户（设计公司管理员）
         $api->put('/group/addUser', 'GroupController@addUser');
-        // {put} /group/removeUser  群组移除用户（主账号）
+        // {put} /group/removeUser  群组移除用户（设计公司管理员）
         $api->put('/group/removeUser', 'GroupController@removeUser');
-        // {delete} /group/delete  删除群组（主账号）
+        // {delete} /group/delete  删除群组（设计公司管理员）
         $api->delete('/group/delete', 'GroupController@delete');
         // {get} /group/userGroupLists  获取某用户所在的群组列表
         $api->get('/group/userGroupLists', 'GroupController@userGroupLists');

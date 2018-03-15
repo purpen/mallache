@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class GroupController extends BaseController
 {
     /**
-     * @api {get} /group/lists  获取公司所有自己创建的群组列表（主账号）
+     * @api {get} /group/lists  获取公司所有自己创建的群组列表（设计公司管理员）
      * @apiVersion 1.0.0
      * @apiName group lists
      *
@@ -39,8 +39,8 @@ class GroupController extends BaseController
      */
     public function lists()
     {
-        // 判断是否是主账号
-        if (!$this->auth_user->isMaster()) {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -53,7 +53,7 @@ class GroupController extends BaseController
     }
 
     /**
-     * @api {post} /group/create  创建群组（主账号）
+     * @api {post} /group/create  创建群组（设计公司管理员）
      * @apiVersion 1.0.0
      * @apiName group create
      *
@@ -72,8 +72,8 @@ class GroupController extends BaseController
      */
     public function create(Request $request)
     {
-        // 判断是否是主账号
-        if (!$this->auth_user->isMaster()) {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -95,7 +95,7 @@ class GroupController extends BaseController
 
 
     /**
-     * @api {put} /group/addUser  向群组添加用户（主账号）
+     * @api {put} /group/addUser  向群组添加用户（设计公司管理员）
      * @apiVersion 1.0.0
      * @apiName group addUser
      *
@@ -114,8 +114,8 @@ class GroupController extends BaseController
      */
     public function addUser(Request $request)
     {
-        // 判断是否是主账号
-        if (!$this->auth_user->isMaster()) {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -139,7 +139,7 @@ class GroupController extends BaseController
     }
 
     /**
-     * @api {put} /group/removeUser  群组移除用户（主账号）
+     * @api {put} /group/removeUser  群组移除用户（设计公司管理员）
      * @apiVersion 1.0.0
      * @apiName group removeUser
      *
@@ -158,8 +158,8 @@ class GroupController extends BaseController
      */
     public function removeUser(Request $request)
     {
-        // 判断是否是主账号
-        if (!$this->auth_user->isMaster()) {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -183,7 +183,7 @@ class GroupController extends BaseController
     }
 
     /**
-     * @api {delete} /group/delete  删除群组（主账号）
+     * @api {delete} /group/delete  删除群组（设计公司管理员）
      * @apiVersion 1.0.0
      * @apiName group delete
      *
@@ -201,8 +201,8 @@ class GroupController extends BaseController
      */
     public function delete(Request $request)
     {
-        // 判断是否是主账号
-        if (!$this->auth_user->isMaster()) {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -251,6 +251,11 @@ class GroupController extends BaseController
      */
     public function userGroupLists()
     {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
         $list = Group::userGroupList($this->auth_user_id);
 
         return $this->response->array($this->apiSuccess('Success', 200, $list));
@@ -282,6 +287,11 @@ class GroupController extends BaseController
      */
     public function groupUserLists(Request $request)
     {
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
         $this->validate($request, [
             'group_id' => 'required|integer',
         ]);
