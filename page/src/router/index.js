@@ -214,7 +214,7 @@ routes = [
       requireAuth: false,
       title: '2018iF季-小米生态链企业-众生相'
     },
-    component: require('@/components/pages/subject/xiaomiInterview')
+    component: require('@/components/pages/subject/XiaoMiInterview')
   },
   // 创新力指数
   {
