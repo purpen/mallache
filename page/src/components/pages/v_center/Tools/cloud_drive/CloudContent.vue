@@ -32,6 +32,9 @@
             <el-col :span="5">
               <p class="upload-date">{{date}}</p>
             </el-col>
+            <el-col :span="2">
+              <p class="more-list"></p>
+            </el-col>
           </div>
         </el-col>
         <el-col v-for="(ele, index) in list" :key="ele + index" :span="4" v-if="curView === 'chunk'">
@@ -287,7 +290,12 @@ export default {
   p.upload-date {
     text-align: right;
   }
-  
+
+  p.more-list {
+    height: 70px;
+    background: url('../../../../../assets/images/tools/cloud_drive/operate/edit@2x.png') center no-repeat;
+    background-size: 24px
+  }
   .item2 .file-name, .item2 .upload-date {
     text-align: center;
     line-height: 20px;
@@ -442,11 +450,16 @@ export default {
     display: block;
     margin: 0 auto;
     max-width: 800px;
-    max-Height: calc(100% - 90px);
+    max-height: calc(100% - 90px);
   }
 
   .image-preview {
     max-width: 980px;
     margin: 0 auto;
+  }
+  .swiper-slide {w
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

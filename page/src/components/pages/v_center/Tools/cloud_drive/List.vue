@@ -229,6 +229,9 @@
       uploadRemove(file, fileList) {
       },
       uploadProgress(event, file, fileList) {
+        console.log(event)
+        console.log(file)
+        console.log(fileList)
         this.webUploader = true
         this.fileList = fileList
         this.totalNumber = this.fileList.length
@@ -423,7 +426,7 @@
   .edit-menu {
     font-size: 0;
     text-align: right;
-    line-height: 30px;
+    line-height: 20px;
     height: 30px;
     overflow: hidden;
   }
@@ -432,7 +435,7 @@
     text-align: left
   }
   .edit-menu span {
-    font-size: 14px;
+    font-size: 16px;
     margin-right: 20px;
     cursor: pointer;
   }
