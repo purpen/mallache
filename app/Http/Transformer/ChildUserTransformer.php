@@ -27,8 +27,8 @@ class ChildUserTransformer extends TransformerAbstract
             'company_role' => $user->company_role,
             'invite_user_id' => $user->invite_user_id,
             'design_company_id' => $user->design_company_id,
-            'design_company_name' => $design->company_name,
-            'design_company_abbreviation' => $design->company_abbreviation,
+            'design_company_name' => $design ? $design->company_name : '',
+            'design_company_abbreviation' => $design ? $design->company_abbreviation : '',
             'created_at' => $user->created_at,
 
         ];
