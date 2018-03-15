@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_company_id'
+        'account', 'username', 'email', 'phone', 'password', 'type' , 'realname' , 'child_account' , 'company_role' , 'invite_user_id' , 'design_company_id'
     ];
 
     /**
@@ -282,14 +282,9 @@ class User extends Authenticatable implements JWTSubject
     {
         $user = self::find($user_id);
         if ($user) {
-            $invite_company_id = $user->invite_company_id;
-            //被邀请的设计公司等于0的话，就返回主账户的设计公司id
-            if ($invite_company_id == 0) {
-                $design_company_id = $user->design_company_id;
-                return $design_company_id;
-            } else {
-                return $invite_company_id;
-            }
+            //主账户id里面的设计公司id
+            $design_company_id = $user->design_company_id;
+            return $design_company_id;
         }
 
     }

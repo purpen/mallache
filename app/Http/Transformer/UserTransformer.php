@@ -31,8 +31,9 @@ class UserTransformer extends TransformerAbstract
             'role_id' => $user->role_id,
             'demand_company_id' => $user->demand_company_id,
             'realname' => $user->realname,
-            'child_account' => $user->realname,
-            'company_role' => $user->realname,
+            'child_account' => $user->child_account,
+            'company_role' => $user->company_role,
+            'invite_user_id' => $user->invite_user_id,
             'design_company_name' => $user->designCompany ? $user->designCompany->company_name : '',
             'design_company_abbreviation' => $user->designCompany ? $user->designCompany->company_abbreviation : '',
 

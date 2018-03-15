@@ -569,7 +569,8 @@ class AuthenticateController extends BaseController
             'username' => $payload['account'],
             'realname' => $payload['realname'],
             'password' => bcrypt($payload['password']),
-            'invite_company_id' => $design_company_id,
+            'design_company_id' => $design_company_id,
+            'invite_user_id' => $invite_user_id,
             'type' => 2
         ]);
 
