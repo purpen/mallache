@@ -34,14 +34,17 @@ class Kernel extends ConsoleKernel
         Commands\UnsetUser::class,
 
         // 项目类型多选数据结构变更
-        Commands\ChangeItem::class
+        Commands\ChangeItem::class,
+
+        // 修改设计公司主账号信息（子账户正式上线后不可使用）
+        Commands\ChangeDesignUserInfo::class,
 
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
