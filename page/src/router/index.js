@@ -303,6 +303,14 @@ routes = [
     },
     component: require('@/components/pages/auth/Register')
   },
+  {
+    path: '/invite/:code',
+    name: 'invite',
+    meta: {
+      title: '邀请注册'
+    },
+    component: require('@/components/pages/auth/Invite')
+  },
   // 找回密码
   {
     path: '/forget',
