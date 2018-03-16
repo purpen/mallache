@@ -24,7 +24,7 @@
               <p class="file-name">
                 <span @click="showView" v-show="chooseList[0] !== ele.id || !hasRename">{{ele.name}}</span>
                 <input v-show="chooseList[0] === ele.id && hasRename" class="rename" type="text" v-model="renameVal">
-                <span @click="renameConfirm" v-show="chooseList[0] === ele.id && hasRename" class="rename-confirm"></span>
+                <span @click="renameConfirm(index)" v-show="chooseList[0] === ele.id && hasRename" class="rename-confirm"></span>
                 <span @click="renameCancel" v-show="chooseList[0] === ele.id && hasRename" class="rename-cancel"></span>
               </p>
             </el-col>
@@ -68,8 +68,10 @@
                 'video': /video/.test(ele.name)
               }]">file-icon</p>
             <p class="file-name" @click="showView">
-              {{ele.name}}
-              <input type="text" v-model="renameVal">
+              <span v-show="chooseList[0] !== ele.id || !hasRename">{{ele.name}}</span>
+              <input v-show="chooseList[0] === ele.id && hasRename" class="rename" type="text" v-model="renameVal">
+                <span @click="renameConfirm(index)" v-show="chooseList[0] === ele.id && hasRename" class="rename-confirm"></span>
+                <span @click="renameCancel" v-show="chooseList[0] === ele.id && hasRename" class="rename-cancel"></span>
             </p>
             <p class="upload-date">{{date}}</p>
             <div class="more-list" tabindex="200" v-if="!chooseStatus">
@@ -205,9 +207,8 @@ export default {
   },
   methods: {
     liClick(i, index) {
-      console.log(1)
       if (!this.hasRename) {
-        this.renameVal = this.list[index].name
+        this.renameVal = this.list[index]['name']
         let str = ''
         if (this.chooseStatus) {
           if (this.chooseList.indexOf(i) === -1) {
@@ -244,8 +245,9 @@ export default {
     renameCancel() {
       this.$emit('renameCancel')
     },
-    renameConfirm() {
+    renameConfirm(index) {
       this.$emit('renameCancel')
+      this.$emit('changeName', index, this.renameVal)
     }
   },
   watch: {

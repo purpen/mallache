@@ -67,7 +67,8 @@
           </div>
           <!-- 文件列表 -->
           <transition name="uploadList">
-            <vContent v-show="showList" :list="list" :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :curView="curView" :hasRename="hasRename" @renameCancel="renameCancel"></vContent>
+            <vContent v-show="showList" :list="list" :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :curView="curView" :hasRename="hasRename" @renameCancel="renameCancel"
+            @changeName="changeName"></vContent>
           </transition>
           <!-- 搜索列表 -->
             <vContent v-show="!showList"></vContent>
@@ -203,6 +204,7 @@
         this.isChoose = !this.isChoose
       },
       cancelChoose() {
+        this.hasRename = false
         this.isChoose = false
       },
       chooseList(e, str) {
@@ -279,6 +281,9 @@
       },
       renameCancel() {
         this.hasRename = false
+      },
+      changeName(index, name) {
+        this.list[index]['name'] = name
       }
     },
     created() {
