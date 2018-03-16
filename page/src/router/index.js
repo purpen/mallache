@@ -209,7 +209,7 @@ routes = [
   // 小米众生相
   {
     path: '/subject/xiaomiInterview',
-    name: 'xiaomiInterview',
+    name: 'XiaoMiInterview',
     meta: {
       requireAuth: false,
       title: '2018iF季-小米生态链企业-众生相'
