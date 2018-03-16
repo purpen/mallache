@@ -166,10 +166,9 @@ export default {
     background-size: cover;
   }
   .picture-cover {
-    max-width: 1306px;
     width: calc( 100% - 60px);
     margin: 0 30px;
-    height: 430px;
+    height: 470px;
     position: absolute;
     top: -50px;
     left: 0;

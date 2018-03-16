@@ -3,14 +3,14 @@
     <div class="home_banner" :style = "{'height' : calcHeight}">
       <swiper :options="swiperOption" class="banner home-banner">
         <swiper-slide>
-          <div class="slide" :style="{ background: 'url(' + require ('assets/images/home/BG@2x.jpg') + ') no-repeat center', height: calcHeight}">
+          <div class="slide" :style="{ background: 'url(' + require ('assets/images/home/banner/BG@2x.jpg') + ') no-repeat center', height: calcHeight}">
             <div class="container clearfix" style="height:100%;">
               <div class="left">
                 <h3 :class="{'m-h3' : isMob}">铟果D³INGO产品创新SaaS平台</h3>
                 <p :class="{'m-p' : isMob}">用设计重塑品质生活</p>
               </div>
               <div class="draw">
-                <img :src="require('assets/images/home/BG02@2x.png')" width="90%" alt="">
+                <img :src="require('assets/images/home/banner/BG02@2x.png')" width="90%" alt="">
               </div>
             </div>
             <div class="head-cover">
@@ -19,9 +19,23 @@
             </div>
           </div>
         </swiper-slide>
-        <swiper-slide>
-          <router-link v-if="isMob" class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/home_banner.jpg') + ') no-repeat center',backgroundSize: 'contain', height: calcHeight}"></router-link>
-          <router-link v-else class="banner-link slide" to="/innovation_index" :style="{ background: 'url(' + require ('assets/images/subject/innovation/innovationIndex.jpg') + ') no-repeat center',backgroundSize: 'cover', height: calcHeight}"></router-link>
+        <swiper-slide v-if="isMob" v-for="(ele, index) in bannerListMob" :key="index">
+          <router-link class="banner-link slide"
+            :to="ele.url"
+            :style="{
+              background: 'url(' + ele.img + ') no-repeat center',
+              backgroundSize: 'contain',
+              height: calcHeight
+            }"></router-link>
+        </swiper-slide>
+        <swiper-slide v-if="!isMob" v-for="(ele, index) in bannerList" :key="index">
+          <router-link class="banner-link slide"
+            :to="ele.url"
+            :style="{
+              background: 'url(' + ele.img + ') no-repeat center',
+              backgroundSize: 'cover',
+              height: calcHeight
+            }"></router-link>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination">
         </div>
@@ -177,6 +191,26 @@
     data() {
       return {
         uType: this.$store.state.event.user.type || 1,
+        bannerListMob: [
+          {
+            img: require ('assets/images/subject/innovation/home_banner.jpg'),
+            url: '/innovation_index'
+          },
+          {
+            img: require ('assets/images/home/banner/homebanner_xiaomi_mob.jpg'),
+            url: '/subject/xiaomiInterview'
+          }
+        ],
+        bannerList: [
+          {
+            img: require ('assets/images/subject/innovation/innovationIndex.jpg'),
+            url: '/innovation_index'
+          },
+          {
+            img: require ('assets/images/home/banner/homebanner_xiaomi.jpg'),
+            url: '/subject/xiaomiInterview'
+          }
+        ],
         caseSlideList: [
           {
             clickUrl: 'http://d3ingo.taihuoniao.com/article/show/26',
