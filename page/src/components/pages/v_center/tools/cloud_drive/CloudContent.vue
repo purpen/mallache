@@ -3,37 +3,42 @@
     <section>
       <el-row :gutter="20" v-if="list.length">
         <el-col v-for="(ele, index) in list" :key="index" :span="24" v-if="curView === 'list'">
-          <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item']">
+          <div :class="[{'active' : chooseList.indexOf(ele.id) !== -1}, 'item']" @click="liClick(ele.id, index)">
             <el-col :span="2" v-if="chooseStatus">
               <p class="file-radio">file-radio</p>
             </el-col>
             <el-col :span="2">
             <p :class="['file-icon', 'other', {
-                'folder': /folder/.test(ele),
-                'artboard': /pdf/.test(ele),
-                'audio': /audio/.test(ele),
-                'compress': /compress/.test(ele),
-                'document': /(?:text|msword)/.test(ele),
-                'image': /image/.test(ele),
-                'powerpoint': /powerpoint/.test(ele),
-                'spreadsheet': /excel/.test(ele),
-                'video': /video/.test(ele)
+                'folder': /folder/.test(ele.name),
+                'artboard': /pdf/.test(ele.name),
+                'audio': /audio/.test(ele.name),
+                'compress': /compress/.test(ele.name),
+                'document': /(?:text|msword)/.test(ele.name),
+                'image': /image/.test(ele.name),
+                'powerpoint': /powerpoint/.test(ele.name),
+                'spreadsheet': /excel/.test(ele.name),
+                'video': /video/.test(ele.name)
               }]">file-icon</p>
             </el-col>
             <el-col :span="8">
-              <p class="file-name" @click="showView">{{ele}}</p>
+              <p class="file-name">
+                <span @click="showView" v-show="chooseList[0] !== ele.id || !hasRename">{{ele.name}}</span>
+                <input v-show="chooseList[0] === ele.id && hasRename" class="rename" type="text" v-model="renameVal">
+                <span @click="renameConfirm" v-show="chooseList[0] === ele.id && hasRename" class="rename-confirm"></span>
+                <span @click="renameCancel" v-show="chooseList[0] === ele.id && hasRename" class="rename-cancel"></span>
+              </p>
             </el-col>
-            <el-col :span="2">
-              <p :class="['file-size', {'hidden': ele === 'folder'}]">{{index}}px</p>
+            <el-col :span="3">
+              <p :class="['file-size', {'hidden': ele.name === 'folder'}]">{{index}}MB</p>
             </el-col>
             <el-col :span="5">
-              <p :class="['file-uploader', {'hidden': ele === 'folder'}]">file-uploader</p>
+              <p :class="['file-uploader']">file-uploader</p>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <p class="upload-date">{{date}}</p>
             </el-col>
-            <el-col :span="2">
-              <div class="more-list">
+            <el-col :span="2" v-if="!chooseStatus">
+              <div class="more-list" tabindex="100">
                 <i></i>
                 <ul>
                   <li>查看权限</li>
@@ -41,20 +46,33 @@
                   <li>下载</li>
                   <li>复制</li>
                   <li>移动</li>
-                  <li>重命名</li>
+                  <li @click="rename(index)">重命名</li>
                   <li>删除</li>
                 </ul>
               </div>
             </el-col>
           </div>
         </el-col>
-        <el-col v-for="(ele, index) in list" :key="ele + index" :span="4" v-if="curView === 'chunk'">
-          <div @click="liClick(index)" :class="[{'active' : chooseList.indexOf(index) !== -1}, 'item2']">
-            <p v-if="chooseStatus" :class="['file-radio', ele]">file-radio</p>
-            <p :class="['file-icon', ele]">file-icon</p>
-            <p class="file-name">{{ele}}</p>
+        <el-col v-for="(ele, index) in list" :key="ele.name + index" :span="4" v-if="curView === 'chunk'">
+          <div :class="[{'active' : chooseList.indexOf(ele.id) !== -1}, 'item2']">
+            <p v-if="chooseStatus" @click="liClick(ele.id, index)" :class="['file-radio', ele.name]">file-radio</p>
+            <p :class="['file-icon', 'other', {
+                'folder': /folder/.test(ele.name),
+                'artboard': /pdf/.test(ele.name),
+                'audio': /audio/.test(ele.name),
+                'compress': /compress/.test(ele.name),
+                'document': /(?:text|msword)/.test(ele.name),
+                'image': /image/.test(ele.name),
+                'powerpoint': /powerpoint/.test(ele.name),
+                'spreadsheet': /excel/.test(ele.name),
+                'video': /video/.test(ele.name)
+              }]">file-icon</p>
+            <p class="file-name" @click="showView">
+              {{ele.name}}
+              <input type="text" v-model="renameVal">
+            </p>
             <p class="upload-date">{{date}}</p>
-            <div class="more-list">
+            <div class="more-list" tabindex="200" v-if="!chooseStatus">
               <i></i>
               <ul>
                 <li>查看权限</li>
@@ -62,7 +80,7 @@
                 <li>下载</li>
                 <li>复制</li>
                 <li>移动</li>
-                <li>重命名</li>
+                  <li @click="rename(index)">重命名</li>
                 <li>删除</li>
               </ul>
             </div>
@@ -80,7 +98,7 @@
           <span class="fl">分享</span>
           <span class="fl">下载</span>
           <span class="fl">移动</span>
-          <span class="fl more">
+          <span class="fl more" tabindex="300">
             <i></i>
             <ul>
               <li>重命名</li>
@@ -144,74 +162,6 @@
 <script>
 export default {
   name: 'cloud_content',
-  data() {
-    return {
-      date: '2017-03-09',
-      chooseList: [],
-      showProfile: false, // 显示详情
-      viewCover: false, // 显示预览
-      swiperOption: {
-        lazyLoading: true,
-        autoplay: 5000,
-        prevButton: '.swiper-button-prev',
-        nextButton: '.swiper-button-next',
-        spaceBetween: 0
-      }
-    }
-  },
-  methods: {
-    liClick(i) {
-      let str = ''
-      if (this.chooseStatus) {
-        if (this.chooseList.indexOf(i) === -1) {
-          this.chooseList.push(i)
-        } else {
-          this.chooseList.splice(this.chooseList.indexOf(i), 1)
-        }
-        if (this.chooseList.length) {
-          if (this.chooseList.length === this.list.length) {
-            str = 'all'
-          }
-        } else {
-          str = 'empty'
-        }
-        this.$emit('choose', this.chooseList, str)
-      } else {
-        this.chooseList = []
-      }
-    },
-    showView() {
-      this.viewCover = true
-      document.body.setAttribute('class', 'disableScroll')
-      document.childNodes[1].setAttribute('class', 'disableScroll')
-    },
-    closeView () {
-      this.viewCover = false
-      this.showProfile = false
-      document.body.removeAttribute('class', 'disableScroll')
-      document.childNodes[1].removeAttribute('class', 'disableScroll')
-    }
-  },
-  watch: {
-    chooseStatus() {
-      if (!this.chooseStatus) {
-        this.chooseList = []
-        this.$emit('choose', this.chooseList, 'empty')
-      }
-    },
-    isChooseAll() {
-      if (this.isChooseAll === 'all') {
-        for (let i in this.list) {
-          this.chooseList.push(Number(i))
-        }
-        this.chooseList = Array.from(new Set(this.chooseList))
-        this.$emit('choose', this.chooseList, 'all')
-      } else if (this.isChooseAll === 'empty') {
-        this.chooseList = []
-        this.$emit('choose', this.chooseList, 'empty')
-      }
-    }
-  },
   props: {
     chooseStatus: {
       type: Boolean,
@@ -230,6 +180,95 @@ export default {
       default: function () {
         return []
       }
+    },
+    hasRename: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      date: '2017-03-09',
+      chooseList: [],
+      showProfile: false, // 显示详情
+      viewCover: false, // 显示预览
+      swiperOption: {
+        lazyLoading: true,
+        autoplay: 5000,
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        spaceBetween: 0
+      },
+      renameVal: '',
+      hideFileName: -1
+    }
+  },
+  methods: {
+    liClick(i, index) {
+      console.log(1)
+      if (!this.hasRename) {
+        this.renameVal = this.list[index].name
+        let str = ''
+        if (this.chooseStatus) {
+          if (this.chooseList.indexOf(i) === -1) {
+            this.chooseList.push(i)
+          } else {
+            this.chooseList.splice(this.chooseList.indexOf(i), 1)
+          }
+          if (this.chooseList.length) {
+            if (this.chooseList.length === this.list.length) {
+              str = 'all'
+            }
+          } else {
+            str = 'empty'
+          }
+          this.$emit('choose', this.chooseList, str)
+        } else {
+          this.chooseList = []
+        }
+      } else {
+        return
+      }
+    },
+    showView() {
+      this.viewCover = true
+      document.body.setAttribute('class', 'disableScroll')
+      document.childNodes[1].setAttribute('class', 'disableScroll')
+    },
+    closeView () {
+      this.viewCover = false
+      this.showProfile = false
+      document.body.removeAttribute('class', 'disableScroll')
+      document.childNodes[1].removeAttribute('class', 'disableScroll')
+    },
+    renameCancel() {
+      this.$emit('renameCancel')
+    },
+    renameConfirm() {
+      this.$emit('renameCancel')
+    }
+  },
+  watch: {
+    chooseStatus() {
+      if (!this.chooseStatus) {
+        this.chooseList = []
+        this.$emit('choose', this.chooseList, 'empty')
+      }
+    },
+    isChooseAll() {
+      if (this.isChooseAll === 'all') {
+        for (let i of this.list) {
+          this.chooseList.push(i.id)
+        }
+        this.chooseList = Array.from(new Set(this.chooseList))
+        this.$emit('choose', this.chooseList, 'all')
+      } else if (this.isChooseAll === 'empty') {
+        this.chooseList = []
+        this.$emit('choose', this.chooseList, 'empty')
+      }
+    },
+    chooseList() {
+      this.hideFileName = this.chooseList[0]
     }
   },
   components: {
@@ -243,14 +282,24 @@ export default {
 }
 </script>
 <style scoped>
-  section div.item {
+  section .item {
     height: 70px;
     line-height: 70px;
     border-bottom: 1px solid #d2d2d2;
     background: #fff;
     cursor: pointer;
   }
-  section div.item2 {
+  
+  section .item p, section .item2 p{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+
+  .item2 p {
+    padding: 0 5px
+  }
+  section .item2 {
     height: 160px;
     border: 1px solid #f0f0f0;
     border-radius: 10px;
@@ -258,32 +307,32 @@ export default {
     position: relative;
     cursor: pointer;
   }
-  section div.item:hover, section div.item.active {
+  section .item:hover, section .item.active {
     background: #f7f7f7
   }
 
-  section div.item2:hover, section div.item2.active {
+  section .item2:hover, section .item2.active {
     border: 1px solid #d2d2d2;
   }
 
-  p.file-radio {
+  .file-radio {
     text-indent: -999em;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 1px solid #d2d2d2;
     background: #fff;
-    margin: 25px auto 0;
+    margin: 25px auto 25px;
     position: relative;
   }
   
-  .item2 p.file-radio {
+  .item2 .file-radio {
     position: absolute;
     left: 10px;
     top: 10px;
     margin: 0;
   }
-  p.file-radio:before {
+  .file-radio:before {
     content: '';
     position: absolute;
     left: 3px;
@@ -296,41 +345,119 @@ export default {
     transform: rotate(-45deg);
   }
   
-  .active p.file-radio {    
+  .active .file-radio {
     border: 1px solid #999;
     background: #999;
   }
 
-  .item2 p.file-icon {
+  .item2 .file-icon {
     width: 60px;
     height: 60px;
     margin: 16px auto 20px; 
   }
+  .rename {
+    width: 160px;
+    height: 30px;
+    margin: 20px 10px 0 3px;
+    border-radius: 4px;
+    padding: 4px 10px;
+    border: none;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5)
+  }
+  
+  .rename:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+  }
 
-  p.file-uploader {
+  .rename-confirm, .rename-cancel {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: #ff5a5f;
+    margin: 20px 10px 0 0;
+    opacity: 0.7;
+    border-radius: 4px;
+    position: relative;
+    user-select:none;
+  }
+  .rename-confirm::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 12px;
+    top: 9px;
+    left: 17px;
+    background: #fff;
+    transform: rotate(45deg)
+  }
+  .rename-confirm::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 6px;
+    top: 14px;
+    left: 11px;
+    background: #fff;
+    transform: rotate(-45deg)
+  }
+  .rename-cancel::before, .rename-cancel::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: #999;
+  }
+  .rename-cancel::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+  .rename-confirm:hover, .rename-cancel:hover {
+    opacity: 0.9;
+  }
+  .rename-confirm:active, .rename-cancel:active {
+    opacity: 1;
+  }
+  .rename-cancel {
+    background: #fff;
+    border: 1px solid #d2d2d2
+  }
+  
+  .rename-cancel:active {
+    background: #d2d2d2;
+    border: 1px solid #999;
+  }
+  .rename-cancel:active::before {
+    background: #fff;
+  }
+  .rename-cancel:active::after {
+    background: #fff;
+  }
+  .file-uploader {
     text-align: center;
   }
-  p.upload-date {
+  .upload-date {
     text-align: right;
   }
 
-  div.more-list i {
+  .more-list i {
     display: block;
     height: 70px;
     background: url('../../../../../assets/images/tools/cloud_drive/jurisdiction/more@2x.png') center no-repeat;
     background-size: 25px
   }
   
-  .item2 div.more-list i {
+  .item2 .more-list i {
     height: 30px;
     background: url('../../../../../assets/images/tools/cloud_drive/jurisdiction/more@2x.png') top no-repeat;
     background-size: 25px
   }
-  .item2 div.more-list ul {
+  .item2 .more-list ul {
     left: 50%;
     top: 30px;
   }
-  div.more-list {
+  .more-list {
     position: relative;
   }
 
@@ -340,7 +467,7 @@ export default {
     font-size: 14px;
   }
 
-  .item2 .upload-date{
+  .item2 .upload-date {
     color: #999;
     font-size: 12px;
   }
@@ -368,7 +495,7 @@ export default {
     font-size: 18px;
     line-height: 60px;
   }
-  .view-cover-head p.fl i:hover {
+  .view-cover-head .fl i:hover {
     color: #999;
   }
   .operate {
@@ -391,7 +518,7 @@ export default {
     padding-left: 20px;
   }
 
-  .operate .more:hover ul {
+  .operate .more:focus ul {
     display: block
   }
 
@@ -417,7 +544,7 @@ export default {
     box-shadow: 0 0 10px rgba(10, 10, 10, .3);
   }
 
-  .more-list:hover ul {
+  .more-list:focus ul {
     display: block;
   }
 

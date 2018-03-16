@@ -55,7 +55,7 @@
                   <span>下载</span>
                   <span>复制</span>
                   <span>移动</span>
-                  <span>重命名</span>
+                  <span @click="rename" :class="[{'disable': alreadyChoose > 1}]">重命名</span>
                   <span>删除</span>
                 </el-col>
               </p>
@@ -67,7 +67,7 @@
           </div>
           <!-- 文件列表 -->
           <transition name="uploadList">
-            <vContent v-show="showList" :list="list" :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :curView="curView"></vContent>
+            <vContent v-show="showList" :list="list" :chooseStatus="isChoose" @choose="chooseList" :isChooseAll="isChooseAll" :curView="curView" :hasRename="hasRename" @renameCancel="renameCancel"></vContent>
           </transition>
           <!-- 搜索列表 -->
             <vContent v-show="!showList"></vContent>
@@ -155,14 +155,26 @@
           'x:open_set': 1,
           'x:group_id': 0
         },
-        list: ['folder', 'artboard', 'audio', 'compress', 'document', 'image', 'other', 'powerpoint', 'spreadsheet', 'video'], // 获取文件列表
+        list: [
+          {id: '1', name: 'folder'},
+          {id: '2', name: 'artboard'},
+          {id: '3', name: 'audio'},
+          {id: '4', name: 'compress'},
+          {id: '5', name: 'document'},
+          {id: '6', name: 'image'},
+          {id: '7', name: 'other'},
+          {id: '8', name: 'powerpoint'},
+          {id: '9', name: 'spreadsheet'},
+          {id: '10', name: 'video'}
+        ], // 获取文件列表
         fileList: [], // 上传列表
         totalNumber: 0,
         webUploader: false, // 上传状态
         isShowProgress: false, // 是否显示上传列表
         showConfirm: false, // 确认删除?
         showList: true, // 显示全部文件或搜索
-        searchWord: '' // 搜索关键字
+        searchWord: '', // 搜索关键字
+        hasRename: false // 重命名状态
       }
     },
     components: {
@@ -198,10 +210,12 @@
         this.isChooseAll = str
       },
       changeChooseAll() {
-        if (this.isChooseAll === '' || this.isChooseAll === 'empty') {
-          this.isChooseAll = 'all'
-        } else if (this.isChooseAll === 'all') {
-          this.isChooseAll = 'empty'
+        if (!this.hasRename) {
+          if (this.isChooseAll === '' || this.isChooseAll === 'empty') {
+            this.isChooseAll = 'all'
+          } else if (this.isChooseAll === 'all') {
+            this.isChooseAll = 'empty'
+          }
         }
       },
       changeFileView() {
@@ -220,8 +234,6 @@
         })
       },
       uploadSuccess(res, file, fileList) {
-        console.log(res)
-        console.log(file)
       },
       uploadError(err, file, fileList) {
         console.error(err)
@@ -229,9 +241,6 @@
       uploadRemove(file, fileList) {
       },
       uploadProgress(event, file, fileList) {
-        console.log(event)
-        console.log(file)
-        console.log(fileList)
         this.webUploader = true
         this.fileList = fileList
         this.totalNumber = this.fileList.length
@@ -255,6 +264,21 @@
       clearShowList() {
         this.showList = true
         this.searchWord = ''
+      },
+      rename() {
+        if (this.alreadyChoose) {
+          if (this.alreadyChoose > 1) {
+            return
+          } else {
+            this.hasRename = true
+            this.$message.success('rename')
+          }
+        } else {
+          this.$message.error('请选择要重命名的文件')
+        }
+      },
+      renameCancel() {
+        this.hasRename = false
       }
     },
     created() {
@@ -435,11 +459,19 @@
     text-align: left
   }
   .edit-menu span {
+    user-select: none;
     font-size: 16px;
     margin-right: 20px;
     cursor: pointer;
   }
 
+  .edit-menu .disable {
+    color: #d2d2d2
+  }
+
+  .edit-menu .disable:hover {
+    color: #d2d2d2
+  }
   .edit-menu span:last-child {
     margin-right: 0;
   }
@@ -556,7 +588,8 @@
   }
 
   .upload-list-title span {
-    flex: 1
+    padding-right: 20px;
+    max-width: 80%;
   }
   span.file-size {
     color: #999;

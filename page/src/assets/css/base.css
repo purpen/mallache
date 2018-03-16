@@ -13,6 +13,9 @@ html {
   box-sizing: inherit;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+*:focus {
+  outline: none
+}
 
 body {
   font-family: "Microsoft Yahei", PingFangSC-Regular, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -31,6 +34,24 @@ body {
   overflow-x: hidden
 }
 
+.cancel-icon {
+  position: relative;
+}
+.cancel-icon::before, .cancel-icon::after {
+  position: relative;
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 14px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: #999;
+}
+
+.cancel-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
 .el-input-group--append {
   padding-left: 2px;
   min-width: 110px;
