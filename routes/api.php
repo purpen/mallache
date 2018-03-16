@@ -403,8 +403,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 云盘
          */
         // 获取云盘上传文件token
-
         $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
+
+        // {post} /yunpan/createDir  创建文件夹
+        $api->post('/yunpan/createDir', 'YunpianUploadController@createDir');
 
         /**
          * 用户群组

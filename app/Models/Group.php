@@ -106,10 +106,10 @@ class Group extends BaseModel
      * @param int $user_id
      * @return mixed
      */
-    public static function userGroupList(int $user_id)
+    public static function userGroupIDList(int $user_id)
     {
-        $list = DB::select("select id,name,type from `group` WHERE json_search(user_id_arr,'one',$user_id) is not null");
-        return $list;
+        $list = DB::select("select id from `group` WHERE json_search(user_id_arr,'one',$user_id) is not null");
+        return $list->pluck('id')->all();
     }
 
     /**
