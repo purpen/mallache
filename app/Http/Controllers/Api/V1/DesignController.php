@@ -501,7 +501,7 @@ class DesignController extends BaseController
     }
 
     /**
-     * @api {get} /design/is_admin 设计公司设置成管理员,恢复成成员
+     * @api {put} /design/is_admin 设计公司设置成管理员,恢复成成员
      *
      * @apiVersion 1.0.0
      * @apiName design is_admin
