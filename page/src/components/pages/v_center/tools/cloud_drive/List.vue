@@ -156,18 +156,7 @@
           'x:open_set': 1,
           'x:group_id': 0
         },
-        list: [
-          {id: '1', name: 'folder'},
-          {id: '2', name: 'artboard'},
-          {id: '3', name: 'audio'},
-          {id: '4', name: 'compress'},
-          {id: '5', name: 'document'},
-          {id: '6', name: 'image'},
-          {id: '7', name: 'other'},
-          {id: '8', name: 'powerpoint'},
-          {id: '9', name: 'spreadsheet'},
-          {id: '10', name: 'video'}
-        ], // 获取文件列表
+        list: [], // 获取文件列表
         fileList: [], // 上传列表
         totalNumber: 0,
         webUploader: false, // 上传状态
@@ -193,7 +182,16 @@
       getList(id = 0) {
         this.$http.get(api.yunpanList, {params: {pan_director_id: id}}).then(
           (res) => {
+            console.log(res.data.data)
             this.list = res.data.data
+            for (let i of this.list) {
+              let size = i['size'] / 1024
+              if (size > 1024) {
+                i['format_size'] = Number(Math.round(i['size'] / 1024 / 1024)) + 'MB'
+              } else {
+                i['format_size'] = Number(size.toFixed(2)) + 'KB'
+              }
+            }
           })
       },
       getSearchList() {

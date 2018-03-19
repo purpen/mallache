@@ -9,15 +9,15 @@
             </el-col>
             <el-col :span="2">
             <p :class="['file-icon', 'other', {
-                'folder': /folder/.test(ele.name),
-                'artboard': /pdf/.test(ele.name),
-                'audio': /audio/.test(ele.name),
-                'compress': /compress/.test(ele.name),
-                'document': /(?:text|msword)/.test(ele.name),
-                'image': /image/.test(ele.name),
-                'powerpoint': /powerpoint/.test(ele.name),
-                'spreadsheet': /excel/.test(ele.name),
-                'video': /video/.test(ele.name)
+                'folder': /folder/.test(ele.mime_type),
+                'artboard': /pdf/.test(ele.mime_type),
+                'audio': /audio/.test(ele.mime_type),
+                'compress': /compress/.test(ele.mime_type),
+                'document': /(?:text|msword)/.test(ele.mime_type),
+                'image': /image/.test(ele.mime_type),
+                'powerpoint': /powerpoint/.test(ele.mime_type),
+                'spreadsheet': /excel/.test(ele.mime_type),
+                'video': /video/.test(ele.mime_type)
               }]">file-icon</p>
             </el-col>
             <el-col :span="8">
@@ -29,7 +29,7 @@
               </p>
             </el-col>
             <el-col :span="3">
-              <p :class="['file-size', {'hidden': ele.name === 'folder'}]">{{index}}MB</p>
+              <p :class="['file-size', {'hidden': ele.name === 'folder'}]">{{ele.format_size}}</p>
             </el-col>
             <el-col :span="5">
               <p :class="['file-uploader']">file-uploader</p>
