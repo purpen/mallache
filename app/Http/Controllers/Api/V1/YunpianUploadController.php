@@ -137,7 +137,7 @@ class YunpianUploadController extends BaseController
                 }
 
                 // 判断是否在企业根目录下创建或公开的
-                if ($pan_director_id === 0 || $pan_dir->open_set == 1) {
+                if ($pan_director_id == 0 || $pan_dir->open_set == 1) {
 
                     $pan_director = new PanDirector();
                     $pan_director->open_set = 1;
