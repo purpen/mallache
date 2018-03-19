@@ -37,6 +37,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
     ]);
+    //设计公司子用户注册
+    $api->post('/auth/childRegister', [
+        'as' => 'auth.childRegister', 'uses' => 'AuthenticateController@childRegister'
+    ]);
     //用户登录
     $api->post('/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
@@ -45,8 +49,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/sms', ['as' => 'auth.sms', 'uses' => 'AuthenticateController@getSmsCode']);
 
     // 七牛图片上传回调地址
-    $api->post('/asset/callback',[
+    $api->post('/asset/callback', [
         'as' => 'upload.callback', 'uses' => 'UploadController@callback'
+    ]);
+
+    // 云盘七牛上传回调地址
+    $api->post('/yunpanCallback', [
+        'as' => 'yunpanCallback', 'uses' => 'YunpianUploadController@yunpanCallback'
     ]);
 
     //支付宝异步回调接口
@@ -57,7 +66,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/pay/jdPayNotify', 'PayController@jdPayNotify');
 
     //忘记密码修改密码
-    $api->post('/auth/forgetPassword' , ['uses' => 'AuthenticateController@forgetPassword']);
+    $api->post('/auth/forgetPassword', ['uses' => 'AuthenticateController@forgetPassword']);
 
     // 设计案例推荐列表
     $api->get('/designCase/openLists', 'DesignCaseController@openLists');
@@ -137,9 +146,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/dateOfAward/month', 'DateOfAwardController@month');
 
     /**
+     * 没登录前，根据字符串，查看用户id和设计公司id
+     */
+    //根据随机字符串查看用户id
+    $api->get('/urlValue', 'UrlKeyValueController@urlValue');
+
+    /**
      * 需验证用户token
      */
-    $api->group(['middleware' => ['jwt.auth']], function ($api){
+    $api->group(['middleware' => ['jwt.auth']], function ($api) {
         //用户退出
         $api->post('/auth/logout', [
             'as' => 'auth.logout', 'uses' => 'AuthenticateController@logout'
@@ -156,8 +171,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/auth/user', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
         //修改用户资料
-        $api->post('/auth/updateUser/{id}' , [
-            'as' => 'auth.updateUser' , 'uses' => 'AuthenticateController@updateUser'
+        $api->post('/auth/updateUser/{id}', [
+            'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
         ]);
 
         //用户钱包信息
@@ -171,8 +186,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'city', 'uses' => 'CommonController@city'
         ]);
         //生产七牛token
-        $api->get('/upload/upToken' , [
-            'as' => 'upload.token' , 'uses' => 'UploadController@upToken'
+        $api->get('/upload/upToken', [
+            'as' => 'upload.token', 'uses' => 'UploadController@upToken'
         ]);
         //删除图片
         $api->delete('/upload/deleteFile/{asset_id}', ['as' => 'upload.deleteFile', 'uses' => 'UploadController@deleteFile']);
@@ -269,7 +284,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
 
 
-
         // 设计案例图片添加描述
         $api->put('/designCase/imageSummary', 'DesignCaseController@imageSummary');
         $api->resource('/designCase', 'DesignCaseController');
@@ -313,6 +327,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/design/itemStart/{item_id}', 'DesignController@itemStart');
         // 确认项目已完成
         $api->post('/design/itemDone/{item_id}', 'DesignController@itemDone');
+        //设计公司成员列表
+        $api->get('/design/members', 'DesignController@members');
+        //设计公司设置成管理员
+        $api->put('/design/is_admin', 'DesignController@is_admin');
 
         /**
          * 通知消息相关路由
@@ -327,7 +345,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         /**
          * 资金流水记录列表
          */
-        $api->resource('/fundLogList' , 'FundLogController');
+        $api->resource('/fundLogList', 'FundLogController');
 
         /**
          * 银行
@@ -340,7 +358,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/bank/un/status', [
             'as' => 'bank.unStatus', 'uses' => 'BankController@unStatus'
         ]);
-        $api->resource('/bank' , 'BankController');
+        $api->resource('/bank', 'BankController');
 
 
         /**
@@ -364,6 +382,58 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/notice', 'NoticeController@show');
         // 列表
         $api->get('/notice/list', 'NoticeController@lists');
+
+
+        /**
+         * 客户接口
+         */
+        $api->resource('/customers', 'CustomerController');
+        //检测客户是否存在
+        $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
+
+
+        /**
+         * 用户id生成string
+         */
+        //根据用户id为key查看随机字符串
+        $api->get('/urlKey', 'UrlKeyValueController@urlKey');
+
+
+        /**
+         * 云盘
+         */
+        // 获取云盘上传文件token
+        $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
+        // {post} /yunpan/createDir  创建文件夹
+        $api->post('/yunpan/createDir', 'YunpianUploadController@createDir');
+        // {get} /yunpan/lists  网盘列表
+        $api->get('/yunpan/lists', 'YunpianUploadController@lists');
+
+
+        /**
+         * 用户群组
+         */
+        // {get} /group/lists  获取公司所有自己创建的群组列表（设计公司管理员）
+        $api->get('/group/lists', 'GroupController@lists');
+        // {post} /group/create  创建群组（设计公司管理员）
+        $api->post('/group/create', 'GroupController@create');
+        // {put} /group/addUser  向群组添加用户（设计公司管理员）
+        $api->put('/group/addUser', 'GroupController@addUser');
+        // {put} /group/removeUser  群组移除用户（设计公司管理员）
+        $api->put('/group/removeUser', 'GroupController@removeUser');
+        // {delete} /group/delete  删除群组（设计公司管理员）
+        $api->delete('/group/delete', 'GroupController@delete');
+        // {get} /group/userGroupLists  获取某用户所在的群组列表
+        $api->get('/group/userGroupLists', 'GroupController@userGroupLists');
+        // {get} /group/groupUserLists  获取一个群组的成员信息
+        $api->get('/group/groupUserLists', 'GroupController@groupUserLists');
+
+
+        /**
+         * 项目级别配置
+         */
+        $api->resource('/itemLevels', 'ItemLevelController');
+
 
     });
 });

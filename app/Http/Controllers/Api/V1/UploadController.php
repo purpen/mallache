@@ -51,6 +51,7 @@ class UploadController extends BaseController
     public function upToken()
     {
         $upload_url = config('filesystems.disks.qiniu.upload_url');
+
         $upToken = QiniuApi::upToken();
 
         $random = uniqid('', true);

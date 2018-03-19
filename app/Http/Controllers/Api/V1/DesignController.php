@@ -10,10 +10,12 @@ use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\DesignShowItemTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\UserTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ItemStage;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -428,6 +430,120 @@ class DesignController extends BaseController
         event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {get} /design/members 设计公司查看成员列表
+     *
+     * @apiVersion 1.0.0
+     * @apiName design members
+     * @apiGroup design
+     *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                "id": 2,
+                "type": 2,
+                "account": "18132382134",
+                "username": "",
+                "email": null,
+                "phone": "18132382134",
+                "status": 0,
+                "item_sum": 0,
+                "price_total": "0.00",
+                "price_frozen": "0.00",
+                "cash": "0.00",
+                "logo_image": null,
+                "design_company_id": 51,
+                "role_id": 0,
+                "demand_company_id": 0,
+                "realname": null,
+                "design_company_name": "222"
+                }
+            ],
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function members(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        if($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if($user->child_account == 0){
+            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->company_role,[0,10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+        $design_company_id = $user->design_company_id;
+        if($design_company_id == 0){
+            return $this->response->array($this->apiError('该用户不是设计公司', 404));
+        }
+        $users = User::where('design_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
+
+        return $this->response->paginator($users, new UserTransformer())->setMeta($this->apiMeta());
+
+    }
+
+    /**
+     * @api {put} /design/is_admin 设计公司设置成管理员,恢复成成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design is_admin
+     * @apiGroup design
+     *
+     * @apiParam {integer} set_user_id 被设置的用户id
+     * @apiParam {integer} company_role 10.管理员；0.成员；
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function is_admin(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if(!$user){
+            return $this->response->array($this->apiError('没有找到主账户', 404));
+        }
+        if($user->child_account == 0){
+            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        }
+        if(in_array($user->company_role , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+        $set_user_id = $request->input('set_user_id');
+        $company_role = $request->input('company_role');
+        $set_user = User::where('id' , $set_user_id)->first();
+        if(!$set_user){
+            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+        }
+        $set_user->company_role = $company_role;
+        $set_user->save();
+
+        return $this->response->array($this->apiSuccess());
+
     }
 
 }

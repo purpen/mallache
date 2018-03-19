@@ -76,8 +76,9 @@ class AuthenticateController extends BaseController
             'phone' => $payload['account'],
             'username' => $payload['account'],
             'type' => $payload['type'],
-            'status' => 1,
             'password' => bcrypt($payload['password']),
+            'child_account' => 10,
+            'company_role' => 20,
         ]);
         if($user->type == 1){
             DemandCompany::createCompany($user->id);
@@ -488,5 +489,98 @@ class AuthenticateController extends BaseController
         $data = ['price_total' => $user->price_total, 'price_frozen' => $user->price_frozen, 'price' => $price];
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
+
+
+    /**
+     * @api {post} /auth/childRegister 子账户注册
+     * @apiVersion 1.0.0
+     * @apiName user childRegister
+     * @apiGroup User
+     *
+     * @apiParam {integer} invite_user_id 邀请用户id
+     * @apiParam {string} account 子账户账号(手机号)
+     * @apiParam {string} realname 姓名
+     * @apiParam {string} password 设置密码
+     * @apiParam {integer} sms_code 短信验证码
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *     "data": {
+     *          "token": ""
+     *      }
+     *   }
+     */
+    public function childRegister(Request $request)
+    {
+        //检测邀请的用户是否是管理员和主账户
+        $invite_user_id = $request->input('invite_user_id');
+        $user = User::where('id', $invite_user_id)->first();
+        if($user){
+            if($user->company_role == 0){
+                return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
+            }
+            if($user->child_account == 0){
+                return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+            }
+        }else{
+            return $this->response->array($this->apiError('没有找到该用户', 404));
+        }
+
+        //检测邀请的设计公司是否存在
+        $design_company_id = $user->designCompanyId($invite_user_id);
+        $design_company = DesignCompanyModel::where('id' , $design_company_id)->first();
+        if(!$design_company){
+            return $this->response->array($this->apiError('没有找到设计公司', 404));
+        }
+
+
+        // 验证规则
+        $rules = [
+            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'password' => ['required', 'min:6'],
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+            'realname' => ['required'],
+        ];
+
+        $payload = $request->only('account', 'password', 'sms_code', 'realname');
+        $validator = Validator::make($payload, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
+        }
+
+        //验证手机验证码
+        $key = 'sms_code:' . strval($payload['account']);
+        $sms_code_value = Cache::get($key);
+        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+            return $this->response->array($this->apiError('验证码错误', 412));
+        }else{
+            Cache::forget($key);
+        }
+
+
+        // 创建用户
+        $users = User::create([
+            'account' => $payload['account'],
+            'phone' => $payload['account'],
+            'username' => $payload['account'],
+            'realname' => $payload['realname'],
+            'password' => bcrypt($payload['password']),
+            'design_company_id' => $design_company_id,
+            'invite_user_id' => $invite_user_id,
+            'type' => 2
+        ]);
+
+        if ($users) {
+            $token = JWTAuth::fromUser($users);
+            return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
+        } else {
+            return $this->response->array($this->apiError('注册失败，请重试!', 412));
+        }
+    }
+
 
 }
