@@ -484,12 +484,12 @@ class YunpianUploadController extends BaseController
         $this->validate($request, [
             'pan_director_id' => 'required|integer',
             'open_set' => 'required|integer|in:1,2',
-            'group_id_arr' => 'required'
+            'group_id_arr' => 'array'
         ]);
 
         $pan_director_id = $request->input('pan_director_id');
         $open_set = $request->input('open_set');
-        $group_id_arr = $request->input('group_id_arr');
+        $group_id_arr = $request->input('group_id_arr') ?? [];
 
         $pan_dir = PanDirector::find($pan_director_id);
 
