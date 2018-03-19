@@ -408,6 +408,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/yunpan/createDir', 'YunpianUploadController@createDir');
         // {get} /yunpan/lists  网盘列表
         $api->get('/yunpan/lists', 'YunpianUploadController@lists');
+        // {put} /yunpan/setPermission  设置权限
+        $api->put('/yunpan/setPermission', 'YunpianUploadController@setPermission');
 
 
         /**
