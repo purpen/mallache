@@ -484,7 +484,7 @@ class YunpianUploadController extends BaseController
         $this->validate($request, [
             'pan_director_id' => 'required|integer',
             'open_set' => 'required|integer|in:1,2',
-            'group_id_arr' => 'required|array'
+            'group_id_arr' => 'required'
         ]);
 
         $pan_director_id = $request->input('pan_director_id');
@@ -524,7 +524,7 @@ class YunpianUploadController extends BaseController
             } else if ($open_set == 1 && empty($group_id_arr)) { //设置为公开
                 $pan_dir->setPublic();
             } else {
-                return $this->response->array($this->apiError('未知错误', 403));
+                return $this->response->array($this->apiError('无权限', 403));
             }
         }
 
