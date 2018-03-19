@@ -128,10 +128,12 @@ class YunpianUploadController extends BaseController
                 $pan_file->url = $path;
                 $pan_file->save();
 
-                //上级目录信息
-                $pan_dir = PanDirector::where(['id' => $pan_director_id, 'type' => 1])->first();
-                if (!$pan_dir) {
-                    throw new \Exception('not found dir');
+                if ($pan_director_id !== 0) {
+                    //上级目录信息
+                    $pan_dir = PanDirector::where(['id' => $pan_director_id, 'type' => 1])->first();
+                    if (!$pan_dir) {
+                        throw new \Exception('not found dir');
+                    }
                 }
 
                 // 判断是否在企业根目录下创建或公开的
@@ -443,8 +445,71 @@ class YunpianUploadController extends BaseController
                     ->where('open_set', 2)
                     ->where('user_id', $user_id);
             })
+            // 公共文件
+            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id) {
+                $query->where('status', 1)
+                    ->where('company_id', $company_id)
+                    ->where('pan_director_id', $pan_director_id)
+                    ->where('open_set', 1)
+                    ->where('group_id', null);
+            })
             ->get();
 
         return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiSuccess());
     }
+
+    // 设置权限
+    public function setPermission(Request $request)
+    {
+        $this->validate($request, [
+            'pan_director_id' => 'required|integer',
+            'open_set' => 'required|integer|in:1,2',
+            'group_id_arr' => 'required|array'
+        ]);
+
+        $pan_director_id = $request->input('pan_director_id');
+        $open_set = $request->input('open_set');
+        $group_id_arr = $request->input('group_id_arr');
+
+        $pan_dir = PanDirector::find($pan_director_id);
+
+        // 文件 不存在、系统创建、非二级目录 均不能修改权限
+        if (!$pan_dir || $pan_dir->isAuto() || $pan_dir->pan_director_id != 0) {
+            return $this->response->array($this->apiError('not found dir!', 404));
+        }
+
+        // 判断是否是设计公司管理员
+        if ($this->auth_user->isDesignAdmin()) {
+            // 如果设为私有
+            if ($open_set == 2) {
+                if ($pan_dir->user_id != $this->auth_user_id) {
+                    return $this->response->array($this->apiError('无权限', 404));
+                }
+
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
