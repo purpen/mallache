@@ -262,6 +262,7 @@ export default {
 
   // 云盘
   yunpanUpToken: '/upload/yunpanUpToken', // 云盘上传upToken
+  yunpanList: '/yunpan/lists', // 云盘文件列表
 
   // 成员管理
   designMemberList: '/design/members',  // GET 获取成员列表

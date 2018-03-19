@@ -67,8 +67,8 @@
                 'spreadsheet': /excel/.test(ele.name),
                 'video': /video/.test(ele.name)
               }]">file-icon</p>
-            <p class="file-name" @click="showView">
-              <span v-show="chooseList[0] !== ele.id || !hasRename">{{ele.name}}</span>
+            <p class="file-name">
+              <span @click="showView" v-show="chooseList[0] !== ele.id || !hasRename">{{ele.name}}</span>
               <input v-show="chooseList[0] === ele.id && hasRename" class="rename" type="text" v-model="renameVal">
                 <span @click="renameConfirm(index)" v-show="chooseList[0] === ele.id && hasRename" class="rename-confirm"></span>
                 <span @click="renameCancel" v-show="chooseList[0] === ele.id && hasRename" class="rename-cancel"></span>
@@ -248,6 +248,8 @@ export default {
     renameConfirm(index) {
       this.$emit('renameCancel')
       this.$emit('changeName', index, this.renameVal)
+    },
+    rename() {
     }
   },
   watch: {
@@ -356,6 +358,30 @@ export default {
     width: 60px;
     height: 60px;
     margin: 16px auto 20px; 
+  }
+  section .item2 .file-name {
+    overflow: initial;
+    position: relative;
+    height: 20px;
+  }
+  .item2 .rename {
+    position: absolute;
+    z-index: 1;
+    width: 70%;
+    left: -10px;
+    top: -10px;
+    margin: 0;
+  }
+  
+  .item2 .rename-confirm, .item2 .rename-cancel {
+    position: absolute;
+    left: 70%;
+    top: -10px;
+    z-index: 1;
+    margin: 0;
+  }
+  .item2 .rename-cancel {
+    left: calc(70% + 35px);
   }
   .rename {
     width: 160px;

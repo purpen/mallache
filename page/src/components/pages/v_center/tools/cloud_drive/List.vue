@@ -55,7 +55,7 @@
                   <span>下载</span>
                   <span>复制</span>
                   <span>移动</span>
-                  <span @click="rename" :class="[{'disable': alreadyChoose > 1}]">重命名</span>
+                  <span @click="rename" :class="[{'disable': alreadyChoose > 1 || !alreadyChoose}]">重命名</span>
                   <span>删除</span>
                 </el-col>
               </p>
@@ -185,14 +185,20 @@
     mounted: function () {
       window.addEventListener('keydown', e => {
         if (e.keyCode === 13) {
-          this.getList()
+          this.getSearchList()
         }
       })
     },
     methods: {
-      getList() {
+      getList(id = 0) {
+        this.$http.get(api.yunpanList, {params: {pan_director_id: id}}).then(
+          (res) => {
+            this.list = res.data.data
+          })
+      },
+      getSearchList() {
         if (!this.showList && this.searchWord) {
-          console.log('getList')
+          console.log('getSearchList')
         } else {
           console.log('enter')
         }
@@ -288,6 +294,7 @@
     },
     created() {
       this.getUploadUrl()
+      this.getList()
     },
     computed: {
       chunkTitle() {
