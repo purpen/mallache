@@ -149,6 +149,9 @@ class PanDirector extends BaseModel
      */
     public function getUrlSmallAttribute()
     {
+        if ($this->type == 1) {
+            return null;
+        }
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = null;
@@ -168,6 +171,10 @@ class PanDirector extends BaseModel
      */
     public function getUrlFileAttribute()
     {
+        if ($this->type == 1) {
+            return null;
+        }
+
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url;
