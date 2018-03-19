@@ -128,7 +128,7 @@ class YunpianUploadController extends BaseController
                 $pan_file->url = $path;
                 $pan_file->save();
 
-                if ($pan_director_id !== 0) {
+                if ($pan_director_id != 0) {
                     //上级目录信息
                     $pan_dir = PanDirector::where(['id' => $pan_director_id, 'type' => 1])->first();
                     if (!$pan_dir) {
@@ -458,7 +458,27 @@ class YunpianUploadController extends BaseController
         return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiSuccess());
     }
 
-    // 设置权限
+
+    /**
+     * @api {put} /yunpan/setPermission  设置权限
+     * @apiVersion 1.0.0
+     * @apiName yunpan 设置权限
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} pan_director_id 文件ID
+     * @apiParam {integer} open_set 隐私设置：1.公开 2.私有 （open_set=1、group_id_arr=[] 是公开）（open_set=2、group_id_arr=[] 是私有）open_set=1、group_id_arr=[1,2] 对应权限组）
+     * @apiParam {array} group_id_arr 所属群组ID数组
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
     public function setPermission(Request $request)
     {
         $this->validate($request, [
@@ -483,11 +503,32 @@ class YunpianUploadController extends BaseController
             // 如果设为私有
             if ($open_set == 2) {
                 if ($pan_dir->user_id != $this->auth_user_id) {
-                    return $this->response->array($this->apiError('无权限', 404));
+                    return $this->response->array($this->apiError('无权限', 403));
                 }
+                $pan_dir->setPrivate();
+            } else if ($open_set == 1 && empty($group_id_arr)) { //设置为公开
+                $pan_dir->setPublic();
+            } else if ($open_set == 1 && !empty($group_id_arr)) { // 设置权限组
+                $pan_dir->setGroup(json_encode($group_id_arr));
+            } else {
+                return $this->response->array($this->apiError('未知错误', 403));
+            }
 
+        } else {  // 成员
+            if ($pan_dir->user_id != $this->auth_user_id) {
+                return $this->response->array($this->apiError('无权限', 403));
+            }
+            // 如果设为私有
+            if ($open_set == 2) {
+                $pan_dir->setPrivate();
+            } else if ($open_set == 1 && empty($group_id_arr)) { //设置为公开
+                $pan_dir->setPublic();
+            } else {
+                return $this->response->array($this->apiError('未知错误', 403));
             }
         }
+
+        return $this->response->array($this->apiSuccess());
     }
 
 }

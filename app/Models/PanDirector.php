@@ -134,11 +134,11 @@ class PanDirector extends BaseModel
     }
 
     /**
-     * 文件、文件夹设置为公开
+     * 文件、文件夹设置为群组
      */
-    public function setGroup()
+    public function setGroup(string $group_id)
     {
-        $this->setPermission(1, null);
+        $this->setPermission(1, $group_id);
     }
 
 }
