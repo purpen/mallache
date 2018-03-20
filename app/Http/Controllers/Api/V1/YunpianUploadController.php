@@ -455,7 +455,7 @@ class YunpianUploadController extends BaseController
             })
             ->get();
 
-        return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiSuccess());
+        return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiMeta());
     }
 
 
