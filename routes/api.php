@@ -410,7 +410,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/yunpan/lists', 'YunpianUploadController@lists');
         // {put} /yunpan/setPermission  设置权限
         $api->put('/yunpan/setPermission', 'YunpianUploadController@setPermission');
+        // {put} /yunpan/delete  放入回收站
+        $api->put('/yunpan/delete', 'YunpianUploadController@delete');
 
+        // {get} /recycleBin/lists 回收站列表
+        $api->get('/recycleBin/lists', 'RecycleBinController@lists');
+        //  {delete} /recycleBin/delete 彻底删除文件（文件夹）
+        $api->delete('/recycleBin/delete', 'RecycleBinController@delete');
+        // {put} /recycleBin/restore 恢复文件（文件夹）
+        $api->put('/recycleBin/restore', 'RecycleBinController@restore');
 
         /**
          * 用户群组

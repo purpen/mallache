@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account', 'username', 'email', 'phone', 'password', 'type' , 'realname' , 'child_account' , 'company_role' , 'invite_user_id' , 'design_company_id'
+        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_user_id', 'design_company_id'
     ];
 
     /**
@@ -135,6 +135,14 @@ class User extends Authenticatable implements JWTSubject
     public function panDirector()
     {
         return $this->hasMany('App\Models\PanDirector', 'user_id');
+    }
+
+    /*
+     * 一对多关联云盘回收站
+     */
+    public function recycleBin()
+    {
+        return $this->hasMany('App\Models\RecycleBin', 'user_id');
     }
 
     /**

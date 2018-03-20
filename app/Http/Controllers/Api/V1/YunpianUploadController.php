@@ -7,6 +7,7 @@ use App\Http\Transformer\YunpanListTransformer;
 use App\Models\Group;
 use App\Models\PanDirector;
 use App\Models\PanFile;
+use App\Models\RecycleBin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -289,7 +290,7 @@ class YunpianUploadController extends BaseController
             return $this->response->array($this->apiError('not found dir!', 404));
         }
         // 判断是否公开的
-        if ($pan_dir->open_set == 1) {
+        if ($pan_dir->open_set == 1 && $pan_dir->group_id == null) {
 
             $pan_director = new PanDirector();
             $pan_director->open_set = 1;
@@ -373,34 +374,45 @@ class YunpianUploadController extends BaseController
      * @apiGroup yunpan
      * @apiParam {string} token
      * @apiParam {integer} pan_director_id 上级文件夹ID
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
      *
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
+     *          "message": "Success",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
      *     }
      * "data": [
-     * {
-     * "id": 2,
-     * "pan_director_id": 1, //上级文件ID
-     * "type": 1, // 类型：1.文件夹、2.文件
-     * "name": "第二层",
-     * "size": 0, // 大小 （字节byte）
-     * "mime_type": "", // 文件类型
-     * "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
-     * "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
-     * "user_id": 1,
-     * "user_name": "",
-     * "group_id": null,  // 分组ID(json数组)
-     * "created_at": 1521430098, // 创建时间
-     * "open_set": 1
-     * }
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     *  }
      * ],
      *  }
      */
     public function lists(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         $pan_director_id = (int)$request->input('pan_director_id');
 
         $user_id = $this->auth_user_id;
@@ -453,9 +465,9 @@ class YunpianUploadController extends BaseController
                     ->where('open_set', 1)
                     ->where('group_id', null);
             })
-            ->get();
+            ->paginate($per_page);
 
-        return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
     }
 
 
@@ -530,6 +542,48 @@ class YunpianUploadController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+
+    /**
+     * @api {put} /yunpan/delete  放入回收站
+     * @apiVersion 1.0.0
+     * @apiName yunpan 放入回收站
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} pan_director_id 文件ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function delete(Request $request)
+    {
+        $this->validate($request, [
+            'pan_director_id' => 'required|integer',
+        ]);
+
+        $pan_director_id = $request->input('pan_director_id');
+        $pan_dir = PanDirector::find($pan_director_id);
+
+        // 文件不存在或当前用户没有权限不能删除
+        if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
+            return $this->response->array($this->apiError('not found dir!', 404));
+        }
+
+        // 创建回收站记录
+        RecycleBin::addRecycle($pan_dir, $this->auth_user_id);
+        // 修改文件状态为删除中
+        $pan_dir->deletingDir();
+
+        return $this->response->array($this->apiSuccess());
+    }
+
 
 }
 
