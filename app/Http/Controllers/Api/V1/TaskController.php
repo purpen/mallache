@@ -18,6 +18,9 @@ class TaskController extends BaseController
      * @apiVersion 1.0.0
      * @apiName  tasks store
      * @apiGroup tasks
+     *
+     * @apiParam {integer} tier 层级 默认0
+     * @apiParam {integer} pid 父id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {string} tags 标签
@@ -93,7 +96,6 @@ class TaskController extends BaseController
             'over_time' => $over_time,
             'status' => 1,
         );
-
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -116,6 +118,10 @@ class TaskController extends BaseController
      * @apiName tasks index
      * @apiGroup tasks
      *
+     * @apiParam {integer} stage 默认10；0.未完成 2.已完成 10.全部
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} sort 0:升序；1.降序(默认)
      * @apiParam {string} token
      *
      *
@@ -147,12 +153,28 @@ class TaskController extends BaseController
             }
         }
      */
-    public function index()
+    public function index(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $stage = $request->input('per_page');
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
         $user_id = intval($this->auth_user_id);
-        $tasks= Task::where(['user_id'=>$user_id,'status'=>1])->orderBy('id', 'desc')->get();
 
-        return $this->response->collection($tasks, new TaskTransformer())->setMeta($this->apiMeta());
+        if(in_array($stage,[0,2])){
+            $tasks= Task::where(['user_id'=>$user_id,'status'=>1 , 'stage'=>$stage])->orderBy('id', $sort)->paginate($per_page);
+        }else{
+            $tasks= Task::where(['user_id'=>$user_id,'status'=>1])->orderBy('id', $sort)->paginate($per_page);
+
+        }
+
+        return $this->response->paginator($tasks, new TaskTransformer())->setMeta($this->apiMeta());
 
     }
 
@@ -213,6 +235,9 @@ class TaskController extends BaseController
      * @apiVersion 1.0.0
      * @apiName  tasks update
      * @apiGroup tasks
+     *
+     * @apiParam {integer} tier 层级 默认0
+     * @apiParam {integer} pid 父id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {string} tags 标签
@@ -222,6 +247,8 @@ class TaskController extends BaseController
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
      * @apiParam {integer} type 类型;1.默认；
      * @apiParam {integer} stage 是否完成:0.未完成；1.进行中；2.已完成；
+     * @apiParam {integer} tier 层级 默认0
+     * @apiParam {integer} pid 父id 默认0
      * @apiParam {string} token
      *
      *
@@ -349,5 +376,33 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError());
         }
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /tasks/is_stage 更改主任务完成与未完成
+     * @apiVersion 1.0.0
+     * @apiName tasks is_stage
+     * @apiGroup tasks
+     *
+     * @apiParam {integer} task_id 任务id
+     * @apiParam {integer} stage 0.未完成；2.已完成
+     * @apiParam {token} token
+     */
+    public function is_stage(Request $request)
+    {
+        $task_id = $request->input('task_id');
+        $stage = $request->input('stage');
+        $task = Task::find($task_id);
+        if(!$task){
+            return $this->response->array($this->apiError('not found task!', 404));
+        }
+        //根据pid查询子任务
+        $pid_tasks = Task::where('pid' , $task_id)->get();
+        foreach ($pid_tasks as $pid_task){
+            if($pid_task->stage == 0){
+                return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
+            }
+        }
+        $task::isStage($task_id , $stage);
     }
 }

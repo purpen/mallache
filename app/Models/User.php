@@ -290,7 +290,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 判断用户是否是管理员
+     * 判断用户是否是设计公司管理员
      */
     public function isDesignAdmin()
     {
@@ -302,7 +302,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 判断用户是否是超级管理员
+     * 判断用户是否是设计公司超级管理员
      * @return bool
      */
     public function isDesignSuperAdmin()

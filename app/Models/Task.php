@@ -31,4 +31,15 @@ class Task extends BaseModel
     {
         return $this->hasMany('App\Models\SubTask' , 'task_id');
     }
+
+    /**
+     * 任务完成与未完成
+     */
+    public static function isStage(int $task_id  , int $stage)
+    {
+        $task = self::find($task_id);
+        $task->stage = $stage;
+        $task->save();
+    }
 }
+

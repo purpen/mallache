@@ -40,7 +40,7 @@ class ChangeDesignUserInfo extends Command
     {
         User::chunk(100, function ($users) {
             foreach ($users as $user) {
-                if ($user->type == 2 && $user->design_company_id != 0) {
+                if ($user->type == 2) {
                     $user->child_account = 1;
                     $user->company_role = 20;
                     $user->save();

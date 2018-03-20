@@ -28,101 +28,6 @@ class PanDirector extends BaseModel
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
-    /**
-     * 判断用户是否可以创建当前文件\文件夹
-     *
-     * @param int $user_id 用户ID
-     * @param int $pan_director_id 上级文件ID
-     * @param int $open_set 隐私设置：1.公开 2.个人
-     * @param int $company_id 所在公司ID
-     * @param int $group_id 所在项目组ID
-     * @return bool
-     */
-    public static function isCreate(int $user_id, int $pan_director_id, int $open_set, int $company_id, int $group_id)
-    {
-        // 个人文件
-        if ($open_set === 2 && $group_id === 0) {
-            if ($pan_director_id === 0) {   // 一级目录
-                return true;
-            } else {
-                // 判断上级目录是否存在
-                $count = PanDirector::where(['user_id' => $user_id, 'id' => $pan_director_id, 'open_set' => $open_set, 'type' => 1, 'status' => 1])->count();
-                if ($count > 0) {
-                    return true;
-                }
-            }
-
-        } elseif ($open_set === 1) {        // 公共文件
-            if ($pan_director_id === 0) {   // 一级目录
-                if ($group_id === 0) {
-                    return true;
-                } else {
-                    if (Yunpan::isItem($user_id, $group_id)) {
-                        return true;
-                    }
-                }
-
-            } elseif ($pan_director_id > 0) {
-                // 全部可见
-                if ($group_id === 0) {
-                    $count = PanDirector::where(['company_id' => $company_id, 'id' => $pan_director_id, 'open_set' => $open_set, 'type' => 1, 'status' => 1, 'group_id' => $group_id])->count();
-                    if ($count > 0) {
-                        return true;
-                    }
-                    // 同项目人员可见
-                } elseif ($group_id > 0) {
-                    if (Yunpan::isItem($user_id, $group_id)) {
-                        $count = PanDirector::where(['company_id' => $company_id, 'id' => $pan_director_id, 'open_set' => $open_set, 'type' => 1, 'status' => 1, 'group_id' => $group_id])->count();
-                        if ($count > 0) {
-                            return true;
-                        }
-                    }
-                }
-
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * 判断用户是否可以创建当前文件\文件夹
-     *
-     * @param int $user_id
-     * @param int $pan_director_id
-     * @param int $group_id
-     * @return bool
-     */
-    public function isCreate2(int $user_id, int $pan_director_id, int $group_id, int $open_set): bool
-    {
-        // 公共网盘
-        if (yunpan::isItem($user_id, $group_id) && $open_set === 1) {
-            if ($pan_director_id === 0) {  // 顶层目录时
-                return true;
-            }
-
-            $dir = PanDirector::find($pan_director_id);
-            if ($dir) {
-                if (yunpan::isItem($user_id, $dir->group_id)) {
-                    return true;
-                }
-            }
-        } else if ($group_id === 0 && $open_set === 2) {  // 个人网盘
-            if ($pan_director_id === 0) {  // 顶层目录时
-                return true;
-            }
-            $dir = PanDirector::find($pan_director_id);
-            if ($dir) {
-                if ($dir->user_id === $user_id) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 
     // 返回文件/文件夹详细信息
     public function info()
@@ -149,6 +54,9 @@ class PanDirector extends BaseModel
      */
     public function getUrlSmallAttribute()
     {
+        if ($this->type == 1) {
+            return null;
+        }
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = null;
@@ -168,6 +76,10 @@ class PanDirector extends BaseModel
      */
     public function getUrlFileAttribute()
     {
+        if ($this->type == 1) {
+            return null;
+        }
+
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url;
@@ -176,5 +88,57 @@ class PanDirector extends BaseModel
         return $signedUrl;
     }
 
+    /*
+     * 判断文件/文件夹是否是系统创建
+     */
+    public function isAuto()
+    {
+        return 2 == $this->is_auto;
+    }
+
+    /**
+     * 文件、文件夹设置指定权限(子目录递归修改)
+     *
+     * @param $open_set integer 隐私设置：1.公开 2.私有
+     * @param $group_id string|null  所属群组ID json数组
+     */
+    public function setPermission($open_set, $group_id)
+    {
+        $this->open_set = $open_set;
+        $this->group_id = $group_id;
+        $this->save();
+        if ($this->type == 2) {
+            return;
+        } else if ($this->type == 1) {
+            $pan_dir_lists = PanDirector::where(['pan_director_id', $this->id])->first();
+            foreach ($pan_dir_lists as $pan_dir) {
+                $pan_dir->setPermission($this->open_set, $this->group_id);
+            }
+        }
+    }
+
+    /**
+     * 文件、文件夹设置为私有
+     */
+    public function setPrivate()
+    {
+        $this->setPermission(2, null);
+    }
+
+    /**
+     * 文件、文件夹设置为公开
+     */
+    public function setPublic()
+    {
+        $this->setPermission(1, null);
+    }
+
+    /**
+     * 文件、文件夹设置为群组
+     */
+    public function setGroup(string $group_id)
+    {
+        $this->setPermission(1, $group_id);
+    }
 
 }

@@ -403,8 +403,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 云盘
          */
         // 获取云盘上传文件token
-
         $api->get('/upload/yunpanUpToken', 'YunpianUploadController@upToken');
+        // {post} /yunpan/createDir  创建文件夹
+        $api->post('/yunpan/createDir', 'YunpianUploadController@createDir');
+        // {get} /yunpan/lists  网盘列表
+        $api->get('/yunpan/lists', 'YunpianUploadController@lists');
+        // {put} /yunpan/setPermission  设置权限
+        $api->put('/yunpan/setPermission', 'YunpianUploadController@setPermission');
+
 
         /**
          * 用户群组
@@ -435,6 +441,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 任务
          */
         $api->resource('/tasks', 'TaskController');
+        //设计公司设置成管理员
+        $api->put('/tasks/is_stage', 'TaskController@is_stage');
+
+        /**
+         * 项目用户
+         */
+        $api->resource('/itemUsers', 'ItemUserController');
 
     });
 });
