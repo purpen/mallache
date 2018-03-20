@@ -27,14 +27,14 @@ class PanFile extends BaseModel
     static public function getFlie(string $md5)
     {
         $file = PanFile::where('md5', $md5)->first();
-        if(!$file){
+        if (!$file) {
             return null;
         }
         return $file;
     }
 
     /**
-     *源文件引用加一
+     *源文件引用加1
      */
     public function fileCountIncrement()
     {
@@ -42,11 +42,16 @@ class PanFile extends BaseModel
     }
 
     /**
-     * 源文件引用减一
+     * 源文件引用减1
      */
     public function fileCountDecrement()
     {
         $this->decrement('count');
+
+        // 如果引用为零
+        if ($this->count == 0) {
+            $this->delete();
+        }
     }
 
 

@@ -28,6 +28,14 @@ class PanDirector extends BaseModel
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    /**
+     * 一对一关联recycle_bin 回收站
+     */
+    public function recycleBin()
+    {
+        return $this->hasOne('App\Models\RecycleBin', 'pan_director_id');
+    }
+
 
     // 返回文件/文件夹详细信息
     public function info()
@@ -106,11 +114,12 @@ class PanDirector extends BaseModel
     {
         $this->open_set = $open_set;
         $this->group_id = $group_id;
+        $this->item_id = null;
         $this->save();
         if ($this->type == 2) {
             return;
         } else if ($this->type == 1) {
-            $pan_dir_lists = PanDirector::where(['pan_director_id', $this->id])->first();
+            $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {
                 $pan_dir->setPermission($this->open_set, $this->group_id);
             }
@@ -139,6 +148,127 @@ class PanDirector extends BaseModel
     public function setGroup(string $group_id)
     {
         $this->setPermission(1, $group_id);
+    }
+
+    /**
+     * 递归的将文件、文件夹修改为删除中状态
+     *
+     * @param int $user_id 操作人
+     */
+    public function deletingDir()
+    {
+        $this->status = 2;
+        $this->save();
+        if ($this->type == 2) {
+            return;
+        } else if ($this->type == 1) {
+            $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
+            foreach ($pan_dir_lists as $pan_dir) {
+                $pan_dir->deletingDir();
+            }
+        }
+
+    }
+
+    /**
+     * 递归的将文件、文件夹修改为正常状态
+     *
+     * @param int $user_id 操作人
+     */
+    public function restoreDir()
+    {
+        $this->status = 1;
+        $this->save();
+        if ($this->type == 2) {
+            return;
+        } else if ($this->type == 1) {
+            $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
+            foreach ($pan_dir_lists as $pan_dir) {
+                $pan_dir->restoreDir();
+            }
+        }
+    }
+
+
+    /**递归的将文件、文件夹删除
+     *
+     * @return bool|null
+     */
+    public function deletedDir()
+    {
+        if ($this->type == 2) {
+            return $this->delete();
+        } else if ($this->type == 1) {
+            $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
+            foreach ($pan_dir_lists as $pan_dir) {
+                $pan_dir->deletedDir();
+            }
+            return $this->delete();
+        }
+    }
+
+    /**
+     * 文件复制、移动、删除、分享权限判定
+     */
+    public function isPermission(User $user)
+    {
+        // 系统生成文件不能删除
+        if ($this->isAuto()) {
+            return false;
+        }
+
+        // 文件是否是公开的
+        if ($this->isPublic()) {
+            return true;
+        }
+
+        // 是否管理员
+        if ($user->isDesignAdmin()) {
+            return true;
+        }
+
+        // 是否是群组成员
+        if ($this->isGroupPersonnel($user->id)) {
+            return true;
+        }
+
+        // 是否是项目成员
+        if ($this->isItemPersonnel()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断文件、文件夹是否公开
+     */
+    public function isPublic()
+    {
+        if ($this->open_set == 1 && $this->group_id == null && $this->item_id == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // 判断是否是项目成员
+    public function isItemPersonnel()
+    {
+        return false;  // 为完成
+    }
+
+    // 判断用户是否是文件群组成员
+    public function isGroupPersonnel($user_id)
+    {
+        if ($this->open_set == 1 && $this->group_id !== null && $this->item_id == null) {
+            $user_group_id_list = Group::userGroupIDList($user_id);
+            if (!empty(array_intersect(json_decode($this->group_id, true), $user_group_id_list))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
