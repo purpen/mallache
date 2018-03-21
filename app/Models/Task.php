@@ -40,6 +40,8 @@ class Task extends BaseModel
         $task = self::find($task_id);
         $task->stage = $stage;
         $task->save();
+
+        return true;
     }
 }
 

@@ -449,13 +449,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 任务
          */
         $api->resource('/tasks', 'TaskController');
-        //设计公司设置成管理员
-        $api->put('/tasks/is_stage', 'TaskController@is_stage');
+        //主任务完成与未完成
+        $api->put('/tasks/is/stage', 'TaskController@stage');
 
         /**
          * 项目用户
          */
         $api->resource('/itemUsers', 'ItemUserController');
+
+        /**
+         * 任务成员
+         */
+        $api->resource('/taskUsers', 'TaskUserController');
 
     });
 });
