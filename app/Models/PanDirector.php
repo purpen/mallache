@@ -54,6 +54,8 @@ class PanDirector extends BaseModel
             'group_id' => $this->group_id,
             'created_at' => $this->created_at,
             'open_set' => $this->open_set,
+            'width' => $this->width,
+            'height' => $this->height,
         ];
     }
 
@@ -110,18 +112,21 @@ class PanDirector extends BaseModel
      * @param $open_set integer 隐私设置：1.公开 2.私有
      * @param $group_id string|null  所属群组ID json数组
      */
-    public function setPermission($open_set, $group_id)
+    public function setPermission($open_set, $group_id, $item_id, $user_id = null)
     {
         $this->open_set = $open_set;
         $this->group_id = $group_id;
-        $this->item_id = null;
+        $this->item_id = $item_id;
+        if ($user_id !== null) {
+            $this->user_id = $user_id;
+        }
         $this->save();
         if ($this->type == 2) {
             return;
         } else if ($this->type == 1) {
             $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {
-                $pan_dir->setPermission($this->open_set, $this->group_id);
+                $pan_dir->setPermission($this->open_set, $this->group_id, $this->item_id);
             }
         }
     }
@@ -131,7 +136,7 @@ class PanDirector extends BaseModel
      */
     public function setPrivate()
     {
-        $this->setPermission(2, null);
+        $this->setPermission(2, null, null);
     }
 
     /**
@@ -139,7 +144,7 @@ class PanDirector extends BaseModel
      */
     public function setPublic()
     {
-        $this->setPermission(1, null);
+        $this->setPermission(1, null, null);
     }
 
     /**
@@ -147,7 +152,7 @@ class PanDirector extends BaseModel
      */
     public function setGroup(string $group_id)
     {
-        $this->setPermission(1, $group_id);
+        $this->setPermission(1, $group_id, null);
     }
 
     /**
@@ -197,7 +202,10 @@ class PanDirector extends BaseModel
     public function deletedDir()
     {
         if ($this->type == 2) {
-            return $this->delete();
+            $this->delete();
+            // 源文件引用减一
+            $this->panFile->fileCountDecrement();
+
         } else if ($this->type == 1) {
             $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {
@@ -208,7 +216,7 @@ class PanDirector extends BaseModel
     }
 
     /**
-     * 文件复制、移动、删除、分享权限判定
+     * 文件复制、移动、删除、分享、名称修改权限判定
      */
     public function isPermission(User $user)
     {
@@ -232,7 +240,42 @@ class PanDirector extends BaseModel
             return true;
         }
 
-        // 是否是项目成员
+        // 是否是项目成员 （功能暂缺）
+        if ($this->isItemPersonnel()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 接收文件夹 复制、移动权限判定
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function isReceivePermission(User $user)
+    {
+        // 判断是否是文件夹
+        if (!$this->isFolder()) {
+            return false;
+        }
+        // 文件夹是否是公开的
+        if ($this->isPublic()) {
+            return true;
+        }
+
+        // 用户是否管理员
+        if ($user->isDesignAdmin()) {
+            return true;
+        }
+
+        // 用户是否是群组成员
+        if ($this->isGroupPersonnel($user->id)) {
+            return true;
+        }
+
+        // 是否是项目成员 （功能暂缺）
         if ($this->isItemPersonnel()) {
             return true;
         }
@@ -270,5 +313,54 @@ class PanDirector extends BaseModel
 
         return false;
     }
+
+
+    /**
+     * 判断是否是文件夹
+     * @return bool
+     */
+    public function isFolder()
+    {
+        return 1 == $this->type;
+    }
+
+    /**
+     * 复制文件及其下级文件，返回复制的文件对象
+     *
+     * @param int $pid 上级文件夹ID
+     * @return PanDirector
+     */
+    public function copyDir(int $pid)
+    {
+        $pan_director = new PanDirector();
+        $pan_director->open_set = $this->open_set;
+        $pan_director->group_id = $this->group_id;
+        $pan_director->company_id = $this->company_id;
+        $pan_director->pan_director_id = $pid;
+        $pan_director->type = $this->type;
+        $pan_director->name = $this->name;
+        $pan_director->size = $this->size;
+        $pan_director->sort = $this->sort;
+        $pan_director->mime_type = $this->mime_type;
+        $pan_director->pan_file_id = $this->pan_file_id;
+        $pan_director->user_id = $this->user_id;
+        $pan_director->status = $this->status;
+        $pan_director->url = $this->url;
+        $pan_director->width = $this->width;
+        $pan_director->height = $this->height;
+        $pan_director->save();
+        if ($this->isFolder()) {
+            $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
+            foreach ($pan_dir_lists as $pan_dir) {
+                // 递归调用
+                $pan_dir->copyDir($pan_director->id);
+            }
+        } else {
+            $this->panFile->fileCountIncrement();
+        }
+
+        return $pan_director;
+    }
+
 
 }

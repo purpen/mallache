@@ -66,7 +66,7 @@ class RecycleBinController extends BaseController
      * @apiName recycleBin 彻底删除文件（文件夹）
      * @apiGroup recycleBin
      *
-     * @apiParam {integer} id 回收站ID
+     * @apiParam {array} id_arr 回收站ID数组
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -79,28 +79,31 @@ class RecycleBinController extends BaseController
      */
     public function delete(Request $request)
     {
-        $id = $request->input('id');
-        $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
-        if (!$recycle_bin) {
-            return $this->response->array($this->apiError());
-        }
+        $this->validate($request, [
+            'id_arr' => 'required|array',
+        ]);
+
+        $id_arr = $request->input('id_arr');
 
         try {
             DB::beginTransaction();
+            foreach ($id_arr as $id) {
+                $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
+                if (!$recycle_bin) {
+                    throw new \Exception("id=" . $id . ":not found");
+                }
 
-            //彻底删除文件（文件夹）并删除回收站记录
-            if (!$recycle_bin->deleteRecycle()) {
-                throw new \Exception('删除失败');
-            } else {
-                DB::commit();
+                //彻底删除文件（文件夹）并删除回收站记录
+                if (!$recycle_bin->deleteRecycle()) {
+                    throw new \Exception("id=" . $id . ":删除失败");
+                }
             }
-
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return $this->response->array($this->apiError('server error', 500));
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
-
 
         return $this->response->array($this->apiSuccess());
     }
@@ -111,7 +114,7 @@ class RecycleBinController extends BaseController
      * @apiName recycleBin 恢复文件（文件夹）
      * @apiGroup recycleBin
      *
-     * @apiParam {integer} id 回收站ID
+     * @apiParam {array} id_arr 回收站ID数组
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -124,26 +127,31 @@ class RecycleBinController extends BaseController
      */
     public function restore(Request $request)
     {
-        $id = $request->input('id');
-        $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
-        if (!$recycle_bin) {
-            return $this->response->array($this->apiError());
-        }
+        $this->validate($request, [
+            'id_arr' => 'required|array',
+        ]);
+
+        $id_arr = $request->input('id_arr');
 
         try {
             DB::beginTransaction();
 
-            // 恢复文件（文件夹）并删除回收站记录
-            if (!$recycle_bin->restoreRecycle()) {
-                throw new \Exception('恢复失败');
-            } else {
-                DB::commit();
+            foreach ($id_arr as $id) {
+                $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
+                if (!$recycle_bin) {
+                    throw new \Exception('id=' . $id . ': not found');
+                }
+                // 恢复文件（文件夹）并删除回收站记录
+                if (!$recycle_bin->restoreRecycle()) {
+                    throw new \Exception('id=' . $id . ': 恢复失败');
+                }
             }
 
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return $this->response->array($this->apiError('server error', 500));
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
 
         return $this->response->array($this->apiSuccess());
