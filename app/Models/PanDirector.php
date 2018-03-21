@@ -54,6 +54,8 @@ class PanDirector extends BaseModel
             'group_id' => $this->group_id,
             'created_at' => $this->created_at,
             'open_set' => $this->open_set,
+            'width' => $this->width,
+            'height' => $this->height,
         ];
     }
 
@@ -197,7 +199,10 @@ class PanDirector extends BaseModel
     public function deletedDir()
     {
         if ($this->type == 2) {
-            return $this->delete();
+            $this->delete();
+            // 源文件引用减一
+            $this->panFile->fileCountDecrement();
+
         } else if ($this->type == 1) {
             $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {

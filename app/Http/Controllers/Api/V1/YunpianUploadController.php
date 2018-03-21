@@ -154,6 +154,8 @@ class YunpianUploadController extends BaseController
                     $pan_director->user_id = $user_id;
                     $pan_director->status = 1;
                     $pan_director->url = $pan_file->url;
+                    $pan_director->width = $pan_file->width;
+                    $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
                 } else if ($item_id = $pan_dir->item_id || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
@@ -178,6 +180,8 @@ class YunpianUploadController extends BaseController
                         $pan_director->user_id = $user_id;
                         $pan_director->status = 1;
                         $pan_director->url = $pan_file->url;
+                        $pan_director->width = $pan_file->width;
+                        $pan_director->height = $pan_file->height;
                         $pan_director->save();
 
                     }
@@ -196,6 +200,8 @@ class YunpianUploadController extends BaseController
                     $pan_director->user_id = $user_id;
                     $pan_director->status = 1;
                     $pan_director->url = $pan_file->url;
+                    $pan_director->width = $pan_file->width;
+                    $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
                     return $this->response->array($this->apiSuccess());
@@ -552,7 +558,7 @@ class YunpianUploadController extends BaseController
      * @apiGroup yunpan
      *
      * @apiParam {string} token
-     * @apiParam {integer} pan_director_id 文件ID
+     * @apiParam {array} pan_director_id_arr 文件ID
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -565,21 +571,32 @@ class YunpianUploadController extends BaseController
     public function delete(Request $request)
     {
         $this->validate($request, [
-            'pan_director_id' => 'required|integer',
+            'pan_director_id_arr' => 'required|array',
         ]);
 
-        $pan_director_id = $request->input('pan_director_id');
-        $pan_dir = PanDirector::find($pan_director_id);
+        $pan_director_id_arr = $request->input('pan_director_id_arr');
 
-        // 文件不存在或当前用户没有权限不能删除
-        if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
-            return $this->response->array($this->apiError('not found dir!', 404));
+        DB::beginTransaction();
+        try {
+            foreach ($pan_director_id_arr as $pan_director_id) {
+                $pan_dir = PanDirector::find($pan_director_id);
+
+                // 文件不存在或当前用户没有权限不能删除
+                if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
+                    throw new \Exception('not found dir!');
+                }
+
+                // 创建回收站记录
+                RecycleBin::addRecycle($pan_dir, $this->auth_user_id);
+                // 修改文件状态为删除中
+                $pan_dir->deletingDir();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError($e->getMessage()));
         }
-
-        // 创建回收站记录
-        RecycleBin::addRecycle($pan_dir, $this->auth_user_id);
-        // 修改文件状态为删除中
-        $pan_dir->deletingDir();
 
         return $this->response->array($this->apiSuccess());
     }
