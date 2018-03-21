@@ -382,6 +382,7 @@ class YunpianUploadController extends BaseController
      * @apiParam {integer} pan_director_id 上级文件夹ID
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} type 类型：1.文件夹 2.文件
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -420,6 +421,7 @@ class YunpianUploadController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $pan_director_id = (int)$request->input('pan_director_id');
+        $type = $request->input('type');
 
         $user_id = $this->auth_user_id;
         $company_id = User::designCompanyId($user_id);
@@ -440,7 +442,10 @@ class YunpianUploadController extends BaseController
 
         $list = PanDirector::query()
             // 组管理文件
-            ->where(function ($query) use ($group_id_arr, $pan_director_id, $company_id) {
+            ->where(function ($query) use ($group_id_arr, $pan_director_id, $company_id, $type) {
+                if ($type) {
+                    $query = $query->where('type', $type);
+                }
                 $query->where('status', 1)
                     ->where('company_id', $company_id)
                     ->where('pan_director_id', $pan_director_id)
@@ -448,7 +453,10 @@ class YunpianUploadController extends BaseController
                     ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'));
             })
             // 项目文件
-            ->orWhere(function ($query) use ($item_id_arr, $pan_director_id, $company_id) {
+            ->orWhere(function ($query) use ($item_id_arr, $pan_director_id, $company_id, $type) {
+                if ($type) {
+                    $query = $query->where('type', $type);
+                }
                 $query->where('status', 1)
                     ->where('company_id', $company_id)
                     ->where('pan_director_id', $pan_director_id)
@@ -456,7 +464,10 @@ class YunpianUploadController extends BaseController
                     ->whereIn('item_id', $item_id_arr);
             })
             // 私人文件
-            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id) {
+            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
+                if ($type) {
+                    $query = $query->where('type', $type);
+                }
                 $query->where('status', 1)
                     ->where('company_id', $company_id)
                     ->where('pan_director_id', $pan_director_id)
@@ -464,7 +475,10 @@ class YunpianUploadController extends BaseController
                     ->where('user_id', $user_id);
             })
             // 公共文件
-            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id) {
+            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
+                if ($type) {
+                    $query = $query->where('type', $type);
+                }
                 $query->where('status', 1)
                     ->where('company_id', $company_id)
                     ->where('pan_director_id', $pan_director_id)
@@ -601,6 +615,201 @@ class YunpianUploadController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+
+    /**
+     * @api {put} /yunpan/copy  文件复制
+     * @apiVersion 1.0.0
+     * @apiName yunpan copy
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {array} from_id_arr 需要复制的文件ID数组
+     * @apiParam {integer} to_id 目标文件夹ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function copy(Request $request)
+    {
+        $this->validate($request, [
+            'from_id_arr' => 'required|array',
+            'to_id' => 'required|integer'
+        ]);
+
+        $from_id_arr = $request->input('from_id_arr');
+        $to_id = $request->input('to_id');
+
+        try {
+            // 接收文件夹ID==0时不做验证
+            if ($to_id != 0) {
+                $to_pan_director = PanDirector::find($to_id);
+                if (!$to_pan_director) {
+                    throw new \Exception('not found to_id', 404);
+                }
+
+                // 判断用户有无在该文件夹下创建文件的权限
+                if (!$to_pan_director->isReceivePermission($this->auth_user)) {
+                    throw new \Exception('not permission', 404);
+                }
+            }
+
+            $from_pan_directors = PanDirector::whereIn('id', $from_id_arr)->get();
+            if (!$from_pan_directors) {
+                throw new \Exception('not found from_id', 404);
+            }
+
+            DB::beginTransaction();
+            foreach ($from_pan_directors as $from_pan_director) {
+                // 判断用户是否有移动该文件的权限
+                if (!$from_pan_director->isPermission($this->auth_user)) {
+                    throw new \Exception('not permission', 403);
+                }
+
+                if ($new_dir = $from_pan_director->copyDir($to_id)) {
+                    //设置复制文件的权限
+                    if ($to_id == 0) {  //公开
+                        $new_dir->setPermission(1, null, null, $this->auth_user_id);
+                    } else {
+                        $new_dir->setPermission($to_pan_director->open_set, $to_pan_director->group_id, $to_pan_director->item_id, $this->auth_user_id);
+                    }
+                } else {
+                    throw new \Exception('变更上级目录ID错误');
+                }
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /yunpan/move  文件移动
+     * @apiVersion 1.0.0
+     * @apiName yunpan move
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {array} from_id_arr 需要移动的文件ID数组
+     * @apiParam {integer} to_id 目标文件夹ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function move(Request $request)
+    {
+        $this->validate($request, [
+            'from_id_arr' => 'required|array',
+            'to_id' => 'required|integer'
+        ]);
+
+        $from_id_arr = $request->input('from_id_arr');
+        $to_id = $request->input('to_id');
+
+        try {
+            // 接收文件夹ID==0时不做验证
+            if ($to_id != 0) {
+                $to_pan_director = PanDirector::find($to_id);
+                if (!$to_pan_director) {
+                    throw new \Exception('not found to_id', 404);
+                }
+
+                // 判断用户有无在该文件夹下创建文件的权限
+                if (!$to_pan_director->isReceivePermission($this->auth_user)) {
+                    throw new \Exception('not permission', 404);
+                }
+            }
+
+            $from_pan_directors = PanDirector::whereIn('id', $from_id_arr)->get();
+            if (!$from_pan_directors) {
+                throw new \Exception('not found from_id', 404);
+            }
+
+            DB::beginTransaction();
+            foreach ($from_pan_directors as $from_pan_director) {
+                // 判断用户是否有移动该文件的权限
+                if (!$from_pan_director->isPermission($this->auth_user)) {
+                    throw new \Exception('not permission', 403);
+                }
+                // 变更原文件上级目录ID
+                $from_pan_director->pan_director_id = $to_id;
+                if ($from_pan_director->save()) {
+                    //设置复制文件的权限
+                    if ($to_id == 0) {  //公开
+                        $from_pan_director->setPermission(1, null, null, $this->auth_user_id);
+                    } else {
+                        $from_pan_director->setPermission($to_pan_director->open_set, $to_pan_director->group_id, $to_pan_director->item_id, $this->auth_user_id);
+                    }
+                } else {
+                    throw new \Exception('变更上级目录ID错误');
+                }
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {put} /yunpan/editName  修改文件名称
+     * @apiVersion 1.0.0
+     * @apiName yunpan editName
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 文件ID
+     * @apiParam {string} name 文件名称
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function editName(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'name' => 'required'
+        ]);
+
+        $id = $request->input('id');
+        $name = $request->input('name');
+
+        $pan_dir = PanDirector::find($id);
+        if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $pan_dir->name = trim($name);
+        $pan_dir->save();
+
+        return $this->response->array($this->apiSuccess());
+    }
 
 }
 

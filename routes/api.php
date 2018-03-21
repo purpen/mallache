@@ -412,6 +412,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/yunpan/setPermission', 'YunpianUploadController@setPermission');
         // {put} /yunpan/delete  放入回收站
         $api->put('/yunpan/delete', 'YunpianUploadController@delete');
+        // {put} /yunpan/copy  文件复制
+        $api->put('/yunpan/copy', 'YunpianUploadController@copy');
+        // api {put} /yunpan/move  文件移动
+        $api->put('/yunpan/move', 'YunpianUploadController@move');
+        // {put} /yunpan/editName  修改文件名称
+        $api->put('/yunpan/editName', 'YunpianUploadController@editName');
 
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');
