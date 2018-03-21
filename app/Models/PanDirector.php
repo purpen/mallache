@@ -355,6 +355,8 @@ class PanDirector extends BaseModel
                 // 递归调用
                 $pan_dir->copyDir($pan_director->id);
             }
+        } else {
+            $this->panFile->fileCountIncrement();
         }
 
         return $pan_director;
