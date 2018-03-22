@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Http\Transformer\TaskTransformer;
+use App\Models\ItemUser;
 use App\Models\Task;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -28,8 +29,6 @@ class TaskController extends BaseController
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
-     * @apiParam {integer} type 类型;1.默认；
-     * @apiParam {integer} stage 是否完成:0.未完成；1.进行中；2.已完成；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -44,7 +43,7 @@ class TaskController extends BaseController
                 "item_id": 0,
                 "level": 1,
                 "type": 1,
-                "sub_count": 0,
+                "$params": 0,
                 "sub_finfished_count": 0,
                 "love_count": 0,
                 "collection_count": 0,
@@ -76,6 +75,8 @@ class TaskController extends BaseController
         ];
 
 
+        $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
+        $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
@@ -102,7 +103,35 @@ class TaskController extends BaseController
         }
 
         try {
-            $tasks = Task::create($params);
+            //如果是主任务，任务数量为0。如果是子任务，任务数量+1
+            if($tier == 0){
+                if($pid !== 0 ){
+                    return $this->response->array($this->apiError('主任务父id必须为0', 412));
+                }
+                $tasks = Task::create($params);
+            }else{
+                //如果父id为0的话，就返回，子任务必须有父id
+                if($pid == 0){
+                    return $this->response->array($this->apiError('父id不能为0', 412));
+                }else{
+                    //查看父id的任务，添加父id里面的子任务数量
+                    $task_pid = Task::find($pid);
+                    if(!$task_pid){
+                        return $this->response->array($this->apiError('没有找到父id为'.$pid.'的任务', 404));
+                    }else{
+                        $sub_count = $task_pid->sub_count;
+                        $sub_count += 1 ;
+                        $task_pid->sub_count = $sub_count;
+                        if($task_pid->save()){
+                            $params['pid'] = $pid;
+                            $tasks = Task::create($params);
+                        }
+                    }
+
+
+                }
+
+            }
         } catch (\Exception $e) {
 
             throw new HttpException($e->getMessage());
@@ -119,6 +148,7 @@ class TaskController extends BaseController
      * @apiGroup tasks
      *
      * @apiParam {integer} stage 默认10；0.未完成 2.已完成 10.全部
+     * @apiParam {integer} item_id 项目id
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0:升序；1.降序(默认)
@@ -155,8 +185,9 @@ class TaskController extends BaseController
      */
     public function index(Request $request)
     {
+        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $stage = $request->input('stage');
+        $stage = $request->input('stage') ? $request->input('stage') : 0;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';
@@ -166,13 +197,22 @@ class TaskController extends BaseController
             $sort = 'desc';
         }
         $user_id = intval($this->auth_user_id);
-
-        if(in_array($stage,[0,2])){
-            $tasks= Task::where(['user_id'=>$user_id,'status'=>1 , 'stage'=>$stage])->orderBy('id', $sort)->paginate($per_page);
-        }else{
-            $tasks= Task::where(['user_id'=>$user_id,'status'=>1])->orderBy('id', $sort)->paginate($per_page);
-
+        $itemUsers = ItemUser::where('item_id' , $item_id)->get();
+        $item_user_id = [];
+        foreach ($itemUsers as $itemUser){
+            $item_user_id[] = $itemUser->user_id;
         }
+        $new_user_id = $item_user_id;
+        if(in_array($user_id , $new_user_id)){
+            if(in_array($stage,[0,2])){
+                $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1 , 'stage' => $stage ])->orderBy('id', $sort)->paginate($per_page);
+            }else{
+                $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1])->orderBy('id', $sort)->paginate($per_page);
+            }
+        }else{
+            return $this->response->array($this->apiError('没有权限查看', 403));
+        }
+
 
         return $this->response->paginator($tasks, new TaskTransformer())->setMeta($this->apiMeta());
 
@@ -245,10 +285,6 @@ class TaskController extends BaseController
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
-     * @apiParam {integer} type 类型;1.默认；
-     * @apiParam {integer} stage 是否完成:0.未完成；1.进行中；2.已完成；
-     * @apiParam {integer} tier 层级 默认0
-     * @apiParam {integer} pid 父id 默认0
      * @apiParam {string} token
      *
      *
@@ -409,6 +445,31 @@ class TaskController extends BaseController
             }
             $ok = $task::isStage($task_id , $stage);
         }else{
+            // 查找任务，任务id为子任务pid的任务
+            $p_task = Task::where('id' , $task->pid)->first();
+            if(!$p_task){
+                return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
+            }
+            //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
+            if($stage == 0){
+                if($p_task->sub_finfished_count == 0){
+                    $p_task->sub_finfished_count = 0;
+                    $p_task->save();
+                }else{
+                    $p_task->sub_finfished_count -= 1;
+                    $p_task->save();
+                }
+            }else{
+                if($p_task->sub_count == $p_task->sub_finfished_count){
+                    $p_task->sub_finfished_count = $p_task->sub_count;
+                    $p_task->save();
+                }else{
+                    $p_task->sub_finfished_count += 1;
+                    $p_task->save();
+
+                }
+
+            }
             $ok = $task::isStage($task_id , $stage);
         }
 

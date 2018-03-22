@@ -81,8 +81,6 @@ class ItemUserController extends BaseController
      * @apiGroup itemUsers
      *
      * @apiParam {integer} item_id 项目id
-     * @apiParam {integer} per_page 分页数量
-     * @apiParam {integer} page 页码
      * @apiParam {int} sort 0:升序；1.降序(默认)
      * @apiParam {string} token
      *
@@ -156,7 +154,6 @@ class ItemUserController extends BaseController
     {
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
 
-        $per_page = $request->input('per_page') ?? $this->per_page;
 
         if($request->input('sort') == 0 && $request->input('sort') !== null) {
             $sort = 'asc';
@@ -170,8 +167,8 @@ class ItemUserController extends BaseController
             $user_id[] = $itemUser->user_id;
         }
         $new_user_id = $user_id;
-        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->paginate($per_page);
-        return $this->response->paginator($users, new UserTransformer())->setMeta($this->apiMeta());
+        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
+        return $this->response->collection($users, new UserTransformer())->setMeta($this->apiMeta());
 
     }
 

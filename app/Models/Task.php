@@ -13,7 +13,26 @@ class Task extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['name', 'summary', 'user_id', 'execute_user_id', 'item_id', 'tags', 'level', 'type', 'sub_count', 'sub_finfished_count', 'love_count', 'collection_count' , 'stage' , 'start_time' , 'over_time' , 'status'];
+    protected $fillable = [
+        'name',
+        'summary',
+        'user_id',
+        'execute_user_id',
+        'item_id',
+        'tags',
+        'level',
+        'type',
+        'sub_count',
+        'sub_finfished_count',
+        'love_count',
+        'collection_count' ,
+        'stage' ,
+        'start_time' ,
+        'over_time' ,
+        'status' ,
+        'pid',
+        'tier'
+    ];
 
 
     /**
