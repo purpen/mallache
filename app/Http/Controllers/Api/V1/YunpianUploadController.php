@@ -426,13 +426,6 @@ class YunpianUploadController extends BaseController
         $user_id = $this->auth_user_id;
         $company_id = User::designCompanyId($user_id);
 
-
-        // 用户所有用户组集合
-        $group_id_arr = Group::userGroupIDList($user_id);
-
-        // 用户 所属项目ID数组
-        $item_id_arr = [];  // 暂无
-
         if ($pan_director_id != 0) {
             $dir = PanDirector::find($pan_director_id);
             if (!$dir) {
@@ -440,52 +433,70 @@ class YunpianUploadController extends BaseController
             }
         }
 
-        $list = PanDirector::query()
-            // 组管理文件
-            ->where(function ($query) use ($group_id_arr, $pan_director_id, $company_id, $type) {
-                if ($type) {
-                    $query = $query->where('type', $type);
-                }
-                $query->where('status', 1)
-                    ->where('company_id', $company_id)
-                    ->where('pan_director_id', $pan_director_id)
-                    ->where('open_set', 1)
-                    ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'));
-            })
-            // 项目文件
-            ->orWhere(function ($query) use ($item_id_arr, $pan_director_id, $company_id, $type) {
-                if ($type) {
-                    $query = $query->where('type', $type);
-                }
-                $query->where('status', 1)
-                    ->where('company_id', $company_id)
-                    ->where('pan_director_id', $pan_director_id)
-                    ->where('open_set', 1)
-                    ->whereIn('item_id', $item_id_arr);
-            })
-            // 私人文件
-            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
-                if ($type) {
-                    $query = $query->where('type', $type);
-                }
-                $query->where('status', 1)
-                    ->where('company_id', $company_id)
-                    ->where('pan_director_id', $pan_director_id)
-                    ->where('open_set', 2)
-                    ->where('user_id', $user_id);
-            })
-            // 公共文件
-            ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
-                if ($type) {
-                    $query = $query->where('type', $type);
-                }
-                $query->where('status', 1)
-                    ->where('company_id', $company_id)
-                    ->where('pan_director_id', $pan_director_id)
-                    ->where('open_set', 1)
-                    ->where('group_id', null);
-            })
-            ->paginate($per_page);
+
+        if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
+            $list = PanDirector::query()
+                ->where('status', 1)
+                ->where('company_id', $company_id)
+                ->where('pan_director_id', $pan_director_id)
+                ->where('open_set', 1)
+                ->where('type', $type)
+                ->paginate($per_page);
+        } else {
+            // 用户所有用户组集合
+            $group_id_arr = Group::userGroupIDList($user_id);
+
+            // 用户 所属项目ID数组
+            $item_id_arr = [];  // 暂无
+
+            $list = PanDirector::query()
+                // 组管理文件
+                ->where(function ($query) use ($group_id_arr, $pan_director_id, $company_id, $type) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 1)
+                        ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'));
+                })
+                // 项目文件
+                ->orWhere(function ($query) use ($item_id_arr, $pan_director_id, $company_id, $type) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 1)
+                        ->whereIn('item_id', $item_id_arr);
+                })
+                // 私人文件
+                ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 2)
+                        ->where('user_id', $user_id);
+                })
+                // 公共文件
+                ->orWhere(function ($query) use ($user_id, $pan_director_id, $company_id, $type) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 1)
+                        ->where('group_id', null);
+                })
+                ->paginate($per_page);
+        }
+
 
         return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
     }
@@ -811,6 +822,112 @@ class YunpianUploadController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+
+    /**
+     * @api {get} /yunpan/search  全局搜索
+     * @apiVersion 1.0.0
+     * @apiName yunpan search
+     *
+     * @apiGroup yunpan
+     * @apiParam {string} token
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {string} name 搜索名
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *          "message": "Success",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *     }
+     * "data": [
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     *  }
+     * ],
+     *  }
+     */
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
+        $user_id = $this->auth_user_id;
+        $company_id = User::designCompanyId($user_id);
+
+        if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
+            $list = PanDirector::query()
+                ->where('name', 'like', '%' . $name . '%')
+                ->where('status', 1)
+                ->where('company_id', $company_id)
+                ->where('open_set', 1)
+                ->paginate($per_page);
+        } else {
+            // 用户所有用户组集合
+            $group_id_arr = Group::userGroupIDList($user_id);
+
+            // 用户 所属项目ID数组
+            $item_id_arr = [];  // 暂无
+
+            $list = PanDirector::query()
+                // 组管理文件
+                ->where(function ($query) use ($group_id_arr, $company_id, $name) {
+                    $query
+                        ->where('name', 'like', '%' . $name . '%')
+                        ->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'));
+                })
+                // 项目文件
+                ->orWhere(function ($query) use ($item_id_arr, $company_id, $name) {
+                    $query->where('name', 'like', '%' . $name . '%')
+                        ->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->whereIn('item_id', $item_id_arr);
+                })
+                // 私人文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $name) {
+                    $query->where('name', 'like', '%' . $name . '%')
+                        ->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 2)
+                        ->where('user_id', $user_id);
+                })
+                // 公共文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $name) {
+                    $query->where('name', 'like', '%' . $name . '%')
+                        ->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where('group_id', null);
+                })
+                ->paginate($per_page);
+        }
+
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+    }
 }
 
 

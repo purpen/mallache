@@ -418,6 +418,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/yunpan/move', 'YunpianUploadController@move');
         // {put} /yunpan/editName  修改文件名称
         $api->put('/yunpan/editName', 'YunpianUploadController@editName');
+        // {get} /yunpan/search  全局搜索
+        $api->get('/yunpan/search', 'YunpianUploadController@search');
 
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');
