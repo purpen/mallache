@@ -420,6 +420,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/yunpan/editName', 'YunpianUploadController@editName');
         // {get} /yunpan/search  全局搜索
         $api->get('/yunpan/search', 'YunpianUploadController@search');
+        // {post} /yunpan/recentUseLog  最近使用文件打点
+        $api->post('/yunpan/recentUseLog', 'YunpianUploadController@recentUseLog');
+        // {get} /yunpan/recentUseFile  获取最近使用文件列表
+        $api->get('/yunpan/recentUseFile', 'YunpianUploadController@recentUseFile');
 
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');

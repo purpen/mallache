@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Qiniu\Auth;
 
 class YunpianUploadController extends BaseController
@@ -933,6 +934,92 @@ class YunpianUploadController extends BaseController
 
         return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
     }
+
+    const recentUseFile = 'recentUseFile:';
+
+
+    /**
+     * @api {post} /yunpan/recentUseLog  最近使用文件打点
+     * @apiVersion 1.0.0
+     * @apiName yunpan recentUseLog
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 文件ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function recentUseLog(Request $request)
+    {
+        $id = $request->input('id');
+        $file = PanDirector::where(['id' => $id, 'type' => 2])->first();
+        if ($file) {
+            if ($file->isPermission($this->auth_user)) {
+
+                $key = self::recentUseFile . $this->auth_user_id;
+
+                Redis::zadd($key, time(), $id);
+
+                Redis::ZREMRANGEBYRANK($key, 0, -100);
+            }
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /yunpan/recentUseFile  获取最近使用文件列表
+     * @apiVersion 1.0.0
+     * @apiName yunpan recentUseFile
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   "data": [
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     *  }
+     * ],
+     *  }
+     */
+    public function recentUseFile()
+    {
+        $key = self::recentUseFile . $this->auth_user_id;
+
+        $data = Redis::ZREVRANGE($key, 0, -1);
+
+        $list = PanDirector::whereIn('id', $data)
+            ->orderBy(DB::raw('field(id,' . implode(',', $data) . ')'))->get();
+
+        return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+    }
+
 }
 
 

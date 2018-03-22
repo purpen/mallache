@@ -220,7 +220,7 @@ class PanDirector extends BaseModel
     }
 
     /**
-     * 文件复制、移动、删除、分享、名称修改权限判定
+     * 文件查看、复制、移动、删除、分享、名称修改权限判定
      */
     public function isPermission(User $user)
     {
