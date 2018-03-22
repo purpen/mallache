@@ -435,12 +435,14 @@ class YunpianUploadController extends BaseController
 
 
         if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
-            $list = PanDirector::query()
-                ->where('status', 1)
+            $query = PanDirector::query();
+            if ($type) {
+                $query = $query->where('type', $type);
+            }
+            $list = $query->where('status', 1)
                 ->where('company_id', $company_id)
                 ->where('pan_director_id', $pan_director_id)
                 ->where('open_set', 1)
-                ->where('type', $type)
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
