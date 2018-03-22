@@ -585,7 +585,7 @@ class YunpianUploadController extends BaseController
      * @apiGroup yunpan
      *
      * @apiParam {string} token
-     * @apiParam {array} pan_director_id_arr 文件ID
+     * @apiParam {array} id_arr 文件ID
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -598,10 +598,10 @@ class YunpianUploadController extends BaseController
     public function delete(Request $request)
     {
         $this->validate($request, [
-            'pan_director_id_arr' => 'required|array',
+            'id_arr' => 'required|array',
         ]);
 
-        $pan_director_id_arr = $request->input('pan_director_id_arr');
+        $pan_director_id_arr = $request->input('id_arr');
 
         DB::beginTransaction();
         try {
@@ -613,10 +613,13 @@ class YunpianUploadController extends BaseController
                     throw new \Exception('not found dir!');
                 }
 
+                // 修改文件状态为删除中
+                if (!$pan_dir->deletingDir()) {
+                    continue;
+                }
                 // 创建回收站记录
                 RecycleBin::addRecycle($pan_dir, $this->auth_user_id);
-                // 修改文件状态为删除中
-                $pan_dir->deletingDir();
+
             }
             DB::commit();
         } catch (\Exception $e) {

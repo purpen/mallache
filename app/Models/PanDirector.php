@@ -162,10 +162,13 @@ class PanDirector extends BaseModel
      */
     public function deletingDir()
     {
+        if (2 == $this->status) {
+            return false;
+        }
         $this->status = 2;
         $this->save();
         if ($this->type == 2) {
-            return;
+            return true;
         } else if ($this->type == 1) {
             $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {
@@ -173,6 +176,7 @@ class PanDirector extends BaseModel
             }
         }
 
+        return true;
     }
 
     /**
