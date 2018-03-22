@@ -162,10 +162,13 @@ class PanDirector extends BaseModel
      */
     public function deletingDir()
     {
+        if (2 == $this->status) {
+            return false;
+        }
         $this->status = 2;
         $this->save();
         if ($this->type == 2) {
-            return;
+            return true;
         } else if ($this->type == 1) {
             $pan_dir_lists = PanDirector::where('pan_director_id', $this->id)->get();
             foreach ($pan_dir_lists as $pan_dir) {
@@ -173,6 +176,7 @@ class PanDirector extends BaseModel
             }
         }
 
+        return true;
     }
 
     /**
@@ -216,7 +220,7 @@ class PanDirector extends BaseModel
     }
 
     /**
-     * 文件复制、移动、删除、分享、名称修改权限判定
+     * 文件查看、复制、移动、删除、分享、名称修改权限判定
      */
     public function isPermission(User $user)
     {
