@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
-use App\Models\PanDirector;
 use App\Models\PanShare;
 use Illuminate\Http\Request;
 
@@ -14,37 +13,70 @@ use Illuminate\Http\Request;
  */
 class PanShareController extends BaseController
 {
-    // 创建文件分享
-    /*public function create(Request $request)
+    /**
+     * @api {get} /yunpan/shareCreate  创建文件分享
+     * @apiVersion 1.0.0
+     * @apiName yunpan shareCreate
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {array} pan_director_id_arr 文件ID数组
+     * @apiParam {integer} type 分享类型：1.私密 2.公开
+     * @apiParam {integer} share_time 有效时间：0.永久 7.七天 30.一个月
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     },
+     * "data": {
+     *      "id": 1,
+     *      "type": "1", // 分享类型 1.私密分享 2.公开
+     *      "url_code": "47d05e497c8a993757a3c853d1a21d39", // 分享唯一编码
+     *      "password": "opwF", // 查看密码
+     *      "share_time": "0"  有效时间（天）：0.永久 7.七天 30.一个月
+     * }
+     *  }
+     */
+    public function create(Request $request)
     {
         $this->validate($request, [
-            'pan_director_id' => 'required|integer',
+            'pan_director_id_arr' => 'required|array',
             'type' => 'required|in:1,2|integer',
+            'share_time' => 'required|integer|in:0,7,30',
         ]);
-        $pan_director_id = $request->input('pan_director_id');
+        $pan_director_id_arr = $request->input('pan_director_id_arr');
         $type = $request->input('type');
+        $share_time = $request->input('share_time');
 
-        $pan_director = PanDirector::find($pan_director_id);
-        if ($pan_director) {
+        $pan_directors = PanShare::whereIn('pan_director_id_arr', $pan_director_id_arr)->get();
+
+        // 权限判断
+        $data = [];
+        foreach ($pan_directors as $pan_director) {
             if ($pan_director->isPermission($this->auth_user)) {
-                $pan_share = new PanShare();
-                $pan_share->pan_director_id = $pan_director_id;
-                $pan_share->user_id = $this->auth_user_id;
-                $pan_share->type = $type;
-
-                $url_code = Tools::microsecondUniqueStr();
-                $pan_share->url_code = $url_code;
-                if ($type == 1) { // 密码分享
-                    $password = Tools::createStr(4);
-                    $pan_share->password = $password;
-                }
-                $pan_share->save();
-
-                return $this->response->array();
+                $data[] = $pan_director->id;
             }
-
         }
 
-        return $this->response->array($this->apiError('not found', 404));
-    }*/
+        $pan_share = new PanShare();
+        $pan_share->pan_director_id_arr = json_encode($data);
+        $pan_share->user_id = $this->auth_user_id;
+        $pan_share->type = $type;
+        $pan_share->share_time = $share_time;
+
+        $url_code = Tools::microsecondUniqueStr();
+        $pan_share->url_code = $url_code;
+        if ($type == 1) { // 密码分享
+            $password = Tools::createStr(4);
+            $pan_share->password = $password;
+        }
+        $pan_share->save();
+
+        return $this->response->array($this->apiSuccess('Success.', 200, $pan_share->info()));
+    }
+
+
 }

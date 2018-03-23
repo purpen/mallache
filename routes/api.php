@@ -425,6 +425,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // {get} /yunpan/recentUseFile  获取最近使用文件列表
         $api->get('/yunpan/recentUseFile', 'YunpianUploadController@recentUseFile');
 
+        //  {get} /yunpan/shareCreate  创建文件分享
+        $api->get('/yunpan/shareCreate', 'PanShareController@create');
+
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');
         //  {delete} /recycleBin/delete 彻底删除文件（文件夹）

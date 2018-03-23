@@ -14,12 +14,14 @@ class PanShare extends BaseModel
         return $this->belongsTo('App\Models\PanDirector', 'pan_director_id');
     }
 
-    /*public function info()
+    public function info()
     {
         return [
             'id' => $this->id,
-            'pan_director_id' => $this->panDirector->info(),
-
+            'type' => $this->type,
+            'url_code' => $this->url_code,
+            'password' => $this->password,
+            'share_time' => $this->share_time,
         ];
-    }*/
+    }
 }
