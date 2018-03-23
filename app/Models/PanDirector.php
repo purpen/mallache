@@ -36,6 +36,14 @@ class PanDirector extends BaseModel
         return $this->hasOne('App\Models\RecycleBin', 'pan_director_id');
     }
 
+    /**
+     * 一对一关联pan_share 云盘分享
+     */
+    public function panShare()
+    {
+        return $this->hasOne('App\Models\PanShare', 'pan_director_id');
+    }
+
 
     // 返回文件/文件夹详细信息
     public function info()
@@ -51,7 +59,7 @@ class PanDirector extends BaseModel
             'url_file' => $this->url_file,
             'user_id' => $this->user_id,
             'user_name' => $this->user->username,
-            'group_id' => $this->group_id,
+            'group_id' => json_decode($this->group_id),
             'created_at' => $this->created_at,
             'open_set' => $this->open_set,
             'width' => $this->width,
@@ -365,6 +373,5 @@ class PanDirector extends BaseModel
 
         return $pan_director;
     }
-
 
 }
