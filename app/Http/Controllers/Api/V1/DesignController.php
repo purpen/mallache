@@ -608,16 +608,18 @@ class DesignController extends BaseController
                         $item_users = ItemUser::where('user_id' , $delete_user_id)->get();
                         //移除项目成员中用户id为delete_user_id
                         foreach ($item_users as $item_user){
-                            $item_user->delete($item_user->id);
+                            $item_user->delete();
                         }
                         DB::commit();
                         return $this->response->array($this->apiSuccess());
+                    }else{
+                        DB::rollBack();
+                        return $this->response->array($this->apiError('更改用户失败', 412));
                     }
 
                 } catch (\Exception $e) {
                     DB::rollBack();
                     Log::error($e);
-                    return $this->response->array($this->apiError('Error', 500));
                 }
             }
 

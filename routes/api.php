@@ -464,6 +464,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/tasks', 'TaskController');
         //主任务完成与未完成
         $api->put('/tasks/is/stage', 'TaskController@stage');
+        //子任务删除
+        $api->delete('/tasks/childDelete/{id}', ['as' => 'tasks.childDelete', 'TaskController@childDelete']);
 
         /**
          * 项目用户

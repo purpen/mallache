@@ -8,6 +8,7 @@ use App\Models\ItemUser;
 use App\Models\Task;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -103,20 +104,24 @@ class TaskController extends BaseController
         }
 
         try {
+            DB::beginTransaction();
             //如果是主任务，任务数量为0。如果是子任务，任务数量+1
             if($tier == 0){
                 if($pid !== 0 ){
+                    DB::rollBack();
                     return $this->response->array($this->apiError('主任务父id必须为0', 412));
                 }
                 $tasks = Task::create($params);
             }else{
                 //如果父id为0的话，就返回，子任务必须有父id
                 if($pid == 0){
+                    DB::rollBack();
                     return $this->response->array($this->apiError('父id不能为0', 412));
                 }else{
                     //查看父id的任务，添加父id里面的子任务数量
                     $task_pid = Task::find($pid);
                     if(!$task_pid){
+                        DB::rollBack();
                         return $this->response->array($this->apiError('没有找到父id为'.$pid.'的任务', 404));
                     }else{
                         $sub_count = $task_pid->sub_count;
@@ -132,9 +137,11 @@ class TaskController extends BaseController
                 }
 
             }
-        } catch (\Exception $e) {
+            DB::commit();
 
-            throw new HttpException($e->getMessage());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
         }
 
         return $this->response->item($tasks, new TaskTransformer())->setMeta($this->apiMeta());
@@ -378,7 +385,7 @@ class TaskController extends BaseController
     /**
      * @api {delete} /tasks/{id} 任务删除
      * @apiVersion 1.0.0
-     * @apiName tasks delete
+     * @apiName tasks destroy
      * @apiGroup tasks
      *
      * @apiParam {string} token
@@ -391,12 +398,16 @@ class TaskController extends BaseController
      *     }
      *   }
      */
-    public function delete($id)
+    public function destroy($id)
     {
         $tasks = Task::find($id);
         //检验是否存在
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
+        }
+        $child_tasks = Task::where('pid' , $id)->get();
+        foreach ($child_tasks as $child_task){
+            $child_task->delete();
         }
 
         $ok = $tasks->delete();
@@ -434,50 +445,89 @@ class TaskController extends BaseController
         if(!$task){
             return $this->response->array($this->apiError('not found task!', 404));
         }
-        //主任务走上面，子任务走下面
-        if($tier == 0){
-            //根据pid查询子任务
-            $pid_tasks = Task::where('pid' , $task_id)->get();
-            foreach ($pid_tasks as $pid_task){
-                if($pid_task->stage == 0){
-                    return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
+        try {
+            DB::beginTransaction();
+            //主任务走上面，子任务走下面
+            if($tier == 0){
+                //根据pid查询子任务
+                $pid_tasks = Task::where('pid' , $task_id)->get();
+                foreach ($pid_tasks as $pid_task){
+                    if($pid_task->stage == 0){
+                        DB::rollBack();
+                        return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
+                    }
                 }
-            }
-            $ok = $task::isStage($task_id , $stage);
-        }else{
-            // 查找任务，任务id为子任务pid的任务
-            $p_task = Task::where('id' , $task->pid)->first();
-            if(!$p_task){
-                return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
-            }
-            //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
-            if($stage == 0){
-                if($p_task->sub_finfished_count == 0){
-                    $p_task->sub_finfished_count = 0;
-                    $p_task->save();
-                }else{
-                    $p_task->sub_finfished_count -= 1;
-                    $p_task->save();
-                }
+                $ok = $task::isStage($task_id , $stage);
             }else{
-                if($p_task->sub_count == $p_task->sub_finfished_count){
-                    $p_task->sub_finfished_count = $p_task->sub_count;
-                    $p_task->save();
+                // 查找任务，任务id为子任务pid的任务
+                $p_task = Task::where('id' , $task->pid)->first();
+                if(!$p_task){
+                    DB::rollBack();
+                    return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
+                }
+                //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
+                if($stage == 0){
+                    if($p_task->sub_finfished_count == 0){
+                        $p_task->sub_finfished_count = 0;
+                        $p_task->save();
+                    }else{
+                        $p_task->sub_finfished_count -= 1;
+                        $p_task->save();
+                    }
                 }else{
-                    $p_task->sub_finfished_count += 1;
-                    $p_task->save();
+                    if($p_task->sub_count == $p_task->sub_finfished_count){
+                        $p_task->sub_finfished_count = $p_task->sub_count;
+                        $p_task->save();
+                    }else{
+                        $p_task->sub_finfished_count += 1;
+                        $p_task->save();
+
+                    }
 
                 }
-
+                $ok = $task::isStage($task_id , $stage);
             }
-            $ok = $task::isStage($task_id , $stage);
+            DB::commit();
+
+            if(!$ok){
+                return $this->response->array($this->apiError());
+            }
+            return $this->response->array($this->apiSuccess());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
         }
 
-        if(!$ok){
+    }
+
+    /**
+     * @api {delete} /tasks/childDelete/{id} 子任务删除
+     * @apiVersion 1.0.0
+     * @apiName tasks childDelete
+     * @apiGroup tasks
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function childDelete($id)
+    {
+        $tasks = Task::find($id);
+        //检验是否存在
+        if (!$tasks) {
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $ok = $tasks->delete();
+        if (!$ok) {
             return $this->response->array($this->apiError());
         }
         return $this->response->array($this->apiSuccess());
-
     }
 
 }
