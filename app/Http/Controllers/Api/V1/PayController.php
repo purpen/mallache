@@ -23,6 +23,7 @@ class PayController extends BaseController
 
     // 发布需求保证金---交易描述信息
     protected $demand_pay_content = '';
+
     /**
      * @api {get} /pay/demandAliPay 发布需求保证金支付-支付宝
      * @apiVersion 1.0.0
@@ -45,8 +46,8 @@ class PayController extends BaseController
     public function demandAliPay()
     {
         //验证是否是需求用户
-        if($this->auth_user->type != 1){
-            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        if ($this->auth_user->type != 1) {
+            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
         }
         //总金额
         $total_fee = config('constant.item_price');
@@ -71,7 +72,7 @@ class PayController extends BaseController
     {
         $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
             ->first();
-        if($pay_order){
+        if ($pay_order) {
             return $pay_order;
         }
 
@@ -102,7 +103,7 @@ class PayController extends BaseController
         Log::info($_POST);
         $alipay = new Alipay();
         //支付成功
-        if($alipay->notifyUrl()){
+        if ($alipay->notifyUrl()) {
             //商户订单号
             $out_trade_no = $_POST['out_trade_no'];
 
@@ -113,37 +114,34 @@ class PayController extends BaseController
             $trade_status = $_POST['trade_status'];
 
             //判断是否支付完成
-            if($_POST['trade_status'] == 'TRADE_SUCCESS') {
-                try{
+            if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
+                try {
                     $pay_order = PayOrder::where('uid', $out_trade_no)->first();
 
                     //判断是否业务已处理
-                    if($pay_order->status == 0){
+                    if ($pay_order->status == 0) {
                         $pay_order->pay_type = 2; //支付宝
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
-                        if(!$pay_order->save()){
+                        if (!$pay_order->save()) {
                             Log::error('支付吧业务处理失败');
                         }
                         Log::info($pay_order);
                         event(new PayOrderEvent($pay_order));
                     }
-                }
-                catch (\Exception $e){
+                } catch (\Exception $e) {
                     Log::error($e);
                     return;
                 }
-            }
-            //三个月后不可退款状态通知
-            elseif ($_POST['trade_status'] == 'TRADE_FINISHED'){
+            } //三个月后不可退款状态通知
+            elseif ($_POST['trade_status'] == 'TRADE_FINISHED') {
 
             }
 
             //处理成功
             $alipay->trueNotifyUrl();
-        }
-        //支付失败
-        else{
+        } //支付失败
+        else {
             Log::error('支付验证失败');
             $alipay->flaseNotifyUrl();
         }
@@ -166,27 +164,28 @@ class PayController extends BaseController
      *      }
      *      "data": {
      *          "id": 1,
-                "uid": "zf59006e63b3445",  //支付单号
-                "user_id": 2,              //用户ID
-                "type": 1,                 //支付类型：1.预付押金；2.项目款；
-                "item_id": 0,               //项目ID
-                "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款
-                "summary": "发布需求保证金",  //备注
-                "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-                "pay_no": "2017042621001004550211582926",  //平台交易号
+     * "uid": "zf59006e63b3445",  //支付单号
+     * "user_id": 2,              //用户ID
+     * "type": 1,                 //支付类型：1.预付押金；2.项目款；
+     * "item_id": 0,               //项目ID
+     * "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款
+     * "summary": "发布需求保证金",  //备注
+     * "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     * "pay_no": "2017042621001004550211582926",  //平台交易号
      *          "item_name": ""  //项目名称
      *          "company_name": "公司名称"  //公司名称
      *          "created_at": {
-                    "date": "2017-04-26 16:24:21.000000",
-                    "timezone_type": 3,
-                    "timezone": "Asia/Shanghai"
-                }
+     * "date": "2017-04-26 16:24:21.000000",
+     * "timezone_type": 3,
+     * "timezone": "Asia/Shanghai"
+     * }
      *      }
      *  }
      */
-    public function getPayStatus($uid){
+    public function getPayStatus($uid)
+    {
         $pay_order = PayOrder::where('uid', $uid)->first();
-        if(!$pay_order){
+        if (!$pay_order) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
@@ -210,14 +209,14 @@ class PayController extends BaseController
      *      }
      *      "data": {
      *          "id": 1,
-                "uid": "zf59006e63b3445",  //支付单号
-                "user_id": 2,              //用户ID
-                "type": 1,                 //支付类型：1.预付押金；2.项目款；
-                "item_id": 0,               //项目ID
-                "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
-                "summary": "发布需求保证金",  //备注
-                "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-                "pay_no": "2017042621001004550211582926",  //平台交易号
+     * "uid": "zf59006e63b3445",  //支付单号
+     * "user_id": 2,              //用户ID
+     * "type": 1,                 //支付类型：1.预付押金；2.项目款；
+     * "item_id": 0,               //项目ID
+     * "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     * "summary": "发布需求保证金",  //备注
+     * "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     * "pay_no": "2017042621001004550211582926",  //平台交易号
      *          "amount"：123， //应支付金额
      *          "total": 22, //总金额
      *          "item_name": ""  //项目名称
@@ -230,14 +229,14 @@ class PayController extends BaseController
     {
 
         $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->where('status', '!=', -1)->first();
-        if($pay_order){
+        if ($pay_order) {
             return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
-        if(!$item = Item::find($item_id)){
+        if (!$item = Item::find($item_id)) {
             return $this->response->array("not found item", 404);
         }
-        if($item->user_id != $this->auth_user_id || $item->status != 7){
+        if ($item->user_id != $this->auth_user_id || !in_array($item->status, [7, 8])) {
             return $this->response->array($this->apiError("无操作权限", 403));
         }
 
@@ -255,7 +254,7 @@ class PayController extends BaseController
         //支付说明
         $summary = '项目尾款';
 
-        $pay_order = $this->createPayOrder($summary, $price,2, $item_id);
+        $pay_order = $this->createPayOrder($summary, $price, 2, $item_id);
 
         //修改项目状态为8，等待托管项目金额
         $item->status = 8;
@@ -265,7 +264,6 @@ class PayController extends BaseController
 
         $pay_order->total_price = $item->price;
         $pay_order->first_pay = $pay_order->amount;
-
 
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
@@ -293,7 +291,7 @@ class PayController extends BaseController
     public function itemAliPay($pay_order_id)
     {
         $pay_order = PayOrder::find((int)$pay_order_id);
-        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
@@ -322,7 +320,7 @@ class PayController extends BaseController
     public function itemBankPay($pay_order_id)
     {
         $pay_order = PayOrder::find((int)$pay_order_id);
-        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
@@ -354,8 +352,8 @@ class PayController extends BaseController
     public function demandWxPay()
     {
         //验证是否是需求用户
-        if($this->auth_user->type != 1){
-            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        if ($this->auth_user->type != 1) {
+            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
         }
         //总金额
         $total_fee = config('constant.item_price');
@@ -363,9 +361,9 @@ class PayController extends BaseController
         $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
 
         $wx_pay = new WxPay();
-        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee*100, 1);
+        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee * 100, 1);
         $uid = $pay_order->uid;
-        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url','uid')));
+        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url', 'uid')));
     }
 
     /**
@@ -390,7 +388,7 @@ class PayController extends BaseController
     public function itemWxPay($pay_order_id)
     {
         $pay_order = PayOrder::find((int)$pay_order_id);
-        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
@@ -435,8 +433,8 @@ class PayController extends BaseController
     public function demandJdPay()
     {
         //验证是否是需求用户
-        if($this->auth_user->type != 1){
-            return $this->response->array($this->apiError('设计公司不能发布项目',403));
+        if ($this->auth_user->type != 1) {
+            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
         }
         //总金额
         $total_fee = config('constant.item_price');
@@ -490,18 +488,18 @@ class PayController extends BaseController
 //        Log::info($_SERVER);
         $jdpay = new JdPay();
         $resData = $jdpay->asynNotify();
-        if($resData && 000000 == $resData['result']['code']){
+        if ($resData && 000000 == $resData['result']['code']) {
 //            Log::info($resData);
-            try{
+            try {
                 // 支付单号
                 $uid = $resData['tradeNum'];
                 // 交易类型 0-消费 1-退款
-                $trade_type =$resData['tradeType'];
+                $trade_type = $resData['tradeType'];
 
-                if($trade_type == 0){
+                if ($trade_type == 0) {
                     $pay_order = PayOrder::where('uid', $uid)->first();
                     //判断是否业务已处理
-                    if($pay_order->status === 0){
+                    if ($pay_order->status === 0) {
                         $pay_order->pay_type = 4; //京东
                         $pay_order->pay_no = $uid;
                         $pay_order->status = 1; //支付成功
@@ -510,15 +508,14 @@ class PayController extends BaseController
                         event(new PayOrderEvent($pay_order));
                     }
                     echo "ok";
-                }else{
+                } else {
                     //退款
                 }
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e);
                 return;
             }
-        }else{
+        } else {
             echo "error";
         }
     }
@@ -545,7 +542,7 @@ class PayController extends BaseController
     public function itemJdPay($pay_order_id)
     {
         $pay_order = PayOrder::find((int)$pay_order_id);
-        if(!$pay_order || $pay_order->user_id != $this->auth_user_id){
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
