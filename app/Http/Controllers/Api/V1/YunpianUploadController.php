@@ -645,7 +645,7 @@ class YunpianUploadController extends BaseController
                     $query->where('open_set', 1)
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
-                ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"))
+                ->whereNotNull(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"))
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -661,7 +661,7 @@ class YunpianUploadController extends BaseController
                         ->where('company_id', $company_id)
                         ->where('open_set', 1)
                         ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'))
-                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                        ->whereNotNull(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
                 // 项目文件
                 ->orWhere(function ($query) use ($item_id_arr, $company_id, $mime_type_regexp) {
@@ -670,7 +670,7 @@ class YunpianUploadController extends BaseController
                         ->where('company_id', $company_id)
                         ->where('open_set', 1)
                         ->whereIn('item_id', $item_id_arr)
-                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                        ->whereNotNull(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
                 // 私人文件
                 ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
@@ -679,7 +679,7 @@ class YunpianUploadController extends BaseController
                         ->where('company_id', $company_id)
                         ->where('open_set', 2)
                         ->where('user_id', $user_id)
-                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                        ->whereNotNull(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
                 // 公共文件
                 ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
@@ -688,7 +688,7 @@ class YunpianUploadController extends BaseController
                         ->where('company_id', $company_id)
                         ->where('open_set', 1)
                         ->where('group_id', null)
-                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                        ->whereNotNull(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
                 ->paginate($per_page);
         }
