@@ -229,7 +229,7 @@ class PayController extends BaseController
     public function endPayOrder($item_id)
     {
 
-        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->first();
+        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->where('status', '!=', -1)->first();
         if($pay_order){
             return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
