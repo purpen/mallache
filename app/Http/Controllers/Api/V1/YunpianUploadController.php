@@ -144,7 +144,7 @@ class YunpianUploadController extends BaseController
                 }
 
                 // 判断是否在企业根目录下创建或公开的
-                if ($pan_director_id == 0 || $pan_dir->open_set == 1) {
+                if ($pan_director_id == 0 || ($pan_dir->open_set == 1 && $pan_dir->group_id == null && $pan_dir->item_id == null)) {
 
                     $pan_director = new PanDirector();
                     $pan_director->open_set = 1;
@@ -164,12 +164,12 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                } else if ($item_id = $pan_dir->item_id || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
+                } else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
                     // 判断用户是否在这个项目中
                     // 项目管理未完成
                     throw new \Exception('项目管理未完成');
 
-                } else if ($pan_dir->group_id !== null) {       // 判断上级文件夹是否是属于群组
+                } else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
                     $user_group_id_list = Group::userGroupIDList($user_id);
                     if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $this->auth_user->isDesignAdmin()) {
                         $pan_director = new PanDirector();
@@ -345,7 +345,7 @@ class YunpianUploadController extends BaseController
             return $this->response->array($this->apiError('not found dir!', 404));
         }
         // 判断是否公开的
-        if ($pan_dir->open_set == 1 && $pan_dir->group_id == null) {
+        if ($pan_dir->open_set == 1 && $pan_dir->group_id == null && $pan_dir->item_id == null) {
 
             $pan_director = new PanDirector();
             $pan_director->open_set = 1;
@@ -367,13 +367,13 @@ class YunpianUploadController extends BaseController
         }
 
         // 判断上级文件夹是否是项目文件夹
-        if ($item_id = $pan_dir->item_id || $this->auth_user->isDesignAdmin()) {
+        if (($pan_dir->open_set == 1 && $pan_dir->group_id == null && $item_id = $pan_dir->item_id) || $this->auth_user->isDesignAdmin()) {
             // 判断用户是否在这个项目中
             // 项目管理未完成
         }
 
         // 判断上级文件夹是否是属于群组
-        if ($pan_dir->group_id !== null) {
+        if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {
             $user_group_id_list = Group::userGroupIDList($user_id);
             if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $this->auth_user->isDesignAdmin()) {
                 $pan_director = new PanDirector();
