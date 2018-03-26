@@ -387,8 +387,17 @@ class PanDirector extends BaseModel
     {
         Log::info([$name, $user_id]);
         $pan_dir = PanDirector::query()
-            ->where(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 1])
-            ->orWhere(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 2, 'user_id' => $user_id])
+            ->where(function ($query) use ($pan_director_id, $name) {
+                $query->where('pan_director_id', $pan_director_id)
+                    ->where('name', trim($name))
+                    ->where('open_set', 1);
+            })
+            ->orWhere(function ($query) use ($pan_director_id, $name, $user_id) {
+                $query->where('pan_director_id', $pan_director_id)
+                    ->where('name', trim($name))
+                    ->where('open_set', 2)
+                    ->where('user_id', $user_id);
+            })
             ->first();
 
         Log::info($pan_dir);
