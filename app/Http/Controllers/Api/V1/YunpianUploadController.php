@@ -254,7 +254,22 @@ class YunpianUploadController extends BaseController
      *     "meta": {
      *       "message": "Success",
      *       "status_code": 200
-     *     }
+     *     },
+     * "data": [
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     * ],
      *  }
      */
     public function createDir(Request $request)
@@ -314,7 +329,7 @@ class YunpianUploadController extends BaseController
             }
 
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         //上级目录信息
@@ -341,7 +356,7 @@ class YunpianUploadController extends BaseController
             $pan_director->url = '';
             $pan_director->save();
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         // 判断上级文件夹是否是项目文件夹
@@ -370,7 +385,7 @@ class YunpianUploadController extends BaseController
                 $pan_director->url = $pan_dir->url;
                 $pan_director->save();
 
-                return $this->response->array($this->apiSuccess());
+                return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
             }
         }
 
@@ -392,7 +407,7 @@ class YunpianUploadController extends BaseController
             $pan_director->url = $pan_dir->url;
             $pan_director->save();
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         return $this->response->array($this->apiError('error', 500));
@@ -469,7 +484,10 @@ class YunpianUploadController extends BaseController
             $list = $query->where('status', 1)
                 ->where('company_id', $company_id)
                 ->where('pan_director_id', $pan_director_id)
-                ->where('open_set', 1)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('open_set', 1)
+                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+                })
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -528,6 +546,15 @@ class YunpianUploadController extends BaseController
 
 
         return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+    }
+
+
+    // 资源分类展示
+    public function typeLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->input('type');
+
     }
 
 
