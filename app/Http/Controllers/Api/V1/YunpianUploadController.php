@@ -94,10 +94,8 @@ class YunpianUploadController extends BaseController
 
         if (!$isQiniuCallback) {  //验证失败
             $callBackDate = [
-                'payload' => [
-                    'success' => 0,
-                    'message' => '回调签名验证失败',
-                ]
+                'success' => 0,
+                'message' => '回调签名验证失败',
             ];
             Log::info($callBackDate);
             return $this->response->array($callBackDate);
@@ -105,6 +103,14 @@ class YunpianUploadController extends BaseController
             $pan_director_id = $request->input('pan_director_id');
             $user_id = $request->input('uid');
 
+            if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
+                $callBackDate = [
+                    'success' => 0,
+                    'message' => '存在同名文件',
+                ];
+                Log::info($callBackDate);
+                return $this->response->array($callBackDate);
+            }
 
             $company_id = User::designCompanyId($user_id);
             if (!$company_id) {
@@ -119,7 +125,7 @@ class YunpianUploadController extends BaseController
 
                 // 保存源文件
                 $pan_file = new PanFile();
-                $pan_file->name = $request->input('name');
+                $pan_file->name = trim($request->input('name'));
                 $pan_file->size = $request->input('size');
                 $pan_file->width = $request->input('width');
                 $pan_file->height = $request->input('height');
@@ -205,7 +211,6 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                    return $this->response->array($this->apiSuccess());
                 } else {
                     throw new \Exception('未知错误');
                 }
@@ -224,10 +229,8 @@ class YunpianUploadController extends BaseController
             } catch (\Exception $e) {
                 DB::rollBack();
                 $callBackDate = [
-                    'payload' => [
-                        'success' => 0,
-                        'message' => $e->getMessage(),
-                    ]
+                    'success' => 0,
+                    'message' => $e->getMessage(),
                 ];
                 Log::info($callBackDate);
                 return $this->response->array($callBackDate);
@@ -279,9 +282,14 @@ class YunpianUploadController extends BaseController
             'pan_director_id' => 'required|integer',
         ]);
 
-        $name = $request->input('name');
+        $name = trim($request->input('name'));
         $pan_director_id = $request->input('pan_director_id');
         $user_id = $this->auth_user_id;
+
+        if (PanDirector::isSameFile($pan_director_id, $name, $user_id)) {
+            return $this->response->array($this->apiError('存在同名文件', 403));
+        }
+
         $company_id = User::designCompanyId($user_id);
         if (!$company_id) {
             return null;
@@ -896,8 +904,13 @@ class YunpianUploadController extends BaseController
         $name = $request->input('name');
 
         $pan_dir = PanDirector::find($id);
+
         if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
             return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if (PanDirector::isSameFile($pan_dir->pan_director_id, $name, $this->auth_user_id)) {
+            return $this->response->array($this->apiError('存在同名文件', 403));
         }
 
         $pan_dir->name = trim($name);

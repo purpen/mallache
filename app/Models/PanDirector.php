@@ -374,4 +374,26 @@ class PanDirector extends BaseModel
         return $pan_director;
     }
 
+    /**
+     *  判断文件夹下是否有同名文件
+     *
+     * @param $pan_director_id integer 上级文件夹ID
+     * @param $name  string 文件名
+     * @param $user_id integer 用户ID
+     * @return bool
+     */
+    public static function isSameFile($pan_director_id, $name, $user_id)
+    {
+        $pan_dir = PanDirector::query()
+            ->where(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 1])
+            ->orWhere(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 2, 'user_id' => $user_id])
+            ->first();
+
+        if ($pan_dir) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
