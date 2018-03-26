@@ -171,7 +171,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/auth/user', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
         //修改用户资料
-        $api->post('/auth/updateUser/{id}', [
+        $api->post('/auth/updateUser', [
             'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
         ]);
 
