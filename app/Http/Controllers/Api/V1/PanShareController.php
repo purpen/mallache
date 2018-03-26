@@ -22,7 +22,7 @@ class PanShareController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {array} pan_director_id_arr 文件ID数组
-     * @apiParam {integer} type 分享类型：1.私密 2.公开
+     * @apiParam {integer} type 分享类型：1.公开 2.私密
      * @apiParam {integer} share_time 有效时间：0.永久 7.七天 30.一个月
      *
      * @apiSuccessExample 成功响应:
@@ -33,7 +33,7 @@ class PanShareController extends BaseController
      *     },
      * "data": {
      *      "id": 1,
-     *      "type": "1", // 分享类型 1.私密分享 2.公开
+     *      "type": "1", // 分享类型 1.公开 2.私密
      *      "url_code": "47d05e497c8a993757a3c853d1a21d39", // 分享唯一编码
      *      "password": "opwF", // 查看密码
      *      "share_time": "0"  有效时间（天）：0.永久 7.七天 30.一个月
@@ -69,7 +69,7 @@ class PanShareController extends BaseController
 
         $url_code = Tools::microsecondUniqueStr();
         $pan_share->url_code = $url_code;
-        if ($type == 1) { // 密码分享
+        if ($type == 2) { // 密码分享
             $password = Tools::createStr(4);
             $pan_share->password = $password;
         }
@@ -78,6 +78,15 @@ class PanShareController extends BaseController
         return $this->response->array($this->apiSuccess('Success.', 200, $pan_share->info()));
     }
 
+    public function isOpen(Request $request)
+    {
+        //
+    }
 
+    //查看分享
+    public function show(Request $request)
+    {
+        //
+    }
 
 }

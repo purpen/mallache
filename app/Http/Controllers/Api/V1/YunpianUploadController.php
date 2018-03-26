@@ -432,6 +432,8 @@ class YunpianUploadController extends BaseController
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} type 类型：1.文件夹 2.文件
+     * @apiParam {integer} order_by 排序 1.时间 2.大小 3.名称
+     * @apiParam {integer} ascend 排序类型： 1.正序 -1.倒序
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -472,6 +474,29 @@ class YunpianUploadController extends BaseController
         $pan_director_id = (int)$request->input('pan_director_id');
         $type = $request->input('type');
 
+        $order_by = $request->input('order_by') ?? 1;
+        $ascend = $request->input('ascend') ?? 1;
+        switch ($order_by) {
+            case 1:
+                $order_by_str = 'id';
+                break;
+            case 2:
+                $order_by_str = 'size';
+                break;
+            case 3:
+                $order_by_str = 'name';
+                break;
+        }
+        switch ($ascend) {
+            case 1:
+                $ascend_str = 'asc';
+                break;
+            case -1:
+                $ascend_str = 'desc';
+                break;
+        }
+
+
         $user_id = $this->auth_user_id;
         $company_id = User::designCompanyId($user_id);
 
@@ -495,6 +520,7 @@ class YunpianUploadController extends BaseController
                     $query->where('open_set', 1)
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -548,6 +574,7 @@ class YunpianUploadController extends BaseController
                         ->where('open_set', 1)
                         ->where('group_id', null);
                 })
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         }
 
@@ -566,6 +593,8 @@ class YunpianUploadController extends BaseController
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} resource_type 资源分类展示 1.图片 2.视频 3.音频 4.文档 5.电子表格 6.演示文稿 7.PDF
+     * @apiParam {integer} order_by 排序 1.时间 2.大小 3.名称
+     * @apiParam {integer} ascend 排序类型： 1.正序 -1.倒序
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -608,6 +637,28 @@ class YunpianUploadController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $resource_type = $request->input('resource_type');
 
+        $order_by = $request->input('order_by') ?? 1;
+        $ascend = $request->input('ascend') ?? 1;
+        switch ($order_by) {
+            case 1:
+                $order_by_str = 'id';
+                break;
+            case 2:
+                $order_by_str = 'size';
+                break;
+            case 3:
+                $order_by_str = 'name';
+                break;
+        }
+        switch ($ascend) {
+            case 1:
+                $ascend_str = 'asc';
+                break;
+            case -1:
+                $ascend_str = 'desc';
+                break;
+        }
+
         // 文件类型正则
         $mime_type_regexp = null;
         switch ($resource_type) {
@@ -646,6 +697,7 @@ class YunpianUploadController extends BaseController
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
                 ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'")
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -690,6 +742,7 @@ class YunpianUploadController extends BaseController
                         ->where('group_id', null)
                         ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         }
 
