@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\QiniuApi;
 use App\Helper\Yunpan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class PanDirector extends BaseModel
 {
@@ -388,6 +389,8 @@ class PanDirector extends BaseModel
             ->where(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 1])
             ->orWhere(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 2, 'user_id' => $user_id])
             ->first();
+
+        Log::info($pan_dir);
 
         if ($pan_dir) {
             return true;
