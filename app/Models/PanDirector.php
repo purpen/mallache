@@ -385,6 +385,7 @@ class PanDirector extends BaseModel
      */
     public static function isSameFile($pan_director_id, $name, $user_id)
     {
+        Log::info([$name, $user_id]);
         $pan_dir = PanDirector::query()
             ->where(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 1])
             ->orWhere(['pan_director_id' => $pan_director_id, 'name' => trim($name), 'open_set' => 2, 'user_id' => $user_id])
