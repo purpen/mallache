@@ -94,10 +94,8 @@ class YunpianUploadController extends BaseController
 
         if (!$isQiniuCallback) {  //验证失败
             $callBackDate = [
-                'payload' => [
-                    'success' => 0,
-                    'message' => '回调签名验证失败',
-                ]
+                'success' => 0,
+                'message' => '回调签名验证失败',
             ];
             Log::info($callBackDate);
             return $this->response->array($callBackDate);
@@ -105,6 +103,13 @@ class YunpianUploadController extends BaseController
             $pan_director_id = $request->input('pan_director_id');
             $user_id = $request->input('uid');
 
+            if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
+                $callBackDate = [
+                    "error" => "success=0&message='存在同名文件'",
+                ];
+                Log::info($callBackDate);
+                return response()->json($callBackDate);
+            }
 
             $company_id = User::designCompanyId($user_id);
             if (!$company_id) {
@@ -119,7 +124,7 @@ class YunpianUploadController extends BaseController
 
                 // 保存源文件
                 $pan_file = new PanFile();
-                $pan_file->name = $request->input('name');
+                $pan_file->name = trim($request->input('name'));
                 $pan_file->size = $request->input('size');
                 $pan_file->width = $request->input('width');
                 $pan_file->height = $request->input('height');
@@ -139,7 +144,7 @@ class YunpianUploadController extends BaseController
                 }
 
                 // 判断是否在企业根目录下创建或公开的
-                if ($pan_director_id == 0 || $pan_dir->open_set == 1) {
+                if ($pan_director_id == 0 || ($pan_dir->open_set == 1 && $pan_dir->group_id == null && $pan_dir->item_id == null)) {
 
                     $pan_director = new PanDirector();
                     $pan_director->open_set = 1;
@@ -159,12 +164,12 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                } else if ($item_id = $pan_dir->item_id || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
+                } else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
                     // 判断用户是否在这个项目中
                     // 项目管理未完成
                     throw new \Exception('项目管理未完成');
 
-                } else if ($pan_dir->group_id !== null) {       // 判断上级文件夹是否是属于群组
+                } else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
                     $user_group_id_list = Group::userGroupIDList($user_id);
                     if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $this->auth_user->isDesignAdmin()) {
                         $pan_director = new PanDirector();
@@ -205,7 +210,6 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                    return $this->response->array($this->apiSuccess());
                 } else {
                     throw new \Exception('未知错误');
                 }
@@ -224,10 +228,8 @@ class YunpianUploadController extends BaseController
             } catch (\Exception $e) {
                 DB::rollBack();
                 $callBackDate = [
-                    'payload' => [
-                        'success' => 0,
-                        'message' => $e->getMessage(),
-                    ]
+                    'success' => 0,
+                    'message' => $e->getMessage(),
                 ];
                 Log::info($callBackDate);
                 return $this->response->array($callBackDate);
@@ -246,25 +248,47 @@ class YunpianUploadController extends BaseController
      * @apiParam {string} token
      * @apiParam {string} name 文件夹名称
      * @apiParam {integer} pan_director_id 上级文件夹ID
+     * @apiParam {integer} open_set 隐私设置：1.公开 2.私有 （open_set=1、group_id_arr=[] 是公开）（open_set=2、group_id_arr=[] 是私有）open_set=1、group_id_arr=[1,2] 对应权限组）
+     * @apiParam {array} group_id_arr 所属群组ID数组
      *
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
      *       "message": "Success",
      *       "status_code": 200
-     *     }
+     *     },
+     * "data": [
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     * ],
      *  }
      */
     public function createDir(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|max:50',
-            'pan_director_id' => 'required|integer'
+            'pan_director_id' => 'required|integer',
         ]);
 
-        $name = $request->input('name');
+        $name = trim($request->input('name'));
         $pan_director_id = $request->input('pan_director_id');
         $user_id = $this->auth_user_id;
+
+        if (PanDirector::isSameFile($pan_director_id, $name, $user_id)) {
+            return $this->response->array($this->apiError('存在同名文件', 403));
+        }
+
         $company_id = User::designCompanyId($user_id);
         if (!$company_id) {
             return null;
@@ -272,23 +296,47 @@ class YunpianUploadController extends BaseController
 
         // 判断是否在企业根目录下创建
         if ($pan_director_id == 0) {
-            $pan_director = new PanDirector();
-            $pan_director->open_set = 1;
-            $pan_director->group_id = null;
-            $pan_director->company_id = $company_id;
-            $pan_director->pan_director_id = $pan_director_id;
-            $pan_director->type = 1;
-            $pan_director->name = $name;
-            $pan_director->size = 0;
-            $pan_director->sort = 0;
-            $pan_director->mime_type = '';
-            $pan_director->pan_file_id = 0;
-            $pan_director->user_id = $user_id;
-            $pan_director->status = 1;
-            $pan_director->url = '';
-            $pan_director->save();
+            $this->validate($request, [
+                'open_set' => 'required|integer|in:1,2',
+                'group_id_arr' => 'array'
+            ]);
 
-            return $this->response->array($this->apiSuccess());
+            try {
+                DB::beginTransaction();
+
+                $pan_director = new PanDirector();
+                $pan_director->open_set = 1;
+                $pan_director->group_id = json_encode($request->input('group_id_arr'));
+                $pan_director->company_id = $company_id;
+                $pan_director->pan_director_id = $pan_director_id;
+                $pan_director->type = 1;
+                $pan_director->name = $name;
+                $pan_director->size = 0;
+                $pan_director->sort = 0;
+                $pan_director->mime_type = '';
+                $pan_director->pan_file_id = 0;
+                $pan_director->user_id = $user_id;
+                $pan_director->status = 1;
+                $pan_director->url = '';
+                $pan_director->save();
+
+                $open_set = $request->input('open_set');
+                $group_id_arr = $request->input('group_id_arr') ?? [];
+
+                $result = $this->rootSetPermission($pan_director, $open_set, $group_id_arr);
+                if ($result[0] != 'ok') {
+                    throw new \Exception($result[0], $result[1]);
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e->getMessage());
+                return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+            }
+
+
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         //上级目录信息
@@ -297,7 +345,7 @@ class YunpianUploadController extends BaseController
             return $this->response->array($this->apiError('not found dir!', 404));
         }
         // 判断是否公开的
-        if ($pan_dir->open_set == 1 && $pan_dir->group_id == null) {
+        if ($pan_dir->open_set == 1 && $pan_dir->group_id == null && $pan_dir->item_id == null) {
 
             $pan_director = new PanDirector();
             $pan_director->open_set = 1;
@@ -315,17 +363,17 @@ class YunpianUploadController extends BaseController
             $pan_director->url = '';
             $pan_director->save();
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         // 判断上级文件夹是否是项目文件夹
-        if ($item_id = $pan_dir->item_id || $this->auth_user->isDesignAdmin()) {
+        if (($pan_dir->open_set == 1 && $pan_dir->group_id == null && $item_id = $pan_dir->item_id) || $this->auth_user->isDesignAdmin()) {
             // 判断用户是否在这个项目中
             // 项目管理未完成
         }
 
         // 判断上级文件夹是否是属于群组
-        if ($pan_dir->group_id !== null) {
+        if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {
             $user_group_id_list = Group::userGroupIDList($user_id);
             if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $this->auth_user->isDesignAdmin()) {
                 $pan_director = new PanDirector();
@@ -344,7 +392,7 @@ class YunpianUploadController extends BaseController
                 $pan_director->url = $pan_dir->url;
                 $pan_director->save();
 
-                return $this->response->array($this->apiSuccess());
+                return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
             }
         }
 
@@ -366,7 +414,7 @@ class YunpianUploadController extends BaseController
             $pan_director->url = $pan_dir->url;
             $pan_director->save();
 
-            return $this->response->array($this->apiSuccess());
+            return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
         }
 
         return $this->response->array($this->apiError('error', 500));
@@ -443,7 +491,10 @@ class YunpianUploadController extends BaseController
             $list = $query->where('status', 1)
                 ->where('company_id', $company_id)
                 ->where('pan_director_id', $pan_director_id)
-                ->where('open_set', 1)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('open_set', 1)
+                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+                })
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -506,6 +557,149 @@ class YunpianUploadController extends BaseController
 
 
     /**
+     * @api {get} /yunpan/typeLists  资源分类展示
+     * @apiVersion 1.0.0
+     * @apiName yunpan typeLists
+     *
+     * @apiGroup yunpan
+     * @apiParam {string} token
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} resource_type 资源分类展示 1.图片 2.视频 3.音频 4.文档 5.电子表格 6.演示文稿 7.PDF
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *          "message": "Success",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *     }
+     * "data": [
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     *  }
+     * ],
+     *  }
+     */
+    public function typeLists(Request $request)
+    {
+        $this->validate($request, [
+            'resource_type' => 'required|in:1,2,3,4,5,6,7',
+        ]);
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $resource_type = $request->input('resource_type');
+
+        // 文件类型正则
+        $mime_type_regexp = null;
+        switch ($resource_type) {
+            case 1:
+                $mime_type_regexp = config('yunpan.mime_type.image');
+                break;
+            case 2:
+                $mime_type_regexp = config('yunpan.mime_type.video');
+                break;
+            case 3:
+                $mime_type_regexp = config('yunpan.mime_type.audio');
+                break;
+            case 4:
+                $mime_type_regexp = config('yunpan.mime_type.document');
+                break;
+            case 5:
+                $mime_type_regexp = config('yunpan.mime_type.sheet');
+                break;
+            case 6:
+                $mime_type_regexp = config('yunpan.mime_type.powerpoint');
+                break;
+            case 7:
+                $mime_type_regexp = config('yunpan.mime_type.pdf');
+                break;
+        }
+
+        $user_id = $this->auth_user_id;
+        $company_id = User::designCompanyId($user_id);
+
+        if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
+            $query = PanDirector::query();
+            $list = $query->where('status', 1)
+                ->where('company_id', $company_id)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('open_set', 1)
+                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+                })
+                ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'")
+                ->paginate($per_page);
+        } else {
+            // 用户所有用户组集合
+            $group_id_arr = Group::userGroupIDList($user_id);
+
+            // 用户 所属项目ID数组
+            $item_id_arr = [];  // 暂无
+
+            $list = PanDirector::query()
+                // 组管理文件
+                ->where(function ($query) use ($group_id_arr, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'))
+                        ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 项目文件
+                ->orWhere(function ($query) use ($item_id_arr, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->whereIn('item_id', $item_id_arr)
+                        ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 私人文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 2)
+                        ->where('user_id', $user_id)
+                        ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 公共文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where('group_id', null)
+                        ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                ->paginate($per_page);
+        }
+
+
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+
+    }
+
+
+    /**
      * @api {put} /yunpan/setPermission  设置权限
      * @apiVersion 1.0.0
      * @apiName yunpan 设置权限
@@ -539,9 +733,34 @@ class YunpianUploadController extends BaseController
 
         $pan_dir = PanDirector::find($pan_director_id);
 
+        try {
+            DB::beginTransaction();
+            $result = $this->rootSetPermission($pan_dir, $open_set, $group_id_arr);
+            if ($result[0] != 'ok') {
+                throw new \Exception($result[0], $result[1]);
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * 设置根目录文件（文件夹）权限
+     * @param PanDirector $pan_dir
+     * @param int $open_set
+     * @param array $group_id_arr
+     * @return array
+     */
+    public function rootSetPermission(PanDirector $pan_dir, int $open_set, array $group_id_arr)
+    {
         // 文件 不存在、系统创建、非二级目录 均不能修改权限
         if (!$pan_dir || $pan_dir->isAuto() || $pan_dir->pan_director_id != 0) {
-            return $this->response->array($this->apiError('not found dir!', 404));
+            return ['not found dir!', 404];
         }
 
         // 判断是否是设计公司管理员
@@ -549,7 +768,7 @@ class YunpianUploadController extends BaseController
             // 如果设为私有
             if ($open_set == 2) {
                 if ($pan_dir->user_id != $this->auth_user_id) {
-                    return $this->response->array($this->apiError('无权限', 403));
+                    return ['无权限', 403];
                 }
                 $pan_dir->setPrivate();
             } else if ($open_set == 1 && empty($group_id_arr)) { //设置为公开
@@ -557,12 +776,12 @@ class YunpianUploadController extends BaseController
             } else if ($open_set == 1 && !empty($group_id_arr)) { // 设置权限组
                 $pan_dir->setGroup(json_encode($group_id_arr));
             } else {
-                return $this->response->array($this->apiError('未知错误', 403));
+                return ['未知错误1', 403];
             }
 
         } else {  // 成员
             if ($pan_dir->user_id != $this->auth_user_id) {
-                return $this->response->array($this->apiError('无权限', 403));
+                return ['未知错误2', 403];
             }
             // 如果设为私有
             if ($open_set == 2) {
@@ -570,11 +789,11 @@ class YunpianUploadController extends BaseController
             } else if ($open_set == 1 && empty($group_id_arr)) { //设置为公开
                 $pan_dir->setPublic();
             } else {
-                return $this->response->array($this->apiError('无权限', 403));
+                return ['未知错误3', 403];
             }
         }
 
-        return $this->response->array($this->apiSuccess());
+        return ['ok', 200];
     }
 
 
@@ -818,8 +1037,13 @@ class YunpianUploadController extends BaseController
         $name = $request->input('name');
 
         $pan_dir = PanDirector::find($id);
+
         if (!$pan_dir || !$pan_dir->isPermission($this->auth_user)) {
             return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if (PanDirector::isSameFile($pan_dir->pan_director_id, $name, $this->auth_user_id)) {
+            return $this->response->array($this->apiError('存在同名文件', 403));
         }
 
         $pan_dir->name = trim($name);

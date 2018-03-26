@@ -425,6 +425,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/yunpan/recentUseLog', 'YunpianUploadController@recentUseLog');
         // {get} /yunpan/recentUseFile  获取最近使用文件列表
         $api->get('/yunpan/recentUseFile', 'YunpianUploadController@recentUseFile');
+        // {get} /yunpan/typeLists  资源分类展示
+        $api->get('/yunpan/typeLists', 'YunpianUploadController@typeLists');
+
+        //  {get} /yunpan/shareCreate  创建文件分享
+        $api->get('/yunpan/shareCreate', 'PanShareController@create');
 
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');

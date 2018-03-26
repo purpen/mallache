@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\QiniuApi;
 use App\Helper\Yunpan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class PanDirector extends BaseModel
 {
@@ -36,6 +37,14 @@ class PanDirector extends BaseModel
         return $this->hasOne('App\Models\RecycleBin', 'pan_director_id');
     }
 
+    /**
+     * 一对一关联pan_share 云盘分享
+     */
+    public function panShare()
+    {
+        return $this->hasOne('App\Models\PanShare', 'pan_director_id');
+    }
+
 
     // 返回文件/文件夹详细信息
     public function info()
@@ -50,8 +59,8 @@ class PanDirector extends BaseModel
             'url_small' => $this->url_small,
             'url_file' => $this->url_file,
             'user_id' => $this->user_id,
-            'user_name' => $this->user->username,
-            'group_id' => $this->group_id,
+            'user_name' => $this->user->realname,
+            'group_id' => json_decode($this->group_id),
             'created_at' => $this->created_at,
             'open_set' => $this->open_set,
             'width' => $this->width,
@@ -366,5 +375,40 @@ class PanDirector extends BaseModel
         return $pan_director;
     }
 
+    /**
+     *  判断文件夹下是否有同名文件
+     *
+     * @param $pan_director_id integer 上级文件夹ID
+     * @param $name  string 文件名
+     * @param $user_id integer 用户ID
+     * @return bool
+     */
+    public static function isSameFile($pan_director_id, $name, $user_id)
+    {
+        Log::info([$name, $user_id]);
+        $pan_dir = PanDirector::query()
+            ->where(function ($query) use ($pan_director_id, $name) {
+                $query->where('pan_director_id', $pan_director_id)
+                    ->where('name', trim($name))
+                    ->where('open_set', 1)
+                    ->where('status', 1);
+            })
+            ->orWhere(function ($query) use ($pan_director_id, $name, $user_id) {
+                $query->where('pan_director_id', $pan_director_id)
+                    ->where('name', trim($name))
+                    ->where('open_set', 2)
+                    ->where('user_id', $user_id)
+                    ->where('status', 1);
+            })
+            ->first();
+
+        Log::info($pan_dir);
+
+        if ($pan_dir) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
