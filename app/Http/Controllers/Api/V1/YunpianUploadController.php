@@ -556,11 +556,145 @@ class YunpianUploadController extends BaseController
     }
 
 
-    // 资源分类展示
+    /**
+     * @api {get} /yunpan/typeLists  资源分类展示
+     * @apiVersion 1.0.0
+     * @apiName yunpan typeLists
+     *
+     * @apiGroup yunpan
+     * @apiParam {string} token
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} resource_type 资源分类展示 1.图片 2.视频 3.音频 4.文档 5.电子表格 6.演示文稿 7.PDF
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *          "message": "Success",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *     }
+     * "data": [
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:wjmgGPJxVxlBAiLSzxCips7XKo4=",
+     *      "url_file": "http://p593eqdrg.bkt.clouddn.com/?e=1521433712&token=AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i:eZmbk-HFZAaAjmwf8i3lh9fAld0=",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1
+     *  }
+     * ],
+     *  }
+     */
     public function typeLists(Request $request)
     {
+        $this->validate($request, [
+            'resource_type' => 'required|in:1,2,3,4,5,6,7',
+        ]);
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type = $request->input('type');
+        $resource_type = $request->input('resource_type');
+
+        // 文件类型正则
+        $mime_type_regexp = null;
+        switch ($resource_type) {
+            case 1:
+                $mime_type_regexp = config('yunpan.mime_type.image');
+                break;
+            case 2:
+                $mime_type_regexp = config('yunpan.mime_type.video');
+                break;
+            case 3:
+                $mime_type_regexp = config('yunpan.mime_type.audio');
+                break;
+            case 4:
+                $mime_type_regexp = config('yunpan.mime_type.document');
+                break;
+            case 5:
+                $mime_type_regexp = config('yunpan.mime_type.sheet');
+                break;
+            case 6:
+                $mime_type_regexp = config('yunpan.mime_type.powerpoint');
+                break;
+            case 7:
+                $mime_type_regexp = config('yunpan.mime_type.pdf');
+                break;
+        }
+
+        $user_id = $this->auth_user_id;
+        $company_id = User::designCompanyId($user_id);
+
+        if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
+            $query = PanDirector::query();
+            $list = $query->where('status', 1)
+                ->where('company_id', $company_id)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('open_set', 1)
+                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+                })
+                ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"))
+                ->paginate($per_page);
+        } else {
+            // 用户所有用户组集合
+            $group_id_arr = Group::userGroupIDList($user_id);
+
+            // 用户 所属项目ID数组
+            $item_id_arr = [];  // 暂无
+
+            $list = PanDirector::query()
+                // 组管理文件
+                ->where(function ($query) use ($group_id_arr, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where(DB::raw('json_contains(group_id,\'' . json_encode($group_id_arr) . '\')'))
+                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 项目文件
+                ->orWhere(function ($query) use ($item_id_arr, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->whereIn('item_id', $item_id_arr)
+                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 私人文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 2)
+                        ->where('user_id', $user_id)
+                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                // 公共文件
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->where('group_id', null)
+                        ->where(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
+                })
+                ->paginate($per_page);
+        }
+
+
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
 
     }
 
