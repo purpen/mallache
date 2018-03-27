@@ -402,8 +402,6 @@ class PanDirector extends BaseModel
             })
             ->first();
 
-        Log::info($pan_dir);
-
         if ($pan_dir) {
             return true;
         } else {
@@ -411,4 +409,27 @@ class PanDirector extends BaseModel
         }
     }
 
+
+    /**
+     *  验证当前文件是否是传入的文件ID的下属文件或本身
+     *
+     * @param array $arr_id 文件ID数组
+     * @return bool
+     */
+    public function isChild(array $arr_id)
+    {
+        if (in_array($this->id, $arr_id)) {
+            return true;
+        }
+        $pid = $this->pan_director_id;
+        while ($pid > 0) {
+            if (in_array($pid, $arr_id)) {
+                return true;
+            }
+            $pan_dir = PanDirector::find($pid);
+            $pid = $pan_dir->pan_director_id;
+        }
+
+        return false;
+    }
 }

@@ -84,6 +84,8 @@ class YunpianUploadController extends BaseController
         $auth = new Auth($accessKey, $secretKey);
         //获取回调的body信息
         $callbackBody = file_get_contents('php://input');
+        Log::info($callbackBody);
+        Log::info($_SERVER);
         //回调的contentType
         $contentType = 'application/x-www-form-urlencoded';
         //回调的签名信息，可以验证该回调是否来自七牛
@@ -100,15 +102,16 @@ class YunpianUploadController extends BaseController
             Log::info($callBackDate);
             return $this->response->array($callBackDate);
         } else {
-            $pan_director_id = $request->input('pan_director_id');
+            $pan_director_id = $request->input('pan_director_id') ?? 0;
             $user_id = $request->input('uid');
 
             if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
                 $callBackDate = [
-                    "error" => "success=0&message='存在同名文件'",
+                    'success' => 0,
+                    'message' => '存在同名文件',
                 ];
                 Log::info($callBackDate);
-                return response()->json($callBackDate);
+                return $this->response->array($callBackDate);
             }
 
             $company_id = User::designCompanyId($user_id);
@@ -432,6 +435,8 @@ class YunpianUploadController extends BaseController
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} type 类型：1.文件夹 2.文件
+     * @apiParam {integer} order_by 排序 1.时间 2.大小 3.名称
+     * @apiParam {integer} ascend 排序类型： 1.正序 -1.倒序
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -472,6 +477,29 @@ class YunpianUploadController extends BaseController
         $pan_director_id = (int)$request->input('pan_director_id');
         $type = $request->input('type');
 
+        $order_by = $request->input('order_by') ?? 1;
+        $ascend = $request->input('ascend') ?? 1;
+        switch ($order_by) {
+            case 1:
+                $order_by_str = 'id';
+                break;
+            case 2:
+                $order_by_str = 'size';
+                break;
+            case 3:
+                $order_by_str = 'name';
+                break;
+        }
+        switch ($ascend) {
+            case 1:
+                $ascend_str = 'asc';
+                break;
+            case -1:
+                $ascend_str = 'desc';
+                break;
+        }
+
+
         $user_id = $this->auth_user_id;
         $company_id = User::designCompanyId($user_id);
 
@@ -495,6 +523,8 @@ class YunpianUploadController extends BaseController
                     $query->where('open_set', 1)
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
+                ->orderBy('type', 'asc')
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -548,11 +578,19 @@ class YunpianUploadController extends BaseController
                         ->where('open_set', 1)
                         ->where('group_id', null);
                 })
+                ->orderBy('type', 'asc')
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         }
 
+        // 获取当前文件夹信息
+        if (isset($dir) && $dir instanceof PanDirector) {
+            $p_info = $dir->info();
+        } else {
+            $p_info = [];
+        }
 
-        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta('Success', 200, ['info' => $p_info]));
     }
 
 
@@ -566,6 +604,8 @@ class YunpianUploadController extends BaseController
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} resource_type 资源分类展示 1.图片 2.视频 3.音频 4.文档 5.电子表格 6.演示文稿 7.PDF
+     * @apiParam {integer} order_by 排序 1.时间 2.大小 3.名称
+     * @apiParam {integer} ascend 排序类型： 1.正序 -1.倒序
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -608,6 +648,28 @@ class YunpianUploadController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $resource_type = $request->input('resource_type');
 
+        $order_by = $request->input('order_by') ?? 1;
+        $ascend = $request->input('ascend') ?? 1;
+        switch ($order_by) {
+            case 1:
+                $order_by_str = 'id';
+                break;
+            case 2:
+                $order_by_str = 'size';
+                break;
+            case 3:
+                $order_by_str = 'name';
+                break;
+        }
+        switch ($ascend) {
+            case 1:
+                $ascend_str = 'asc';
+                break;
+            case -1:
+                $ascend_str = 'desc';
+                break;
+        }
+
         // 文件类型正则
         $mime_type_regexp = null;
         switch ($resource_type) {
@@ -646,6 +708,7 @@ class YunpianUploadController extends BaseController
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
                 ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'")
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
             // 用户所有用户组集合
@@ -690,6 +753,7 @@ class YunpianUploadController extends BaseController
                         ->where('group_id', null)
                         ->whereRaw(DB::raw("mime_type REGEXP '" . $mime_type_regexp . "'"));
                 })
+                ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         }
 
@@ -889,6 +953,10 @@ class YunpianUploadController extends BaseController
                     throw new \Exception('not found to_id', 404);
                 }
 
+                if ($to_pan_director->isChild($from_id_arr)) {
+                    throw new \Exception('目录复制操作错误', 403);
+                }
+
                 // 判断用户有无在该文件夹下创建文件的权限
                 if (!$to_pan_director->isReceivePermission($this->auth_user)) {
                     throw new \Exception('not permission', 404);
@@ -964,6 +1032,10 @@ class YunpianUploadController extends BaseController
                 $to_pan_director = PanDirector::find($to_id);
                 if (!$to_pan_director) {
                     throw new \Exception('not found to_id', 404);
+                }
+
+                if ($to_pan_director->isChild($from_id_arr)) {
+                    throw new \Exception('目录移动操作错误', 403);
                 }
 
                 // 判断用户有无在该文件夹下创建文件的权限

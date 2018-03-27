@@ -151,6 +151,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     //根据随机字符串查看用户id
     $api->get('/urlValue', 'UrlKeyValueController@urlValue');
 
+    //云盘分享查看 {get} /yunpan/shareShow 查看分享
+    $api->get('/yunpan/shareShow', 'PanShareController@show');
+
     /**
      * 需验证用户token
      */
@@ -430,6 +433,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //  {get} /yunpan/shareCreate  创建文件分享
         $api->get('/yunpan/shareCreate', 'PanShareController@create');
+
 
         // {get} /recycleBin/lists 回收站列表
         $api->get('/recycleBin/lists', 'RecycleBinController@lists');

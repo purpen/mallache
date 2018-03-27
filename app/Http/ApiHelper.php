@@ -13,14 +13,14 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiSuccess($message='Success', $status_code=200, $data=null, $meta=array())
+    public function apiSuccess($message = 'Success', $status_code = 200, $data = null, $meta = array())
     {
         $result['meta'] = array(
             'message' => $message,
             'status_code' => $status_code
         );
 
-        if(!empty($meta)){
+        if (!empty($meta)) {
             $result['meta'] = array_merge($result['meta'], $meta);
         }
 
@@ -38,12 +38,18 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiMeta($message='Success', $status_code=200)
+    public function apiMeta($message = 'Success', $status_code = 200, $meta = array())
     {
-        return [
+        $result = [
             'message' => $message,
             'status_code' => $status_code,
         ];
+
+        if (!empty($meta)) {
+            $result = array_merge($result, $meta);
+        }
+
+        return $result;
     }
 
     /**
@@ -53,7 +59,7 @@ trait ApiHelper
      *
      * @return array
      */
-    public function apiError($message='Error', $status_code=400)
+    public function apiError($message = 'Error', $status_code = 400)
     {
         $result['meta'] = array(
             'message' => $message,
