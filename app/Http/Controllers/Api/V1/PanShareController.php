@@ -68,7 +68,7 @@ class PanShareController extends BaseController
         $pan_share->share_time = $share_time;
 
         $url_code = Tools::microsecondUniqueStr();
-        $pan_share->url_code = $url_code;
+        $pan_share->url_code = $type . $url_code;  // 将分享类型拼接在随机随机字符串头部，用来判断分享类型
         if ($type == 2) { // 密码分享
             $password = Tools::createStr(4);
             $pan_share->password = $password;
@@ -78,15 +78,21 @@ class PanShareController extends BaseController
         return $this->response->array($this->apiSuccess('Success.', 200, $pan_share->info()));
     }
 
-    public function isOpen(Request $request)
-    {
-        //
-    }
-
     //查看分享
     public function show(Request $request)
     {
-        //
+        $url_code = $request->input('url_code');
+        $password = $request->input('password');
+
+        try {
+            $pan_share = PanShare::where('url_code', $url_code)->first();
+            if (!$pan_share) {
+
+            }
+        } catch (\Exception $e) {
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
     }
 
 }

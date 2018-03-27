@@ -84,6 +84,7 @@ class YunpianUploadController extends BaseController
         $auth = new Auth($accessKey, $secretKey);
         //获取回调的body信息
         $callbackBody = file_get_contents('php://input');
+        Log::info($callbackBody);
         //回调的contentType
         $contentType = 'application/x-www-form-urlencoded';
         //回调的签名信息，可以验证该回调是否来自七牛
