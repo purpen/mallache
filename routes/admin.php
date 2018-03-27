@@ -19,6 +19,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/item/trueItem', 'ItemActionController@trueItem');
         // 项目详情
         $api->get('/admin/item/show', 'ItemActionController@show');
+        // 后台强制关闭当前项目并分配项目款
+        $api->post('/admin/item/closeItem', 'ItemActionController@closeItem');
 
 
         //更新设计公司审核状态

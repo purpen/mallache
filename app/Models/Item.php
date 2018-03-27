@@ -17,7 +17,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name','company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status' , 'contract_id','position','design_types'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types'];
 
     /**
      * 添加返回字段
@@ -101,7 +101,7 @@ class Item extends BaseModel
     public function itemInfo()
     {
         $item = $this;
-        switch ((int)$item->type){
+        switch ((int)$item->type) {
             case 0:
                 return [
                     'id' => $item->id,
@@ -188,7 +188,7 @@ class Item extends BaseModel
                 ];
                 break;
             case 2:
-                if(!$info = $item->uDesign){
+                if (!$info = $item->uDesign) {
                     return [];
                 }
                 return [
@@ -248,7 +248,7 @@ class Item extends BaseModel
     //设计类型
     public function getTypeValueAttribute()
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 1:
                 $type_value = '产品设计类型';
                 break;
@@ -267,8 +267,8 @@ class Item extends BaseModel
     {
         $item_type = config('constant.item_type');
 
-        if(array_key_exists($this->type, $item_type)){
-            if(array_key_exists($this->design_type, $item_type[$this->type])){
+        if (array_key_exists($this->type, $item_type)) {
+            if (array_key_exists($this->design_type, $item_type[$this->type])) {
                 return $item_type[$this->type][$this->design_type];
             }
         }
@@ -281,11 +281,11 @@ class Item extends BaseModel
     {
         $item_type = config('constant.item_type');
 
-        $design_types = json_decode($this->design_types,true);
+        $design_types = json_decode($this->design_types, true);
         $arr = [];
-        if(array_key_exists($this->type, $item_type)) {
+        if (array_key_exists($this->type, $item_type)) {
             foreach ($design_types as $v) {
-                if(array_key_exists($v, $item_type[$this->type])){
+                if (array_key_exists($v, $item_type[$this->type])) {
                     $arr[] = $item_type[$this->type][$v];
                 }
             }
@@ -297,7 +297,7 @@ class Item extends BaseModel
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
     public function getStageValueAttribute()
     {
-        switch ($this->stage){
+        switch ($this->stage) {
             case 1:
                 $stage_value = '已有app／网站，需重新设计';
                 break;
@@ -314,7 +314,7 @@ class Item extends BaseModel
     //已有项目设计内容格式化输出 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；
     public function getCompleteContentValueAttribute()
     {
-        switch ($this->complete_content){
+        switch ($this->complete_content) {
             case 1:
                 $complete_content_value = '流程图';
                 break;
@@ -338,7 +338,7 @@ class Item extends BaseModel
     //公司规模
     public function getCompanySizeValueAttribute()
     {
-        switch ($this->company_size){
+        switch ($this->company_size) {
             case 1:
                 $company_size_val = '10人以下';
                 break;
@@ -394,7 +394,7 @@ class Item extends BaseModel
     {
         $demand_item_status = config('constant.demand_item_status');
 
-        if(!array_key_exists($this->status, $demand_item_status)){
+        if (!array_key_exists($this->status, $demand_item_status)) {
             return '';
         }
         return $demand_item_status[$this->status];
@@ -407,7 +407,7 @@ class Item extends BaseModel
     {
         $demand_item_status = config('constant.design_item_status');
 
-        if(!array_key_exists($this->status, $demand_item_status)){
+        if (!array_key_exists($this->status, $demand_item_status)) {
             return '';
         }
         return $demand_item_status[$this->status];
@@ -424,7 +424,7 @@ class Item extends BaseModel
             ->where('design_company_status', '!=', -1)
             ->count();
         //匹配失败项目状态修改为匹配失败（2）
-        if(empty($item_count)){
+        if (empty($item_count)) {
             $item = Item::find($item_id);
             $item->status = -2;
             $item->save();
@@ -437,7 +437,7 @@ class Item extends BaseModel
 
     public function getStatusTimeAttribute($key)
     {
-        return json_decode($key,true);
+        return json_decode($key, true);
     }
 
     /**
@@ -448,6 +448,7 @@ class Item extends BaseModel
     public function statusTime(int $status)
     {
         $status_time_arr = [
+            -3 => '',
             -2 => '',
             -1 => '',
             1 => '',
@@ -466,7 +467,7 @@ class Item extends BaseModel
         ];
 
         $status_time = $this->status_time;
-        if(!empty($status_time)){
+        if (!empty($status_time)) {
             $status_time_arr = $status_time;
         }
 
