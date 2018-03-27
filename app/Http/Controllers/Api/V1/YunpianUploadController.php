@@ -102,7 +102,7 @@ class YunpianUploadController extends BaseController
             Log::info($callBackDate);
             return $this->response->array($callBackDate);
         } else {
-            $pan_director_id = $request->input('pan_director_id');
+            $pan_director_id = $request->input('pan_director_id') ?? 0;
             $user_id = $request->input('uid');
 
             if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
@@ -523,6 +523,7 @@ class YunpianUploadController extends BaseController
                     $query->where('open_set', 1)
                         ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
                 })
+                ->orderBy('type', 'asc')
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
@@ -577,6 +578,7 @@ class YunpianUploadController extends BaseController
                         ->where('open_set', 1)
                         ->where('group_id', null);
                 })
+                ->orderBy('type', 'asc')
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         }
@@ -943,17 +945,16 @@ class YunpianUploadController extends BaseController
         $from_id_arr = $request->input('from_id_arr');
         $to_id = $request->input('to_id');
 
-        $to_id_object = PanDirector::find($to_id);
-        if ($to_id_object->isChild($from_id_arr)) {
-            return $this->response->array($this->apiError('目录复制操作错误'));
-        }
-
         try {
             // 接收文件夹ID==0时不做验证
             if ($to_id != 0) {
                 $to_pan_director = PanDirector::find($to_id);
                 if (!$to_pan_director) {
                     throw new \Exception('not found to_id', 404);
+                }
+
+                if ($to_pan_director->isChild($from_id_arr)) {
+                    throw new \Exception('目录复制操作错误', 403);
                 }
 
                 // 判断用户有无在该文件夹下创建文件的权限
@@ -1025,19 +1026,16 @@ class YunpianUploadController extends BaseController
         $from_id_arr = $request->input('from_id_arr');
         $to_id = $request->input('to_id');
 
-
-        $to_id_object = PanDirector::find($to_id);
-
-        if ($to_id_object->isChild($from_id_arr)) {
-            return $this->response->array($this->apiError('目录移动操作错误'));
-        }
-
         try {
             // 接收文件夹ID==0时不做验证
             if ($to_id != 0) {
                 $to_pan_director = PanDirector::find($to_id);
                 if (!$to_pan_director) {
                     throw new \Exception('not found to_id', 404);
+                }
+
+                if ($to_pan_director->isChild($from_id_arr)) {
+                    throw new \Exception('目录移动操作错误', 403);
                 }
 
                 // 判断用户有无在该文件夹下创建文件的权限
