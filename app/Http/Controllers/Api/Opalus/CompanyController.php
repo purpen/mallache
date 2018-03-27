@@ -20,7 +20,7 @@ class CompanyController extends Controller
      * @apiName OpalusDesignCompany list
      * @apiGroup OpalusDesignCompany
      *
-     * @apiParam {integer} per_page 分页数量  默认15
+     * @apiParam {integer} per_page 分页数量  默认100
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.升序；1.降序（默认）;2.推荐降序；
      * @apiParam {integer} type_status 0.禁用; 1.正常；
@@ -108,7 +108,7 @@ class CompanyController extends Controller
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ?? 100;
         $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2,3]) ? $request->input('type_verify_status') : null;
         $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
         $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : 0;
