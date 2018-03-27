@@ -107,10 +107,11 @@ class YunpianUploadController extends BaseController
 
             if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
                 $callBackDate = [
-                    'error' => 'success=0&message=存在同名文件',
+                    'success' => 0,
+                    'message' => '存在同名文件',
                 ];
-                Log::info(json_encode($callBackDate));
-                return response()->json($callBackDate);
+                Log::info($callBackDate);
+                return $this->response->array($callBackDate);
             }
 
             $company_id = User::designCompanyId($user_id);
