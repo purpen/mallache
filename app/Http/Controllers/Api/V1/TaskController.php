@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\TaskTransformer;
 use App\Models\ItemUser;
 use App\Models\Task;
+use App\Models\TaskUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ class TaskController extends BaseController
      *
      * @apiParam {integer} tier 层级 默认0
      * @apiParam {integer} pid 父id 默认0
+     * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {string} tags 标签
@@ -78,17 +80,20 @@ class TaskController extends BaseController
 
         $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
         $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
+        $execute_user_id = $request->input('execute_user_id') ? (int)$request->input('execute_user_id') : 0;
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
         $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
+        $tags = $request->input('tags') ? (int)$request->input('tags') : '';
+        $summary = $request->input('summary') ? (int)$request->input('summary') : '';
 
         $params = array(
             'name' => $request->input('name'),
-            'tags' => $request->input('tags'),
-            'summary' => $request->input('summary'),
+            'tags' => $tags,
+            'summary' => $summary,
             'user_id' => $this->auth_user_id,
             'type' => $type,
             'item_id' => $item_id,
@@ -97,6 +102,7 @@ class TaskController extends BaseController
             'start_time' => $start_time,
             'over_time' => $over_time,
             'status' => 1,
+            'execute_user_id' => $execute_user_id,
         );
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
@@ -278,13 +284,14 @@ class TaskController extends BaseController
     }
 
     /**
-     * @api {post} /tasks/{id} 任务修改
+     * @api {put} /tasks/{id} 任务修改
      * @apiVersion 1.0.0
      * @apiName  tasks update
      * @apiGroup tasks
      *
      * @apiParam {integer} tier 层级 默认0
      * @apiParam {integer} pid 父id 默认0
+     * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {string} tags 标签
@@ -344,11 +351,14 @@ class TaskController extends BaseController
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
         $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
+        $execute_user_id = $request->input('execute_user_id') ? (int)$request->input('execute_user_id') : 0;
+        $tags = $request->input('tags') ? (int)$request->input('tags') : '';
+        $summary = $request->input('summary') ? (int)$request->input('summary') : '';
 
         $params = array(
             'name' => $request->input('name'),
-            'tags' => $request->input('tags'),
-            'summary' => $request->input('summary'),
+            'tags' => $tags,
+            'summary' => $summary,
             'user_id' => $this->auth_user_id,
             'type' => $type,
             'item_id' => $item_id,
@@ -357,12 +367,8 @@ class TaskController extends BaseController
             'start_time' => $start_time,
             'over_time' => $over_time,
             'status' => 1,
+            'execute_user_id' => $execute_user_id,
         );
-
-        $validator = Validator::make($params, $rules, $messages);
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
 
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
@@ -530,4 +536,44 @@ class TaskController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+    /**
+     * @api {post} /tasks/executeUser 领取任务
+     * @apiVersion 1.0.0
+     * @apiName tasks executeUser
+     * @apiGroup tasks
+     *
+     * @apiParam {integer} task_id 任务id
+     * @apiParam {integer} execute_user_id 设定执行任务的用户id
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function executeUser(Request $request)
+    {
+        $task_id = $request->input('task_id');
+        $execute_user_id = $request->input('execute_user_id') ? $request->input('execute_user_id') : 0;
+        $task = Task::find($task_id);
+        if(!$task){
+            return $this->response->array($this->apiError('没有找到该任务!', 404));
+        }
+        $taskUsers = TaskUser::where('task_id' , $task_id)->get();
+        $user_id = [];
+        foreach ($taskUsers as $taskUser){
+            $user_id[] = $taskUser->user_id;
+        }
+        $new_user_id = $user_id;
+        if(!in_array($execute_user_id , $new_user_id)){
+            return $this->response->array($this->apiError('请先添加该用户到任务用户列表!', 403));
+        }
+        $task->execute_user_id = $execute_user_id;
+        if($task->save()){
+            return $this->response->array($this->apiSuccess());
+        }
+    }
 }

@@ -25,15 +25,30 @@ class TaskUserController extends BaseController
      * @apiParam {integer} task_id 任务id
      * @apiParam {integer} user_id 项目成员用户列表id
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 1,
+                "task_id": 11,
+                "user_id": 3,
+                "type": 1,
+                "status": 1,
+                "created_at": 1522155497
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     public function store(Request $request)
     {
         $task_id = $request->input('task_id');
         $user_id = $request->input('user_id');
-
         $params = array(
-            'task_id' => $task_id,
-            'user_id' => $user_id,
+            'task_id' => intval($task_id),
+            'user_id' => intval($user_id),
             'type' => 1,
             'status' => 1,
         );
@@ -57,6 +72,23 @@ class TaskUserController extends BaseController
      * @apiParam {integer} task_id 任务id
      * @apiParam {integer} user_id 项目成员用户列表id
      * @apiParam {string} token
+     *
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 1,
+                "task_id": 11,
+                "user_id": 3,
+                "type": 1,
+                "status": 1,
+                "created_at": 1522155497
+            },
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
      */
     public function update(Request $request , $id)
     {
@@ -89,6 +121,22 @@ class TaskUserController extends BaseController
      * @apiGroup taskUsers
      *
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "data": {
+    "id": 1,
+    "task_id": 11,
+    "user_id": 3,
+    "type": 1,
+    "status": 1,
+    "created_at": 1522155497
+    },
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    }
+    }
      */
     public function show($id)
     {
