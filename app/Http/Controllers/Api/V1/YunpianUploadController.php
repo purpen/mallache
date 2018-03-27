@@ -580,8 +580,14 @@ class YunpianUploadController extends BaseController
                 ->paginate($per_page);
         }
 
+        // 获取当前文件夹信息
+        if (isset($dir) && $dir instanceof PanDirector) {
+            $p_info = $dir->info();
+        } else {
+            $p_info = [];
+        }
 
-        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($list, new YunpanListTransformer())->setMeta($this->apiMeta('Success', 200, ['info' => $p_info]));
     }
 
 
@@ -936,6 +942,11 @@ class YunpianUploadController extends BaseController
         $from_id_arr = $request->input('from_id_arr');
         $to_id = $request->input('to_id');
 
+        $to_id_object = PanDirector::find($to_id);
+        if ($to_id_object->isChild($from_id_arr)) {
+            return $this->response->array($this->apiError('目录复制操作错误'));
+        }
+
         try {
             // 接收文件夹ID==0时不做验证
             if ($to_id != 0) {
@@ -1012,6 +1023,13 @@ class YunpianUploadController extends BaseController
 
         $from_id_arr = $request->input('from_id_arr');
         $to_id = $request->input('to_id');
+
+
+        $to_id_object = PanDirector::find($to_id);
+
+        if ($to_id_object->isChild($from_id_arr)) {
+            return $this->response->array($this->apiError('目录移动操作错误'));
+        }
 
         try {
             // 接收文件夹ID==0时不做验证

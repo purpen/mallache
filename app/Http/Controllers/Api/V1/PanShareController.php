@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Http\Transformer\YunpanListTransformer;
+use App\Models\PanDirector;
 use App\Models\PanShare;
 use Illuminate\Http\Request;
 
@@ -51,7 +53,7 @@ class PanShareController extends BaseController
         $type = $request->input('type');
         $share_time = $request->input('share_time');
 
-        $pan_directors = PanShare::whereIn('pan_director_id_arr', $pan_director_id_arr)->get();
+        $pan_directors = PanDirector::whereIn('id', $pan_director_id_arr)->get();
 
         // 权限判断
         $data = [];
@@ -78,21 +80,80 @@ class PanShareController extends BaseController
         return $this->response->array($this->apiSuccess('Success.', 200, $pan_share->info()));
     }
 
-    //查看分享
+
+    /**
+     * @api {get} /yunpan/shareShow 查看分享
+     * @apiVersion 1.0.0
+     * @apiName yunpan shareShow
+     *
+     * @apiGroup yunpan
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {string} url_code 分享唯一编码
+     * @apiParam {string} password 查看密码
+     * @apiParam {integer} id 文件ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     },
+     * "data": {
+     *      "id": 29,
+     *      "pan_director_id": 0,
+     *      "type": 1,
+     *      "name": "kiu8987",
+     *      "size": 0,
+     *      "mime_type": "",
+     *      "url_small": null,
+     *      "url_file": null,
+     *      "user_id": 6,
+     *      "user_name": null,
+     *      "group_id": null,
+     *      "created_at": 1521796620,
+     *      "open_set": 1,
+     *      "width": null,
+     *      "height": null
+     * }
+     *  }
+     */
     public function show(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
         $url_code = $request->input('url_code');
         $password = $request->input('password');
+        $id = $request->input('id') ?? null;
 
         try {
             $pan_share = PanShare::where('url_code', $url_code)->first();
             if (!$pan_share) {
-
+                throw New \Exception('分享不存在', 404);
             }
+
+            if ($pan_share->type == 2 && $pan_share->password != trim($password)) {
+                throw New \Exception('查看密码不正确', 404);
+            }
+
+            $pan_director_id_arr = json_decode($pan_share->pan_director_id_arr, true);
+            if ($id) {
+                $pan_dir = PanDirector::find($id);
+                if ($pan_dir->isChild($pan_director_id_arr)) {
+                    $lists = PanDirector::where(['pan_director_id' => $id, 'status' => 1])->paginate($per_page);
+                } else {
+                    throw New \Exception('分享不存在', 404);
+                }
+
+            } else {
+                $lists = PanDirector::whereIn('id', $pan_director_id_arr)->where('status', 1)->paginate($per_page);
+            }
+
+            return $this->response->paginator($lists, new YunpanListTransformer())->setMeta($this->apiMeta());
         } catch (\Exception $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
-
     }
 
 }

@@ -24,4 +24,5 @@ class PanShare extends BaseModel
             'share_time' => $this->share_time,
         ];
     }
+
 }
