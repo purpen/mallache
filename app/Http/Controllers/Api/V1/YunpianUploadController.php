@@ -919,6 +919,9 @@ class YunpianUploadController extends BaseController
             return $this->response->array($this->apiError($e->getMessage()));
         }
 
+        // 从最近使用文件中移除
+        $this->recentUseRemove($pan_director_id_arr);
+
         return $this->response->array($this->apiSuccess());
     }
 
@@ -1317,10 +1320,27 @@ class YunpianUploadController extends BaseController
 
         $data = Redis::ZREVRANGE($key, 0, -1);
 
-        $list = PanDirector::whereIn('id', $data)
-            ->orderBy(DB::raw('field(id,' . implode(',', $data) . ')'))->get();
+        if ($data) {
+            $list = PanDirector::whereIn('id', $data)
+                ->orderBy(DB::raw('field(id,' . implode(',', $data) . ')'))->get();
+        } else {
+            $list = collect([]);
+        }
+
 
         return $this->response->collection($list, new YunpanListTransformer())->setMeta($this->apiMeta());
+    }
+
+    // 移除最近使用中已删除的文件
+    public function recentUseRemove($arr)
+    {
+        $key = self::recentUseFile . $this->auth_user_id;
+
+        Redis::pipeline(function ($pipe) use ($arr, $key) {
+            foreach ($arr as $name) {
+                $pipe->zrem($key, $name);
+            }
+        });
     }
 
 }
