@@ -27,7 +27,6 @@ class CompanyController extends Controller
      * @apiParam {integer} type_verify_status 0.未审核；1.审核通过；2.未通过审核 3.审核中
      * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
      * @apiParam {integer} val 查询值（根据查询条件判断）
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -166,7 +165,6 @@ class CompanyController extends Controller
      * @apiGroup OpalusDesignCompany
      *
      * @apiParam {integer} id 设计公司ID
-     * @apiParam {string} token
      */
     public function show(Request $request)
     {

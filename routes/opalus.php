@@ -18,6 +18,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Opalus'], function
         $api->get('/opalus/company/show', [
             'as' => 'Company.show', 'uses' => 'CompanyController@show'
         ]);
+
+        // 设计案例列表
+        $api->get('/opalus/design_case/list', 'DesignCaseController@lists');
+        // 设计案例详情
+        $api->get('/opalus/design_case/show', 'DesignCaseController@show');
     #});
 
 });
