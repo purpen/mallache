@@ -172,12 +172,14 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                } else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
-                    // 判断用户是否在这个项目中
-                    // 项目管理未完成
-                    throw new \Exception('项目管理未完成');
-
-                } else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
+                }
+//                else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
+//                    // 判断用户是否在这个项目中
+//                    // 项目管理未完成
+//                    throw new \Exception('项目管理未完成');
+//
+//                }
+                else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
                     $user_group_id_list = Group::userGroupIDList($user_id);
                     if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $user->isDesignAdmin()) {
                         $pan_director = new PanDirector();
