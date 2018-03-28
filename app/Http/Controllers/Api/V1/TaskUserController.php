@@ -7,10 +7,9 @@ use App\Http\Transformer\TaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
 use App\Models\TaskUser;
 use App\Models\User;
-use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TaskUserController extends BaseController
@@ -23,7 +22,7 @@ class TaskUserController extends BaseController
      * @apiGroup taskUsers
      *
      * @apiParam {integer} task_id 任务id
-     * @apiParam {integer} user_id 项目成员用户列表id
+     * @apiParam {array} user_id_arr 项目成员用户列表id(可以多选)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -44,74 +43,33 @@ class TaskUserController extends BaseController
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'task_id' => 'required|integer',
+            'user_id_arr' => 'required|array',
+        ]);
         $task_id = $request->input('task_id');
-        $user_id = $request->input('user_id');
-        $params = array(
-            'task_id' => intval($task_id),
-            'user_id' => intval($user_id),
-            'type' => 1,
-            'status' => 1,
-        );
+        $user_id_arr = $request->input('user_id_arr');
 
-        try {
-            $taskUsers = TaskUser::create($params);
-        } catch (\Exception $e) {
-
-            throw new HttpException($e->getMessage());
-        }
-
-        return $this->response->item($taskUsers, new TaskUserTransformer())->setMeta($this->apiMeta());
-    }
-
-    /**
-     * @api {put} /taskUsers/{id} 任务成员更改
-     * @apiVersion 1.0.0
-     * @apiName  taskUsers update
-     * @apiGroup taskUsers
-     *
-     * @apiParam {integer} task_id 任务id
-     * @apiParam {integer} user_id 项目成员用户列表id
-     * @apiParam {string} token
-     *
-     *
-     * @apiSuccessExample 成功响应:
-        {
-            "data": {
-                "id": 1,
-                "task_id": 11,
-                "user_id": 3,
-                "type": 1,
-                "status": 1,
-                "created_at": 1522155497
-            },
-            "meta": {
-                "message": "Success",
-                "status_code": 200
+        //遍历用户id，添加
+        foreach ($user_id_arr as $user_id){
+            $params = array(
+                'task_id' => intval($task_id),
+                'type' => 1,
+                'status' => 1,
+                'user_id' => $user_id,
+            );
+            //查看是否有没有创建过任务用户，有的话，跳出
+            $taskUsers = TaskUser::where('task_id' , $task_id)->where('user_id' , $user_id)->first();
+            if($taskUsers){
+                continue;
             }
-        }
-     */
-    public function update(Request $request , $id)
-    {
-        $task_id = $request->input('task_id');
-        $user_id = $request->input('user_id');
+            $taskUsers = TaskUser::create($params);
 
-        $params = array(
-            'task_id' => $task_id,
-            'user_id' => $user_id,
-            'type' => 1,
-            'status' => 1,
-        );
-
-        $taskUsers = TaskUser::find($id);
-        if (!$taskUsers) {
-            return $this->response->array($this->apiError('not found!', 404));
         }
-        $taskUsers->update($params);
-        if (!$taskUsers) {
-            return $this->response->array($this->apiError());
-        }
-
         return $this->response->item($taskUsers, new TaskUserTransformer())->setMeta($this->apiMeta());
+
+
+
     }
 
     /**

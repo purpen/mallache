@@ -190,6 +190,9 @@ class UploadController extends BaseController
         switch ($type) {
             case 2:
                 if ($user = User::find($target_id)) {
+                    if($user->isDesignSuperAdmin == true){
+                        return;
+                    }
                     $user->logo = $id;
                     $user->save();
                 }
