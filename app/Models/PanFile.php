@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\QiniuApi;
 use Illuminate\Database\Eloquent\Model;
 
 class PanFile extends BaseModel
@@ -51,6 +52,9 @@ class PanFile extends BaseModel
         // 如果引用为零
         if ($this->count == 0) {
             $this->delete();
+
+            // 删除七牛中的云盘文件
+            QiniuApi::yunPanDelete($this->url);
         }
     }
 

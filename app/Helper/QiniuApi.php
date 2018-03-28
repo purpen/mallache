@@ -13,14 +13,20 @@ use Qiniu\Storage\UploadManager;
 
 class QiniuApi
 {
+    // 生成七牛处理对象
+    public static function auth()
+    {
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
+        return new Auth($accessKey, $secretKey);
+    }
+
     /**
      * 生成七牛Token
      */
     static public function upToken()
     {
-        $accessKey = config('filesystems.disks.qiniu.access_key');
-        $secretKey = config('filesystems.disks.qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
+        $auth = self::auth();
 
         $bucket = config('filesystems.disks.qiniu.bucket');
 
@@ -40,9 +46,7 @@ class QiniuApi
      */
     static public function yunPanUpToken(int $uid)
     {
-        $accessKey = config('filesystems.disks.qiniu.access_key');
-        $secretKey = config('filesystems.disks.qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
+        $auth = self::auth();
 
         $bucket = config('filesystems.disks.yunpan_qiniu.bucket');
 
@@ -64,21 +68,26 @@ class QiniuApi
      */
     static public function yunPanDownloadUrl(string $baseUrl)
     {
-        $accessKey = config('filesystems.disks.qiniu.access_key');
-        $secretKey = config('filesystems.disks.qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
+        $auth = self::auth();
 
         // 对链接进行签名
         $signedUrl = $auth->privateDownloadUrl($baseUrl);
         return $signedUrl;
     }
 
-    // 生成七牛处理对象
-    public static function auth()
+    /**
+     * 删除七牛中的云盘文件
+     */
+    static public function yunPanDelete($key)
     {
-        $accessKey = config('filesystems.disks.qiniu.access_key');
-        $secretKey = config('filesystems.disks.qiniu.secret_key');
-        return new Auth($accessKey, $secretKey);
+        $auth = self::auth();
+
+        $bucket = config('filesystems.disks.yunpan_qiniu.bucket');
+
+        $config = new \Qiniu\Config();
+        $bucketManager = new \Qiniu\Storage\BucketManager($auth, $config);
+        $bucketManager->delete($bucket, $key);
     }
+
 
 }

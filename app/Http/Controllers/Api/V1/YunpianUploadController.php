@@ -105,6 +105,11 @@ class YunpianUploadController extends BaseController
             $pan_director_id = $request->input('pan_director_id') ?? 0;
             $user_id = $request->input('uid');
 
+            $user = User::fin($user_id);
+            if (!$user) {
+                return null;
+            }
+
             if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
                 $callBackDate = [
                     'success' => 0,
@@ -167,14 +172,14 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                } else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $this->auth_user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
+                } else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
                     // 判断用户是否在这个项目中
                     // 项目管理未完成
                     throw new \Exception('项目管理未完成');
 
                 } else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
                     $user_group_id_list = Group::userGroupIDList($user_id);
-                    if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $this->auth_user->isDesignAdmin()) {
+                    if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $user->isDesignAdmin()) {
                         $pan_director = new PanDirector();
                         $pan_director->open_set = $pan_dir->open_set;
                         $pan_director->group_id = $pan_dir->group_id;
@@ -194,7 +199,7 @@ class YunpianUploadController extends BaseController
                         $pan_director->save();
 
                     }
-                } else if (($pan_dir->open_set == 2 && $pan_dir->user_id == $user_id) || $this->auth_user->isDesignAdmin()) {  // 判断上级目录是不是私有的
+                } else if (($pan_dir->open_set == 2 && $pan_dir->user_id == $user_id) || $user->isDesignAdmin()) {  // 判断上级目录是不是私有的
                     $pan_director = new PanDirector();
                     $pan_director->open_set = $pan_dir->open_set;
                     $pan_director->group_id = $pan_dir->group_id;
