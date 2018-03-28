@@ -105,7 +105,7 @@ class YunpianUploadController extends BaseController
             $pan_director_id = $request->input('pan_director_id') ?? 0;
             $user_id = $request->input('uid');
 
-            $user = User::fin($user_id);
+            $user = User::find($user_id);
             if (!$user) {
                 return null;
             }
