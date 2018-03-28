@@ -174,7 +174,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/auth/user', ['as' => 'auth.user', 'uses' => 'AuthenticateController@authUser']);
 
         //修改用户资料
-        $api->post('/auth/updateUser/{id}', [
+        $api->post('/auth/updateUser', [
             'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
         ]);
 
@@ -333,8 +333,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //设计公司成员列表
         $api->get('/design/members', 'DesignController@members');
         //设计公司设置成管理员
-        $api->put('/design/is_admin', 'DesignController@is_admin');
-
+        $api->put('/design/isAdmin', 'DesignController@isAdmin');
+        //移除成员
+        $api->put('/design/deleteMember', 'DesignController@deleteMember');
         /**
          * 通知消息相关路由
          */
@@ -465,6 +466,27 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         $api->resource('/itemLevels', 'ItemLevelController');
 
+
+        /**
+         * 任务
+         */
+        $api->resource('/tasks', 'TaskController');
+        //主任务完成与未完成
+        $api->put('/tasks/is/stage', 'TaskController@stage');
+        //子任务删除
+        $api->delete('/tasks/childDelete/{id}', ['as' => 'tasks.childDelete', 'TaskController@childDelete']);
+        //领取任务
+        $api->post('/tasks/executeUser', 'TaskController@executeUser');
+
+        /**
+         * 项目用户
+         */
+        $api->resource('/itemUsers', 'ItemUserController');
+
+        /**
+         * 任务成员
+         */
+        $api->resource('/taskUsers', 'TaskUserController');
 
     });
 });

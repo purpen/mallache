@@ -427,37 +427,28 @@ class AuthenticateController extends BaseController
 
     /**
      *
-     * @api {post} /auth/updateUser/{id} 修改用户资料
+     * @api {post} /auth/updateUser 修改用户资料
      * @apiVersion 1.0.0
      * @apiName user updateUser
      * @apiGroup User
      *
      *
-     * @apiParam {string} account 用户账号
+     * @apiParam {string} realname 姓名
+     * @apiParam {string} position 职位
+     * @apiParam {string} email 邮箱
      * @apiParam {string} token
      */
-    public function updateUser(Request $request , $id)
+    public function updateUser(Request $request)
     {
         $user_id = $this->auth_user_id;
-        // 验证规则
-        $rules = [
-            'account' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-        ];
-        $payload = $request->only('account');
-        $validator = Validator::make($payload, $rules);
-        if($validator->fails()){
-            throw new StoreResourceFailedException('用户修改失败！', $validator->errors());
-        }
-        if($id != $user_id){
-            return $this->response->array($this->apiSuccess('没有权限修改', 403));
-        }
+
         $all = $request->except(['token']);
-        $user = User::where('id' , $id)->first();
+        $user = User::where('id' , $user_id)->first();
         if(!$user){
             return $this->response->array($this->apiSuccess('没有该用户', 404));
         }
         $user->update($all);
-        return $this->response->item($user, new UserTransformer())->setMeta($this->apiMeta());
+        return $this->response->array($this->apiSuccess('修改成功', 200));
 
     }
 

@@ -33,6 +33,7 @@ class UserTransformer extends TransformerAbstract
             'role_id' => $user->role_id,
             'demand_company_id' => $user->demand_company_id,
             'realname' => $user->realname,
+            'position' => $user->position,
             'child_account' => $user->child_account,
             'company_role' => $user->company_role,
             'invite_user_id' => $user->invite_user_id,
