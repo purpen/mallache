@@ -201,7 +201,7 @@ class YunpianUploadController extends BaseController
                         $pan_director->save();
 
                     }
-                } else if (($pan_dir->open_set == 2 && $pan_dir->user_id == $user_id) || $user->isDesignAdmin()) {  // 判断上级目录是不是私有的
+                } else if (($pan_dir->open_set == 2 && $pan_dir->user_id == $user_id)) {  // 判断上级目录是不是私有的
                     $pan_director = new PanDirector();
                     $pan_director->open_set = $pan_dir->open_set;
                     $pan_director->group_id = $pan_dir->group_id;
