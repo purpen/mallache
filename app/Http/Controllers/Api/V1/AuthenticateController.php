@@ -454,7 +454,7 @@ class AuthenticateController extends BaseController
         if(!empty($email)){
             $users = User::where('email' , $email)->count();
             if($users > 0){
-                return $this->response->array($this->apiError('邮箱不能重复', 412));
+                return $this->response->array($this->apiError('邮箱已被占用', 412));
             }
         }
         //移除空的字段不更改
