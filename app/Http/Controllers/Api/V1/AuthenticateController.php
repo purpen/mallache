@@ -448,7 +448,8 @@ class AuthenticateController extends BaseController
         if(!$user){
             return $this->response->array($this->apiError('没有该用户', 404));
         }
-        if($user->email == $email){
+        $users = User::where('email' , $email)->count();
+        if($users > 0){
             return $this->response->array($this->apiError('邮箱不能重复', 412));
         }
         $user->update($all);
