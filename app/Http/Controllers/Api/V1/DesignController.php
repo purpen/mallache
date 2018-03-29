@@ -486,8 +486,8 @@ class DesignController extends BaseController
         }
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->child_account == 0){
-            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
         }
         if(in_array($user->company_role,[0,10])){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
@@ -529,8 +529,8 @@ class DesignController extends BaseController
         if(!$user){
             return $this->response->array($this->apiError('没有找到主账户', 404));
         }
-        if($user->child_account == 0){
-            return $this->response->array($this->apiError('该用户不是主账户', 403));
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
         }
         if(in_array($user->company_role , [0 , 10])){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
@@ -575,8 +575,9 @@ class DesignController extends BaseController
         if(!$user){
             return $this->response->array($this->apiError('没有找到主账户', 404));
         }
-        if($user->child_account == 0){
-            return $this->response->array($this->apiError('该用户不是主账户', 403));
+
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
         }
         if(in_array($user->company_role , [0 , 10])){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));

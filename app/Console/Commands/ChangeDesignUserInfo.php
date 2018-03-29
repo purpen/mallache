@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ChangeDesignUserInfo extends Command
 {
@@ -41,9 +42,13 @@ class ChangeDesignUserInfo extends Command
         User::chunk(100, function ($users) {
             foreach ($users as $user) {
                 if ($user->type == 2) {
-                    $user->child_account = 1;
-                    $user->company_role = 20;
+                    if($user->child_account == 1){
+                        $user->child_account = 0;
+                    }else{
+                        $user->child_account = 1;
+                    }
                     $user->save();
+
                 }
 
             }

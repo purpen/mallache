@@ -321,4 +321,17 @@ class User extends Authenticatable implements JWTSubject
             return false;
         }
     }
+
+    /**
+     * 判断用户是否是子账户
+     * @return bool
+     */
+    public function isChildAccount()
+    {
+        if ($this->type == 2 && $this->child_account == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

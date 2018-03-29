@@ -77,7 +77,7 @@ class AuthenticateController extends BaseController
             'username' => $payload['account'],
             'type' => $payload['type'],
             'password' => bcrypt($payload['password']),
-            'child_account' => 10,
+            'child_account' => 0,
             'company_role' => 20,
         ]);
         if($user->type == 1){
@@ -514,7 +514,8 @@ class AuthenticateController extends BaseController
             if($user->company_role == 0){
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
-            if($user->child_account == 0){
+
+            if($user->isChildAccount() == true){
                 return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
             }
         }else{
@@ -562,7 +563,8 @@ class AuthenticateController extends BaseController
             'password' => bcrypt($payload['password']),
             'design_company_id' => $design_company_id,
             'invite_user_id' => $invite_user_id,
-            'type' => 2
+            'type' => 2,
+            'child_account' => 1,
         ]);
 
         if ($users) {
