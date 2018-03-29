@@ -440,12 +440,16 @@ class AuthenticateController extends BaseController
      */
     public function updateUser(Request $request)
     {
+        $email = $request->input('email');
         $user_id = $this->auth_user_id;
 
         $all = $request->except(['token']);
         $user = User::where('id' , $user_id)->first();
         if(!$user){
-            return $this->response->array($this->apiSuccess('没有该用户', 404));
+            return $this->response->array($this->apiError('没有该用户', 404));
+        }
+        if($user->email == $email){
+            return $this->response->array($this->apiError('邮箱不能重复', 412));
         }
         $user->update($all);
         return $this->response->array($this->apiSuccess('修改成功', 200));
