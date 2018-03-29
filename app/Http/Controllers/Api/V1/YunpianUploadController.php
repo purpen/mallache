@@ -716,14 +716,20 @@ class YunpianUploadController extends BaseController
         $company_id = User::designCompanyId($user_id);
 
         if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
-            $query = PanDirector::query();
-            $list = $query->where('status', 1)
-                ->where('company_id', $company_id)
-                ->where(function ($query) use ($user_id) {
-                    $query->where('open_set', 1)
-                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+
+            $list = PanDirector::query()
+                ->where(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'");
                 })
-                ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'")
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where(['open_set' => 2, 'user_id' => $user_id])
+                        ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'");
+                })
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
