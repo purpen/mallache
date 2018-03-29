@@ -519,20 +519,29 @@ class YunpianUploadController extends BaseController
 
 
         if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
-            $query = PanDirector::query();
-            if ($type) {
-                $query = $query->where('type', $type);
-            }
-            $list = $query->where('status', 1)
-                ->where('company_id', $company_id)
-                ->where('pan_director_id', $pan_director_id)
-                ->where(function ($query) use ($user_id) {
-                    $query->where('open_set', 1)
-                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+            $list = PanDirector::query()
+                ->where(function ($query) use ($user_id, $type, $company_id, $pan_director_id) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 1);
+                })
+                ->orWhere(function ($query) use ($user_id, $type, $company_id, $pan_director_id) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where(['open_set' => 2, 'user_id' => $user_id]);
                 })
                 ->orderBy('type', 'asc')
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
+
         } else {
             // 用户所有用户组集合
             $group_id_arr = Group::userGroupIDList($user_id);
