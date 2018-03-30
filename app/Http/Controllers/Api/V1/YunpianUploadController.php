@@ -25,6 +25,7 @@ class YunpianUploadController extends BaseController
      * @apiGroup yunpan
      * @apiParam {string} token 图片上传upToken
      * @apiParam {string} x:pan_director_id 上级文件目录ID （顶层文件传'0'）
+     * @apiParam {string} x:browser 浏览器：1.IE
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -110,7 +111,12 @@ class YunpianUploadController extends BaseController
                 return null;
             }
 
-            if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
+            $file_name = trim($request->input('name'));
+            if ($request->input('browser') == 1) {
+                $file_name = preg_replace("#^.*\\\#", '', $file_name);
+            }
+
+            if (PanDirector::isSameFile($pan_director_id, $file_name, $user_id)) {
                 $callBackDate = [
                     'success' => 0,
                     'message' => '存在同名文件',
@@ -132,7 +138,7 @@ class YunpianUploadController extends BaseController
 
                 // 保存源文件
                 $pan_file = new PanFile();
-                $pan_file->name = trim($request->input('name'));
+                $pan_file->name = $file_name;
                 $pan_file->size = $request->input('size');
                 $pan_file->width = $request->input('width');
                 $pan_file->height = $request->input('height');
