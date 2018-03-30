@@ -1,12 +1,11 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="20">
       <v-menu currentName="modify_pwd" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
       <el-col :span="isMob ? 24 : 20">
         <div class="right-content modify-content">
-          <v-menu-sub currentSubName="identification"></v-menu-sub>
+          <v-menu-sub v-if="false" currentSubName="identification"></v-menu-sub>
           <div :class="['content-box' , isMob ? 'content-box-m' : '']" v-loading.body="isLoading">
             <div :class="['form-title', isMob ? 'form-title-m' : '']">
               <span>修改密码</span>

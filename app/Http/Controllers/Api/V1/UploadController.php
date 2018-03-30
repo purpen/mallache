@@ -51,6 +51,7 @@ class UploadController extends BaseController
     public function upToken()
     {
         $upload_url = config('filesystems.disks.qiniu.upload_url');
+
         $upToken = QiniuApi::upToken();
 
         $random = uniqid('', true);
@@ -189,6 +190,9 @@ class UploadController extends BaseController
         switch ($type) {
             case 2:
                 if ($user = User::find($target_id)) {
+                    if ($user->isDesignSuperAdmin() == true) {
+                        return;
+                    }
                     $user->logo = $id;
                     $user->save();
                 }

@@ -1,14 +1,10 @@
 <template>
-  <div class="container clearfix">
-    <div class="blank20"></div>
+  <div class="container blank40 clearfix">
     <v-menu currentName="c_item" :class="[isMob ? 'v-menu' : '']"></v-menu>
     <el-col :span="isMob ? 24 :20">
       <div class="right-content">
         <v-menu-sub :waitCountProp="waitCount" :ingCountProp="ingCount"></v-menu-sub>
-
-        <div class="loading"></div>
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]"  v-loading.body="isLoading">
-
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '' ]" v-loading="isLoading">
           <el-row v-if="!isMob" class="item-title-box list-box" v-show="designItems.length">
             <el-col :span="10">
               <p>项目名称</p>
@@ -38,7 +34,7 @@
                   <p class="contact">邮箱: {{ d.item.email }}</p>
                   <p slot="reference" class="name-wrapper contact-user"><i class="fa fa-phone" aria-hidden="true"></i>
                     {{ d.item.company_name }}</p>
-                  <p>产品功能：{{d.item.product_features}}</p>
+                  <!-- <p>产品功能：{{d.item.product_features}}</p> -->
                 </el-popover>
               </el-col>
             </el-row>
@@ -171,7 +167,7 @@
     },
     methods: {
       // 进入详情
-      showView() {
+      showView(event) {
         let itemId = parseInt(event.currentTarget.getAttribute('item_id'))
         this.$router.push({name: 'vcenterCItemShow', params: {id: itemId}})
       },
@@ -276,37 +272,34 @@
       }
       self.$http.get(api.designItemList, {})
         .then(function (response) {
-          self.isLoading = false
           if (response.data.meta.status_code === 200) {
+            self.isLoading = false
             if (!response.data.data) {
-              return false
-            }
-            self.waitCount = response.data.meta.pagination.total
-            let designItems = response.data.data
-            for (let i = 0; i < designItems.length; i++) {
-              let item = designItems[i]
-              let typeLabel = ''
-              if (item.item.type === 1) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
-              } else if (item.item.type === 2) {
-                typeLabel = item.item.type_value + '/' + item.item.design_type_value
-              }
-              designItems[i].item.type_label = typeLabel
-              designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
-            } // endfor
-            self.designItems = designItems
-            if (self.designItems.length) {
-              self.isEmpty = false
-            } else {
               self.isEmpty = true
+            } else {
+              self.isEmpty = false
+              self.waitCount = response.data.meta.pagination.total
+              let designItems = response.data.data
+              for (let i = 0; i < designItems.length; i++) {
+                let item = designItems[i]
+                let typeLabel = ''
+                if (item.item.type === 1) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value + '/' + item.item.field_value + '/' + item.item.industry_value
+                } else if (item.item.type === 2) {
+                  typeLabel = item.item.type_value + '/' + item.item.design_type_value
+                }
+                designItems[i].item.type_label = typeLabel
+                designItems[i]['item']['created_at'] = item.item.created_at.date_format().format('yyyy-MM-dd')
+              } // endfor
+              self.designItems = designItems
             }
           } else {
             self.$message.error(response.data.meta.message)
+            self.isLoading = false
           }
-
-//          console.log(response.data)
         })
         .catch(function (error) {
+          self.isLoading = false
           self.$message.error(error.message)
           return false
         })
@@ -338,7 +331,7 @@
     overflow: hidden;
   }
   .content-item-box-m {
-    margin: 15px 15px 0;
+    margin: 0 15px 0;
   }
 
   .content-item-box .item {
@@ -425,8 +418,7 @@
   }
 
   .item-title-box {
-    margin-top: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #d2d2d2;
     border-bottom: none;
   }
 
@@ -497,12 +489,13 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/\tools/report/NoContent.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 </style>

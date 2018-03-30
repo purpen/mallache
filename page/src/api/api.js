@@ -22,10 +22,12 @@ export default {
   modifyPwd: '/auth/changePassword', // POST 修改密码
   check_account: '/auth/phoneState/{0}',  // 验证手机号是否存在
   fetch_msm_code: '/auth/sms', // 获取手机验证码
+  fetch_img_captcha: '/captcha/getCaptcha', // 获取图片验证码
   user: '/auth/user',  // 获取用户信息
   authFundInfo: '/auth/fundInfo', // GET 用户钱包信息
   fundLogList: '/fundLogList', // GET 交易记录
   withdrawCreate: '/withdraw/create', // POST 提现
+  withdrawList: '/withdraw/lists', // GET 用户提现列表
 
   // 栏目
   columnList: '/column/lists', // GET 列表
@@ -154,12 +156,13 @@ export default {
   adminItemShow: '/admin/item/show', // GET 项目详情
   addItemToCompany: '/admin/item/addDesignToItem',  // 给项目推荐公司
   ConfirmItemToCompany: '/admin/item/trueItem',  // 确认项目推荐公司
+  forceCloseSubmit: '/admin/item/closeItem',  // POST 强制关闭项目并返还款项
 
   // 需求公司管理
   adminDemandCompanyList: '/admin/demandCompany/lists', // GET 需求公司列表
   adminDemandCompanyShow: '/admin/demandCompany/show', // GET 需求公司详情
-  adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中
-  adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过
+  adminDemandCompanyVerifyIng: '/admin/demandCompany/unVerifyStatus', // PUT 审核中(停用)
+  adminDemandCompanyVerifyNo: '/admin/demandCompany/noVerifyStatus', // PUT 未能通过(停用)
   adminDemandCompanyVerifyOk: '/admin/demandCompany/verifyStatus', // PUT 通过审核
 
   // 设计公司管理
@@ -168,7 +171,7 @@ export default {
   adminCompanyStatusOk: '/admin/designCompany/okStatus', // PUT 启用
   adminCompanyStatusDisable: '/admin/designCompany/unStatus', // PUT 禁用
   adminCompanyVerifyOk: '/admin/designCompany/verifyStatus', // PUT 通过审核
-  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // PUT 取消审核
+  adminCompanyVerifyCancel: '/admin/designCompany/unVerifyStatus', // PUT 取消审核 (停用)
 
   // 订单管理
   adminPayOrderLists: '/admin/payOrder/lists', // GET 订单列表
@@ -246,12 +249,14 @@ export default {
   adminBlockSetStatus: '/admin/block/changeStatus', // PUT 启用 | 禁用
 
   // 附件管理
-  adminAssetUrlUpload: '/admin/urlUpload',  // GET 图片地址上传
+  adminAssetUrlUpload: '/admin/urlUpload', // GET 图片地址上传
 
   // veer图片列表
   veerImage: '/veerImage/list',
   block: '/block',
 
+  // 云盘
+  yunpanUpToken: '/upload/yunpanUpToken', // 云盘上传upToken
   // test
   test: '/'  // End
 }

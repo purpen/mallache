@@ -460,7 +460,7 @@ class DesignCaseController extends BaseController
      *
      * @apiParam {integer} page 页码
      * @apiParam {integer} per_page  页面数量
-     * @apiParam {integer} sort 创建时间排序 0.创建时间正序；1.创建时间倒序；2.推荐倒序；
+     * @apiParam {integer} sort 创建时间排序 0.创建时间倒序；1.创建时间正序；2.推荐倒序；5.随机数正序；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -521,14 +521,19 @@ class DesignCaseController extends BaseController
         //排序
         switch ($sort) {
             case 0:
-                $query->orderBy('id', 'asc');
+                $query->orderBy('id', 'desc');
                 break;
             case 1:
-                $query->orderBy('id', 'desc');
+                $query->orderBy('id', 'asc');
                 break;
             case 2:
                 $query->orderBy('open_time', 'desc');
                 break;
+            case 5:
+                $query->orderBy('random', 'asc');
+                break;
+            default:
+                $query->orderBy('id', 'desc');
         }
 
 

@@ -1,7 +1,7 @@
 <template>
-  <div class="container" v-loading.fullscreen.lock="isFullLoading">
-    <div class="blank20"></div>
-    <el-row :gutter="10">
+  <div class="container blank40"
+    v-loading.fullscreen.lock="isFullLoading">
+    <el-row :gutter="20">
 
       <el-col :xs="24" :sm="6" :md="6" :lg="6">
         <div class="design-case-slide">
@@ -9,21 +9,21 @@
             <img class="avatar" v-if="item.logo_url" :src="item.logo_url" width="100"/>
             <img class="avatar" v-else :src="require('assets/images/avatar_100.png')" width="100"/>
             <h3>{{ item.company_abbreviation }}</h3>
-            <p><span>{{ item.province_value }}</span>&nbsp;&nbsp;&nbsp;<span>{{ item.city_value }}</span></p>
+            <p><i class="fx-icon-location"></i><span>{{ item.province_value }}</span><span>{{ item.city_value }}</span></p>
           </div>
 
           <div class="rate">
             <p>信用指数：<span>{{ item.score }}分</span></p>
           </div>
 
-          <div class="cate">
+          <div class="cate" v-if="item.design_type_val">
             <p class="c-title">设计类别</p>
             <p class="tag">
               <el-tag type="gray" v-for="(d, index) in item.design_type_val" :key="index">{{ d }}</el-tag>
             </p>
           </div>
 
-          <div class="cate">
+          <div class="cate" v-if="item.good_field_value">
             <p class="c-title">擅长领域</p>
             <p class="tag">
               <el-tag type="gray" v-for="(d, index) in item.good_field_value" :key="index">{{ d }}</el-tag>
@@ -32,11 +32,11 @@
 
           <div class="cate">
             <p class="c-title">联系方式</p>
-            <p>地址: {{ item.address }}</p>
-            <p>联系人: {{ item.contact_name }}</p>
+            <p v-if="item.address">地址: {{ item.address }}</p>
+            <p v-if="item.contact_name">联系人: {{ item.contact_name }}</p>
             <p v-if="item.phone">电话: {{ item.phone }}</p>
             <p v-if="item.email">邮箱: {{ item.email }}</p>
-            <p class="web">网址: <a :href="item.web" :target="isMob ? '_self' : '_blank'">{{ item.web }}</a></p>
+            <p v-if="item.web" class="web">网址: <a :href="item.web" :target="isMob ? '_self' : '_blank'">{{ item.web }}</a></p>
           </div>
 
         </div>
@@ -46,9 +46,7 @@
         <div class="design-case-content">
           <div class="">
             <h2>作品案例</h2>
-
             <div class="design-case-list" v-loading.body="isLoading">
-
               <el-row :gutter="10">
                 <el-col :xs="24" :sm="8" :md="8" :lg="8" v-for="(d, index) in designCases" :key="index">
                   <el-card :body-style="{ padding: '0px' }" class="item">
@@ -66,18 +64,17 @@
                   </el-card>
                 </el-col>
               </el-row>
-
             </div>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.company_profile">
             <h2>公司简介</h2>
             <p>{{ item.company_profile }}</p>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.professional_advantage">
             <h2>专业优势</h2>
             <p>{{ item.professional_advantage }}</p>
           </div>
-          <div class="summary">
+          <div class="summary" v-if="item.awards">
             <h2>荣誉奖项</h2>
             <p>
               <pre v-html="item.awards" style="white-space:normal"></pre>
@@ -168,12 +165,12 @@ export default {
 <style lang="stylus" scoped>
 .design-case-content {
   padding: 20px 40px 20px 40px;
-  border: 1px solid #ccc;
+  // border: 1px solid #ccc;
 }
 
 .design-case-content .title {
   text-align: center;
-  color: #5d6266;
+  color: #666;
   margin: 20px 0 20px 0;
   font-size: 2rem;
 }
@@ -181,7 +178,7 @@ export default {
 .design-case-content h2 {
   text-align: center;
   font-size: 1.8rem;
-  color: #333;
+  color: #222;
   margin: 20px;
 }
 
@@ -191,7 +188,7 @@ export default {
 
 .design-case-content .summary p {
   line-height: 1.6;
-  color: #5d6266;
+  color: #666;
 }
 
 .design-case-content .des {
@@ -212,15 +209,26 @@ export default {
   text-align: center;
 }
 
+.design-case-slide .info h3 {
+  color: #222;
+}
+
+.design-case-slide .info p {
+  color: #222;
+}
+
+.info p span, .info p i {
+  margin-right: 10px
+}
+
 .design-case-slide h3 {
-  margin: 10px;
-  font-size: 2rem;
+  margin: 20px;
+  font-size: 1.8rem;
 }
 
 .design-case-slide .rate {
   padding: 10px;
   text-align: center;
-  border-top: 1px solid rgba(224, 224, 224, 0.46);
 }
 
 .design-case-slide .cate {
@@ -239,7 +247,15 @@ export default {
 }
 
 .cate p.tag span {
-  margin: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
+  background: rgba(0, 0, 0, 0)
+  border: 1px solid #d2d2d2;
+  padding: 7px;
+  line-height: 1;
+  font-size: 12px;
+  height: auto;
+  color: #666;
 }
 
 .design-case-slide .prize {
@@ -265,7 +281,10 @@ p.web {
 .content a {
   font-size: 1.5rem;
 }
-
+.image-box {
+  height: 150px;
+  overflow: hidden;
+}
 @media screen and (max-width: 767px) {
   .design-case-slide {
     border: none;

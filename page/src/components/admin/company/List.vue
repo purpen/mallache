@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container company-verify">
     <div class="blank20"></div>
     <el-row :gutter="20">
       <v-menu selectedName="companyList"></v-menu>
@@ -9,10 +9,10 @@
 
           <div class="admin-menu-sub">
             <div class="admin-menu-sub-list">
-              <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == 0}">全部</router-link>
+              <router-link :to="{name: 'adminCompanyList'}" active-class="false" :class="{'item': true, 'is-active': menuType == ''}">全部</router-link>
             </div>
             <div class="admin-menu-sub-list">
-              <router-link :to="{name: 'adminCompanyList', query: {type: -1}}" :class="{'item': true, 'is-active': menuType === -1}" active-class="false">待审核</router-link>
+              <router-link :to="{name: 'adminCompanyList', query: {type: 3}}" :class="{'item': true, 'is-active': menuType === 3}" active-class="false">待审核</router-link>
             </div>
             <div class="admin-menu-sub-list">
               <router-link :to="{name: 'adminCompanyList', query: {type: 1}}" :class="{'item': true, 'is-active': menuType === 1}" active-class="false">通过审核</router-link>
@@ -63,7 +63,7 @@
             </el-table-column>
             <el-table-column
               label="内容"
-              min-width="180">
+              min-width="160">
                 <template slot-scope="scope">
                   <p>全称: <router-link :to="{name: 'companyShow', params: {id: scope.row.id}}" target="_blank">{{ scope.row.company_name }}</router-link></p>
                   <p>简称: {{ scope.row.company_abbreviation }}</p>
@@ -74,7 +74,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-              label="创建人">
+              label="创建人"
+              min-width="90">
                 <template slot-scope="scope">
                   <p>
                     {{ scope.row.users.account }}[{{ scope.row.user_id }}]
@@ -82,34 +83,46 @@
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               prop="verify_status"
-              label="是否审核">
+              label="审核状态">
                 <template slot-scope="scope">
-                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">是</el-tag></p>
-                  <p v-else><el-tag type="gray">否</el-tag></p>
+                  <p v-if="scope.row.verify_status === 0"><el-tag type="gray">未审核</el-tag></p>
+                  <p v-if="scope.row.verify_status === 1"><el-tag type="success">通过</el-tag></p>
+                  <p v-if="scope.row.verify_status === 2"><el-tag type="danger">失败</el-tag></p>
+                  <p v-if="scope.row.verify_status === 3"><el-tag type="warning">待审核</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               label="状态">
                 <template slot-scope="scope">
                   <p v-if="scope.row.status === 1"><el-tag type="success">正常</el-tag></p>
-                  <p v-else><el-tag type="gray">禁用</el-tag></p>
+                  <p v-else><el-tag type="danger">禁用</el-tag></p>
                 </template>
             </el-table-column>
             <el-table-column
+              align="center"
               prop="created_at"
               width="80"
               label="创建时间">
             </el-table-column>
             <el-table-column
+              align="center"
               width="100"
               label="操作">
                 <template slot-scope="scope">
-                  <p>
-                    <a href="javascript:void(0);" v-if="scope.row.verify_status === 1" @click="setVerify(scope.$index, scope.row, 0)">取消审核</a>
-                    <a href="javascript:void(0);" v-else @click="setVerify(scope.$index, scope.row, 1)">通过审核</a>
-                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)">禁用</a>
-                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)">启用</a>
+                  <p class="operate">
+                    <span class="clearfix">
+                      <a href="javascript:void(0);"
+                        v-if="scope.row.verify_status === 2 || scope.row.verify_status === 3" @click="setVerify(scope.$index, scope.row, 1)" class="tag-pass">通过</a>
+                      <a href="javascript:void(0);" v-if="scope.row.verify_status === 1 || scope.row.verify_status === 3" @click="setRefuseRease(scope.$index, scope.row, 2)"
+                      class="tag-refuse">拒绝</a>
+                    </span>
+                    <a href="javascript:void(0);" v-if="scope.row.status === 1" @click="setStatus(scope.$index, scope.row, 0)" class="tag-disable">禁用</a>
+                    <a href="javascript:void(0);" v-else @click="setStatus(scope.$index, scope.row, 1)"
+                    class="tag-able">启用</a>
+                    <router-link :to="{name: 'adminCompanyShow', params: {id: scope.row.id}}" target="_blank" class="tag-view">查看</router-link>
                   </p>
                   <!--
                   <p>
@@ -117,12 +130,17 @@
                     <a href="javascript:void(0);" @click="handleDelete(scope.$index, scope.row.id)">删除</a>
                   </p>
                   -->
-                  <p>
-                    <router-link :to="{name: 'adminCompanyShow', params: {id: scope.row.id}}" target="_blank">查看</router-link>
-                  </p>
                 </template>
             </el-table-column>
           </el-table>
+
+          <el-dialog title="请填写拒绝原因" :visible.sync="dialogVisible" size="tiny">
+            <el-input v-model="verify.refuseRease"></el-input>
+            <span slot="footer" class="dialog-footer">
+              <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+              <el-button size="small" type="primary" @click="setVerify(verify.index, verify.item, verify.evt, verify.refuseRease)">确 定</el-button>
+            </span>
+          </el-dialog>
 
           <el-pagination
             class="pagination"
@@ -165,9 +183,15 @@ export default {
         type: 0,
         evt: '',
         val: '',
-
         test: null
       },
+      verify: {
+        index: '',
+        item: '',
+        evt: '',
+        refuseRease: ''
+      },
+      dialogVisible: false,
       msg: ''
     }
   },
@@ -188,17 +212,19 @@ export default {
       this.query.page = val
       this.$router.push({name: this.$route.name, query: this.query})
     },
-    setVerify(index, item, evt) {
+    setRefuseRease (index, item, evt) {
+      this.dialogVisible = !this.dialogVisible
+      this.verify.index = index
+      this.verify.item = item
+      this.verify.evt = evt
+    },
+    setVerify(index, item, evt, refuseRease = '') {
+      this.dialogVisible = false
       var id = item.id
-      var url = ''
-      if (evt === 0) {
-        url = api.adminCompanyVerifyCancel
-      } else {
-        url = api.adminCompanyVerifyOk
-      }
       var self = this
-      self.$http.put(url, {id: id})
+      self.$http.put(api.adminCompanyVerifyOk, {id: id, status: evt, verify_summary: refuseRease})
       .then (function(response) {
+        self.verify.refuseRease = ''
         if (response.data.meta.status_code === 200) {
           self.itemList[index].verify_status = evt
           self.$message.success('操作成功')
@@ -208,7 +234,7 @@ export default {
       })
       .catch (function(error) {
         self.$message.error(error.message)
-        console.log(error.message)
+        console.error(error.message)
       })
     },
     setStatus(index, item, evt) {
@@ -239,7 +265,7 @@ export default {
       // 查询条件
       self.query.page = parseInt(this.$route.query.page || 1)
       self.query.sort = this.$route.query.sort || 0
-      self.query.type = this.$route.query.type || 0
+      self.query.type = this.$route.query.type || ''
       self.query.evt = this.$route.query.evt || ''
       self.query.val = this.$route.query.val || ''
       this.menuType = 0
@@ -290,6 +316,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .operate a {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 8px;
+    border-radius: 4px;
+  }
 
 </style>

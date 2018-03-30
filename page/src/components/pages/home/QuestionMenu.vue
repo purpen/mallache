@@ -33,8 +33,8 @@
         意见与反馈
       </router-link>
     </div>
-    <div class="question-list">
-      <div class="Mmenu-list" v-if="isMob">
+    <div class="question-list" v-if="isMob">
+      <div class="Mmenu-list">
         <router-link :to="{name: 'question', query: {name: 'auth'}}" active-class="false" :class="{'item': true, 'is-active': currentName === 'auth' ? true : false}">
           注册与登录
         </router-link>

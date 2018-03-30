@@ -1,13 +1,12 @@
 <template>
-  <div class="container min-height350">
-    <div class="blank20"></div>
+  <div class="container blank40 min-height350">
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-loading="isLoading">
+          <div class="content-box">
 
             <div class="item" v-for="(d, index) in itemList" @click="showDes(d, index)" :key="index">
               <div class="banner2">
@@ -21,7 +20,8 @@
                   <i v-else class="el-icon-arrow-down"></i>
                 </p>
               </div>
-              <p v-show="d.is_show" class="content">{{ d.content }} <a href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看</a></p>
+              <p v-show="d.is_show" class="content">{{ d.content }}</p>
+              <a v-show="d.is_show" class="detail" href="javascript:void(0);" v-if="d.is_url === 1" @click.stop="redirect(d)">查看详情>></a>
             </div>
           </div>
 
@@ -47,6 +47,7 @@
   import vMenu from '@/components/pages/v_center/Menu'
   import vMenuSub from '@/components/pages/v_center/message/MenuSub'
   import api from '@/api/api'
+  import { MSG_COUNT } from '@/store/mutation-types'
   import '@/assets/js/format'
   import '@/assets/js/date_format'
 
@@ -105,7 +106,6 @@
               } else {
                 self.isEmpty = true
               }
-//              console.log(data)
             }
           })
           .catch(function (error) {
@@ -130,19 +130,20 @@
         if (d.is_show) {
           this.itemList[index].is_show = false
         } else {
+          this.fetchMessageCount()
           this.itemList[index].is_show = true
-          // 确认已读状态
-          if (d.status === 0) {
-            self.$http.put(api.messageTrueRead, {id: d.id})
-              .then(function (response) {
-                if (response.data.meta.status_code === 200) {
-                  self.itemList[index].status = 1
-                }
-              })
-              .catch(function (error) {
-                self.$message.error(error.message)
-              })
-          }
+        }
+        // 确认已读状态
+        if (self.itemList[index].status === 0) {
+          self.$http.put(api.messageTrueRead, {id: d.id})
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                self.itemList[index].status = 1
+              }
+            })
+            .catch(function (error) {
+              self.$message.error(error.message)
+            })
         }
       },
       // 根据类型跳转
@@ -152,6 +153,36 @@
         } else if (d.type === 3) {
           this.$router.push({name: 'vcenterWalletList'})
         }
+      },
+      // 请求消息数量
+      fetchMessageCount() {
+        const self = this
+        this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            var message = 0
+            var notice = 0
+            var quantity = 0
+            if (parseInt(response.data.data.message)) {
+              message = parseInt(response.data.data.message) - 1
+            } else {
+              message = parseInt(response.data.data.message)
+            }
+            notice = parseInt(response.data.data.notice)
+            sessionStorage.setItem('noticeCount', notice)
+            if (parseInt(response.data.data.quantity)) {
+              quantity = parseInt(response.data.data.quantity) - 1
+            } else {
+              quantity = parseInt(response.data.data.quantity)
+            }
+            var msgCount = {message: message, notice: notice, quantity: quantity}
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, msgCount)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     computed: {
@@ -199,7 +230,7 @@
     position: relative;
     border: 1px solid #ccc;
     margin-bottom: -1px;
-    padding: 10px 20px 10px;
+    padding: 20px;
     cursor: pointer;
     min-height: 30px;
     line-height: 30px;
@@ -242,7 +273,10 @@
 
 
   .item p.icon {
-    float: right;
+    position: absolute;
+    right: 20px;
+    color: #999;
+    top: 33px;
   }
 
   .item p.content {
@@ -250,16 +284,18 @@
     font-size: 14px;
     clear: both;
     line-height: 18px;
-    color: #666;
   }
 
-  .item p.content a {
-    font-size: 1.2rem;
+  .item .detail {
+    font-size: 14px;
+    line-height: 24px;
+    color: #FF5A5F;
+    cursor: pointer;
   }
 
   i.alert {
     display: block;
-    background: #f00;
+    background: #FF5A5F;
     border-radius: 50%;
     width: 7px;
     height: 7px;
@@ -268,9 +304,6 @@
     position: absolute;;
   }
 
-  i.alert.gray {
-    background: #ddd;
-  }
 
   .pagination {
     display: flex;
@@ -281,13 +314,14 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/tools/report/NoMessage.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 
   .content a {

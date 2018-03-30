@@ -57,6 +57,7 @@ export default {
     font-size: 1.4rem;
     color: #666;
     line-height: 1.5;
+    height: 42px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

@@ -316,7 +316,7 @@ export default {
   }
 
   .company-show .item p {
-    line-height: 3;
+    line-height: 40px;
   }
 
   .company-show .item.des p {

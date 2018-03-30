@@ -1,10 +1,9 @@
 <template>
-  <div class="container min-height350">
-    <div class="blank20"></div>
+  <div class="container blank40 control min-height350">
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="control"></v-menu>
-      <el-col :span="isMob ? 24 : 20">
-        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']" v-loading.body="isLoading">
+      <el-col :span="isMob ? 24 : 20" v-loading.body="isLoading">
+        <div :class="['content-item-box', isMob ? 'content-item-box-m' : '']">
           <div class="item ing" v-for="(d, index) in itemIngList" :key="index">
             <div class="banner">
               <p>
@@ -39,7 +38,7 @@
             </div>
             <p class="alert-title"><span>*</span> 在铟果平台接单前，请先完善以下信息并完成公司认证，便于系统精准推送项目需求。</p>
 
-            <div class="item clearfix" v-show="item.design_info_status === 0">
+            <div class="item clearfix" v-if="item.design_info_status === 0">
               <h3>完善公司信息</h3>
               <p class="item-title">填写公司基本信息、公司简介、荣誉奖励</p>
               <p class="item-btn">
@@ -47,7 +46,7 @@
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_verify_status !== 1">
+            <div class="item clearfix" v-if="item.design_verify_status !== 1">
               <h3>公司认证</h3>
               <p class="item-title">提交公司认证信息</p>
               <p class="item-btn">
@@ -55,7 +54,7 @@
               </p>
             </div>
 
-            <div class="item clearfix" v-show="item.design_item_status === 0">
+            <div class="item clearfix" v-if="item.design_item_status === 0">
               <h3>公司接单设置</h3>
               <p class="item-title">设计项目接单价格</p>
               <p class="item-btn">
@@ -63,7 +62,7 @@
               </p>
             </div>
 
-            <div class="item no-line clearfix" v-show="item.design_case_status === 0">
+            <div class="item no-line clearfix" v-if="item.design_case_status === 0">
               <h3>上传案例作品</h3>
               <p class="item-title">向客户更好的展示和推荐项目案例</p>
               <p class="item-btn">
@@ -105,8 +104,8 @@
             <div class="form-title">
               <span>待处理事项</span>
             </div>
-            <p class="alert-title clearfix" v-if="messageCount !== 0">{{ messageCount }} 条消息</p>
-            <div class="message-btn" v-if="messageCount === 0">
+            <p class="alert-title clearfix" v-if="messageCount.quantity">{{ messageCount.quantity }} 条消息</p>
+            <div class="message-btn" v-if="!messageCount.quantity">
               <img src="../../../../assets/images/icon/control_icon.png"/>
               <p>当前无待处理事项</p>
             </div>
@@ -128,6 +127,7 @@
 
 <script>
   import vMenu from '@/components/pages/v_center/Menu'
+  import { MSG_COUNT } from '@/store/mutation-types'
   import api from '@/api/api'
 
   export default {
@@ -181,6 +181,36 @@
             break
         }
         this.$router.push({name: name, params: {id: itemId}})
+      },
+      // 请求消息数量
+      fetchMessageCount() {
+        const self = this
+        this.$http.get(api.messageGetMessageQuantity, {}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            var message = 0
+            var notice = 0
+            var quantity = 0
+            if (parseInt(response.data.data.message)) {
+              message = parseInt(response.data.data.message) - 1
+            } else {
+              message = parseInt(response.data.data.message)
+            }
+            notice = parseInt(response.data.data.notice)
+            sessionStorage.setItem('noticeCount', notice)
+            if (parseInt(response.data.data.quantity)) {
+              quantity = parseInt(response.data.data.quantity) - 1
+            } else {
+              quantity = parseInt(response.data.data.quantity)
+            }
+            var msgCount = {message: message, notice: notice, quantity: quantity}
+            // 写入localStorage
+            self.$store.commit(MSG_COUNT, msgCount)
+          } else {
+            self.$message.error(response.data.meta.message)
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     computed: {
@@ -192,6 +222,7 @@
       }
     },
     created: function () {
+      this.fetchMessageCount()
       const that = this
       let isCompany = that.isCompany()
       let url = null
@@ -205,6 +236,7 @@
           if (response.data.meta.status_code === 200) {
             let item = null
             that.item = item = response.data.data
+            console.log(response.data.data)
             let verifyStatus = 0
             if (isCompany) {
               if (item.design_info_status === 0 || item.design_verify_status !== 1 || item.design_case_status === 0 || item.design_item_status === 0) {
@@ -217,16 +249,19 @@
               }
               verifyStatus = item.demand_verify_status
             }
-
+            console.log(verifyStatus)
             switch (verifyStatus) {
               case 0:
-                item.verify_label = '待认证'
+                item.verify_label = '未认证'
                 break
               case 1:
                 item.verify_label = '已通过'
                 break
               case 2:
                 item.verify_label = '认证失败'
+                break
+              case 3:
+                item.verify_label = '等待认证'
                 break
             }
           }
@@ -279,8 +314,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .right-content .content-box {
-    margin-top: 0;
     min-height: 200px;
+    padding-bottom: 0;
   }
 
   p.alert-title {
@@ -297,10 +332,12 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
     padding-bottom: 10px;
+    position: relative;
   }
 
   .content-box .item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
   }
 
   .content-box .item h3 {
@@ -317,11 +354,15 @@
   }
 
   .content-box .item .item-btn {
-    float: right;
-    margin-top: 5px;
-    margin-right: 10px;
+    position: absolute;
+    right: 20px;
+    bottom: 24px;
     font-size: 1.4rem;
     line-height: 1.7;
+  }
+
+  .content-box .item:last-child .item-btn {
+    bottom: 14px;
   }
 
   .content-box .item .item-btn a {
@@ -337,20 +378,12 @@
   }
 
   .right-content.message {
-    margin: 20px 0;
+    margin: 0 0 20px;
   }
 
   .message-btn {
     text-align: center;
     margin-bottom: 20px;
-  }
-
-  .content-item-box {
-    margin-top: 10px;
-  }
-
-  .content-item-box-m {
-    margin-top: 20px;
   }
 
   .pub {
@@ -431,7 +464,7 @@
   .item-title-box {
     margin-top: 20px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #d2d2d2;
     border-bottom: none;
   }
 

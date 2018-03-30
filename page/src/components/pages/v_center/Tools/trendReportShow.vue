@@ -4,12 +4,12 @@
       <ToolsMenu currentName="trendReport"></ToolsMenu>
       <p class="title">{{pdf.title}}</p>
       <p class="info clearfix">
-        <span class="date fl"><i class="fx-2 fx-icon-time"></i>{{pdf.created_at}}</span>
-        <span class="view fl"><i class="fx-3 fx-icon-see"></i>{{pdf.hits}}</span>
+        <span class="date fl"><i class="fx-2 fx-icon-time-orange-sm"></i>{{pdf.created_at}}</span>
+        <span class="view fl"><i class="fx-3 fx-icon-browse-sm"></i>{{pdf.hits}}</span>
         <span class="tigs fl">
           <b class="fl">标签:</b>
           <i class="fx" v-for="(e, i) in pdf.tag" :key="i">
-            <i class="fx-icon-label"></i>
+            <i class="fx-icon-label-orange2-sm"></i>
             {{e}}
           </i>
         </span>
@@ -231,14 +231,13 @@
 
   p.info {
     color: #999999;
-    overflow: hidden;
     padding-bottom: 5px;
   }
 
   p.info span {
     font-size: 12px;
     line-height: 16px;
-    padding-right: 15px;
+    padding-right: 20px;
     margin: 5px 0;
     display: flex;
     align-items: center;
@@ -247,7 +246,7 @@
   .tigs i.fx {
     display: flex;
     align-items: center;
-    margin-left: 6px;
+    margin-left: 14px;
   }
 
   p.flip {
@@ -273,7 +272,7 @@
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #D2D2D2;
-    padding: 0 20px 0 15px;
+    padding: 0 20px;
     background: #FFFFFF;
     display: flex;
     align-items: center;
@@ -281,7 +280,7 @@
   }
 
   menu menuitem {
-    margin-right: 8px;
+    margin-right: 20px;
     width: 30px;
     height: 30px;
     font-size: 14px;

@@ -30,9 +30,7 @@
               <img class="avatar" v-else src="../../../assets/images/avatar_100.png" width="100"/>
             </router-link>
             <h3>{{ item.design_company.company_abbreviation }}</h3>
-            <p class="com-addr">
-              <span>{{ item.design_company.province_value }}</span>&nbsp;&nbsp;&nbsp;
-              <span>{{ item.design_company.city_value }}</span>
+            <p class="com-addr"><i class="fx-icon-location"></i><span>{{ item.design_company.province_value }}</span><span>{{ item.design_company.city_value }}</span>
             </p>
           </div>
           <div class="rate">
@@ -161,6 +159,18 @@ export default {
   text-align: center;
 }
 
+.design-case-slide .info h3 {
+  color: #222;
+}
+
+.design-case-slide .info p {
+  color: #222;
+}
+
+.info p span, .info p i {
+  margin-right: 10px
+}
+
 .design-case-slide .info img {
   border-radius: 50%;
   overflow: hidden;
@@ -176,6 +186,7 @@ export default {
 
 .design-case-slide .com-addr {
   line-height: 2.8rem;
+  color: #666;
 }
 
 .design-case-slide .rate {

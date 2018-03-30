@@ -105,7 +105,7 @@ export default {
                       if (prevUrlName) {
                         // 清空上一url
                         auth.clear_prev_url_name()
-                        that.$router.replace({ name: prevUrlName })
+                        that.$router.replace({ path: prevUrlName })
                       } else {
                         if (that.isMob) {
                           that.$router.replace({ name: 'home' })

@@ -1,6 +1,5 @@
 <template>
-  <div class="container taking-dialog">
-    <div class="blank20"></div>
+  <div class="container taking-dialog blank40">
     <el-row :gutter="24">
       <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 

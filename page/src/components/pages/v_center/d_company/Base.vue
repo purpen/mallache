@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
 
@@ -12,7 +11,7 @@
 
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m item-mAvatar' : '']">
               <el-col :span="titleSpan" class="title avatarhead">
-                <p>头像</p>
+                <p>公司logo</p>
                 <span v-if="isMob">{{ avatarStr }}</span>
               </el-col>
               <el-col :span="isMob ? 12 : 20" class="content avatarcontent">
@@ -47,8 +46,6 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('company_abbreviation')">编辑</a>
               </el-col>
             </el-row>
-
-            <!--
             <el-row :gutter="gutter" class="item">
               <el-col :span="titleSpan" class="title">
                 <p>联系人信息</p>
@@ -82,8 +79,6 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('contact')">编辑</a>
               </el-col>
             </el-row>
-            -->
-
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>地址</p>
@@ -314,7 +309,7 @@
         }
 
         console.log(row)
-        that.$http({method: 'POST', url: api.demandCompany, data: row})
+        that.$http({method: 'PUT', url: api.demandCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.element[mark] = false
@@ -402,6 +397,7 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
+              console.log
               // 重新渲染
               that.$nextTick(function () {
                 that.form = response.data.data
@@ -470,6 +466,12 @@
     margin: 5px 0;
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
+  }
+
+  .content-box .item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .no-border {

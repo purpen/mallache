@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu :class="[isMob ? 'v-menu' : '']" currentName="match_case"></v-menu>
 
@@ -141,7 +140,7 @@
 
   .right-content .content-box-m {
     border-top: 1px solid #E6E6E6;
-    margin: 14px 0 0 0;
+    margin: 0;
     padding: 0 15px;
   }
 

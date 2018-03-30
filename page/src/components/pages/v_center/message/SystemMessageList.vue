@@ -1,14 +1,13 @@
 <template>
-  <div class="container min-height350">
-    <div class="blank20"></div>
+  <div class="container blank40 min-height350">
     <el-row :gutter="20" class="anli-elrow">
       <v-menu currentName="message"></v-menu>
 
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :span="isMob ? 24 : 20" v-loading="isLoading">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
-          <div class="content-box" v-loading="isLoading">
-            <div class="item clearfix" v-for="(d, index) in itemList" :key="index">
+          <div class="content-box">
+            <div class="item clearfix" v-for="(d, index) in itemList" :key="index" @click="removeRedDot(index)">
               <div class="left">
                 <p class="logo"></p>
               </div>
@@ -102,7 +101,9 @@
               }
               let noticeCount = sessionStorage.getItem('noticeCount')
               for (let j = 0; j < noticeCount; j++) {
-                self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                if (self.itemList[j]) {
+                  self.itemList[j]['not_read'] = true // 给未读通知加上红点
+                }
               }
             } else {
               self.$message.error(response.data.meta.message)
@@ -112,6 +113,9 @@
             self.isLoading = false
             self.$message.error(error.message)
           })
+      },
+      removeRedDot(index) {
+        this.itemList[index]['not_read'] = false
       },
       handleCurrentChange(val) {
         this.query.page = val
@@ -124,18 +128,6 @@
           return
         }
         window.open(link)
-      },
-      // 请求消息数量
-      fetchMessageCount() {
-        this.$http.get(api.messageGetMessageQuantity, {}).then((response) => {
-          if (response.data.meta.status_code === 200) {
-            this.notice = parseInt(response.data.data.notice)
-          } else {
-            this.$message.error(response.data.meta.message)
-          }
-        }).catch((error) => {
-          console.error(error)
-        })
       }
     },
     computed: {
@@ -178,29 +170,22 @@
   }
 
   .content-box .item {
-    position: relative;
     border: 1px solid #ccc;
     margin-bottom: -1px;
-    padding: 10px 20px 10px 80px;
+    padding: 30px 50px 30px 20px;
     min-height: 30px;
     line-height: 30px;
     cursor: default;
+    display: flex;
   }
 
   .content-box .item:hover {
     background-color: #F2F1F1;
   }
 
-  .item .left{
-    position: absolute;
-    height: 100%;
+  .item .left {
     width: 70px;
-    left: 6px;
-    top:0;
-    display: flex;
-    align-items:flex-start;
-    justify-content: center;
-    overflow: hidden;
+    margin-right: 20px;
   }
 
   .item .left .logo{
@@ -215,7 +200,7 @@
 
   .item p {
     line-height: 24px
-  }
+  } 
 
   .item .banner2 {
     height: 30px;
@@ -271,12 +256,8 @@
     height: 7px;
     margin-top: 20px;
     margin-left: -72px;
-    background: #f00;
+    background: #FF5A5F;
     border-radius: 50%;
-  }
-
-  i.alert.gray {
-    background: #ddd;
   }
 
   .pagination {
@@ -288,13 +269,14 @@
     width: 122px;
     height: 113px;
     margin: 100px auto 0;
-    background: url("../../../../assets/images/item/Group5.png");
+    background: url("../../../../assets/images/tools/report/NoMessage.png") no-repeat;
     background-size: contain;
   }
 
   .noMsg {
     text-align: center;
     color: #969696;
+    line-height: 3;
   }
 
   @media screen and (max-width: 350px) {
@@ -311,7 +293,9 @@
 </style>
 <style>
   .item p.title .el-badge__content.is-fixed {
-    top: 3px;
-    left: -84px;
+    top: 10px;
+    left: -88px;
+    width: 7px;
+    height: 7px;
   }
 </style>

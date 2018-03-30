@@ -13,6 +13,7 @@
             <el-menu-item index="article" :route="menu.article">铟果说</el-menu-item>
             <el-menu-item index="design_case" :route="menu.design_case">灵感</el-menu-item>
             <el-menu-item index="commonly_sites" :route="menu.commonly_sites">设计工具</el-menu-item>
+            <el-menu-item index="innovation_index" :route="menu.innovation_index">创新指数</el-menu-item>
           </el-menu>
         </hgroup>
         <div class="nav-right nav-menu" v-if="isLogin">
@@ -21,17 +22,19 @@
           </div>
           <a class="nav-item is-hidden-mobile" @click="viewMsg" ref="msgList">
               <span class="icon active">
-                <i class="fa fa-bell-o" aria-hidden="true">
-                  <span v-if="messageCount > 0">{{ messageCount }}</span>
+                <i class="fx-4 fx-icon-notice">
+                  <span v-if="messageCount.quantity">{{ messageCount.quantity }}</span>
                 </i>
               </span>
               <div :class="['view-msg',{'view-msg-min': !msg.message && !msg.notice}]">
                 <router-link :to="{name: 'vcenterMessageList'}" class="news">
-                  <span v-if="msg.message"><i>{{msg.message}}</i>条[项目提醒]未查看</span>
+                  <i class="fx-4 fx-icon-notice"></i><i class="fx-4 fx-icon-news-hover"></i>
+                  <span v-if="messageCount.message"><b>{{messageCount.message}}</b>条[项目提醒]未查看</span>
                   <span v-else>[项目提醒]</span>
                 </router-link>
                 <router-link :to="{name: 'systemMessageList'}" class="notice">
-                  <span v-if="msg.notice"><i>{{msg.notice}}</i>条[系统通知]未查看</span>
+                  <i class="fx-4 fx-icon-sound-loudly"></i><i class="fx-4 fx-icon-notice-hover"></i>
+                  <span v-if="messageCount.notice"><b>{{messageCount.notice}}</b>条[系统通知]未查看</span>
                   <span v-else>[系统通知]</span>
                 </router-link>
               </div>
@@ -43,9 +46,10 @@
                 <img class="avatar" v-else :src="require('assets/images/avatar_100.png')"/>
                 <span class="b-nickname">{{ eventUser.account }}</span>
               </template>
-              <el-menu-item class="menu-control" index="/vcenter/control">个人中心</el-menu-item>
-              <el-menu-item class="menu-admin" index="/admin" v-if="isAdmin > 0 ? true : false">后台管理</el-menu-item>
-              <el-menu-item index="" class="menu-sign-out" @click="logout">安全退出</el-menu-item>
+              <el-menu-item index="/vcenter/control"><i class="fx-4 fx-icon-control-center"></i><i class="fx-4 fx-icon-console-hover"></i>个人中心</el-menu-item>
+              <el-menu-item index="/admin" v-if="isAdmin > 0 ? true : false"><i class="fx-4 fx-icon-personal-center"></i><i class="fx-4 fx-icon-combined-shape-hover"></i>后台管理</el-menu-item>
+              <el-menu-item index="" @click="logout">
+<i class="fx-4 fx-icon-logout"></i><i class="fx-4 fx-icon-logout-hover"></i>安全退出</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>
@@ -86,6 +90,9 @@
           </li>
           <li @click="closeMenu">
             <router-link :to="menu.commonly_sites">设计工具</router-link>
+          </li>
+          <li @click="closeMenu">
+            <router-link :to="menu.innovation_index">创新指数</router-link>
           </li>
           <li @click="closeMenu">
             <router-link :to="menu.design">设计服务商入驻</router-link>
@@ -143,6 +150,7 @@
           article: {path: '/article/list'},
           design_case: {path: '/design_case/general_list'},
           commonly_sites: {path: '/vcenter/commonly_sites'},
+          innovation_index: {path: '/innovation_index'},
           apply: {path: '/apply'},
           login: {path: '/login'},
           register: {path: '/register'},
@@ -190,9 +198,10 @@
             self.msg.message = parseInt(response.data.data.message)
             self.msg.notice = parseInt(response.data.data.notice)
             sessionStorage.setItem('noticeCount', self.msg.notice)
-            let messageCount = parseInt(response.data.data.quantity)
+            let quantity = parseInt(response.data.data.quantity)
+            let msgCount = {message: self.msg.message, notice: self.msg.notice, quantity: quantity}
             // 写入localStorage
-            self.$store.commit(MSG_COUNT, messageCount)
+            self.$store.commit(MSG_COUNT, msgCount)
           } else {
             self.$message.error(response.data.meta.message)
           }
@@ -206,13 +215,13 @@
         // 定时请求消息数量
         var limitTimes = 0
         self.requestMessageTask = setInterval(function () {
-          if (limitTimes >= 12) {
+          if (limitTimes >= 36) {
             return
           } else {
             self.fetchMessageCount()
             limitTimes += 1
           }
-        }, 30000)
+        }, 10000)
       },
       // 查看消息
       viewMsg() {
@@ -333,6 +342,10 @@
     }
   }
 
+  .nav-right .el-menu-header {
+    min-width: 120px;
+  }
+
   #header-layout {
     position: relative;
     z-index: 999;
@@ -353,7 +366,7 @@
   .more {
     width: 1200px;
     height: 60px;
-    background: #ff4500;
+    background: #FF5A5F;
     position: fixed;
   }
 

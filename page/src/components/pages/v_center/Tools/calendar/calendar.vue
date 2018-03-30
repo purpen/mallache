@@ -43,8 +43,8 @@
         <p ref="title_ico">{{eventMsg.title}}</p>
       </div>
       <div class="info-body">
-        <p class="date" ref="date"><span class="fx-icon-time"></span><span>时间:</span>{{eventMsg.date}}</p>
-        <p class="summary" ref="summary"><span class="fx-icon-list"></span>{{eventMsg.summary}}</p>
+        <p class="date" ref="date"><span>时间:</span>{{eventMsg.date}}</p>
+        <p class="summary" ref="summary">{{eventMsg.summary}}</p>
         <p class="tips" ref="tips"><span></span>{{eventMsg.tips}}</p>
       </div>
     </div>
@@ -128,12 +128,13 @@
           dayNames: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           dayNamesShort: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           eventClick (event, jq, mouth) {
+            console.log(jq)
             let docWidth = $(window).width()
             let maxdocHeight = $(window).height() + $(document).scrollTop()
             let infoWidth = $(self.$refs.info).width()
             let infoHeight = $(self.$refs.info).height()
-            let top = jq.pageY - 50
-            let left = jq.pageX - 100
+            let top = jq.pageY + 25
+            let left = jq.pageX
 
             if (jq.pageX - 100 < 0) {
               left = 20
@@ -142,7 +143,7 @@
               left = docWidth - infoWidth - 100
             }
             if (jq.pageY + infoHeight > maxdocHeight) {
-              top = jq.pageY - infoHeight - 90
+              top = jq.pageY - infoHeight - 30
             }
             self.hideinfo = true
             self.$refs.info.style.top = top + 'px'
@@ -231,7 +232,7 @@
         this.hideinfo = false
         this.$refs.calendar.fireMethod('today')
         this.getView()
-        this.$emit('update-date')
+        this.$emit('update-date', this.eventMsg.month)
       },
       changeView (method) {
         this.view = method
@@ -463,9 +464,10 @@
   }
 
   .info-body p {
-    text-indent: 24px;
     line-height: 1.5;
     margin-bottom: 6px;
+    position: relative;
+    padding-left: 24px;
   }
 
   .date {

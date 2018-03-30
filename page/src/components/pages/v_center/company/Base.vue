@@ -1,9 +1,8 @@
 <template>
-  <div class="container">
-    <div class="blank20"></div>
+  <div class="container blank40">
     <el-row :gutter="24">
       <v-menu currentName="profile" :class="[isMob ? 'v-menu' : '']"></v-menu>
-      <el-col :span="isMob ? 24 : 20">
+      <el-col :xs="24" :sm="20" :md="20" :lg="20">
         <div class="right-content">
           <v-menu-sub></v-menu-sub>
 
@@ -11,10 +10,10 @@
 
             <el-row :gutter="gutter" :class="['item', isMob ? 'item-m item-mAvatar' : '']">
               <el-col :span="titleSpan" class="title avatarhead">
-                <p>头像</p>
+                <p>公司logo</p>
                 <span v-if="isMob">{{ avatarStr }}</span>
               </el-col>
-              <el-col :span="isMob ? 12 : 20" class="content avatarcontent">
+              <el-col  :xs="12" :sm="20" :md="20" :lg="20" class="content avatarcontent">
                 <el-upload
                   class="avatar-uploader"
                   :action="uploadParam.url"
@@ -24,15 +23,14 @@
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload">
                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                  <i v-else class="el-icon-plus
-                    avatar-uploader-icon"></i>
+                  <i v-else class="avatar-uploader-icon"></i>
                   <div slot="tip" class="el-upload__tip" v-if="!isMob">{{ avatarStr }}</div>
                 </el-upload>
 
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司简称</p>
               </el-col>
@@ -48,8 +46,23 @@
               </el-col>
             </el-row>
 
-            <!--
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>公司英文名称</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+                <el-input v-if="element.company_english" v-model="form.company_english" style="width: 300px;"
+                          placeholder="如: thn"></el-input>
+                <p v-else>{{ form.company_english }}</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.company_english" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('company_english', ['company_english'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('company_english')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>联系人信息</p>
               </el-col>
@@ -82,9 +95,8 @@
                 <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('contact')">编辑</a>
               </el-col>
             </el-row>
-            -->
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>地址</p>
               </el-col>
@@ -109,7 +121,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司规模</p>
               </el-col>
@@ -117,9 +129,9 @@
 
                 <el-select v-model.number="form.company_size" placeholder="请选择" v-if="element.company_size">
                   <el-option
-                    v-for="item in sizeOptions"
+                    v-for="(item, index) in sizeOptions"
                     :label="item.label"
-                    :key="item.index"
+                    :key="index"
                     :value="item.value">
                   </el-option>
                 </el-select>
@@ -133,8 +145,30 @@
               </el-col>
             </el-row>
 
-            <!--
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>公司营收</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+
+                <el-select v-model.number="form.revenue" placeholder="请选择" v-if="element.revenue">
+                  <el-option
+                    v-for="item in revenueOptions"
+                    :label="item.label"
+                    :key="item.index"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+
+                <p v-else>{{ form.revenue_value }}</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.revenue" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('revenue', ['revenue'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('revenue')">编辑</a>
+              </el-col>
+            </el-row>
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>实名认证</p>
               </el-col>
@@ -142,12 +176,11 @@
                 <p>{{ form.verify_status_label }}</p>
               </el-col>
               <el-col :span="editSpan" class="edit">
-                <a href="javascript:void(0)" title="编辑" @click="goVerify">编辑</a>
+                <router-link v-if="form.verify_status === 0 || form.verify_status === 2" to="/vcenter/company/accreditation">去认证</router-link>
               </el-col>
             </el-row>
-            -->
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>专业优势</p>
               </el-col>
@@ -157,7 +190,7 @@
                   type="textarea"
                   :rows="3"
                   v-if="element.advantage"
-                  placeholder="请输入内容"
+                  placeholder="专业优势"
                   v-model="form.professional_advantage">
                 </el-input>
 
@@ -170,7 +203,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>公司简介</p>
               </el-col>
@@ -180,7 +213,7 @@
                   type="textarea"
                   :rows="3"
                   v-if="element.profile"
-                  placeholder="请输入内容"
+                  placeholder="公司简介"
                   v-model="form.company_profile">
                 </el-input>
 
@@ -193,7 +226,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>奖项荣誉</p>
               </el-col>
@@ -216,7 +249,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>网址</p>
               </el-col>
@@ -234,7 +267,24 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m no-border' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>微信公众号</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+
+              <el-input v-model="form.weixin_id" placeholder="请输入微信公众号" v-if="element.weixin_id">
+              </el-input>
+
+                <p v-else><a>{{ form.weixin_id }}</a></p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.weixin_id" title="保存" href="javascript:void(0)" @click="saveBtn('weixin_id', ['weixin_id'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('weixin_id')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>擅长领域</p>
               </el-col>
@@ -272,23 +322,22 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="gutter" :class="['item', 'no-border', isMob ? 'item-m' : '']">
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
               <el-col :span="titleSpan" class="title">
                 <p>分公司</p>
               </el-col>
-              <el-col :span="contentSpan" class="content">
+              <el-col :span="contentSpan" class="content subsidiary">
 
                 <div v-if="element.branch">
-                  <el-col :span="isMob ? 4 : 2">
+                  <el-col :xs="6" :sm="2" :md="2" :lg="2">
                     <el-switch
-                      style="height: 40px; line-height: 50px;"
                       @change="isBranch"
                       v-model="is_branch"
-                      on-text=""
-                      off-text="">
+                      on-text="有"
+                      off-text="无">
                     </el-switch>
                   </el-col>
-                  <el-col :span="isMob ? 6 : 3" v-show="is_branch">
+                  <el-col :xs="10" :sm="3" :md="3" :lg="3" v-show="is_branch">
                     <el-input v-model.number="form.branch_office" :disabled="!is_branch" placeholder="">
                       <template slot="append">家</template>
                     </el-input>
@@ -304,13 +353,163 @@
               </el-col>
             </el-row>
 
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>高新企业</p>
+              </el-col>
+              <el-col v-if="form.high_tech_enterprises.length||element.high_tech_enterprises" :span="contentSpan" class="content">
+                <div v-if="element.high_tech_enterprises">
+                  <el-col :span="20" class="margin-bottom10" v-for="(ele, index) in form.high_tech_enterprises" :key="index">
+                    <el-row :gutter="10">
+                      <el-col class="margin-bottom10" :xs="20" :sm="10" :md="10" :lg="10">
+                        <el-date-picker
+                          v-model="ele.time"
+                          type="date"
+                          placeholder="认定时间">
+                        </el-date-picker>
+                      </el-col>
+                      <el-col :xs="20" :sm="10" :md="10" :lg="10">
+                        <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.high_tech_enterprises">
+                          <el-option
+                            v-for="(item, index) in companyHighTechGradeOptions"
+                            :label="item.label"
+                            :key="index"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-button class="del-btn" type="danger" size="small" @click="delType(index, 'high_tech_enterprises')">删除</el-button>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                  <el-col :xs="24" :sm="4" :md="4" :lg="4">
+                    <el-button class="add-btn" type="primary" size="small" @click="addType('high_tech_enterprises')">添加</el-button>
+                  </el-col>
+                </div>
+                <p v-if="!element.high_tech_enterprises && form.high_tech_enterprises.length" v-for="(e, index) in form.high_tech_enterprises" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
+              </el-col>
+              <el-col :xs="24" :sm="19" :md="19" :lg="19" class="content" v-else>
+                <p>无</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.high_tech_enterprises" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('high_tech_enterprises', ['high_tech_enterprises'], true)">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('high_tech_enterprises')">编辑</a>
+              </el-col>
+            </el-row>
 
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>工业设计中心</p>
+              </el-col>
+              <el-col v-if="form.industrial_design_center.length||element.industrial_design_center" :span="contentSpan" class="content">
+                <div v-if="element.industrial_design_center">
+                  <el-col class="margin-bottom10" :span="20" v-for="(ele, index) in form.industrial_design_center" :key="index">
+                    <el-row :gutter="10">
+                      <el-col class="margin-bottom10" :xs="20" :sm="10" :md="10" :lg="10">
+                        <el-date-picker
+                          v-model="ele.time"
+                          type="date"
+                          placeholder="认定时间">
+                        </el-date-picker>
+                      </el-col>
+                      <el-col :xs="20" :sm="10" :md="10" :lg="10">
+                      <el-select v-model.number="ele.type" placeholder="认定级别" v-if="element.industrial_design_center">
+                        <el-option
+                          v-for="(item, index) in companyIndustrialDesignGradeOptions"
+                          :label="item.label"
+                          :key="index"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-button class="del-btn" type="danger" size="small" @click="delType(index, 'industrial_design_center')">删除</el-button>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+                  <el-col :xs="24" :sm="4" :md="4" :lg="4">
+                    <el-button class="add-btn" type="primary" size="small" @click="addType('industrial_design_center')">添加</el-button>
+                  </el-col>
+                </div>
+                <p v-if="!element.industrial_design_center && form.industrial_design_center.length" v-for="(e, index) in form.industrial_design_center" :key="e.time + index">{{ e.time}}{{ e.val }}</p>
+              </el-col>
+              <el-col :xs="24" :sm="19" :md="19" :lg="19" class="content" v-else>
+                <p>无</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.industrial_design_center" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('industrial_design_center', ['industrial_design_center'], true)">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('industrial_design_center')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>投资孵化产品</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content">
+                <el-switch
+                  v-if="element.investment_product"
+                  v-model="form.investment_product"
+                  on-text="有"
+                  off-text="无">
+                </el-switch>
+              <p v-else>{{ hasProduct }}</p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.investment_product" title="保存" href="javascript:void(0)" @click="saveBtn('investment_product', ['investment_product'])">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('investment_product')">编辑</a>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="gutter" :class="['item', isMob ? 'item-m' : '']">
+              <el-col :span="titleSpan" class="title">
+                <p>自有产品品牌</p>
+              </el-col>
+              <el-col :span="contentSpan" class="content subsidiary">
+                <div v-if="element.own_brand">
+                  <el-row :gutter="10">
+                    <el-col :xs="4" :sm="2" :md="2" :lg="2" class="margin-bottom10">
+                      <el-switch
+                        @change="changeBrand"
+                        v-model="hasBrand"
+                        on-text="有"
+                        off-text="无">
+                      </el-switch>
+                    </el-col>
+                    <el-col :xs="24" :sm="3" :md="3" :lg="3" class="margin-bottom10" v-if="hasBrand">
+                      <p>品牌名称:</p>
+                    </el-col>                    
+                    <el-col class="input-brand margin-bottom10" v-if="hasBrand" v-for="(ele, index) in form.own_brand" :key="index" :xs="12" :sm="3" :md="3" :lg="3">
+                      <el-input v-model="form.own_brand[index]">
+                        <template slot="append">
+                          <i class="fx-icon-nothing-close-error" @click="delType(index, 'own_brand')"></i>
+                        </template>
+                      </el-input>
+                    </el-col>
+                    <el-col v-if="ownBrand" :xs="24" :sm="3" :md="3" :lg="3">
+                      <el-button type="primary" size="mini" @click="addOwnBrand">添加</el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+
+                <p v-else>
+                  <span class="own-brand" v-if="hasBrand" v-for="(e, index) in form.own_brand" :key="e + index">{{ e }}</span>
+                  <span v-if="!hasBrand">无</span>
+                </p>
+              </el-col>
+              <el-col :span="editSpan" class="edit">
+                <a v-if="element.own_brand" title="保存" href="javascript:void(0)"
+                   @click="saveBtn('own_brand', ['own_brand'], true)">保存</a>
+                <a v-else href="javascript:void(0)" title="编辑" @click="editBtn('own_brand')">编辑</a>
+              </el-col>
+            </el-row>
           </div>
-
         </div>
       </el-col>
     </el-row>
-
   </div>
 
 </template>
@@ -343,6 +542,9 @@
         avatarStr: '点击图像上传Logo，只能上传jpg/gif/png文件，且不超过2M',
         isFirst: false,
         is_branch: false,
+        hasProduct: '无',
+        hasBrand: false,
+        ownBrand: false,
         companyId: '',
         province: '',
         city: '',
@@ -350,31 +552,52 @@
         items: {},
         form: {
           company_abbreviation: '',
+          company_english: '',
           company_type: '',
           good_field: [],
           branch: '',
           registration_number: '',
           web: '',
           company_size: '',
+          company_size_val: '',
+          revenue: '',
+          revenue_value: '',
           branch_office: '',
+          high_tech_enterprises: [{
+            time: '',
+            type: -1,
+            val: ''
+          }],
+          industrial_design_center: [{
+            time: '',
+            type: -1,
+            val: ''
+          }],
           contact_name: '',
           email: '',
           phone: '',
-          position: ''
-
+          position: '',
+          investment_product: false,
+          own_brand: []
         },
         element: {
           company_abbreviation: false,
+          company_english: false,
           contact: false,
           good_field: false,
           address: false,
           company_size: false,
+          revenue: false,
           advantage: false,
           profile: false,
           awards: false,
           web: false,
+          weixin_id: false,
           branch: false,
-
+          investment_product: false,
+          high_tech_enterprises: false,
+          industrial_design_center: false,
+          own_brand: false,
           test: false
         },
         uploadParam: {
@@ -402,12 +625,49 @@
         }
         return items
       },
+      // 公司规模
       sizeOptions() {
         let items = []
         for (let i = 0; i < typeData.COMPANY_SIZE.length; i++) {
           let item = {
             value: typeData.COMPANY_SIZE[i]['id'],
             label: typeData.COMPANY_SIZE[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      },
+      // 公司营收
+      revenueOptions() {
+        let items = []
+        for (let i = 0; i < typeData.COMPANY_REVENUE.length; i++) {
+          let item = {
+            value: typeData.COMPANY_REVENUE[i]['id'],
+            label: typeData.COMPANY_REVENUE[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      },
+      // 公司高新企业等级
+      companyHighTechGradeOptions() {
+        let items = []
+        for (let i = 0; i < typeData.HIGH_TECH_ENTERPRISE.length; i++) {
+          let item = {
+            value: typeData.HIGH_TECH_ENTERPRISE[i]['id'],
+            label: typeData.HIGH_TECH_ENTERPRISE[i]['name']
+          }
+          items.push(item)
+        }
+        return items
+      },
+      // 公司工业设计等级
+      companyIndustrialDesignGradeOptions() {
+        let items = []
+        for (let i = 0; i < typeData.INDUSTRIAL_DESIGN_GRADE.length; i++) {
+          let item = {
+            value: typeData.INDUSTRIAL_DESIGN_GRADE[i]['id'],
+            label: typeData.INDUSTRIAL_DESIGN_GRADE[i]['name']
           }
           items.push(item)
         }
@@ -435,8 +695,6 @@
           return false
         }
         this.element[mark] = true
-        if (mark === 'address') {
-        }
       },
       isBranch(val) {
         if (val === true) {
@@ -447,20 +705,62 @@
           this.form.branch_office = 0
         }
       },
-      saveBtn(mark, nameArr) {
+      saveBtn(mark, nameArr, multi = false) {
         let that = this
         let row = {}
-        for (let i = 0; i < nameArr.length; i++) {
-          let name = nameArr[i]
-          row[name] = this.form[name]
-          if (!row[name]) {
-            if (name === 'area') {
-              row['area'] = 0
-            } else if (mark === 'branch') {
-              continue
-            } else {
-              this.$message.error('请完善您的公司信息！')
-              return false
+        if (multi) {
+          row = this.form[nameArr[0]]
+          // 高新企业
+          if (mark === 'high_tech_enterprises') {
+            for (let i = 0; i < row.length; i++) {
+              if (!row[i].time) {
+                this.$message.error('请完善您的公司信息！')
+                return
+              } else {
+                row[i].time = row[i].time.format('yyyy-MM-dd')
+              }
+              if (!row[i].type) {
+                this.$message.error('请完善您的公司信息！')
+                return
+              }
+            }
+            row = {'high_tech_enterprises': JSON.stringify(row)}
+          } else if (mark === 'industrial_design_center') {
+            for (let i = 0; i < row.length; i++) {
+              if (!row[i].time) {
+                this.$message.error('请完善您的公司信息！')
+                return
+              } else {
+                row[i].time = row[i].time.format('yyyy-MM-dd')
+              }
+              if (!row[i].type) {
+                this.$message.error('请完善您的公司信息！')
+                return
+              }
+            }
+            row = {'industrial_design_center': JSON.stringify(row)}
+          } else if (mark === 'own_brand') {
+            for (let i of row) {
+              if (i === '') {
+                this.$message.error('请完善您的公司信息！')
+                return
+              }
+            }
+            row = {'own_brand': JSON.stringify(row)}
+          }
+        } else {
+          for (let i = 0; i < nameArr.length; i++) {
+            let name = nameArr[i]
+            row[name] = this.form[name]
+            if (!row[name]) {
+              if (name === 'area') {
+                row['area'] = 0
+              } else if (mark === 'branch' || mark === 'investment_product') {
+                continue
+              } else {
+                this.$message.error('请完善您的公司信息！')
+                return false
+              }
             }
           }
         }
@@ -492,17 +792,28 @@
             return false
           }
         }
+        if (mark === 'investment_product') {
+          if (row[mark] === true) {
+            row[mark] = 1
+          } else {
+            row[mark] = 0
+          }
+        }
+
         that.$http({method: 'PUT', url: api.designCompany, data: row})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.element[mark] = false
               let item = response.data.data
+              console.log(item)
               if (mark === 'address') {
                 that.form.province_value = item.province_value
                 that.form.city_value = item.city_value
                 that.form.area_value = item.area_value
               } else if (mark === 'company_size') {
                 that.form.company_size_val = item.company_size_val
+              } else if (mark === 'revenue') {
+                that.form.revenue_value = item.revenue_value
               } else if (mark === 'web') {
                 that.form.web_p = row.web
                 let urlRegex = /http:\/\/|https:\/\//
@@ -516,6 +827,42 @@
                 } else {
                   that.form.branch = '无'
                 }
+              } else if (mark === 'high_tech_enterprises') {
+                for (let i = 0; i < that.form.high_tech_enterprises.length; i++) {
+                  that.form.high_tech_enterprises[i].time = that.form.high_tech_enterprises[i].time.format('yyyy-MM-dd')
+                  switch (that.form.high_tech_enterprises[i].type) {
+                    case 1:
+                      that.form.high_tech_enterprises[i].val = '市级高新技术企业'
+                      break
+                    case 2:
+                      that.form.high_tech_enterprises[i].val = '省级高新技术企业'
+                      break
+                    case 3:
+                      that.form.high_tech_enterprises[i].val = '国家级高新技术企业'
+                      break
+                  }
+                }
+              } else if (mark === 'industrial_design_center') {
+                for (let i = 0; i < that.form.industrial_design_center.length; i++) {
+                  that.form.industrial_design_center[i].time = that.form.industrial_design_center[i].time.format('yyyy-MM-dd')
+                  switch (that.form.industrial_design_center[i].type) {
+                    case 1:
+                      that.form.industrial_design_center[i].val = '市级工业设计中心'
+                      break
+                    case 2:
+                      that.form.industrial_design_center[i].val = '省级工业设计中心'
+                      break
+                    case 3:
+                      that.form.industrial_design_center[i].val = '国家级工业设计中心'
+                      break
+                  }
+                }
+              } else if (mark === 'investment_product') {
+                if (that.form.investment_product) {
+                  that.hasProduct = '有'
+                } else {
+                  that.hasProduct = '无'
+                }
               }
             } else {
               that.$message.error(response.data.meta.message)
@@ -525,7 +872,25 @@
             that.$message.error(error.message)
           })
       },
-      change: function (obj) {
+      addType(e) {
+        this.form[e].push({time: '', type: '', val: ''})
+      },
+      addOwnBrand() {
+        this.form.own_brand.push('')
+      },
+      delType(e, type) {
+        this.form[type].splice(e, 1)
+      },
+      changeBrand() {
+        if (this.hasBrand) {
+          this.ownBrand = true
+          this.addOwnBrand()
+        } else {
+          this.ownBrand = false
+          this.form.own_brand = []
+        }
+      },
+      change(obj) {
         this.province = this.form.province = obj.province
         this.city = this.form.city = obj.city
         this.district = this.form.area = obj.district
@@ -569,7 +934,8 @@
         this.$router.push({name: 'vcenterComputerIdentification'})
       }
     },
-    watch: {},
+    watch: {
+    },
     created: function () {
       let uType = this.$store.state.event.user.type
       // 如果是需求方，跳转到相应页面
@@ -585,6 +951,7 @@
           that.isFirst = true
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
+              console.log(response.data.data)
               // 重新渲染
               that.$nextTick(function () {
                 that.form = response.data.data
@@ -595,6 +962,7 @@
                 that.city = response.data.data.city === 0 ? '' : response.data.data.city
                 that.district = response.data.data.area === 0 ? '' : response.data.data.area
                 that.form.web_p = that.form.web
+                that.form.verify_status_label = typeData.VERIFY_STATUS[that.form.verify_status]
                 if (response.data.data.branch_office !== 0) {
                   that.is_branch = true
                 }
@@ -612,16 +980,58 @@
                 if (response.data.data.logo_image) {
                   that.imageUrl = response.data.data.logo_image.logo
                 }
-                that.form.verify_status_label = ''
-                if (that.form.verify_status === 0) {
-                  that.form.verify_status_label = '等待认证'
-                } else if (that.form.verify_status === 1) {
-                  that.form.verify_status_label = '认证通过'
-                } else if (that.form.verify_status === 2) {
-                  that.form.verify_status_label = '认证失败'
+                if (that.form.high_tech_enterprises) {
+                  for (let i of that.form.high_tech_enterprises) {
+                    switch (i.type) {
+                      case 1:
+                        i.val = '市级高新技术企业'
+                        break
+                      case 2:
+                        i.val = '省级高新技术企业'
+                        break
+                      case 3:
+                        i.val = '国家级高新技术企业'
+                        break
+                    }
+                  }
+                } else {
+                  that.form.high_tech_enterprises = []
+                }
+                if (that.form.industrial_design_center) {
+                  for (let i of that.form.industrial_design_center) {
+                    switch (i.type) {
+                      case 1:
+                        i.val = '市级工业设计中心'
+                        break
+                      case 2:
+                        i.val = '省级工业设计中心'
+                        break
+                      case 3:
+                        i.val = '国家级工业设计中心'
+                        break
+                    }
+                  }
+                } else {
+                  that.form.industrial_design_center = []
+                }
+                if (that.form.investment_product) {
+                  that.form.investment_product = true
+                  that.hasProduct = '有'
+                } else {
+                  that.form.investment_product = false
+                  that.hasProduct = '无'
+                }
+                if (!that.form.own_brand || !that.form.own_brand.length) {
+                  that.form.own_brand = []
+                  that.hasBrand = false
+                } else {
+                  that.hasBrand = true
+                  that.ownBrand = true
                 }
               })
             }
+          } else {
+            that.$message.error(response.data.meta.message)
           }
         })
         .catch(function (error) {
@@ -662,7 +1072,10 @@
   .item {
     margin: 5px 0;
     padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #d2d2d2;
+  }
+  .content-box .item:last-child {
+    border-bottom: none;
   }
 
   .item-m {
@@ -671,9 +1084,13 @@
     position: relative;
   }
 
-  .item .el-col {
+  /* .item .el-col {
     padding: 10px 0 10px 0;
   }
+
+  .item .el-col .el-col {
+    padding: 0
+  } */
 
   .item-m .el-col {
     padding: 0;
@@ -691,7 +1108,16 @@
     line-height: 21px;
   }
 
+  .item p {
+    line-height: 1.6;
+  }
+
+  .title {
+    margin: 0;
+    padding: 0;
+  }
   .title p {
+    line-height: 36px;
     color: #666;
     font-size: 1.5rem;
   }
@@ -703,7 +1129,12 @@
     font-weight: 400;
   }
 
+  .item .content {
+    padding: 6px 0
+  }
+
   .item-m .content {
+    color: #666;
     border: 1px solid #E6E6E6;
     padding: 4px 8px;
     min-height: 30px;
@@ -720,7 +1151,7 @@
   .item-mAvatar .avatarhead span {
     font-size: 10px;
     line-height: 1.1;
-    color: #8391a5;
+    color: #999;
   }
 
   .item-m .avatarcontent {
@@ -738,12 +1169,8 @@
     color: #FF5A5F;
   }
 
-  .item p {
-    line-height: 1.6;
-  }
-
   .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
+    border: 1px dashed #d2d2d2;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
@@ -755,13 +1182,15 @@
   }
 
   .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
+    display: block;
+    border-radius: 50%;
+    color: #999;
+    background: url('../../../../assets/images/avatar_default.png') no-repeat;
+    background-size: contain;
     width: 100px;
     height: 100px;
     line-height: 100px;
     text-align: center;
-    border: 1px dashed #ccc;
   }
 
   .item-m .avatar-uploader-icon {
@@ -815,5 +1244,51 @@
 
   .MmenuHide {
     margin-left: 0;
+  }
+
+  .el-upload__tip {
+    color: #999;
+  }
+  .del-box {
+    display: inline-block;
+    /* padding-top: 7px; */
+  }
+  .del-btn, .add-btn {
+    margin-top: 4px;
+  }
+
+  .margin-bottom10 {
+    margin-bottom: 10px
+  }
+
+  .margin-bottom10:last-child {
+    margin-bottom: 0;
+  }
+
+  .input-brand.margin-bottom10:nth-child(2n+1) {
+    padding-left: 0!important;
+  }
+  .own-brand {
+    position: relative;
+    margin-right: 10px;
+  }
+  .own-brand::after {
+    content: ",";
+  }
+  .own-brand:last-child::after {
+    content: "";
+  }
+  .subsidiary .fx-icon-nothing-close-error {
+    font-size: 12px;
+    cursor: pointer;
+    color: #fff;
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: 767px) {
+    .item-m .content {
+      border: none;
+      padding: 0;
+    }
   }
 </style>

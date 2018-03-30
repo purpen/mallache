@@ -76,7 +76,9 @@ module.exports = {
         test: /\.(js|vue)$/,
         loader: 'happypack/loader?id=eslint',
         enforce: "pre",
-        include: [resolve('src'), resolve('test')]
+        include: [
+          resolve('src'),
+          resolve('test')]
       },
       {
         test: /\.vue$/,

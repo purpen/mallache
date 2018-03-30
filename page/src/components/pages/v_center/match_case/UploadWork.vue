@@ -43,7 +43,7 @@
             <el-col :span="isMob ? 24 : 8" v-for="(d, index) in fileList" :key="index">
               <el-card :body-style="{ padding: '0px' }" class="item">
                 <div class="image-box">
-                  <img :src="d.url">
+                  <img v-lazy="d.url">
                 </div>
                 <div class="content">
                   <p>{{ d.name }}</p>
@@ -183,7 +183,8 @@
         })
       },
       returnGifts() {
-        this.$router.push ({name: 'YuQuanGifts'})
+        // this.$router.push ({name: 'YuQuanGifts'})
+        this.$router.go(-1)
       },
       beforeUpload (file) {
         const arr = ['image/jpeg', 'image/gif', 'image/png']
@@ -453,8 +454,8 @@
   }
 
   .submit:visited, .submit:hover, .submit:active {
-    background: #FF4500;
-    border-color: #FF4500;
+    background: #FF5A5F;
+    border-color: #FF5A5F;
   }
 
   .upload-demo {
@@ -480,6 +481,14 @@
   }
 
   @media screen and (max-width: 767px) {
+    .upload {
+      margin-top: 0;
+    }
+
+    .upload h2{
+      padding: 30px 0;
+    }
+
     .upload, .buttons {
       border: none
     }
