@@ -25,6 +25,7 @@ class YunpianUploadController extends BaseController
      * @apiGroup yunpan
      * @apiParam {string} token 图片上传upToken
      * @apiParam {string} x:pan_director_id 上级文件目录ID （顶层文件传'0'）
+     * @apiParam {string} x:browser 浏览器：1.IE
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -110,7 +111,12 @@ class YunpianUploadController extends BaseController
                 return null;
             }
 
-            if (PanDirector::isSameFile($pan_director_id, trim($request->input('name')), $user_id)) {
+            $file_name = trim($request->input('name'));
+            if ($request->input('browser') == 1) {
+                $file_name = preg_replace("#^.*\\\#", '', $file_name);
+            }
+
+            if (PanDirector::isSameFile($pan_director_id, $file_name, $user_id)) {
                 $callBackDate = [
                     'success' => 0,
                     'message' => '存在同名文件',
@@ -132,7 +138,7 @@ class YunpianUploadController extends BaseController
 
                 // 保存源文件
                 $pan_file = new PanFile();
-                $pan_file->name = trim($request->input('name'));
+                $pan_file->name = $file_name;
                 $pan_file->size = $request->input('size');
                 $pan_file->width = $request->input('width');
                 $pan_file->height = $request->input('height');
@@ -519,20 +525,29 @@ class YunpianUploadController extends BaseController
 
 
         if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
-            $query = PanDirector::query();
-            if ($type) {
-                $query = $query->where('type', $type);
-            }
-            $list = $query->where('status', 1)
-                ->where('company_id', $company_id)
-                ->where('pan_director_id', $pan_director_id)
-                ->where(function ($query) use ($user_id) {
-                    $query->where('open_set', 1)
-                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+            $list = PanDirector::query()
+                ->where(function ($query) use ($user_id, $type, $company_id, $pan_director_id) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where('open_set', 1);
+                })
+                ->orWhere(function ($query) use ($user_id, $type, $company_id, $pan_director_id) {
+                    if ($type) {
+                        $query = $query->where('type', $type);
+                    }
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('pan_director_id', $pan_director_id)
+                        ->where(['open_set' => 2, 'user_id' => $user_id]);
                 })
                 ->orderBy('type', 'asc')
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
+
         } else {
             // 用户所有用户组集合
             $group_id_arr = Group::userGroupIDList($user_id);
@@ -707,14 +722,20 @@ class YunpianUploadController extends BaseController
         $company_id = User::designCompanyId($user_id);
 
         if ($this->auth_user->isDesignAdmin()) {        // 管理员忽略权限限制
-            $query = PanDirector::query();
-            $list = $query->where('status', 1)
-                ->where('company_id', $company_id)
-                ->where(function ($query) use ($user_id) {
-                    $query->where('open_set', 1)
-                        ->orWhere(['open_set' => 2, 'user_id' => $user_id]);
+
+            $list = PanDirector::query()
+                ->where(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where('open_set', 1)
+                        ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'");
                 })
-                ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'")
+                ->orWhere(function ($query) use ($user_id, $company_id, $mime_type_regexp) {
+                    $query->where('status', 1)
+                        ->where('company_id', $company_id)
+                        ->where(['open_set' => 2, 'user_id' => $user_id])
+                        ->whereRaw("mime_type REGEXP '" . $mime_type_regexp . "'");
+                })
                 ->orderBy($order_by_str, $ascend_str)
                 ->paginate($per_page);
         } else {
