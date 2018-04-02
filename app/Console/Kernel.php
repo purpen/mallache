@@ -42,6 +42,9 @@ class Kernel extends ConsoleKernel
         // 删除过期的云盘分享
         Commands\ClearPanShare::class,
 
+        // 清除设计云盘回收站过期的文件
+        Commands\ClearRecycleBin::class,
+
 
     ];
 
@@ -65,6 +68,11 @@ class Kernel extends ConsoleKernel
 
         // 每小时 运行一次删除过期云盘分享任务
         $schedule->command('clear:panShare')->hourly();
+
+        // 每天凌晨3点 清除设计云盘回收站过期的文件
+        $schedule->command('clear:RecycleBin')->dailyAt('3:00');
+
+
     }
 
     /**

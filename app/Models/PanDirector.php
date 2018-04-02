@@ -243,6 +243,11 @@ class PanDirector extends BaseModel
             return true;
         }
 
+        // 文件是否私有
+        if ($this->isPrivate($user->id)) {
+            return true;
+        }
+
         // 是否管理员
         if ($user->isDesignAdmin()) {
             return true;
@@ -278,6 +283,11 @@ class PanDirector extends BaseModel
             return true;
         }
 
+        // 文件是否私有
+        if ($this->isPrivate($user->id)) {
+            return true;
+        }
+
         // 用户是否管理员
         if ($user->isDesignAdmin()) {
             return true;
@@ -290,6 +300,18 @@ class PanDirector extends BaseModel
 
         // 是否是项目成员 （功能暂缺）
         if ($this->isItemPersonnel()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断文件文件夹是否是用户私有
+     */
+    public function isPrivate($user_id)
+    {
+        if ($this->open_set == 2 && $this->group_id == null && $this->item_id == null && $this->user_id == $user_id) {
             return true;
         }
 

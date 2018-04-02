@@ -53,9 +53,16 @@ class RecycleBinController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
 
-        $lists = RecycleBin::where('user_id', $this->auth_user_id)
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
+        $user = $this->auth_user;
+        if ($user->isDesignAdmin()) {
+            $lists = RecycleBin::orderBy('id', 'desc')
+                ->paginate($per_page);
+        } else {
+            $lists = RecycleBin::where('user_id', $this->auth_user_id)
+                ->orderBy('id', 'desc')
+                ->paginate($per_page);
+        }
+
 
         return $this->response->paginator($lists, new RecycleBinTransformer())->setMeta($this->apiMeta());
     }
@@ -93,10 +100,16 @@ class RecycleBinController extends BaseController
                     throw new \Exception("id=" . $id . ":not found");
                 }
 
-                //彻底删除文件（文件夹）并删除回收站记录
-                if (!$recycle_bin->deleteRecycle()) {
-                    throw new \Exception("id=" . $id . ":删除失败");
+                // 管理员和文件所属用户可永久删除
+                if ($recycle_bin->panDirector && ($recycle_bin->panDirector->user_id == $this->auth_user_id || $this->auth_user->isDesignAdmin())) {
+                    //彻底删除文件（文件夹）并删除回收站记录
+                    if (!$recycle_bin->deleteRecycle()) {
+                        throw new \Exception("id=" . $id . ":删除失败");
+                    }
+                } else {
+                    continue;
                 }
+
             }
             DB::commit();
         } catch (\Exception $e) {
