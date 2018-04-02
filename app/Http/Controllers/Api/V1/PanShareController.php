@@ -139,7 +139,7 @@ class PanShareController extends BaseController
             }
 
             $pan_director_id_arr = json_decode($pan_share->pan_director_id_arr, true);
-            Log::info($pan_director_id_arr);
+
             $pan_dir = null;
             if ($id) {
                 $pan_dir = PanDirector::find($id);
@@ -153,7 +153,6 @@ class PanShareController extends BaseController
                 $lists = PanDirector::whereIn('id', $pan_director_id_arr)->where('status', 1)->paginate($per_page);
             }
 
-            Log::info($lists);
             // 上级目录信息
             $pan_dir_info = $pan_dir ? $pan_dir->info() : null;
 
