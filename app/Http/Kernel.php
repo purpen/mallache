@@ -20,7 +20,10 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         //允许跨域请求
-        \App\Http\Middleware\EnableCross::class
+        \App\Http\Middleware\EnableCross::class,
+
+        // 操作记录中间件
+        \App\Http\Middleware\OperationLogs::class,
     ];
 
     /**
