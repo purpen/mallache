@@ -138,6 +138,7 @@ class PanShareController extends BaseController
             }
 
             $pan_director_id_arr = json_decode($pan_share->pan_director_id_arr, true);
+            $pan_dir = null;
             if ($id) {
                 $pan_dir = PanDirector::find($id);
                 if ($pan_dir->isChild($pan_director_id_arr)) {
@@ -150,7 +151,10 @@ class PanShareController extends BaseController
                 $lists = PanDirector::whereIn('id', $pan_director_id_arr)->where('status', 1)->paginate($per_page);
             }
 
-            return $this->response->paginator($lists, new YunpanListTransformer())->setMeta($this->apiMeta());
+            // 上级目录信息
+            $pan_dir_info = $pan_dir ? $pan_dir->info() : null;
+
+            return $this->response->paginator($lists, new YunpanListTransformer())->setMeta($this->apiMeta('Success.', 200, ['info' => $pan_dir_info]));
         } catch (\Exception $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
