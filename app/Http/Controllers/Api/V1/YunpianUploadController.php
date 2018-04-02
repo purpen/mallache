@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\QiniuApi;
+use App\Helper\Tools;
 use App\Http\Transformer\YunpanListTransformer;
+use App\Jobs\deleteQiniuFile;
 use App\Models\Group;
 use App\Models\PanDirector;
 use App\Models\PanFile;
 use App\Models\RecycleBin;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -85,8 +88,7 @@ class YunpianUploadController extends BaseController
         $auth = new Auth($accessKey, $secretKey);
         //获取回调的body信息
         $callbackBody = file_get_contents('php://input');
-        Log::info($callbackBody);
-        Log::info($_SERVER);
+
         //回调的contentType
         $contentType = 'application/x-www-form-urlencoded';
         //回调的签名信息，可以验证该回调是否来自七牛
@@ -117,10 +119,20 @@ class YunpianUploadController extends BaseController
             }
 
             if (PanDirector::isSameFile($pan_director_id, $file_name, $user_id)) {
+                $str = Tools::createStr(10);
                 $callBackDate = [
-                    'success' => 0,
-                    'message' => '存在同名文件',
+                    'key' => $str,
+                    'payload' => [
+                        'success' => 0,
+                        'message' => '存在同名文件',
+
+                    ]
                 ];
+
+                // 添加延迟队列任务删除文件
+                $job = (new deleteQiniuFile($str))->delay(Carbon::now()->addSeconds(1));
+                $this->dispatch($job);
+
                 Log::info($callBackDate);
                 return $this->response->array($callBackDate);
             }
