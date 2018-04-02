@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Helper\OperationLogsAction;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class OperationLogs
 {
@@ -27,23 +29,23 @@ class OperationLogs
         // 请求方法
         $match = $request->getMethod();
 
+        // 初始化 操作记录方法类
+        $operation_logs_action = new OperationLogsAction($request, $response);
+
         foreach ($this->selfConfig() as $route => $func) {
             if ($this->isPath($route, $match, $path)) {
-                $this->$func();
+                $operation_logs_action->$func();
             }
         }
     }
 
-    public function task(Request $request, Response $response)
-    {
-        Log::info('我是一条记录');
-    }
 
+    // 路由对应处理方法
     protected function selfConfig()
     {
         // ['路由:请求方法' => 对应执行的方法]
         return [
-            'path:match' => 'task',
+            '/recycleBin/*:get' => 'task',
         ];
     }
 
@@ -58,6 +60,8 @@ class OperationLogs
      */
     public function isPath($pattern, $match, $value)
     {
+        $match = strtolower($match);
+
         $pattern_arr = explode(':', $pattern);
         if (count($pattern_arr) != 2) {
             throw new \Exception('pattern value error');
@@ -73,9 +77,9 @@ class OperationLogs
 
         $pattern = $pattern_arr[0];
         $pattern = preg_quote($pattern, '#');
-        // 支持通配符
-        $pattern = str_replace('/*', '.*', $pattern);
 
-        return (bool)preg_match('#^' . $pattern . '\n#u', $value);
+        // 支持通配符
+        $pattern = str_replace('\*', '.*', $pattern);
+        return (bool)preg_match('#^' . $pattern . '#u', $value);
     }
 }
