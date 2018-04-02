@@ -433,7 +433,8 @@ class ItemMessageListener
         $item_info = $item->itemInfo();
 
         $phone_arr = config('constant.new_item_send_phone');
-        $text = '【太火鸟铟果】平台有新项目发布:【' . $item_info['name'] . '】';
+
+        $text = '【太火鸟铟果】您好，铟果平台有新项目需求发布:“' . $item_info['name'] . '”，请及时登陆查看，并进行相关操作。';
         foreach ($phone_arr as $phone) {
             dispatch(new SendOneSms($phone, $text));
         }
@@ -443,8 +444,6 @@ class ItemMessageListener
     protected function phoneMessage($content)
     {
         return config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
-
-//        return '您好，您在铟果平台的项目最新状态已更新为“' . $content . '”，请您及时登录铟果官网查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电'. config('constant.notice_phone') .'。';
     }
 
     // 向用户发送系统信息
