@@ -36,7 +36,8 @@ class Tools
         $code = (int)$code;
         $data = config('city.data');
         $data_arr = [];
-        foreach (json_decode($data, true) as $v) {
+        $data = json_decode($data, true);
+        foreach ($data as $v) {
             $data_arr = $data_arr + $v;
         }
         if (array_key_exists($code, $data_arr)) {

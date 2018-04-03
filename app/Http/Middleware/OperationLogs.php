@@ -6,7 +6,6 @@ use App\Helper\OperationLogsAction;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 
 class OperationLogs
 {
@@ -45,7 +44,7 @@ class OperationLogs
     {
         // ['路由:请求方法' => 对应执行的方法]
         return [
-            '/recycleBin/*:get' => 'task',
+            '/recycleBin/*:get' => 'task', // 测试
         ];
     }
 
