@@ -336,6 +336,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/design/isAdmin', 'DesignController@isAdmin');
         //移除成员
         $api->put('/design/deleteMember', 'DesignController@deleteMember');
+        //设计公司成员列表
+        $api->get('/design/members/search', 'DesignController@membersSearch');
+        //恢复成员
+        $api->put('/design/restoreMember', 'DesignController@restoreMember');
+
         /**
          * 通知消息相关路由
          */
