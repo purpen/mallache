@@ -27,6 +27,9 @@ class Tools
         return mt_rand(100000, 999999);
     }
 
+
+    protected static $city_data = null;
+
     /**
      * 获取城市名称
      * @param $code
@@ -34,12 +37,19 @@ class Tools
     static public function cityName($code)
     {
         $code = (int)$code;
-        $data = config('city.data');
+        if (Tools::$city_data === null) {
+            $data = config('city.data');
+            $data = json_decode($data, true);
+            Tools::$city_data = $data;
+        } else {
+            $data = Tools::$city_data;
+        }
+
         $data_arr = [];
-        $data = json_decode($data, true);
         foreach ($data as $v) {
             $data_arr = $data_arr + $v;
         }
+        unset($data);
         if (array_key_exists($code, $data_arr)) {
             $name = $data_arr[$code];
         } else {
