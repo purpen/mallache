@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_user_id', 'design_company_id' , 'position'
+        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_user_id', 'design_company_id', 'position'
     ];
 
     /**
@@ -65,17 +65,25 @@ class User extends Authenticatable implements JWTSubject
     public function getLogoImageAttribute()
     {
         $asset = AssetModel::getOneImage($this->logo);
-        if(!$asset){
+        if (!$asset) {
             //上设计公司需求公司。下需求公司
-            if($this->type = 2 ){
+            if ($this->type = 2) {
                 //子账户，主账户
-                if($this->isChildAccount() == true){
+                if ($this->isChildAccount() == true) {
                     return $asset;
-                }else{
-                    return $this->designCompany ? $this->designCompany->logo_image : '';
+                } else {
+                    $design = DesignCompanyModel::where('user_id', $this->id)->first();
+                    if ($design) {
+                        return $design->logo_image;
+                    }
+//                    return $this->designCompany ? $this->designCompany->logo_image : '';
                 }
-            }else{
-                return $this->demandCompany ? $this->demandCompany->logo_image : '';
+            } else {
+                $demand = DemandCompany::where('user_id', $this->id)->first();
+                if ($demand) {
+                    return $demand->logo_image;
+                }
+//                return $this->demandCompany ? $this->demandCompany->logo_image : '';
             }
         }
         return $asset;
