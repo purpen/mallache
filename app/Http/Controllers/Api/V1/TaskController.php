@@ -27,7 +27,7 @@ class TaskController extends BaseController
      * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
-     * @apiParam {string} tags 标签
+     * @apiParam {array} tags 标签
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
@@ -87,12 +87,11 @@ class TaskController extends BaseController
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
         $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
-        $tags = $request->input('tags') ? (int)$request->input('tags') : '';
+        $tags = $request->input('tags') ? $request->input('tags') : [];
         $summary = $request->input('summary') ? (int)$request->input('summary') : '';
-
         $params = array(
             'name' => $request->input('name'),
-            'tags' => $tags,
+            'tags' => implode(',' , $tags),
             'summary' => $summary,
             'user_id' => $this->auth_user_id,
             'type' => $type,
@@ -104,6 +103,7 @@ class TaskController extends BaseController
             'status' => 1,
             'execute_user_id' => $execute_user_id,
         );
+
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -294,7 +294,7 @@ class TaskController extends BaseController
      * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
-     * @apiParam {string} tags 标签
+     * @apiParam {array} tags 标签
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
@@ -352,12 +352,12 @@ class TaskController extends BaseController
         $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
         $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
         $execute_user_id = $request->input('execute_user_id') ? (int)$request->input('execute_user_id') : 0;
-        $tags = $request->input('tags') ? (int)$request->input('tags') : '';
+        $tags = $request->input('tags') ? $request->input('tags') : [];
         $summary = $request->input('summary') ? (int)$request->input('summary') : '';
 
         $params = array(
             'name' => $request->input('name'),
-            'tags' => $tags,
+            'tags' => implode(',' , $tags),
             'summary' => $summary,
             'user_id' => $this->auth_user_id,
             'type' => $type,
@@ -369,7 +369,6 @@ class TaskController extends BaseController
             'status' => 1,
             'execute_user_id' => $execute_user_id,
         );
-
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());

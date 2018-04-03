@@ -600,7 +600,12 @@ class DesignController extends BaseController
             if(!$del_user){
                 return $this->response->array($this->apiError('没有找到移除的用户', 404));
             }else{
+                //如果是超级管理员不能被移除
+                if($del_user->company_role == 20){
+                    return $this->response->array($this->apiError('该用户是超级管理员，不能移除', 403));
+                }
                 try {
+
                     DB::beginTransaction();
                     $del_user->design_company_id = 0;
                     $del_user->invite_user_id = 0;
