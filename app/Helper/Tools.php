@@ -46,6 +46,7 @@ class Tools
                 $data_arr = $data_arr + $v;
             }
             self::$data_arr = $data_arr;
+            Log::info('22');
         } else {
             Log::info('11');
             $data_arr = self::$data_arr;
