@@ -32,7 +32,7 @@ class TaskTransformer extends TransformerAbstract
         return [
             'id' => intval($tasks->id),
             'name' => strval($tasks->name),
-            'tags' => strval($tasks->tags),
+            'tags' => strval($tasks->tags) ? explode(',' , $tasks->tags) : [],
             'summary' => $tasks->summary,
             'user_id' => intval($tasks->user_id),
             'execute_user_id' => intval($tasks->execute_user_id),
