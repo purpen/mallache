@@ -37,7 +37,7 @@ class Tools
     static public function cityName($code)
     {
         $code = (int)$code;
-        if (Tools::$data_arr === null) {
+        if (self::$data_arr == null) {
             $data = config('city.data');
             $data = json_decode($data, true);
 
@@ -45,9 +45,10 @@ class Tools
             foreach ($data as $v) {
                 $data_arr = $data_arr + $v;
             }
-            Tools::$data_arr = $data_arr;
+            self::$data_arr = $data_arr;
         } else {
-            $data_arr = Tools::$data_arr;
+            Log::info('11');
+            $data_arr = self::$data_arr;
         }
 
         if (array_key_exists($code, $data_arr)) {
