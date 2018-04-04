@@ -90,7 +90,7 @@ class DesignCompanyController extends BaseController
         $user_id = intval($this->auth_user_id);
 
         $design = DesignCompanyModel::where('user_id', $user_id)->first();
-        if(!$design){
+        if (!$design) {
             $design = DesignCompanyModel::createDesign($user_id);
         }
 
@@ -304,6 +304,13 @@ class DesignCompanyController extends BaseController
         $all = $request->except(['token']);
         $validator = Validator::make($all, $rules, $messages);
 
+        if (!$this->isPrizes($all['high_tech_enterprises'])) {
+            return $this->response->array($this->apiError('高新企业high_tech_enterprises数据格式不正确', 403));
+        }
+        if (!$this->isPrizes($all['industrial_design_center'])) {
+            return $this->response->array($this->apiError('工业设计中心industrial_design_center数据格式不正确', 403));
+        }
+
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
@@ -338,7 +345,7 @@ class DesignCompanyController extends BaseController
 
 //        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
         $design = DesignCompanyModel::where(['user_id' => $user_id])->first();
-        if(!$design){
+        if (!$design) {
             $design = DesignCompanyModel::createDesign($user_id);
         }
 
@@ -347,6 +354,16 @@ class DesignCompanyController extends BaseController
             return $this->response->array($this->apiError());
         }
         return $this->response->item($design, new DesignCompanyTransformer())->setMeta($this->apiMeta());
+    }
+
+    protected function isPrizes($value)
+    {
+        $data = json_decode($value, true);
+        if (empty($data) || (isset($data[0]) && $data[0]['time'] && $data[0]['type'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
