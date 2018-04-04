@@ -216,7 +216,7 @@ class DesignCaseController extends BaseController
     protected function isPrizes($value)
     {
         $data = json_decode($value, true);
-        if (empty($data) || (count($data, 1) > 0 && $data[0]['time'] && $data[0]['type'])) {
+        if (empty($data) || (isset($data[0]) && $data[0]['time'] && $data[0]['type'])) {
             return true;
         }
 
