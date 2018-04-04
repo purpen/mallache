@@ -101,6 +101,10 @@ class RecycleBinController extends BaseController
                     continue;
                 }
 
+                Log::info($recycle_bin->panDirector);
+                Log::info($recycle_bin->panDirector->user_id == $this->auth_user_id);
+                Log::info($this->auth_user->isDesignAdmin());
+
                 // 管理员和文件所属用户可永久删除
                 if ($recycle_bin->panDirector && (($recycle_bin->panDirector->user_id == $this->auth_user_id) || $this->auth_user->isDesignAdmin())) {
                     //彻底删除文件（文件夹）并删除回收站记录
