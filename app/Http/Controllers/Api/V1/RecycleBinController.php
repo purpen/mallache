@@ -97,6 +97,7 @@ class RecycleBinController extends BaseController
             foreach ($id_arr as $id) {
                 $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
                 if (!$recycle_bin) {
+                    Log::info('不存在');
                     continue;
                 }
 
@@ -107,6 +108,7 @@ class RecycleBinController extends BaseController
                         throw new \Exception("id=" . $id . ":删除失败");
                     }
                 } else {
+                    Log::info('管理员和文件所属用户可永久删除');
                     continue;
                 }
 
