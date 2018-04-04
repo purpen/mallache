@@ -536,6 +536,9 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $set_user_id = $request->input('set_user_id');
+        if($user_id == $set_user_id){
+            return $this->response->array($this->apiError('不能把自己设置成管理员或成员', 403));
+        }
         $company_role = $request->input('company_role');
         $set_user = User::where('id' , $set_user_id)->first();
         if(!$set_user){
