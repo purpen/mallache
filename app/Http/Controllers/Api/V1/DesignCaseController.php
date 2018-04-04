@@ -188,6 +188,14 @@ class DesignCaseController extends BaseController
         $all['patent'] = $request->input('patent') ?? '[]';
         $all['prizes'] = $request->input('prizes') ?? '[]';
 
+        if (!$this->isPrizes($all['prizes'])) {
+            return $this->response->array($this->apiError('获得奖项数据不正确', 403));
+        }
+        if (!$this->isPrizes($all['patent'])) {
+            return $this->response->array($this->apiError('专利数据不正确', 403));
+        }
+
+
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -198,10 +206,21 @@ class DesignCaseController extends BaseController
             AssetModel::setRandom($designCase->id, $random);
         } catch (\Exception $e) {
 
-            throw new HttpException($e->getMessage());
+            throw new HttpException($e->getMessage(), $e->getCode());
         }
 
         return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
+    }
+
+    // 判断获得奖项数据格式是否正确
+    protected function isPrizes($value)
+    {
+        $data = json_decode($value, true);
+        if (empty($data) || ($data[0]['time'] && $data[0]['type'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -264,9 +283,9 @@ class DesignCaseController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if($is_phone){
+        if ($is_phone) {
             return $this->response->item($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
-        }else{
+        } else {
             return $this->response->item($designCase, new DesignCaseOpenTransformer())->setMeta($this->apiMeta());
         }
 
@@ -373,6 +392,16 @@ class DesignCaseController extends BaseController
 
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        $all['patent'] = $request->input('patent') ?? '[]';
+        $all['prizes'] = $request->input('prizes') ?? '[]';
+
+        if (!$this->isPrizes($all['prizes'])) {
+            return $this->response->array($this->apiError('获得奖项数据不正确', 403));
+        }
+        if (!$this->isPrizes($all['patent'])) {
+            return $this->response->array($this->apiError('专利数据不正确', 403));
         }
 
         $all = $request->except(['token', 'status']);

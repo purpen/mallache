@@ -74,7 +74,7 @@ class Group extends BaseModel
     public function deleteGroup()
     {
         // 是否有文件使用
-        $dir = PanDirector::where('group_id', $this->group_id)->first();
+        $dir = PanDirector::where('group_id', $this->id)->first();
         if ($dir) {
             return false;
         }

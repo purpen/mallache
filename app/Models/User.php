@@ -76,14 +76,12 @@ class User extends Authenticatable implements JWTSubject
                     if ($design) {
                         return $design->logo_image;
                     }
-//                    return $this->designCompany ? $this->designCompany->logo_image : '';
                 }
             } else {
                 $demand = DemandCompany::where('user_id', $this->id)->first();
                 if ($demand) {
                     return $demand->logo_image;
                 }
-//                return $this->demandCompany ? $this->demandCompany->logo_image : '';
             }
         }
         return $asset;
