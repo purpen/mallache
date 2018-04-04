@@ -36,6 +36,14 @@ class UrlKeyValueController extends BaseController
     public function urlKey()
     {
         $user_id = $this->auth_user_id;
+        // 判断设计公司是否认证
+        $designCompany = DesignCompanyModel::where('user_id' , $user_id)->first();
+        if(!$designCompany){
+            return $this->response->array($this->apiError('您不是设计公司', 404));
+        }
+        if ($designCompany->verify_status  !== 1) {
+            return $this->response->array($this->apiError('该公司没有认证成功', 403));
+        }
         //检测随机字符串是否存在，不存在从新创建
         $data['rand_string'] = Redis::get($user_id);
         if($data['rand_string'] !== null){
