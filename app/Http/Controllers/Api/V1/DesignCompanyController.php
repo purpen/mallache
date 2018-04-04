@@ -304,10 +304,10 @@ class DesignCompanyController extends BaseController
         $all = $request->except(['token']);
         $validator = Validator::make($all, $rules, $messages);
 
-        if (!$this->isPrizes($all['high_tech_enterprises'])) {
+        if (isset($all['high_tech_enterprises']) && !$this->isPrizes($all['high_tech_enterprises'])) {
             return $this->response->array($this->apiError('高新企业high_tech_enterprises数据格式不正确', 403));
         }
-        if (!$this->isPrizes($all['industrial_design_center'])) {
+        if (isset($all['industrial_design_center']) && !$this->isPrizes($all['industrial_design_center'])) {
             return $this->response->array($this->apiError('工业设计中心industrial_design_center数据格式不正确', 403));
         }
 

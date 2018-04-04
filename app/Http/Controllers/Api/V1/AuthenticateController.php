@@ -4,6 +4,7 @@
  *
  * @user llh
  */
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
@@ -46,7 +47,7 @@ class AuthenticateController extends BaseController
      *      }
      *   }
      */
-    public function register (Request $request)
+    public function register(Request $request)
     {
         // 验证规则
         $rules = [
@@ -58,18 +59,25 @@ class AuthenticateController extends BaseController
 
         $payload = $request->only('account', 'password', 'sms_code', 'type');
         $validator = Validator::make($payload, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
         }
 
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['account']);
         $sms_code_value = Cache::get($key);
-        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
-        }else{
+        } else {
             Cache::forget($key);
         }
+
+        if ($payload['type'] == 1) {
+            $company_role = 0;
+        } else if ($payload['type'] == 2) {
+            $company_role = 20;
+        }
+
         // 创建用户
         $user = User::create([
             'account' => $payload['account'],
@@ -78,11 +86,11 @@ class AuthenticateController extends BaseController
             'type' => $payload['type'],
             'password' => bcrypt($payload['password']),
             'child_account' => 0,
-            'company_role' => 20,
+            'company_role' => $company_role,
         ]);
-        if($user->type == 1){
+        if ($user->type == 1) {
             DemandCompany::createCompany($user->id);
-        }else if($user->type == 2){
+        } else if ($user->type == 2) {
             DesignCompanyModel::createDesign($user->id);
         }
         if ($user) {
@@ -96,7 +104,8 @@ class AuthenticateController extends BaseController
     /**
      * Aliases authenticate
      */
-    public function login (Request $request) {
+    public function login(Request $request)
+    {
         return $this->authenticate($request);
     }
 
@@ -121,17 +130,16 @@ class AuthenticateController extends BaseController
      *    }
      *  }
      */
-    public function authenticate (Request $request)
+    public function authenticate(Request $request)
     {
         $credentials = $request->only('account', 'password');
 
         try {
             // 验证规则
             $rules = [
-                'account' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+                'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
                 'password' => ['required', 'min:6']
             ];
-
 
 
             $payload = app('request')->only('account', 'password');
@@ -142,11 +150,11 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
-            if(!$this->phoneIsRegister($credentials['account'])){
+            if (!$this->phoneIsRegister($credentials['account'])) {
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('账户名或密码错误', 401));
             }
         } catch (JWTException $e) {
@@ -227,12 +235,12 @@ class AuthenticateController extends BaseController
     public function getSmsCode(Request $request)
     {
         $rules = [
-            'phone' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'str' => 'required|string',
             'captcha' => 'required|string',
         ];
 
-        $payload = $request->only('phone','str','captcha');
+        $payload = $request->only('phone', 'str', 'captcha');
         $validator = app('validator')->make($payload, $rules);
 
         if ($validator->fails()) {
@@ -243,7 +251,7 @@ class AuthenticateController extends BaseController
         $str = $request->input('str');
         $captcha = $request->input('captcha');
 
-        if(!Tools::checkCaptcha($str, $captcha)){
+        if (!Tools::checkCaptcha($str, $captcha)) {
             return $this->response->array($this->apiSuccess('验证码错误', 403));
         }
 
@@ -257,7 +265,7 @@ class AuthenticateController extends BaseController
 
         $text = ' 【太火鸟】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         //插入单条短信发送队列
-        $this->dispatch(new SendOneSms($phone,$text));
+        $this->dispatch(new SendOneSms($phone, $text));
 
         return $this->response->array($this->apiSuccess('请求成功！', 200));
     }
@@ -293,17 +301,17 @@ class AuthenticateController extends BaseController
         $old_password = $request->input('old_password');
         $newPassword = $request->input('password');
 
-        $user  =  JWTAuth::parseToken()->authenticate();
+        $user = JWTAuth::parseToken()->authenticate();
 
-        if(!Hash::check($old_password, $user->password)){
+        if (!Hash::check($old_password, $user->password)) {
             return $this->response->array($this->apiError('原密码不正确', 403));
         }
 
         $user->password = bcrypt($newPassword);
-        if($user->save()){
+        if ($user->save()) {
             $token = JWTAuth::refresh();
             return $this->response->array($this->apiSuccess('请求成功', 200, compact('token')));
-        }else{
+        } else {
             return $this->response->array($this->apiError('Error', 500));
         }
     }
@@ -326,7 +334,7 @@ class AuthenticateController extends BaseController
      */
     public function phoneState($phone)
     {
-        if($this->phoneIsRegister($phone)){
+        if ($this->phoneIsRegister($phone)) {
             return $this->response->array($this->apiError('手机号已注册！', 412));
         };
 
@@ -335,9 +343,9 @@ class AuthenticateController extends BaseController
 
     protected function phoneIsRegister($account)
     {
-        if(User::where('account', intval($account))->count() > 0){
+        if (User::where('account', intval($account))->count() > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -368,8 +376,8 @@ class AuthenticateController extends BaseController
      *          "price_frozen": "0.00", //冻结金额
      *           "image": "",
      *          "design_company_id": 1,
-                "role_id": 1    // 角色：0.用户；1.管理员；
-            }
+     * "role_id": 1    // 角色：0.用户；1.管理员；
+     * }
      *   }
      */
     public function AuthUser()
@@ -397,30 +405,30 @@ class AuthenticateController extends BaseController
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
         ];
 
-        $payload = $request->only('phone', 'password' , 'sms_code');
+        $payload = $request->only('phone', 'password', 'sms_code');
         $validator = Validator::make($payload, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('找回密码失败！', $validator->errors());
         }
 
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
-        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
-        }else{
+        } else {
             Cache::forget($key);
         }
         $user = User::where('phone', intval($request->input('phone')))->first();
-        if(!$user){
+        if (!$user) {
             return $this->response->array($this->apiError('手机号还没有注册过！', 404));
         }
 
         $newPassword = $request->input('password');
         $user->password = bcrypt($newPassword);
-        if($user->save()){
+        if ($user->save()) {
             return $this->response->array($this->apiSuccess('修改成功', 200));
-        }else{
+        } else {
             return $this->response->array($this->apiError('修改失败', 500));
         }
     }
@@ -445,20 +453,20 @@ class AuthenticateController extends BaseController
 
 
         $all = $request->except(['token']);
-        $user = User::where('id' , $user_id)->first();
+        $user = User::where('id', $user_id)->first();
 
-        if(!$user){
+        if (!$user) {
             return $this->response->array($this->apiError('没有该用户', 404));
         }
         //空的邮箱直接跳过
-        if(!empty($email)){
-            $users = User::where('email' , $email)->count();
-            if($users > 0){
+        if (!empty($email)) {
+            $users = User::where('email', $email)->count();
+            if ($users > 0) {
                 return $this->response->array($this->apiError('邮箱已被占用', 412));
             }
         }
         //移除空的字段不更改
-        $new_all = array_diff($all , array(null));
+        $new_all = array_diff($all, array(null));
         $user->update($new_all);
 
         return $this->response->array($this->apiSuccess('修改成功', 200));
@@ -489,7 +497,7 @@ class AuthenticateController extends BaseController
     public function fundInfo()
     {
         $user = $this->auth_user;
-        $price = sprintf("%01.2f",$user->price_total - $user->price_frozen);
+        $price = sprintf("%01.2f", $user->price_total - $user->price_frozen);
         $data = ['price_total' => $user->price_total, 'price_frozen' => $user->price_frozen, 'price' => $price];
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
@@ -523,19 +531,19 @@ class AuthenticateController extends BaseController
         //检测邀请的用户是否是管理员和主账户
         $invite_user_id = $request->input('invite_user_id');
         $user = User::where('id', $invite_user_id)->first();
-        if($user){
-            if($user->company_role == 0){
+        if ($user) {
+            if ($user->company_role == 0) {
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
 
-        }else{
+        } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));
         }
 
         //检测邀请的设计公司是否存在
         $design_company_id = $user->designCompanyId($invite_user_id);
-        $design_company = DesignCompanyModel::where('id' , $design_company_id)->first();
-        if(!$design_company){
+        $design_company = DesignCompanyModel::where('id', $design_company_id)->first();
+        if (!$design_company) {
             return $this->response->array($this->apiError('没有找到设计公司', 404));
         }
 
@@ -550,16 +558,16 @@ class AuthenticateController extends BaseController
 
         $payload = $request->only('account', 'password', 'sms_code', 'realname');
         $validator = Validator::make($payload, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
         }
 
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['account']);
         $sms_code_value = Cache::get($key);
-        if(intval($payload['sms_code']) !== intval($sms_code_value)){
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
-        }else{
+        } else {
             Cache::forget($key);
         }
 
