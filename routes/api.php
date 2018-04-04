@@ -464,7 +464,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/group/userGroupLists', 'GroupController@userGroupLists');
         // {get} /group/groupUserLists  获取一个群组的成员信息
         $api->get('/group/groupUserLists', 'GroupController@groupUserLists');
-
+        // {put} /group/updateName  修改群组名称（设计公司管理员）
+        $api->put('/group/updateName', 'GroupController@updateName');
 
         /**
          * 项目级别配置
