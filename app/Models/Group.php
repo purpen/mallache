@@ -169,7 +169,7 @@ class Group extends BaseModel
     public function userList()
     {
         $user_id_arr = json_decode($this->user_id_arr, true);
-        $list = User::select('id', 'username', 'position', 'realname')->whereIn('id', $user_id_arr)->get();
+        $list = User::whereIn('id', $user_id_arr)->get();
         return $list;
     }
 

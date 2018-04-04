@@ -83,7 +83,7 @@ class RecycleBin extends BaseModel
             'size' => $this->size,
             'mime_type' => $this->mime_type,
             'user_id' => $this->user_id,
-            'user_name' => $this->user->username,
+            'user_name' => $this->user->realname,
             'created_at' => $this->created_at,
         ];
     }

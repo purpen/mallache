@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use App\Http\Transformer\UserTransformer;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -302,7 +303,7 @@ class GroupController extends BaseController
         $group = Group::getGroup($group_id, $company_id);
         if ($group) {
             $lists = $group->userList();
-            return $this->response->array($this->apiSuccess('Success', 200, $lists));
+            return $this->response->collection($lists, new UserTransformer())->setMeta($this->apiMeta());
         }
 
         return $this->response->array($this->apiError('not found', 404));
@@ -339,9 +340,9 @@ class GroupController extends BaseController
         if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
         }
-        $group = Group::where('id' , $group_id)->first();
+        $group = Group::where('id', $group_id)->first();
         $group->name = $name;
-        if($group->save()){
+        if ($group->save()) {
             return $this->response->array($this->apiSuccess());
         }
 
