@@ -528,9 +528,6 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
 
-            if($user->isChildAccount() == true){
-                return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
-            }
         }else{
             return $this->response->array($this->apiError('没有找到该用户', 404));
         }
