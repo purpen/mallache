@@ -62,6 +62,10 @@ class RecycleBin extends BaseModel
      */
     public function restoreRecycle()
     {
+        if (!$this->panDirector) {
+            return $this->delete();
+        }
+
         if ($this->panDirector->restoreDir() === false || $this->delete() === false) {
             return false;
         }
