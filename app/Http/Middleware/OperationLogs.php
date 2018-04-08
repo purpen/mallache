@@ -29,6 +29,12 @@ class OperationLogs
         // 请求方法
         $match = $request->getMethod();
 
+        // 判断请求是否成功：成功下一步动态记录处理 ，失败则返回
+        $response_arr = json_decode($response->getContent(), true);
+        if (empty($response_arr) || $response_arr['meta']['status_code'] != 200) {
+            return;
+        }
+
         // 初始化 操作记录方法类
         $operation_logs_action = new OperationLogsAction($request, $response);
 
@@ -45,7 +51,8 @@ class OperationLogs
     {
         // ['路由:请求方法' => 对应执行的方法]
         return [
-            '/recycleBin/*:get' => 'task',
+            '/recycleBin/*:get' => 'task', // 测试
+            '/tasks:post' => 'createTask'  // 创建任务
         ];
     }
 

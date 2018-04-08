@@ -62,6 +62,10 @@ class RecycleBin extends BaseModel
      */
     public function restoreRecycle()
     {
+        if (!$this->panDirector) {
+            return $this->delete();
+        }
+
         if ($this->panDirector->restoreDir() === false || $this->delete() === false) {
             return false;
         }
@@ -83,8 +87,9 @@ class RecycleBin extends BaseModel
             'size' => $this->size,
             'mime_type' => $this->mime_type,
             'user_id' => $this->user_id,
-            'user_name' => $this->user->username,
+            'user_name' => $this->user->realname,
             'created_at' => $this->created_at,
+            'file_user_id' => $this->panDirector ? $this->panDirector->user_id : null,
         ];
     }
 }
