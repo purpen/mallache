@@ -25,6 +25,8 @@ class TaskTransformer extends TransformerAbstract
     start_time	        datetime	否		开始时间
     over_time	        datetime	否		完成时间
     status	            tinyint(1)	是	1	状态：0.禁用；1.启用；
+    tier	            integer	            层级 默认0
+    pid	                integer	            父id 默认0
     */
 
     public function transform(Task $tasks)
@@ -48,6 +50,8 @@ class TaskTransformer extends TransformerAbstract
             'start_time' => $tasks->start_time,
             'over_time' => $tasks->over_time,
             'created_at' => $tasks->created_at,
+            'tier' => $tasks->tier,
+            'pid' => $tasks->pid,
         ];
     }
 }

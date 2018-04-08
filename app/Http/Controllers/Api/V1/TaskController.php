@@ -46,7 +46,6 @@ class TaskController extends BaseController
                 "item_id": 0,
                 "level": 1,
                 "type": 1,
-                "$params": 0,
                 "sub_finfished_count": 0,
                 "love_count": 0,
                 "collection_count": 0,
