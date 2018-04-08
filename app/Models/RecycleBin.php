@@ -89,6 +89,7 @@ class RecycleBin extends BaseModel
             'user_id' => $this->user_id,
             'user_name' => $this->user->realname,
             'created_at' => $this->created_at,
+            'file_user_id' => $this->panDirector ? $this->panDirector->user_id : null,
         ];
     }
 }
