@@ -156,7 +156,7 @@ class PanShareController extends BaseController
             // 上级目录信息
             $pan_dir_info = $pan_dir ? $pan_dir->info() : null;
 
-            return $this->response->paginator($lists, new YunpanListTransformer())->setMeta($this->apiMeta('Success.', 200, ['info' => $pan_dir_info]));
+            return $this->response->paginator($lists, new YunpanListTransformer())->setMeta($this->apiMeta('Success.', 200, ['info' => $pan_dir_info, 'share' => $pan_share->info()]));
         } catch (\Exception $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }

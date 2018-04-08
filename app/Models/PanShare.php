@@ -22,6 +22,8 @@ class PanShare extends BaseModel
             'url_code' => $this->url_code,
             'password' => $this->password,
             'share_time' => $this->share_time,
+            'created_at' => $this->created_at,
+            'end_at' => ($this->created_at) + ($this->share_time * 24 * 3600),
         ];
     }
 
