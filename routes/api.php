@@ -336,6 +336,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/design/isAdmin', 'DesignController@isAdmin');
         //移除成员
         $api->put('/design/deleteMember', 'DesignController@deleteMember');
+        //设计公司成员列表
+        $api->get('/design/members/search', 'DesignController@membersSearch');
+        //恢复成员
+        $api->put('/design/restoreMember', 'DesignController@restoreMember');
+
         /**
          * 通知消息相关路由
          */
@@ -459,7 +464,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/group/userGroupLists', 'GroupController@userGroupLists');
         // {get} /group/groupUserLists  获取一个群组的成员信息
         $api->get('/group/groupUserLists', 'GroupController@groupUserLists');
-
+        // {put} /group/updateName  修改群组名称（设计公司管理员）
+        $api->put('/group/updateName', 'GroupController@updateName');
 
         /**
          * 项目级别配置
@@ -487,6 +493,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 任务成员
          */
         $api->resource('/taskUsers', 'TaskUserController');
+
+
+        /**
+         * 标签
+         */
+        $api->resource('/tags', 'TagController');
+        //标签id查看任务
+        $api->get('/tags/task/{id} ', 'TagController@tagTask');
 
     });
 });

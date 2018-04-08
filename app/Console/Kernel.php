@@ -45,6 +45,9 @@ class Kernel extends ConsoleKernel
         // 清除设计云盘回收站过期的文件
         Commands\ClearRecycleBin::class,
 
+        // 子账户上线 主账户角色数据变更
+        Commands\ChangeCompanyRole::class,
+
 
     ];
 

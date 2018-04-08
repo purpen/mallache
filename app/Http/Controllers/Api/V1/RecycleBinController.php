@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\RecycleBinTransformer;
 use App\Models\RecycleBin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -54,11 +55,13 @@ class RecycleBinController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
 
         $user = $this->auth_user;
+        $company_id = User::designCompanyId($this->auth_user_id);
         if ($user->isDesignAdmin()) {
-            $lists = RecycleBin::orderBy('id', 'desc')
+            $lists = RecycleBin::where(['company_id' => $company_id])
+                ->orderBy('id', 'desc')
                 ->paginate($per_page);
         } else {
-            $lists = RecycleBin::where('user_id', $this->auth_user_id)
+            $lists = RecycleBin::where(['user_id' => $this->auth_user_id, 'company_id' => $company_id])
                 ->orderBy('id', 'desc')
                 ->paginate($per_page);
         }
@@ -94,14 +97,27 @@ class RecycleBinController extends BaseController
 
         try {
             DB::beginTransaction();
+
+            $company_id = User::designCompanyId($this->auth_user_id);
             foreach ($id_arr as $id) {
-                $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
-                if (!$recycle_bin) {
-                    throw new \Exception("id=" . $id . ":not found");
+                if ($this->auth_user->isDesignAdmin()) {
+                    $recycle_bin = RecycleBin::where(['id' => $id, 'company_id' => $company_id])->first();
+                } else {
+                    $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id, 'company_id' => $company_id])->first();
                 }
 
+                if (!$recycle_bin) {
+                    continue;
+                }
+
+
                 // 管理员和文件所属用户可永久删除
-                if ($recycle_bin->panDirector && ($recycle_bin->panDirector->user_id == $this->auth_user_id || $this->auth_user->isDesignAdmin())) {
+                if ($recycle_bin->panDirector && (($recycle_bin->panDirector->user_id == $this->auth_user_id) || $this->auth_user->isDesignAdmin())) {
+                    //彻底删除文件（文件夹）并删除回收站记录
+                    if (!$recycle_bin->deleteRecycle()) {
+                        throw new \Exception("id=" . $id . ":删除失败");
+                    }
+                } else if (!$recycle_bin->panDirector) {
                     //彻底删除文件（文件夹）并删除回收站记录
                     if (!$recycle_bin->deleteRecycle()) {
                         throw new \Exception("id=" . $id . ":删除失败");
@@ -145,12 +161,12 @@ class RecycleBinController extends BaseController
         ]);
 
         $id_arr = $request->input('id_arr');
-
+        $company_id = User::designCompanyId($this->auth_user_id);
         try {
             DB::beginTransaction();
 
             foreach ($id_arr as $id) {
-                $recycle_bin = RecycleBin::where(['id' => $id, 'user_id' => $this->auth_user_id])->first();
+                $recycle_bin = RecycleBin::where(['id' => $id, 'company_id' => $company_id])->first();
                 if (!$recycle_bin) {
                     throw new \Exception('id=' . $id . ': not found');
                 }

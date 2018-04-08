@@ -536,6 +536,9 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $set_user_id = $request->input('set_user_id');
+        if($user_id == $set_user_id){
+            return $this->response->array($this->apiError('不能把自己设置成管理员或成员', 403));
+        }
         $company_role = $request->input('company_role');
         $set_user = User::where('id' , $set_user_id)->first();
         if(!$set_user){
@@ -600,7 +603,12 @@ class DesignController extends BaseController
             if(!$del_user){
                 return $this->response->array($this->apiError('没有找到移除的用户', 404));
             }else{
+                //如果是超级管理员不能被移除
+                if($del_user->company_role == 20){
+                    return $this->response->array($this->apiError('该用户是超级管理员，不能移除', 403));
+                }
                 try {
+
                     DB::beginTransaction();
                     $del_user->design_company_id = 0;
                     $del_user->invite_user_id = 0;
@@ -626,6 +634,96 @@ class DesignController extends BaseController
 
         }else{
             return $this->response->array($this->apiError('没有权限移除该用户', 403));
+        }
+
+    }
+
+    /**
+     * @api {get} /design/members/search 设计公司成员搜索
+     *
+     * @apiVersion 1.0.0
+     * @apiName design membersSearch
+     * @apiGroup design
+     *
+     * @apiParam {string} realname
+     * @apiParam {token} token
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 2,
+    "type": 2,
+    "account": "18132382134",
+    "username": "",
+    "email": null,
+    "phone": "18132382134",
+    "status": 0,
+    "item_sum": 0,
+    "price_total": "0.00",
+    "price_frozen": "0.00",
+    "cash": "0.00",
+    "logo_image": null,
+    "design_company_id": 51,
+    "role_id": 0,
+    "demand_company_id": 0,
+    "realname": null,
+    "design_company_name": "222"
+    }
+    ],
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    }
+    }
+     */
+    public function membersSearch(Request $request)
+    {
+        $realname = $request->input('realname');
+        $user = User::where('realname' , 'like' , '%'.$realname.'%')->get();
+        if($user){
+            return $this->response->collection($user, new UserTransformer())->setMeta($this->apiMeta());
+        }
+    }
+
+    /**
+     * @api {put} /design/restoreMember 恢复成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design restoreMember
+     * @apiGroup design
+     *
+     * @apiParam {integer} phone 被恢复成员的手机号
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function restoreMember(Request $request)
+    {
+        $phone = $request->input('phone');
+        //被恢复的成员
+        $restoreUser = User::where('phone' , $phone)->first();
+        if(!$restoreUser){
+            return $this->response->array($this->apiError('没有找到该成员', 404));
+        }
+        $user_id = $this->auth_user_id;
+        //主账户
+        $user = User::where('id' , $user_id)->first();
+        //如果是超级管理员不能被移除
+        if($user->company_role !== 20){
+            return $this->response->array($this->apiError('该用户是超级管理员，不能恢复成员', 403));
+        }
+        if($user){
+            $restoreUser->design_company_id = $user->design_company_id;
+            $restoreUser->invite_user_id = $user_id;
+            $restoreUser->save();
+            return $this->response->array($this->apiSuccess());
         }
 
     }

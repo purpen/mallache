@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use App\Http\Transformer\UserTransformer;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -302,10 +303,49 @@ class GroupController extends BaseController
         $group = Group::getGroup($group_id, $company_id);
         if ($group) {
             $lists = $group->userList();
-            return $this->response->array($this->apiSuccess('Success', 200, $lists));
+            return $this->response->collection($lists, new UserTransformer())->setMeta($this->apiMeta());
         }
 
         return $this->response->array($this->apiError('not found', 404));
+    }
+
+    /**
+     * @api {put} /group/updateName  修改群组名称（设计公司管理员）
+     * @apiVersion 1.0.0
+     * @apiName group updateName
+     *
+     * @apiGroup group
+     * @apiParam {string} token
+     * @apiParam {string} name 群组名称
+     * @apiParam {integer} group_id 群组ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *  }
+     */
+    public function updateName(Request $request)
+    {
+        $this->validate($request, [
+            'group_id' => 'required|integer',
+            'name' => 'required|max:50',
+        ]);
+
+        $group_id = $request->input('group_id');
+        $name = $request->input('name');
+        // 判断是否是设计公司管理员
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+        $group = Group::where('id', $group_id)->first();
+        $group->name = $name;
+        if ($group->save()) {
+            return $this->response->array($this->apiSuccess());
+        }
+
     }
 
 }

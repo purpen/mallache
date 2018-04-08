@@ -74,7 +74,7 @@ class Group extends BaseModel
     public function deleteGroup()
     {
         // 是否有文件使用
-        $dir = PanDirector::where('group_id', $this->group_id)->first();
+        $dir = PanDirector::where('group_id', $this->id)->first();
         if ($dir) {
             return false;
         }
@@ -169,7 +169,7 @@ class Group extends BaseModel
     public function userList()
     {
         $user_id_arr = json_decode($this->user_id_arr, true);
-        $list = User::select('id', 'username')->whereIn('id', $user_id_arr)->get();
+        $list = User::whereIn('id', $user_id_arr)->get();
         return $list;
     }
 

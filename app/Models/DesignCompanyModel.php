@@ -68,7 +68,6 @@ class DesignCompanyModel extends BaseModel
     protected $appends = [
         'company_type_val',
         'company_size_val',
-        'city_arr',
         'logo_image',
         'design_type_value',
 
@@ -390,7 +389,7 @@ class DesignCompanyModel extends BaseModel
             $user->design_company_id = $design->id;
             $user->save();
             return $design;
-        }else{
+        } else {
             return false;
         }
     }
@@ -400,9 +399,9 @@ class DesignCompanyModel extends BaseModel
     {
         $revenue = $this->revenue;
         $revenue_value = config('constant.revenue');
-        if(!array_key_exists($revenue, $revenue_value)){
+        if (!array_key_exists($revenue, $revenue_value)) {
             return null;
-        }else{
+        } else {
             return $revenue_value[$revenue];
         }
     }

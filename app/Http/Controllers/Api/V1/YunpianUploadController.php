@@ -205,7 +205,7 @@ class YunpianUploadController extends BaseController
                         $pan_director->group_id = $pan_dir->group_id;
                         $pan_director->company_id = $pan_dir->company_id;
                         $pan_director->pan_director_id = $pan_director_id;
-                        $pan_director->type = $pan_dir->type;
+                        $pan_director->type = 2;
                         $pan_director->name = $pan_file->name;
                         $pan_director->size = $pan_file->size;
                         $pan_director->sort = 0;
@@ -225,7 +225,7 @@ class YunpianUploadController extends BaseController
                     $pan_director->group_id = $pan_dir->group_id;
                     $pan_director->company_id = $pan_dir->company_id;
                     $pan_director->pan_director_id = $pan_director_id;
-                    $pan_director->type = $pan_dir->type;
+                    $pan_director->type = 2;
                     $pan_director->name = $pan_file->name;
                     $pan_director->size = $pan_file->size;
                     $pan_director->sort = 0;
@@ -1103,9 +1103,9 @@ class YunpianUploadController extends BaseController
                 if ($from_pan_director->save()) {
                     //设置复制文件的权限
                     if ($to_id == 0) {  //公开
-                        $from_pan_director->setPermission(1, null, null, $this->auth_user_id);
+                        $from_pan_director->setPermission(1, null, null);
                     } else {
-                        $from_pan_director->setPermission($to_pan_director->open_set, $to_pan_director->group_id, $to_pan_director->item_id, $this->auth_user_id);
+                        $from_pan_director->setPermission($to_pan_director->open_set, $to_pan_director->group_id, $to_pan_director->item_id);
                     }
                 } else {
                     throw new \Exception('变更上级目录ID错误');
