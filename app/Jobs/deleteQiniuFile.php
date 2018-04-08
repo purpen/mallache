@@ -13,6 +13,8 @@ class deleteQiniuFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $path_str = null;
+
     /**
      * Create a new job instance.
      *

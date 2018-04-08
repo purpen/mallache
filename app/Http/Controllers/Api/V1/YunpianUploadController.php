@@ -133,7 +133,6 @@ class YunpianUploadController extends BaseController
                 $job = (new deleteQiniuFile($str))->delay(Carbon::now()->addSeconds(1));
                 $this->dispatch($job);
 
-                Log::info($callBackDate);
                 return $this->response->array($callBackDate);
             }
 
@@ -251,7 +250,7 @@ class YunpianUploadController extends BaseController
 
                     ]
                 ];
-                Log::info($callBackDate);
+
                 return $this->response->array($callBackDate);
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -259,7 +258,7 @@ class YunpianUploadController extends BaseController
                     'success' => 0,
                     'message' => $e->getMessage(),
                 ];
-                Log::info($callBackDate);
+
                 return $this->response->array($callBackDate);
             }
 
