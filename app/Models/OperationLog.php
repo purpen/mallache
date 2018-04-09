@@ -6,6 +6,18 @@ class OperationLog extends BaseModel
 {
     protected $table = 'operation_log';
 
+    //关联操作用户
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    // 关联被操作用户
+    public function otherUser()
+    {
+        return $this->belongsTo('App\Models\User', 'other_user_id');
+    }
+
     /**
      * 创建动态
      *
@@ -34,5 +46,33 @@ class OperationLog extends BaseModel
 
         return $operation_log;
     }
+
+    //动态信息
+    public function info()
+    {
+        $str = null;
+        switch ($this->action_type) {
+            case 1:
+                $str = $this->masterTask();
+        }
+
+        return [
+            'action_type' => $this->action_type,
+            'title' => $str,
+            'content' => $this->content,
+            'created_at' => $this->created_at
+        ];
+    }
+
+    // 获取
+
+    // 创建主任务
+    public function masterTask()
+    {
+        return $this->user->realname . '创建了任务';
+    }
+
+
+
 
 }
