@@ -529,7 +529,7 @@ class TaskController extends BaseController
     public function executeUser(Request $request)
     {
         $task_id = $request->input('task_id');
-        $execute_user_id = $request->input('execute_user_id') ? $request->input('execute_user_id') : 0;
+        $execute_user_id = $this->auth_user_id;
         $task = Task::find($task_id);
         if(!$task){
             return $this->response->array($this->apiError('没有找到该任务!', 404));
