@@ -503,5 +503,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //标签id查看任务
         $api->get('/tags/task/{id} ', 'TagController@tagTask');
 
+        /**
+         * 阶段
+         */
+        $api->resource('/stages', 'StageController');
+
     });
 });
