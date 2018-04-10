@@ -28,6 +28,7 @@ class TaskController extends BaseController
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {array} tags 标签
+     * @apiParam {array} selected_user_id 选择的用户id
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
@@ -87,6 +88,7 @@ class TaskController extends BaseController
         $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
         $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
         $tags = $request->input('tags') ? $request->input('tags') : [];
+        $selected_user_id_arr = $request->input('selected_user_id') ? $request->input('selected_user_id') : [];
         $summary = $request->input('summary') ? (int)$request->input('summary') : '';
         $params = array(
             'name' => $request->input('name'),
@@ -117,6 +119,24 @@ class TaskController extends BaseController
                     return $this->response->array($this->apiError('主任务父id必须为0', 412));
                 }
                 $tasks = Task::create($params);
+                //如果选中的用户不为空，把用户更新到用户成员里
+                if(!empty($selected_user_id_arr)){
+                    foreach ($selected_user_id_arr as $selected_user_id){
+                        //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                        $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('user_id' , $this->auth_user_id)->where('selected_user_id' , $selected_user_id)->first();
+                        if($find_task_user){
+                            continue;
+                        }else{
+                            $task_user = new TaskUser();
+                            $task_user->user_id = $this->auth_user_id;
+                            $task_user->task_id = $tasks->id;
+                            $task_user->selected_user_id = $selected_user_id;
+                            $task_user->type = 1;
+                            $task_user->status = 1;
+                            $task_user->save();
+                        }
+                    }
+                }
             }else{
                 //如果父id为0的话，就返回，子任务必须有父id
                 if($pid == 0){
@@ -135,6 +155,24 @@ class TaskController extends BaseController
                         if($task_pid->save()){
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
+                            //如果选中的用户不为空，把用户更新到用户成员里
+                            if(!empty($selected_user_id_arr)){
+                                foreach ($selected_user_id_arr as $selected_user_id){
+                                    //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                                    $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('user_id' , $this->auth_user_id)->where('selected_user_id' , $selected_user_id)->first();
+                                    if($find_task_user){
+                                        continue;
+                                    }else{
+                                        $task_user = new TaskUser();
+                                        $task_user->user_id = $this->auth_user_id;
+                                        $task_user->task_id = $tasks->id;
+                                        $task_user->selected_user_id = $selected_user_id;
+                                        $task_user->type = 1;
+                                        $task_user->status = 1;
+                                        $task_user->save();
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -330,55 +368,16 @@ class TaskController extends BaseController
         }
      */
     public function update(Request $request , $id)
-    {        // 验证规则
-        $rules = [
-            'name' => 'required|max:100',
-            'tags' => 'max:500',
-            'summary' => 'max:1000',
-        ];
-        $messages = [
-            'name.required' => '名称不能为空',
-            'name.max' => '名称最多50字符',
-            'tags.max' => '标签最多500字符',
-            'summary.max' => '备注最多1000字符',
-        ];
+    {
 
-
-        $type = $request->input('type') ? (int)$request->input('type') : 1;
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        $level = $request->input('level') ? (int)$request->input('level') : 1;
-        $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
-        $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
-        $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
-        $execute_user_id = $request->input('execute_user_id') ? (int)$request->input('execute_user_id') : 0;
-        $tags = $request->input('tags') ? $request->input('tags') : [];
-        $summary = $request->input('summary') ? (int)$request->input('summary') : '';
-
-        $params = array(
-            'name' => $request->input('name'),
-            'tags' => implode(',' , $tags),
-            'summary' => $summary,
-            'user_id' => $this->auth_user_id,
-            'type' => $type,
-            'item_id' => $item_id,
-            'level' => $level,
-            'stage' => $stage,
-            'start_time' => $start_time,
-            'over_time' => $over_time,
-            'status' => 1,
-            'execute_user_id' => $execute_user_id,
-        );
-        $validator = Validator::make($params, $rules, $messages);
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
-
+        $all = $request->except(['token']);
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $tasks->update($params);
+        $new_all = array_diff($all , array(null));
+        $tasks->update($new_all);
         if (!$tasks) {
             return $this->response->array($this->apiError());
         }
