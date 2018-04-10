@@ -404,6 +404,10 @@ class TaskController extends BaseController
     public function destroy($id)
     {
         $tasks = Task::find($id);
+        //检验是否是当前用户创建的作品
+        if ($tasks->user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('没有权限删除!', 403));
+        }
         //检验是否存在
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
