@@ -21,6 +21,7 @@ status	tinyint(1)	是	1	状态：0.禁用；1.启用；
             'id' => intval($taskUsers->id),
             'task_id' => intval($taskUsers->task_id),
             'user_id' => intval($taskUsers->user_id),
+            'selected_user_id' => intval($taskUsers->selected_user_id),
             'type' => intval($taskUsers->type),
             'status' => intval($taskUsers->status),
             'created_at' => $taskUsers->created_at,
