@@ -504,35 +504,6 @@ class TaskController extends BaseController
 
     }
 
-    /**
-     * @api {delete} /tasks/childDelete/{id} 子任务删除
-     * @apiVersion 1.0.0
-     * @apiName tasks childDelete
-     * @apiGroup tasks
-     *
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *     "meta": {
-     *       "message": "",
-     *       "status_code": 200
-     *     }
-     *   }
-     */
-    public function childDelete($id)
-    {
-        $tasks = Task::find($id);
-        //检验是否存在
-        if (!$tasks) {
-            return $this->response->array($this->apiError('not found!', 404));
-        }
-        $ok = $tasks->delete();
-        if (!$ok) {
-            return $this->response->array($this->apiError());
-        }
-        return $this->response->array($this->apiSuccess());
-    }
 
     /**
      * @api {post} /tasks/executeUser 领取任务
