@@ -32,6 +32,7 @@ class TaskController extends BaseController
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
+     * @apiParam {integer} stage_id 阶段ID
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
      * @apiParam {string} token
      *
@@ -47,6 +48,7 @@ class TaskController extends BaseController
                 "item_id": 0,
                 "level": 1,
                 "type": 1,
+                "stage_id": 1,
                 "sub_finfished_count": 0,
                 "love_count": 0,
                 "collection_count": 0,
@@ -85,11 +87,12 @@ class TaskController extends BaseController
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
-        $start_time = $request->input('start_time') ? (int)$request->input('start_time') : null;
-        $over_time = $request->input('start_time') ? (int)$request->input('over_time') : null;
+        $start_time = $request->input('start_time') ? $request->input('start_time') : null;
+        $over_time = $request->input('start_time') ? $request->input('over_time') : null;
         $tags = $request->input('tags') ? $request->input('tags') : [];
         $selected_user_id_arr = $request->input('selected_user_id') ? $request->input('selected_user_id') : [];
-        $summary = $request->input('summary') ? (int)$request->input('summary') : '';
+        $summary = $request->input('summary') ? $request->input('summary') : '';
+        $stage_id= $request->input('stage_id') ? $request->input('stage_id') : '';
         $params = array(
             'name' => $request->input('name'),
             'tags' => implode(',' , $tags),
@@ -103,6 +106,7 @@ class TaskController extends BaseController
             'over_time' => $over_time,
             'status' => 1,
             'execute_user_id' => $execute_user_id,
+            'stage_id' => $stage_id,
         );
 
         $validator = Validator::make($params, $rules, $messages);
@@ -335,6 +339,7 @@ class TaskController extends BaseController
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
      * @apiParam {integer} item_id 所属项目ID
+     * @apiParam {integer} stage_id 阶段ID
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
      * @apiParam {string} token
      *
@@ -352,6 +357,7 @@ class TaskController extends BaseController
                 "level": 1,
                 "type": 1,
                 "sub_count": 0,
+                "stage_id": 0,
                 "sub_finfished_count": 0,
                 "love_count": 0,
                 "collection_count": 0,
