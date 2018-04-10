@@ -493,7 +493,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 任务成员
          */
         $api->resource('/taskUsers', 'TaskUserController');
-
+        //保存任务成员
+        $api->post('/taskUsers/newStore', 'TaskUserController@newStore');
 
         /**
          * 标签
