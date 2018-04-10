@@ -52,6 +52,7 @@ class TaskTransformer extends TransformerAbstract
             'created_at' => $tasks->created_at,
             'tier' => intval($tasks->tier),
             'pid' => intval($tasks->pid),
+            'stage_id' => intval($tasks->stage_id),
         ];
     }
 }
