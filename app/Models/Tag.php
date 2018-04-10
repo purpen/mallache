@@ -20,6 +20,14 @@ class Tag extends BaseModel
         'task_id',
     ];
 
+    /**
+     * 返回
+     */
+    protected $appends = [
+        'type_val',
+
+    ];
+
     //根据标签id，查看任务里面含有该任务的任务task_id_array
     public static function tagTask($id)
     {
@@ -41,5 +49,15 @@ class Tag extends BaseModel
         $new_task_id_arr = $task_id_arr;
 
         return $new_task_id_arr;
+    }
+
+    //颜色类型
+    public function getTypeValAttribute()
+    {
+        if(array_key_exists($this->type,config('constant.tag_type'))){
+            return config('constant.tag_type')[$this->type];
+
+        }
+        return '';
     }
 }

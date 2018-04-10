@@ -93,15 +93,17 @@ class TagController extends BaseController
         // 验证规则
         $rules = [
             'title' => 'required|max:100',
+            'item_id' => 'required|integer',
         ];
         $messages = [
             'title.required' => '标题不能为空',
+            'item_id.required' => '项目id不能为空',
             'title.max' => '最多100字符',
         ];
 
 
         $type = $request->input('type') ? (int)$request->input('type') : 0;
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
+        $item_id = $request->input('item_id');
         $task_id = $request->input('task_id') ? (int)$request->input('task_id') : 0;
 
         $params = array(
