@@ -515,7 +515,6 @@ class TaskController extends BaseController
      * @apiGroup tasks
      *
      * @apiParam {integer} task_id 任务id
-     * @apiParam {integer} execute_user_id 设定执行任务的用户id
      * @apiParam {token} token
      *
      * @apiSuccessExample 成功响应:
