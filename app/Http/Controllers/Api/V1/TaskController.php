@@ -92,7 +92,7 @@ class TaskController extends BaseController
         $tags = $request->input('tags') ? $request->input('tags') : [];
         $selected_user_id_arr = $request->input('selected_user_id') ? $request->input('selected_user_id') : [];
         $summary = $request->input('summary') ? $request->input('summary') : '';
-        $stage_id= $request->input('stage_id') ? $request->input('stage_id') : '';
+        $stage_id= $request->input('stage_id') ? $request->input('stage_id') : 0;
         $params = array(
             'name' => $request->input('name'),
             'tags' => implode(',' , $tags),
