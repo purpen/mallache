@@ -127,7 +127,7 @@ class TaskController extends BaseController
                 if(!empty($selected_user_id_arr)){
                     foreach ($selected_user_id_arr as $selected_user_id){
                         //检查又没有创建过任务成员，创建过返回，没有创建过创建
-                        $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('user_id' , $this->auth_user_id)->where('selected_user_id' , $selected_user_id)->first();
+                        $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('selected_user_id' , $selected_user_id)->first();
                         if($find_task_user){
                             continue;
                         }else{
@@ -163,7 +163,7 @@ class TaskController extends BaseController
                             if(!empty($selected_user_id_arr)){
                                 foreach ($selected_user_id_arr as $selected_user_id){
                                     //检查又没有创建过任务成员，创建过返回，没有创建过创建
-                                    $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('user_id' , $this->auth_user_id)->where('selected_user_id' , $selected_user_id)->first();
+                                    $find_task_user = TaskUser::where('task_id' , $tasks->id)->where('selected_user_id' , $selected_user_id)->first();
                                     if($find_task_user){
                                         continue;
                                     }else{
