@@ -508,5 +508,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         $api->resource('/stages', 'StageController');
 
+        /**
+         * 沟通纪要表
+         */
+        $api->resource('/communeSummaries', 'CommuneSummaryController');
+
+        /**
+         * 沟通纪要成员表
+         */
+        $api->resource('/communeSummaryUser', 'CommuneSummaryUserController');
+
     });
 });
