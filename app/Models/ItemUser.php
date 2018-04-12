@@ -14,5 +14,16 @@ class ItemUser extends BaseModel
      */
     protected $fillable = ['user_id', 'item_id' , 'status' , 'level' , 'is_creator' , 'type'];
 
+    //检查是否有权限查看任务
+    public static function checkUser($item_id , $user_id)
+    {
+        $itemUser = ItemUser::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
+        if($itemUser){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 }

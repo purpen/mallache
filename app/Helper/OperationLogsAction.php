@@ -96,6 +96,7 @@ class OperationLogsAction
         if ($tier == 0) {  // 父任务
             $this->createItemLog($item_id, 1, $target_id, null, $content);
         } else if ($tier == 1) {  // 子任务
+            $this->createItemLog($item_id, 2, $target_id, null, $content);
 
         }
     }

@@ -9,6 +9,7 @@ class OperationLog extends BaseModel
     // 操作动态文字说明
     protected $title_config = [
         '1' => ' 创建了任务',  // 创建任务
+        '2' => ' 创建了子任务',  // 创建子任务
     ];
 
     //关联操作用户
@@ -59,6 +60,10 @@ class OperationLog extends BaseModel
         switch ($this->action_type) {
             case 1:
                 $str = $this->masterTask();
+                break;
+            case 2:
+                $str = $this->childTask();
+                break;
         }
 
         return [
@@ -94,6 +99,12 @@ class OperationLog extends BaseModel
     public function masterTask()
     {
         return $this->user->getUserName() . $this->title_config['1'];
+    }
+
+    // 创建子任务
+    public function childTask()
+    {
+        return $this->user->getUserName() . $this->title_config['2'];
     }
 
 

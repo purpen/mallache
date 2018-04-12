@@ -31,7 +31,8 @@ class Task extends BaseModel
         'over_time' ,
         'status' ,
         'pid',
-        'tier'
+        'tier',
+        'stage_id'
     ];
 
 
