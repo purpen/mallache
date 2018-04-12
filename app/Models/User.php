@@ -166,6 +166,22 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 一对多关联项目管理表 商务经理字段
+     */
+    public function businessManagerDesignProject()
+    {
+        return $this->hasMany('App\Models\DesignProject', 'business_manager');
+    }
+
+    /**
+     * 一对多关联项目管理表 项目负责人字段
+     */
+    public function leaderDesignProject()
+    {
+        return $this->hasMany('App\Models\DesignProject', 'leader');
+    }
+
+    /**
      * 增加用户账户金额（总金额、冻结金额）
      *
      * @param int $user_id
