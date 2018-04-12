@@ -489,8 +489,8 @@ class DesignController extends BaseController
         if($user->isChildAccount() == true){
             return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
         }
-        if(in_array($user->company_role,[0,10])){
-            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        if($user->isDesignAdmin() == false){
+            return $this->response->array($this->apiError('该用户不是管理员或者超级管理员', 403));
         }
         $design_company_id = $user->design_company_id;
         if($design_company_id == 0){
@@ -530,9 +530,9 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('没有找到主账户', 404));
         }
         if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+            return $this->response->array($this->apiError('用户不是主账户', 403));
         }
-        if(in_array($user->company_role , [0 , 10])){
+        if($user->isDesignSuperAdmin() == false){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $set_user_id = $request->input('set_user_id');
@@ -542,7 +542,7 @@ class DesignController extends BaseController
         $company_role = $request->input('company_role');
         $set_user = User::where('id' , $set_user_id)->first();
         if(!$set_user){
-            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+            return $this->response->array($this->apiError('没有找到被设置的用户', 404));
         }
         $set_user->company_role = $company_role;
         $set_user->save();
@@ -576,16 +576,12 @@ class DesignController extends BaseController
         $delete_user_id = $request->input('delete_user_id');
         $user = User::where('id' , $user_id)->first();
         if(!$user){
-            return $this->response->array($this->apiError('没有找到主账户', 404));
+            return $this->response->array($this->apiError('没有找到该账户', 404));
         }
 
-        if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+        if($user->isDesignAdmin() == false){
+            return $this->response->array($this->apiError('该用户不是管理员或者超级管理员', 403));
         }
-        if(in_array($user->company_role , [0 , 10])){
-            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
-        }
-
         $design_company_id = $user->design_company_id;
         if($design_company_id == 0){
             return $this->response->array($this->apiError('该用户不是设计公司', 404));

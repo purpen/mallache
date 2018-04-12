@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use App\Http\Transformer\TaskChildTransformer;
 use App\Http\Transformer\TaskTransformer;
 use App\Models\ItemUser;
 use App\Models\Task;
@@ -24,7 +25,6 @@ class TaskController extends BaseController
      *
      * @apiParam {integer} tier 层级 默认0
      * @apiParam {integer} pid 父id 默认0
-     * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {array} tags 标签
@@ -82,9 +82,11 @@ class TaskController extends BaseController
 
         $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
         $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
-        $execute_user_id = $request->input('execute_user_id') ? (int)$request->input('execute_user_id') : 0;
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
+        if($item_id == 0){
+            return $this->response->array($this->apiError('项目id不能为0', 412));
+        }
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? $request->input('start_time') : null;
@@ -105,7 +107,7 @@ class TaskController extends BaseController
             'start_time' => $start_time,
             'over_time' => $over_time,
             'status' => 1,
-            'execute_user_id' => $execute_user_id,
+            'execute_user_id' => $this->auth_user_id,
             'stage_id' => $stage_id,
         );
 
@@ -201,7 +203,7 @@ class TaskController extends BaseController
      * @apiName tasks index
      * @apiGroup tasks
      *
-     * @apiParam {integer} stage 默认10；0.未完成 2.已完成 10.全部
+     * @apiParam {integer} stage 默认10；0.全部 2.已完成 -1.未完成  默认0
      * @apiParam {integer} item_id 项目id
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
@@ -239,9 +241,12 @@ class TaskController extends BaseController
      */
     public function index(Request $request)
     {
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        $stage = $request->input('stage') ? $request->input('stage') : 0;
+        $item_id = $request->input('item_id') ? intval($request->input('item_id')) : 0;
+        if($item_id == 0){
+            return $this->response->array($this->apiError('项目id不能为0', 412));
+        }
+        $per_page = $request->input('per_page') ? intval($request->input('per_page')) : $this->big_per_page;
+        $stage = $request->input('stage') ? intval($request->input('stage')) : 0;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
             $sort = 'asc';
@@ -251,22 +256,20 @@ class TaskController extends BaseController
             $sort = 'desc';
         }
         $user_id = intval($this->auth_user_id);
-        $itemUsers = ItemUser::where('item_id' , $item_id)->get();
-        $item_user_id = [];
-        foreach ($itemUsers as $itemUser){
-            $item_user_id[] = $itemUser->user_id;
-        }
-        $new_user_id = $item_user_id;
-        if(in_array($user_id , $new_user_id)){
-            if(in_array($stage,[0,2])){
-                $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1 , 'stage' => $stage ])->orderBy('id', $sort)->paginate($per_page);
-            }else{
-                $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1])->orderBy('id', $sort)->paginate($per_page);
-            }
-        }else{
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($item_id , $user_id);
+        if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看', 403));
         }
 
+        if($stage !== 0){
+            if($stage == -1){
+                $stage = 0;
+            }
+            $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1 , 'stage' => $stage ])->orderBy('id', $sort)->paginate($per_page);
+        }else{
+            $tasks= Task::where(['item_id' => (int)$item_id , 'status' => 1])->orderBy('id', $sort)->paginate($per_page);
+        }
 
         return $this->response->paginator($tasks, new TaskTransformer())->setMeta($this->apiMeta());
 
@@ -311,17 +314,19 @@ class TaskController extends BaseController
     public function show($id)
     {
         $id = intval($id);
-        $tasks = Task::find($id);
-
-        if (!$tasks) {
+        $task = Task::find($id);
+        if (!$task) {
             return $this->response->array($this->apiError('not found', 404));
         }
+        //查看子任务
+        $taskChild = Task::where('pid' , $id)->get();
+        $task['childTask'] = $taskChild;
 
-        if ($tasks->status == 0) {
+        if ($task->status == 0) {
             return $this->response->array($this->apiError('该任务已禁用！', 403));
         }
 
-        return $this->response->item($tasks, new TaskTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($task, new TaskChildTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -330,15 +335,13 @@ class TaskController extends BaseController
      * @apiName  tasks update
      * @apiGroup tasks
      *
-     * @apiParam {integer} tier 层级 默认0
-     * @apiParam {integer} pid 父id 默认0
+     * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
      * @apiParam {array} tags 标签
      * @apiParam {string} start_time 开始时间
      * @apiParam {string} over_time 完成时间
-     * @apiParam {integer} item_id 所属项目ID
      * @apiParam {integer} stage_id 阶段ID
      * @apiParam {integer} level 优先级：1.普通；5.紧级；8.非常紧级；
      * @apiParam {string} token
@@ -375,7 +378,16 @@ class TaskController extends BaseController
      */
     public function update(Request $request , $id)
     {
-
+        $item_id = $request->input('item_id') ? intval($request->input('item_id')) : 0;
+        if($item_id == 0){
+            return $this->response->array($this->apiError('项目id不能为0', 412));
+        }
+        $user_id = $this->auth_user_id;
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($item_id , $user_id);
+        if($itemUser == false){
+            return $this->response->array($this->apiError('没有权限查看该项目', 403));
+        }
         $all = $request->except(['token']);
         //检验是否存在任务
         $tasks = Task::find($id);
@@ -470,6 +482,10 @@ class TaskController extends BaseController
                         return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
                     }
                 }
+                //检测执行者与登录id是否是一个人
+                if($task->execute_user_id !== $this->auth_user_id){
+                    return $this->response->array($this->apiError('当前用户不是执行者，不能点击完成!', 403));
+                }
                 $ok = $task::isStage($task_id , $stage);
             }else{
                 // 查找任务，任务id为子任务pid的任务
@@ -520,6 +536,8 @@ class TaskController extends BaseController
      * @apiName tasks executeUser
      * @apiGroup tasks
      *
+     * @apiParam {integer} item_id 项目id
+     * @apiParam {integer} execute_user_id 执行者id
      * @apiParam {integer} task_id 任务id
      * @apiParam {token} token
      *
@@ -533,20 +551,23 @@ class TaskController extends BaseController
      */
     public function executeUser(Request $request)
     {
-        $task_id = $request->input('task_id');
-        $execute_user_id = $this->auth_user_id;
+        //项目id不能为0
+        $item_id = $request->input('item_id') ? intval($request->input('item_id')) : 0;
+        $task_id = $request->input('task_id') ? intval($request->input('task_id')) : 0;
+        $execute_user_id = $request->input('execute_user_id') ? intval($request->input('execute_user_id')) : 0;
+
+        if($item_id == 0){
+            return $this->response->array($this->apiError('项目id不能为0', 412));
+        }
         $task = Task::find($task_id);
         if(!$task){
             return $this->response->array($this->apiError('没有找到该任务!', 404));
         }
-        $taskUsers = TaskUser::where('task_id' , $task_id)->get();
-        $user_id = [];
-        foreach ($taskUsers as $taskUser){
-            $user_id[] = $taskUser->user_id;
-        }
-        $new_user_id = $user_id;
-        if(!in_array($execute_user_id , $new_user_id)){
-            return $this->response->array($this->apiError('请先添加该用户到任务用户列表!', 403));
+        $user_id = $this->auth_user_id;
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($item_id , $user_id);
+        if($itemUser == false){
+            return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
         $task->execute_user_id = $execute_user_id;
         if($task->save()){
