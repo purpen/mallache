@@ -53,7 +53,7 @@ class TaskChildTransformer extends TransformerAbstract
             'tier' => intval($tasks->tier),
             'pid' => intval($tasks->pid),
             'stage_id' => intval($tasks->stage_id),
-            'childTask' => $tasks->childTask,
+            'childTask' => $tasks->child,
         ];
     }
 }
