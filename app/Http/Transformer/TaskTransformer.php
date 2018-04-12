@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\OperationLog;
 use App\Models\Task;
 use League\Fractal\TransformerAbstract;
 
@@ -48,6 +49,7 @@ class TaskTransformer extends TransformerAbstract
             'start_time' => $tasks->start_time,
             'over_time' => $tasks->over_time,
             'created_at' => $tasks->created_at,
+            'log' => OperationLog::getTaskLog($tasks->id),
         ];
     }
 }
