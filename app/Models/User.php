@@ -354,4 +354,14 @@ class User extends Authenticatable implements JWTSubject
             return false;
         }
     }
+
+    /**
+     * 获取用户名称
+     *
+     * @return mixed
+     */
+    public function getUserName()
+    {
+        return $this->realname ?? $this->account;
+    }
 }

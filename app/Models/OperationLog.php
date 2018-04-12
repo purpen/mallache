@@ -6,6 +6,11 @@ class OperationLog extends BaseModel
 {
     protected $table = 'operation_log';
 
+    // 操作动态文字说明
+    protected $title_config = [
+        '1' => ' 创建了任务',  // 创建任务
+    ];
+
     //关联操作用户
     public function user()
     {
@@ -64,15 +69,32 @@ class OperationLog extends BaseModel
         ];
     }
 
-    // 获取
+    /**
+     * 获取任务动态
+     *
+     * @param int $task_id 任务ID
+     * @return array
+     */
+    public static function getTaskLog(int $task_id)
+    {
+        // 任务动态类型
+        $arr = [1, 2];
+        $logs = OperationLog::whereIn('action_type', $arr)
+            ->where('target_id', $task_id)->get();
+
+        $resp_data = [];
+        foreach ($logs as $obj) {
+            $resp_data[] = $obj->info();
+        }
+
+        return $resp_data;
+    }
 
     // 创建主任务
     public function masterTask()
     {
-        return $this->user->realname . '创建了任务';
+        return $this->user->getUserName() . $this->title_config['1'];
     }
-
-
 
 
 }
