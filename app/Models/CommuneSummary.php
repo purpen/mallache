@@ -21,4 +21,12 @@ class CommuneSummary extends BaseModel
         'location',
         'expire_time',
     ];
+
+    /**
+     * 案例图片
+     */
+    public function getCommuneImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 29, 1);
+    }
 }

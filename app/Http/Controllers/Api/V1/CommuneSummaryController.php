@@ -183,6 +183,9 @@ class CommuneSummaryController extends BaseController
     public function index(Request $request)
     {
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
+        if($item_id == 0){
+            return $this->response->array($this->apiError('项目id不能为0', 412));
+        }
         $per_page = $request->input('per_page') ?? $this->per_page;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
@@ -193,19 +196,15 @@ class CommuneSummaryController extends BaseController
             $sort = 'desc';
         }
         $user_id = intval($this->auth_user_id);
-        $itemUsers = ItemUser::where('item_id' , $item_id)->get();
-        $item_user_id = [];
-        foreach ($itemUsers as $itemUser){
-            $item_user_id[] = $itemUser->user_id;
-        }
-        $new_user_id = $item_user_id;
-        if(in_array($user_id , $new_user_id)){
-            $communeSummary = CommuneSummary::where('item_id' , $item_id)->orderBy('id', $sort)->paginate($per_page);
-            return $this->response->paginator($communeSummary, new CommuneSummaryTransformer())->setMeta($this->apiMeta());
-
-        }else{
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($item_id , $user_id);
+        if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看', 403));
         }
+
+        $communeSummary = CommuneSummary::where('item_id' , $item_id)->orderBy('id', $sort)->paginate($per_page);
+        return $this->response->paginator($communeSummary, new CommuneSummaryTransformer())->setMeta($this->apiMeta());
+
     }
 
     /**
