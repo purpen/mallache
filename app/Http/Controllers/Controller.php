@@ -38,6 +38,9 @@ class Controller extends BaseController
      */
     public $per_page = 10;
 
+    public $big_per_page = 50;
+
+
     public function __construct(Request $request)
     {
         $this->getAuthUser();
