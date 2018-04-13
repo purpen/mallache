@@ -63,6 +63,7 @@ class CreateDesignItem extends Migration
             $table->string('address', 20)->default('');
             $table->tinyInteger('type');
             $table->integer('user_id');
+            $table->tinyInteger('status');
 
             $table->timestamps();
         });

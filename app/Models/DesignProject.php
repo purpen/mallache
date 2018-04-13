@@ -10,7 +10,7 @@ class DesignProject extends BaseModel
     protected $table = 'design_project';
 
     // 批量赋值黑名单
-    protected $guarded = ['user_id', 'type'];
+    protected $guarded = ['user_id', 'type', 'status'];
 
     // 商务经理相对关联用户表
     public function businessManagerUser()
@@ -27,13 +27,13 @@ class DesignProject extends BaseModel
     // 商务经理
     public function getBusinessManagerValueAttribute()
     {
-        return $this->businessManagerUser->getUserName();
+        return $this->businessManagerUser ? $this->businessManagerUser->getUserName() : null;
     }
 
     // 项目经理
     public function getLeaderValueAttribute()
     {
-        return $this->leaderUser->getUserName();
+        return $this->leaderUser ? $this->leaderUser->getUserName() : null;
     }
 
     /**
@@ -124,6 +124,8 @@ class DesignProject extends BaseModel
             'phone' => $this->phone,
             'province' => $this->province,
             'province_value' => $this->province_value,
+            'city' => $this->city,
+            'area' => $this->area,
             'city_value' => $this->city_value,
             'area_value' => $this->area_value,
             'address' => $this->address,
