@@ -10,7 +10,7 @@ class DesignProject extends BaseModel
     protected $table = 'design_project';
 
     // 批量赋值黑名单
-    protected $guarded = ['user_id', 'type', 'status'];
+    protected $guarded = ['user_id', 'type', 'status', 'token'];
 
     // 商务经理相对关联用户表
     public function businessManagerUser()
@@ -87,7 +87,7 @@ class DesignProject extends BaseModel
     }
 
     // 判断当前用户有无修改项目信息权限
-    protected function isPower(int $user_id)
+    public function isPower(int $user_id)
     {
         // 创建用户、商务经理、项目负责人
         if ($this->user_id == $user_id || $this->business_manager == $user_id || $this->leader == $user_id) {
@@ -132,4 +132,37 @@ class DesignProject extends BaseModel
             'user_id' => $this->user_id,
         ];
     }
+
+    /**
+     * 移除项目的商务经理
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public function removeBusinessManager(int $user_id)
+    {
+        if ($this->business_manager == $user_id) {
+            $this->business_manager = 0;
+            return $this->save();
+        }
+
+        return true;
+    }
+
+    /**
+     * 移除项目的项目经理
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public function removeLeader(int $user_id)
+    {
+        if ($this->leader == $user_id) {
+            $this->leader = 0;
+            return $this->save();
+        }
+
+        return true;
+    }
+
 }

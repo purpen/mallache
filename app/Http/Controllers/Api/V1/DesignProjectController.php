@@ -7,7 +7,10 @@ use App\Http\Transformer\DesignProjectTransformer;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
 use App\Models\User;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * 设计项目管理
@@ -157,6 +160,7 @@ class DesignProjectController extends BaseController
                 'level' => 'required|integer|in:1,2,3',
             ]);
 
+            DB::beginTransaction();
             $design_project = new DesignProject();
             $design_project->name = $request->input('name');
             $design_project->description = $request->input('description');
@@ -165,13 +169,18 @@ class DesignProjectController extends BaseController
             $design_project->design_company_id = $design_company_id;
             $design_project->status = 1;
             $design_project->type = 2;
-
             $design_project->save();
 
+            // 将创建者添加入项目人员
+            if (!ItemUser::addItemUser($design_project->id, $user_id, 1)) {
+                throw new MassageException('项目成员添加失败', 403);
+            }
+
+            DB::commit();
         } catch (MassageException $e) {
+            DB::rollBack();
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
-
 
         return $this->response->item($design_project, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
@@ -183,6 +192,7 @@ class DesignProjectController extends BaseController
      * @apiName designProject update
      * @apiGroup designProject
      *
+     * @apiParam {int} id
      * @apiParam {string} name 项目名称
      * @apiParam {string} description 项目描述
      * @apiParam {int} level 项目等级 1.普通 2.紧急 3.非常紧急
@@ -254,7 +264,7 @@ class DesignProjectController extends BaseController
                 throw new MassageException('无权限', 403);
             }
 
-            $this->validate($request, [
+            $rules = [
                 'id' => 'required|integer',
                 'name' => 'required|max:100',
                 'description' => 'max:6500',
@@ -276,8 +286,12 @@ class DesignProjectController extends BaseController
                 'city' => 'integer',
                 'area' => 'integer',
                 'address' => 'string|max:100'
-            ]);
+            ];
 
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                throw new StoreResourceFailedException('errors', $validator->errors());
+            }
 
             $arr = $request->all();
             $arr = array_filter($arr, function ($v) {
@@ -286,7 +300,24 @@ class DesignProjectController extends BaseController
                 }
                 return false;
             });
-            DesignProject::updated($arr);
+
+            DB::beginTransaction();
+
+            // 设置商务经理
+            if (isset($arr['business_manager']) && $business_manager = $arr['business_manager']) {
+                if ($business_manager_user = ItemUser::getItemUser($id, $business_manager)) {
+                    $business_manager_user->changeLevel(5);
+                }
+            }
+
+            // 设置项目经理
+            if (isset($arr['leader']) && $leader = $arr['leader']) {
+                if ($leader_user = ItemUser::getItemUser($id, $leader)) {
+                    $leader_user->changeLevel(3);
+                }
+            }
+
+            $design_project->update($arr);
 
         } catch (MassageException $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
