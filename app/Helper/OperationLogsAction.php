@@ -85,6 +85,7 @@ class OperationLogsAction
 //        Log::info($this->auth_user->phone . '我是一条记录');
     }
 
+    //创建任务，子任务
     public function createTask()
     {
         $response_content = $this->getResponseContent();
@@ -101,5 +102,19 @@ class OperationLogsAction
         }
     }
 
+    public function updateTask()
+    {
+        $response_content = $this->getResponseContent();
+        $all = $this->request->except(['token']);
+        $new_all = array_diff($all, array(null));
+        Log::info($new_all);
+        $target_id = $response_content['data']['id'];
+
+        $item_id = intval($this->request->input('item_id'));
+        $content = $response_content['data']['name'];
+
+        $this->createItemLog($item_id, 3, $target_id, null, $content);
+
+    }
 
 }

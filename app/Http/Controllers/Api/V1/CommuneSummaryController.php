@@ -183,9 +183,6 @@ class CommuneSummaryController extends BaseController
     public function index(Request $request)
     {
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        if($item_id == 0){
-            return $this->response->array($this->apiError('项目id不能为0', 412));
-        }
         $per_page = $request->input('per_page') ?? $this->per_page;
         if($request->input('sort') == 0 && $request->input('sort') !== null)
         {
@@ -201,10 +198,8 @@ class CommuneSummaryController extends BaseController
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看', 403));
         }
-
         $communeSummary = CommuneSummary::where('item_id' , $item_id)->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($communeSummary, new CommuneSummaryTransformer())->setMeta($this->apiMeta());
-
     }
 
     /**

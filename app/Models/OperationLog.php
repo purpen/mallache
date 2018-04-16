@@ -10,6 +10,7 @@ class OperationLog extends BaseModel
     protected $title_config = [
         '1' => ' 创建了任务',  // 创建任务
         '2' => ' 创建了子任务',  // 创建子任务
+        '3' => ' 更改任务',  // 更改任务
     ];
 
     //关联操作用户
@@ -64,6 +65,9 @@ class OperationLog extends BaseModel
             case 2:
                 $str = $this->childTask();
                 break;
+            case 3:
+                $str = $this->updateTask();
+                break;
         }
 
         return [
@@ -83,7 +87,7 @@ class OperationLog extends BaseModel
     public static function getTaskLog(int $task_id)
     {
         // 任务动态类型
-        $arr = [1, 2];
+        $arr = [1, 2 , 3];
         $logs = OperationLog::whereIn('action_type', $arr)
             ->where('target_id', $task_id)->get();
 
@@ -105,6 +109,12 @@ class OperationLog extends BaseModel
     public function childTask()
     {
         return $this->user->getUserName() . $this->title_config['2'];
+    }
+
+    // 更改任务
+    public function updateTask()
+    {
+        return $this->user->getUserName() . $this->title_config['3'];
     }
 
 
