@@ -531,6 +531,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // api {get} /designProject 设计工具项目详情展示
         $api->get('/designProject', 'DesignProjectController@show');
 
+
+        //设计公司客户
+        // api {get} /designClient/lists 客户信息列表
+        $api->get('/designClient/lists', 'DesignClientController@index');
+        // api {post} /designClient/create 创建客户信息
+        $api->post('/designClient/create', 'DesignClientController@store');
+        // api {get} /designClient/search 搜索客户信息
+        $api->get('/designClient/search', 'DesignClientController@search');
+
+        // 设计报价职位
+        // api {post} /designPosition/create 添加职位
+        $api->post('/designPosition/create', 'DesignPositionController@create');
+        // api {get} /designPosition/lists 职位列表
+        $api->get('/designPosition/lists', 'DesignPositionController@lists');
+        // api {get} /designPosition/search 职位搜索
+        $api->get('/designPosition/search', 'DesignPositionController@search');
+
+
     });
 
 });
