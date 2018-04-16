@@ -518,5 +518,19 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          */
         $api->resource('/communeSummaryUser', 'CommuneSummaryUserController');
 
+
+        /**
+         * 设计工具项目路由
+         */
+        // api {get} /designProject/lists 设计工具个人参与项目展示
+        $api->get('/designProject/lists', 'DesignProjectController@lists');
+        // @api {post} /designProject/create 设计工具创建项目
+        $api->post('/designProject/create', 'DesignProjectController@create');
+        // api {put} /designProject/update 设计工具项目编辑
+        $api->put('/designProject/update', 'DesignProjectController@update');
+        // api {get} /designProject 设计工具项目详情展示
+        $api->get('/designProject', 'DesignProjectController@show');
+
     });
+
 });

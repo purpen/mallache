@@ -218,7 +218,7 @@ class CommuneSummaryController extends BaseController
      *     }
      *   }
      */
-    public function delete($id)
+    public function destroy($id)
     {
         $communeSummary = CommuneSummary::find($id);
         //检验是否存在
