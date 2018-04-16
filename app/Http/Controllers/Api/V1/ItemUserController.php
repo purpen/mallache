@@ -6,7 +6,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\ItemUserTransformer;
+use App\Http\Transformer\UserTaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
+use App\Models\DesignProject;
 use App\Models\ItemUser;
 use App\Models\User;
 use Dingo\Api\Contract\Http\Request;
@@ -24,8 +26,6 @@ class ItemUserController extends BaseController
      * @apiGroup itemUsers
      * @apiParam {integer} user_id 用户id
      * @apiParam {integer} item_id 项目id
-     * @apiParam {integer} level 默认1；级别：1.成员；3.项目负责人；5.商务负责人；
-     * @apiParam {integer} is_creator 默认0；是否是创建者: 0.否；1.是；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -50,18 +50,23 @@ class ItemUserController extends BaseController
     {
         $user_id = $request->input('user_id') ? (int)$request->input('user_id') : 0;
         $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        $level = $request->input('level') ? $request->input('level') : 1;
-        $is_creator = $request->input('is_creator') ? $request->input('is_creator') : 0;
 
 
         $params = array(
             'user_id' => $user_id,
             'item_id' => $item_id,
-            'level' => $level,
-            'is_creator' => $is_creator,
             'type' => 1,
             'status' => 1,
         );
+
+        //判断权限
+        $designProject = DesignProject::where('id' , $item_id)->first();
+        if(!$designProject){
+            return $this->response->array($this->apiError('没有找到该项目!', 404));
+        }
+        if($designProject->isPower($this->auth_user_id) != true){
+            return $this->response->array($this->apiError('没有权限添加!', 403));
+        }
 
         try {
             $itemUsers = ItemUser::create($params);
@@ -168,17 +173,16 @@ class ItemUserController extends BaseController
         }
         $new_user_id = $user_id;
         $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
 
     }
 
     /**
-     * @api {get} /itemUsers  根据用户id查看项目成员详情
+     * @api {get} /itemUsers/{user_id}  根据选择用户id查看项目成员详情
      * @apiVersion 1.0.0
      * @apiName itemUsers show
      * @apiGroup itemUsers
      *
-     * @apiParam {integer} user_id 用户id
      * @apiParam {string} token
      *
      *
@@ -200,11 +204,9 @@ class ItemUserController extends BaseController
         }
         }
      */
-    public function show(Request $request)
+    public function show($user_id)
     {
-        $user_id = $request->input('user_id');
         $itemUser = ItemUser::where('user_id' , $user_id)->first();
-
         if (!$itemUser) {
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -212,66 +214,6 @@ class ItemUserController extends BaseController
         return $this->response->item($itemUser, new ItemUserTransformer())->setMeta($this->apiMeta());
 
 
-    }
-
-    /**
-     * @api {put} /itemUsers/{id} 项目成员更新
-     * @apiVersion 1.0.0
-     * @apiName  itemUsers update
-     * @apiGroup itemUsers
-     * @apiParam {integer} user_id 用户id
-     * @apiParam {integer} item_id 项目id
-     * @apiParam {integer} level 默认1；级别：1.成员；3.项目负责人；5.商务负责人；
-     * @apiParam {integer} is_creator 默认0；是否是创建者: 0.否；1.是；
-     * @apiParam {string} token
-     *
-     *
-     * @apiSuccessExample 成功响应:
-        {
-            "data": {
-            "id": 1,
-            "user_id": 1,
-            "item_id": 1,
-            "level": 1,
-            "is_creator": 1,
-            "type": 1,
-            "status": 1,
-            "created_at": 1521547539
-        },
-        "meta": {
-            "message": "Success",
-            "status_code": 200
-        }
-        }
-     */
-    public function update(Request $request , $id)
-    {
-
-        $user_id = $request->input('user_id') ? (int)$request->input('user_id') : 0;
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        $level = $request->input('level') ? $request->input('level') : 1;
-        $is_creator = $request->input('is_creator') ? $request->input('is_creator') : 0;
-
-
-        $params = array(
-            'user_id' => $user_id,
-            'item_id' => $item_id,
-            'level' => $level,
-            'is_creator' => $is_creator,
-            'type' => 1,
-            'status' => 1,
-        );
-
-        //检验是否存在该项目用户
-        $itemUser = ItemUser::find($id);
-        if (!$itemUser) {
-            return $this->response->array($this->apiError('not found!', 404));
-        }
-        $itemUser->update($params);
-        if (!$itemUser) {
-            return $this->response->array($this->apiError());
-        }
-        return $this->response->item($itemUser, new ItemUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -298,9 +240,18 @@ class ItemUserController extends BaseController
         if (!$itemUser) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        //检验是否是当前用户创建的作品
-        if ($itemUser->user_id != $this->auth_user_id) {
+        //检验是否是当前用
+        if ($itemUser->user_id == $this->auth_user_id) {
+            return $this->response->array($this->apiError('自己不能删除自己!', 403));
+        }
+        //判断权限
+        $designProject = DesignProject::where('id' , $itemUser->item_id)->first();
+        if(!$designProject){
+            return $this->response->array($this->apiError('没有找到该项目!', 404));
+        }
+        if($designProject->isPower($this->auth_user_id) != true){
             return $this->response->array($this->apiError('没有权限删除!', 403));
+
         }
         $ok = $itemUser->delete();
         if (!$ok) {
