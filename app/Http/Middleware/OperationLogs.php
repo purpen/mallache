@@ -53,7 +53,8 @@ class OperationLogs
         return [
             '/recycleBin/*:get' => 'task', // 测试
             '/tasks:post' => 'createTask',  // 创建任务
-            '/tasks:put' => 'updateTask',  // 更改任务
+            '/isStage/tasks:put' => 'isStage',  // 任务完成与未完成
+            '/tasks:put' => 'updateTask',  // 更改任务名称，备注，优先级
         ];
     }
 

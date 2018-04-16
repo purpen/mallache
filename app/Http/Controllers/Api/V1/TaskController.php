@@ -443,7 +443,7 @@ class TaskController extends BaseController
     }
 
     /**
-     * @api {put} /tasks/is/stage 更改主／子任务完成与未完成
+     * @api {put} /isStage/tasks 更改主／子任务完成与未完成
      * @apiVersion 1.0.0
      * @apiName tasks stage
      * @apiGroup tasks

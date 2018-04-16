@@ -10,7 +10,13 @@ class OperationLog extends BaseModel
     protected $title_config = [
         '1' => ' 创建了任务',  // 创建任务
         '2' => ' 创建了子任务',  // 创建子任务
-        '3' => ' 更改任务',  // 更改任务
+        '3' => ' 更改任务名称',  // 更改任务名称
+        '4' => ' 更改任务备注',  // 更改任务备注
+        '5' => ' 更改任务优先级',  // 更改任务优先级
+        '6' => ' 任务重做',  // 父任务重做
+        '7' => ' 任务完成',  // 父任务完成
+        '8' => ' 子任务重做',  // 子任务重做
+        '9' => ' 子任务完成',  // 子任务完成
     ];
 
     //关联操作用户
@@ -66,7 +72,25 @@ class OperationLog extends BaseModel
                 $str = $this->childTask();
                 break;
             case 3:
-                $str = $this->updateTask();
+                $str = $this->updateTaskName();
+                break;
+            case 4:
+                $str = $this->updateTaskSummary();
+                break;
+            case 5:
+                $str = $this->updateTaskLevel();
+                break;
+            case 6:
+                $str = $this->noStage();
+                break;
+            case 7:
+                $str = $this->isStage();
+                break;
+            case 8:
+                $str = $this->noChildStage();
+                break;
+            case 9:
+                $str = $this->isChildStage();
                 break;
         }
 
@@ -87,7 +111,7 @@ class OperationLog extends BaseModel
     public static function getTaskLog(int $task_id)
     {
         // 任务动态类型
-        $arr = [1, 2 , 3];
+        $arr = [1, 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9];
         $logs = OperationLog::whereIn('action_type', $arr)
             ->where('target_id', $task_id)->get();
 
@@ -111,11 +135,47 @@ class OperationLog extends BaseModel
         return $this->user->getUserName() . $this->title_config['2'];
     }
 
-    // 更改任务
-    public function updateTask()
+    // 更改任务名称
+    public function updateTaskName()
     {
         return $this->user->getUserName() . $this->title_config['3'];
     }
 
+    // 更改任务备注
+    public function updateTaskSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['4'];
+    }
+
+    // 更改任务优先级
+    public function updateTaskLevel()
+    {
+        return $this->user->getUserName() . $this->title_config['5'];
+    }
+
+    //父任务重做
+    public function noStage()
+    {
+        return $this->user->getUserName() . $this->title_config['6'];
+
+    }
+    //父任务完成
+    public function isStage()
+    {
+        return $this->user->getUserName() . $this->title_config['7'];
+
+    }
+    //子任务重做
+    public function noChildStage()
+    {
+        return $this->user->getUserName() . $this->title_config['8'];
+
+    }
+    //子任务完成
+    public function isChildStage()
+    {
+        return $this->user->getUserName() . $this->title_config['9'];
+
+    }
 
 }

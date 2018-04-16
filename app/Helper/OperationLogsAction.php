@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Models\OperationLog;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -106,14 +107,53 @@ class OperationLogsAction
     {
         $response_content = $this->getResponseContent();
         $all = $this->request->except(['token']);
-        $new_all = array_diff($all, array(null));
-        Log::info($new_all);
+        array_diff($all, array(null));
         $target_id = $response_content['data']['id'];
 
         $item_id = intval($this->request->input('item_id'));
-        $content = $response_content['data']['name'];
+        $name = $this->request->input('name');
+        $summary = $this->request->input('summary');
+        $level = $this->request->input('level');
+        if(!empty($name)){
+            $this->createItemLog($item_id, 3, $target_id, null, $name);
 
-        $this->createItemLog($item_id, 3, $target_id, null, $content);
+        } elseif(!empty($summary)){
+            $this->createItemLog($item_id, 4, $target_id, null, $summary);
+
+        } elseif(!empty($level)){
+            $this->createItemLog($item_id, 5, $target_id, null, $level);
+
+        }
+
+    }
+
+    public function isStage()
+    {
+        $all = $this->request->except(['token']);
+        array_diff($all, array(null));
+        $target_id = intval($this->request->input('task_id'));
+        $tier = intval($this->request->input('tier'));
+        $stage = intval($this->request->input('stage'));
+        $task = Task::find($target_id);
+        $item_id = $task->item_id;
+        if ($tier == 0) {  // 父任务
+            if($stage == 0){ //父任务重做
+                $this->createItemLog($item_id, 6, $target_id, null, $stage);
+
+            }else{  //父任务完成
+                $this->createItemLog($item_id, 7, $target_id, null, $stage);
+
+            }
+
+        } else if ($tier == 1) {  // 子任务
+            if($stage == 0){ //子任务重做
+                $this->createItemLog($item_id, 8, $target_id, null, $stage);
+
+            }else{  //子任务完成
+                $this->createItemLog($item_id, 9, $target_id, null, $stage);
+
+            }
+        }
 
     }
 
