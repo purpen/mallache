@@ -161,7 +161,7 @@ class DesignProjectController extends BaseController
             $design_project = new DesignProject();
             $design_project->name = $request->input('name');
             $design_project->description = $request->input('description');
-            $design_project->level = $request->input('level');
+            $design_project->level = intval($request->input('level'));
             $design_project->user_id = $user_id;
             $design_project->design_company_id = $design_company_id;
             $design_project->status = 1;
@@ -412,7 +412,7 @@ class DesignProjectController extends BaseController
         $id = $request->input('id');
 
         if (!ItemUser::checkUser($id, $this->auth_user_id)) {
-            throw new MassageException('无权限', 403);
+            return $this->response->array($this->apiError('无权限', 403));
         }
 
         $design_project = DesignProject::where(['id' => $id, 'status' => 1])->first();
