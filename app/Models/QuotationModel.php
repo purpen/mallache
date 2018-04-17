@@ -18,7 +18,11 @@ class QuotationModel extends BaseModel
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id' , 'item_demand_id' , 'design_company_id' , 'price' , 'summary' , 'status'];
+    protected $fillable = ['user_id', 'item_demand_id', 'design_company_id', 'price', 'summary', 'status', 'is_tax',
+        'is_invoice',
+        'tax_rate',
+        'design_project_id',
+        'total_price',];
 
     /**
      * 相对关联到User用户表

@@ -410,12 +410,16 @@ class DesignProjectController extends BaseController
     public function delete(Request $request)
     {
         $id = $request->input('id');
+        $user_id = $this->auth_user_id;
 
-        if (!ItemUser::checkUser($id, $this->auth_user_id)) {
-            return $this->response->array($this->apiError('无权限', 403));
+        if (!$this->auth_user->isDesignAdmin()) {
+            throw new MassageException('无权限', 403);
+        }
+        if (!$design_company_id = User::designCompanyId($user_id)) {
+            throw new MassageException('无权限', 403);
         }
 
-        $design_project = DesignProject::where(['id' => $id, 'status' => 1])->first();
+        $design_project = DesignProject::where(['id' => $id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
         if (!$design_project) {
             return $this->response->array($this->apiSuccess());
         }

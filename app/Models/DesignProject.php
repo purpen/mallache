@@ -130,6 +130,7 @@ class DesignProject extends BaseModel
             'area_value' => $this->area_value,
             'address' => $this->address,
             'user_id' => $this->user_id,
+            'created_at' => $this->created_at,
         ];
     }
 
