@@ -31,6 +31,12 @@ class OperationLog extends BaseModel
         return $this->belongsTo('App\Models\User', 'other_user_id');
     }
 
+    //关联任务id
+    public function task()
+    {
+        return $this->belongsTo('App\Models\Task', 'target_id');
+    }
+
     /**
      * 创建动态
      *
@@ -168,13 +174,13 @@ class OperationLog extends BaseModel
     //子任务重做
     public function noChildStage()
     {
-        return $this->user->getUserName() . $this->title_config['8'];
+        return $this->user->getUserName() . $this->title_config['8'] . $this->task->getTaskName();
 
     }
     //子任务完成
     public function isChildStage()
     {
-        return $this->user->getUserName() . $this->title_config['9'];
+        return $this->user->getUserName() . $this->title_config['9'] . $this->task->getTaskName();
 
     }
 
