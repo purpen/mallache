@@ -671,8 +671,10 @@ class DesignController extends BaseController
      */
     public function membersSearch(Request $request)
     {
+        $user_id = $this->auth_user_id;
+        $design_id = User::designCompanyId($user_id);
         $realname = $request->input('realname');
-        $user = User::where('realname' , 'like' , '%'.$realname.'%')->get();
+        $user = User::where('realname' , 'like' , '%'.$realname.'%')->where('design_company_id' , $design_id)->get();
         if($user){
             return $this->response->collection($user, new UserTransformer())->setMeta($this->apiMeta());
         }
