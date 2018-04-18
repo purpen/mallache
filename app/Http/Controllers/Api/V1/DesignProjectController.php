@@ -210,6 +210,14 @@ class DesignProjectController extends BaseController
      * @apiParam {int} city  城市
      * @apiParam {int} area 地区
      * @apiParam {string} address varchar(100) 详细地址
+     *
+     * @apiParam {string} design_company_name    varchar(100) 设计名称
+     * @apiParam {string} design_contact_name    varchar(50) 设计联系人姓名
+     * @apiParam {string} design_phone  varchar(20) 设计手机
+     * @apiParam {int} design_province  设计省份
+     * @apiParam {int} design_city  设计城市
+     * @apiParam {int} design_area 设计地区
+     * @apiParam {string} design_address varchar(100) 设计详细地址
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -282,7 +290,15 @@ class DesignProjectController extends BaseController
                 'province' => 'integer',
                 'city' => 'integer',
                 'area' => 'integer',
-                'address' => 'string|max:100'
+                'address' => 'string|max:100',
+                'design_company_name' => 'max:100',
+                'design_contact_name' => 'max:50',
+                'design_position' => 'max:50',
+                'design_phone' => 'max:20',
+                'design_province' => 'integer',
+                'design_city' => 'integer',
+                'design_area' => 'integer',
+                'design_address' => 'string|max:100'
             ];
 
             $validator = Validator::make($request->all(), $rules);
