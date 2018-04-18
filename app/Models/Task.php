@@ -73,5 +73,45 @@ class Task extends BaseModel
     {
         return $this->name ? $this->name : '';
     }
+
+    /**
+     * 获取任务备注
+     *
+     * @return mixed
+     */
+    public function getTaskSummary()
+    {
+        return $this->summary ? $this->summary : '';
+    }
+
+    /**
+     * 获取任务优先级
+     *
+     * @return mixed
+     */
+    public function getTaskLevel()
+    {
+        switch ($this->level){
+            case 1:
+                return '普通';
+                break;
+            case 2:
+                return '紧级';
+                break;
+            case 3:
+                return '非常紧级';
+                break;
+        }
+    }
+
+    /**
+     * 获取完成时间
+     *
+     * @return mixed
+     */
+    public function getOverTime()
+    {
+        return $this->over_time ? $this->over_time : '';
+    }
 }
 

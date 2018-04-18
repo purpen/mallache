@@ -13,10 +13,11 @@ class OperationLog extends BaseModel
         '3' => ' 更改任务名称',  // 更改任务名称
         '4' => ' 更改任务备注',  // 更改任务备注
         '5' => ' 更改任务优先级',  // 更改任务优先级
-        '6' => ' 任务重做',  // 父任务重做
-        '7' => ' 任务完成',  // 父任务完成
-        '8' => ' 子任务重做',  // 子任务重做
-        '9' => ' 子任务完成',  // 子任务完成
+        '6' => ' 重做了任务',  // 父任务重做
+        '7' => ' 完成了任务',  // 父任务完成
+        '8' => ' 重做了子任务',  // 子任务重做
+        '9' => ' 完成了子任务',  // 子任务完成
+        '10' => ' 更新了截至时间',  // 更新了截至时间
     ];
 
     //关联操作用户
@@ -98,6 +99,9 @@ class OperationLog extends BaseModel
             case 9:
                 $str = $this->isChildStage();
                 break;
+            case 10:
+                $str = $this->updateOverTime();
+                break;
         }
 
         return [
@@ -117,7 +121,7 @@ class OperationLog extends BaseModel
     public static function getTaskLog(int $task_id)
     {
         // 任务动态类型
-        $arr = [1, 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9];
+        $arr = [1, 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10];
         $logs = OperationLog::whereIn('action_type', $arr)
             ->where('target_id', $task_id)->get();
 
@@ -144,19 +148,19 @@ class OperationLog extends BaseModel
     // 更改任务名称
     public function updateTaskName()
     {
-        return $this->user->getUserName() . $this->title_config['3'];
+        return $this->user->getUserName() . $this->title_config['3'] . $this->task->getTaskName();
     }
 
     // 更改任务备注
     public function updateTaskSummary()
     {
-        return $this->user->getUserName() . $this->title_config['4'];
+        return $this->user->getUserName() . $this->title_config['4'] . $this->task->getTaskSummary();
     }
 
     // 更改任务优先级
     public function updateTaskLevel()
     {
-        return $this->user->getUserName() . $this->title_config['5'];
+        return $this->user->getUserName() . $this->title_config['5'] . $this->task->getTaskLevel();
     }
 
     //父任务重做
@@ -182,6 +186,12 @@ class OperationLog extends BaseModel
     {
         return $this->user->getUserName() . $this->title_config['9'] . $this->task->getTaskName();
 
+    }
+
+    // 更改任务备注
+    public function updateOverTime()
+    {
+        return $this->user->getUserName() . $this->title_config['10'] . $this->task->getOverTime();
     }
 
 }
