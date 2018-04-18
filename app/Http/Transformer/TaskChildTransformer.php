@@ -4,6 +4,7 @@ namespace App\Http\Transformer;
 
 use App\Models\Task;
 use League\Fractal\TransformerAbstract;
+use App\Models\OperationLog;
 
 class TaskChildTransformer extends TransformerAbstract
 {
@@ -54,6 +55,8 @@ class TaskChildTransformer extends TransformerAbstract
             'pid' => intval($tasks->pid),
             'stage_id' => intval($tasks->stage_id),
             'childTask' => $tasks->childTask,
+            'log' => OperationLog::getTaskLog($tasks->id),
+
         ];
     }
 }

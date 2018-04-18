@@ -63,5 +63,15 @@ class Task extends BaseModel
 
         return true;
     }
+
+    /**
+     * 获取任务名称名称
+     *
+     * @return mixed
+     */
+    public function getTaskName()
+    {
+        return $this->name ? $this->name : '';
+    }
 }
 

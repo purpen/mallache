@@ -486,9 +486,6 @@ class DesignController extends BaseController
         }
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
-        }
         if($user->isDesignAdmin() == false){
             return $this->response->array($this->apiError('该用户不是管理员或者超级管理员', 403));
         }
