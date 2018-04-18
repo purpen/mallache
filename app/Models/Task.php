@@ -103,5 +103,15 @@ class Task extends BaseModel
                 break;
         }
     }
+
+    /**
+     * 获取完成时间
+     *
+     * @return mixed
+     */
+    public function getOverTime()
+    {
+        return $this->over_time ? $this->over_time : '';
+    }
 }
 

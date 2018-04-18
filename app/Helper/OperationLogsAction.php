@@ -114,6 +114,7 @@ class OperationLogsAction
         $name = $this->request->input('name');
         $summary = $this->request->input('summary');
         $level = $this->request->input('level');
+        $over_time = $this->request->input('over_time');
         if(!empty($name)){
             $this->createItemLog($item_id, 3, $target_id, null, $name);
 
@@ -123,6 +124,8 @@ class OperationLogsAction
         } elseif(!empty($level)){
             $this->createItemLog($item_id, 5, $target_id, null, $level);
 
+        } elseif(!empty($over_time)){
+            $this->createItemLog($item_id, 10, $target_id, null, $over_time);
         }
 
     }
