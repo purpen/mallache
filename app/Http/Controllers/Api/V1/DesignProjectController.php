@@ -77,11 +77,8 @@ class DesignProjectController extends BaseController
      */
     public function lists(Request $request)
     {
-        $this->validate($request, [
-            'status' => 'required|in:1,2',
-        ]);
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $status = $request->status;
+        $status = $request->status ?? 1;
 
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
@@ -164,7 +161,7 @@ class DesignProjectController extends BaseController
             $design_project = new DesignProject();
             $design_project->name = $request->input('name');
             $design_project->description = $request->input('description');
-            $design_project->level = $request->input('level');
+            $design_project->level = intval($request->input('level'));
             $design_project->user_id = $user_id;
             $design_project->design_company_id = $design_company_id;
             $design_project->status = 1;
@@ -393,4 +390,43 @@ class DesignProjectController extends BaseController
         return $this->response->item($design_project, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
 
+    /**
+     * @api {put} /designProject/delete 设计工具项目放入回收站
+     * @apiVersion 1.0.0
+     * @apiName designProject delete
+     * @apiGroup designProject
+     *
+     * @apiParam {int} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function delete(Request $request)
+    {
+        $id = $request->input('id');
+        $user_id = $this->auth_user_id;
+
+        if (!$this->auth_user->isDesignAdmin()) {
+            throw new MassageException('无权限', 403);
+        }
+        if (!$design_company_id = User::designCompanyId($user_id)) {
+            throw new MassageException('无权限', 403);
+        }
+
+        $design_project = DesignProject::where(['id' => $id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
+        if (!$design_project) {
+            return $this->response->array($this->apiSuccess());
+        }
+
+        $design_project->status = 2;
+        $design_project->save();
+
+        return $this->response->array($this->apiSuccess());
+    }
 }

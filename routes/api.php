@@ -532,6 +532,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designProject/update', 'DesignProjectController@update');
         // api {get} /designProject 设计工具项目详情展示
         $api->get('/designProject', 'DesignProjectController@show');
+        // api {put} /designProject/delete 设计工具项目详情展示
+        $api->put('/designProject/delete', 'DesignProjectController@delete');
 
 
         //设计公司客户
@@ -550,6 +552,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // api {get} /designPosition/search 职位搜索
         $api->get('/designPosition/search', 'DesignPositionController@search');
 
+        // 设计报价单
+        // api {post} /designQuotation/create 设计工具-创建报价单
+        $api->post('/designQuotation/create', 'DesignQuotationController@create');
+        // api {put} /designQuotation/update 设计工具-更新报价单
+        $api->put('/designQuotation/update', 'DesignQuotationController@update');
+        // api {get} /designQuotation 设计工具-查看详情
+        $api->get('/designQuotation', 'DesignQuotationController@show');
 
     });
 
