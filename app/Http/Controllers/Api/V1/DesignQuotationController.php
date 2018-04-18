@@ -27,6 +27,10 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} contact_name 甲方联系人
      * @apiParam {string} phone 联系方式
      * @apiParam {string} address 详细地址
+     * @apiParam {string} design_company_name 设计公司名称
+     * @apiParam {string} design_contact_name 设计联系人
+     * @apiParam {string} design_phone 设计联系方式
+     * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
      * @apiParam {int} is_tax 是否含税
@@ -84,6 +88,10 @@ class DesignQuotationController extends BaseController
                 'contact_name' => 'required|max:20',
                 'phone' => 'required|max:20',
                 'address' => 'required|string|max:200',
+                'design_company_name' => 'required|max:100',
+                'design_contact_name' => 'required|max:20',
+                'design_phone' => 'required|max:20',
+                'design_address' => 'required|string|max:200',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
                 'is_invoice' => 'int',
@@ -111,16 +119,6 @@ class DesignQuotationController extends BaseController
             }
 
             DB::beginTransaction();
-
-            // 保存甲方信息
-            $jia_info = $request->only(['company_name', 'contact_name', 'phone', 'address']);
-            if (!$design_project) {
-                throw new MassageException('not found', 404);
-            }
-            if (!$design_project->update($jia_info)) {
-                throw new MassageException('server save err', 500);
-            }
-
 
             // 保存报价单信息
             $quotation_info = $request->only([
@@ -151,6 +149,20 @@ class DesignQuotationController extends BaseController
             $quotation_info['design_company_id'] = User::designCompanyId($this->auth_user_id);
             $quotation_info['item_demand_id'] = 0;
             $quotation = QuotationModel::create($quotation_info);
+
+
+            // 保存甲方信息
+            $jia_info = $request->only([
+                'company_name', 'contact_name', 'phone', 'address',
+                'design_company_name', 'design_contact_name', 'design_phone', 'design_address'
+            ]);
+            if (!$design_project) {
+                throw new MassageException('not found', 404);
+            }
+            $jia_info['quotation_id'] = $quotation->id;
+            if (!$design_project->update($jia_info)) {
+                throw new MassageException('server save err', 500);
+            }
 
             // 项目计划
             /*[
@@ -207,6 +219,10 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} contact_name 甲方联系人
      * @apiParam {string} phone 联系方式
      * @apiParam {string} address 详细地址
+     * @apiParam {string} design_company_name 设计公司名称
+     * @apiParam {string} design_contact_name 设计联系人
+     * @apiParam {string} design_phone 设计联系方式
+     * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
      * @apiParam {int} is_tax 是否含税
@@ -264,6 +280,10 @@ class DesignQuotationController extends BaseController
                 'contact_name' => 'required|max:20',
                 'phone' => 'required|max:20',
                 'address' => 'required|string|max:200',
+                'design_company_name' => 'required|max:100',
+                'design_contact_name' => 'required|max:20',
+                'design_phone' => 'required|max:20',
+                'design_address' => 'required|string|max:200',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
                 'is_invoice' => 'int',
@@ -292,7 +312,10 @@ class DesignQuotationController extends BaseController
             DB::beginTransaction();
 
             // 保存甲方信息
-            $jia_info = $request->only(['company_name', 'contact_name', 'phone', 'address']);
+            $jia_info = $request->only([
+                'company_name', 'contact_name', 'phone', 'address',
+                'design_company_name', 'design_contact_name', 'design_phone', 'design_address'
+            ]);
             if (!$design_project) {
                 throw new MassageException('not found', 404);
             }

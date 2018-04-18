@@ -22,7 +22,12 @@ class QuotationModel extends BaseModel
         'is_invoice',
         'tax_rate',
         'design_project_id',
-        'total_price',];
+        'total_price',
+        'design_company_name',
+        'design_contact_name',
+        'design_phone',
+        'design_address'
+    ];
 
     /**
      * 相对关联到User用户表

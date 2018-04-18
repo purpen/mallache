@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\AssetModel;
 use App\Models\QuotationModel;
 use League\Fractal\TransformerAbstract;
 
@@ -16,10 +17,10 @@ class DesignQuotationTransformer extends TransformerAbstract
             'phone' => $quotation->designProject->phone,
             'address' => $quotation->designProject->address,
 
-            'design_company_name' => $quotation->designCompany->company_name,
-            'design_contact_name' => $quotation->designCompany->contact_name,
-            'design_phone' => $quotation->designCompany->phone,
-            'design_address' => $quotation->designCompany->address,
+            'design_company_name' => $quotation->designProject->design_company_name,
+            'design_contact_name' => $quotation->designProject->design_contact_name,
+            'design_phone' => $quotation->designProject->design_phone,
+            'design_address' => $quotation->designProject->design_address,
 
             'project_name' => $quotation->designProject->name,
             'summary' => $quotation->summary,
@@ -29,6 +30,7 @@ class DesignQuotationTransformer extends TransformerAbstract
             'tax_rate' => $quotation->tax_rate,
             'total_price' => $quotation->total_price,
             'price' => $quotation->price,
+            'asset' => AssetModel::getImageUrl($quotation->id, 30),
         ];
     }
 }
