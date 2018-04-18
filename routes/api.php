@@ -285,6 +285,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designCompany', ['as' => 'designCompany.show', 'uses' => 'DesignCompanyController@show']);
         $api->put('/designCompany', ['as' => 'designCompany.update', 'uses' => 'DesignCompanyController@update']);
         $api->post('/designCompany', ['as' => 'designCompany.store', 'uses' => 'DesignCompanyController@store']);
+        //子公司展示
+        $api->get('/designCompany/child', ['as' => 'designCompany.childShow', 'uses' => 'DesignCompanyController@childShow']);
 
 
         // 设计案例图片添加描述
