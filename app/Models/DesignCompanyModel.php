@@ -107,6 +107,14 @@ class DesignCompanyModel extends BaseModel
     }
 
     /**
+     * 一对多关联报价表
+     */
+    public function quotation()
+    {
+        return $this->hasMany('App\Models\QuotationModel', 'design_company_id');
+    }
+
+    /**
      * 更改设计公司审核状态
      */
     static public function verifyStatus($id, $verify_status = 0, $verify_summary = ' ')

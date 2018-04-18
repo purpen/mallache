@@ -24,6 +24,12 @@ class DesignProject extends BaseModel
         return $this->belongsTo('App\Models\User', 'leader');
     }
 
+    // 一对一关联项目报价表
+    public function quotation()
+    {
+        return $this->hasOne('App\Models\QuotationModel', 'design_project_id');
+    }
+
     // 商务经理
     public function getBusinessManagerValueAttribute()
     {

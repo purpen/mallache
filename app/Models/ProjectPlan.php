@@ -31,4 +31,13 @@ class ProjectPlan extends BaseModel
         return $project_plan->save();
     }
 
+    /**
+     * 一对多相对关联报价单
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function quotation()
+    {
+        return $this->belongsTo('App\Models\QuotationModel', 'quotation_id');
+    }
+
 }

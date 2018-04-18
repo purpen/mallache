@@ -48,4 +48,48 @@ class QuotationModel extends BaseModel
         return $this->hasOne('App\Models\Item', 'quotation_id');
     }
 
+    /**
+     * 一对一相对关联 设计管理项目
+     */
+    public function designProject()
+    {
+        return $this->belongsTo('App\Models\DesignProject', 'design_project_id');
+    }
+
+
+    /**
+     * 一对多关联设计计划表
+     */
+    public function projectPlan()
+    {
+        return $this->hasMany('App\Models\ProjectPlan', 'quotation_id');
+    }
+
+    /**
+     * 相对关联设计公司
+     */
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
+
+    // 获取项目报价计划
+    public function getProjectPlan()
+    {
+        $plans = $this->projectPlan;
+        $arr = [];
+        foreach ($plans as $plan) {
+            $a = [];
+            $a['content'] = $plan->content;
+            $a['arranged'] = json_decode($plan->arranged, true);
+            $a['duration'] = $plan->duration;
+            $a['price'] = $plan->price;
+            $a['summary'] = $plan->summary;
+
+            $arr[] = $a;
+        }
+
+        return $arr;
+    }
+
 }
