@@ -20,6 +20,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class DesignController extends BaseController
 {
@@ -687,7 +688,7 @@ class DesignController extends BaseController
      * @apiName design restoreMember
      * @apiGroup design
      *
-     * @apiParam {integer} phone 被恢复成员的手机号
+     * @apiParam {string} rand_string 随机字符串
      * @apiParam {token} token
      *
      * @apiSuccessExample 成功响应:
@@ -701,24 +702,29 @@ class DesignController extends BaseController
      */
     public function restoreMember(Request $request)
     {
-        $phone = $request->input('phone');
+        $rand_string = $request->input('rand_string');
+        $master_user_id = Redis::get($rand_string);
+        if($master_user_id == null){
+            return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 403));
+        }
+        //主账户设计公司
+        $master_user = User::where('id' , $master_user_id)->first();
+        if(!$master_user){
+            return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 404));
+
+        }
+        $design_company_id = $master_user->design_company_id;
         //被恢复的成员
-        $restoreUser = User::where('phone' , $phone)->first();
-        if(!$restoreUser){
-            return $this->response->array($this->apiError('没有找到该成员', 404));
-        }
         $user_id = $this->auth_user_id;
-        //主账户
         $user = User::where('id' , $user_id)->first();
-        //如果是超级管理员不能被移除
-        if($user->company_role !== 20){
-            return $this->response->array($this->apiError('该用户是超级管理员，不能恢复成员', 403));
+        if(!$user_id){
+            return $this->response->array($this->apiError('被恢复的用户不存在' , 404));
         }
-        if($user){
-            $restoreUser->design_company_id = $user->design_company_id;
-            $restoreUser->invite_user_id = $user_id;
-            $restoreUser->save();
+        $user->design_company_id = $design_company_id;
+        $user->invite_user_id = $master_user_id;
+        if($user->save()){
             return $this->response->array($this->apiSuccess());
+
         }
 
     }
