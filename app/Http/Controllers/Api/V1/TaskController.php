@@ -396,6 +396,10 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
         $all = $request->except(['token']);
+        $tags = $all['tags'];
+        if(!empty($tags)){
+            $all['tags'] = implode(',' , $tags);
+        }
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
