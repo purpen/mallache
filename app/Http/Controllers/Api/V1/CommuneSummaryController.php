@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Http\Transformer\CommuneSummaryTransformer;
-use App\Http\Transformer\CummuneSummaryTransformer;
+use App\Models\AssetModel;
 use App\Models\CommuneSummary;
 use App\Models\CommuneSummaryUser;
 use App\Models\ItemUser;
