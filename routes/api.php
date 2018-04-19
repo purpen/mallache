@@ -396,14 +396,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
 
         /**
-         * 客户接口
-         */
-        $api->resource('/customers', 'CustomerController');
-        //检测客户是否存在
-        $api->get('/customers/detection', ['as' => 'customers.detection', 'uses' => 'CustomerController@detection']);
-
-
-        /**
          * 用户id生成string
          */
         //根据用户id为key查看随机字符串
