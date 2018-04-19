@@ -532,8 +532,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designProject/update', 'DesignProjectController@update');
         // api {get} /designProject 设计工具项目详情展示
         $api->get('/designProject', 'DesignProjectController@show');
-        // api {put} /designProject/delete 设计工具项目详情展示
-        $api->put('/designProject/delete', 'DesignProjectController@delete');
+        // api {put} /designProject/delete 设计工具项目删除
+        $api->delete('/designProject/delete', 'DesignProjectController@delete');
 
 
         //设计公司客户

@@ -167,6 +167,7 @@ class DesignProject extends BaseModel
             'created_at' => $this->created_at,
             'design_company_name' => $this->design_company_name,
             'design_contact_name' => $this->design_contact_name,
+            'design_position' => $this->design_position,
             'design_phone' => $this->design_phone,
             'design_province' => $this->design_province,
             'design_province_value' => $this->design_province_value,

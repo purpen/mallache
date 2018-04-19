@@ -24,6 +24,7 @@ class DesignQuotationController extends BaseController
      *
      * @apiParam {string} company_name 甲方名称
      * @apiParam {string} contact_name 甲方联系人
+     * @apiParam {string} position 甲方职位
      * @apiParam {string} phone 联系方式
      * @apiParam {int} province  省份
      * @apiParam {int} city  城市
@@ -31,6 +32,7 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} address 详细地址
      * @apiParam {string} design_company_name 设计公司名称
      * @apiParam {string} design_contact_name 设计联系人
+     * @apiParam {string} design_position 乙方职位
      * @apiParam {string} design_phone 设计联系方式
      * @apiParam {int} design_province  设计省份
      * @apiParam {int} design_city  设计城市
@@ -172,6 +174,8 @@ class DesignQuotationController extends BaseController
                 'design_province',
                 'design_city',
                 'design_area',
+                'design_position',
+                'position'
             ]);
             if (!$design_project) {
                 throw new MassageException('not found', 404);
@@ -234,6 +238,7 @@ class DesignQuotationController extends BaseController
      * @apiParam {int} id 报价单ID
      * @apiParam {string} company_name 甲方名称
      * @apiParam {string} contact_name 甲方联系人
+     * @apiParam {string} position 甲方职位
      * @apiParam {string} phone 联系方式
      * @apiParam {int} province  省份
      * @apiParam {int} city  城市
@@ -241,6 +246,7 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} address 详细地址
      * @apiParam {string} design_company_name 设计公司名称
      * @apiParam {string} design_contact_name 设计联系人
+     * @apiParam {string} design_position 乙方职位
      * @apiParam {string} design_phone 设计联系方式
      * @apiParam {int} design_province  设计省份
      * @apiParam {int} design_city  设计城市
@@ -350,6 +356,8 @@ class DesignQuotationController extends BaseController
                 'design_province',
                 'design_city',
                 'design_area',
+                'design_position',
+                'position'
             ]);
             if (!$design_project) {
                 throw new MassageException('not found', 404);
