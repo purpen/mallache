@@ -32,6 +32,7 @@ class CommuneSummaryController extends BaseController
      * @apiParam {string} location 定位
      * @apiParam {array}  selected_user_id 选择的用户id
      * @apiParam {string} expire_time 到期时间
+     * @apiParam {string} random 随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -87,6 +88,11 @@ class CommuneSummaryController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $communeSummary = CommuneSummary::create($params);
+        if($communeSummary){
+            if ($random = $request->input('random')) {
+                AssetModel::setRandom($communeSummary->id, $random);
+            }
+        }
         //如果选中的用户不为空，把用户更新到沟通纪要成员里
         if(!empty($selected_user_id_arr)) {
             foreach ($selected_user_id_arr as $selected_user_id) {
