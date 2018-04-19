@@ -342,7 +342,6 @@ class TaskController extends BaseController
      * @apiName  tasks update
      * @apiGroup tasks
      *
-     * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
@@ -385,20 +384,17 @@ class TaskController extends BaseController
      */
     public function update(Request $request , $id)
     {
-        $item_id = $request->input('item_id') ? intval($request->input('item_id')) : 0;
-        if($item_id == 0){
-            return $this->response->array($this->apiError('项目id不能为0', 412));
-        }
         $user_id = $this->auth_user_id;
-        //检查是否有查看的权限
-        $itemUser = ItemUser::checkUser($item_id , $user_id);
-        if($itemUser == false){
-            return $this->response->array($this->apiError('没有权限查看该项目', 403));
-        }
+
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
+        }
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
+        if($itemUser == false){
+            return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
         $all = $request->except(['token']);
         $tags = $all['tags'];
