@@ -15,6 +15,7 @@ class DesignQuotationTransformer extends TransformerAbstract
             'company_name' => $quotation->designProject->company_name,
             'contact_name' => $quotation->designProject->contact_name,
             'phone' => $quotation->designProject->phone,
+            'position' => $quotation->designProject->position,
             'province' => $quotation->designProject->province,
             'province_value' => $quotation->designProject->province_value,
             'city' => $quotation->designProject->city,
@@ -25,6 +26,7 @@ class DesignQuotationTransformer extends TransformerAbstract
 
             'design_company_name' => $quotation->designProject->design_company_name,
             'design_contact_name' => $quotation->designProject->design_contact_name,
+            'design_position' => $quotation->designProject->design_position,
             'design_phone' => $quotation->designProject->design_phone,
             'design_province' => $quotation->designProject->design_province,
             'design_province_value' => $quotation->designProject->design_province_value,

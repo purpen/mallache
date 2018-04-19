@@ -213,6 +213,7 @@ class DesignProjectController extends BaseController
      *
      * @apiParam {string} design_company_name    varchar(100) 设计名称
      * @apiParam {string} design_contact_name    varchar(50) 设计联系人姓名
+     * @apiParam {string} design_position  varchar(50) 设计职位
      * @apiParam {string} design_phone  varchar(20) 设计手机
      * @apiParam {int} design_province  设计省份
      * @apiParam {int} design_city  设计城市
