@@ -395,22 +395,30 @@ class TaskController extends BaseController
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
-        $all = $request->except(['token']);
-        $tags = $all['tags'];
-        if(!empty($tags)){
-            $all['tags'] = implode(',' , $tags);
-        }
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        $all = $request->except(['token']);
+        $tags = $all['tags'];
+        //不为空标签时，合并数组
+        if(!empty($tags)){
+            $all['tags'] = implode(',' , $tags);
+        }
+        //移除没有更新的值，只要更新的
         $new_all = array_diff($all , array(null));
         $tasks->update($new_all);
+        //更改完任务，查看标签是否为空，不为空分割成数组
+        if(!empty($tasks->tags)){
+            $new_tags = explode(',' , $tasks->tags);
+            $tasks['tagsAll'] = Tag::whereIn('id' , $new_tags)->get();
+
+        }
         if (!$tasks) {
             return $this->response->array($this->apiError());
         }
-        return $this->response->item($tasks, new TaskTransformer())->setMeta($this->apiMeta());
+        return $this->response->item($tasks, new TaskChildTransformer())->setMeta($this->apiMeta());
 
     }
 
