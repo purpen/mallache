@@ -543,6 +543,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/designClient/create', 'DesignClientController@store');
         // api {get} /designClient/search 搜索客户信息
         $api->get('/designClient/search', 'DesignClientController@search');
+        // api {put} /designClient/update 创建客户信息
+        $api->put('/designClient/update', 'DesignClientController@update');
+        // api {delete} /designClient/delete 创建客户信息
+        $api->delete('/designClient/delete', 'DesignClientController@delete');
 
         // 设计报价职位
         // api {post} /designPosition/create 添加职位
