@@ -20,6 +20,7 @@ class DesignClientController extends Controller
      *
      * @apiParam {int} per_page 页面条数
      * @apiParam {int} page 页数
+     * @apiParam {integer} sort 0:升序；1.降序(默认)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -47,7 +48,15 @@ class DesignClientController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $design_company_id = User::designCompanyId($this->auth_user_id);
-        $lists = DesignClient::where(['design_company_id' => $design_company_id])->paginate($per_page);
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+        $lists = DesignClient::where(['design_company_id' => $design_company_id])->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($lists, new DesignClientTransformer())->setMeta($this->apiMeta());
     }
