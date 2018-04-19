@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\MassageException;
 use App\Http\Transformer\DesignQuotationTransformer;
 use App\Models\DesignProject;
-use App\Models\ItemUser;
 use App\Models\ProjectPlan;
 use App\Models\QuotationModel;
 use App\Models\User;
@@ -26,10 +25,16 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} company_name 甲方名称
      * @apiParam {string} contact_name 甲方联系人
      * @apiParam {string} phone 联系方式
+     * @apiParam {int} province  省份
+     * @apiParam {int} city  城市
+     * @apiParam {int} area 地区
      * @apiParam {string} address 详细地址
      * @apiParam {string} design_company_name 设计公司名称
      * @apiParam {string} design_contact_name 设计联系人
      * @apiParam {string} design_phone 设计联系方式
+     * @apiParam {int} design_province  设计省份
+     * @apiParam {int} design_city  设计城市
+     * @apiParam {int} design_area 设计地区
      * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
@@ -87,10 +92,16 @@ class DesignQuotationController extends BaseController
                 'company_name' => 'required|max:100',
                 'contact_name' => 'required|max:20',
                 'phone' => 'required|max:20',
+                'province' => 'integer',
+                'city' => 'integer',
+                'area' => 'integer',
                 'address' => 'required|string|max:200',
                 'design_company_name' => 'required|max:100',
                 'design_contact_name' => 'required|max:20',
                 'design_phone' => 'required|max:20',
+                'design_province' => 'integer',
+                'design_city' => 'integer',
+                'design_area' => 'integer',
                 'design_address' => 'required|string|max:200',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
@@ -154,7 +165,13 @@ class DesignQuotationController extends BaseController
             // 保存甲方信息
             $jia_info = $request->only([
                 'company_name', 'contact_name', 'phone', 'address',
-                'design_company_name', 'design_contact_name', 'design_phone', 'design_address'
+                'design_company_name', 'design_contact_name', 'design_phone', 'design_address',
+                'province',
+                'city',
+                'area',
+                'design_province',
+                'design_city',
+                'design_area',
             ]);
             if (!$design_project) {
                 throw new MassageException('not found', 404);
@@ -218,10 +235,16 @@ class DesignQuotationController extends BaseController
      * @apiParam {string} company_name 甲方名称
      * @apiParam {string} contact_name 甲方联系人
      * @apiParam {string} phone 联系方式
+     * @apiParam {int} province  省份
+     * @apiParam {int} city  城市
+     * @apiParam {int} area 地区
      * @apiParam {string} address 详细地址
      * @apiParam {string} design_company_name 设计公司名称
      * @apiParam {string} design_contact_name 设计联系人
      * @apiParam {string} design_phone 设计联系方式
+     * @apiParam {int} design_province  设计省份
+     * @apiParam {int} design_city  设计城市
+     * @apiParam {int} design_area 设计地区
      * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
@@ -279,10 +302,16 @@ class DesignQuotationController extends BaseController
                 'company_name' => 'required|max:100',
                 'contact_name' => 'required|max:20',
                 'phone' => 'required|max:20',
+                'province' => 'integer',
+                'city' => 'integer',
+                'area' => 'integer',
                 'address' => 'required|string|max:200',
                 'design_company_name' => 'required|max:100',
                 'design_contact_name' => 'required|max:20',
                 'design_phone' => 'required|max:20',
+                'design_province' => 'integer',
+                'design_city' => 'integer',
+                'design_area' => 'integer',
                 'design_address' => 'required|string|max:200',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
@@ -314,7 +343,13 @@ class DesignQuotationController extends BaseController
             // 保存甲方信息
             $jia_info = $request->only([
                 'company_name', 'contact_name', 'phone', 'address',
-                'design_company_name', 'design_contact_name', 'design_phone', 'design_address'
+                'design_company_name', 'design_contact_name', 'design_phone', 'design_address',
+                'province',
+                'city',
+                'area',
+                'design_province',
+                'design_city',
+                'design_area',
             ]);
             if (!$design_project) {
                 throw new MassageException('not found', 404);

@@ -69,7 +69,7 @@ class DesignProject extends BaseModel
      * 省份访问修改器
      * @return mixed|string
      */
-    public function getCompanyProvinceValueAttribute()
+    public function getProvinceValueAttribute()
     {
         return Tools::cityName($this->company_province);
     }
@@ -78,7 +78,7 @@ class DesignProject extends BaseModel
      * 城市访问修改器
      * @return mixed|string
      */
-    public function getCompanyCityValueAttribute()
+    public function getCityValueAttribute()
     {
         return Tools::cityName($this->company_city);
     }
@@ -87,9 +87,36 @@ class DesignProject extends BaseModel
      * 区县访问修改器
      * @return mixed|string
      */
-    public function getCompanyAreaValueAttribute()
+    public function getAreaValueAttribute()
     {
         return Tools::cityName($this->company_area);
+    }
+
+    /**
+     * 省份访问修改器
+     * @return mixed|string
+     */
+    public function getDesignProvinceValueAttribute()
+    {
+        return Tools::cityName($this->design_province);
+    }
+
+    /**
+     * 城市访问修改器
+     * @return mixed|string
+     */
+    public function getDesignCityValueAttribute()
+    {
+        return Tools::cityName($this->design_city);
+    }
+
+    /**
+     * 区县访问修改器
+     * @return mixed|string
+     */
+    public function getDesignAreaValueAttribute()
+    {
+        return Tools::cityName($this->design_area);
     }
 
     // 判断当前用户有无修改项目信息权限
@@ -138,6 +165,16 @@ class DesignProject extends BaseModel
             'user_id' => $this->user_id,
             'quotation_id' => $this->quotation_id,
             'created_at' => $this->created_at,
+            'design_company_name' => $this->design_company_name,
+            'design_contact_name' => $this->design_contact_name,
+            'design_phone' => $this->design_phone,
+            'design_province' => $this->design_province,
+            'design_province_value' => $this->design_province_value,
+            'design_city' => $this->design_city,
+            'design_area' => $this->design_area,
+            'design_city_value' => $this->design_city_value,
+            'design_area_value' => $this->design_area_value,
+            'design_address' => $this->design_address,
         ];
     }
 

@@ -100,6 +100,8 @@ class DesignCompanyController extends BaseController
         return $this->response->item($design, new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
 
+
+
     /**
      * @api {get} /designCompany/otherIndex/{id} 其它公司查看根据设计公司id查看信息
      * @apiVersion 1.0.0
