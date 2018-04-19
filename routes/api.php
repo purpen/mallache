@@ -547,6 +547,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designPosition/lists', 'DesignPositionController@lists');
         // api {get} /designPosition/search 职位搜索
         $api->get('/designPosition/search', 'DesignPositionController@search');
+        // api {put} /designPosition/update 编辑职位
+        $api->put('/designPosition/update', 'DesignPositionController@update');
+        // api {delete} /designPosition/delete 删除职位
+        $api->delete('/designPosition/delete', 'DesignPositionController@delete');
+
+
 
         // 设计报价单
         // api {post} /designQuotation/create 设计工具-创建报价单
