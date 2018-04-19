@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\TaskChildTransformer;
 use App\Http\Transformer\TaskTransformer;
 use App\Models\ItemUser;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\TaskUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -321,7 +322,13 @@ class TaskController extends BaseController
         //查看子任务
         $taskChild = Task::where('pid' , $id)->get();
         $task['childTask'] = $taskChild;
-
+        $tagsAll = $task->tags;
+        if(!empty($tagsAll)){
+            $tagsAll = explode(',' , $tagsAll);
+            $task['tagsAll'] = Tag::whereIn('id' , $tagsAll)->get();
+        }else{
+            $task['tagsAll'] = [];
+        }
         if ($task->status == 0) {
             return $this->response->array($this->apiError('该任务已禁用！', 403));
         }
