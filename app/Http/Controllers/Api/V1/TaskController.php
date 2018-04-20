@@ -397,10 +397,9 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
         $all = $request->except(['token']);
-        $tags = $all['tags'];
         //不为空标签时，合并数组
-        if(!empty($tags)){
-            $all['tags'] = implode(',' , $tags);
+        if(!empty($all['tags'])){
+            $all['tags'] = implode(',' , $all['tags']);
         }
         //移除没有更新的值，只要更新的
         $new_all = array_diff($all , array(null));
