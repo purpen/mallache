@@ -32,9 +32,12 @@ class DesignPositionController extends BaseController
             'name' => 'required|max:50',
         ]);
 
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
         $design_company_id = User::designCompanyId($this->auth_user_id);
         $name = $request->input('name');
-
         $count = DesignPosition::where('name', $name)->count();
         if ($count > 0) {
             return $this->response->array($this->apiError('已存在', 403));
@@ -44,6 +47,87 @@ class DesignPositionController extends BaseController
         $design_position->name = $name;
         $design_position->design_company_id = $design_company_id;
         $design_position->save();
+
+        return $this->response->item($design_position, new DesignPositionTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {put} /designPosition/update 编辑职位
+     * @apiVersion 1.0.0
+     * @apiName designPosition update
+     * @apiGroup designPosition
+     *
+     * @apiParam {integer} id
+     * @apiParam {string} name  名称
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'name' => 'required|max:50',
+        ]);
+
+        $id = $request->input('id');
+        $name = $request->input('name');
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
+        $design_company_id = User::designCompanyId($this->auth_user_id);
+
+        $design_position = DesignPosition::find($id);
+        if (!$design_position || ($design_position->design_company_id != $design_company_id)) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $design_position->name = $name;
+        $design_position->save();
+
+        return $this->response->item($design_position, new DesignPositionTransformer())->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {delete} /designPosition/delete 删除职位
+     * @apiVersion 1.0.0
+     * @apiName designPosition delete
+     * @apiGroup designPosition
+     *
+     * @apiParam {integer} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function delete(Request $request)
+    {
+        $id = $request->input('id');
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+
+        $design_company_id = User::designCompanyId($this->auth_user_id);
+
+        $design_position = DesignPosition::find($id);
+        if (!$design_position || ($design_position->design_company_id != $design_company_id)) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $design_position->delete();
 
         return $this->response->array($this->apiSuccess());
     }
