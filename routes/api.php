@@ -553,7 +553,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/designPosition/delete', 'DesignPositionController@delete');
 
 
-
         // 设计报价单
         // api {post} /designQuotation/create 设计工具-创建报价单
         $api->post('/designQuotation/create', 'DesignQuotationController@create');
@@ -561,6 +560,33 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designQuotation/update', 'DesignQuotationController@update');
         // api {get} /designQuotation 设计工具-查看详情
         $api->get('/designQuotation', 'DesignQuotationController@show');
+
+        // 项目阶段规划
+        // api {post} /designStage/create 设计工具--创建项目阶段
+        $api->post('/designStage/create', 'DesignStageController@create');
+        // api {put} /designStage/update 设计工具--更新项目阶段
+        $api->put('/designStage/update', 'DesignStageController@update');
+        // api {get} /designStage 设计工具--项目阶段详情
+        $api->get('/designStage', 'DesignStageController@show');
+        // api {delete} /designStage/delete 设计工具--项目阶段删除
+        $api->delete('/designStage/delete', 'DesignStageController@delete');
+        // api {get} /designStage/lists 设计工具--项目阶段列表
+        $api->get('/designStage/lists', 'DesignStageController@lists');
+
+        // 项目规划子阶段
+        // api {post} /designSubstage/create 设计工具--创建子阶段
+        $api->post('/designSubstage/create', 'DesignSubstageController@create');
+        $api->put('/designSubstage/update', 'DesignSubstageController@update');
+        $api->get('/designSubstage', 'DesignSubstageController@show');
+        $api->delete('/designSubstage/delete', 'DesignSubstageController@delete');
+
+        // 阶段节点
+        // api {post} /designStageNode/create 设计工具--创建阶段节点
+        $api->post('/designStageNode/create', 'DesignStageNodeController@create');
+        $api->put('/designStageNode/update', 'DesignStageNodeController@update');
+        $api->get('/designStageNode', 'DesignStageNodeController@show');
+        $api->delete('/designStageNode/delete', 'DesignStageNodeController@delete');
+
 
     });
 

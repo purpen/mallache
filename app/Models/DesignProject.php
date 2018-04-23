@@ -30,6 +30,12 @@ class DesignProject extends BaseModel
         return $this->hasOne('App\Models\QuotationModel', 'design_project_id');
     }
 
+    // 一对多关联项目规划阶段表
+    public function designStage()
+    {
+        return $this->hasMany('App\Models\DesignStage', 'design_project_id');
+    }
+
     // 商务经理
     public function getBusinessManagerValueAttribute()
     {
