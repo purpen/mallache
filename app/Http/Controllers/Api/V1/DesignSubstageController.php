@@ -113,7 +113,7 @@ class DesignSubstageController extends BaseController
      * @apiName designSubstage update
      * @apiGroup designSubstage
      *
-     * @apiParam {integer} design_substage_id 子阶段ID
+     * @apiParam {integer} id 子阶段ID
      * @apiParam {integer} execute_user_id 执行人
      * @apiParam {string} name 阶段名称
      * @apiParam {integer} duration 投入时间
@@ -144,7 +144,7 @@ class DesignSubstageController extends BaseController
     public function update(Request $request)
     {
         $rules = [
-            'design_substage_id' => 'required|integer',
+            'id' => 'required|integer',
             'execute_user_id' => 'integer',
             'name' => 'max:100',
             'duration' => 'integer',
@@ -157,8 +157,8 @@ class DesignSubstageController extends BaseController
             throw new StoreResourceFailedException('errors', $validator->errors());
         }
 
-        $design_substage_id = $request->input('design_substage_id');
-        $design_substage = DesignSubstage::find($design_substage_id);
+        $id = $request->input('id');
+        $design_substage = DesignSubstage::find($id);
         if (!$design_substage) {
             return $this->response->array($this->apiError('not found', 404));
         }
@@ -174,6 +174,7 @@ class DesignSubstageController extends BaseController
         }
 
         $arr = array_diff($request->all(), [null]);
+
         $design_substage->update($arr);
 
         return $this->response->item($design_substage, new DesignSubstageTransformer())->setMeta($this->apiMeta());

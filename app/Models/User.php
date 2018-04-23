@@ -181,6 +181,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\DesignProject', 'leader');
     }
 
+    // 一对多关联设计项目子阶段
+    public function designSubstage()
+    {
+        return $this->hasMany('App\Models\DesignSubstage', 'design_substage_id');
+    }
+
     /**
      * 增加用户账户金额（总金额、冻结金额）
      *
