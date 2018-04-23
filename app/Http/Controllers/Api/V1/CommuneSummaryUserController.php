@@ -180,7 +180,7 @@ class CommuneSummaryUserController extends BaseController
         $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->get();
         $user_id = [];
         foreach ($communeSummaryUsers as $communeSummaryUser){
-            $user_id[] = $communeSummaryUser->user_id;
+            $user_id[] = $communeSummaryUser->selected_user_id;
         }
         $new_user_id = $user_id;
         $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();

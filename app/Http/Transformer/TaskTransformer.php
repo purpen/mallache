@@ -38,6 +38,7 @@ class TaskTransformer extends TransformerAbstract
             'tags' => strval($tasks->tags) ? explode(',' , $tasks->tags) : [],
             'summary' => $tasks->summary,
             'user_id' => intval($tasks->user_id),
+            'realname' => $tasks->user->getUserName(),
             'execute_user_id' => intval($tasks->execute_user_id),
             'item_id' => intval($tasks->item_id),
             'level' => intval($tasks->level),

@@ -53,6 +53,14 @@ class Task extends BaseModel
     }
 
     /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
      * 任务完成与未完成
      */
     public static function isStage(int $task_id  , int $stage)
