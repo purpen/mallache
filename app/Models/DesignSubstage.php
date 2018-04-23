@@ -13,6 +13,12 @@ class DesignSubstage extends BaseModel
         return $this->belongsTo('App\Models\DesignStage', 'design_stage_id');
     }
 
+    // 一对一关联阶段节点
+    public function designStageNode()
+    {
+        return $this->hasOne('App\Models\DesignStageNode', 'design_substage_id');
+    }
+
     public function info()
     {
         return [
@@ -26,6 +32,7 @@ class DesignSubstage extends BaseModel
             'summary' => $this->summary,
             'user_id' => $this->user_id,
             'status' => $this->status,
+            'design_stage_node' => $this->designStageNode ? $this->designStageNode->info() : null,
         ];
     }
 }

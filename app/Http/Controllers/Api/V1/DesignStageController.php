@@ -262,6 +262,28 @@ class DesignStageController extends BaseController
      *          "content": "我是描述",     // 交付内容
      *          "user_id": 6,             // 操作用户
      *          "status": 0               // 状态：0.未完成 1.完成
+     *          "design_substage": [{     // 子阶段信息
+     *              "id": 1,                // 子阶段ID
+     *              "design_project_id": 4,     // 项目ID
+     *              "design_stage_id": 1,       // 父阶段ID
+     *              "name": "我狮子阶段",        // 子阶段名称
+     *              "execute_user_id": null,    // 执行人
+     *              "duration": 1,              // 投入时间
+     *              "start_time": 123479,
+     *              "summary": "面熟面熟",          // 描述
+     *              "user_id": 6,
+     *              "status": 0,
+     *              "design_stage_node": {      // 节点信息
+     *                  "id": 1,
+     *                  "name": "第一个节点编辑",
+     *                  "time": 12,                 // 节点时间
+     *                  "is_owner": 0,              // 甲方参与：0.否 1.是
+     *                  "design_substage_id": 1,    // 子阶段ID
+     *                  "design_project_id": 4,
+     *                  "status": 0,
+     *                  "asset": []                 // 附件
+     *              }
+     *          }]
      *       }],
      *       "meta": {
      *           "message": "Success",
@@ -277,7 +299,9 @@ class DesignStageController extends BaseController
             return $this->response->array($this->apiError('无权限', 403));
         }
 
-        $lists = DesignStage::where('design_project_id', $design_project_id)->get();
+        $lists = DesignStage::with('designSubstage')
+            ->where('design_project_id', $design_project_id)
+            ->get();
 
         return $this->response->collection($lists, new DesignStageTransformer())->setMeta($this->apiMeta());
     }

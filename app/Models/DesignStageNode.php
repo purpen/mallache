@@ -13,6 +13,12 @@ class DesignStageNode extends BaseModel
         'status'
     ];
 
+    // 一对一相对关联设计子阶段
+    public function designSubstage()
+    {
+        return $this->belongsTo('App\Models\DesignSubstage', 'design_substage_id');
+    }
+
     public function info()
     {
         return [

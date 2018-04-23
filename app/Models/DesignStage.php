@@ -24,6 +24,17 @@ class DesignStage extends BaseModel
 
     public function info()
     {
+        $design_substages = $this->designSubstage;
+        $arr = [];
+        if($design_substages->isEmpty()){
+            $arr = null;
+        }else{
+
+            foreach ($design_substages as $value){
+                $arr[] = $value->info();
+            }
+        }
+
         return [
             'id' => $this->id,
             'design_project_id' => $this->design_project_id,
@@ -33,6 +44,7 @@ class DesignStage extends BaseModel
             'content' => $this->content,
             'user_id' => $this->user_id,
             'status' => $this->status,
+            'design_substage' => $arr,
         ];
     }
 }
