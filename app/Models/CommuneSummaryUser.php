@@ -18,5 +18,14 @@ class CommuneSummaryUser extends BaseModel
         'status',
         'selected_user_id',
         'type',
+        'other_realname',
     ];
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'selected_user_id');
+    }
 }

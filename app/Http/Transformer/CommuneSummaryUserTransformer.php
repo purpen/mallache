@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\DesignCompanyModel;
 use League\Fractal\TransformerAbstract;
 use App\Models\CommuneSummaryUser;
 
@@ -26,6 +27,8 @@ status	tinyint(1)	是	1	状态：0.禁用；1.启用；
             'type' => intval($communeSummaryUser->type),
             'status' => intval($communeSummaryUser->status),
             'created_at' => $communeSummaryUser->created_at,
+            'other_realname' => $communeSummaryUser->other_realname,
+            'user' => $communeSummaryUser->user,
         ];
     }
 }

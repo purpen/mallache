@@ -24,6 +24,7 @@ class CommuneSummaryUserController extends BaseController
      *
      * @apiParam {integer} commune_summary_id 沟通纪要id
      * @apiParam {integer} selected_user_id 选择的用户
+     * @apiParam {string} other_realname  其他公司成员姓名
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -46,10 +47,10 @@ class CommuneSummaryUserController extends BaseController
     {
         $this->validate($request, [
             'commune_summary_id' => 'required|integer',
-            'selected_user_id' => 'required|integer',
         ]);
         $commune_summary_id = $request->input('commune_summary_id');
-        $selected_user_id = $request->input('selected_user_id');
+        $selected_user_id = $request->input('selected_user_id') ? $request->input('selected_user_id') : 0;
+        $other_realname = $request->input('other_realname') ? $request->input('other_realname') : '';
 
         $params = array(
             'commune_summary_id' => intval($commune_summary_id),
@@ -57,9 +58,10 @@ class CommuneSummaryUserController extends BaseController
             'status' => 1,
             'selected_user_id' => $selected_user_id,
             'user_id' => $this->auth_user_id,
+            'other_realname' => $other_realname,
         );
         //查看是否有没有创建过沟通纪要用户，有的话，跳出
-        $communeSummaryUser = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->where('selected_user_id' , $selected_user_id)->first();
+        $communeSummaryUser = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->where('other_realname' , $other_realname)->first();
         if($communeSummaryUser){
             return $this->response->array($this->apiError('已存在该任务成员', 412));
         }
@@ -177,14 +179,15 @@ class CommuneSummaryUserController extends BaseController
             $sort = 'desc';
         }
         $commune_summary_id = $request->input('commune_summary_id');
-        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->get();
-        $user_id = [];
-        foreach ($communeSummaryUsers as $communeSummaryUser){
-            $user_id[] = $communeSummaryUser->selected_user_id;
-        }
-        $new_user_id = $user_id;
-        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->orderBy('id', $sort)->get();
+//        $user_id = [];
+//        foreach ($communeSummaryUsers as $communeSummaryUser){
+//            $user_id[] = $communeSummaryUser->selected_user_id;
+//        }
+//        $new_user_id = $user_id;
+//        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
+//        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($communeSummaryUsers, new CommuneSummaryUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -203,7 +206,7 @@ class CommuneSummaryUserController extends BaseController
      *     }
      *   }
      */
-    public function delete($id)
+    public function destroy($id)
     {
         $communeSummaryUser = CommuneSummaryUser::find($id);
         //检验是否存在
