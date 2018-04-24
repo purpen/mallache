@@ -39,11 +39,11 @@ class DesignQuotationTransformer extends TransformerAbstract
             'project_name' => $quotation->designProject->name,
             'summary' => $quotation->summary,
             'plan' => $quotation->getProjectPlan(),
-            'is_tax' => $quotation->is_tax,
-            'is_invoice' => $quotation->is_invoice,
-            'tax_rate' => $quotation->tax_rate,
-            'total_price' => $quotation->total_price,
-            'price' => $quotation->price,
+            'is_tax' => intval($quotation->is_tax),
+            'is_invoice' => intval($quotation->is_invoice),
+            'tax_rate' => intval($quotation->tax_rate),
+            'total_price' => floatval($quotation->total_price),
+            'price' => floatval($quotation->price),
             'asset' => AssetModel::getImageUrl($quotation->id, 30),
         ];
     }
