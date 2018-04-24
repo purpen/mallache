@@ -238,7 +238,7 @@ class DesignStageController extends BaseController
             return $this->response->array($this->apiError('无权限', 403));
         }
 
-        $design_stage->delete();
+        $design_stage->deleteStage();
         return $this->response->array($this->apiSuccess());
     }
 

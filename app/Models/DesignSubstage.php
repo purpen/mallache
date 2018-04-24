@@ -44,4 +44,17 @@ class DesignSubstage extends BaseModel
             'design_stage_node' => $this->designStageNode ? $this->designStageNode->info() : null,
         ];
     }
+
+    /**
+     * 删除子阶段及其节点
+     */
+    public function deleteSubstage()
+    {
+        if ($this->designStageNode) {
+            $this->designStageNode->delete();
+        }
+
+        $this->delete();
+    }
+
 }
