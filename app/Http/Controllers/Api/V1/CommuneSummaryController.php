@@ -33,6 +33,7 @@ class CommuneSummaryController extends BaseController
      * @apiParam {array}  selected_user_id 选择的用户id
      * @apiParam {string} expire_time 到期时间
      * @apiParam {string} random 随机数
+     * @apiParam {string} other_realname  其他公司成员姓名
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -72,6 +73,7 @@ class CommuneSummaryController extends BaseController
         $location = $request->input('location') ? $request->input('location') : '';
         $expire_time = $request->input('expire_time') ? $request->input('expire_time') : null;
         $selected_user_id_arr = $request->input('selected_user_id') ? $request->input('selected_user_id') : [];
+        $other_realname = $request->input('other_realname') ? $request->input('other_realname') : '';
 
         $params = array(
             'title' => $request->input('title'),
@@ -107,6 +109,7 @@ class CommuneSummaryController extends BaseController
                     $task_user->selected_user_id = $selected_user_id;
                     $task_user->type = 1;
                     $task_user->status = 1;
+                    $task_user->other_realname = $other_realname;
                     $task_user->save();
                 }
             }
