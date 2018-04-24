@@ -493,6 +493,9 @@ class DesignQuotationController extends BaseController
     {
         $id = $request->input('id');
         $quotation = QuotationModel::find($id);
+        if(!$quotation){
+            return $this->response->array($this->apiError('not found', 404));
+        }
         $design_project = $quotation->designProject;
         if (!$design_project->isPower($this->auth_user_id)) {
             throw new MassageException('无权限', 403);

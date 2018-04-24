@@ -7,6 +7,7 @@ use App\Helper\Tools;
 use App\Http\Transformer\YunpanListTransformer;
 use App\Jobs\deleteQiniuFile;
 use App\Models\Group;
+use App\Models\ItemUser;
 use App\Models\PanDirector;
 use App\Models\PanFile;
 use App\Models\RecycleBin;
@@ -190,14 +191,31 @@ class YunpianUploadController extends BaseController
                     $pan_director->height = $pan_file->height;
                     $pan_director->save();
 
-                }
-//                else if (($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) || $user->isDesignAdmin()) { // 判断上级文件夹是否是项目文件夹
-//                    // 判断用户是否在这个项目中
-//                    // 项目管理未完成
-//                    throw new \Exception('项目管理未完成');
-//
-//                }
-                else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
+                } else if ($item_id = $pan_dir->item_id && $pan_dir->open_set == 1 && $pan_dir->group_id == null) { // 判断上级文件夹是否是项目文件
+                    // 判断用户是否在这个项目中
+                    if (ItemUser::checkUser($pan_dir->item_id, $user_id) || $user->isDesignAdmin()) {
+                        $pan_director = new PanDirector();
+                        $pan_director->open_set = $pan_dir->open_set;
+                        $pan_director->group_id = $pan_dir->group_id;
+                        $pan_director->company_id = $pan_dir->company_id;
+                        $pan_director->pan_director_id = $pan_director_id;
+                        $pan_director->type = 2;
+                        $pan_director->name = $pan_file->name;
+                        $pan_director->size = $pan_file->size;
+                        $pan_director->sort = 0;
+                        $pan_director->mime_type = $pan_file->mime_type;
+                        $pan_director->pan_file_id = $pan_file->id;
+                        $pan_director->user_id = $user_id;
+                        $pan_director->status = 1;
+                        $pan_director->url = $pan_file->url;
+                        $pan_director->width = $pan_file->width;
+                        $pan_director->height = $pan_file->height;
+                        $pan_director->item_id = $pan_dir->item_id;
+                        $pan_director->save();
+
+                    }
+
+                } else if ($pan_dir->group_id !== null && $pan_dir->open_set == 1 && $pan_dir->item_id == null) {       // 判断上级文件夹是否是属于群组
                     $user_group_id_list = Group::userGroupIDList($user_id);
                     if (!empty(array_intersect(json_decode($pan_dir->group_id, true), $user_group_id_list)) || $user->isDesignAdmin()) {
                         $pan_director = new PanDirector();
@@ -395,9 +413,29 @@ class YunpianUploadController extends BaseController
         }
 
         // 判断上级文件夹是否是项目文件夹
-        if (($pan_dir->open_set == 1 && $pan_dir->group_id == null && $item_id = $pan_dir->item_id) || $this->auth_user->isDesignAdmin()) {
+        if (($pan_dir->open_set == 1 && $pan_dir->group_id == null && $item_id = $pan_dir->item_id)) {
             // 判断用户是否在这个项目中
-            // 项目管理未完成
+            if (ItemUser::checkUser($pan_dir->item_id, $user_id) || $this->auth_user->isDesignAdmin()) {
+                $pan_director = new PanDirector();
+                $pan_director->open_set = $pan_dir->open_set;
+                $pan_director->group_id = $pan_dir->group_id;
+                $pan_director->company_id = $pan_dir->company_id;
+                $pan_director->pan_director_id = $pan_director_id;
+                $pan_director->type = $pan_dir->type;
+                $pan_director->name = $name;
+                $pan_director->size = $pan_dir->size;
+                $pan_director->sort = $pan_dir->sort;
+                $pan_director->mime_type = $pan_dir->mime_type;
+                $pan_director->pan_file_id = $pan_dir->pan_file_id;
+                $pan_director->user_id = $user_id;
+                $pan_director->status = $pan_dir->status;
+                $pan_director->url = $pan_dir->url;
+                $pan_director->item_id = $pan_dir->item_id;
+                $pan_director->save();
+
+                return $this->response->item($pan_director, new YunpanListTransformer())->setMeta($this->apiMeta());
+            }
+
         }
 
         // 判断上级文件夹是否是属于群组
