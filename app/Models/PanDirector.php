@@ -463,7 +463,7 @@ class PanDirector extends BaseModel
      * @param int $user_id
      * @return PanDirector
      */
-    public static function projectBaseDir(DesignCompanyModel &$company, int $user_id)
+    public static function projectBaseDir(DesignCompanyModel &$company)
     {
         $pan_director = new PanDirector();
         $pan_director->open_set = 1;
@@ -476,7 +476,7 @@ class PanDirector extends BaseModel
         $pan_director->sort = 0;
         $pan_director->mime_type = '';
         $pan_director->pan_file_id = 0;
-        $pan_director->user_id = $user_id;
+        $pan_director->user_id = 0;
         $pan_director->status = 1;
         $pan_director->url = '';
         $pan_director->is_auto = 2;
@@ -497,10 +497,10 @@ class PanDirector extends BaseModel
      * @param int $user_id
      * @return PanDirector
      */
-    public static function createProjectDir(DesignCompanyModel &$company, DesignProject &$design_project, int $user_id)
+    public static function createProjectDir(DesignCompanyModel &$company, DesignProject &$design_project)
     {
         if ($company->project_dir_id === null) {
-            PanDirector::projectBaseDir($company, $user_id);
+            PanDirector::projectBaseDir($company);
         }
 
         $pan_director = new PanDirector();
@@ -514,7 +514,7 @@ class PanDirector extends BaseModel
         $pan_director->sort = 0;
         $pan_director->mime_type = '';
         $pan_director->pan_file_id = 0;
-        $pan_director->user_id = $user_id;
+        $pan_director->user_id = 0;
         $pan_director->status = 1;
         $pan_director->url = '';
         $pan_director->item_id = $design_project->id;
