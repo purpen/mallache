@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\MassageException;
 use App\Http\Transformer\DesignProjectTransformer;
+use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
+use App\Models\PanDirector;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -172,6 +174,10 @@ class DesignProjectController extends BaseController
             if (!ItemUser::addItemUser($design_project->id, $user_id, 1)) {
                 throw new MassageException('项目成员添加失败', 403);
             }
+
+            $design_company = DesignCompanyModel::find($design_company_id);
+            // 自动创建项目云盘目录
+            PanDirector::createProjectDir($design_company, $design_project, $user_id);
 
             DB::commit();
         } catch (MassageException $e) {

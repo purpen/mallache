@@ -454,4 +454,74 @@ class PanDirector extends BaseModel
 
         return false;
     }
+
+
+    /**
+     * 创建项目文件夹根目录并将目录ID写入设计公司信息表
+     *
+     * @param DesignCompanyModel $company
+     * @param int $user_id
+     * @return PanDirector
+     */
+    public static function projectBaseDir(DesignCompanyModel &$company, int $user_id)
+    {
+        $pan_director = new PanDirector();
+        $pan_director->open_set = 1;
+        $pan_director->group_id = null;
+        $pan_director->company_id = $company->id;
+        $pan_director->pan_director_id = 0;
+        $pan_director->type = 1;
+        $pan_director->name = '项目';
+        $pan_director->size = 0;
+        $pan_director->sort = 0;
+        $pan_director->mime_type = '';
+        $pan_director->pan_file_id = 0;
+        $pan_director->user_id = $user_id;
+        $pan_director->status = 1;
+        $pan_director->url = '';
+        $pan_director->is_auto = 2;
+        $pan_director->save();
+
+        $company->project_dir_id = $pan_director->id;
+        $company->save();
+
+        return $pan_director;
+    }
+
+
+    /**
+     * 系统创建新建项目云盘文件夹
+     *
+     * @param DesignCompanyModel $company
+     * @param DesignProject $design_project
+     * @param int $user_id
+     * @return PanDirector
+     */
+    public static function createProjectDir(DesignCompanyModel &$company, DesignProject &$design_project, int $user_id)
+    {
+        if ($company->project_dir_id === null) {
+            PanDirector::projectBaseDir($company, $user_id);
+        }
+
+        $pan_director = new PanDirector();
+        $pan_director->open_set = 1;
+        $pan_director->group_id = null;
+        $pan_director->company_id = $company->id;
+        $pan_director->pan_director_id = $company->project_dir_id;
+        $pan_director->type = 1;
+        $pan_director->name = $design_project->name;
+        $pan_director->size = 0;
+        $pan_director->sort = 0;
+        $pan_director->mime_type = '';
+        $pan_director->pan_file_id = 0;
+        $pan_director->user_id = $user_id;
+        $pan_director->status = 1;
+        $pan_director->url = '';
+        $pan_director->item_id = $design_project->id;
+        $pan_director->is_auto = 2;
+        $pan_director->save();
+
+        return $pan_director;
+    }
+
 }
