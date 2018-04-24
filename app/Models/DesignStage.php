@@ -26,11 +26,10 @@ class DesignStage extends BaseModel
     {
         $design_substages = $this->designSubstage;
         $arr = [];
-        if($design_substages->isEmpty()){
+        if ($design_substages->isEmpty()) {
             $arr = null;
-        }else{
-
-            foreach ($design_substages as $value){
+        } else {
+            foreach ($design_substages as $value) {
                 $arr[] = $value->info();
             }
         }
@@ -47,4 +46,20 @@ class DesignStage extends BaseModel
             'design_substage' => $arr,
         ];
     }
+
+    /**
+     * 删除阶段及其子阶段和节点
+     */
+    public function deleteStage()
+    {
+        $design_substages = $this->designSubstage;
+        if (!$design_substages->isEmpty()) {
+            foreach ($design_substages as $v) {
+                $v->deleteSubstage();
+            }
+        }
+
+        $this->delete();
+    }
+
 }

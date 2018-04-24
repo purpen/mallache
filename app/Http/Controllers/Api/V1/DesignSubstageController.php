@@ -259,7 +259,7 @@ class DesignSubstageController extends BaseController
             return $this->response->array($this->apiError('无权限', 403));
         }
 
-        $design_substage->delete();
+        $design_substage->deleteSubstage();
 
         return $this->response->array($this->apiSuccess());
     }

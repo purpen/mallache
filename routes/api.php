@@ -587,6 +587,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designStageNode', 'DesignStageNodeController@show');
         $api->delete('/designStageNode/delete', 'DesignStageNodeController@delete');
 
+        //api {post} /nodes/create 设计工具--节点列表操作
+        $api->post('/nodes/create', 'NodesController@create');
+        $api->put('/nodes/update', 'NodesController@update');
+        $api->delete('/nodes/delete', 'NodesController@delete');
+        $api->get('/nodes/lists', 'NodesController@lists');
+
 
     });
 
