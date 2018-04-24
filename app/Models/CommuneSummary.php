@@ -20,6 +20,7 @@ class CommuneSummary extends BaseModel
         'content',
         'location',
         'expire_time',
+        'other_realname',
     ];
 
     /**

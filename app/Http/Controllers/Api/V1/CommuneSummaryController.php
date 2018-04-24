@@ -33,7 +33,7 @@ class CommuneSummaryController extends BaseController
      * @apiParam {array}  selected_user_id 选择的用户id
      * @apiParam {string} expire_time 到期时间
      * @apiParam {string} random 随机数
-     * @apiParam {string} other_realname  其他公司成员姓名
+     * @apiParam {string} other_realname 其他公司成员姓名
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -60,12 +60,14 @@ class CommuneSummaryController extends BaseController
         $rules = [
             'title' => 'required|max:100',
             'item_id' => 'required|integer',
+            'other_realname' => 'max:100',
         ];
         $messages = [
             'title.required' => '标题不能为空',
             'title.max' => '标题最多100字符',
             'item_id.required' => '项目id不能为空',
             'item_id.integer' => '项目id必须为整形',
+            'other_realname.max' => '参会人员姓名最多100字符',
 
         ];
 
@@ -83,6 +85,7 @@ class CommuneSummaryController extends BaseController
             'content' => $content,
             'location' => $location,
             'expire_time' => $expire_time,
+            'other_realname' => $other_realname,
         );
 
         $validator = Validator::make($params, $rules, $messages);
@@ -109,7 +112,6 @@ class CommuneSummaryController extends BaseController
                     $task_user->selected_user_id = $selected_user_id;
                     $task_user->type = 1;
                     $task_user->status = 1;
-                    $task_user->other_realname = $other_realname;
                     $task_user->save();
                 }
             }
@@ -251,8 +253,8 @@ class CommuneSummaryController extends BaseController
      * @apiParam {string} title 标题
      * @apiParam {string} content 内容
      * @apiParam {string} location 定位
-     * @apiParam {array}  selected_user_id 选择的用户id
      * @apiParam {string} expire_time 到期时间
+     * @apiParam {string} other_realname 其他公司成员姓名
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:

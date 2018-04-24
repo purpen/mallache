@@ -18,7 +18,6 @@ class CommuneSummaryUser extends BaseModel
         'status',
         'selected_user_id',
         'type',
-        'other_realname',
     ];
 
     /**

@@ -31,6 +31,7 @@ expire_time	date	是		到期时间
             'type' => intval($cummuneSummary->type),
             'status' => intval($cummuneSummary->status),
             'expire_time' => $cummuneSummary->expire_time,
+            'other_realname' => $cummuneSummary->other_realname,
             'commune_image' => $cummuneSummary->commune_image,
             'created_at' => $cummuneSummary->created_at,
         ];
