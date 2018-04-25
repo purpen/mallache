@@ -84,7 +84,7 @@ class QuotationModel extends BaseModel
             $a['content'] = $plan->content;
             $a['arranged'] = json_decode($plan->arranged, true);
             $a['duration'] = $plan->duration;
-            $a['price'] = $plan->price;
+            $a['price'] = floatval($plan->price);
             $a['summary'] = $plan->summary;
 
             $arr[] = $a;
