@@ -55,6 +55,7 @@ class TaskTransformer extends TransformerAbstract
             'tier' => intval($tasks->tier),
             'pid' => intval($tasks->pid),
             'stage_id' => intval($tasks->stage_id),
+            'stages' => $tasks->stages,
             'log' => OperationLog::getTaskLog($tasks->id),
         ];
     }

@@ -61,6 +61,14 @@ class Task extends BaseModel
     }
 
     /**
+     * 相对关联到阶段表
+     */
+    public function stages()
+    {
+        return $this->belongsTo('App\Models\Stage', 'stage_id');
+    }
+
+    /**
      * 任务完成与未完成
      */
     public static function isStage(int $task_id  , int $stage)

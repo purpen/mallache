@@ -176,15 +176,15 @@ class CommuneSummaryUserController extends BaseController
             $sort = 'desc';
         }
         $commune_summary_id = $request->input('commune_summary_id');
-        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->get();
-        $user_id = [];
-        foreach ($communeSummaryUsers as $communeSummaryUser){
-            $user_id[] = $communeSummaryUser->selected_user_id;
-        }
-        $new_user_id = $user_id;
-        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
-//        return $this->response->collection($communeSummaryUsers, new CommuneSummaryUserTransformer())->setMeta($this->apiMeta());
+        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->orderBy('id', $sort)->get();
+//        $user_id = [];
+//        foreach ($communeSummaryUsers as $communeSummaryUser){
+//            $user_id[] = $communeSummaryUser->selected_user_id;
+//        }
+//        $new_user_id = $user_id;
+//        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
+//        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($communeSummaryUsers, new CommuneSummaryUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
