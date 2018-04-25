@@ -120,6 +120,7 @@ class QuotationController extends BaseController
             }
         }
         catch (\Exception $e){
+            Log::error($e);
             return $this->response->array($this->apiError());
         }
         return $this->response->item($quotation, new QuotationTransformer())->setMeta($this->apiMeta());
