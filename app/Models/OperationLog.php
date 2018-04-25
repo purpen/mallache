@@ -6,6 +6,10 @@ class OperationLog extends BaseModel
 {
     protected $table = 'operation_log';
 
+    protected $action_type_config = [
+        'task' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],  // 任务--动作类型
+    ];
+
     // 操作动态文字说明
     protected $title_config = [
         '1' => ' 创建了任务',  // 创建任务
@@ -45,19 +49,21 @@ class OperationLog extends BaseModel
      * @param int $type 模块类型 1.项目 2.网盘
      * @param int $model_id 模块ID （与type配合使用）
      * @param int $action_type 动作类型
-     * @param int $target_id 目标ID（与action_type配合使用）
+     * @param int $target_id 目标ID（与target_type配合使用）
+     * @param int $target_type 目标类型 1.任务
      * @param int $user_id 操作人ID
      * @param int|null $other_user_id 被操作人ID
      * @param string|null $content 变更内容
      * @return OperationLog
      */
-    public static function createLog(int $company_id, int $type, int $model_id, int $action_type, int $target_id, int $user_id, int $other_user_id = null, string $content = null)
+    public static function createLog(int $company_id, int $type, int $model_id, int $action_type, int $target_type, int $target_id, int $user_id, int $other_user_id = null, string $content = null)
     {
         $operation_log = new OperationLog();
         $operation_log->company_id = $company_id;
         $operation_log->type = $type;
         $operation_log->model_id = $model_id;
         $operation_log->action_type = $action_type;
+        $operation_log->target_type = $target_type;
         $operation_log->target_id = $target_id;
         $operation_log->user_id = $user_id;
         $operation_log->other_user_id = $other_user_id;
@@ -121,8 +127,7 @@ class OperationLog extends BaseModel
     public static function getTaskLog(int $task_id)
     {
         // 任务动态类型
-        $arr = [1, 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10];
-        $logs = OperationLog::whereIn('action_type', $arr)
+        $logs = OperationLog::where('target_type', 1)
             ->where('target_id', $task_id)->get();
 
         $resp_data = [];
@@ -169,18 +174,21 @@ class OperationLog extends BaseModel
         return $this->user->getUserName() . $this->title_config['6'];
 
     }
+
     //父任务完成
     public function isStage()
     {
         return $this->user->getUserName() . $this->title_config['7'];
 
     }
+
     //子任务重做
     public function noChildStage()
     {
         return $this->user->getUserName() . $this->title_config['8'] . $this->task->getTaskName();
 
     }
+
     //子任务完成
     public function isChildStage()
     {
