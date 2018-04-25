@@ -195,11 +195,13 @@ class TaskUserController extends BaseController
     }
 
     /**
-     * @api {delete} /taskUsers/{id} 任务成员删除
+     * @api {delete} /taskUsers/delete 任务成员删除
      * @apiVersion 1.0.0
      * @apiName taskUsers delete
      * @apiGroup taskUsers
      *
+     * @apiParam {integer} task_id
+     * @apiParam {integer} selected_user_id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -210,9 +212,11 @@ class TaskUserController extends BaseController
      *     }
      *   }
      */
-    public function delete($id)
+    public function destroy(Request $request)
     {
-        $taskUsers = TaskUser::find($id);
+        $task_id = $request->input('task_id');
+        $selected_user_id = $request->input('selected_user_id');
+        $taskUsers = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $selected_user_id)->first();
         //检验是否存在
         if (!$taskUsers) {
             return $this->response->array($this->apiError('not found!', 404));

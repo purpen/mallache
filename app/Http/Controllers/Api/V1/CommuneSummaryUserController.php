@@ -188,11 +188,13 @@ class CommuneSummaryUserController extends BaseController
     }
 
     /**
-     * @api {delete} /communeSummaryUser/{id} 沟通纪要成员删除
+     * @api {delete} /communeSummaryUser/delete 沟通纪要成员删除
      * @apiVersion 1.0.0
      * @apiName communeSummaryUser delete
      * @apiGroup communeSummaryUser
      *
+     * @apiParam {integer} commune_summary_id
+     * @apiParam {integer} selected_user_id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -203,9 +205,11 @@ class CommuneSummaryUserController extends BaseController
      *     }
      *   }
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $communeSummaryUser = CommuneSummaryUser::find($id);
+        $commune_summary_id = $request->input('commune_summary_id');
+        $selected_user_id = $request->input('selected_user_id');
+        $communeSummaryUser = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->where('selected_user_id' , $selected_user_id)->first();
         //检验是否存在
         if (!$communeSummaryUser) {
             return $this->response->array($this->apiError('not found!', 404));

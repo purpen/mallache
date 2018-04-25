@@ -489,6 +489,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/taskUsers', 'TaskUserController');
         //保存任务成员
         $api->post('/taskUsers/newStore', 'TaskUserController@newStore');
+        $api->delete('/taskUsers/delete', 'TaskUserController@destroy');
 
         /**
          * 标签
@@ -511,6 +512,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 沟通纪要成员表
          */
         $api->resource('/communeSummaryUser', 'CommuneSummaryUserController');
+        $api->delete('/communeSummaryUser/delete', 'CommuneSummaryUserController@destroy');
 
 
         /**
