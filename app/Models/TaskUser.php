@@ -26,4 +26,12 @@ class TaskUser extends BaseModel
     {
         return $this->belongsTo('App\Models\Task' , 'task_id');
     }
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'selected_user_id');
+    }
 }

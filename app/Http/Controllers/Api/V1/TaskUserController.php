@@ -184,14 +184,14 @@ class TaskUserController extends BaseController
             $sort = 'desc';
         }
         $task_id = $request->input('task_id');
-        $taskUsers = TaskUser::where('task_id' , $task_id)->get();
-        $user_id = [];
-        foreach ($taskUsers as $taskUser){
-            $user_id[] = $taskUser->user_id;
-        }
-        $new_user_id = $user_id;
-        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        $taskUsers = TaskUser::where('task_id' , $task_id)->orderBy('id', $sort)->get();
+//        $user_id = [];
+//        foreach ($taskUsers as $taskUser){
+//            $user_id[] = $taskUser->user_id;
+//        }
+//        $new_user_id = $user_id;
+//        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
+        return $this->response->collection($taskUsers, new TaskUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
