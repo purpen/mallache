@@ -521,6 +521,9 @@ class PanDirector extends BaseModel
         $pan_director->is_auto = 2;
         $pan_director->save();
 
+        // 将新建的云盘文件夹ID 写入项目表
+        $design_project->pan_director_id = $pan_director->id;
+
         return $pan_director;
     }
 

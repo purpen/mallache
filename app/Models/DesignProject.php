@@ -182,6 +182,7 @@ class DesignProject extends BaseModel
             'design_city_value' => $this->design_city_value,
             'design_area_value' => $this->design_area_value,
             'design_address' => $this->design_address,
+            'pan_director_id' => $this->pan_director_id,
         ];
     }
 

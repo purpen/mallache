@@ -53,7 +53,7 @@ class OperationLogsAction
 
 
     /**
-     * 创建项目管理类型的操作动态
+     * 创建项目管理--任务的操作动态
      *
      * @param int $item_id 项目ID
      * @param int $action_type 动作类型 1.创建任务
@@ -62,10 +62,10 @@ class OperationLogsAction
      * @param string|null $content 变更内容
      * @return OperationLog
      */
-    private function createItemLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
+    private function createTaskLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
     {
         $company_id = $this->getUserDesignId();
-        return OperationLog::createLog($company_id, 1, $item_id, $action_type, $target_id, $this->auth_user->id, $other_user_id, $content);
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type,1, $target_id, $this->auth_user->id, $other_user_id, $content);
     }
 
     /**
@@ -96,9 +96,9 @@ class OperationLogsAction
         $tier = intval($this->request->input('tier'));
 
         if ($tier == 0) {  // 父任务
-            $this->createItemLog($item_id, 1, $target_id, null, $content);
+            $this->createTaskLog($item_id, 1, $target_id, null, $content);
         } else if ($tier == 1) {  // 子任务
-            $this->createItemLog($item_id, 2, $target_id, null, $content);
+            $this->createTaskLog($item_id, 2, $target_id, null, $content);
 
         }
     }
@@ -117,16 +117,16 @@ class OperationLogsAction
         $level = $this->request->input('level');
         $over_time = $this->request->input('over_time');
         if(!empty($name)){
-            $this->createItemLog($item_id, 3, $target_id, null, $name);
+            $this->createTaskLog($item_id, 3, $target_id, null, $name);
 
         } elseif(!empty($summary)){
-            $this->createItemLog($item_id, 4, $target_id, null, $summary);
+            $this->createTaskLog($item_id, 4, $target_id, null, $summary);
 
         } elseif(!empty($level)){
-            $this->createItemLog($item_id, 5, $target_id, null, $level);
+            $this->createTaskLog($item_id, 5, $target_id, null, $level);
 
         } elseif(!empty($over_time)){
-            $this->createItemLog($item_id, 10, $target_id, null, $over_time);
+            $this->createTaskLog($item_id, 10, $target_id, null, $over_time);
         }
 
     }
@@ -143,19 +143,19 @@ class OperationLogsAction
         $item_id = $task->item_id;
         if ($tier == 0) {  // 父任务
             if($stage == 0){ //父任务重做
-                $this->createItemLog($item_id, 6, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 6, $target_id, null, $stage);
 
             }else{  //父任务完成
-                $this->createItemLog($item_id, 7, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 7, $target_id, null, $stage);
 
             }
 
         } else if ($tier == 1) {  // 子任务
             if($stage == 0){ //子任务重做
-                $this->createItemLog($item_id, 8, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 8, $target_id, null, $stage);
 
             }else{  //子任务完成
-                $this->createItemLog($item_id, 9, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 9, $target_id, null, $stage);
 
             }
         }
