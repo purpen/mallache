@@ -603,7 +603,7 @@ class YunpianUploadController extends BaseController
             $group_id_arr = Group::userGroupIDList($user_id);
 
             // 用户 所属项目ID数组
-            $item_id_arr = [];  // 暂无
+            $item_id_arr = ItemUser::projectId($user_id);  //
 
             $list = PanDirector::query()
                 // 组管理文件
@@ -793,7 +793,7 @@ class YunpianUploadController extends BaseController
             $group_id_arr = Group::userGroupIDList($user_id);
 
             // 用户 所属项目ID数组
-            $item_id_arr = [];  // 暂无
+            $item_id_arr = ItemUser::projectId($user_id);  //
 
             $list = PanDirector::query()
                 // 组管理文件

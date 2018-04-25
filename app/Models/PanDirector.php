@@ -59,7 +59,7 @@ class PanDirector extends BaseModel
             'url_small' => $this->url_small,
             'url_file' => $this->url_file,
             'user_id' => $this->user_id,
-            'user_name' => $this->user->realname,
+            'user_name' => $this->user ? $this->user->realname : null,
             'group_id' => json_decode($this->group_id),
             'created_at' => $this->created_at,
             'open_set' => $this->open_set,
