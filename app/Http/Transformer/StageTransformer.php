@@ -3,6 +3,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\Stage;
+use App\Models\Task;
 use App\Models\TaskUser;
 use League\Fractal\TransformerAbstract;
 
@@ -16,11 +17,13 @@ title	varchar(100)	是		标题
 
     public function transform(Stage $stage)
     {
+        $task = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
         return [
             'id' => intval($stage->id),
             'item_id' => intval($stage->item_id),
             'title' => $stage->title,
             'created_at' => $stage->created_at,
+            'task' => $task ? $task : '',
         ];
     }
 }

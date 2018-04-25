@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\StageTransformer;
 use App\Models\Stage;
+use App\Models\Task;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -39,9 +40,9 @@ class StageController extends BaseController
     public function index(Request $request)
     {
         $item_id = $request->input('item_id');
-        $stage = Stage::where('item_id' , $item_id)->orderBy('id', 'desc')->get();
+        $stages = Stage::where('item_id' , $item_id)->orderBy('id', 'desc')->get();
 
-        return $this->response->collection($stage, new StageTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
 
     }
 
