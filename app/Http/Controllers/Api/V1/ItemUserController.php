@@ -217,11 +217,13 @@ class ItemUserController extends BaseController
     }
 
     /**
-     * @api {delete} /itemUsers/{id} 项目成员删除
+     * @api {delete} /itemUsers/delete 项目成员删除
      * @apiVersion 1.0.0
      * @apiName itemUsers delete
      * @apiGroup itemUsers
      *
+     * @apiParam {integer} item_id
+     * @apiParam {integer} selected_user_id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -233,10 +235,12 @@ class ItemUserController extends BaseController
      *   }
      *
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $item_id = $request->input('item_id');
+        $user_id = $request->input('selected_user_id');
         //检验是否存在
-        $itemUser = ItemUser::find($id);
+        $itemUser = ItemUser::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
         if (!$itemUser) {
             return $this->response->array($this->apiError('not found!', 404));
         }

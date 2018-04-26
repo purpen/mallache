@@ -482,6 +482,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 项目用户
          */
         $api->resource('/itemUsers', 'ItemUserController');
+        $api->delete('/itemUsers/delete', 'ItemUserController@destroy');
 
         /**
          * 任务成员
