@@ -12,6 +12,7 @@ use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -339,7 +340,10 @@ class DesignProjectController extends BaseController
 
             $design_project->update($arr);
 
+            DB::commit();
         } catch (MassageException $e) {
+            Log::error($e);
+            DB::rollBack();
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
 
