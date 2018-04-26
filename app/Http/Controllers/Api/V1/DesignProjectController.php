@@ -46,7 +46,6 @@ class DesignProjectController extends BaseController
      *          "leader_value": null,  // 项目负责人
      *          "cost": null,  // 项目费用
      *          "workplace": null, // 工作地点
-     *          "type_value": null,     // 设计类别
      *          "field": null,  // 产品所属领域
      *          "field_value": "",
      *          "industry": null,   // 产品所属行业
@@ -118,7 +117,6 @@ class DesignProjectController extends BaseController
      *          "leader_value": null,  // 项目负责人
      *          "cost": null,  // 项目费用
      *          "workplace": null, // 工作地点
-     *          "type_value": null,     // 设计类别
      *          "field": null,  // 产品所属领域
      *          "field_value": "",
      *          "industry": null,   // 产品所属行业
@@ -168,7 +166,7 @@ class DesignProjectController extends BaseController
             $design_project->user_id = $user_id;
             $design_project->design_company_id = $design_company_id;
             $design_project->status = 1;
-            $design_project->type = 2;
+            $design_project->project_type = 2;
             $design_project->save();
 
             // 将创建者添加入项目人员
@@ -204,7 +202,9 @@ class DesignProjectController extends BaseController
      * @apiParam {int} leader 项目负责人
      * @apiParam {decimal} cost 项目费用
      * @apiParam {string} workplace  工作地点
-     * @apiParam {string} type_value  设计类别
+     * @apiParam {integer} type  设计类别
+     * @apiParam {json} design_types  设计类别
+     *
      * @apiParam {int} field 产品所属领域
      * @apiParam {int} industry 产品所属行业
      * @apiParam {int} start_time  项目开始时间
@@ -241,7 +241,6 @@ class DesignProjectController extends BaseController
      *          "leader_value": null,  // 项目负责人
      *          "cost": null,  // 项目费用
      *          "workplace": null, // 工作地点
-     *          "type_value": null,     // 设计类别
      *          "field": null,  // 产品所属领域
      *          "field_value": "",
      *          "industry": null,   // 产品所属行业
@@ -306,7 +305,9 @@ class DesignProjectController extends BaseController
                 'design_province' => 'integer',
                 'design_city' => 'integer',
                 'design_area' => 'integer',
-                'design_address' => 'string|max:100'
+                'design_address' => 'string|max:100',
+                'type' => 'integer',
+                'design_types' => 'json',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -373,7 +374,6 @@ class DesignProjectController extends BaseController
      *          "leader_value": null,  // 项目负责人
      *          "cost": null,  // 项目费用
      *          "workplace": null, // 工作地点
-     *          "type_value": null,     // 设计类别
      *          "field": null,  // 产品所属领域
      *          "field_value": "",
      *          "industry": null,   // 产品所属行业

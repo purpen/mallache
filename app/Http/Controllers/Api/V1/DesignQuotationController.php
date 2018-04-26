@@ -500,4 +500,5 @@ class DesignQuotationController extends BaseController
 
         return $this->response->item($quotation, new DesignQuotationTransformer())->setMeta($this->apiMeta());
     }
+
 }
