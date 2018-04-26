@@ -278,9 +278,9 @@ class DesignProjectController extends BaseController
 
             $rules = [
                 'id' => 'required|integer',
-                'name' => 'required|max:100',
+                'name' => 'max:100',
                 'description' => 'max:6500',
-                'level' => 'required|integer|in:1,2,3',
+                'level' => 'integer|in:1,2,3',
                 'business_manager' => 'integer',
                 'leader' => 'integer',
                 'cost' => 'numeric',
