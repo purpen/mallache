@@ -202,9 +202,8 @@ class DesignProjectController extends BaseController
      * @apiParam {int} leader 项目负责人
      * @apiParam {decimal} cost 项目费用
      * @apiParam {string} workplace  工作地点
-     * @apiParam {integer} type  设计类别
-     * @apiParam {json} design_types  设计类别
-     *
+     * @apiParam {integer} type  设计类型：1.产品设计；2.UI UX 设计；
+     * @apiParam {json} design_types 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）。[1,2]
      * @apiParam {int} field 产品所属领域
      * @apiParam {int} industry 产品所属行业
      * @apiParam {int} start_time  项目开始时间
@@ -284,8 +283,7 @@ class DesignProjectController extends BaseController
                 'business_manager' => 'integer',
                 'leader' => 'integer',
                 'cost' => 'numeric',
-                'workplace' => 'string|max:50',
-                'type_value' => 'string|max:100',
+                'workplace' => 'max:50',
                 'field' => 'integer',
                 'industry' => 'integer',
                 'start_time' => 'integer',
@@ -297,7 +295,7 @@ class DesignProjectController extends BaseController
                 'province' => 'integer',
                 'city' => 'integer',
                 'area' => 'integer',
-                'address' => 'string|max:100',
+                'address' => 'max:100',
                 'design_company_name' => 'max:100',
                 'design_contact_name' => 'max:50',
                 'design_position' => 'max:50',
@@ -305,7 +303,7 @@ class DesignProjectController extends BaseController
                 'design_province' => 'integer',
                 'design_city' => 'integer',
                 'design_area' => 'integer',
-                'design_address' => 'string|max:100',
+                'design_address' => 'max:100',
                 'type' => 'integer',
                 'design_types' => 'json',
             ];
