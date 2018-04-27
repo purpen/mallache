@@ -10,6 +10,8 @@ use App\Http\Transformer\UserTaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
+use App\Models\Task;
+use App\Models\TaskUser;
 use App\Models\User;
 use Dingo\Api\Contract\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -258,9 +260,22 @@ class ItemUserController extends BaseController
 
         }
         $ok = $itemUser->delete();
-        if (!$ok) {
-            return $this->response->array($this->apiError());
+        if ($ok) {
+            //查询任务成员
+            $taskUsers = TaskUser::where('selected_user_id' , $user_id)->get();
+            foreach ($taskUsers as $taskUser){
+                //查询任务成员所参加的任务
+                $task = Task::find($taskUser->task_id);
+                if($task){
+                    //移除任务执行人
+                    $task->removeExecuteUser($user_id);
+                }
+                //移除任务成员
+                $taskUser->delete();
+            }
+            return $this->response->array($this->apiSuccess());
         }
-        return $this->response->array($this->apiSuccess());
+        return $this->response->array($this->apiError());
+
     }
 }

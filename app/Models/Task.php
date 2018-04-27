@@ -129,5 +129,21 @@ class Task extends BaseModel
     {
         return $this->over_time ? $this->over_time : '';
     }
+
+    /**
+     * 移除执行人id
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public function removeExecuteUser(int $user_id)
+    {
+        if ($this->execute_user_id == $user_id) {
+            $this->execute_user_id = 0;
+            return $this->save();
+        }
+
+        return true;
+    }
 }
 

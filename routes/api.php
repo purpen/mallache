@@ -180,7 +180,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //用户钱包信息
         $api->get('/auth/fundInfo', ['as' => 'auth.fundInfo', 'uses' => 'AuthenticateController@fundInfo']);
-
+        //根据用户id获取用户信息
+        $api->get('/auth/userId', ['as' => 'auth.userId', 'uses' => 'AuthenticateController@userId']);
         /**
          * 公共接口
          */
