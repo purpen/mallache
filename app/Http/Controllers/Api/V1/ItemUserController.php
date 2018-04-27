@@ -251,13 +251,19 @@ class ItemUserController extends BaseController
             return $this->response->array($this->apiError('自己不能删除自己!', 403));
         }
         //判断权限
-        $designProject = DesignProject::where('id' , $itemUser->item_id)->first();
+        $designProject = DesignProject::where('id' , $item_id)->first();
         if(!$designProject){
             return $this->response->array($this->apiError('没有找到该项目!', 404));
         }
         if($designProject->isPower($this->auth_user_id) != true){
             return $this->response->array($this->apiError('没有权限删除!', 403));
 
+        }
+        //判断是商务经理还是项目经理
+        if($itemUser->level == 3){
+            $designProject->removeLeader($user_id);
+        }elseif($itemUser->level == 5){
+            $designProject->removeBusinessManager($user_id);
         }
         $ok = $itemUser->delete();
         if ($ok) {
