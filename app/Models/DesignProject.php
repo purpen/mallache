@@ -10,7 +10,7 @@ class DesignProject extends BaseModel
     protected $table = 'design_project';
 
     // 批量赋值黑名单
-    protected $guarded = ['user_id', 'type', 'status', 'token'];
+    protected $guarded = ['user_id', 'project_type', 'status', 'token'];
 
     // 商务经理相对关联用户表
     public function businessManagerUser()
@@ -125,6 +125,42 @@ class DesignProject extends BaseModel
         return Tools::cityName($this->design_area);
     }
 
+    //设计类型
+    public function getTypeValueAttribute()
+    {
+        switch ($this->type) {
+            case 1:
+                $type_value = '产品设计类型';
+                break;
+            case 2:
+                $type_value = 'UI UX设计类型';
+                break;
+            default:
+                $type_value = '';
+        }
+
+        return $type_value;
+    }
+
+    //设计类别多选
+    public function getDesignTypesValueAttribute()
+    {
+        $item_type = config('constant.item_type');
+
+        $design_types = json_decode($this->design_types, true);
+        $arr = [];
+        if (array_key_exists($this->type, $item_type)) {
+            foreach ($design_types as $v) {
+                if (array_key_exists($v, $item_type[$this->type])) {
+                    $arr[] = $item_type[$this->type][$v];
+                }
+            }
+        }
+
+        return $arr;
+    }
+
+
     // 判断当前用户有无修改项目信息权限
     public function isPower(int $user_id)
     {
@@ -150,7 +186,6 @@ class DesignProject extends BaseModel
             'leader_value' => $this->leader_value,
             'cost' => $this->cost,
             'workplace' => $this->workplace,
-            'type_value' => $this->type_value,
             'field' => $this->field,
             'field_value' => $this->field_value,
             'industry' => $this->industry,
@@ -183,6 +218,10 @@ class DesignProject extends BaseModel
             'design_area_value' => $this->design_area_value,
             'design_address' => $this->design_address,
             'pan_director_id' => $this->pan_director_id,
+            'type' => $this->type,
+            'type_value' => $this->type_value,
+            'design_types' => json_decode($this->design_types),
+            'design_types_value' => $this->design_types_value,
         ];
     }
 

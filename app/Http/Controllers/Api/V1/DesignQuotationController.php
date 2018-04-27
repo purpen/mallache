@@ -97,14 +97,14 @@ class DesignQuotationController extends BaseController
                 'province' => 'integer',
                 'city' => 'integer',
                 'area' => 'integer',
-                'address' => 'required|string|max:200',
+                'address' => 'required|string|max:100',
                 'design_company_name' => 'required|max:100',
                 'design_contact_name' => 'required|max:20',
                 'design_phone' => 'required|max:20',
                 'design_province' => 'integer',
                 'design_city' => 'integer',
                 'design_area' => 'integer',
-                'design_address' => 'required|string|max:200',
+                'design_address' => 'required|string|max:100',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
                 'is_invoice' => 'int',
@@ -311,14 +311,14 @@ class DesignQuotationController extends BaseController
                 'province' => 'integer',
                 'city' => 'integer',
                 'area' => 'integer',
-                'address' => 'required|string|max:200',
+                'address' => 'required|string|max:100',
                 'design_company_name' => 'required|max:100',
                 'design_contact_name' => 'required|max:20',
                 'design_phone' => 'required|max:20',
                 'design_province' => 'integer',
                 'design_city' => 'integer',
                 'design_area' => 'integer',
-                'design_address' => 'required|string|max:200',
+                'design_address' => 'required|string|max:100',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
                 'is_invoice' => 'int',
@@ -433,9 +433,6 @@ class DesignQuotationController extends BaseController
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
         }
 
         return $this->response->item($quotation, new DesignQuotationTransformer())->setMeta($this->apiMeta());
@@ -503,4 +500,5 @@ class DesignQuotationController extends BaseController
 
         return $this->response->item($quotation, new DesignQuotationTransformer())->setMeta($this->apiMeta());
     }
+
 }
