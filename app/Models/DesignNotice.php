@@ -5,7 +5,7 @@ namespace App\Models;
 
 class DesignNotice extends BaseModel
 {
-    protected $table = 'deisgn_notice';
+    protected $table = 'design_notice';
 
     /**
      * @param int $user_id 用户ID
