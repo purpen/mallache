@@ -10,6 +10,7 @@ use App\Models\QuotationModel;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -490,7 +491,7 @@ class DesignQuotationController extends BaseController
     {
         $id = $request->input('id');
         $quotation = QuotationModel::find($id);
-        if(!$quotation){
+        if (!$quotation) {
             return $this->response->array($this->apiError('not found', 404));
         }
         $design_project = $quotation->designProject;
@@ -499,6 +500,37 @@ class DesignQuotationController extends BaseController
         }
 
         return $this->response->item($quotation, new DesignQuotationTransformer())->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {get} /designQuotationDown 设计工具-报价单下载
+     * @apiVersion 1.0.0
+     * @apiName designQuotation down
+     * @apiGroup designQuotation
+     *
+     * @apiParam {int} id 报价单ID
+     * @apiParam {string} token
+     */
+    public function DownQuotationPDF(Request $request)
+    {
+        $id = $request->input('id');
+        $quotation = QuotationModel::find($id);
+        if (!$quotation) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $design_project = $quotation->designProject;
+        if (!$design_project->isPower($this->auth_user_id)) {
+            throw new MassageException('无权限', 403);
+        }
+
+        $html = view('tools/quotationpdf', ['data' => $quotation->info()])->render();
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML($html);
+        return $pdf->download($quotation->info()['project_name'] . '.pdf');
+
     }
 
 }

@@ -18,9 +18,8 @@ Route::get('/', function () {
 Route::group(['namespace' => 'Web'], function () {
     Route::post('/jdCallbackUrl', 'JdCallBackController@callUrl');
 });
+Route::get('/designQuotationDown', 'Api\V1\DesignQuotationController@DownQuotationPDF')->middleware('jwt.auth');
 
-
-
-Route::get('/test' , 'TestController@index');
-Route::get('/test/create' , 'TestController@create');
-Route::post('/test/store' , 'TestController@store');
+Route::get('/test', 'TestController@index');
+Route::get('/test/create', 'TestController@create');
+Route::post('/test/store', 'TestController@store');
