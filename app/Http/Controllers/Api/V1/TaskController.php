@@ -109,6 +109,15 @@ class TaskController extends BaseController
                     return $this->response->array($this->apiError('主任务父id必须为0', 412));
                 }
                 $tasks = Task::create($params);
+                if($tasks){
+                    $task_user = new TaskUser();
+                    $task_user->user_id = $this->auth_user_id;
+                    $task_user->task_id = $tasks->id;
+                    $task_user->selected_user_id =  $this->auth_user_id;
+                    $task_user->type = 1;
+                    $task_user->status = 1;
+                    $task_user->save();
+                }
                 //如果选中的用户不为空，把用户更新到用户成员里
                 if(!empty($selected_user_id_arr)){
                     foreach ($selected_user_id_arr as $selected_user_id){
@@ -145,6 +154,15 @@ class TaskController extends BaseController
                         if($task_pid->save()){
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
+                            if($tasks){
+                                $task_user = new TaskUser();
+                                $task_user->user_id = $this->auth_user_id;
+                                $task_user->task_id = $tasks->id;
+                                $task_user->selected_user_id =  $this->auth_user_id;
+                                $task_user->type = 1;
+                                $task_user->status = 1;
+                                $task_user->save();
+                            }
                             //如果选中的用户不为空，把用户更新到用户成员里
                             if(!empty($selected_user_id_arr)){
                                 foreach ($selected_user_id_arr as $selected_user_id){
