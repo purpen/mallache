@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Log;
+
 class OperationLog extends BaseModel
 {
     protected $table = 'operation_log';
@@ -40,6 +42,27 @@ class OperationLog extends BaseModel
     public function task()
     {
         return $this->belongsTo('App\Models\Task', 'target_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        //监听 操作动态创建
+        OperationLog::created(function (OperationLog $operation_log) {
+
+            switch ($operation_log->target_type) {
+                // 任务相关的消息处理
+                case 1:
+                    // 查看 任务的相关人员
+                    $user_id_arr = TaskUser::getTaskUser($operation_log->target_id);
+                    // 推送消息
+                    foreach ($user_id_arr as $user_id) {
+                        DesignNotice::createNotice($user_id, $operation_log->id);
+                    }
+                    break;
+            }
+        });
     }
 
     /**
