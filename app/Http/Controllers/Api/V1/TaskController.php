@@ -67,19 +67,6 @@ class TaskController extends BaseController
      */
     public function store(Request $request)
     {
-        // 验证规则
-        $rules = [
-            'name' => 'required|max:100',
-            'tags' => 'max:500',
-            'summary' => 'max:1000',
-        ];
-        $messages = [
-            'name.required' => '名称不能为空',
-            'name.max' => '名称最多50字符',
-            'tags.max' => '标签最多500字符',
-            'summary.max' => '备注最多1000字符',
-        ];
-
 
         $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
         $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
@@ -95,9 +82,10 @@ class TaskController extends BaseController
         $tags = $request->input('tags') ? $request->input('tags') : [];
         $selected_user_id_arr = $request->input('selected_user_id') ? $request->input('selected_user_id') : [];
         $summary = $request->input('summary') ? $request->input('summary') : '';
+        $name= $request->input('name') ? $request->input('name') : '';
         $stage_id= $request->input('stage_id') ? $request->input('stage_id') : 0;
         $params = array(
-            'name' => $request->input('name'),
+            'name' => $name,
             'tags' => implode(',' , $tags),
             'summary' => $summary,
             'user_id' => $this->auth_user_id,
@@ -111,11 +99,6 @@ class TaskController extends BaseController
             'execute_user_id' => $this->auth_user_id,
             'stage_id' => $stage_id,
         );
-
-        $validator = Validator::make($params, $rules, $messages);
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
 
         try {
             DB::beginTransaction();
@@ -342,7 +325,6 @@ class TaskController extends BaseController
      * @apiName  tasks update
      * @apiGroup tasks
      *
-     * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} execute_user_id 执行人id 默认0
      * @apiParam {string} name 名称
      * @apiParam {string} summary 备注
@@ -385,26 +367,22 @@ class TaskController extends BaseController
      */
     public function update(Request $request , $id)
     {
-        $item_id = $request->input('item_id') ? intval($request->input('item_id')) : 0;
-        if($item_id == 0){
-            return $this->response->array($this->apiError('项目id不能为0', 412));
-        }
         $user_id = $this->auth_user_id;
-        //检查是否有查看的权限
-        $itemUser = ItemUser::checkUser($item_id , $user_id);
-        if($itemUser == false){
-            return $this->response->array($this->apiError('没有权限查看该项目', 403));
-        }
+
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        //检查是否有查看的权限
+        $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
+        if($itemUser == false){
+            return $this->response->array($this->apiError('没有权限查看该项目', 403));
+        }
         $all = $request->except(['token']);
-        $tags = $all['tags'];
         //不为空标签时，合并数组
-        if(!empty($tags)){
-            $all['tags'] = implode(',' , $tags);
+        if(!empty($all['tags'])){
+            $all['tags'] = implode(',' , $all['tags']);
         }
         //移除没有更新的值，只要更新的
         $new_all = array_diff($all , array(null));

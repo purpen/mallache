@@ -19,4 +19,12 @@ class CommuneSummaryUser extends BaseModel
         'selected_user_id',
         'type',
     ];
+
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'selected_user_id');
+    }
 }

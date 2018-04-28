@@ -103,6 +103,7 @@ class OperationLogsAction
         }
     }
 
+    // 更改任务
     public function updateTask()
     {
         $response_content = $this->getResponseContent();
@@ -130,6 +131,7 @@ class OperationLogsAction
 
     }
 
+    //任务完成重做
     public function isStage()
     {
         $all = $this->request->except(['token']);

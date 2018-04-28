@@ -46,10 +46,9 @@ class CommuneSummaryUserController extends BaseController
     {
         $this->validate($request, [
             'commune_summary_id' => 'required|integer',
-            'selected_user_id' => 'required|integer',
         ]);
         $commune_summary_id = $request->input('commune_summary_id');
-        $selected_user_id = $request->input('selected_user_id');
+        $selected_user_id = $request->input('selected_user_id') ? $request->input('selected_user_id') : 0;
 
         $params = array(
             'commune_summary_id' => intval($commune_summary_id),
@@ -177,22 +176,25 @@ class CommuneSummaryUserController extends BaseController
             $sort = 'desc';
         }
         $commune_summary_id = $request->input('commune_summary_id');
-        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->get();
-        $user_id = [];
-        foreach ($communeSummaryUsers as $communeSummaryUser){
-            $user_id[] = $communeSummaryUser->user_id;
-        }
-        $new_user_id = $user_id;
-        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        $communeSummaryUsers = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->orderBy('id', $sort)->get();
+//        $user_id = [];
+//        foreach ($communeSummaryUsers as $communeSummaryUser){
+//            $user_id[] = $communeSummaryUser->selected_user_id;
+//        }
+//        $new_user_id = $user_id;
+//        $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
+//        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($communeSummaryUsers, new CommuneSummaryUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {delete} /communeSummaryUser/{id} 沟通纪要成员删除
+     * @api {delete} /communeSummaryUser/delete 沟通纪要成员删除
      * @apiVersion 1.0.0
      * @apiName communeSummaryUser delete
      * @apiGroup communeSummaryUser
      *
+     * @apiParam {integer} commune_summary_id
+     * @apiParam {integer} selected_user_id
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -203,9 +205,11 @@ class CommuneSummaryUserController extends BaseController
      *     }
      *   }
      */
-    public function delete($id)
+    public function destroy(Request $request)
     {
-        $communeSummaryUser = CommuneSummaryUser::find($id);
+        $commune_summary_id = $request->input('commune_summary_id');
+        $selected_user_id = $request->input('selected_user_id');
+        $communeSummaryUser = CommuneSummaryUser::where('commune_summary_id' , $commune_summary_id)->where('selected_user_id' , $selected_user_id)->first();
         //检验是否存在
         if (!$communeSummaryUser) {
             return $this->response->array($this->apiError('not found!', 404));

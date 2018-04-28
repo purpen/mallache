@@ -53,6 +53,22 @@ class Task extends BaseModel
     }
 
     /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
+     * 相对关联到阶段表
+     */
+    public function stages()
+    {
+        return $this->belongsTo('App\Models\Stage', 'stage_id');
+    }
+
+    /**
      * 任务完成与未完成
      */
     public static function isStage(int $task_id  , int $stage)
@@ -112,6 +128,22 @@ class Task extends BaseModel
     public function getOverTime()
     {
         return $this->over_time ? $this->over_time : '';
+    }
+
+    /**
+     * 移除执行人id
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public function removeExecuteUser(int $user_id)
+    {
+        if ($this->execute_user_id == $user_id) {
+            $this->execute_user_id = 0;
+            return $this->save();
+        }
+
+        return true;
     }
 }
 

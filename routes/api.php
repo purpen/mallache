@@ -180,7 +180,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         //用户钱包信息
         $api->get('/auth/fundInfo', ['as' => 'auth.fundInfo', 'uses' => 'AuthenticateController@fundInfo']);
-
+        //根据用户id获取用户信息
+        $api->get('/auth/userId', ['as' => 'auth.userId', 'uses' => 'AuthenticateController@userId']);
         /**
          * 公共接口
          */
@@ -482,6 +483,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 项目用户
          */
         $api->resource('/itemUsers', 'ItemUserController');
+        $api->delete('/itemUsers/delete', 'ItemUserController@destroy');
 
         /**
          * 任务成员
@@ -489,6 +491,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/taskUsers', 'TaskUserController');
         //保存任务成员
         $api->post('/taskUsers/newStore', 'TaskUserController@newStore');
+        $api->delete('/taskUsers/delete', 'TaskUserController@destroy');
 
         /**
          * 标签
@@ -511,6 +514,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 沟通纪要成员表
          */
         $api->resource('/communeSummaryUser', 'CommuneSummaryUserController');
+        $api->delete('/communeSummaryUser/delete', 'CommuneSummaryUserController@destroy');
 
 
         /**
