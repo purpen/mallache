@@ -277,13 +277,10 @@ class ItemUserController extends BaseController
         $ok = $itemUser->delete();
         if ($ok) {
             //查询任务成员
-            $taskUsers = TaskUser::where('selected_user_id' , $user_id)->get();
-            Log::info($taskUsers);
+            $taskUsers = TaskUser::where('selected_user_id' , $user_id)->where('item_id' , $item_id)->get();
             foreach ($taskUsers as $taskUser){
                 //查询任务成员所参加的任务
                 $task = Task::find($taskUser->task_id);
-                Log::info($task);
-
                 if($task){
                     //移除任务执行人
                     $task->removeExecuteUser($user_id);
