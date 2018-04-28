@@ -5,6 +5,7 @@
  */
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helper\MassageException;
 use App\Http\Transformer\ItemUserTransformer;
 use App\Http\Transformer\UserTaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
@@ -14,6 +15,8 @@ use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\User;
 use Dingo\Api\Contract\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -68,6 +71,11 @@ class ItemUserController extends BaseController
         }
         if($designProject->isPower($this->auth_user_id) != true){
             return $this->response->array($this->apiError('没有权限添加!', 403));
+        }
+        $item_user = ItemUser::where('user_id' , $user_id)->where('item_id' , $item_id)->first();
+        if($item_user){
+            return $this->response->array($this->apiError('该项目成员以存在!', 412));
+
         }
 
         try {
@@ -252,26 +260,30 @@ class ItemUserController extends BaseController
         }
         //判断权限
         $designProject = DesignProject::where('id' , $item_id)->first();
-        if(!$designProject){
+        if (!$designProject) {
             return $this->response->array($this->apiError('没有找到该项目!', 404));
         }
-        if($designProject->isPower($this->auth_user_id) != true){
+        if ($designProject->isPower($this->auth_user_id) != true) {
             return $this->response->array($this->apiError('没有权限删除!', 403));
 
         }
+
         //判断是商务经理还是项目经理
-        if($itemUser->level == 3){
+        if ($itemUser->level == 3) {
             $designProject->removeLeader($user_id);
-        }elseif($itemUser->level == 5){
+        } elseif ($itemUser->level == 5){
             $designProject->removeBusinessManager($user_id);
         }
         $ok = $itemUser->delete();
         if ($ok) {
             //查询任务成员
             $taskUsers = TaskUser::where('selected_user_id' , $user_id)->get();
+            Log::info($taskUsers);
             foreach ($taskUsers as $taskUser){
                 //查询任务成员所参加的任务
                 $task = Task::find($taskUser->task_id);
+                Log::info($task);
+
                 if($task){
                     //移除任务执行人
                     $task->removeExecuteUser($user_id);
@@ -280,7 +292,7 @@ class ItemUserController extends BaseController
                 $taskUser->delete();
             }
             return $this->response->array($this->apiSuccess());
-        }
+         }
         return $this->response->array($this->apiError());
 
     }
