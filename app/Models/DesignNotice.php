@@ -7,6 +7,12 @@ class DesignNotice extends BaseModel
 {
     protected $table = 'design_notice';
 
+    // 相对关联operation_log 操作日志
+    public function operationLog()
+    {
+        return $this->belongsTo('App\Models\OperationLog', 'operation_log_id');
+    }
+
     /**
      * @param int $user_id 用户ID
      * @param int $operation_log_id 设计工具动态ID
@@ -26,4 +32,17 @@ class DesignNotice extends BaseModel
 
         return $design_notice;
     }
+
+    // 设计工作通知详情
+    public function info()
+    {
+        return [
+            'id' => $this->id,
+            'is_read' => $this->is_read,
+            'user_id' => $this->user_id,
+            'operation_log_id' => $this->operation_log_id,
+            'operation_log' => $this->operationLog->info(),
+        ];
+    }
+
 }

@@ -26,6 +26,7 @@ class MessageController extends BaseController
                 "quantity": 10,
                 "message": 4,
                 "notice": 6,
+     *          "design_notice": 0,  // 设计项目管理通知
      *      }
      *  }
      */

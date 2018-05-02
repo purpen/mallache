@@ -44,6 +44,12 @@ class OperationLog extends BaseModel
         return $this->belongsTo('App\Models\Task', 'target_id');
     }
 
+    // 一对多关联设计通知表
+    public function designNotice()
+    {
+        return $this->hasMany('App\Models\DesignNotice', 'operation_log_id');
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -135,6 +141,7 @@ class OperationLog extends BaseModel
 
         return [
             'action_type' => $this->action_type,
+            'target_type' => $this->target_type,
             'title' => $str,
             'content' => $this->content,
             'created_at' => $this->created_at

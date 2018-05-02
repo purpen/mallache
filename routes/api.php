@@ -598,6 +598,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/nodes/lists', 'NodesController@lists');
 
 
+        /**
+         * 设计工具--消息管理
+         */
+        // api {get} /designNotice/lists 设计管理工具--消息通知列表
+        $api->get('/designNotice/lists', 'DesignNoticeController@lists');
+        // api {put} /designNotice/trueRead 设计管理工具--消息确认阅读
+        $api->put('/designNotice/trueRead', 'DesignNoticeController@trueRead');
+        // api {delete} /designNotice/delete 设计管理工具--消息删除
+        $api->delete('/designNotice/delete', 'DesignNoticeController@delete');
+
+
     });
 
 });
