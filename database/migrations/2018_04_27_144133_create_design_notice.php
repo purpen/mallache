@@ -19,7 +19,7 @@ class CreateDesignNotice extends Migration
          * is_read    tinyint(4)    否        是否阅读 0.否 1.是
          * operation_log_id    int(10)    否        设计工具动态ID
          */
-        Schema::create('desing_notice', function (Blueprint $table) {
+        Schema::create('design_notice', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('user_id');
@@ -37,6 +37,6 @@ class CreateDesignNotice extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('desing_notice');
+        Schema::dropIfExists('design_notice');
     }
 }

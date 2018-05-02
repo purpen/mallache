@@ -127,7 +127,6 @@ class Tools
      * 读取用户新消息数量
      *
      * @param int $user_id 用户Id
-     * @param int $type 消息类型：1.系统消息
      * @return int 消息数量
      */
     public function getMessageQuantity(int $user_id)
@@ -147,6 +146,7 @@ class Tools
             'message' => 0,
             'notice' => 0,
             'quantity' => 0,
+            'design_notice' => 0,
         );
 
         if (!$user_id) {
@@ -160,7 +160,8 @@ class Tools
 
         if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
         if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
-        $data['quantity'] = $data['message'] + $data['notice'];
+        if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
+        $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
 
         // $data = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return $data;

@@ -42,10 +42,6 @@
         line-height: 1;
     }
 
-    .contact-box {
-
-    }
-
     .contact-box p span {
         color: #666;
     }
@@ -70,10 +66,6 @@
 
     .total-money span {
         color: #FF5A5F;
-    }
-
-    .invoice-box {
-        clear: both;
     }
 
     .invoice-box p {

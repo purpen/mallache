@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class TaskUser extends BaseModel
 {
     protected $table = 'task_users';
@@ -19,12 +17,23 @@ class TaskUser extends BaseModel
         'type',
         'status',
     ];
+
     /**
      * 相对关联任务成员表
      */
     public function task()
     {
-        return $this->belongsTo('App\Models\Task' , 'task_id');
+        return $this->belongsTo('App\Models\Task', 'task_id');
+    }
+
+    //使用任务ID获取参与人员
+    public static function getTaskUser(int $task_id)
+    {
+        $user_id_arr = TaskUser::select('selected_user_id')
+            ->where('task_id', $task_id)
+            ->get()->pluck('selected_user_id')->all();
+
+        return $user_id_arr;
     }
 
     /**
