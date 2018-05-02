@@ -57,16 +57,23 @@ class OperationLog extends BaseModel
         //监听 操作动态创建
         OperationLog::created(function (OperationLog $operation_log) {
 
+            $user_id_arr = [];
             switch ($operation_log->target_type) {
                 // 任务相关的消息处理
                 case 1:
                     // 查看 任务的相关人员
                     $user_id_arr = TaskUser::getTaskUser($operation_log->target_id);
-                    // 推送消息
-                    foreach ($user_id_arr as $user_id) {
-                        DesignNotice::createNotice($user_id, $operation_log->id);
-                    }
                     break;
+            }
+
+            // 推送消息
+            foreach ($user_id_arr as $user_id) {
+
+                // 不需要给动态操作用户发送提醒
+                if ($operation_log->user_id == $user_id) {
+                    continue;
+                }
+                DesignNotice::createNotice($user_id, $operation_log->id);
             }
         });
     }
@@ -142,6 +149,7 @@ class OperationLog extends BaseModel
         return [
             'action_type' => $this->action_type,
             'target_type' => $this->target_type,
+            'target_id' => $this->target_id,
             'title' => $str,
             'content' => $this->content,
             'created_at' => $this->created_at
