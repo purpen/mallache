@@ -144,7 +144,8 @@ class OperationLog extends BaseModel
             'target_type' => $this->target_type,
             'title' => $str,
             'content' => $this->content,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'user_name' => $this->user->getUserName(),
         ];
     }
 
@@ -215,7 +216,7 @@ class OperationLog extends BaseModel
     //子任务重做
     public function noChildStage()
     {
-        return $this->user->getUserName() . $this->title_config['8'] . $this->task->getTaskName();
+        return $this->user->getUserName() . $this->title_config['8'] . $this->content;
 
     }
 
@@ -229,7 +230,7 @@ class OperationLog extends BaseModel
     // 更改任务备注
     public function updateOverTime()
     {
-        return $this->user->getUserName() . $this->title_config['10'] . $this->task->getOverTime();
+        return $this->user->getUserName() . $this->title_config['10'];
     }
 
 }
