@@ -155,7 +155,6 @@ class TaskController extends BaseController
                         if($task_pid->save()){
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
-                            Log::info($params);
                             if($tasks){
                                 $task_user = new TaskUser();
                                 $task_user->user_id = $this->auth_user_id;
