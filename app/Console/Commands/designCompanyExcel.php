@@ -56,7 +56,7 @@ class designCompanyExcel extends Command
 
         $designObj = DB::table('design_company')
             ->join('users','design_company.id', '=', 'users.design_company_id' )
-            ->select(['id as ID', 'company_name as 公司全称', 'company_abbreviation as 公司简称' , 'users.id as 用户id'  , 'users.phone as 用户手机号'])
+            ->select(['design_company.id as ID', 'company_name as 公司全称', 'company_abbreviation as 公司简称' , 'users.id as 用户id'  , 'users.phone as 用户手机号'])
             ->get();
 
         $new_data = [];
