@@ -98,6 +98,7 @@ class TaskController extends BaseController
             'status' => 1,
             'execute_user_id' => $this->auth_user_id,
             'stage_id' => $stage_id,
+            'tier' => $tier,
         );
 
         try {
@@ -105,7 +106,7 @@ class TaskController extends BaseController
             //如果是主任务，任务数量为0。如果是子任务，任务数量+1
             if($tier == 0){
                 if($pid !== 0 ){
-                    DB::rollBack();
+//                    DB::rollBack();
                     return $this->response->array($this->apiError('主任务父id必须为0', 412));
                 }
                 $tasks = Task::create($params);
@@ -154,6 +155,7 @@ class TaskController extends BaseController
                         if($task_pid->save()){
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
+                            Log::info($params);
                             if($tasks){
                                 $task_user = new TaskUser();
                                 $task_user->user_id = $this->auth_user_id;
