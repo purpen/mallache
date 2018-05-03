@@ -159,7 +159,7 @@ class OperationLog extends BaseModel
     {
         // 任务动态类型
         $logs = OperationLog::where('target_type', 1)
-            ->where('target_id', $task_id)->get();
+            ->where('target_id', $task_id)->orderBy('id', 'desc')->get();
 
         $resp_data = [];
         foreach ($logs as $obj) {
