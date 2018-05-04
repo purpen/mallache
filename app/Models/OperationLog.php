@@ -68,7 +68,7 @@ class OperationLog extends BaseModel
 
             // 推送消息
             foreach ($user_id_arr as $user_id) {
-
+                Log::info([$operation_log->user_id,$user_id]);
                 // 不需要给动态操作用户发送提醒
                 if ($operation_log->user_id == $user_id) {
                     continue;
