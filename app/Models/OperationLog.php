@@ -68,7 +68,6 @@ class OperationLog extends BaseModel
 
             // 推送消息
             foreach ($user_id_arr as $user_id) {
-                Log::info([$operation_log->user_id,$user_id]);
                 // 不需要给动态操作用户发送提醒
                 if ($operation_log->user_id == $user_id) {
                     continue;
@@ -153,7 +152,8 @@ class OperationLog extends BaseModel
             'target_id' => $this->target_id,
             'title' => $str,
             'content' => $this->content,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'user_name' => $this->user->getUserName(),
         ];
     }
 
@@ -167,7 +167,7 @@ class OperationLog extends BaseModel
     {
         // 任务动态类型
         $logs = OperationLog::where('target_type', 1)
-            ->where('target_id', $task_id)->get();
+            ->where('target_id', $task_id)->orderBy('id', 'desc')->get();
 
         $resp_data = [];
         foreach ($logs as $obj) {
@@ -224,7 +224,7 @@ class OperationLog extends BaseModel
     //子任务重做
     public function noChildStage()
     {
-        return $this->user->getUserName() . $this->title_config['8'] . $this->task->getTaskName();
+        return $this->user->getUserName() . $this->title_config['8'] . $this->content;
 
     }
 
@@ -238,7 +238,7 @@ class OperationLog extends BaseModel
     // 更改任务备注
     public function updateOverTime()
     {
-        return $this->user->getUserName() . $this->title_config['10'] . $this->task->getOverTime();
+        return $this->user->getUserName() . $this->title_config['10'];
     }
 
 }

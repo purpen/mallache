@@ -478,6 +478,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/tasks/childDelete/{id}', ['as' => 'tasks.childDelete', 'TaskController@childDelete']);
         //领取任务
         $api->post('/tasks/executeUser', 'TaskController@executeUser');
+        //任务统计
+        $api->get('/statistical/tasks', 'TaskController@statistical');
+
 
         /**
          * 项目用户

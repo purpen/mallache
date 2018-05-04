@@ -50,13 +50,14 @@ class designCompanyExcel extends Command
         $currentSheet = $excelObj->getActiveSheet(); // 获取当前活动sheet
         $currentSheet->setCellValue( 'A1', 'ID' )         //给表的单元格设置数据
         ->setCellValue( 'B1', '公司全称' )
-            ->setCellValue( 'C1', '公司简称' );
+            ->setCellValue( 'C1', '公司简称' )
+            ->setCellValue( 'D1', '用户id' )
+            ->setCellValue( 'E1', '用户手机号' );
 
-        $designObj = DB::table('design_company')->select([
-            'id as ID',
-            'company_name as 公司全称',
-            'company_abbreviation as 公司简称',
-        ])->get();
+        $designObj = DB::table('design_company')
+            ->join('users','design_company.id', '=', 'users.design_company_id' )
+            ->select(['design_company.id as ID', 'company_name as 公司全称', 'company_abbreviation as 公司简称' , 'users.id as 用户id'  , 'users.phone as 用户手机号'])
+            ->get();
 
         $new_data = [];
         foreach ($designObj as $k=>$v){
@@ -70,7 +71,7 @@ class designCompanyExcel extends Command
 
         $j = 2;
         foreach($new_data as $val){
-            $currentSheet->setCellValue('A'.$j,$val['ID'])->setCellValue('B'.$j,$val['公司全称'])->setCellValue('C'.$j, $val['公司简称']);
+            $currentSheet->setCellValue('A'.$j,$val['ID'])->setCellValue('B'.$j,$val['公司全称'])->setCellValue('C'.$j, $val['公司简称'])->setCellValue('D'.$j, $val['用户id'])->setCellValue('E'.$j, $val['用户手机号']);
             $j++; // 每循环一次换一行写入数据
         }
         $sheeetWrite = \PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
