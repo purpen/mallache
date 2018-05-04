@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\MassageException;
 use App\Http\Transformer\DesignProjectTransformer;
+use App\Models\AssetModel;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
@@ -454,4 +455,69 @@ class DesignProjectController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+
+    /**
+     * @api {get} /designProject/payAssets 设计工具--交付内容
+     * @apiVersion 1.0.0
+     * @apiName designProject payAssets
+     * @apiGroup designProject
+     *
+     * @apiParam {int} id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function payAssets(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!ItemUser::checkUser($id, $this->auth_user_id)) {
+            throw new MassageException('无权限', 403);
+        }
+
+        $design_project = DesignProject::where(['id' => $id, 'status' => 1])->first();
+        if (!$design_project) {
+            throw new MassageException('不存在', 404);
+        }
+
+        $design_stage = $design_project->designStage;
+        if (!$design_stage) {
+            return $this->response->array($this->apiSuccess('Success.', 200, []));
+        }
+
+        $data = [];
+        foreach ($design_stage as $stage) {
+            $stage_data = [];
+            $stage_data['id'] = $stage->id;
+            $stage_data['name'] = $stage->name;
+            $stage_data['content'] = $stage->content;
+
+            $design_substage = $stage->designSubstage;
+            if (!$design_substage) {
+                continue;
+            }
+
+            $asset_data = [];
+            foreach ($design_substage as $subStage) {
+                $design_stage_node = $subStage->designStageNode;
+                if (!$design_stage_node) {
+                    continue;
+                }
+                $asset_data = array_merge($asset_data, AssetModel::getImageUrl($design_stage_node->id, 31));
+            }
+
+            $stage_data['assets'] = $asset_data;
+            $data[] = $stage_data;
+        }
+
+        return $this->response->array($this->apiSuccess('Success', 200, $data));
+    }
+
 }

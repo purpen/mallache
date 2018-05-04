@@ -597,6 +597,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/nodes/delete', 'NodesController@delete');
         $api->get('/nodes/lists', 'NodesController@lists');
 
+        // api {get} /designProject/payAssets 设计工具--交付内容
+        $api->get('/designProject/payAssets', 'DesignProjectController@payAssets');
+
 
         /**
          * 设计工具--消息管理

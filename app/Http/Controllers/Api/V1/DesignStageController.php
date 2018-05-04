@@ -305,4 +305,5 @@ class DesignStageController extends BaseController
 
         return $this->response->collection($lists, new DesignStageTransformer())->setMeta($this->apiMeta());
     }
+
 }
