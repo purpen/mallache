@@ -58,6 +58,7 @@ class PanDirector extends BaseModel
             'mime_type' => $this->mime_type,
             'url_small' => $this->url_small,
             'url_file' => $this->url_file,
+            'url_download' => $this->url_download,
             'user_id' => $this->user_id,
             'user_name' => $this->user ? $this->user->realname : null,
             'group_id' => json_decode($this->group_id),
@@ -102,6 +103,20 @@ class PanDirector extends BaseModel
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
         $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url;
+        // 对链接进行签名
+        $signedUrl = $auth->privateDownloadUrl($baseUrl);
+        return $signedUrl;
+    }
+
+    public function getUrlDownloadAttribute()
+    {
+        if ($this->type == 1) {
+            return null;
+        }
+
+        $auth = QiniuApi::auth();
+        // 私有空间中的外链 http://<domain>/<file_key>
+        $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . '?attname=' . $this->name;
         // 对链接进行签名
         $signedUrl = $auth->privateDownloadUrl($baseUrl);
         return $signedUrl;
