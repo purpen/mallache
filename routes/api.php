@@ -602,6 +602,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
         // api {get} /designProject/payAssets 设计工具--交付内容
         $api->get('/designProject/payAssets', 'DesignProjectController@payAssets');
+        //项目中合同列表
+        $api->get('/designProject/contracts', 'DesignProjectController@contracts');
 
 
         /**

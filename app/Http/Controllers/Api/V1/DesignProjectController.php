@@ -520,4 +520,37 @@ class DesignProjectController extends BaseController
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
 
+    /**
+     * @api {get} /designProject/contracts 项目中的合同列表
+     * @apiVersion 1.0.0
+     * @apiName designProject contracts
+     * @apiGroup designProject
+     *
+     * @apiParam {int} item_id 项目id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function contracts(Request $request)
+    {
+        try {
+            $item_id = $request->input('item_id');
+            $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
+            if (!$design_project) {
+                throw new MassageException('不存在', 404);
+            }
+            $contracts = AssetModel::getImageUrl($item_id , 32 , 1);
+        } catch (MassageException $e) {
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess('Success', 200, $contracts));
+
+    }
 }
