@@ -123,6 +123,14 @@ class OperationLogsAction
             $this->createTaskLog($item_id, 4, $target_id, null, $summary);
 
         } elseif(!empty($level)){
+            //优先级存普通，紧急，非常紧急
+            if($level == 1){
+                $level = '普通';
+            }else if($level == 5){
+                $level = '紧级';
+            }else if($level == 8){
+                $level = '非常紧级';
+            }
             $this->createTaskLog($item_id, 5, $target_id, null, $level);
 
         } elseif(!empty($over_time)){
