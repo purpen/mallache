@@ -44,10 +44,10 @@ class Recommend
             //判断是否匹配到设计公司
             if (empty($design)) {
                 // 临时处理 永不匹配失败
-                $this->failAction();
+//                $this->failAction();
 
                 // 原处理
-//                $this->itemFail();
+                $this->itemFail();
             } else {
                 $recommend = implode(',', $design);
                 $this->item->recommend = $recommend;
@@ -71,10 +71,10 @@ class Recommend
 
         } else {
             // 临时处理 永不匹配失败
-            $this->failAction();
+//            $this->failAction();
 
             // 原处理
-//            $this->itemFail();
+            $this->itemFail();
         }
 
         //注销变量
