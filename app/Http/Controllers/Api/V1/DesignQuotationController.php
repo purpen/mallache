@@ -85,6 +85,8 @@ class DesignQuotationController extends BaseController
      *          "tax_rate": null,
      *          "total_price": "10000",
      *          "price": "10000"
+     *          "item_demand_id": 1,
+     *          "design_company_id": 27,
      *      },
      *   }
      */

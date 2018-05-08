@@ -10,7 +10,7 @@
  * Mbstring PHP Extension
  * Tokenizer PHP Extension
  
- 建议环境：Nginx 1.10 / PHP 7.0.* / MariaDB 10.1(Mysql 5.6) / Laravel 5.4
+ 建议环境：Nginx 1.10 / PHP 7.0.* / Mysql 5.7 / Laravel 5.4
  使用说明：[英文文档](https://laravel.com/docs/5.4)；[中文文档](http://laravel-china.org/docs/5.4)。
  
  ###安装使用

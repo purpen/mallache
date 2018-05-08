@@ -222,6 +222,7 @@ class DesignProject extends BaseModel
             'type_value' => $this->type_value,
             'design_types' => json_decode($this->design_types),
             'design_types_value' => $this->design_types_value,
+            'project_demand' => $this->project_demand,
         ];
     }
 
