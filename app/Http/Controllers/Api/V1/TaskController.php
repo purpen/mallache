@@ -758,13 +758,29 @@ class TaskController extends BaseController
                     }
                 }
                 //未领取百分比
-                $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
+                if($total_count != 0){
+                    $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
+                }else{
+                    $no_get_percentage = 0;
+                }
                 //未完成百分比
-                $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0);
+                if($total_count != 0){
+                    $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0);
+                }else{
+                    $no_stage_percentage = 0;
+                }
                 //已完成百分比
-                $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                if($total_count != 0){
+                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                }else {
+                    $ok_stage_percentage = 0;
+                }
                 //已预期百分比
-                $overdue_percentage = round(($overdue / $total_count) * 100 , 0);
+                if($total_count != 0){
+                    $overdue_percentage = round(($overdue / $total_count) * 100 , 0);
+                }else{
+                    $overdue_percentage = 0;
+                }
 
                 $statistical = [];
                 $statistical['no_get'] = $no_get;
