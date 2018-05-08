@@ -15,7 +15,7 @@ return [
     'warranty_money' => 0.10,
 
     //项目推荐失败后，是否人工后台介入处理
-    'item_recommend_lose' => true,     // true:人工介入； false：项目匹配失败
+    'item_recommend_lose' => env('ITEM_RECOMMEND_LOSE', true),     // true:人工介入； false：项目匹配失败
 
 
 
