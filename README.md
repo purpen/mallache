@@ -100,7 +100,7 @@ git@github.com:purpen/mallache.git
  ###### 批量生成用户账号
  php artisan user:create --count=10 --type=2 创建用户命令: --count 创建数量  --type 1.需求公司；2.设计公司
  
- ###### 更新veerToken
+ ###### 创建更新图片素材token
  php artisan Update:token
  
  ###### 更新设计公司案例数据结构迁移
