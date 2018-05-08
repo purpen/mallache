@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account', 'username', 'email', 'phone', 'password', 'type'
+        'account', 'username', 'email', 'phone', 'password', 'type', 'realname', 'child_account', 'company_role', 'invite_user_id', 'design_company_id', 'position'
     ];
 
     /**
@@ -64,7 +64,27 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getLogoImageAttribute()
     {
-        return AssetModel::getOneImage($this->logo);
+        $asset = AssetModel::getOneImage($this->logo);
+        if (!$asset) {
+            //上设计公司需求公司。下需求公司
+            if ($this->type = 2) {
+                //子账户，主账户
+                if ($this->isChildAccount() == true) {
+                    return $asset;
+                } else {
+                    $design = DesignCompanyModel::where('user_id', $this->id)->first();
+                    if ($design) {
+                        return $design->logo_image;
+                    }
+                }
+            } else {
+                $demand = DemandCompany::where('user_id', $this->id)->first();
+                if ($demand) {
+                    return $demand->logo_image;
+                }
+            }
+        }
+        return $asset;
     }
 
     /*
@@ -127,6 +147,22 @@ class User extends Authenticatable implements JWTSubject
     public function withdrawOrder()
     {
         return $this->hasMany('App\Models\WithdrawOrder', 'user_id');
+    }
+
+    /*
+     * 一对多关联云盘文件目录表
+     */
+    public function panDirector()
+    {
+        return $this->hasMany('App\Models\PanDirector', 'user_id');
+    }
+
+    /*
+     * 一对多关联云盘回收站
+     */
+    public function recycleBin()
+    {
+        return $this->hasMany('App\Models\RecycleBin', 'user_id');
     }
 
     /**
@@ -259,11 +295,63 @@ class User extends Authenticatable implements JWTSubject
      */
     public function unsetUser()
     {
-        $account = '2' . substr($this->account,1);
+        $account = '2' . substr($this->account, 1);
         $this->account = $account;
         $this->phone = $account;
         $this->email = null;
         $this->status = -1;
         $this->save();
+    }
+
+    /**
+     * 根据用户id来获取设计公司id
+     */
+    public static function designCompanyId(int $user_id)
+    {
+        $user = self::find($user_id);
+        if ($user) {
+            //主账户id里面的设计公司id
+            $design_company_id = $user->design_company_id;
+            return $design_company_id;
+        }
+
+    }
+
+    /**
+     * 判断用户是否是设计公司管理员
+     */
+    public function isDesignAdmin()
+    {
+        if ($this->type == 2 && $this->company_role > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断用户是否是设计公司超级管理员
+     * @return bool
+     */
+    public function isDesignSuperAdmin()
+    {
+        if ($this->type == 2 && $this->company_role == 20) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断用户是否是子账户
+     * @return bool
+     */
+    public function isChildAccount()
+    {
+        if ($this->type == 2 && $this->child_account == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

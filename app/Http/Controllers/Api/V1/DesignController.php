@@ -10,11 +10,15 @@ use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\DesignShowItemTransformer;
 use App\Http\Transformer\ItemTransformer;
+use App\Http\Transformer\UserTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\ItemStage;
+use App\Models\ItemUser;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DesignController extends BaseController
@@ -428,6 +432,300 @@ class DesignController extends BaseController
         event(new ItemStatusEvent($item));
 
         return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {get} /design/members 设计公司查看成员列表
+     *
+     * @apiVersion 1.0.0
+     * @apiName design members
+     * @apiGroup design
+     *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
+     * @apiParam {int} sort 0:升序；1.降序(默认)
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                "id": 2,
+                "type": 2,
+                "account": "18132382134",
+                "username": "",
+                "email": null,
+                "phone": "18132382134",
+                "status": 0,
+                "item_sum": 0,
+                "price_total": "0.00",
+                "price_frozen": "0.00",
+                "cash": "0.00",
+                "logo_image": null,
+                "design_company_id": 51,
+                "role_id": 0,
+                "demand_company_id": 0,
+                "realname": null,
+                "design_company_name": "222"
+                }
+            ],
+            "meta": {
+                "message": "Success",
+                "status_code": 200
+            }
+        }
+     */
+    public function members(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        if($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+        }
+        if(in_array($user->company_role,[0,10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+        $design_company_id = $user->design_company_id;
+        if($design_company_id == 0){
+            return $this->response->array($this->apiError('该用户不是设计公司', 404));
+        }
+        $users = User::where('design_company_id' , $design_company_id)->orderBy('id', $sort)->paginate($per_page);
+
+        return $this->response->paginator($users, new UserTransformer())->setMeta($this->apiMeta());
+
+    }
+
+    /**
+     * @api {put} /design/isAdmin 设计公司设置成管理员,恢复成成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design isAdmin
+     * @apiGroup design
+     *
+     * @apiParam {integer} set_user_id 被设置的用户id
+     * @apiParam {integer} company_role 10.管理员；0.成员；
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function isAdmin(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $user = User::where('id' , $user_id)->first();
+        if(!$user){
+            return $this->response->array($this->apiError('没有找到主账户', 404));
+        }
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+        }
+        if(in_array($user->company_role , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+        $set_user_id = $request->input('set_user_id');
+        if($user_id == $set_user_id){
+            return $this->response->array($this->apiError('不能把自己设置成管理员或成员', 403));
+        }
+        $company_role = $request->input('company_role');
+        $set_user = User::where('id' , $set_user_id)->first();
+        if(!$set_user){
+            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+        }
+        $set_user->company_role = $company_role;
+        $set_user->save();
+
+        return $this->response->array($this->apiSuccess());
+
+    }
+
+    /**
+     * @api {put} /design/deleteMember 移除成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design deleteMember
+     * @apiGroup design
+     *
+     * @apiParam {integer} delete_user_id 被移除的用户id
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function deleteMember(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $delete_user_id = $request->input('delete_user_id');
+        $user = User::where('id' , $user_id)->first();
+        if(!$user){
+            return $this->response->array($this->apiError('没有找到主账户', 404));
+        }
+
+        if($user->isChildAccount() == true){
+            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+        }
+        if(in_array($user->company_role , [0 , 10])){
+            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        }
+
+        $design_company_id = $user->design_company_id;
+        if($design_company_id == 0){
+            return $this->response->array($this->apiError('该用户不是设计公司', 404));
+        }
+        //查看属于该公司的成员列表
+        $users = User::where('design_company_id' , $design_company_id)->get();
+        $user_id_arr = [];
+        foreach ($users as $new_user){
+            $user_id_arr[] = $new_user->id;
+        }
+        $new_user_id_arr = $user_id_arr;
+        //判断是否是该公司的成员
+        if(in_array($user_id , $new_user_id_arr)){
+            $del_user = User::find(intval($delete_user_id));
+            if(!$del_user){
+                return $this->response->array($this->apiError('没有找到移除的用户', 404));
+            }else{
+                //如果是超级管理员不能被移除
+                if($del_user->company_role == 20){
+                    return $this->response->array($this->apiError('该用户是超级管理员，不能移除', 403));
+                }
+                try {
+
+                    DB::beginTransaction();
+                    $del_user->design_company_id = 0;
+                    $del_user->invite_user_id = 0;
+                    //用户表的设计公司id，邀请人的id都变成0
+                    if($del_user->save()){
+                        $item_users = ItemUser::where('user_id' , $delete_user_id)->get();
+                        //移除项目成员中用户id为delete_user_id
+                        foreach ($item_users as $item_user){
+                            $item_user->delete();
+                        }
+                        DB::commit();
+                        return $this->response->array($this->apiSuccess());
+                    }else{
+                        DB::rollBack();
+                        return $this->response->array($this->apiError('更改用户失败', 412));
+                    }
+
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
+                }
+            }
+
+        }else{
+            return $this->response->array($this->apiError('没有权限移除该用户', 403));
+        }
+
+    }
+
+    /**
+     * @api {get} /design/members/search 设计公司成员搜索
+     *
+     * @apiVersion 1.0.0
+     * @apiName design membersSearch
+     * @apiGroup design
+     *
+     * @apiParam {string} realname
+     * @apiParam {token} token
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 2,
+    "type": 2,
+    "account": "18132382134",
+    "username": "",
+    "email": null,
+    "phone": "18132382134",
+    "status": 0,
+    "item_sum": 0,
+    "price_total": "0.00",
+    "price_frozen": "0.00",
+    "cash": "0.00",
+    "logo_image": null,
+    "design_company_id": 51,
+    "role_id": 0,
+    "demand_company_id": 0,
+    "realname": null,
+    "design_company_name": "222"
+    }
+    ],
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    }
+    }
+     */
+    public function membersSearch(Request $request)
+    {
+        $realname = $request->input('realname');
+        $user = User::where('realname' , 'like' , '%'.$realname.'%')->get();
+        if($user){
+            return $this->response->collection($user, new UserTransformer())->setMeta($this->apiMeta());
+        }
+    }
+
+    /**
+     * @api {put} /design/restoreMember 恢复成员
+     *
+     * @apiVersion 1.0.0
+     * @apiName design restoreMember
+     * @apiGroup design
+     *
+     * @apiParam {integer} phone 被恢复成员的手机号
+     * @apiParam {token} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     */
+    public function restoreMember(Request $request)
+    {
+        $phone = $request->input('phone');
+        //被恢复的成员
+        $restoreUser = User::where('phone' , $phone)->first();
+        if(!$restoreUser){
+            return $this->response->array($this->apiError('没有找到该成员', 404));
+        }
+        $user_id = $this->auth_user_id;
+        //主账户
+        $user = User::where('id' , $user_id)->first();
+        //如果是超级管理员不能被移除
+        if($user->company_role !== 20){
+            return $this->response->array($this->apiError('该用户是超级管理员，不能恢复成员', 403));
+        }
+        if($user){
+            $restoreUser->design_company_id = $user->design_company_id;
+            $restoreUser->invite_user_id = $user_id;
+            $restoreUser->save();
+            return $this->response->array($this->apiSuccess());
+        }
+
     }
 
 }

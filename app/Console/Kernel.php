@@ -37,14 +37,24 @@ class Kernel extends ConsoleKernel
         Commands\ChangeItem::class,
 
         // 每日定时更新内容的随机数，用于内容随机排序
-        Commands\UpdateRandom::class
+        Commands\UpdateRandom::class,
+
+        // 删除过期的云盘分享
+        Commands\ClearPanShare::class,
+
+        // 清除设计云盘回收站过期的文件
+        Commands\ClearRecycleBin::class,
+
+        // 子账户上线 主账户角色数据变更
+        Commands\ChangeCompanyRole::class,
+
 
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -58,6 +68,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('Update:token')->everyFiveMinutes();
         // 每日定时更新内容的随机数，用于内容随机排序
         $schedule->command('random:update')->daily();
+
+        // 每小时 运行一次删除过期云盘分享任务
+        $schedule->command('clear:panShare')->hourly();
+
+        // 每天凌晨3点 清除设计云盘回收站过期的文件
+        $schedule->command('clear:RecycleBin')->dailyAt('3:00');
+
+
     }
 
     /**

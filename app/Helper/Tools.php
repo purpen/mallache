@@ -27,6 +27,9 @@ class Tools
         return mt_rand(100000, 999999);
     }
 
+
+    protected static $data_arr = null;
+
     /**
      * 获取城市名称
      * @param $code
@@ -34,17 +37,28 @@ class Tools
     static public function cityName($code)
     {
         $code = (int)$code;
-        $data = config('city.data');
-        $data_arr = [];
-        foreach (json_decode($data, true) as $v) {
-            $data_arr = $data_arr + $v;
+        if (self::$data_arr == null) {
+            $data = config('city.data');
+            $data = json_decode($data, true);
+
+            $data_arr = [];
+            foreach ($data as $v) {
+                $data_arr = $data_arr + $v;
+            }
+            self::$data_arr = $data_arr;
+            Log::info('22');
+        } else {
+            Log::info('11');
+            $data_arr = self::$data_arr;
         }
+
         if (array_key_exists($code, $data_arr)) {
             $name = $data_arr[$code];
         } else {
             $name = '';
         }
 
+        unset($data_arr);
         return $name;
     }
 
@@ -104,9 +118,9 @@ class Tools
         //member
         $member = 'user:' . $user_id;
         $quantity = Redis::zscore($key, $member);
-        if($quantity < 0){
+        if ($quantity < 0) {
             Redis::zadd($key, 0, $member);
-        }else{
+        } else {
             Redis::zincrby($key, -1, $member);
         }
     }
@@ -162,7 +176,7 @@ class Tools
     {
         if ($message = Message::find($id)) {
             $message->status = 1;
-            if($message->save()){
+            if ($message->save()) {
                 $user = User::find($message->user_id);
                 if ($user && $user->message_count > 0) {
                     $user->decrement('message_count');
@@ -205,34 +219,33 @@ class Tools
      * @param $options Array
      * @return string
      */
-    public static function request($url, $data, $options=array())
+    public static function request($url, $data, $options = array())
     {
         if (empty($url)) {
             return false;
         }
-        
+
         $o = "";
-        if(!empty($data)){
-            if(is_array($data)){
-                foreach ( $data as $k => $v ) 
-                { 
-                    $o.= "$k=" . urlencode( $v ). "&" ;
+        if (!empty($data)) {
+            if (is_array($data)) {
+                foreach ($data as $k => $v) {
+                    $o .= "$k=" . urlencode($v) . "&";
                 }
-                $data = substr($o,0,-1);           
+                $data = substr($o, 0, -1);
             }
         }
 
         $postUrl = $url;
         $curlPost = $data;
         $ch = curl_init();//初始化curl
-        curl_setopt($ch, CURLOPT_URL,$postUrl);//抓取指定网页
+        curl_setopt($ch, CURLOPT_URL, $postUrl);//抓取指定网页
         curl_setopt($ch, CURLOPT_HEADER, 0);//设置header
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//要求结果为字符串且输出到屏幕上
         curl_setopt($ch, CURLOPT_POST, 1);//post提交方式
         curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
         $result = curl_exec($ch);//运行curl
         curl_close($ch);
-        
+
         return $result;
     }
 
@@ -244,9 +257,9 @@ class Tools
     public static function captchaCreate($str)
     {
         $str = trim($str);
-        if ($phrase = Cache::get($str)){
+        if ($phrase = Cache::get($str)) {
             $builder = new CaptchaBuilder($phrase);
-        }else{
+        } else {
             $builder = new CaptchaBuilder();
             $phrase = $builder->getPhrase();
 
@@ -277,10 +290,10 @@ class Tools
         $captcha = trim($captcha);
         $result = Cache::get($str);
 
-        if($result === null){
+        if ($result === null) {
             return false;
         }
-        if(strtolower($result) == strtolower($captcha)){
+        if (strtolower($result) == strtolower($captcha)) {
             Cache::forget($str);
             return true;
         }
@@ -297,5 +310,39 @@ class Tools
     {
         $str = uniqid('mallache', true);
         return md5($str);
+    }
+
+    /**
+     * 生成随机字符串
+     *
+     * @return string
+     */
+    public static function createStr($num)
+    {
+        $digit_msp = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'w', 'z', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'W', 'Z'];
+        return implode('', array_random($digit_msp, $num));
+    }
+
+    /**
+     * 短网址、推广码
+     *
+     */
+
+    public static function url_short($url)
+    {
+        if (!is_string($url)) return false;
+        $result = sprintf("%u", crc32($url));
+        $shortUrl = '';
+        $digitMsp = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'w', 'z', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'W', 'Z');
+        while ($result > 0) {
+            $s = $result % 62;
+            $result = floor($result / 62);
+            if ($s > 9 && $s < 36)
+                $s += 10;
+            $shortUrl .= $digitMsp[$s];
+        }
+
+        return $shortUrl;
+
     }
 }

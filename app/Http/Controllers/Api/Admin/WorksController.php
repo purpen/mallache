@@ -136,8 +136,8 @@ class WorksController extends Controller
     /**
      * @api {put} /admin/works/{id} 更新
      * @apiVersion 1.0.0
-     * @apiName AdminWorks update
-     * @apiGroup works
+     * @apiName works update
+     * @apiGroup AdminWorks
      * @apiParam {string} title 标题
      * @apiParam {string} content 作品介绍
      * @apiParam {integer} type 类型:1.默认;
