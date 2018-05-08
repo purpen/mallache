@@ -40,7 +40,7 @@ class AssetModel extends BaseModel
             $sort = 'asc';
         }
 
-        $query = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime')
+        $query = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime' , 'size')
             ->where(['target_id' => $target_id, 'type' => $type])
             ->orderBy('id', $sort);
         if ($limit !== null) {
