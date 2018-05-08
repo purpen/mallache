@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Http\Transformer\TaskUserTransformer;
+use App\Http\Transformer\UserTaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
 use App\Models\TaskUser;
 use App\Models\User;
@@ -16,7 +17,7 @@ class TaskUserController extends BaseController
 {
 
     /**
-     * @api {post} /taskUsers 任务成员创建
+     * @api {post} /taskUsers 任务成员创建(暂时不用)
      * @apiVersion 1.0.0
      * @apiName  taskUsers store
      * @apiGroup taskUsers
@@ -131,15 +132,9 @@ class TaskUserController extends BaseController
                     "username": "18132382133",
                     "email": null,
                     "phone": "18132382133",
-                    "status": 0,
-                    "item_sum": 0,
-                    "price_total": "0.00",
-                    "price_frozen": "0.00",
-                    "cash": "0.00",
                     "logo_image": null,
                     "design_company_id": 52,
                     "role_id": 0,
-                    "demand_company_id": 0,
                     "realname": null,
                     "child_account": 1,
                     "company_role": 20,
@@ -155,15 +150,9 @@ class TaskUserController extends BaseController
                     "username": "",
                     "email": null,
                     "phone": "15810295774",
-                    "status": 0,
-                    "item_sum": 0,
-                    "price_total": "0.00",
-                    "price_frozen": "0.00",
-                    "cash": "0.00",
                     "logo_image": null,
                     "design_company_id": 49,
                     "role_id": 20,
-                    "demand_company_id": 0,
                     "realname": "1",
                     "child_account": 1,
                     "company_role": 20,
@@ -202,7 +191,7 @@ class TaskUserController extends BaseController
         }
         $new_user_id = $user_id;
         $users = User::whereIn('id',$new_user_id)->orderBy('id', $sort)->get();
-        return $this->response->collection($users, new UserTransformer())->setMeta($this->apiMeta());
+        return $this->response->collection($users, new UserTaskUserTransformer())->setMeta($this->apiMeta());
     }
 
     /**
@@ -234,5 +223,57 @@ class TaskUserController extends BaseController
             return $this->response->array($this->apiError());
         }
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /taskUsers/newStore 新任务成员创建
+     * @apiVersion 1.0.0
+     * @apiName  taskUsers newStore
+     * @apiGroup taskUsers
+     *
+     * @apiParam {integer} task_id 任务id
+     * @apiParam {integer} selected_user_id 选择的用户
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "data": {
+    "id": 1,
+    "task_id": 11,
+    "user_id": 3,
+    "type": 1,
+    "status": 1,
+    "created_at": 1522155497
+    },
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    }
+    }
+     */
+    public function newStore(Request $request)
+    {
+        $this->validate($request, [
+            'task_id' => 'required|integer',
+            'selected_user_id' => 'required|integer',
+        ]);
+        $task_id = $request->input('task_id');
+        $selected_user_id = $request->input('selected_user_id');
+
+        $params = array(
+            'task_id' => intval($task_id),
+            'type' => 1,
+            'status' => 1,
+            'selected_user_id' => $selected_user_id,
+            'user_id' => $this->auth_user_id,
+        );
+        //查看是否有没有创建过任务用户，有的话，跳出
+        $taskUsers = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $selected_user_id)->first();
+        if($taskUsers){
+            return $this->response->array($this->apiError('已存在该任务成员', 412));
+        }
+        $taskUsers = TaskUser::create($params);
+
+        return $this->response->item($taskUsers, new TaskUserTransformer())->setMeta($this->apiMeta());
     }
 }

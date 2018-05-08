@@ -20,6 +20,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class DesignController extends BaseController
 {
@@ -486,11 +487,8 @@ class DesignController extends BaseController
         }
         $user_id = $this->auth_user_id;
         $user = User::where('id' , $user_id)->first();
-        if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
-        }
-        if(in_array($user->company_role,[0,10])){
-            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
+        if($user->isDesignAdmin() == false){
+            return $this->response->array($this->apiError('该用户不是管理员或者超级管理员', 403));
         }
         $design_company_id = $user->design_company_id;
         if($design_company_id == 0){
@@ -530,9 +528,9 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('没有找到主账户', 404));
         }
         if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+            return $this->response->array($this->apiError('用户不是主账户', 403));
         }
-        if(in_array($user->company_role , [0 , 10])){
+        if($user->isDesignSuperAdmin() == false){
             return $this->response->array($this->apiError('该用户不是超级管理员', 403));
         }
         $set_user_id = $request->input('set_user_id');
@@ -542,7 +540,7 @@ class DesignController extends BaseController
         $company_role = $request->input('company_role');
         $set_user = User::where('id' , $set_user_id)->first();
         if(!$set_user){
-            return $this->response->array($this->apiError('没有找到被设计的用户', 404));
+            return $this->response->array($this->apiError('没有找到被设置的用户', 404));
         }
         $set_user->company_role = $company_role;
         $set_user->save();
@@ -576,16 +574,12 @@ class DesignController extends BaseController
         $delete_user_id = $request->input('delete_user_id');
         $user = User::where('id' , $user_id)->first();
         if(!$user){
-            return $this->response->array($this->apiError('没有找到主账户', 404));
+            return $this->response->array($this->apiError('没有找到该账户', 404));
         }
 
-        if($user->isChildAccount() == true){
-            return $this->response->array($this->apiError('邀请的用户不是主账户', 403));
+        if($user->isDesignAdmin() == false){
+            return $this->response->array($this->apiError('该用户不是管理员或者超级管理员', 403));
         }
-        if(in_array($user->company_role , [0 , 10])){
-            return $this->response->array($this->apiError('该用户不是超级管理员', 403));
-        }
-
         $design_company_id = $user->design_company_id;
         if($design_company_id == 0){
             return $this->response->array($this->apiError('该用户不是设计公司', 404));
@@ -678,8 +672,10 @@ class DesignController extends BaseController
      */
     public function membersSearch(Request $request)
     {
+        $user_id = $this->auth_user_id;
+        $design_id = User::designCompanyId($user_id);
         $realname = $request->input('realname');
-        $user = User::where('realname' , 'like' , '%'.$realname.'%')->get();
+        $user = User::where('realname' , 'like' , '%'.$realname.'%')->where('design_company_id' , $design_id)->get();
         if($user){
             return $this->response->collection($user, new UserTransformer())->setMeta($this->apiMeta());
         }
@@ -692,7 +688,7 @@ class DesignController extends BaseController
      * @apiName design restoreMember
      * @apiGroup design
      *
-     * @apiParam {integer} phone 被恢复成员的手机号
+     * @apiParam {string} rand_string 随机字符串
      * @apiParam {token} token
      *
      * @apiSuccessExample 成功响应:
@@ -706,24 +702,29 @@ class DesignController extends BaseController
      */
     public function restoreMember(Request $request)
     {
-        $phone = $request->input('phone');
+        $rand_string = $request->input('rand_string');
+        $master_user_id = Redis::get($rand_string);
+        if($master_user_id == null){
+            return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 403));
+        }
+        //主账户设计公司
+        $master_user = User::where('id' , $master_user_id)->first();
+        if(!$master_user){
+            return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 404));
+
+        }
+        $design_company_id = $master_user->design_company_id;
         //被恢复的成员
-        $restoreUser = User::where('phone' , $phone)->first();
-        if(!$restoreUser){
-            return $this->response->array($this->apiError('没有找到该成员', 404));
-        }
         $user_id = $this->auth_user_id;
-        //主账户
         $user = User::where('id' , $user_id)->first();
-        //如果是超级管理员不能被移除
-        if($user->company_role !== 20){
-            return $this->response->array($this->apiError('该用户是超级管理员，不能恢复成员', 403));
+        if(!$user_id){
+            return $this->response->array($this->apiError('被恢复的用户不存在' , 404));
         }
-        if($user){
-            $restoreUser->design_company_id = $user->design_company_id;
-            $restoreUser->invite_user_id = $user_id;
-            $restoreUser->save();
+        $user->design_company_id = $design_company_id;
+        $user->invite_user_id = $master_user_id;
+        if($user->save()){
             return $this->response->array($this->apiSuccess());
+
         }
 
     }

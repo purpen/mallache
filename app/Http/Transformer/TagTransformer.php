@@ -23,6 +23,7 @@ class TagTransformer extends TransformerAbstract
             'user_id' => intval($tags->user_id),
             'item_id' => intval($tags->item_id),
             'type' => intval($tags->type),
+            'type_val' => strval($tags->type_val),
             'created_at' => $tags->created_at,
         ];
     }
