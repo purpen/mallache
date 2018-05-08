@@ -616,10 +616,10 @@ class TaskController extends BaseController
     "ok_stage": 1,    //已完成
     "overdue": 0,   //已预期
     "total_count": 3,   //任务总数
-    "no_get_percentage": "33.33%",  //未领取百分比
-    "no_stage_percentage": "66.67%", //未完成百分比
-    "ok_stage_percentage": "33.33%", //已完成百分比
-    "overdue_percentage": "0%"  //已预期百分比
+    "no_get_percentage": "33",  //未领取百分比
+    "no_stage_percentage": "66", //未完成百分比
+    "ok_stage_percentage": "33", //已完成百分比
+    "overdue_percentage": "0"  //已预期百分比
     }
     }
      */
@@ -660,13 +660,13 @@ class TaskController extends BaseController
                 }
             }
             //未领取百分比
-            $no_get_percentage = round(($no_get / $total_count) * 100 , 0)."%";
+            $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
             //未完成百分比
-            $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0)."%";
+            $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0);
             //已完成百分比
-            $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0)."%";
+            $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
             //已预期百分比
-            $overdue_percentage = round(($overdue / $total_count) * 100 , 0)."%";
+            $overdue_percentage = round(($overdue / $total_count) * 100 , 0);
 
             $statistical = [];
             $statistical['no_get'] = $no_get;
@@ -685,4 +685,106 @@ class TaskController extends BaseController
         return $this->response->array($this->apiError('该项目下没有任务', 404));
 
     }
+
+    /**
+     * @api {get} /statistical/userTasks  个人任务统计
+     * @apiVersion 1.0.0
+     * @apiName tasks userStatistical
+     * @apiGroup tasks
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "获取成功",
+    "status_code": 200
+    },
+    "data": {
+    "no_get": 1,       //未领取
+    "no_stage": 2,    //未完成
+    "ok_stage": 1,    //已完成
+    "overdue": 0,   //已预期
+    "total_count": 3,   //任务总数
+    "no_get_percentage": "33",  //未领取百分比
+    "no_stage_percentage": "66", //未完成百分比
+    "ok_stage_percentage": "33", //已完成百分比
+    "overdue_percentage": "0"  //已预期百分比
+    }
+    }
+     */
+    public function userStatistical(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $taskUsers = TaskUser::where('selected_user_id' , $user_id)->get();
+        if(!empty($taskUsers)){
+            //总数量
+            $total_count = $taskUsers->count();
+            //任务数组
+            $task_id_array = [];
+            foreach ($taskUsers as $taskUser){
+                $task_id_array[] = $taskUser->task_id;
+            }
+
+            $tasks = Task::whereIn('id' , $task_id_array)->get();
+            if(!empty($tasks)){
+                //未领取
+                $no_get = 0;
+                //未完成
+                $no_stage = 0;
+                //已完成
+                $ok_stage = 0;
+                //已预期
+                $overdue = 0;
+                //当前时间
+                $current_time = date('Y-m-d H:i:s');
+                foreach ($tasks as $task){
+                    //未领取
+                    if($task->execute_user_id == 0){
+                        $no_get += 1;
+                    }
+                    //未完成
+                    if($task->stage == 0){
+                        $no_stage += 1;
+                    }
+                    //已完成
+                    if($task->stage == 2){
+                        $ok_stage += 1;
+                    }
+                    //已预期
+                    $over_time = $task->over_time;
+                    if($over_time > $current_time && $task->stage == 0){
+                        $overdue += 1;
+                    }
+                }
+                //未领取百分比
+                $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
+                //未完成百分比
+                $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0);
+                //已完成百分比
+                $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                //已预期百分比
+                $overdue_percentage = round(($overdue / $total_count) * 100 , 0);
+
+                $statistical = [];
+                $statistical['no_get'] = $no_get;
+                $statistical['no_stage'] = $no_stage;
+                $statistical['ok_stage'] = $ok_stage;
+                $statistical['overdue'] = $overdue;
+                $statistical['total_count'] = $total_count;
+                $statistical['no_get_percentage'] = $no_get_percentage;
+                $statistical['no_stage_percentage'] = $no_stage_percentage;
+                $statistical['ok_stage_percentage'] = $ok_stage_percentage;
+                $statistical['overdue_percentage'] = $overdue_percentage;
+
+                return $this->response->array($this->apiSuccess('获取成功' , 200 , $statistical));
+
+            }
+            return $this->response->array($this->apiError('没有参加任何任务', 404));
+
+        }else{
+            return $this->response->array($this->apiError('没有参加任何任务', 404));
+        }
+    }
+
 }
