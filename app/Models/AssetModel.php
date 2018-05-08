@@ -94,7 +94,7 @@ class AssetModel extends BaseModel
             $sort = 'asc';
         }
 
-        $asset = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime')
+        $asset = self::select('id', 'path', 'name', 'created_at', 'summary', 'mime' , 'size')
             ->where(['target_id' => $target_id, 'type' => $type])
             ->orderBy('id', $sort)
             ->first();
