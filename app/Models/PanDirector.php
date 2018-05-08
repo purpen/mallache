@@ -116,7 +116,7 @@ class PanDirector extends BaseModel
 
         $auth = QiniuApi::auth();
         // 私有空间中的外链 http://<domain>/<file_key>
-        $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . '?attname=' . $this->name;
+        $baseUrl = config('filesystems.disks.yunpan_qiniu.url') . $this->url . '?attname=' . urlencode($this->name);
         // 对链接进行签名
         $signedUrl = $auth->privateDownloadUrl($baseUrl);
         return $signedUrl;
