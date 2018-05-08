@@ -607,8 +607,13 @@ class DesignProjectController extends BaseController
                 $total_count = Task::where('item_id' , $designProduct->id)->count();
                 //完成的数量
                 $ok_stage = Task::where('item_id' , $designProduct->id)->where('stage' , 2)->count();
-                //百分比
-                $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                if($total_count != 0){
+                    //百分比
+                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                }else{
+                    $ok_stage_percentage = 0;
+                }
+
 
                 $designProduct['ok_stage_percentage'] = $ok_stage_percentage;
             }
