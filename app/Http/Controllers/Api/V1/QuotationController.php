@@ -14,6 +14,7 @@ use App\Models\ItemRecommend;
 use App\Models\ItemUser;
 use App\Models\ProjectPlan;
 use App\Models\QuotationModel;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
