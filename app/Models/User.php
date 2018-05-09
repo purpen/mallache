@@ -67,7 +67,7 @@ class User extends Authenticatable implements JWTSubject
         $asset = AssetModel::getOneImage($this->logo);
         if (!$asset) {
             //上设计公司需求公司。下需求公司
-            if ($this->type = 2) {
+            if ($this->type == 2) {
                 //子账户，主账户
                 if ($this->isChildAccount() == true) {
                     return $asset;
