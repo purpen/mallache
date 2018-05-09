@@ -11,6 +11,8 @@ class DesignProjectStatisticalTransformer extends TransformerAbstract
     {
         return [
             'id' => (int)$designProducts->id,
+            'level' => (int)$designProducts->level,
+            'level_value' => $designProducts->level_value,
             'name' => $designProducts->name,
             'start_time' => $designProducts->start_time,
             'ok_stage_percentage' => (int)$designProducts['ok_stage_percentage'] ? (int)$designProducts['ok_stage_percentage'] : (int)0,

@@ -598,7 +598,7 @@ class DesignProjectController extends BaseController
                 $item_id_array[] = $item_user->item_id;
             }
             //查看所有参与的项目
-            $designProducts = DesignProject::whereIn('id' , $item_id_array)->get();
+            $designProducts = DesignProject::whereIn('id' , $item_id_array)->where('status' , 1)->get();
             if(empty($designProducts)){
                 return $this->response->array($this->apiError('没有参加任何任务', 404));
             }
