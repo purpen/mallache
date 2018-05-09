@@ -873,6 +873,12 @@ class DemandController extends BaseController
             $item->status = 5;
             $item->save();
 
+            // 将项目需求ID写入合作的设计公司的项目管理中
+            if ($design_project = $quotation->designProject) {
+                $design_project->item_demand_id = $item->id;
+                $design_project->save();
+            }
+
             //触发项目状态事件
             $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
             event(new ItemStatusEvent($item, ['yes' => $all['design_company_id'], 'no' => $design_company_id]));
@@ -1208,7 +1214,7 @@ class DemandController extends BaseController
         }
 
         if ($design_types) {
-            $design_types = json_decode($design_types,true);
+            $design_types = json_decode($design_types, true);
             $query->whereIn('design_type', $design_types);
         }
 

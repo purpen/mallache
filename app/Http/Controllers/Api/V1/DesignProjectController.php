@@ -177,7 +177,7 @@ class DesignProjectController extends BaseController
 
             $design_company = DesignCompanyModel::find($design_company_id);
             // 自动创建项目云盘目录
-            PanDirector::createProjectDir($design_company, $design_project, $user_id);
+            PanDirector::createProjectDir($design_company, $design_project);
 
             DB::commit();
         } catch (MassageException $e) {
