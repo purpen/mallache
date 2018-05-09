@@ -720,6 +720,8 @@ class TaskController extends BaseController
         if(!empty($taskUsers)){
             //总数量
             $total_count = $taskUsers->count();
+            Log::info($total_count);
+
             //任务数组
             $task_id_array = [];
             foreach ($taskUsers as $taskUser){
@@ -727,6 +729,7 @@ class TaskController extends BaseController
             }
 
             $tasks = Task::whereIn('id' , $task_id_array)->get();
+            Log::info($tasks->count());
             if(!empty($tasks)){
                 //未领取
                 $no_get = 0;
