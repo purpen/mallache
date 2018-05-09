@@ -469,7 +469,6 @@ class QuotationController extends BaseController
                 }
             }
             $quotation_info['user_id'] = $this->auth_user_id;
-            $quotation_info['item_demand_id'] = 0;
             $quotation->update($quotation_info);
 
             // 项目计划

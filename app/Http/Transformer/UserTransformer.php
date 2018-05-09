@@ -15,7 +15,7 @@ class UserTransformer extends TransformerAbstract
 {
     public function transform(User $user)
     {
-        $design = DesignCompanyModel::where('id' , $user->design_company_id)->first();
+        $design = DesignCompanyModel::where('id', $user->design_company_id)->first();
         return [
             'id' => (int)$user->id,
             'type' => (int)$user->type,
@@ -29,7 +29,7 @@ class UserTransformer extends TransformerAbstract
             'price_frozen' => $user->price_frozen,
             'cash' => $user->cash,
             'logo_image' => $user->logo_image,
-            'design_company_id' =>$user->design_company_id,
+            'design_company_id' => $user->design_company_id,
             'role_id' => $user->role_id,
             'demand_company_id' => $user->demand_company_id,
             'realname' => $user->realname,
