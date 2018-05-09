@@ -131,6 +131,9 @@ class QuotationModel extends BaseModel
             'total_price' => floatval($this->total_price),
             'price' => floatval($this->price),
             'asset' => AssetModel::getImageUrl($this->id, 30),
+
+            'item_demand_id' => intval($this->item_demand_id),
+            'design_company_id' => intval($this->design_company_id),
         ];
     }
 

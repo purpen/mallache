@@ -220,6 +220,7 @@ class DesignProjectController extends BaseController
      * @apiParam {int} city  城市
      * @apiParam {int} area 地区
      * @apiParam {string} address varchar(100) 详细地址
+     * @apiParam {string} project_demand  项目需求
      *
      * @apiParam {string} design_company_name    varchar(100) 设计名称
      * @apiParam {string} design_contact_name    varchar(50) 设计联系人姓名
@@ -260,6 +261,7 @@ class DesignProjectController extends BaseController
      *          "area_value": null,  // 地区
      *          "address": null,    // 详细地址
      *          "user_id": 6
+     *          "project_demand": "项目需求"  // 项目需求
      *       },
      *       "meta": {
      *           "message": "Success",
@@ -392,6 +394,7 @@ class DesignProjectController extends BaseController
      *          "area_value": null,  // 地区
      *          "address": null,    // 详细地址
      *          "user_id": 6
+     *          "project_demand": "项目需求"  // 项目需求
      *       },
      *       "meta": {
      *           "message": "Success",

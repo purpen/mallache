@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Log;
 
 class OperationLog extends BaseModel
 {
