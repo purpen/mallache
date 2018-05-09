@@ -16,6 +16,8 @@ class OpalusController extends BaseController
      * @apiName company_record list
      * @apiGroup Opalus
      *
+     * @apiParam {string} mark 配置名称
+     * @apiParam {integer} no 期数 默认1
      * @apiParam {integer} size 显示数量，默认10
      * @apiParam {integer} sort 排序：0.总分（默认）；1.基础运作； 2.商业决策； 3.创新交付； 4.品牌溢价； 5.客观公信； 6.风险应激；
      * @apiParam {string} token
@@ -28,12 +30,12 @@ class OpalusController extends BaseController
      *   "data":[
            {
                 "_id": "5af2cca8b24b000a484e4f24",
-                "ave_score": 89,
-                "base_average": 91,
-                "business_average": 97,
-                "credit_average": 88,
+                "ave_score": 89,  // 总分
+                "base_average": 91, // 基础运作力
+                "business_average": 97, // 商业决策力
+                "credit_average": 88, // 风险应激力
                 "deleted": 0,
-                "design_average": 67,
+                "design_average": 67, // 品牌溢价力
                 "design_company": {
                     "_id": "5a951f5fb24b006f0fe726e1",
                     "d3ing_id": 0,
@@ -42,11 +44,11 @@ class OpalusController extends BaseController
                     "name": "北京洛可可科技有限公司",
                     "scope_business": "工程勘察设计；货物进出口"
                 },
-                "effect_average": 95,
-                "innovate_average": 99,
-                "mark": "plan_a",
-                "no": 3,
-                "number": "180227170535840551",
+                "effect_average": 95,   // 客观公信力
+                "innovate_average": 99, // 创新交付力
+                "mark": "plan_a", // 配置名
+                "no": 3,  // 期数
+                "number": "180227170535840551", // 编号
                 "status": 1,
                 "type": 1
             }
@@ -56,7 +58,7 @@ class OpalusController extends BaseController
     public function getCompanyRecord(Request $request)
     {
         $mark = $request->input('mark') ? $request->input('mark') : 'plan_a';
-        $no = $request->input('no') ? (int)$request->input('no') : 3;
+        $no = $request->input('no') ? (int)$request->input('no') : 1;
         $size = $request->input('size') ? (int)$request->input('size') : 10;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $url = config('app.opalus_api') . 'design_record/list';
@@ -79,4 +81,5 @@ class OpalusController extends BaseController
         return $this->response()->array($this->apiSuccess('Success', 200 , $result['data']['rows']));
     }
 }
+
 
