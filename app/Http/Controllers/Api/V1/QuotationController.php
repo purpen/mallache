@@ -14,6 +14,7 @@ use App\Models\ItemRecommend;
 use App\Models\ItemUser;
 use App\Models\ProjectPlan;
 use App\Models\QuotationModel;
+use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,6 @@ class QuotationController extends BaseController
      * @apiParam {int} tax_rate 税率
      * @apiParam {decimal} total_price 合计金额
      * @apiParam {decimal} price 总计金额
-     * @apiParam {int} design_project_id 项目管理项目ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -126,7 +126,6 @@ class QuotationController extends BaseController
                 'is_invoice' => 'int',
                 'tax_rate' => 'int',
                 'total_price' => 'required',
-                'design_project_id' => 'required|int',
                 'plan' => 'string',
                 'price' => 'required',
             ];
@@ -166,7 +165,6 @@ class QuotationController extends BaseController
                     'is_tax',
                     'is_invoice',
                     'tax_rate',
-                    'design_project_id',
                     'price',
                     'total_price',
                     'item_demand_id',
@@ -188,7 +186,8 @@ class QuotationController extends BaseController
                 }
                 $quotation_info['user_id'] = $this->auth_user_id;
                 $quotation_info['design_company_id'] = User::designCompanyId($this->auth_user_id);
-                $quotation_info['item_demand_id'] = 0;
+                $quotation_info['item_demand_id'] = $item_demand_id;
+                $quotation_info['design_project_id'] = $design_project->id;
                 $quotation = QuotationModel::create($quotation_info);
 
                 $item_recommend->quotation_id = $quotation->id;

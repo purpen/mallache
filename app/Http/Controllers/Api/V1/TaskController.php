@@ -718,18 +718,14 @@ class TaskController extends BaseController
         $user_id = $this->auth_user_id;
         $taskUsers = TaskUser::where('selected_user_id' , $user_id)->get();
         if(!empty($taskUsers)){
-            //总数量
-            $total_count = $taskUsers->count();
-            Log::info($total_count);
-
             //任务数组
             $task_id_array = [];
             foreach ($taskUsers as $taskUser){
                 $task_id_array[] = $taskUser->task_id;
             }
-
             $tasks = Task::whereIn('id' , $task_id_array)->get();
-            Log::info($tasks->count());
+            //总数量
+            $total_count = $tasks->count();
             if(!empty($tasks)){
                 //未领取
                 $no_get = 0;
