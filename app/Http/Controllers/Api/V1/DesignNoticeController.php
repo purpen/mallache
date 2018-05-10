@@ -27,6 +27,8 @@ class DesignNoticeController extends BaseController
      *              "user_id": 6,
      *              "operation_log_id": 9,
      *              "operation_log": {
+     *                  "type": 1  // 模块类型 1.项目 2.网盘
+     *                  "model_id": 1 // 模块ID （与type配合使用）
      *                  "action_type": 1, // 1.创建主任务 2.创建子任务 3.更改任务名称 4.更改任务备注 5.更改任务优先级 6.父任务重做 7.父任务完成 8.子任务重做 9.子任务完成 10.更新了截至时间
      *                  "target_type": 1, // 目标类型 1.任务 2.
      *                  "title": "18629493333 创建了任务",

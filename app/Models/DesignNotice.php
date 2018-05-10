@@ -41,6 +41,7 @@ class DesignNotice extends BaseModel
             'is_read' => $this->is_read,
             'user_id' => $this->user_id,
             'operation_log_id' => $this->operation_log_id,
+            'title' => $this->operationLog->info()['title'],  // 消息标题
             'operation_log' => $this->operationLog->info(),
         ];
     }
