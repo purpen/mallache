@@ -142,6 +142,26 @@ class DesignProject extends BaseModel
         return $type_value;
     }
 
+    //级别
+    public function getLevelValueAttribute()
+    {
+        switch ($this->level) {
+            case 1:
+                $level_value = '普通';
+                break;
+            case 2:
+                $level_value = '紧急';
+                break;
+            case 3:
+                $level_value = '非常紧急';
+                break;
+            default:
+                $level_value = '';
+        }
+
+        return $level_value;
+    }
+
     //设计类别多选
     public function getDesignTypesValueAttribute()
     {

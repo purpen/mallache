@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\MassageException;
+use App\Http\Transformer\DesignProjectStatisticalTransformer;
 use App\Http\Transformer\DesignProjectTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
 use App\Models\PanDirector;
+use App\Models\ProductDesign;
+use App\Models\Task;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -523,4 +526,106 @@ class DesignProjectController extends BaseController
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
 
+    /**
+     * @api {get} /designProject/contracts 项目中的合同列表
+     * @apiVersion 1.0.0
+     * @apiName designProject contracts
+     * @apiGroup designProject
+     *
+     * @apiParam {int} item_id 项目id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function contracts(Request $request)
+    {
+        try {
+            $item_id = $request->input('item_id');
+            $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
+            if (!$design_project) {
+                throw new MassageException('不存在', 404);
+            }
+            $contracts = AssetModel::getImageUrl($item_id , 32 , 1);
+        } catch (MassageException $e) {
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess('Success', 200, $contracts));
+
+    }
+
+    /**
+     * @api {get} /designProject/userStatistical 个人项目统计
+     * @apiVersion 1.0.0
+     * @apiName designProject userStatistical
+     * @apiGroup designProject
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 1,
+    "name": "测试",
+    "start_time": 123456789,
+    "ok_stage_percentage": 25
+    },
+    {
+    "id": 2,
+    "name": "测试2",
+    "start_time": 123456789,
+    "ok_stage_percentage": 33
+    }
+    ],
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    }
+    }
+     */
+    public function userStatistical()
+    {
+        $user_id = $this->auth_user_id;
+        //项目成员，查看参与的项目
+        $item_users = ItemUser::where('user_id' , $user_id)->get();
+        if(!empty($item_users)){
+            $item_id_array = [];
+            foreach ($item_users as $item_user){
+                $item_id_array[] = $item_user->item_id;
+            }
+            //查看所有参与的项目
+            $designProducts = DesignProject::whereIn('id' , $item_id_array)->where('status' , 1)->get();
+            if(empty($designProducts)){
+                return $this->response->array($this->apiError('没有参加任何任务', 404));
+            }
+            foreach ($designProducts as $designProduct){
+                //总数量
+                $total_count = Task::where('item_id' , $designProduct->id)->count();
+                //完成的数量
+                $ok_stage = Task::where('item_id' , $designProduct->id)->where('stage' , 2)->count();
+                if($total_count != 0){
+                    //百分比
+                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+                }else{
+                    $ok_stage_percentage = 0;
+                }
+
+
+                $designProduct['ok_stage_percentage'] = $ok_stage_percentage;
+            }
+            return $this->response->collection($designProducts, new DesignProjectStatisticalTransformer())->setMeta($this->apiMeta());
+
+        }else{
+            return $this->response->array($this->apiError('没有参加任何任务', 404));
+        }
+
+
+    }
 }
