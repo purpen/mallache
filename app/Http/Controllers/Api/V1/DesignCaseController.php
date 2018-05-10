@@ -464,7 +464,6 @@ class DesignCaseController extends BaseController
      * @apiName designCase lists
      * @apiGroup designCase
      *
-     * @apiParam {string} token
      */
     public function lists($design_company_id)
     {
