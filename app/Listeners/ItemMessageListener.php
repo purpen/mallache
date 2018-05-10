@@ -453,11 +453,7 @@ class ItemMessageListener
 
         // 判断短信通知是否开启
         if (config('constant.sms_send')) {
-            try {
-                dispatch(new SendOneSms($phone, $text));
-            } catch (\Exception $e) {
-                Log::error($e);
-            }
+            dispatch(new SendOneSms($phone, $text));
         }
     }
 

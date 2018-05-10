@@ -574,7 +574,7 @@ class DemandController extends BaseController
 
 
         try {
-
+            DB::beginTransaction();
             $item = Item::find($all['item_id']);
             if (!empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))) {
                 return $this->response->array($this->apiError('选择设计公司不符合要求', 403));
@@ -593,7 +593,9 @@ class DemandController extends BaseController
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
 
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
             return $this->response->array($this->apiError('Error', 500));
         }
