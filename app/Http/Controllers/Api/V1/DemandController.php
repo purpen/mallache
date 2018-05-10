@@ -574,6 +574,7 @@ class DemandController extends BaseController
 
 
         try {
+            DB::beginTransaction();
 
             $item = Item::find($all['item_id']);
             if (!empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))) {
@@ -593,7 +594,9 @@ class DemandController extends BaseController
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
 
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
             return $this->response->array($this->apiError('Error', 500));
         }
@@ -1005,7 +1008,7 @@ class DemandController extends BaseController
     }
 
     /**
-     * @api {post} /demand/closeItem 用户关闭需求项目
+     * @api {post} /demand/closeItem 用户关闭需求项目 -2.匹配失败；1.填写资料；2.人工干预；3.匹配设计公司；4.等待设计公司接单(报价)；
      * @apiVersion 1.0.0
      * @apiName demand closeItem
      * @apiGroup demandType

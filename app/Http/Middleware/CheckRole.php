@@ -59,7 +59,7 @@ class CheckRole
                 }
                 break;
             default:
-                throw new HttpException(401, '无访问权限');
+                throw new HttpException(403, '无访问权限');
         }
 
         return $next($request);

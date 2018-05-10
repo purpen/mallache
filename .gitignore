@@ -25,3 +25,4 @@ page/deploy.sh
 page/.idea
 *.jsbeautifyrc
 composer.lock
+/public/AdminApidoc/

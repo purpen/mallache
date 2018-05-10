@@ -30,7 +30,7 @@ class SendOneSms implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(string $mobile, string $text)
+    public function __construct($mobile, $text)
     {
         $this->mobile = $mobile;
         $this->text = $text;
@@ -46,9 +46,9 @@ class SendOneSms implements ShouldQueue
         $yun_pian = new Yunpian();
         $result = $yun_pian->sendOneSms($this->mobile, $this->text);
 
-        if(intval($result->statusCode) !== 200){
+        if (intval($result->statusCode) !== 200) {
             Log::error('短信发送：' . json_encode($result));
-            throw new \Exception($result->error,$result->statusCode);
+            throw new \Exception($result->error, $result->statusCode);
         }
 
         unset($yun_pian, $result);
