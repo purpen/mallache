@@ -542,6 +542,31 @@ class DesignProjectController extends BaseController
      *           "message": "Success",
      *           "status_code": 200
      *       }
+     *      "data": {
+     *          "info": {   // 线上合同信息
+     *              "id": 45,
+     *              "item_demand_id": 120,
+     *              "design_company_id": 20,
+     *              "demand_company_name": "不一样的烟火",
+     *              "demand_company_address": "北京 验货区",
+     *              "demand_company_phone": "387822234",
+     *              "demand_company_legal_person": "大傻",
+     *              "design_company_name": "北京一劳永逸科技有限公司",
+     *              "design_company_address": "电通创业园111222",
+     *              "design_company_phone": "194585839312",
+     *              "design_company_legal_person": "太火鸟",
+     *              "total": "50000.00",
+     *              "status": 1,
+     *              "unique_id": "ht5af2cba0601b2",    // 合同unique_id
+     *              "item_name": null,
+     *              "title": "我是专门测试报价单接口修改的",  // 合同名称
+     *              "warranty_money": "5000.00",
+     *              "first_payment": "20000.00",
+     *              "warranty_money_proportion": "0.10",
+     *              "first_payment_proportion": "0.40"
+     *          },
+     *          "assets": []        // 线下合同附件
+     *      }
      *   }
      */
     public function contracts(Request $request)
@@ -566,8 +591,8 @@ class DesignProjectController extends BaseController
                     'item_demand_id' => $design_project->item_demand_id,
                     'design_company_id' => $design_company_id
                 ])->first();
-            if($contract){
-                $info =  $contract->info();
+            if ($contract) {
+                $info = $contract->info();
             }
         }
         $data = [
