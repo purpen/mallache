@@ -191,32 +191,32 @@ class OperationLog extends BaseModel
     // 更改任务名称
     public function updateTaskName()
     {
-        return $this->user->getUserName() . $this->title_config['3'] . $this->task->getTaskName();
+        return $this->user->getUserName() . $this->title_config['3'] . $this->content;
     }
 
     // 更改任务备注
     public function updateTaskSummary()
     {
-        return $this->user->getUserName() . $this->title_config['4'] . $this->task->getTaskSummary();
+        return $this->user->getUserName() . $this->title_config['4'] . $this->content;
     }
 
     // 更改任务优先级
     public function updateTaskLevel()
     {
-        return $this->user->getUserName() . $this->title_config['5'] . $this->task->getTaskLevel();
+        return $this->user->getUserName() . $this->title_config['5'] . $this->content;
     }
 
     //父任务重做
     public function noStage()
     {
-        return $this->user->getUserName() . $this->title_config['6'];
+        return $this->user->getUserName() . $this->title_config['6'].$this->content;
 
     }
 
     //父任务完成
     public function isStage()
     {
-        return $this->user->getUserName() . $this->title_config['7'];
+        return $this->user->getUserName() . $this->title_config['7'].$this->content;
 
     }
 
@@ -230,14 +230,14 @@ class OperationLog extends BaseModel
     //子任务完成
     public function isChildStage()
     {
-        return $this->user->getUserName() . $this->title_config['9'] . $this->task->getTaskName();
+        return $this->user->getUserName() . $this->title_config['9'] . $this->content;
 
     }
 
     // 更改任务备注
     public function updateOverTime()
     {
-        return $this->user->getUserName() . $this->title_config['10'];
+        return $this->user->getUserName() . $this->title_config['10'].$this->content;
     }
 
 }
