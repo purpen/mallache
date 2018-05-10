@@ -16,6 +16,7 @@ class OpalusController extends BaseController
      * @apiName company_record list
      * @apiGroup Opalus
      *
+     * @apiParam {string} ids 多个ID查询，用,分隔，传入此参数，下列参数传入无效
      * @apiParam {string} mark 配置名称
      * @apiParam {integer} no 期数 默认1
      * @apiParam {integer} size 显示数量，默认10
@@ -57,6 +58,7 @@ class OpalusController extends BaseController
      */
     public function getCompanyRecord(Request $request)
     {
+        $ids = $request->input('ids') ? $request->input('ids') : '';
         $mark = $request->input('mark') ? $request->input('mark') : 'plan_a';
         $no = $request->input('no') ? (int)$request->input('no') : 1;
         $size = $request->input('size') ? (int)$request->input('size') : 10;
