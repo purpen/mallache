@@ -6,6 +6,7 @@ use App\Helper\MassageException;
 use App\Http\Transformer\DesignProjectStatisticalTransformer;
 use App\Http\Transformer\DesignProjectTransformer;
 use App\Models\AssetModel;
+use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
@@ -180,7 +181,7 @@ class DesignProjectController extends BaseController
 
             $design_company = DesignCompanyModel::find($design_company_id);
             // 自动创建项目云盘目录
-            PanDirector::createProjectDir($design_company, $design_project, $user_id);
+            PanDirector::createProjectDir($design_company, $design_project);
 
             DB::commit();
         } catch (MassageException $e) {
@@ -541,22 +542,65 @@ class DesignProjectController extends BaseController
      *           "message": "Success",
      *           "status_code": 200
      *       }
+     *      "data": {
+     *          "info": {   // 线上合同信息
+     *              "id": 45,
+     *              "item_demand_id": 120,
+     *              "design_company_id": 20,
+     *              "demand_company_name": "不一样的烟火",
+     *              "demand_company_address": "北京 验货区",
+     *              "demand_company_phone": "387822234",
+     *              "demand_company_legal_person": "大傻",
+     *              "design_company_name": "北京一劳永逸科技有限公司",
+     *              "design_company_address": "电通创业园111222",
+     *              "design_company_phone": "194585839312",
+     *              "design_company_legal_person": "太火鸟",
+     *              "total": "50000.00",
+     *              "status": 1,
+     *              "unique_id": "ht5af2cba0601b2",    // 合同unique_id
+     *              "item_name": null,
+     *              "title": "我是专门测试报价单接口修改的",  // 合同名称
+     *              "warranty_money": "5000.00",
+     *              "first_payment": "20000.00",
+     *              "warranty_money_proportion": "0.10",
+     *              "first_payment_proportion": "0.40"
+     *          },
+     *          "assets": []        // 线下合同附件
+     *      }
      *   }
      */
     public function contracts(Request $request)
     {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
         try {
             $item_id = $request->input('item_id');
             $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
             if (!$design_project) {
                 throw new MassageException('不存在', 404);
             }
-            $contracts = AssetModel::getImageUrl($item_id , 32 , 1);
+            $contracts = AssetModel::getImageUrl($item_id, 32, 1);
         } catch (MassageException $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
 
-        return $this->response->array($this->apiSuccess('Success', 200, $contracts));
+        $info = null;
+        if ($design_project->project_type == 1) {
+            $contract = Contract::query()
+                ->where([
+                    'item_demand_id' => $design_project->item_demand_id,
+                    'design_company_id' => $design_company_id
+                ])->first();
+            if ($contract) {
+                $info = $contract->info();
+            }
+        }
+        $data = [
+            'info' => $info,
+            'assets' => $contracts,
+        ];
+
+        return $this->response->array($this->apiSuccess('Success', 200, $data));
 
     }
 
@@ -569,51 +613,51 @@ class DesignProjectController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-    {
-    "data": [
-    {
-    "id": 1,
-    "name": "测试",
-    "start_time": 123456789,
-    "ok_stage_percentage": 25
-    },
-    {
-    "id": 2,
-    "name": "测试2",
-    "start_time": 123456789,
-    "ok_stage_percentage": 33
-    }
-    ],
-    "meta": {
-    "message": "Success",
-    "status_code": 200
-    }
-    }
+     * {
+     * "data": [
+     * {
+     * "id": 1,
+     * "name": "测试",
+     * "start_time": 123456789,
+     * "ok_stage_percentage": 25
+     * },
+     * {
+     * "id": 2,
+     * "name": "测试2",
+     * "start_time": 123456789,
+     * "ok_stage_percentage": 33
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     public function userStatistical()
     {
         $user_id = $this->auth_user_id;
         //项目成员，查看参与的项目
-        $item_users = ItemUser::where('user_id' , $user_id)->get();
-        if(!empty($item_users)){
+        $item_users = ItemUser::where('user_id', $user_id)->get();
+        if (!empty($item_users)) {
             $item_id_array = [];
-            foreach ($item_users as $item_user){
+            foreach ($item_users as $item_user) {
                 $item_id_array[] = $item_user->item_id;
             }
             //查看所有参与的项目
-            $designProducts = DesignProject::whereIn('id' , $item_id_array)->where('status' , 1)->get();
-            if(empty($designProducts)){
+            $designProducts = DesignProject::whereIn('id', $item_id_array)->where('status', 1)->get();
+            if (empty($designProducts)) {
                 return $this->response->array($this->apiError('没有参加任何任务', 404));
             }
-            foreach ($designProducts as $designProduct){
+            foreach ($designProducts as $designProduct) {
                 //总数量
-                $total_count = Task::where('item_id' , $designProduct->id)->count();
+                $total_count = Task::where('item_id', $designProduct->id)->count();
                 //完成的数量
-                $ok_stage = Task::where('item_id' , $designProduct->id)->where('stage' , 2)->count();
-                if($total_count != 0){
+                $ok_stage = Task::where('item_id', $designProduct->id)->where('stage', 2)->count();
+                if ($total_count != 0) {
                     //百分比
-                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
-                }else{
+                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100, 0);
+                } else {
                     $ok_stage_percentage = 0;
                 }
 
@@ -622,7 +666,7 @@ class DesignProjectController extends BaseController
             }
             return $this->response->collection($designProducts, new DesignProjectStatisticalTransformer())->setMeta($this->apiMeta());
 
-        }else{
+        } else {
             return $this->response->array($this->apiError('没有参加任何任务', 404));
         }
 

@@ -53,5 +53,29 @@ class Contract extends BaseModel
         return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
     }
 
-
+    public function info()
+    {
+        return [
+            'id' => intval($this->id),
+            'item_demand_id' => intval($this->item_demand_id),
+            'design_company_id' => intval($this->design_company_id),
+            'demand_company_name' => strval($this->demand_company_name),
+            'demand_company_address' => strval($this->demand_company_address),
+            'demand_company_phone' => strval($this->demand_company_phone),
+            'demand_company_legal_person' => strval($this->demand_company_legal_person),
+            'design_company_name' => strval($this->design_company_name),
+            'design_company_address' => strval($this->design_company_address),
+            'design_company_phone' => strval($this->design_company_phone),
+            'design_company_legal_person' => strval($this->design_company_legal_person),
+            'total' => strval($this->total),
+            'status' => intval($this->status),
+            'unique_id' => strval($this->unique_id),
+            'item_name' => $this->item_name,
+            'title' => strval($this->title),
+            'warranty_money' => $this->warranty_money,
+            'first_payment' => $this->first_payment,
+            'warranty_money_proportion' => $this->warranty_money_proportion,
+            'first_payment_proportion' => $this->first_payment_proportion,
+        ];
+    }
 }
