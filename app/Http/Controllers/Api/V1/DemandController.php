@@ -1226,9 +1226,9 @@ class DemandController extends BaseController
             $query->where('min_price', '<=', $max);
         }
 
-        if ($cycle) {
-            $query->where('project_cycle', $cycle);
-        }
+//        if ($cycle) {
+//            $query->where('project_cycle', $cycle);
+//        }
 
         //设计公司用户ID
         $design_id_arr = $query->get()->pluck('user_id')->all();
@@ -1236,13 +1236,13 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if ($province && $province != -1) {
-            $design->where('province', $province);
-        }
-
-        if ($city && $city != -1) {
-            $design->where('city', $city);
-        }
+//        if ($province && $province != -1) {
+//            $design->where('province', $province);
+//        }
+//
+//        if ($city && $city != -1) {
+//            $design->where('city', $city);
+//        }
 
         if ($item_id) {
             if ($item = Item::find($item_id)) {
