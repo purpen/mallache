@@ -574,7 +574,7 @@ class DemandController extends BaseController
 
 
         try {
-
+            DB::beginTransaction();
             $item = Item::find($all['item_id']);
             if (!empty(array_diff($all['design_company_id'], explode(',', $item->recommend)))) {
                 return $this->response->array($this->apiError('选择设计公司不符合要求', 403));
@@ -593,7 +593,9 @@ class DemandController extends BaseController
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
 
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
             return $this->response->array($this->apiError('Error', 500));
         }
@@ -1197,9 +1199,9 @@ class DemandController extends BaseController
         $type = $request->input('type') ?? null;
         $design_types = $request->input('design_types') ?? null;
         $design_cost = $request->input('design_cost') ?? null;
-        $cycle = $request->input('cycle') ?? null;
-        $province = $request->input('province') ?? null;
-        $city = $request->input('city') ?? null;
+//        $cycle = $request->input('cycle') ?? null;
+//        $province = $request->input('province') ?? null;
+//        $city = $request->input('city') ?? null;
         $item_id = $request->input('item_id') ?? null;
 
         $query = DesignItemModel::select('user_id');
@@ -1217,9 +1219,9 @@ class DemandController extends BaseController
             $query->where('min_price', '<=', $max);
         }
 
-        if ($cycle) {
-            $query->where('project_cycle', $cycle);
-        }
+//        if ($cycle) {
+//            $query->where('project_cycle', $cycle);
+//        }
 
         //设计公司用户ID
         $design_id_arr = $query->get()->pluck('user_id')->all();
@@ -1227,13 +1229,13 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if ($province && $province != -1) {
-            $design->where('province', $province);
-        }
-
-        if ($city && $city != -1) {
-            $design->where('city', $city);
-        }
+//        if ($province && $province != -1) {
+//            $design->where('province', $province);
+//        }
+//
+//        if ($city && $city != -1) {
+//            $design->where('city', $city);
+//        }
 
         if ($item_id) {
             if ($item = Item::find($item_id)) {
