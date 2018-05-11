@@ -66,6 +66,7 @@ class OpalusController extends BaseController
         $url = config('app.opalus_api') . 'design_record/list';
 
         $param = [
+          'ids' => $ids,
           'mark'=> $mark,
           'no'=> $no,
           'sort'=> $sort,
