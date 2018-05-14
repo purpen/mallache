@@ -6,6 +6,7 @@ use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
+use App\Models\AssetModel;
 use App\Models\Item;
 use App\Models\PayOrder;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,7 @@ class PayController extends BaseController
         //总金额
         $total_fee = config('constant.item_price');
 
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 2);
         $alipay = new Alipay();
         $html_text = $alipay->alipayApi($pay_order->uid, '发布需求保证金', $total_fee);
 
@@ -66,9 +67,10 @@ class PayController extends BaseController
      * @param int $item_id 目标ID
      * @param int $user_id 用户ID
      * @param string $summary 备注
+     * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      * @return mixed
      */
-    protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0)
+    protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0, $pay_type = 0)
     {
         $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
             ->first();
@@ -85,6 +87,7 @@ class PayController extends BaseController
             'summary' => $summary,
             'item_id' => $item_id,
             'amount' => $amount,
+            'pay_type' => $pay_type,
         ]);
         return $pay_order;
     }
@@ -295,6 +298,9 @@ class PayController extends BaseController
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
+        $pay_order->pay_type = 2;  // 支付宝
+        $pay_order->save();
+
         $alipay = new Alipay();
         $html_text = $alipay->alipayApi($pay_order->uid, $pay_order->summary, $pay_order->amount);
 
@@ -358,7 +364,7 @@ class PayController extends BaseController
         //总金额
         $total_fee = config('constant.item_price');
 
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 3);
 
         $wx_pay = new WxPay();
         $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee * 100, 1);
@@ -391,6 +397,9 @@ class PayController extends BaseController
         if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
+
+        $pay_order->pay_type = 3; // 维信
+        $pay_order->save();
 
         $wx_pay = new WxPay();
         $code_url = $wx_pay->wxPayApi($pay_order->summary, $pay_order->uid, $pay_order->amount * 100, 1);
@@ -439,7 +448,7 @@ class PayController extends BaseController
         //总金额
         $total_fee = config('constant.item_price');
 
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee);
+        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 4);
 
         $jdpay = new JdPay();
         $html_text = $jdpay->payApi($pay_order->uid, $total_fee, '发布需求保证金');
@@ -546,10 +555,48 @@ class PayController extends BaseController
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
+        $pay_order->pay_type = 4; // 京东
+        $pay_order->save();
+
         $jdpay = new JdPay();
         $html_text = $jdpay->payApi($pay_order->uid, $pay_order->amount, $pay_order->summary);
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
+    }
+
+
+    /**
+     * @api {put} /pay/bankTransfer/{pay_order_id} 银行转账凭证上传确认
+     * @apiVersion 1.0.0
+     * @apiName pay bankTransfer
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function bankTransfer($pay_order_id)
+    {
+        $pay_order = PayOrder::where(['id' => $pay_order_id, 'pay_type' => 5])->first();  // 查询银行转账的支付单
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+
+        $count = AssetModel::where(['type' => 32, 'target_id' => $pay_order_id])->count();
+        if ($count > 0) {
+            $pay_order->bank_transfer = 1; // 已上传用户凭证
+            $pay_order->save();
+            return $this->response->array($this->apiSuccess());
+        } else {
+            return $this->response->array($this->apiError('未上传转账凭证附件!', 403));
+        }
+
     }
 
 }
