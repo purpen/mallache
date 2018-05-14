@@ -235,6 +235,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //查询支付状态
         $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 
+        // api {put} /pay/bankTransfer/{pay_order_id} 银行转账凭证上传确认
+        $api->get('/pay/bankTransfer/{pay_order_id}', 'PayController@bankTransfer');
+
         //用户提现
         $api->post('/withdraw/create', 'WithdrawOrderController@create');
         $api->get('/withdraw/lists', 'WithdrawOrderController@lists');

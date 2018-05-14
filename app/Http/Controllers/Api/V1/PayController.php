@@ -583,7 +583,7 @@ class PayController extends BaseController
      */
     public function bankTransfer($pay_order_id)
     {
-        $pay_order = PayOrder::where(['id' => $pay_order_id, 'pay_type' => 5])->first();  // 查询银行转账的支付单
+        $pay_order = PayOrder::where(['id' => $pay_order_id, 'pay_type' => 5, 'status' => 0])->first();  // 查询银行转账的支付单
         if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
