@@ -128,8 +128,8 @@ class QuotationModel extends BaseModel
             'is_tax' => intval($this->is_tax),
             'is_invoice' => intval($this->is_invoice),
             'tax_rate' => intval($this->tax_rate),
-            'total_price' => floatval($this->total_price),
-            'price' => floatval($this->price),
+            'total_price' => number_format($this->total_price, 2, '.', ''),
+            'price' => number_format($this->price, 2, '.', ''),
             'asset' => AssetModel::getImageUrl($this->id, 30),
 
             'item_demand_id' => intval($this->item_demand_id),
