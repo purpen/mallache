@@ -203,7 +203,7 @@ class Recommend
 //        }
 
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
-            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
+//            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
