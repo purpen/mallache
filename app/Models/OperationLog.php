@@ -145,6 +145,7 @@ class OperationLog extends BaseModel
         }
 
         return [
+            'id' => $this->id,
             'user_id' => $this->user_id,
             'action_type' => $this->action_type,
             'type' => $this->type,
