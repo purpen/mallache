@@ -99,7 +99,6 @@ class OperationLogsAction
         return json_decode($this->response->getContent(), true);
     }
 
-
     // 路由请求对应的log记录方法
     public function task()
     {
@@ -188,6 +187,30 @@ class OperationLogsAction
 
             }
         }
+
+    }
+
+    //创建标签
+    public function createTag()
+    {
+        $response_content = $this->getResponseContent();
+
+        $item_id = intval($this->request->input('item_id'));
+        $target_id = $response_content['data']['id'];
+        $content = $response_content['data']['title'];
+
+        $this->createTagLog($item_id, 11, $target_id, null, $content);
+
+    }
+
+    //删除标签
+    public function deleteTag()
+    {
+        $content = $_POST['tagTitle'];
+        $item_id = $_POST['item_id'];
+        $target_id = $_POST['id'];
+
+        $this->createTagLog($item_id, 12, $target_id, null, $content);
 
     }
 

@@ -269,13 +269,20 @@ class TagController extends BaseController
      *   }
      *
      */
-    public function destroy($id)
+    public function destroy(Request $request ,$id)
     {
         //检验是否存在
         $tag = Tag::find($id);
         if (!$tag) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        $title = $tag->title;
+        $id = $tag->id;
+        $item_id = $tag->item_id;
+        //通过$_POST存储数据，记录到动态表中
+        $_POST['tagTitle'] = $title;
+        $_POST['id'] = $id;
+        $_POST['item_id'] = $item_id;
         //检验是否是当前用户创建的作品
         if ($tag->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('没有权限删除!', 403));
