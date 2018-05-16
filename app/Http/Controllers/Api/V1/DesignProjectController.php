@@ -683,6 +683,42 @@ class DesignProjectController extends BaseController
      *
      * @apiParam {int} item_id 项目id
      * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    },
+    "data": [
+    {
+    "id": 48,
+    "user_id": 1,
+    "action_type": 2,
+    "type": 1,
+    "model_id": 1,
+    "target_type": 1,
+    "target_id": 27,
+    "title": "test111 创建了子任务",
+    "content": "test",
+    "created_at": 1525337806,
+    "user_name": "test111"
+    },
+    {
+    "id": 39,
+    "user_id": 1,
+    "action_type": 1,
+    "type": 1,
+    "model_id": 1,
+    "target_type": 1,
+    "target_id": 22,
+    "title": "test111 创建了任务",
+    "content": "test",
+    "created_at": 1525225273,
+    "user_name": "test111"
+    }
+    ]
+    }
      */
     public function dynamic(Request $request)
     {
