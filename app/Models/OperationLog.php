@@ -84,7 +84,7 @@ class OperationLog extends BaseModel
      * @param int $model_id 模块ID （与type配合使用）
      * @param int $action_type 动作类型
      * @param int $target_id 目标ID（与target_type配合使用）
-     * @param int $target_type 目标类型 1.任务
+     * @param int $target_type 目标类型 1.任务 2.标签 3.项目人员 4.沟通纪要
      * @param int $user_id 操作人ID
      * @param int|null $other_user_id 被操作人ID
      * @param string|null $content 变更内容

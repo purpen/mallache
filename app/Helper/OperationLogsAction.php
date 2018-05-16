@@ -65,7 +65,28 @@ class OperationLogsAction
     private function createTaskLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
     {
         $company_id = $this->getUserDesignId();
-        return OperationLog::createLog($company_id, 1, $item_id, $action_type,1, $target_id, $this->auth_user->id, $other_user_id, $content);
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type, 1, $target_id, $this->auth_user->id, $other_user_id, $content);
+    }
+
+    // 项目管理--标签操作动态
+    private function createTagLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
+    {
+        $company_id = $this->getUserDesignId();
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type, 2, $target_id, $this->auth_user->id, $other_user_id, $content);
+    }
+
+    // 项目管理--项目人员操作动态
+    private function createUserLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
+    {
+        $company_id = $this->getUserDesignId();
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type, 3, $target_id, $this->auth_user->id, $other_user_id, $content);
+    }
+
+    // 项目管理--项目人员操作动态
+    private function createSummariesLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
+    {
+        $company_id = $this->getUserDesignId();
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type, 4, $target_id, $this->auth_user->id, $other_user_id, $content);
     }
 
     /**
@@ -116,24 +137,24 @@ class OperationLogsAction
         $summary = $this->request->input('summary');
         $level = $this->request->input('level');
         $over_time = $this->request->input('over_time');
-        if(!empty($name)){
+        if (!empty($name)) {
             $this->createTaskLog($item_id, 3, $target_id, null, $name);
 
-        } elseif(!empty($summary)){
+        } elseif (!empty($summary)) {
             $this->createTaskLog($item_id, 4, $target_id, null, $summary);
 
-        } elseif(!empty($level)){
+        } elseif (!empty($level)) {
             //优先级存普通，紧急，非常紧急
-            if($level == 1){
+            if ($level == 1) {
                 $level = '普通';
-            }else if($level == 5){
+            } else if ($level == 5) {
                 $level = '紧级';
-            }else if($level == 8){
+            } else if ($level == 8) {
                 $level = '非常紧级';
             }
             $this->createTaskLog($item_id, 5, $target_id, null, $level);
 
-        } elseif(!empty($over_time)){
+        } elseif (!empty($over_time)) {
             $this->createTaskLog($item_id, 10, $target_id, null, $over_time);
         }
 
@@ -150,19 +171,19 @@ class OperationLogsAction
         $task = Task::find($target_id);
         $item_id = $task->item_id;
         if ($tier == 0) {  // 父任务
-            if($stage == 0){ //父任务重做
+            if ($stage == 0) { //父任务重做
                 $this->createTaskLog($item_id, 6, $target_id, null, $stage);
 
-            }else{  //父任务完成
+            } else {  //父任务完成
                 $this->createTaskLog($item_id, 7, $target_id, null, $stage);
 
             }
 
         } else if ($tier == 1) {  // 子任务
-            if($stage == 0){ //子任务重做
+            if ($stage == 0) { //子任务重做
                 $this->createTaskLog($item_id, 8, $target_id, null, $stage);
 
-            }else{  //子任务完成
+            } else {  //子任务完成
                 $this->createTaskLog($item_id, 9, $target_id, null, $stage);
 
             }
