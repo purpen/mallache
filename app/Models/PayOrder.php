@@ -6,7 +6,7 @@ class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'bank_id'];
+    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'bank_id','pay_type'];
 
     protected $appends = ['status_value', 'pay_type_value','bank'];
 

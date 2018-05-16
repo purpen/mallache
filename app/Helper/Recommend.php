@@ -164,12 +164,12 @@ class Recommend
 
         //所属领域
         $field =  $this->item->productDesign->field;
-        //周期
-        $cycle = $this->item->productDesign->cycle;
-        //项目公司地点
-        $item_info = $this->item->itemInfo();
-        $province = $item_info['province'];
-        $city = $item_info['city'];
+//        //周期
+//        $cycle = $this->item->productDesign->cycle;
+//        //项目公司地点
+//        $item_info = $this->item->itemInfo();
+//        $province = $item_info['province'];
+//        $city = $item_info['city'];
 
 
         $arr = [];
@@ -179,7 +179,7 @@ class Recommend
                 ->where('type', $type)
                 ->where('design_type', $design_type)
                 ->where('min_price', '<=', $max)
-                ->where('project_cycle', $cycle)
+//                ->where('project_cycle', $cycle)
                 ->get()
                 ->pluck('user_id')->all();
 
@@ -197,13 +197,13 @@ class Recommend
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province && $province != -1){
-            $design->where('province', $province)
-                ->where('city', $city);
-        }
+//        if($province && $province != -1){
+//            $design->where('province', $province)
+//                ->where('city', $city);
+//        }
 
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
-            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
+//            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
@@ -221,12 +221,12 @@ class Recommend
         //所属领域
 //        $field =  $this->item->productDesign->field;
         //周期
-        $cycle = $this->item->uDesign->cycle;
+//        $cycle = $this->item->uDesign->cycle;
 
         //项目公司地点
-        $item_info = $this->item->itemInfo();
-        $province = $item_info['province'];
-        $city = $item_info['city'];
+//        $item_info = $this->item->itemInfo();
+//        $province = $item_info['province'];
+//        $city = $item_info['city'];
 
         $arr = [];
         foreach ($design_types as $design_type){
@@ -235,7 +235,7 @@ class Recommend
                 ->where('type', $type)
                 ->where('design_type', $design_type)
                 ->where('min_price', '<=', $max)
-                ->where('project_cycle', $cycle)
+//                ->where('project_cycle', $cycle)
                 ->get()
                 ->pluck('user_id')->all();
 
@@ -252,10 +252,10 @@ class Recommend
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province && $province != -1){
-            $design->where('province', $province)
-                ->where('city', $city);
-        }
+//        if($province && $province != -1){
+//            $design->where('province', $province)
+//                ->where('city', $city);
+//        }
 
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
