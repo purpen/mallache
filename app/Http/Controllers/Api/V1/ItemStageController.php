@@ -93,7 +93,7 @@ class ItemStageController extends BaseController
     public function demandLists(Request $request)
     {
         $item_id = $request->input('item_id');
-        $itemStage = ItemStage::where('item_id', $item_id)->where('status' , 1)->get();
+        $itemStage = ItemStage::where('item_id', $item_id)->where('status', 1)->get();
         if (!$itemStage) {
             return $this->response->array($this->apiError('not found item_stage', 404));
         }
@@ -394,22 +394,22 @@ class ItemStageController extends BaseController
     {
         $item_stage_id = $request->input('item_stage_id');
 
-        if(!$item_stage = ItemStage::find($item_stage_id)){
+        if (!$item_stage = ItemStage::find($item_stage_id)) {
             return $this->response->array($this->apiError('not found itemStage', 404));
         }
 
         // 判断用户有无操作权限
-        if(Item::where(['id' => $item_stage->item_id, 'user_id' => $this->auth_user_id])->count() < 1){
+        if (Item::where(['id' => $item_stage->item_id, 'user_id' => $this->auth_user_id])->count() < 1) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
         //判断阶段是否按sort 顺序确认；
         $next_item_stage = ItemStage::where(['item_id' => $item_stage->item_id, 'confirm' => 0])->orderBy('sort', 'asc')->first();
         //如不存在 说明阶段都已确认 返回成功
-        if(!$next_item_stage){
+        if (!$next_item_stage) {
             return $this->response->array($this->apiSuccess());
         }
-        if($next_item_stage->sort != $item_stage->sort){
+        if ($next_item_stage->sort != $item_stage->sort) {
             return $this->response->array($this->apiError('当前阶段不可操作', 403));
         }
 
@@ -419,7 +419,7 @@ class ItemStageController extends BaseController
         $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
 
         // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
-        if(!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)){
+        if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
             return $this->response->array($this->apiError());
         }
 
@@ -427,17 +427,17 @@ class ItemStageController extends BaseController
     }
 
     /**
-     * @param int $demand_user_id  需求用户ID
-     * @param int $design_user_id  设计公司ID
-     * @param float $amount   支付金额
+     * @param int $demand_user_id 需求用户ID
+     * @param int $design_user_id 设计公司ID
+     * @param float $amount 支付金额
      * @param object $item 项目实例
-     * @param object $item_stage  项目阶段实例
+     * @param object $item_stage 项目阶段实例
      * @return bool
      */
     protected function pay($demand_user_id, $design_user_id, $amount, $item, $item_stage)
     {
         DB::beginTransaction();
-        try{
+        try {
             // 项目阶段确认
             $item_stage->confirm = 1;
             $item_stage->save();
@@ -453,26 +453,26 @@ class ItemStageController extends BaseController
             //增加设计公司账户总金额
             $user_model->totalIncrease($design_user_id, $amount);
 
+            $item_info = $item->itemInfo();
+
             $fund_log = new FundLog();
             //需求公司资金流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1,$design_user_id, '支付项目款');
+            $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
             //设计公司资金流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到项目款');
+            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
 
-            $item_info = $item->itemInfo();
+
             $tools = new Tools();
             //通知需求公司
-//            $tools->message($demand_user_id, '支付设计公司项目款');
             $title1 = '支付阶段项目款';
             $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
             $tools->message($demand_user_id, $title1, $content1, 3, null);
             //通知设计公司
-//            $tools->message($design_user_id, '收到项目方项目款');
             $title2 = '收到阶段项目款';
             $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
             $tools->message($design_user_id, $title2, $content2, 3, null);
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return false;
