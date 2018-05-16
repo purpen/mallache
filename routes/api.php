@@ -610,7 +610,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designProject/contracts', 'DesignProjectController@contracts');
         //项目完成进度
         $api->get('/designProject/userStatistical', 'DesignProjectController@userStatistical');
-
+        //项目动态
+        $api->get('/designProject/dynamic', 'DesignProjectController@dynamic');
         /**
          * 设计工具--消息管理
          */

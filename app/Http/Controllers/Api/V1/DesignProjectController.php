@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\MassageException;
+use App\Http\Middleware\OperationLogs;
 use App\Http\Transformer\DesignProjectStatisticalTransformer;
 use App\Http\Transformer\DesignProjectTransformer;
 use App\Models\AssetModel;
@@ -10,6 +11,7 @@ use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
 use App\Models\ItemUser;
+use App\Models\OperationLog;
 use App\Models\PanDirector;
 use App\Models\ProductDesign;
 use App\Models\Task;
@@ -671,5 +673,66 @@ class DesignProjectController extends BaseController
         }
 
 
+    }
+
+    /**
+     * @api {get} /designProject/dynamic 项目动态
+     * @apiVersion 1.0.0
+     * @apiName designProject dynamic
+     * @apiGroup designProject
+     *
+     * @apiParam {int} item_id 项目id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    },
+    "data": [
+    {
+    "id": 48,
+    "user_id": 1,
+    "action_type": 2,
+    "type": 1,
+    "model_id": 1,
+    "target_type": 1,
+    "target_id": 27,
+    "title": "test111 创建了子任务",
+    "content": "test",
+    "created_at": 1525337806,
+    "user_name": "test111"
+    },
+    {
+    "id": 39,
+    "user_id": 1,
+    "action_type": 1,
+    "type": 1,
+    "model_id": 1,
+    "target_type": 1,
+    "target_id": 22,
+    "title": "test111 创建了任务",
+    "content": "test",
+    "created_at": 1525225273,
+    "user_name": "test111"
+    }
+    ]
+    }
+     */
+    public function dynamic(Request $request)
+    {
+        $item_id = $request->input('item_id');
+        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
+        if (!$design_project) {
+            return $this->response->array($this->apiError('该项目不存在', 404));
+        }
+        $dynamics = OperationLog::where('model_id' , $item_id)->where('type' , 1)->orderBy('id', 'desc')->get();
+
+        $resp_data = [];
+        foreach ($dynamics as $dynamic) {
+            $resp_data[] = $dynamic->info();
+        }
+        return $this->response->array($this->apiSuccess('Success', 200, $resp_data));
     }
 }
