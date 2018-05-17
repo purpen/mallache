@@ -4,6 +4,7 @@ namespace App\Http\Transformer;
 
 use App\Models\OperationLog;
 use App\Models\Task;
+use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
 class TaskTransformer extends TransformerAbstract
@@ -32,12 +33,14 @@ class TaskTransformer extends TransformerAbstract
 
     public function transform(Task $tasks)
     {
+        $user = User::find($tasks->execute_user_id);
         return [
             'id' => intval($tasks->id),
             'name' => strval($tasks->name),
             'tags' => strval($tasks->tags) ? explode(',' , $tasks->tags) : [],
             'summary' => $tasks->summary,
             'user_id' => intval($tasks->user_id),
+            'logo_image' => $user ? $user->logo_image : '',
             'realname' => $tasks->user->getUserName(),
             'execute_user_id' => intval($tasks->execute_user_id),
             'item_id' => intval($tasks->item_id),
