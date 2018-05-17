@@ -57,6 +57,11 @@ class OperationLogs
             '/tasks:put' => 'updateTask',  // 更改任务名称，备注，优先级
             '/tags:post' => 'createTag',  // 创建标签
             '/tags:delete' => 'deleteTag',  // 删除标签
+            '/itemUsers:post' => 'createItemUser',  //创建项目成员
+            '/itemUsers:delete' => 'deleteItemUser',  //创建项目成员
+            '/communeSummaries:post' => 'createCommuneSummary',  //创建沟通纪要
+            '/communeSummaries:put' => 'updateCommuneSummary',  //更改沟通纪要
+            '/communeSummaries:delete' => 'deleteCommuneSummary',  //删除沟通纪要
         ];
     }
 

@@ -274,6 +274,10 @@ class ItemUserController extends BaseController
         } elseif ($itemUser->level == 5){
             $designProject->removeBusinessManager($user_id);
         }
+        //通过$_POST存储数据，记录到动态表中
+        $_POST['user_id'] = $user_id;
+        $_POST['id'] = $itemUser->id;
+        $_POST['item_id'] = $item_id;
         $ok = $itemUser->delete();
         if ($ok) {
             $tasks = Task::where('item_id' , $item_id)->get();

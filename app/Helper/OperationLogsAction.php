@@ -214,4 +214,65 @@ class OperationLogsAction
 
     }
 
+    //创建项目成员
+    public function createItemUser()
+    {
+        $response_content = $this->getResponseContent();
+
+        $item_id = intval($this->request->input('item_id'));
+        $user_id = intval($this->request->input('user_id'));
+        $target_id = $response_content['data']['id'];
+        $user = User::find($user_id);
+        $content = $user->getUserName();
+
+        $this->createUserLog($item_id, 13, $target_id, null, $content);
+
+    }
+
+    //删除项目成员
+    public function deleteItemUser()
+    {
+        $user_id = $_POST['user_id'];
+        $target_id = $_POST['id'];
+        $item_id = $_POST['item_id'];
+        $user = User::find($user_id);
+        $content = $user->getUserName();
+
+        $this->createUserLog($item_id, 14, $target_id, null, $content);
+
+    }
+
+    //创建沟通纪要
+    public function createCommuneSummary()
+    {
+        $response_content = $this->getResponseContent();
+
+        $item_id = intval($this->request->input('item_id'));
+        $content = $this->request->input('title');
+        $target_id = $response_content['data']['id'];
+
+        $this->createSummariesLog($item_id, 15, $target_id, null, $content);
+
+    }
+
+    //更改沟通纪要
+    public function updateCommuneSummary()
+    {
+        $content = $_POST['title'];
+        $target_id = $_POST['id'];
+        $item_id = $_POST['item_id'];
+        $this->createSummariesLog($item_id, 16, $target_id, null, $content);
+
+    }
+
+    //删除沟通纪要
+    public function deleteCommuneSummary()
+    {
+        $content = $_POST['title'];
+        $target_id = $_POST['id'];
+        $item_id = $_POST['item_id'];
+        $this->createSummariesLog($item_id, 17, $target_id, null, $content);
+
+    }
+
 }

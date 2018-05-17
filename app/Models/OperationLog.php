@@ -159,19 +159,19 @@ class OperationLog extends BaseModel
                 $str = $this->deleteTag();
                 break;
             case 13:
-                $str = $this->updateOverTime();
+                $str = $this->createItemUser();
                 break;
             case 14:
-                $str = $this->updateOverTime();
+                $str = $this->deleteItemUser();
                 break;
             case 15:
-                $str = $this->updateOverTime();
+                $str = $this->createCommuneSummary();
                 break;
             case 16:
-                $str = $this->updateOverTime();
+                $str = $this->updateCommuneSummary();
                 break;
             case 17:
-                $str = $this->updateOverTime();
+                $str = $this->deleteCommuneSummary();
                 break;
         }
 
@@ -285,5 +285,36 @@ class OperationLog extends BaseModel
     {
         return $this->user->getUserName() . $this->title_config['12'].$this->content;
     }
+
+    // 创建项目成员
+    public function createItemUser()
+    {
+        return $this->user->getUserName() . $this->title_config['13'].$this->content;
+    }
+
+    // 删除项目成员
+    public function deleteItemUser()
+    {
+        return $this->user->getUserName() . $this->title_config['14'].$this->content;
+    }
+
+    // 创建沟通纪要
+    public function createCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['15'].$this->content;
+    }
+
+    // 更改沟通纪要
+    public function updateCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['16'].$this->content;
+    }
+
+    // 删除沟通纪要
+    public function deleteCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['17'].$this->content;
+    }
+
 
 }
