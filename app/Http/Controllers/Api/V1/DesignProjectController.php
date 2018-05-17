@@ -724,6 +724,7 @@ class DesignProjectController extends BaseController
     {
         $item_id = $request->input('item_id');
         $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
+        Log::info($design_project);
         if (!$design_project) {
             return $this->response->array($this->apiError('该项目不存在', 404));
         }
