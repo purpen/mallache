@@ -739,7 +739,7 @@ class TaskController extends BaseController
                 $current_time = date('Y-m-d H:i:s');
                 foreach ($tasks as $task){
                     //未领取
-                    if($task->execute_user_id == 0){
+                    if($task->execute_user_id == 0 && $task->stage == 0){
                         $no_get += 1;
                     }
                     //未完成
