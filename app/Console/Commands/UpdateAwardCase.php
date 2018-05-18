@@ -104,7 +104,7 @@ class UpdateAwardCase extends Command
                 $asset_id = $asset_result['data']['id'];
                 echo "get asset_id: $asset_id.\n";
                 $ok = true;
-                //$ok = AwardCase::where('id', $id)->update(['cover_id'=>$asset_id]);
+                $ok = AwardCase::where('id', $id)->update(['cover_id'=>$asset_id]);
                 if($ok) {
                     $total++;
                     echo "update success $id..\n";
@@ -148,7 +148,7 @@ class UpdateAwardCase extends Command
                 $id = $list[$i]->id;
                 echo "set awardCase[". $id ."]..........\n";
                 $ok = true;
-                //$ok = AwardCase::where('id', $id)->update(['status'=>0]);
+                $ok = AwardCase::where('id', $id)->update(['status'=>0]);
                 if($ok) $total++;
             }
             if($max < $size){
