@@ -2,8 +2,8 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\AssetModel;
 use App\Models\PayOrder;
-use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class PayOrderTransformer extends TransformerAbstract
@@ -20,9 +20,9 @@ class PayOrderTransformer extends TransformerAbstract
         pay_type	tinyint(4)	是	0	支付方式；1.支付宝；2.微信；3.京东；
         pay_no	varchar(30)	是	’‘	对应平台支付交易号*/
 
-        if($pay_order->item){
+        if ($pay_order->item) {
             $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()['name'] : '';
-        }else{
+        } else {
             $name = '';
         }
         return [
@@ -45,6 +45,9 @@ class PayOrderTransformer extends TransformerAbstract
             'item_name' => $name,
             'company_name' => $pay_order->item ? $pay_order->item->company_name : '',
             'created_at' => $pay_order->created_at,
+
+            'bank_transfer' => $pay_order->bank_transfer,
+            'assets' => AssetModel::getImageUrl($pay_order->id, 33), // 转账附件
         ];
     }
 }

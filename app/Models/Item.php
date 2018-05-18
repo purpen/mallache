@@ -165,7 +165,7 @@ class Item extends BaseModel
                     'province_value' => $info->province_value,
                     'city_value' => $info->city_value,
                     'image' => $info->image,
-                    'price' => floatval($item->price),
+                    'price' => number_format($item->price, 2, '.', ''),
 
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -217,7 +217,7 @@ class Item extends BaseModel
                     'province_value' => $info->province_value,
                     'city_value' => $info->city_value,
                     'image' => $info->image,
-                    'price' => floatval($item->price),
+                    'price' => number_format($item->price, 2, '.', ''),
                     'stage_status' => (int)$item->stage_status,
                     'cycle' => $info->cycle,
                     'cycle_value' => $info->cycle_value,
