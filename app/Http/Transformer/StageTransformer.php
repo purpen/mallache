@@ -17,13 +17,13 @@ title	varchar(100)	是		标题
 
     public function transform(Stage $stage)
     {
-        $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
+//        $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
         return [
             'id' => intval($stage->id),
             'item_id' => intval($stage->item_id),
             'title' => $stage->title,
             'created_at' => $stage->created_at,
-            'task' => $tasks ? $tasks : '',
+            'task' => $stage->tasks,
         ];
     }
 }
