@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\StageTransformer;
 use App\Models\Stage;
 use App\Models\Task;
-use App\Models\TaskUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,22 +41,8 @@ class StageController extends BaseController
     {
         $item_id = $request->input('item_id');
         $stages = Stage::where('item_id' , $item_id)->orderBy('id', 'desc')->get();
-        if(!empty($stages)){
-            foreach ($stages as $stage){
-                $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
-                if(!empty($tasks)){
-                    $stages['tasks'] = $tasks;
-                    foreach ($tasks as $task){
-                        $task['logo_image'] = $task->user->logo_image;
-                    }
-                }
 
-            }
-            Log::info($stages);
-            return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
-        }
-
-
+        return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
 
     }
 

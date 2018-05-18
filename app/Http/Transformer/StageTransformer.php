@@ -15,15 +15,15 @@ item_id	int(11)	是		项目ID
 title	varchar(100)	是		标题
     */
 
-    public function transform($stage)
+    public function transform(Stage $stage)
     {
-//        $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
+        $task = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
         return [
             'id' => intval($stage->id),
             'item_id' => intval($stage->item_id),
             'title' => $stage->title,
             'created_at' => $stage->created_at,
-            'task' => $stage->tasks,
+            'task' => $task ? $task : '',
         ];
     }
 }
