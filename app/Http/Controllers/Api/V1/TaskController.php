@@ -724,8 +724,6 @@ class TaskController extends BaseController
                 $task_id_array[] = $taskUser->task_id;
             }
             $tasks = Task::whereIn('id' , $task_id_array)->get();
-            //总数量
-            $total_count = $tasks->count();
             if(!empty($tasks)){
                 //未领取
                 $no_get = 0;
@@ -756,6 +754,8 @@ class TaskController extends BaseController
                         $overdue += 1;
                     }
                 }
+                //总数量
+                $total_count = $no_get + $no_stage + $ok_stage + $overdue;
                 //未领取百分比
                 if($total_count != 0){
                     $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
