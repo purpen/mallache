@@ -53,10 +53,10 @@ class StageController extends BaseController
                 }
 
             }
+            return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
         }
 
 
-        return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
 
     }
 

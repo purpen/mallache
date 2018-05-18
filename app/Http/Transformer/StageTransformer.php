@@ -15,7 +15,7 @@ item_id	int(11)	是		项目ID
 title	varchar(100)	是		标题
     */
 
-    public function transform(Stage $stage)
+    public function transform($stage)
     {
 //        $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
         return [
