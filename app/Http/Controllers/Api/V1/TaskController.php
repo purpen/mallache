@@ -628,8 +628,6 @@ class TaskController extends BaseController
         $item_id = $request->input('item_id');
         $tasks = Task::where('item_id' , $item_id)->get();
         if(!empty($tasks)){
-            //总数量
-            $total_count = $tasks->count();
             //未领取
             $no_get = 0;
             //未完成
@@ -642,31 +640,33 @@ class TaskController extends BaseController
             $current_time = date('Y-m-d H:i:s');
             foreach ($tasks as $task){
                 //未领取
-                if($task->execute_user_id == 0){
+                if($task->execute_user_id == 0 && $task->stage == 0){
                     $no_get += 1;
                 }
                 //未完成
-                if($task->stage == 0){
+                if($task->stage == 0 && $task->execute_user_id != 0){
                     $no_stage += 1;
                 }
                 //已完成
-                if($task->stage == 2){
+                if($task->stage == 2 && $task->execute_user_id != 0){
                     $ok_stage += 1;
                 }
                 //已预期
                 $over_time = $task->over_time;
-                if($over_time > $current_time && $task->stage == 0){
+                if($over_time > $current_time && $task->stage == 0  && $task->execute_user_id != 0){
                     $overdue += 1;
                 }
             }
+            //总数量
+            $total_count = $no_get + $no_stage + $ok_stage + $overdue;
             //未领取百分比
-            $no_get_percentage = round(($no_get / $total_count) * 100 , 0);
+            $no_get_percentage = round(($no_get / $total_count) * 100);
             //未完成百分比
-            $no_stage_percentage = round(($no_stage / $total_count) * 100 , 0);
+            $no_stage_percentage = round(($no_stage / $total_count) * 100);
             //已完成百分比
-            $ok_stage_percentage = round(($ok_stage / $total_count) * 100 , 0);
+            $ok_stage_percentage = round(($ok_stage / $total_count) * 100);
             //已预期百分比
-            $overdue_percentage = round(($overdue / $total_count) * 100 , 0);
+            $overdue_percentage = round(100 - $no_get_percentage - $no_stage_percentage - $ok_stage_percentage);
 
             $statistical = [];
             $statistical['no_get'] = $no_get;
