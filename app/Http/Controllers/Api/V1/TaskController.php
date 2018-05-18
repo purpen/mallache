@@ -776,7 +776,8 @@ class TaskController extends BaseController
                 }
                 //已预期百分比
                 if($total_count != 0){
-                    $overdue_percentage = round(($overdue / $total_count) * 100);
+//                    $overdue_percentage = round(($overdue / $total_count) * 100);
+                    $overdue_percentage = round(100 - $ok_stage_percentage - $no_stage_percentage - $no_get_percentage);
                 }else{
                     $overdue_percentage = 0;
                 }
