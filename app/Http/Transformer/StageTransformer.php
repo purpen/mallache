@@ -24,6 +24,7 @@ title	varchar(100)	是		标题
             'title' => $stage->title,
             'created_at' => $stage->created_at,
             'task' => $task ? $task : '',
+            'logo_image' => $task ? $task->user->logo_iamge : '',
         ];
     }
 }
