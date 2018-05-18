@@ -743,16 +743,16 @@ class TaskController extends BaseController
                         $no_get += 1;
                     }
                     //未完成
-                    if($task->stage == 0){
+                    if($task->stage == 0 && $task->execute_user_id != 0){
                         $no_stage += 1;
                     }
                     //已完成
-                    if($task->stage == 2){
+                    if($task->stage == 2 && $task->execute_user_id != 0){
                         $ok_stage += 1;
                     }
                     //已预期
                     $over_time = $task->over_time;
-                    if($over_time > $current_time && $task->stage == 0){
+                    if($over_time > $current_time && $task->stage == 0 && $task->execute_user_id != 0){
                         $overdue += 1;
                     }
                 }
