@@ -764,7 +764,7 @@ class TaskController extends BaseController
                 }
                 //未完成百分比
                 if($total_count != 0){
-                    $no_stage_percentage = round(($no_stage / $total_count) * 100;
+                    $no_stage_percentage = round(($no_stage / $total_count) * 100);
                 }else{
                     $no_stage_percentage = 0;
                 }
