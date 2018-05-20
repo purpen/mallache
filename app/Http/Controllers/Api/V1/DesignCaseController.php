@@ -558,8 +558,11 @@ class DesignCaseController extends BaseController
             case 2:
                 $query->orderBy('open_time', 'desc');
                 break;
-            case 5:
+            case 6:
                 $query->orderBy('random', 'asc');
+                break;
+            case 5:
+                $query->orderBy('recommended_on', 'desc');
                 break;
             default:
                 $query->orderBy('id', 'desc');

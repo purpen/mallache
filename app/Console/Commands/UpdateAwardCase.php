@@ -133,7 +133,7 @@ class UpdateAwardCase extends Command
         $total = 0;
         while(!$is_end){
             $offset = ($page - 1) * $size;
-            $list = AwardCase::select('id','random','status')
+            $list = AwardCase::select('id','random','status','cover_id')
                 ->where('status', 0)
                 ->skip($offset)
                 ->limit($size)
@@ -147,8 +147,11 @@ class UpdateAwardCase extends Command
             for ($i=0; $i < $max; $i++) {
                 $id = $list[$i]->id;
                 echo "set awardCase[". $id ."]..........\n";
+                if (!$list[$i]->cover_id) {
+                    continue;
+                }
                 $ok = true;
-                $ok = AwardCase::where('id', $id)->update(['status'=>0]);
+                //$ok = AwardCase::where('id', $id)->update(['status'=>1]);
                 if($ok) $total++;
             }
             if($max < $size){
