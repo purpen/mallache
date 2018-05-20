@@ -188,7 +188,11 @@ class UpdateAwardCase extends Command
         try {
             $auth = new Auth($accessKey, $secretKey);
             $token = $auth->uploadToken($bucket);
-            $filePath = file_get_contents($url);
+            $filePath = @file_get_contents($url);
+            if(strlen($filePath) == 0){
+                $result['message'] = '文件找不到！';
+                return $result;
+            }
             $key = 'saas/'.date("Ymd").'/'.uniqid();
             // 初始化 UploadManager 对象并进行文件的上传。
             $uploadMgr = new UploadManager();

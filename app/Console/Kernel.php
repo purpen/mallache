@@ -51,6 +51,9 @@ class Kernel extends ConsoleKernel
         // 批量更新奖项案例: 封面图、简述、内容、状态等
         Commands\UpdateAwardCase::class,
 
+        // 批量更新案例作品
+        Commands\UpdateDesignCase::class,
+
 
     ];
 
