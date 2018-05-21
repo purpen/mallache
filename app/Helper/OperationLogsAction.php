@@ -114,11 +114,13 @@ class OperationLogsAction
         $target_id = $response_content['data']['id'];
         $content = $response_content['data']['name'];
         $tier = intval($this->request->input('tier'));
+        //父id
+        $pid = intval($this->request->input('pid'));
 
         if ($tier == 0) {  // 父任务
             $this->createTaskLog($item_id, 1, $target_id, null, $content);
         } else if ($tier == 1) {  // 子任务
-            $this->createTaskLog($item_id, 2, $target_id, null, $content);
+            $this->createTaskLog($item_id, 2, $pid, null, $content);
 
         }
     }
@@ -180,10 +182,10 @@ class OperationLogsAction
 
         } else if ($tier == 1) {  // 子任务
             if ($stage == 0) { //子任务重做
-                $this->createTaskLog($item_id, 8, $target_id, null, $task->name);
+                $this->createTaskLog($item_id, 8, $task->pid, null, $task->name);
 
             } else {  //子任务完成
-                $this->createTaskLog($item_id, 9, $target_id, null, $task->name);
+                $this->createTaskLog($item_id, 9, $task->pid, null, $task->name);
 
             }
         }
