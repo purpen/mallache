@@ -38,4 +38,14 @@ class CommuneSummary extends BaseModel
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+    //获取沟通纪要相关人员
+    public static function getCommuneSummaryUserArr(int $commune_summary_id)
+    {
+        $user_id_arr = CommuneSummaryUser::select('selected_user_id')
+            ->where('id', $commune_summary_id)
+            ->get()->pluck('selected_user_id')->all();
+
+        return $user_id_arr;
+    }
 }
