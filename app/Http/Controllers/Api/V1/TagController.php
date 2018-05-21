@@ -68,7 +68,7 @@ class TagController extends BaseController
      * @apiParam {string} title 标题
      * @apiParam {integer} type 类型:1.默认;
      * @apiParam {integer} item_id 项目ID
-     * @apiParam {integer} task_id 项目ID
+     * @apiParam {integer} task_id 任务ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -113,6 +113,10 @@ class TagController extends BaseController
             'item_id' => $item_id,
             'task_id' => $task_id,
         );
+        $tag = Tag::where('title' , $params['title'])->where('item_id' , $item_id)->first();
+        if($tag){
+            return $this->response->array($this->apiError('标签名称已经存在', 412));
+        }
 
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
