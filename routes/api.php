@@ -218,6 +218,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 发布需求保证金支付-京东
         $api->get('/pay/demandJdPay', 'PayController@demandJdPay');
 
+
         /**
          * 支付项目尾款
          */
@@ -241,6 +242,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //用户提现
         $api->post('/withdraw/create', 'WithdrawOrderController@create');
         $api->get('/withdraw/lists', 'WithdrawOrderController@lists');
+
+        // @api {post} /demand/create 需求公司创建需求项目
+        $api->post('/demand/create', 'DemandController@create');
 
         //发布需求
         $api->post('/demand/release', ['as' => 'demand.release', 'uses' => 'DemandController@release']);

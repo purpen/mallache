@@ -49,7 +49,7 @@ class PayOrderListener
          */
         switch ($pay_order->type){
             //项目押金
-            case 1:
+           /* case 1:
                 //资金流水记录
                 $fund_log->inFund($pay_order->user_id, $pay_order->amount, $pay_order->pay_type, $pay_order->uid,'创建项目押金');
                 //创建需求项目
@@ -57,7 +57,7 @@ class PayOrderListener
                    $pay_order->item_id = $item->id;
                    $pay_order->save();
                 }
-                break;
+                break;*/
             //项目尾款
             case 2:
                 $item =Item::find($pay_order->item_id);
@@ -78,7 +78,7 @@ class PayOrderListener
     }
 
     //创建需求表
-    public function createItem($user_id)
+    /*public function createItem($user_id)
     {
         $item = Item::create([
             'user_id' => $user_id,
@@ -93,6 +93,6 @@ class PayOrderListener
             Log::error('创建需求表出错user_id:' . $user_id);
             return false;
         }
-    }
+    }*/
 
 }

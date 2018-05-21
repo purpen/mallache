@@ -39,26 +39,6 @@ use Illuminate\Support\Facades\Validator;
 class DemandController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * @api {get} /demand/{id} 需求公司获取项目详细信息
      * @apiVersion 1.0.0
      * @apiName demand show
@@ -119,12 +99,6 @@ class DemandController extends BaseController
      * }
      * }
      */
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         if (!$item = Item::find(intval($id))) {
@@ -141,15 +115,31 @@ class DemandController extends BaseController
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
+
     /**
-     * Show the form for editing the specified resource.
+     * @api {post} /demand/create 需求公司创建需求项目
+     * @apiVersion 1.0.0
+     * @apiName demand create
+     * @apiGroup demandType
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
      */
-    public function edit($id)
+    public function create()
     {
-        //
+        $item = Item::createItem($this->auth_user_id);
+        if (!$item) {
+            return $this->response->array($this->apiError());
+        }
+
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -228,13 +218,6 @@ class DemandController extends BaseController
      * }
      * }
      */
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $type = (int)$request->input('type');
@@ -246,7 +229,6 @@ class DemandController extends BaseController
                 'type' => 'required|integer',
                 'design_types' => 'required|JSON',
                 'field' => 'required|integer',
-//                'industry' => 'required|integer',
             ];
 
             $all = $request->only(['stage_status', 'type', 'design_types', 'field']);
@@ -1042,21 +1024,20 @@ class DemandController extends BaseController
         // 触发项目变更状态
         event(new ItemStatusEvent($item));
 
-        //解冻保证金
-        $pay_order = PayOrder::where([
+        //解冻保证金 (发布项目保证金已经取消，为保证历史数据正常处理 这段代码保留)
+        $pay_order = PayOrder::query()->where([
             'user_id' => $this->auth_user_id,
             'item_id' => $item_id,
             'type' => 1,
             'status' => 1,
         ])->first();
-
-        //支付单改为退款
-        $pay_order->status = 2;  //退款
-        $pay_order->save();
-
         if ($pay_order) {
+            //支付单改为退款
+            $pay_order->status = 2;  //退款
+            $pay_order->save();
+
             $user = $this->auth_user;
-            $user->price_frozen -= $pay_order->amount;
+            $user->price_frozen = bcsub($user->price_frozen, $pay_order->amount, 2);
             if ($user->price_frozen < 0) {
                 $user->price_frozen = 0;
             }
@@ -1210,7 +1191,7 @@ class DemandController extends BaseController
         }
 
         if ($design_types) {
-            $design_types = json_decode($design_types,true);
+            $design_types = json_decode($design_types, true);
             $query->whereIn('design_type', $design_types);
         }
 

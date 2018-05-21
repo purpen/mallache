@@ -93,6 +93,23 @@ class Item extends BaseModel
         return $this->hasOne('App\Models\Evaluate', 'item_id');
     }
 
+    //创建需求表
+    public static function createItem($user_id)
+    {
+        $item = Item::create([
+            'user_id' => $user_id,
+            'status' => 1,
+            'type' => 0,
+            'design_type' => 0
+        ]);
+        if ($item) {
+            event(new ItemStatusEvent($item));
+            return $item;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 判断item对应的详细信息
      *
