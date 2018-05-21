@@ -85,5 +85,15 @@ class ItemUser extends BaseModel
         return $itemUser;
     }
 
+    //通知人员
+    public static function getItemUserArr(int $item_user_id)
+    {
+        $user_id_arr = ItemUser::select('user_id')
+            ->where('id', $item_user_id)
+            ->get()->pluck('user_id')->all();
+
+        return $user_id_arr;
+    }
+
 
 }

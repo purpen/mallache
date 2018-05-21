@@ -171,19 +171,19 @@ class OperationLogsAction
         $item_id = $task->item_id;
         if ($tier == 0) {  // 父任务
             if ($stage == 0) { //父任务重做
-                $this->createTaskLog($item_id, 6, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 6, $target_id, null, $task->name);
 
             } else {  //父任务完成
-                $this->createTaskLog($item_id, 7, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 7, $target_id, null, $task->name);
 
             }
 
         } else if ($tier == 1) {  // 子任务
             if ($stage == 0) { //子任务重做
-                $this->createTaskLog($item_id, 8, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 8, $target_id, null, $task->name);
 
             } else {  //子任务完成
-                $this->createTaskLog($item_id, 9, $target_id, null, $stage);
+                $this->createTaskLog($item_id, 9, $target_id, null, $task->name);
 
             }
         }

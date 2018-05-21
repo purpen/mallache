@@ -73,6 +73,10 @@ class OperationLog extends BaseModel
                     // 查看 任务的相关人员
                     $user_id_arr = TaskUser::getTaskUser($operation_log->target_id);
                     break;
+                case 3:
+                    // 查看 添加删除项目人员
+                    $user_id_arr = ItemUser::getItemUserArr($operation_log->target_id);
+                    break;
             }
 
             // 推送消息
