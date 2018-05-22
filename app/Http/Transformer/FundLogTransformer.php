@@ -25,7 +25,7 @@ class FundLogTransformer extends TransformerAbstract
             'transaction_type' => (int)$fundLog->transaction_type,
             'transaction_type_value' => $fundLog->transaction_type_value,
             'target_id' => $fundLog->target_id,
-            'amount' => floatval($fundLog->amount),
+            'amount' => number_format($fundLog->amount, 2, '.', ''),
             'summary' => $fundLog->summary,
             'created_at' => $fundLog->created_at,
             'number' => $fundLog->number,
