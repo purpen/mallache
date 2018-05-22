@@ -175,6 +175,9 @@ return [
         '/admin/block/list',
         //启用禁用
         '/admin/block/changeStatus',
+
+        // 佣金收取列表
+        '/itemCommission/lists',
     ],
 
     /**
@@ -343,6 +346,9 @@ return [
         '/admin/block/list',
         //启用禁用
         '/admin/block/changeStatus',
+
+        // 佣金收取列表
+        '/itemCommission/lists',
     ],
 
     /**
@@ -471,5 +477,8 @@ return [
         '/admin/block/list',
         //启用禁用
         '/admin/block/changeStatus',
+
+        // 佣金收取列表
+        '/itemCommission/lists',
     ],
 ];

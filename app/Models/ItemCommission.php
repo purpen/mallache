@@ -24,4 +24,25 @@ class ItemCommission extends BaseModel
         $item_commission->save();
 
     }
+
+    public function info()
+    {
+        /**
+         * id    int(10)    否
+         * design_user_id    int(10)    否        设计公司用户ID
+         * item_id    int(10)    否        项目ID
+         * price    tinyint(4)    否        项目金额
+         * commission    decimal(10,2)            佣金
+         * status
+         */
+        return [
+            'id' => $this->id,
+            'design_user_id' => $this->design_user_id,
+            'item_id' => $this->item_id,
+            'price' => $this->price,
+            'commission' => $this->commission,
+            'status' => $this->status,
+        ];
+    }
+
 }

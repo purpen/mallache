@@ -9,7 +9,7 @@ $api = app('Dingo\Api\Routing\Router');
 
 //管理员权限
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function ($api) {
-    $api->group(['middleware' => ['jwt.auth', 'role']], function ($api){
+    $api->group(['middleware' => ['jwt.auth', 'role']], function ($api) {
 
         //项目列表
         $api->get('/admin/item/lists', 'ItemActionController@itemList');
@@ -48,7 +48,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
             'as' => 'AdminDesignCompany.show', 'uses' => 'AdminDesignCompanyController@show'
         ]);
         // 公开或关闭设计公司资料
-        $api->put('/admin/designCompany/openInfo',[
+        $api->put('/admin/designCompany/openInfo', [
             'as' => 'AdminDesignCompany.openInfo', 'uses' => 'AdminDesignCompanyController@openInfo'
         ]);
 
@@ -163,7 +163,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // {put} /admin/article/recommend 文章推荐
         $api->put('/admin/article/recommend', 'ArticleController@recommend');
         // 删除文章
-        $api->delete('/admin/article/delete','ArticleController@destroy');
+        $api->delete('/admin/article/delete', 'ArticleController@destroy');
 
         /**
          * 日期奖项
@@ -202,7 +202,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // {put} /admin/works/published 发布
         $api->put('/admin/works/published', 'WorksController@published');
         // 删除文章
-        $api->delete('/admin/works','WorksController@destroy');
+        $api->delete('/admin/works', 'WorksController@destroy');
 
 
         /**
@@ -295,6 +295,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/block/list', 'BlockController@lists');
         //启用禁用
         $api->put('/admin/block/changeStatus', 'BlockController@changeStatus');
+
+        //api {get} /itemCommission/lists 收取项目佣金列表
+        $api->get('/itemCommission/lists', 'ItemCommissionController@lists');
     });
 
 });
