@@ -45,6 +45,13 @@
         cateList: [],
         itemList: [
           {
+            id: 8,
+            title: '2018 iF季 小米生态链企业 众生相',
+            cover_url: require ('@/assets/images/subject/list_06.jpg'),
+            url: '/subject/XiaoMiInterview',
+            content: '2018年，iF设计大奖公布，小米生态链众多产品获奖，铟果作为太火鸟旗下专注设计驱动创新力的SaaS平台，借此契机，采访了小米生态链负责人刘德和生态链内数位企业家，希望从他们的故事中，找到获奖产品背后不为人知的细节。'
+          },
+          {
             id: 7,
             title: '羽泉二十周年巡回演唱会-IP衍生品招募',
             cover_url: require ('@/assets/images/subject/list_05.jpg'),

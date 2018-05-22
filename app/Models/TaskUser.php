@@ -15,6 +15,7 @@ class TaskUser extends BaseModel
     protected $fillable = [
         'task_id',
         'user_id',
+        'selected_user_id',
         'type',
         'status',
     ];

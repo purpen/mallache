@@ -561,6 +561,9 @@ class DesignCaseController extends BaseController
             case 5:
                 $query->orderBy('random', 'asc');
                 break;
+            case 6:
+                $query->orderBy('recommended_on', 'desc');
+                break;
             default:
                 $query->orderBy('id', 'desc');
         }
