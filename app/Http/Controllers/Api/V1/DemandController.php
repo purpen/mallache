@@ -134,6 +134,9 @@ class DemandController extends BaseController
      */
     public function create()
     {
+        if($this->auth_user->type != 1){
+            return $this->response->array($this->apiError('error: not demand', 403));
+        }
         $item = Item::createItem($this->auth_user_id);
         if (!$item) {
             return $this->response->array($this->apiError());
