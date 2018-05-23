@@ -12,7 +12,7 @@ class ItemTransformer extends TransformerAbstract
         $data = $item->itemInfo();
         return [
             'item' => $data,
-            'quotation' => $item->quotation,
+            'quotation' => $item->quotation ? $item->quotation->info() : null,
             'contract' => $item->contract,
             'evaluate' => $item->evaluate,
         ];

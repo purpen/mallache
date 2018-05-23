@@ -7,7 +7,6 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class OperationLogsAction
@@ -82,7 +81,7 @@ class OperationLogsAction
         return OperationLog::createLog($company_id, 1, $item_id, $action_type, 3, $target_id, $this->auth_user->id, $other_user_id, $content);
     }
 
-    // 项目管理--项目人员操作动态
+    // 项目管理--项目沟通纪要操作动态
     private function createSummariesLog(int $item_id, int $action_type, int $target_id, int $other_user_id = null, string $content = null)
     {
         $company_id = $this->getUserDesignId();

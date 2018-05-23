@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Transformer;
 
 use App\Models\Item;
@@ -27,7 +28,7 @@ class DesignShowItemTransformer extends TransformerAbstract
 
         return [
             'item' => $data,
-            'quotation' => $this->quotation($item->id),
+            'quotation' => $this->quotation($item->id) ? $this->quotation($item->id)->info() : null,
             'contract' => $item->contract,
             'evaluate' => $item->evaluate,
         ];
