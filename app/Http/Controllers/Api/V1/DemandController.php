@@ -882,6 +882,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiSuccess());
 
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return $this->response->array($this->apiError('Error', 500));
         }
