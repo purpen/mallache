@@ -857,9 +857,9 @@ class DemandController extends BaseController
             $quotation->save();
 
             // 获取设计公司佣金比例
-            list($rate, $preferential_type) = ItemCommissionAction::getCommissionRate($all['design_company_id']);
-            $item->commission_rate = $rate;
-            $item->preferential_type = $preferential_type;
+            $result_data = ItemCommissionAction::getCommissionRate($all['design_company_id']);
+            $item->commission_rate = $result_data['rate'];
+            $item->preferential_type = $result_data['type'];
 
 
             $item->design_company_id = $all['design_company_id'];
