@@ -178,6 +178,11 @@ return [
 
         // 佣金收取列表
         '/itemCommission/lists',
+
+        //添加设计公司佣金免费次数
+        '/admin/commissionCount/add',
+        // 设计公司优惠次数列表
+        '/admin/commissionCount/lists',
     ],
 
     /**
@@ -349,6 +354,11 @@ return [
 
         // 佣金收取列表
         '/itemCommission/lists',
+
+        //添加设计公司佣金免费次数
+        '/admin/commissionCount/add',
+        // 设计公司优惠次数列表
+        '/admin/commissionCount/lists',
     ],
 
     /**

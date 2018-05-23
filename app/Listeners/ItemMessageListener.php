@@ -397,23 +397,22 @@ class ItemMessageListener
             //减少需求公司账户金额（总金额、冻结金额）
             $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
 
-            // 计算平台佣金
-            $commission = ItemCommissionAction::getCommission($item->price);
-
-            if ($amount < $commission) {
-                throw new \Exception("首付款金额低于平台佣金", 500);
-            }
-
 
             //设计公司用户ID
             $design_user_id = $item->designCompany->user_id;
             $design_phone = $item->designCompany->phone;
+            $design_company_id = $item->designCompany->id;
+
+            // 计算平台佣金
+            $commission = ItemCommissionAction::getCommission($item);
+            if ($amount < $commission) {
+                throw new \Exception("首付款金额低于平台佣金", 500);
+            }
+            // 收取佣金记录
+            ItemCommission::createCommission($item->id, $design_company_id, $item->price, $commission);
 
             // 设计公司收到金额（扣除平台佣金）
             $design_amount = bcsub($amount, $commission, 2);
-            // 收取佣金记录
-            ItemCommission::createCommission($item->id, $design_user_id, $item->price, $commission);
-
             //增加设计公司账户总金额
             $user_model->totalIncrease($design_user_id, $design_amount);
 
@@ -422,7 +421,13 @@ class ItemMessageListener
             //需求公司流水记录
             $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付项目首付款');
             //设计公司流水记录
-            $fund_log->inFund($design_user_id, $design_amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款（扣除平台佣金）');
+            $fund_log->inFund($design_user_id, $design_amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
+
+            if ($commission > 0) {
+                //扣除佣金 设计公司流水记录
+                $fund_log->outFund($design_user_id, $commission, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '平台扣除佣金');
+            }
+
 
             $tools = new Tools();
             //通知需求公司
@@ -435,7 +440,15 @@ class ItemMessageListener
             $title1 = '收到首付款';
             $content1 = '【' . $item_info['name'] . '】项目已收到项目首付款';
             $tools->message($design_user_id, $title1, $content1, 3, null);
-            $this->sendSmsToPhone($design_phone, $content);
+            $this->sendSmsToPhone($design_phone, $content1);
+
+            if ($commission > 0) {
+                //扣除佣金 设计公司
+                $title2 = '平台扣除佣金';
+                $content2 = '【' . $item_info['name'] . '】项目已平台扣除佣金';
+                $tools->message($design_user_id, $title2, $content2, 3, null);
+                $this->sendSmsToPhone($design_phone, $content2);
+            }
 
             DB::commit();
         } catch (\Exception $e) {

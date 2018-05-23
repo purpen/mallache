@@ -10,14 +10,14 @@ class ItemCommission extends BaseModel
      * 创建平台项目佣金收取记录
      *
      * @param $item_id
-     * @param $design_user_id
+     * @param $design_company_id
      * @param $price
      * @param $commission
      */
-    public static function createCommission($item_id, $design_user_id, $price, $commission)
+    public static function createCommission($item_id, $design_company_id, $price, $commission)
     {
         $item_commission = new ItemCommission();
-        $item_commission->design_user_id = (int)$design_user_id;
+        $item_commission->design_company_id = (int)$design_company_id;
         $item_commission->item_id = (int)$item_id;
         $item_commission->price = $price;
         $item_commission->commission = $commission;
@@ -29,7 +29,7 @@ class ItemCommission extends BaseModel
     {
         /**
          * id    int(10)    否
-         * design_user_id    int(10)    否        设计公司用户ID
+         * design_company_id    int(10)    否        设计公司ID
          * item_id    int(10)    否        项目ID
          * price    tinyint(4)    否        项目金额
          * commission    decimal(10,2)            佣金
@@ -37,7 +37,7 @@ class ItemCommission extends BaseModel
          */
         return [
             'id' => $this->id,
-            'design_user_id' => $this->design_user_id,
+            'design_company_id' => $this->design_company_id,
             'item_id' => $this->item_id,
             'price' => $this->price,
             'commission' => $this->commission,

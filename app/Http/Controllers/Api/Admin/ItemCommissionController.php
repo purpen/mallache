@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ItemCommissionController extends BaseController
 {
     /**
-     * @api {get} /itemCommission/lists 收取项目佣金列表
+     * @api {get} /admin/itemCommission/lists 收取项目佣金列表
      * @apiVersion 1.0.0
      * @apiName ItemCommission lists
      * @apiGroup ItemCommission

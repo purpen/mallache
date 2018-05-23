@@ -297,7 +297,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/block/changeStatus', 'BlockController@changeStatus');
 
         //api {get} /itemCommission/lists 收取项目佣金列表
-        $api->get('/itemCommission/lists', 'ItemCommissionController@lists');
+        $api->get('/admin/itemCommission/lists', 'ItemCommissionController@lists');
+
+        /**
+         * 佣金优惠
+         */
+        // api {post} /admin/commissionCount/add 添加设计公司佣金免费次数
+        $api->post('/admin/commissionCount/add', 'CommissionCountController@addCount');
+        // api {get} /admin/commissionCount/lists 设计公司优惠次数列表
+        $api->get('/admin/commissionCount/lists', 'CommissionCountController@lists');
     });
 
 });

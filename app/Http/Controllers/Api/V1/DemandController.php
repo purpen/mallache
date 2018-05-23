@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\ItemCommissionAction;
 use App\Helper\Recommend;
 use App\Helper\Tools;
 use App\Http\Transformer\DemandCompanyTransformer;
@@ -134,7 +135,7 @@ class DemandController extends BaseController
      */
     public function create()
     {
-        if($this->auth_user->type != 1){
+        if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
         }
         $item = Item::createItem($this->auth_user_id);
@@ -854,11 +855,18 @@ class DemandController extends BaseController
             $quotation->status = 1;
             $quotation->save();
 
+            // 获取设计公司佣金比例
+            list($rate, $preferential_type) = ItemCommissionAction::getCommissionRate($all['design_company_id']);
+            $item->commission_rate = $rate;
+            $item->preferential_type = $preferential_type;
+
+
             $item->design_company_id = $all['design_company_id'];
             $item->price = $quotation->price;
             $item->quotation_id = $quotation->id;
             $item->status = 5;
             $item->save();
+
 
             //触发项目状态事件
             $design_company_id = $item_recommend_qt->pluck('design_company_id')->all();
