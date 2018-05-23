@@ -5,6 +5,7 @@ namespace App\Http\Transformer;
 use App\Models\Stage;
 use App\Models\Task;
 use App\Models\TaskUser;
+use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
 class StageTransformer extends TransformerAbstract
@@ -20,8 +21,9 @@ title	varchar(100)	是		标题
         $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
         foreach ($tasks as $task){
             $user_id = $task->execute_user_id;
-            if($user_id != 0){
-                $task['logo_image'] = $task->user->logo_image;
+            $user = User::find($user_id);
+            if($user){
+                $task['logo_image'] = $user->logo_image;
             }else{
                 $task['logo_image'] = '';
             }
