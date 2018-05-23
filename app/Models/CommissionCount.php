@@ -7,6 +7,8 @@ class CommissionCount extends BaseModel
 {
     protected $table = 'commission_count';
 
+    protected $fillable = ['design_company_id'];
+
     // 相对一对一关联设计公司表
     public function designCompany()
     {
