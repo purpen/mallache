@@ -177,7 +177,7 @@ return [
         '/admin/block/changeStatus',
 
         // 佣金收取列表
-        '/itemCommission/lists',
+        '/admin/itemCommission/lists',
 
         //添加设计公司佣金免费次数
         '/admin/commissionCount/add',
@@ -353,7 +353,7 @@ return [
         '/admin/block/changeStatus',
 
         // 佣金收取列表
-        '/itemCommission/lists',
+        '/admin/itemCommission/lists',
 
         //添加设计公司佣金免费次数
         '/admin/commissionCount/add',
@@ -489,6 +489,11 @@ return [
         '/admin/block/changeStatus',
 
         // 佣金收取列表
-        '/itemCommission/lists',
+        '/admin/itemCommission/lists',
+
+        //添加设计公司佣金免费次数
+        '/admin/commissionCount/add',
+        // 设计公司优惠次数列表
+        '/admin/commissionCount/lists',
     ],
 ];
