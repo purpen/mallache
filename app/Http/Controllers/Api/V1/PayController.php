@@ -243,16 +243,23 @@ class PayController extends BaseController
             return $this->response->array($this->apiError("无操作权限", 403));
         }
 
-        //查询项目押金的金额
+        //查询项目押金的金额(兼容历史数据)
         $first_pay_order = PayOrder::where([
             'user_id' => $this->auth_user_id,
             'item_id' => $item_id,
             'type' => 1,
             'status' => 1,
         ])->first();
+        // 当存在项目发布押金时
+        if ($first_pay_order) {
+            //计算应付金额
+            $price = bcsub($item->price, $first_pay_order->amount, 2);
+            $first_pay = $first_pay_order->amount;
+        } else {
+            $price = $item->price;
+            $first_pay = 0;
+        }
 
-        //计算应付金额
-        $price = $item->price - $first_pay_order->amount;
 
         //支付说明
         $summary = '项目尾款';
@@ -266,7 +273,7 @@ class PayController extends BaseController
         event(new ItemStatusEvent($item));
 
         $pay_order->total_price = $item->price;
-        $pay_order->first_pay = $pay_order->amount;
+        $pay_order->first_pay = $first_pay;
 
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
