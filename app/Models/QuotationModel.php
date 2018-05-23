@@ -132,6 +132,7 @@ class QuotationModel extends BaseModel
             'price' => number_format($this->price, 2, '.', ''),
             'asset' => AssetModel::getImageUrl($this->id, 30),
 
+            'status' => $this->status,
             'item_demand_id' => intval($this->item_demand_id),
             'design_company_id' => intval($this->design_company_id),
         ];
