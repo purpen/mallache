@@ -19,7 +19,7 @@ class CreateCommissionCount extends Migration
             $table->integer('count')->default(0);
             $table->timestamps();
 
-            $table->index(['design_user_id']);
+            $table->index(['design_company_id']);
         });
     }
 
