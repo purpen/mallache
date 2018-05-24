@@ -38,7 +38,10 @@ class DesignPositionController extends BaseController
 
         $design_company_id = User::designCompanyId($this->auth_user_id);
         $name = $request->input('name');
-        $count = DesignPosition::where('name', $name)->count();
+        $count = DesignPosition::query()
+            ->where('name', $name)
+            ->where('design_company_id', $design_company_id)
+            ->count();
         if ($count > 0) {
             return $this->response->array($this->apiError('已存在', 403));
         }
