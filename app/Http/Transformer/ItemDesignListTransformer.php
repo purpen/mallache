@@ -17,7 +17,7 @@ class ItemDesignListTransformer extends TransformerAbstract
             'design_company_status' => $itemRecommend->design_company_status,
             'design_company_status_value' => $itemRecommend->design_company_status_value,
             'design_company' => $itemRecommend->designCompany,
-            'quotation' => $itemRecommend->quotation,
+            'quotation' => $itemRecommend->quotation ? $itemRecommend->quotation->info() : null,
         ];
     }
 }
