@@ -106,6 +106,12 @@ class DesignCompanyModel extends BaseModel
         return $this->hasMany('App\Models\Item', 'design_company_id');
     }
 
+    // 一对一关联 佣金免费次数表
+    public function commissionCount()
+    {
+        return $this->hasOne('App\Models\CommissionCount', 'design_company_id');
+    }
+
     /**
      * 一对多关联报价表
      */
