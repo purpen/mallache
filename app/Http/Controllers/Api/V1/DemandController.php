@@ -133,7 +133,7 @@ class DemandController extends BaseController
      *      }
      *  }
      */
-    public function create()
+    public function create(Request $request)
     {
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
@@ -143,7 +143,9 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError());
         }
 
-        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+        return $this->update($request, $item->id);
+
+//        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**
