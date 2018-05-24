@@ -803,4 +803,118 @@ class TaskController extends BaseController
         }
     }
 
+    /**
+     * @api {get} /myTasks  我的任务
+     * @apiVersion 1.0.0
+     * @apiName tasks myTasks
+     * @apiGroup tasks
+     *
+     * @apiParam {integer} stage 默认10；0.全部 2.已完成 -1.未完成  默认0
+     * @apiParam {integer} sort 0:升序；1.降序(默认)
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "meta": {
+                "message": "获取成功",
+                "status_code": 200
+            },
+            "data": [
+                {
+                    "id": 15,
+                    "name": "1",
+                    "summary": "",
+                    "tags": "",
+                    "user_id": 1,
+                    "execute_user_id": 1,
+                    "item_id": 0,
+                    "sub_count": 0,
+                    "sub_finfished_count": 0,
+                    "love_count": 0,
+                    "collection_count": 0,
+                    "level": 1,
+                    "type": 1,
+                    "stage": 2,
+                    "status": 1,
+                    "start_time": null,
+                    "over_time": null,
+                    "created_at": 1523346906,
+                    "updated_at": 1523505245,
+                    "tier": 1,
+                    "pid": 12,
+                    "stage_id": 0,
+                    "fatherTask": {
+                        "id": 12,
+                        "name": "123name"
+                    }
+                },
+                {
+                    "id": 16,
+                    "name": "1",
+                    "summary": "",
+                    "tags": "",
+                    "user_id": 1,
+                    "execute_user_id": 1,
+                    "item_id": 0,
+                    "sub_count": 0,
+                    "sub_finfished_count": 0,
+                    "love_count": 0,
+                    "collection_count": 0,
+                    "level": 1,
+                    "type": 1,
+                    "stage": 0,
+                    "status": 1,
+                    "start_time": null,
+                    "over_time": null,
+                    "created_at": 1523346916,
+                    "updated_at": 1523346916,
+                    "tier": 1,
+                    "pid": 12,
+                    "stage_id": 0,
+                    "fatherTask": {
+                        "id": 12,
+                        "name": "123name"
+                    }
+                }
+            ]
+        }
+     */
+    public function myTasks(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $stage = $request->input('stage') ? intval($request->input('stage')) : 0;
+        if($request->input('sort') == 0 && $request->input('sort') !== null)
+        {
+            $sort = 'asc';
+        }
+        else
+        {
+            $sort = 'desc';
+        }
+        if($stage !== 0){
+            if($stage == -1){
+                $stage = 0;
+            }
+            $tasks= Task::where(['execute_user_id' => $user_id , 'status' => 1 , 'stage' => $stage ])->orderBy('id', $sort)->get();
+        }else{
+            $tasks= Task::where(['execute_user_id' => $user_id , 'status' => 1])->orderBy('id', $sort)->get();
+        }
+
+        //给子任务赋值id，name
+        foreach ($tasks as $task){
+            if($task->pid != 0){
+                $pid = $task->pid;
+                $pidTask = Task::find($pid);
+                $pidName = $pidTask->name;
+                $task['fatherTask'] = [
+                    'id' => $pid,
+                    'name' => $pidName
+                ];
+            }
+        }
+
+        return $this->response->array($this->apiSuccess('获取成功' , 200 , $tasks));
+
+    }
+
 }

@@ -495,7 +495,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/statistical/tasks', 'TaskController@statistical');
         //个人任务统计
         $api->get('/statistical/userTasks', 'TaskController@userStatistical');
-
+        //我的任务
+        $api->get('/myTasks', 'TaskController@myTasks');
         /**
          * 项目用户
          */
