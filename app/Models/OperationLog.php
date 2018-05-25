@@ -9,6 +9,9 @@ class OperationLog extends BaseModel
 
     protected $action_type_config = [
         'task' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],  // 任务--动作类型
+        'tags' => [11 , 12],  // 标签--动作类型
+        'item_user' => [13 , 14],  // 项目人员--动作类型
+        'commune_summaries' => [15 , 16 , 17],  // 沟通纪要--动作类型
     ];
 
     // 操作动态文字说明
@@ -23,6 +26,13 @@ class OperationLog extends BaseModel
         '8' => ' 重做了子任务',  // 子任务重做
         '9' => ' 完成了子任务',  // 子任务完成
         '10' => ' 更新了截至时间',  // 更新了截至时间
+        '11' => ' 创建标签',  // 创建标签
+        '12' => ' 删除标签',  // 删除标签
+        '13' => ' 添加项目人员',  // 添加项目人员
+        '14' => ' 移除项目成员',  // 移除项目成员
+        '15' => ' 创建沟通纪要',  // 创建沟通纪要
+        '16' => ' 修改沟通纪要',  // 修改沟通纪要
+        '17' => ' 删除沟通纪要',  // 删除沟通纪要
     ];
 
     //关联操作用户
@@ -62,6 +72,14 @@ class OperationLog extends BaseModel
                 case 1:
                     // 查看 任务的相关人员
                     $user_id_arr = TaskUser::getTaskUser($operation_log->target_id);
+                    break;
+                case 3:
+                    // 查看 添加删除项目人员
+                    $user_id_arr = ItemUser::getItemUserArr($operation_log->target_id);
+                    break;
+                case 4:
+                    // 查看 沟通纪要相关人员
+                    $user_id_arr = CommuneSummary::getCommuneSummaryUserArr($operation_log->target_id);
                     break;
             }
 
@@ -142,11 +160,33 @@ class OperationLog extends BaseModel
             case 10:
                 $str = $this->updateOverTime();
                 break;
+            case 11:
+                $str = $this->createTag();
+                break;
+            case 12:
+                $str = $this->deleteTag();
+                break;
+            case 13:
+                $str = $this->createItemUser();
+                break;
+            case 14:
+                $str = $this->deleteItemUser();
+                break;
+            case 15:
+                $str = $this->createCommuneSummary();
+                break;
+            case 16:
+                $str = $this->updateCommuneSummary();
+                break;
+            case 17:
+                $str = $this->deleteCommuneSummary();
+                break;
         }
 
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'logo_image' => $this->user->logo_image,
             'action_type' => $this->action_type,
             'type' => $this->type,
             'model_id' => $this->model_id,
@@ -242,5 +282,48 @@ class OperationLog extends BaseModel
     {
         return $this->user->getUserName() . $this->title_config['10'].$this->content;
     }
+
+    // 创建标签
+    public function createTag()
+    {
+        return $this->user->getUserName() . $this->title_config['11'].$this->content;
+    }
+
+    // 删除标签
+    public function deleteTag()
+    {
+        return $this->user->getUserName() . $this->title_config['12'].$this->content;
+    }
+
+    // 创建项目成员
+    public function createItemUser()
+    {
+        return $this->user->getUserName() . $this->title_config['13'].$this->content;
+    }
+
+    // 删除项目成员
+    public function deleteItemUser()
+    {
+        return $this->user->getUserName() . $this->title_config['14'].$this->content;
+    }
+
+    // 创建沟通纪要
+    public function createCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['15'].$this->content;
+    }
+
+    // 更改沟通纪要
+    public function updateCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['16'].$this->content;
+    }
+
+    // 删除沟通纪要
+    public function deleteCommuneSummary()
+    {
+        return $this->user->getUserName() . $this->title_config['17'].$this->content;
+    }
+
 
 }

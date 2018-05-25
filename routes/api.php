@@ -495,7 +495,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/statistical/tasks', 'TaskController@statistical');
         //个人任务统计
         $api->get('/statistical/userTasks', 'TaskController@userStatistical');
-
+        //我的任务
+        $api->get('/myTasks', 'TaskController@myTasks');
         /**
          * 项目用户
          */
@@ -547,7 +548,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designProject', 'DesignProjectController@show');
         // api {put} /designProject/delete 设计工具项目删除
         $api->delete('/designProject/delete', 'DesignProjectController@delete');
-
+        // api {put} /designProject/collect 设计工具项目收藏
+        $api->put('/designProject/collect', 'DesignProjectController@collect');
 
         //设计公司客户
         // api {get} /designClient/lists 客户信息列表
@@ -600,6 +602,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designSubstage/update', 'DesignSubstageController@update');
         $api->get('/designSubstage', 'DesignSubstageController@show');
         $api->delete('/designSubstage/delete', 'DesignSubstageController@delete');
+        $api->put('/designSubstage/updateDuration', 'DesignSubstageController@updateDuration');
+
 
         // 阶段节点
         // api {post} /designStageNode/create 设计工具--创建阶段节点

@@ -9,6 +9,8 @@ use App\Models\DesignSubstage;
 use App\Models\ItemUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class DesignSubstageController extends BaseController
@@ -262,6 +264,55 @@ class DesignSubstageController extends BaseController
         $design_substage->deleteSubstage();
 
         return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {put} /designSubstage/updateDuration 设计工具--更改投入时间
+     * @apiVersion 1.0.0
+     * @apiName designSubstage updateDuration
+     * @apiGroup designSubstage
+     *
+     * @apiParam {json} durations 投入时间'[{"id":1,"duration":2},{"id":1,"duration":2}]'
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function updateDuration(Request $request)
+    {
+        $durations = $request->input('durations') ?? '[]';
+
+        //转换称数组格式
+        $newDurations = json_decode($durations, true);
+        try {
+            DB::beginTransaction();
+            foreach ($newDurations as $durationObj){
+                //查看是否存在子阶段
+                $design_substage = DesignSubstage::find($durationObj['id']);
+                if(!$design_substage){
+                    return $this->response->array($this->apiError('子阶段不存在', 404));
+                }
+                $design_substage->duration = $durationObj['duration'];
+                //更改子阶段的时间
+                if(!$design_substage->save()){
+                    return $this->response->array($this->apiError('子阶段更改失败', 412));
+                }
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+
     }
 
 

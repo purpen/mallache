@@ -236,7 +236,10 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-
+        //通过$_POST存储数据，记录到动态表中
+        $_POST['title'] = $communeSummary->title;
+        $_POST['id'] = $id;
+        $_POST['item_id'] = $communeSummary->item_id;
         $ok = $communeSummary->delete();
         if (!$ok) {
             return $this->response->array($this->apiError());
@@ -284,6 +287,10 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        //通过$_POST存储数据，记录到动态表中
+        $_POST['title'] = $communeSummary->title;
+        $_POST['id'] = $id;
+        $_POST['item_id'] = $communeSummary->item_id;
         $new_all = array_diff($all , array(null));
         $communeSummary->update($new_all);
         if (!$communeSummary) {

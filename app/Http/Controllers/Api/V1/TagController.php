@@ -68,7 +68,7 @@ class TagController extends BaseController
      * @apiParam {string} title 标题
      * @apiParam {integer} type 类型:1.默认;
      * @apiParam {integer} item_id 项目ID
-     * @apiParam {integer} task_id 项目ID
+     * @apiParam {integer} task_id 任务ID
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -113,6 +113,10 @@ class TagController extends BaseController
             'item_id' => $item_id,
             'task_id' => $task_id,
         );
+        $tag = Tag::where('title' , $params['title'])->where('item_id' , $item_id)->first();
+        if($tag){
+            return $this->response->array($this->apiError('标签名称已经存在', 412));
+        }
 
         $validator = Validator::make($params, $rules, $messages);
         if ($validator->fails()) {
@@ -269,13 +273,20 @@ class TagController extends BaseController
      *   }
      *
      */
-    public function destroy($id)
+    public function destroy(Request $request ,$id)
     {
         //检验是否存在
         $tag = Tag::find($id);
         if (!$tag) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        $title = $tag->title;
+        $id = $tag->id;
+        $item_id = $tag->item_id;
+        //通过$_POST存储数据，记录到动态表中
+        $_POST['tagTitle'] = $title;
+        $_POST['id'] = $id;
+        $_POST['item_id'] = $item_id;
         //检验是否是当前用户创建的作品
         if ($tag->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('没有权限删除!', 403));

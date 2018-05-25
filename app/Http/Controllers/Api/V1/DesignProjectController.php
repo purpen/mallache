@@ -36,6 +36,7 @@ class DesignProjectController extends BaseController
      * @apiGroup designProject
      *
      * @apiParam {int} status 状态：1.正常 2.回收站
+     * @apiParam {int} collect 收藏状态：0.默认 1.收藏
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -88,13 +89,22 @@ class DesignProjectController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = $request->status ?? 1;
+        $collect = $request->collect ?? 0;
 
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
 
-        $lists = DesignProject::where('status', $status)
-            ->whereIn('id', $arr)
-            ->paginate($per_page);
+        if ($collect == 1){
+            $lists = DesignProject::where('status', $status)
+                ->where('collect', $collect)
+                ->whereIn('id', $arr)
+                ->paginate($per_page);
+        }else{
+            $lists = DesignProject::where('status', $status)
+                ->whereIn('id', $arr)
+                ->paginate($per_page);
+        }
+
 
         return $this->response->paginator($lists, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
@@ -734,5 +744,47 @@ class DesignProjectController extends BaseController
             $resp_data[] = $dynamic->info();
         }
         return $this->response->array($this->apiSuccess('Success', 200, $resp_data));
+    }
+
+    /**
+     * @api {put} /designProject/collect 设计工具项目收藏
+     * @apiVersion 1.0.0
+     * @apiName designProject collect
+     * @apiGroup designProject
+     *
+     * @apiParam {int} id
+     * @apiParam {int} collect 0.默认 1.收藏
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function collect(Request $request)
+    {
+        $id = $request->input('id');
+        $collect = $request->input('collect');
+        $user_id = $this->auth_user_id;
+
+        if (!$this->auth_user->isDesignAdmin()) {
+            throw new MassageException('无权限', 403);
+        }
+        if (!$design_company_id = User::designCompanyId($user_id)) {
+            throw new MassageException('无权限', 403);
+        }
+
+        $design_project = DesignProject::where(['id' => $id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
+        if (!$design_project) {
+            return $this->response->array($this->apiSuccess());
+        }
+
+        $design_project->collect = $collect;
+        $design_project->save();
+
+        return $this->response->array($this->apiSuccess());
     }
 }

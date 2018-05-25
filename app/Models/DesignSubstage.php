@@ -30,17 +30,17 @@ class DesignSubstage extends BaseModel
     public function info()
     {
         return [
-            'id' => $this->id,
-            'design_project_id' => $this->design_project_id,
-            'design_stage_id' => $this->design_stage_id,
+            'id' => intval($this->id),
+            'design_project_id' => intval($this->design_project_id),
+            'design_stage_id' => intval($this->design_stage_id),
             'name' => $this->name,
-            'execute_user_id' => $this->execute_user_id,
+            'execute_user_id' => intval($this->execute_user_id),
             'execute_user' => $this->user ?? null,
-            'duration' => $this->duration,
-            'start_time' => $this->start_time,
+            'duration' => intval($this->duration),
+            'start_time' => intval($this->start_time),
             'summary' => $this->summary,
-            'user_id' => $this->user_id,
-            'status' => $this->status,
+            'user_id' => intval($this->user_id),
+            'status' => intval($this->status),
             'design_stage_node' => $this->designStageNode ? $this->designStageNode->info() : null,
         ];
     }
