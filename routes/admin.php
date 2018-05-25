@@ -51,6 +51,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/designCompany/openInfo', [
             'as' => 'AdminDesignCompany.openInfo', 'uses' => 'AdminDesignCompanyController@openInfo'
         ]);
+        // api {put} /admin/designCompany/isTest 设置设计公司是否是测试数据
+        $api->put('/admin/designCompany/isTest', 'AdminDesignCompanyController@setIsTestData');
 
         // 设计公司案例列表
         $api->get('/admin/designCase/lists', [
@@ -60,6 +62,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/designCase/openInfo', [
             'as' => 'DesignCase.openInfo', 'uses' => 'DesignCaseController@openInfo'
         ]);
+
 
 
         //更新需求公司审核状态

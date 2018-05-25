@@ -25,6 +25,8 @@ return [
         '/admin/designCompany/show',
         // 公开或关闭设计公司资料
         '/admin/designCompany/openInfo',
+        // 设置设计公司是否是测试数据
+        '/admin/designCompany/isTest',
 
 
         //更新需求公司审核状态
@@ -216,6 +218,8 @@ return [
         '/admin/designCompany/show',
         // 公开或关闭设计公司资料
         '/admin/designCompany/openInfo',
+        // 设置设计公司是否是测试数据
+        '/admin/designCompany/isTest',
 
         //更新需求公司审核状态
         '/admin/demandCompany/verifyStatus',

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helper;
 
 use App\Events\ItemStatusEvent;
@@ -85,9 +86,9 @@ class Recommend
     //匹配失败
     protected function itemFail()
     {
-        if(config('constant.item_recommend_lose')){
+        if (config('constant.item_recommend_lose')) {
             $this->item->status = 2;  //等待后台人工干预
-        }else{
+        } else {
             $this->item->status = -2;  //匹配失败
         }
 
@@ -110,7 +111,7 @@ class Recommend
         $key_arr = array_rand($design_id_arr, 2);
 
         $design_id_arr_rand = [];
-        foreach ($key_arr as $value){
+        foreach ($key_arr as $value) {
             $design_id_arr_rand[] = $design_id_arr[$value];
         }
 
@@ -144,8 +145,8 @@ class Recommend
         // 设计公司ID
         $design_id = 32;
 
-        if((int)$user_id === (int)$this->item->user_id){
-            $this->item->recommend =  $this->item->recommend . "," . $design_id;
+        if ((int)$user_id === (int)$this->item->user_id) {
+            $this->item->recommend = $this->item->recommend . "," . $design_id;
             $this->item->save();
         }
     }
@@ -163,7 +164,7 @@ class Recommend
         $max = $this->cost($this->item->productDesign->design_cost);
 
         //所属领域
-        $field =  $this->item->productDesign->field;
+        $field = $this->item->productDesign->field;
 //        //周期
 //        $cycle = $this->item->productDesign->cycle;
 //        //项目公司地点
@@ -173,7 +174,7 @@ class Recommend
 
 
         $arr = [];
-        foreach ($design_types as $design_type){
+        foreach ($design_types as $design_type) {
             //获取符合设计类型和设计费用的设计公司ID数组
             $design_id_arr = DesignItemModel::select('user_id')
                 ->where('type', $type)
@@ -183,9 +184,9 @@ class Recommend
                 ->get()
                 ->pluck('user_id')->all();
 
-            if(empty($arr)){
-                $arr =  $design_id_arr;
-            }else{
+            if (empty($arr)) {
+                $arr = $design_id_arr;
+            } else {
                 $arr = array_intersect($arr, $design_id_arr);
             }
         }
@@ -195,7 +196,7 @@ class Recommend
 //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 1, 'verify_status' => 1]);
+            ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
 
 //        if($province && $province != -1){
 //            $design->where('province', $province)
@@ -229,7 +230,7 @@ class Recommend
 //        $city = $item_info['city'];
 
         $arr = [];
-        foreach ($design_types as $design_type){
+        foreach ($design_types as $design_type) {
             //获取符合 设计类型 和 设计费用 的设计公司ID数组
             $design_id_arr = DesignItemModel::select('user_id')
                 ->where('type', $type)
@@ -239,9 +240,9 @@ class Recommend
                 ->get()
                 ->pluck('user_id')->all();
 
-            if(empty($arr)){
-                $arr =  $design_id_arr;
-            }else{
+            if (empty($arr)) {
+                $arr = $design_id_arr;
+            } else {
                 $arr = array_intersect($arr, $design_id_arr);
             }
         }
@@ -250,7 +251,7 @@ class Recommend
 //Log::info($design_id_arr);
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 1, 'verify_status' => 1]);
+            ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
 
 //        if($province && $province != -1){
 //            $design->where('province', $province)

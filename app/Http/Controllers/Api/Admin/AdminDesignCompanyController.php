@@ -35,33 +35,33 @@ class AdminDesignCompanyController extends Controller
      */
     public function verifyStatus(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'status' => 'required',
             'id' => 'required',
         ]);
         $id = $request->input('id');
         $status = $request->input('status');
-        $verify_summary = $request->input('verify_summary','');
+        $verify_summary = $request->input('verify_summary', '');
 
-        if(!in_array($status,[0,1,2,3])){
-            return $this->response->array($this->apiSuccess('状态参数错误' , 403));
+        if (!in_array($status, [0, 1, 2, 3])) {
+            return $this->response->array($this->apiSuccess('状态参数错误', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        $design_company = DesignCompanyModel::where('id', $id)->first();
+        if (!$design_company) {
+            return $this->response->array($this->apiSuccess('设计公司不存在', 404));
         }
 
-        $design = DesignCompanyModel::verifyStatus($id , $status, $verify_summary);
-        if(!$design){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $design = DesignCompanyModel::verifyStatus($id, $status, $verify_summary);
+        if (!$design) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
 
         // 系统消息通知
         $tools = new Tools();
         $title = '公司信息审核';
         $content = '';
-        switch ($status){
+        switch ($status) {
             case 0:
                 $content = '公司信息变更为未审核状态，请修改资料重新提交';
                 break;
@@ -100,13 +100,13 @@ class AdminDesignCompanyController extends Controller
     public function unVerifyStatus(Request $request)
     {
         $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        $design_company = DesignCompanyModel::where('id', $id)->first();
+        if (!$design_company) {
+            return $this->response->array($this->apiSuccess('设计公司不存在', 404));
         }
-        $design = DesignCompanyModel::verifyStatus($id , 0);
-        if(!$design){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $design = DesignCompanyModel::verifyStatus($id, 0);
+        if (!$design) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -132,13 +132,13 @@ class AdminDesignCompanyController extends Controller
     public function noVerifyStatus(Request $request)
     {
         $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        $design_company = DesignCompanyModel::where('id', $id)->first();
+        if (!$design_company) {
+            return $this->response->array($this->apiSuccess('设计公司不存在', 404));
         }
-        $design = DesignCompanyModel::verifyStatus($id , 2);
-        if(!$design){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $design = DesignCompanyModel::verifyStatus($id, 2);
+        if (!$design) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
 
         // 系统消息通知
@@ -171,14 +171,14 @@ class AdminDesignCompanyController extends Controller
     public function okStatus(Request $request)
     {
         $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
+        $design_company = DesignCompanyModel::where('id', $id)->first();
 
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        if (!$design_company) {
+            return $this->response->array($this->apiSuccess('设计公司不存在', 404));
         }
-        $design = DesignCompanyModel::unStatus($id , 1);
-        if(!$design){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $design = DesignCompanyModel::unStatus($id, 1);
+        if (!$design) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -203,13 +203,13 @@ class AdminDesignCompanyController extends Controller
     public function unStatus(Request $request)
     {
         $id = $request->input('id');
-        $design_company = DesignCompanyModel::where('id' , $id)->first();
-        if(!$design_company){
-            return $this->response->array($this->apiSuccess('设计公司不存在' , 404));
+        $design_company = DesignCompanyModel::where('id', $id)->first();
+        if (!$design_company) {
+            return $this->response->array($this->apiSuccess('设计公司不存在', 404));
         }
-        $design = DesignCompanyModel::unStatus($id , 0);
-        if(!$design){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $design = DesignCompanyModel::unStatus($id, 0);
+        if (!$design) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -231,100 +231,101 @@ class AdminDesignCompanyController extends Controller
      *
      * @apiSuccessExample 成功响应:
      * {
-         * {[
-            {
-            "id": 1,
-            "user_id": 1,
-            "company_type": 1,
-            "company_type_val": "普通",
-            "company_name": "测试设计公司",
-            "company_abbreviation": "",
-            "registration_number": "12344556",
-            "province": 1,
-            "city": 2,
-            "area": 3,
-            "province_value": "",
-            "city_value": "",
-            "area_value": "",
-            "address": "北京朝阳",
-            "contact_name": "小王",
-            "position": "老总",
-            "phone": "18629493220",
-            "email": "qq@qq.com",
-            "company_size": 4,
-            "company_size_val": "100-300人之间",
-            "branch_office": 1,
-            "good_field": [
-                "1",
-                "2",
-                "3"
-            ],
-            "web": "www.tai.com",
-            "company_profile": "一家有价值的公司",
-            "design_type": "1,2,3,4,5",
-            "establishment_time": "2013-12-10",
-            "professional_advantage": "专业",
-            "awards": "就是专业",
-            "score": 70,
-            "status": 1,
-            "is_recommend": 0,
-            "verify_status": 1,
-            "logo": 0,
-            "logo_image": [],
-            "license_image": [],
-            "unique_id": "",
-            "created_at": 1491893664,
-            "users": {},
-            "city_arr": [
-                "",
-                ""
-            ],
-            "legal_person": "",
-            "document_type": 0,
-            "document_type_val": "",
-            "document_number": "",
-            "document_image": [],
-            "item_type": [
-                "产品设计",
-                "app设计",
-                "网页设计"
-            ],
-            "open": 0   // 公司资料是否公开：0.否；1.是；
-            }
-        ],
-        "meta": {
-            "message": "Success",
-            "status_code": 200,
-            "pagination": {
-                "total": 3,
-                "count": 3,
-                "per_page": 10,
-                "current_page": 1,
-                "total_pages": 1,
-                "links": []
-            }
-        }
-    }
+     * {[
+     * {
+     * "id": 1,
+     * "user_id": 1,
+     * "company_type": 1,
+     * "company_type_val": "普通",
+     * "company_name": "测试设计公司",
+     * "company_abbreviation": "",
+     * "registration_number": "12344556",
+     * "province": 1,
+     * "city": 2,
+     * "area": 3,
+     * "province_value": "",
+     * "city_value": "",
+     * "area_value": "",
+     * "address": "北京朝阳",
+     * "contact_name": "小王",
+     * "position": "老总",
+     * "phone": "18629493220",
+     * "email": "qq@qq.com",
+     * "company_size": 4,
+     * "company_size_val": "100-300人之间",
+     * "branch_office": 1,
+     * "good_field": [
+     * "1",
+     * "2",
+     * "3"
+     * ],
+     * "web": "www.tai.com",
+     * "company_profile": "一家有价值的公司",
+     * "design_type": "1,2,3,4,5",
+     * "establishment_time": "2013-12-10",
+     * "professional_advantage": "专业",
+     * "awards": "就是专业",
+     * "score": 70,
+     * "status": 1,
+     * "is_recommend": 0,
+     * "verify_status": 1,
+     * "logo": 0,
+     * "logo_image": [],
+     * "license_image": [],
+     * "unique_id": "",
+     * "created_at": 1491893664,
+     * "users": {},
+     * "city_arr": [
+     * "",
+     * ""
+     * ],
+     * "legal_person": "",
+     * "document_type": 0,
+     * "document_type_val": "",
+     * "document_number": "",
+     * "document_image": [],
+     * "item_type": [
+     * "产品设计",
+     * "app设计",
+     * "网页设计"
+     * ],
+     * "open": 0   // 公司资料是否公开：0.否；1.是；
+     *      "is_test_data": 0  // 是否是测试数据 0.真实数据 1.测试数据
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200,
+     * "pagination": {
+     * "total": 3,
+     * "count": 3,
+     * "per_page": 10,
+     * "current_page": 1,
+     * "total_pages": 1,
+     * "links": []
+     * }
+     * }
+     * }
      */
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2,3]) ? $request->input('type_verify_status') : null;
-        $type_status = in_array($request->input('type_status'), [0,1]) ? $request->input('type_status') : null;
-        $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : 0;
+        $type_verify_status = in_array($request->input('type_verify_status'), [0, 1, 2, 3]) ? $request->input('type_verify_status') : null;
+        $type_status = in_array($request->input('type_status'), [0, 1]) ? $request->input('type_status') : null;
+        $sort = in_array($request->input('sort'), [0, 1, 2]) ? $request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
 
-        $query = DesignCompanyModel::with('user','user.designItem');
-        if($type_status !== null && $type_status !== ''){
+        $query = DesignCompanyModel::with('user', 'user.designItem');
+        if ($type_status !== null && $type_status !== '') {
             $query->where('status', $type_status);
         }
-        if($type_verify_status !== null && $type_verify_status !== ''){
+        if ($type_verify_status !== null && $type_verify_status !== '') {
             $query->where('verify_status', $type_verify_status);
         }
 
         if ($val) {
-            switch($evt) {
+            switch ($evt) {
                 case 1:
                     $query->where('id', (int)$val);
                     break;
@@ -343,7 +344,7 @@ class AdminDesignCompanyController extends Controller
         }
 
         //排序
-        switch ($sort){
+        switch ($sort) {
             case 0:
                 $query->orderBy('id', 'desc');
                 break;
@@ -356,7 +357,7 @@ class AdminDesignCompanyController extends Controller
         }
 
         $lists = $query->paginate($per_page);
-        return $this->response->paginator($lists , new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -387,12 +388,12 @@ class AdminDesignCompanyController extends Controller
         $design_id = $request->input('design_id');
         $is_open = $request->input('is_open');
 
-        if(!$design_company = DesignCompanyModel::find($design_id)){
+        if (!$design_company = DesignCompanyModel::find($design_id)) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
         $design_company->open = 1;
-        if(!$design_company->save()){
+        if (!$design_company->save()) {
             return $this->response->array($this->apiError('error', 500));
         }
 
@@ -411,10 +412,41 @@ class AdminDesignCompanyController extends Controller
     public function show(Request $request)
     {
         $id = $request->input('id');
-        if(!$design = DesignCompanyModel::find($id)){
+        if (!$design = DesignCompanyModel::find($id)) {
             return $this->response->array($this->apiError('not found design company', 404));
         }
 
         return $this->response->item($design, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {put} /admin/designCompany/isTest 设置设计公司是否是测试数据
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignCompany isTest
+     * @apiGroup AdminDesignCompany
+     *
+     * @apiParam {integer} id 设计公司ID
+     * @apiParam {integer} is_test_data 是否是测试数据 0.真实数据 1.测试数据
+     * @apiParam {string} token
+     */
+    public function setIsTestData(Request $request)
+    {
+        $id = $request->input('id');
+        $is_test_data = $request->input('is_test_data');
+
+        $design = DesignCompanyModel::find($id);
+        if (!$design) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($is_test_data) {
+            $design->is_test_data = 1;
+        } else {
+            $design->is_test_data = 0;
+        }
+        $design->save();
+
+        return $this->response->array($this->apiSuccess());
     }
 }
