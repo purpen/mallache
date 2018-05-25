@@ -602,6 +602,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designSubstage/update', 'DesignSubstageController@update');
         $api->get('/designSubstage', 'DesignSubstageController@show');
         $api->delete('/designSubstage/delete', 'DesignSubstageController@delete');
+        $api->put('/designSubstage/updateDuration', 'DesignSubstageController@updateDuration');
+
 
         // 阶段节点
         // api {post} /designStageNode/create 设计工具--创建阶段节点
