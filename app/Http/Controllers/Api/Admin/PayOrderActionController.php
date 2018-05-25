@@ -108,7 +108,7 @@ class PayOrderActionController extends BaseController
             $query->where('status', $status);
         }
         if ($pay_type !== null) {
-            $query->where('pay_status', $pay_type);
+            $query->where('pay_type', $pay_type);
         }
         if ($bank_transfer !== null) {
             $query->where('bank_transfer', $bank_transfer);
