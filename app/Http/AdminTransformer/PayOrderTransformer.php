@@ -20,7 +20,7 @@ class PayOrderTransformer extends TransformerAbstract
         $payOrder->user;
         $payOrder->item_name = $name;
         $payOrder->company_name = $company_name;
-        $payOrder->assets = AssetModel::getImageUrl($payOrder->id, 33); // 转账附件
+        $payOrder->assets = AssetModel::getOneImageUrl($payOrder->id, 33); // 转账附件
         unset($payOrder->item);
 
         return $payOrder->toArray();
