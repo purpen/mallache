@@ -595,7 +595,7 @@ class PayController extends BaseController
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
-        $count = AssetModel::where(['type' => 32, 'target_id' => $pay_order_id])->count();
+        $count = AssetModel::where(['type' => 33, 'target_id' => $pay_order_id])->count();
         if ($count > 0) {
             $pay_order->bank_transfer = 1; // 已上传用户凭证
             $pay_order->save();
