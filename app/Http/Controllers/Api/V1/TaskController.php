@@ -325,6 +325,15 @@ class TaskController extends BaseController
         if (!$task) {
             return $this->response->array($this->apiError('not found', 404));
         }
+        //查看项目名称
+        $item_id = $task->item_id;
+        $item = DesignProject::where('id' , $item_id)->first();
+        if($item){
+            $task['itemName'] = $item->name;
+        }else{
+            $task['itemName'] = '';
+        }
+
         //查看子任务
         $taskChild = Task::where('pid' , $id)->get();
         $task['childTask'] = $taskChild;
