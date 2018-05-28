@@ -56,6 +56,7 @@ class TaskChildTransformer extends TransformerAbstract
             'pid' => intval($tasks->pid),
             'stage_id' => intval($tasks->stage_id),
             'childTask' => $tasks->childTask,
+            'itemName' => $tasks->itemName,
             'log' => OperationLog::getTaskLog($tasks->id),
 
         ];

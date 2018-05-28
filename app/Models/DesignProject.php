@@ -195,6 +195,12 @@ class DesignProject extends BaseModel
     // 设计项目项目信息
     public function info()
     {
+        $user = User::find($this->user_id);
+        if($user){
+            $realName = $user->getUserName();
+        }else{
+            $realName = '';
+        }
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -244,6 +250,7 @@ class DesignProject extends BaseModel
             'design_types_value' => $this->design_types_value,
             'project_demand' => $this->project_demand,
             'collect' => intval($this->collect),
+            'realName' => $realName,
         ];
     }
 

@@ -273,7 +273,7 @@ class DesignSubstageController extends BaseController
      * @apiName designSubstage updateDuration
      * @apiGroup designSubstage
      *
-     * @apiParam {json} durations 投入时间'[{"id":1,"duration":2},{"id":1,"duration":2}]'
+     * @apiParam {json} durations 投入时间'[{"id":1,"duration":2,"start_time":222},{"id":1,"duration":2,"start_time":222}]'
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -299,6 +299,7 @@ class DesignSubstageController extends BaseController
                     return $this->response->array($this->apiError('子阶段不存在', 404));
                 }
                 $design_substage->duration = $durationObj['duration'];
+                $design_substage->start_time = $durationObj['start_time'];
                 //更改子阶段的时间
                 if(!$design_substage->save()){
                     return $this->response->array($this->apiError('子阶段更改失败', 412));

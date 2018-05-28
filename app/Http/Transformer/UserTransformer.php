@@ -39,6 +39,7 @@ class UserTransformer extends TransformerAbstract
             'invite_user_id' => $user->invite_user_id,
             'design_company_name' => $design ? $design->company_name : '',
             'design_company_abbreviation' => $design ? $design->company_abbreviation : '',
+            'verify_status' => $design ? $design->verify_status : 0,
             'created_at' => $user->created_at,
 
 
