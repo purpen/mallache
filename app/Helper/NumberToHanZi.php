@@ -2,7 +2,7 @@
 
 namespace App\Helper;
 
-class NumberTOHanZi
+class NumberToHanZi
 {
     // 获取数字的中文大写
     public static function numberToH($number)
