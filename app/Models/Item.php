@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\ItemCommissionAction;
+use App\Helper\NumberTOHanZi;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -118,6 +120,10 @@ class Item extends BaseModel
     public function itemInfo()
     {
         $item = $this;
+
+        $price = number_format($item->price, 2, '.', '');
+        $commission = ItemCommissionAction::getCommission($item);
+
         switch ((int)$item->type) {
             case 0:
                 return [
@@ -166,6 +172,7 @@ class Item extends BaseModel
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
                     'design_company_id' => $item->design_company_id,
+
                     'field' => $info->field,
                     'field_value' => $info->field_value,
                     'industry' => $info->industry,
@@ -182,7 +189,12 @@ class Item extends BaseModel
                     'province_value' => $info->province_value,
                     'city_value' => $info->city_value,
                     'image' => $info->image,
-                    'price' => number_format($item->price, 2, '.', ''),
+
+                    'price' => $price,
+                    'price_han' => NumberTOHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberTOHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
 
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -234,7 +246,13 @@ class Item extends BaseModel
                     'province_value' => $info->province_value,
                     'city_value' => $info->city_value,
                     'image' => $info->image,
-                    'price' => number_format($item->price, 2, '.', ''),
+
+                    'price' => $price,
+                    'price_han' => NumberTOHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberTOHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
+
                     'stage_status' => (int)$item->stage_status,
                     'cycle' => $info->cycle,
                     'cycle_value' => $info->cycle_value,

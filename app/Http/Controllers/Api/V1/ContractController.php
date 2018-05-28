@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\ItemCommissionAction;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Transformer\ContractTransformer;
 use App\Models\Contract;
@@ -50,6 +51,10 @@ class ContractController extends BaseController
      * @apiParam {string} design_company_address 设计公司地址
      * @apiParam {string} design_company_phone 设计公司电话
      * @apiParam {string} design_company_legal_person 设计公司法人
+     * @apiParam {string} thn_company_name 平台名称
+     * @apiParam {string} thn_company_address 平台地址
+     * @apiParam {string} thn_company_phone 平台联系电话
+     * @apiParam {string} thn_company_legal_person 平台联系人
      * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
@@ -71,7 +76,16 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
+     *      "design_company_id": 47,
+     *      "thn_company_name": "", // 平台名称
+     *      "thn_company_address": "", // 地址
+     *      "thn_company_phone": "",    // 联系方式
+     *      "thn_company_legal_person": "", // 联系人
      *      "total": "",
+     *      "total_han": "" //
+     *      "commission": 123, // 佣金
+     *      "commission_han": "", // 佣金汉字大写
+     *      "commission_rate": 12, // 佣金比例
      *      "warranty_money": ,
      *      "first_payment": ,   // 首付款
      *      "warranty_money_proportion": 0.10,   //尾款比例
@@ -134,6 +148,10 @@ class ContractController extends BaseController
 //            'design_work_content' => 'required',
             'title' => 'required|max:50',
 //            'item_stage' => 'array',
+            'thn_company_name' => 'required',
+            'thn_company_address' => 'required',
+            'thn_company_phone' => 'required',
+            'thn_company_legal_person' => 'required',
         ];
 
         $messages = [
@@ -176,6 +194,8 @@ class ContractController extends BaseController
 
             $all['item_content'] = '';
             $all['design_work_content'] = '';
+            $all['commission'] = ItemCommissionAction::getCommission($item);
+            $all['commission_rate'] = $item->commission_rate;
             $contract = Contract::create($all);
 
             foreach ($all['item_stage'] as $stage) {
@@ -340,6 +360,10 @@ class ContractController extends BaseController
      * @apiParam {string} design_company_address 设计公司地址
      * @apiParam {string} design_company_phone 设计公司电话
      * @apiParam {string} design_company_legal_person 设计公司法人
+     * @apiParam {string} thn_company_name 平台名称
+     * @apiParam {string} thn_company_address 平台地址
+     * @apiParam {string} thn_company_phone 平台联系电话
+     * @apiParam {string} thn_company_legal_person 平台联系人
      * @apiParam {string} title 合同名称
      * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12'],'content' => ['内容一','内容二'],]
      *
@@ -359,7 +383,15 @@ class ContractController extends BaseController
      *      "design_company_address": "",
      *      "design_company_phone": "",
      *      "design_company_legal_person": "",
+     *      "thn_company_name": "", // 平台名称
+     *      "thn_company_address": "", // 地址
+     *      "thn_company_phone": "",    // 联系方式
+     *      "thn_company_legal_person": "", // 联系人
      *      "total": "",
+     *      "total_han": "" //
+     *      "commission": 123, // 佣金
+     *      "commission_han": "", // 佣金汉字大写
+     *      "commission_rate": 12, // 佣金比例
      *      "warranty_money": ,
      *      "first_payment": ,   // 首付款
      *      "warranty_money_proportion": 0.10,   //尾款比例
@@ -396,7 +428,7 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
 
-        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person','title','item_stage']);
+        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person', 'title', 'item_stage']);
 
         $rules = [
             'demand_company_name' => 'required',
@@ -411,6 +443,10 @@ class ContractController extends BaseController
 //            'design_work_content' => 'required',
             'title' => 'required|max:20',
 //            'item_stage' => 'array',
+            'thn_company_name' => 'required',
+            'thn_company_address' => 'required',
+            'thn_company_phone' => 'required',
+            'thn_company_legal_person' => 'required',
         ];
 
         $messages = [

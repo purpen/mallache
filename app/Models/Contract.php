@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\NumberTOHanZi;
 use Illuminate\Database\Eloquent\Model;
 
 class Contract extends BaseModel
@@ -29,6 +30,10 @@ class Contract extends BaseModel
         'design_company_address',
         'design_company_phone',
         'design_company_legal_person',
+        'thn_company_name',
+        'thn_company_address',
+        'thn_company_phone',
+        'thn_company_legal_person',
         'item_content',
         'total',
         'design_work_content',
@@ -39,6 +44,8 @@ class Contract extends BaseModel
         'first_payment',
         'warranty_money_proportion',
         'first_payment_proportion',
+        'commission_rate',
+        'commission',
     ];
 
     //相对关联 项目表
@@ -67,7 +74,16 @@ class Contract extends BaseModel
             'design_company_address' => strval($this->design_company_address),
             'design_company_phone' => strval($this->design_company_phone),
             'design_company_legal_person' => strval($this->design_company_legal_person),
-            'total' => strval($this->total),
+            'thn_company_name' => strval($this->thn_company_name),
+            'thn_company_address' => strval($this->thn_company_address),
+            'thn_company_phone' => strval($this->thn_company_phone),
+            'thn_company_legal_person' => strval($this->thn_company_legal_person),
+            'commission' => $this->commission,
+            'commission_han' => NumberTOHanZi::numberToH($this->commission),
+            'commission_rate' => $this->commission_rate,
+            'total' => $this->total,
+            'total_han' => NumberTOHanZi::numberToH($this->total),
+
             'status' => intval($this->status),
             'unique_id' => strval($this->unique_id),
             'item_name' => $this->item_name,
