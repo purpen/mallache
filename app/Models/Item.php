@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\ItemCommissionAction;
-use App\Helper\NumberTOHanZi;
+use App\Helper\NumberToHanZi;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -191,9 +191,9 @@ class Item extends BaseModel
                     'image' => $info->image,
 
                     'price' => $price,
-                    'price_han' => NumberTOHanZi::numberToH($price),
+                    'price_han' => NumberToHanZi::numberToH($price),
                     'commission' => $commission,
-                    'commission_han' => NumberTOHanZi::numberToH($commission),
+                    'commission_han' => NumberToHanZi::numberToH($commission),
                     'commission_rate' => $item->commission_rate,
 
                     'company_name' => $item->company_name,
@@ -248,9 +248,9 @@ class Item extends BaseModel
                     'image' => $info->image,
 
                     'price' => $price,
-                    'price_han' => NumberTOHanZi::numberToH($price),
+                    'price_han' => NumberToHanZi::numberToH($price),
                     'commission' => $commission,
-                    'commission_han' => NumberTOHanZi::numberToH($commission),
+                    'commission_han' => NumberToHanZi::numberToH($commission),
                     'commission_rate' => $item->commission_rate,
 
                     'stage_status' => (int)$item->stage_status,

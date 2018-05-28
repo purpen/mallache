@@ -2,7 +2,7 @@
 
 namespace App\Http\Transformer;
 
-use App\Helper\NumberTOHanZi;
+use App\Helper\NumberToHanZi;
 use App\Models\Contract;
 use App\Models\ItemStage;
 use League\Fractal\TransformerAbstract;
@@ -24,7 +24,7 @@ class ContractTransformer extends TransformerAbstract
             'design_company_phone' => strval($contract->design_company_phone),
             'design_company_legal_person' => strval($contract->design_company_legal_person),
             'total' => strval($contract->total),
-            'total_han' => NumberTOHanZi::numberToH($this->total),
+            'total_han' => NumberToHanZi::numberToH($this->total),
 //            'item_content' => $contract->item_content,
 //            'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
@@ -42,7 +42,7 @@ class ContractTransformer extends TransformerAbstract
             'thn_company_phone' => strval($contract->thn_company_phone),
             'thn_company_legal_person' => strval($contract->thn_company_legal_person),
             'commission' => $contract->commission,
-            'commission_han' => NumberTOHanZi::numberToH($this->commission),
+            'commission_han' => NumberToHanZi::numberToH($this->commission),
             'commission_rate' => $contract->commission_rate,
         ];
     }

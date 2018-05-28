@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Helper\NumberTOHanZi;
+use App\Helper\NumberToHanZi;
 use Illuminate\Database\Eloquent\Model;
 
 class Contract extends BaseModel
@@ -79,10 +79,10 @@ class Contract extends BaseModel
             'thn_company_phone' => strval($this->thn_company_phone),
             'thn_company_legal_person' => strval($this->thn_company_legal_person),
             'commission' => $this->commission,
-            'commission_han' => NumberTOHanZi::numberToH($this->commission),
+            'commission_han' => NumberToHanZi::numberToH($this->commission),
             'commission_rate' => $this->commission_rate,
             'total' => $this->total,
-            'total_han' => NumberTOHanZi::numberToH($this->total),
+            'total_han' => NumberToHanZi::numberToH($this->total),
 
             'status' => intval($this->status),
             'unique_id' => strval($this->unique_id),
