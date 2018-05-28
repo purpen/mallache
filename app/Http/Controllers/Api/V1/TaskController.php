@@ -736,6 +736,12 @@ class TaskController extends BaseController
                 //当前时间
                 $current_time = date('Y-m-d H:i:s');
                 foreach ($tasks as $task){
+                    //判断项目是否存在
+                    $item_id = $task->item_id;
+                    $item = DesignProject::where('id' , $item_id)->where('status' , 1)->first();
+                    if(!$item){
+                        continue;
+                    }
                     //未领取
                     if($task->execute_user_id == 0 && $task->stage == 0){
                         $no_get += 1;
