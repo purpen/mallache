@@ -1228,7 +1228,7 @@ class DemandController extends BaseController
         $design_id_arr = $query->get()->pluck('user_id')->all();
 
         $design = DesignCompanyModel::select(['id', 'user_id'])
-            ->where(['status' => 1, 'verify_status' => 1]);
+            ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
 
 //        if ($province && $province != -1) {
 //            $design->where('province', $province);

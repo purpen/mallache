@@ -100,7 +100,8 @@ class AdminDesignCompanyTransformer extends TransformerAbstract
             'high_tech_enterprises' => json_decode($DesignCompany->high_tech_enterprises),
             'industrial_design_center' => json_decode($DesignCompany->industrial_design_center),
             'investment_product' => $DesignCompany->investment_product,
-            'own_brand' => json_decode($DesignCompany->own_brand)
+            'own_brand' => json_decode($DesignCompany->own_brand),
+            'is_test_data' => (int)$DesignCompany->is_test_data,
         ];
     }
 }
