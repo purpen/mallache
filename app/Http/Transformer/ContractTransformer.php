@@ -24,7 +24,7 @@ class ContractTransformer extends TransformerAbstract
             'design_company_phone' => strval($contract->design_company_phone),
             'design_company_legal_person' => strval($contract->design_company_legal_person),
             'total' => strval($contract->total),
-            'total_han' => NumberToHanZi::numberToH($this->total),
+            'total_han' => NumberToHanZi::numberToH($contract->total),
 //            'item_content' => $contract->item_content,
 //            'design_work_content' => strval($contract->design_work_content),
             'status' => intval($contract->status),
