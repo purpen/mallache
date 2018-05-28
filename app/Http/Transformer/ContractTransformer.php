@@ -42,7 +42,7 @@ class ContractTransformer extends TransformerAbstract
             'thn_company_phone' => strval($contract->thn_company_phone),
             'thn_company_legal_person' => strval($contract->thn_company_legal_person),
             'commission' => $contract->commission,
-            'commission_han' => NumberToHanZi::numberToH($this->commission),
+            'commission_han' => NumberToHanZi::numberToH($contract->commission),
             'commission_rate' => $contract->commission_rate,
         ];
     }
