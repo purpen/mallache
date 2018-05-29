@@ -182,6 +182,8 @@ class DesignController extends BaseController
      * "city": 2,
      * "image": [],
      * "price": 200000,
+     * "commission": 20000,  // 佣金金额
+     * "commission_rate": 12, // 佣金比例
      * "company_name": null,  //公司名称
      * "company_abbreviation": null, //简称
      * "company_size": null, //公司规模；1...

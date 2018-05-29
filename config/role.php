@@ -372,6 +372,9 @@ return [
         '/admin/item/lists',         // 项目列表
         '/admin/item/show',           // 项目详情
 
+        '/admin/item/addDesignToItem',   // 为项目添加推荐公司
+        '/admin/item/trueItem',          // //确认项目给推荐的设计公司
+
         '/admin/designCompany/lists',    // 设计公司列表
         // 设计公司详情
         '/admin/designCompany/show',
