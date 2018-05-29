@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helper\Tools;
 use App\Http\Controllers\Api\Admin\BaseController;
 use App\Http\Transformer\ItemStageTransformer;
+use App\Jobs\SendOneSms;
 use App\Models\AssetModel;
 use App\Models\FundLog;
 use App\Models\Item;
@@ -467,10 +468,15 @@ class ItemStageController extends BaseController
             $title1 = '支付阶段项目款';
             $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
             $tools->message($demand_user_id, $title1, $content1, 3, null);
+            // 短信通知需求公司
+            $this->sendSms($item->phone);
+
             //通知设计公司
             $title2 = '收到阶段项目款';
             $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
             $tools->message($design_user_id, $title2, $content2, 3, null);
+            // 短信通知设计公司
+            $this->sendSms($item->designCompany->phone);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -480,6 +486,12 @@ class ItemStageController extends BaseController
 
         DB::commit();
         return true;
+    }
+
+    public function sendSms($phone)
+    {
+        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+        dispatch(new SendOneSms($phone, $text));
     }
 
 }

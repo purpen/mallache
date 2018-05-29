@@ -8,7 +8,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Helper\Tools;
 use App\Http\AdminTransformer\WithdrawOrderTransformer;
+use App\Jobs\SendOneSms;
 use App\Models\FundLog;
 use App\Models\User;
 use App\Models\WithdrawOrder;
@@ -42,19 +44,16 @@ class WithdrawOrderActionController extends BaseController
      */
     public function lists(Request $request)
     {
-        $status = in_array($request->input('status'), [0,1]) ? $request->input('status') : null;
+        $status = in_array($request->input('status'), [0, 1]) ? $request->input('status') : null;
         $per_page = $request->input('per_page') ?? $this->per_page;
-        if($request->input('sort') == 0 && $request->input('sort') !== null)
-        {
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
             $sort = 'asc';
-        }
-        else
-        {
+        } else {
             $sort = 'desc';
         }
         $query = WithdrawOrder::query();
 
-        if($status !== null){
+        if ($status !== null) {
             $query->where('status', $status);
         }
 
@@ -90,18 +89,18 @@ class WithdrawOrderActionController extends BaseController
         $all = $request->only(['withdraw_order_id']);
 
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
         $withdraw_order_id = (int)$request->input('withdraw_order_id');
         $summary = $request->input('summary') ?? '';
 
-        if(!$withdraw_order = WithdrawOrder::find($withdraw_order_id)){
+        if (!$withdraw_order = WithdrawOrder::find($withdraw_order_id)) {
             return $this->response->array($this->apiError('NOT FOUND', 404));
         }
 
-        try{
+        try {
             DB::beginTransaction();
 
             $withdraw_order->status = 1;
@@ -116,16 +115,35 @@ class WithdrawOrderActionController extends BaseController
 
             //交易流水记录
             $fund_log = new FundLog();
-            $fund_log->outFund($withdraw_order->user_id, $withdraw_order->amount, 5,$withdraw_order->uid, '提现');
+            $fund_log->outFund($withdraw_order->user_id, $withdraw_order->amount, 5, $withdraw_order->uid, '提现');
+
+            //通知设计公司
+            $tools = new Tools();
+            $title = '提现完成';
+            $content = '单号：' . $withdraw_order->uid . '提现已完成';
+            $tools->message($withdraw_order->user_id, $title, $content, 3, null);
+            // 短信通知设计公司
+            if ($design_user = User::find($withdraw_order->user_id)) {
+                if ($design_user->designCompany) {
+                    $this->sendSms($user->designCompany->phone);
+                }
+            }
+
 
             DB::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError('Error', 500));
         }
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    public function sendSms($phone)
+    {
+        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+        dispatch(new SendOneSms($phone, $text));
     }
 
 }
