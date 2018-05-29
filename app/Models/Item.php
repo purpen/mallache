@@ -95,6 +95,12 @@ class Item extends BaseModel
         return $this->hasOne('App\Models\Evaluate', 'item_id');
     }
 
+    // 一对多关联云盘层级目录pan_director
+    public function panDirector()
+    {
+        return $this->hasMany('App\Models\PanDirector', 'item_id');
+    }
+
     //创建需求表
     public static function createItem($user_id)
     {

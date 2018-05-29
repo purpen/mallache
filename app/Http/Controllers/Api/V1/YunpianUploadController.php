@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\QiniuApi;
 use App\Helper\Tools;
+use App\Http\Transformer\MyFilesTransformer;
 use App\Http\Transformer\YunpanListTransformer;
 use App\Jobs\deleteQiniuFile;
 use App\Models\Group;
@@ -1269,7 +1270,7 @@ class YunpianUploadController extends BaseController
             $group_id_arr = Group::userGroupIDList($user_id);
 
             // 用户 所属项目ID数组
-            $item_id_arr = [];  // 暂无
+            $item_id_arr = ItemUser::projectId($user_id); //
 
             $list = PanDirector::query()
                 // 组管理文件
@@ -1411,6 +1412,75 @@ class YunpianUploadController extends BaseController
                 $pipe->zrem($key, $name);
             }
         });
+    }
+
+    //
+
+    /**
+     * @api {get} /yunpan/myFiles  我的文件列表（项目文件）
+     * @apiVersion 1.0.0
+     * @apiName yunpan myFiles
+     *
+     * @apiGroup yunpan
+     * @apiParam {string} token
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *          "message": "Success",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *     }
+     * "data": [
+     *  {
+     *      "id": 2,
+     *      "pan_director_id": 1, //上级文件ID
+     *      "type": 1, // 类型：1.文件夹、2.文件
+     *      "name": "第二层",
+     *      "size": 0, // 大小 （字节byte）
+     *      "mime_type": "", // 文件类型
+     *      "url_small": "?e=1",
+     *      "url_file": "http://p593eqdrg.bk",
+     *      "user_id": 1,
+     *      "user_name": "",
+     *      "group_id": null,  // 分组ID(json数组)
+     *      "created_at": 1521430098, // 创建时间
+     *      "open_set": 1,
+     *      "item_id": 1, // 项目ID
+     *      "item_name": "项目名称", // 项目名称
+     *  }
+     * ],
+     *  }
+     */
+    public function myFiles(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
+        $user_id = $this->auth_user_id;
+        $company_id = User::designCompanyId($user_id);
+
+        // 用户 所属项目ID数组
+        $item_id_arr = ItemUser::projectId($user_id); //
+
+        $list = PanDirector::query()->with('item')
+            ->where('status', 1)
+            ->where('type', 2)
+            ->where('user_id', $user_id)
+            ->where('company_id', $company_id)
+            ->where('open_set', 1)
+            ->whereIn('item_id', $item_id_arr)
+            ->paginate($per_page);
+
+        return $this->response->paginator($list, new MyFilesTransformer())->setMeta($this->apiMeta());
     }
 
 }
