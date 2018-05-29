@@ -197,9 +197,9 @@ class DesignProject extends BaseModel
     {
         $user = User::find($this->user_id);
         if($user){
-            $realName = $user->getUserName();
+            $user_name = $user->getUserName();
         }else{
-            $realName = '';
+            $user_name = '';
         }
         return [
             'id' => $this->id,
@@ -250,7 +250,7 @@ class DesignProject extends BaseModel
             'design_types_value' => $this->design_types_value,
             'project_demand' => $this->project_demand,
             'collect' => intval($this->collect),
-            'realName' => $realName,
+            'user_name' => $user_name,
         ];
     }
 
