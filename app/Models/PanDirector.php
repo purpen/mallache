@@ -45,6 +45,11 @@ class PanDirector extends BaseModel
         return $this->hasOne('App\Models\PanShare', 'pan_director_id');
     }
 
+    // 一对多相对关联项目表
+    public function item()
+    {
+        return $this->belongsTo('App\Models\Item', 'item_id');
+    }
 
     // 返回文件/文件夹详细信息
     public function info()
@@ -66,6 +71,7 @@ class PanDirector extends BaseModel
             'open_set' => $this->open_set,
             'width' => $this->width,
             'height' => $this->height,
+            'item_id' => $this->item_id,
         ];
     }
 

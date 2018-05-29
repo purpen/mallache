@@ -455,6 +455,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // {put} /recycleBin/restore 恢复文件（文件夹）
         $api->put('/recycleBin/restore', 'RecycleBinController@restore');
 
+        // {get} /yunpan/myFiles
+        $api->get('/yunpan/myFiles', 'YunpianUploadController@myFiles');
+
         /**
          * 用户群组
          */
