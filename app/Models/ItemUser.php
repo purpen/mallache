@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
+
 class ItemUser extends BaseModel
 {
     protected $table = 'item_users';
