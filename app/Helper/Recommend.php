@@ -7,6 +7,7 @@ use App\Models\DesignCaseModel;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
 use App\Models\Item;
+use Illuminate\Support\Facades\Log;
 use Lib\AiBaiDu\Api;
 
 class Recommend
@@ -327,9 +328,13 @@ class Recommend
             foreach ($design_case as $case) {
                 $text_2 = $case->title;
                 $result = $ai_api->nlp($text_1, $text_2); // 调用百度ai接口
-                if ($result['score'] > $score) {
-                    $score = $result['score'];
+                Log::info($result);
+                if (isset($result['score'])) {
+                    if ($result['score'] > $score) {
+                        $score = $result['score'];
+                    }
                 }
+
             }
 
             $data[$id] = $design->score * $score;
