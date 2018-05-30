@@ -36,10 +36,10 @@ class ItemUser extends BaseModel
     {
 //        return ItemUser::where('user_id', $user_id)->get()->pluck('item_id')->all();
 
-        return DB::table('item_user')
+        return DB::table('item_users')
             ->select('design_project.id as id')
-            ->join('design_project', 'item_user.item_id', '=', 'design_project.id')
-            ->where('item_user.user_id', $user_id)
+            ->join('design_project', 'item_users.item_id', '=', 'design_project.id')
+            ->where('item_users.user_id', $user_id)
             ->where('design_project.status', $status)
             ->get()->pluck('id')->all();
     }
