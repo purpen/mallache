@@ -26,12 +26,20 @@ class ItemUser extends BaseModel
     /**
      * 获取用户所有项目ID
      *
-     * @param int $user_id
+     * @param int $user_id 用户ID
+     * @param int $status 状态：1.正常 2.回收站
      * @return array
      */
-    public static function projectId(int $user_id)
+    public static function projectId(int $user_id, $status = 1)
     {
-        return ItemUser::where('user_id', $user_id)->get()->pluck('item_id')->all();
+//        return ItemUser::where('user_id', $user_id)->get()->pluck('item_id')->all();
+
+        return DB::table('item_user')
+            ->select('design_project.id as id')
+            ->join('design_project', 'item_user.item_id', '=', 'design_project.id')
+            ->where('item_user.user_id', $user_id)
+            ->where('design_project.status', $status)
+            ->get()->pluck('id')->all();
     }
 
     /**
