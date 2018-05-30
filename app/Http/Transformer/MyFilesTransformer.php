@@ -10,7 +10,7 @@ class MyFilesTransformer extends TransformerAbstract
     public function transform(PanDirector $pan_director)
     {
         $arr = $pan_director->info();
-        $arr['item_name'] = $pan_director->item ? $pan_director->item->itemInfo->nane : null;
+        $arr['item_name'] = $pan_director->item ? $pan_director->item->itemInfo()['name'] : null;
 
         return $arr;
     }
