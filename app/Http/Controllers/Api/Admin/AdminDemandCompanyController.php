@@ -32,33 +32,33 @@ class AdminDemandCompanyController extends Controller
      */
     public function verifyStatus(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'status' => 'required',
             'id' => 'required',
         ]);
         $id = $request->input('id');
         $status = $request->input('status');
-        $verify_summary = $request->input('verify_summary','');
+        $verify_summary = $request->input('verify_summary', '');
 
-        $demand_company = DemandCompany::where('id' , $id)->first();
-        if(!$demand_company){
-            return $this->response->array($this->apiSuccess('需求公司不存在' , 404));
+        $demand_company = DemandCompany::where('id', $id)->first();
+        if (!$demand_company) {
+            return $this->response->array($this->apiSuccess('需求公司不存在', 404));
         }
 
-        if(!in_array($status,[0,1,2,3])){
-            return $this->response->array($this->apiSuccess('状态参数错误' , 403));
+        if (!in_array($status, [0, 1, 2, 3])) {
+            return $this->response->array($this->apiSuccess('状态参数错误', 403));
         }
 
-        $demand = DemandCompany::verifyStatus($id , $status, $verify_summary);
-        if(!$demand){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $demand = DemandCompany::verifyStatus($id, $status, $verify_summary);
+        if (!$demand) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
 
         // 系统消息通知
         $tools = new Tools();
         $title = '公司信息审核';
         $content = '';
-        switch ($status){
+        switch ($status) {
             case 0:
                 $content = '公司信息变更为未审核状态，请修改资料重新提交';
                 break;
@@ -98,13 +98,13 @@ class AdminDemandCompanyController extends Controller
     public function unVerifyStatus(Request $request)
     {
         $id = $request->input('id');
-        $demand_company = DemandCompany::where('id' , $id)->first();
-        if(!$demand_company){
-            return $this->response->array($this->apiSuccess('需求公司不存在' , 404));
+        $demand_company = DemandCompany::where('id', $id)->first();
+        if (!$demand_company) {
+            return $this->response->array($this->apiSuccess('需求公司不存在', 404));
         }
-        $demand = DemandCompany::verifyStatus($id , 0);
-        if(!$demand){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $demand = DemandCompany::verifyStatus($id, 0);
+        if (!$demand) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
         return $this->response->array($this->apiSuccess());
     }
@@ -130,13 +130,13 @@ class AdminDemandCompanyController extends Controller
     public function noVerifyStatus(Request $request)
     {
         $id = $request->input('id');
-        $demand_company = DemandCompany::where('id' , $id)->first();
-        if(!$demand_company){
-            return $this->response->array($this->apiSuccess('需求公司不存在' , 404));
+        $demand_company = DemandCompany::where('id', $id)->first();
+        if (!$demand_company) {
+            return $this->response->array($this->apiSuccess('需求公司不存在', 404));
         }
-        $demand = DemandCompany::verifyStatus($id , 2);
-        if(!$demand){
-            return $this->response->array($this->apiError('修改失败' , 500));
+        $demand = DemandCompany::verifyStatus($id, 2);
+        if (!$demand) {
+            return $this->response->array($this->apiError('修改失败', 500));
         }
 
         // 系统消息通知
@@ -160,6 +160,7 @@ class AdminDemandCompanyController extends Controller
      * @apiParam {integer} sort 0.升序；1.降序（默认）
      * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核 3.审核中
      * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
+     * @apiParam {string} val 查询值
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -201,26 +202,26 @@ class AdminDemandCompanyController extends Controller
     public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $type_verify_status = in_array($request->input('type_verify_status'), [0,1,2,3]) ? $request->input('type_verify_status') : null;
+        $type_verify_status = in_array($request->input('type_verify_status'), [0, 1, 2, 3]) ? $request->input('type_verify_status') : null;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
 
         $query = DemandCompany::query()->with('user');
-        if($type_verify_status !== null && $type_verify_status !== ''){
+        if ($type_verify_status !== null && $type_verify_status !== '') {
             $query->where('verify_status', $type_verify_status);
         }
 
         if ($val) {
-            switch($evt) {
+            switch ($evt) {
                 case 1:
                     $query->where('id', (int)$val);
                     break;
                 case 2:
-                    $query->where('company_name', $val);
+                    $query->where('company_name', 'like', '%' . $val . '%');
                     break;
                 case 3:
-                    $query->where('company_abbreviation', $val);
+                    $query->where('company_abbreviation', 'like', '%' . $val . '%');
                     break;
                 case 4:
                     $query->where('user_id', (int)$val);
@@ -231,7 +232,7 @@ class AdminDemandCompanyController extends Controller
         }
 
         //排序
-        switch ($sort){
+        switch ($sort) {
             case 0:
                 $query->orderBy('id', 'desc');
                 break;
@@ -241,7 +242,7 @@ class AdminDemandCompanyController extends Controller
         }
 
         $lists = $query->paginate($per_page);
-        return $this->response->paginator($lists , new DemandCompanyTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new DemandCompanyTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -256,7 +257,7 @@ class AdminDemandCompanyController extends Controller
     public function show(Request $request)
     {
         $id = $request->input('id');
-        if(!$demand = DemandCompany::find($id)){
+        if (!$demand = DemandCompany::find($id)) {
             return $this->response->array($this->apiError('not found demandcompany', 404));
         }
 

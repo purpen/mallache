@@ -330,10 +330,10 @@ class AdminDesignCompanyController extends Controller
                     $query->where('id', (int)$val);
                     break;
                 case 2:
-                    $query->where('company_name', $val);
+                    $query->where('company_name', 'like', '%' . $val . '%');
                     break;
                 case 3:
-                    $query->where('company_abbreviation', $val);
+                    $query->where('company_abbreviation', 'like', '%' . $val . '%');
                     break;
                 case 4:
                     $query->where('user_id', (int)$val);

@@ -396,16 +396,16 @@ class QuotationController extends BaseController
                 'company_name' => 'max:100',
                 'contact_name' => 'max:20',
                 'phone' => 'max:20',
-                'province' => 'integer',
-                'city' => 'integer',
-                'area' => 'integer',
+//                'province' => 'integer',
+//                'city' => 'integer',
+//                'area' => 'integer',
                 'address' => 'max:100',
                 'design_company_name' => 'max:100',
                 'design_contact_name' => 'max:20',
                 'design_phone' => 'max:20',
-                'design_province' => 'integer',
-                'design_city' => 'integer',
-                'design_area' => 'integer',
+//                'design_province' => 'integer',
+//                'design_city' => 'integer',
+//                'design_area' => 'integer',
                 'design_address' => 'max:100',
                 'summary' => 'max:500',
                 'is_tax' => 'required|int',
@@ -423,11 +423,11 @@ class QuotationController extends BaseController
 
             $quotation = QuotationModel::find($id);
             if (!$quotation) {
-                throw new MassageException('not found', 404);
+                throw new MassageException('not found1', 404);
             }
 
             if ($quotation->user_id != $this->auth_user_id) {
-                throw new MassageException('not found', 404);
+                throw new MassageException('not found2', 404);
             }
 
             //如果已经确认了，就不能更新报价单信息了
@@ -452,8 +452,25 @@ class QuotationController extends BaseController
                 'design_position',
                 'position'
             ]);
-            if (!$design_project) {
-                throw new MassageException('not found', 404);
+            if (!$design_project) {  // 兼容报价单历史数据
+                if (!$item = Item::find($quotation->item_demand_id)) {
+                    throw new MassageException('not found3', 404);
+                }
+                // 系统自动创建项目管理项目
+                $design_project = new DesignProject();
+                $design_project->name = $item->itemInfo()['name'];
+                $design_project->level = 1;  // 默认普通
+                $design_project->user_id = $this->auth_user_id;
+                $design_project->design_company_id = $quotation->design_company_id;
+                $design_project->status = -1;  // 隐藏
+                $design_project->project_type = 1;  // 线上
+                $design_project->save();
+
+                // 将创建者添加入项目人员
+                if (!ItemUser::addItemUser($design_project->id, $this->auth_user_id, 1)) {
+                    throw new MassageException('项目成员添加失败', 403);
+                }
+
             }
             if (!$design_project->update($jia_info)) {
                 throw new MassageException('server save err', 500);
@@ -485,6 +502,7 @@ class QuotationController extends BaseController
                 }
             }
             $quotation_info['user_id'] = $this->auth_user_id;
+            $quotation_info['design_project_id'] = $design_project->id;
             $quotation->update($quotation_info);
 
             // 项目计划
