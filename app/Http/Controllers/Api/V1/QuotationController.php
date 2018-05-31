@@ -423,11 +423,11 @@ class QuotationController extends BaseController
 
             $quotation = QuotationModel::find($id);
             if (!$quotation) {
-                throw new MassageException('not found', 404);
+                throw new MassageException('not found1', 404);
             }
 
             if ($quotation->user_id != $this->auth_user_id) {
-                throw new MassageException('not found', 404);
+                throw new MassageException('not found2', 404);
             }
 
             //如果已经确认了，就不能更新报价单信息了
@@ -454,7 +454,7 @@ class QuotationController extends BaseController
             ]);
             if (!$design_project) {  // 兼容报价单历史数据
                 if (!$item = $quotation->item) {
-                    throw new MassageException('not found', 404);
+                    throw new MassageException('not found3', 404);
                 }
                 // 系统自动创建项目管理项目
                 $design_project = new DesignProject();
