@@ -55,7 +55,7 @@ return [
          * 支付单相关路由
          */
         //支付单列表
-       '/admin/payOrder/lists',
+        '/admin/payOrder/lists',
         //后台确认项目支付单付款
         '/admin/payOrder/truePay',
 
@@ -172,7 +172,7 @@ return [
          * block
          */
         // 保存 更新 详情 删除
-       '/admin/block',
+        '/admin/block',
         // 列表
         '/admin/block/list',
         //启用禁用
@@ -502,5 +502,12 @@ return [
         '/admin/commissionCount/add',
         // 设计公司优惠次数列表
         '/admin/commissionCount/lists',
+    ],
+
+    /**
+     * 编辑
+     */
+    'editor' => [
+
     ],
 ];

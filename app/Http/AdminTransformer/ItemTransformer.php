@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\AdminTransformer;
 
 use App\Models\DesignCompanyModel;
@@ -10,29 +11,39 @@ class ItemTransformer extends TransformerAbstract
     public function transform(Item $item)
     {
         $type = $item->type;
-        if($type == 0)
-        {
+        if ($type == 0) {
             $info = '';
-        }
-        else if($type == 1)
-        {
+        } else if ($type == 1) {
             $info = $item->productDesign ?? '';
-        }
-        else if($type == 2)
-        {
+        } else if ($type == 2) {
             $info = $item->uDesign ?? '';
-        }
-        else
-        {
+        } else {
             $info = '';
         }
 
-        $design_company_id = explode(',' , $item->recommend);
-        if(!empty($design_company_id)){
+        $design_company_id = explode(',', $item->recommend);
+        if (!empty($design_company_id)) {
             $designCompany = DesignCompanyModel::whereIn("id", $design_company_id)->get();
-        }else{
+        } else {
             $designCompany = [];
         }
+
+        $item_recommends = $item->itemRecommend;
+
+        $recommend = [];
+        foreach ($item_recommends as $item_recommend) {
+            $recommend[] = [
+                'status' => ($item_recommend->itemStatus())['status'],
+                'status_value' => ($item_recommend->itemStatus())['status_value'],
+                'item_status' => $item_recommend->item_status,
+                'item_status_value' => $item_recommend->item_status_value,
+                'design_company_status' => $item_recommend->design_company_status,
+                'design_company_status_value' => $item_recommend->design_company_status_value,
+                'design_company' => $item_recommend->designCompany,
+                'quotation' => $item_recommend->quotation ? $item_recommend->quotation->info() : null,
+            ];
+        }
+
 
         $item->user;
         unset($item->productDesign, $item->uDesign);
@@ -40,7 +51,8 @@ class ItemTransformer extends TransformerAbstract
         return [
             'item' => $item,
             'info' => $info,
-            'designCompany' => $designCompany
+            'designCompany' => $designCompany,
+            'recommend' => $recommend,
         ];
     }
 }
