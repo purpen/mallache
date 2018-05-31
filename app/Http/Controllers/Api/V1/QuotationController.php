@@ -472,6 +472,7 @@ class QuotationController extends BaseController
                 }
 
             }
+            $jia_info = array_diff($jia_info, ['', ' ', null]);
             if (!$design_project->update($jia_info)) {
                 throw new MassageException('server save err', 500);
             }
