@@ -453,7 +453,7 @@ class QuotationController extends BaseController
                 'position'
             ]);
             if (!$design_project) {  // 兼容报价单历史数据
-                if (!$item = $quotation->item) {
+                if (!$item = Item::find($quotation->item_demand_id)) {
                     throw new MassageException('not found3', 404);
                 }
                 // 系统自动创建项目管理项目
