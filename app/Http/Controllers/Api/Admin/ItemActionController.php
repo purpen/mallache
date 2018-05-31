@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\Tools;
+use App\Http\AdminTransformer\ItemListTransformer;
 use App\Http\AdminTransformer\ItemTransformer;
 use App\Http\Controllers\Controller;
 use App\Models\DesignCompanyModel;
@@ -181,7 +182,7 @@ class ItemActionController extends Controller
 
         $lists = $query->paginate($per_page);
 
-        return $this->response->paginator($lists, new ItemTransformer)->setMeta($this->apiMeta());
+        return $this->response->paginator($lists, new ItemListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -330,7 +331,6 @@ class ItemActionController extends Controller
     }
 
 
-
     /**
      * @api {post} /admin/item/closeItem 后台强制关闭当前项目并分配项目款
      * @apiVersion 1.0.0
@@ -363,11 +363,11 @@ class ItemActionController extends Controller
         $design_amount = sprintf("%.2f", $request->input('design_amount'));
 
         $item = Item::find($item_id);
-        if(!$item){
+        if (!$item) {
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        if($item->rest_fund != bcadd($demand_amount, $design_amount,2)){
+        if ($item->rest_fund != bcadd($demand_amount, $design_amount, 2)) {
             return $this->response->array($this->apiError('资金总额错误！', 404));
         }
 
@@ -380,7 +380,7 @@ class ItemActionController extends Controller
         //设计公司用户ID
         $design_user_id = $item->designCompany->user_id;
 
-        try{
+        try {
 
             //减少需求公司账户金额（总金额、冻结金额）
             $user_model->totalAndFrozenDecrease($demand_user_id, $design_amount);
@@ -397,7 +397,7 @@ class ItemActionController extends Controller
             $fund_log->inFund($design_user_id, $design_amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目款');
 
 
-            if($design_amount > 0){
+            if ($design_amount > 0) {
                 $tools = new Tools();
                 //通知需求公司
                 $title = '支付项目款';
@@ -416,7 +416,7 @@ class ItemActionController extends Controller
 
             DB::commit();
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
         }

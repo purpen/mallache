@@ -725,48 +725,48 @@ class DemandController extends BaseController
      *          "status_code": 200
      *      }
      *      "data": [
-     * {
-     *              "status": 5, //1.已选择其他设计公司;2.设计公司已拒绝;3.未操作；4.设计公司有意接单；5.选定该设计公司；
-     * "status_value": "选定设计公司",
-     * "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
-     * "item_status_value": "选定设计公司",
-     * "design_company_status": 0, //设计公司状态: -1.拒绝；0.待操作；1.一键成交；2.有意向报价;
-     * "design_company_status_value": "待操作",
-     * "design_company": {
-     * "id": 1,
-     * "user_id": 1, //用户表ID
-     * "company_type": 1, //企业类型：1.普通；2.多证合一；
-     * "company_name": "测试设计公司", //公司名称
-     * "registration_number": "12344556", //注册号
-     * "province": 1,
-     * "city": 2,
-     * "area": 3,
-     * "address": "北京朝阳",
-     * "contact_name": "小王", //联系人姓名
-     * "position": "老总", //职位
-     * "phone": "18629493220",
-     * "email": "qq@qq.com",
-     * "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
-     * "branch_office": 1, //分公司：1.有；2.无；
-     * "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
-     * "company_profile": "一家有价值的公司",
-     * "good_field": "1,2,3", //good_field
-     * "web": "www.tai.com", //公司网站
-     * "establishment_time": "2013-12-10",
-     * "professional_advantage": "专业", //专业优势
-     * "awards": "就是专业", //荣誉奖项
-     * "created_at": "2017-04-11 14:54:24",
-     * "updated_at": "2017-04-11 14:59:36",
-     * "deleted_at": null,
-     * "score": 70,
-     * "status": 0, //设计公司状态：-1.禁用; 0.正常；
-     * "company_abbreviation": "", //简称
-     * "is_recommend": 0, //推荐
-     * "verify_status": 1 //审核状态
-     * },
-     * "quotation": null  //设计公司报价单
-     * },
-     * ],
+     *      {
+     *          "status": 5, //1.已选择其他设计公司;2.设计公司已拒绝;3.未操作；4.设计公司有意接单；5.选定该设计公司；
+     *          "status_value": "选定设计公司",
+     *          "item_status": 1, //需求方项目状态：-1.拒绝；0.待操作；1.选定设计公司；
+     *          "item_status_value": "选定设计公司",
+     *          "design_company_status": 0, //设计公司状态: -1.拒绝；0.待操作；1.一键成交；2.有意向报价;
+     *          "design_company_status_value": "待操作",
+     *          "design_company": {
+     *              "id": 1,
+     *              "user_id": 1, //用户表ID
+     *              "company_type": 1, //企业类型：1.普通；2.多证合一；
+     *              "company_name": "测试设计公司", //公司名称
+     *              "registration_number": "12344556", //注册号
+     *              "province": 1,
+     *              "city": 2,
+     *              "area": 3,
+     *              "address": "北京朝阳",
+     *              "contact_name": "小王", //联系人姓名
+     *              "position": "老总", //职位
+     *              "phone": "18629493220",
+     *              "email": "qq@qq.com",
+     *              "company_size": 4, //公司规模：1.10以下；2.10-50；3.50-100；4.100以上;
+     *              "branch_office": 1, //分公司：1.有；2.无；
+     *              "item_quantity": 2, //曾服务项目：1.10以下；2.10-50；3.50-100；4.100-200;5.200以上
+     *              "company_profile": "一家有价值的公司",
+     *              "good_field": "1,2,3", //good_field
+     *              "web": "www.tai.com", //公司网站
+     *              "establishment_time": "2013-12-10",
+     *              "professional_advantage": "专业", //专业优势
+     *              "awards": "就是专业", //荣誉奖项
+     *              "created_at": "2017-04-11 14:54:24",
+     *              "updated_at": "2017-04-11 14:59:36",
+     *              "deleted_at": null,
+     *              "score": 70,
+     *              "status": 0, //设计公司状态：-1.禁用; 0.正常；
+     *              "company_abbreviation": "", //简称
+     *              "is_recommend": 0, //推荐
+     *              "verify_status": 1 //审核状态
+     *          },
+     *          "quotation": null  //设计公司报价单
+     *          },
+     *          ],
      *  }
      */
     public function itemDesignList($item_id)

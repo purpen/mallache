@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\ItemStatusEvent;
+use App\Models\DesignCaseModel;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
 use App\Models\Item;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Lib\AiBaiDu\Api;
 
 /**
  * 推荐设计公司队列
@@ -61,7 +63,6 @@ class Recommend implements ShouldQueue
         }
 
 
-//Log::info($design);
         if (count($design) > 0) {
             //剔除已推荐的
             $ord_recommend = $this->item->ord_recommend;
@@ -69,6 +70,9 @@ class Recommend implements ShouldQueue
                 $ord_recommend_arr = explode(',', $ord_recommend);
                 $design = array_diff($design, $ord_recommend_arr);
             }
+
+            // 使用标题关联性重新排序
+            $design = $this->againSort($design);
 
             $design = array_slice($design, 0, 5);
 
@@ -134,7 +138,7 @@ class Recommend implements ShouldQueue
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province){
+        if ($province) {
             $design->where('province', $province)
                 ->where('city', $city);
         }
@@ -179,7 +183,7 @@ class Recommend implements ShouldQueue
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1]);
 
-        if($province){
+        if ($province) {
             $design->where('province', $province)
                 ->where('city', $city);
         }
@@ -228,4 +232,43 @@ class Recommend implements ShouldQueue
         return $max;
     }
 
+    // 计算需求和设计公司案例的匹配程度，重新排序
+    public function againSort($design_company_id_arr)
+    {
+        $ai_api = new Api();
+
+        $item_info = $this->item->itemInfo();
+        $text_1 = $item_info['name'];
+
+        $data = [];
+        foreach ($design_company_id_arr as $id) {
+            $score = 0; // 设计公司案例最高匹配度
+
+            $design = DesignCompanyModel::find($id);
+
+            $design_case = DesignCaseModel::query()
+                ->select('title', 'profile')
+                ->where('design_company_id', $id)->get();
+
+            foreach ($design_case as $case) {
+                $text_2 = $case->title;
+                $result = $ai_api->nlp($text_1, $text_2); // 调用百度ai接口
+                if ($result['score'] > $score) {
+                    $score = $result['score'];
+                }
+            }
+
+            $data[$id] = $design->score * $score;
+        }
+
+        arsort($data, SORT_NUMERIC);
+
+        $result_data = [];
+        foreach ($data as $k => $v) {
+            $result_data[] = $k;
+        }
+
+        return $result_data;
+    }
 }
+
