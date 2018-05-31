@@ -535,7 +535,10 @@ class AuthenticateController extends BaseController
             if ($user->company_role == 0) {
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
-
+            //判断子账户的数量
+            if($user->child_count >= config('constant.child_count')){
+                return $this->response->array($this->apiError('当前只能邀请10个用户' , 403));
+            }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));
         }
@@ -586,6 +589,9 @@ class AuthenticateController extends BaseController
         ]);
 
         if ($users) {
+            //增加子账户数量
+            $user->child_count += 1;
+            $user->save();
             $token = JWTAuth::fromUser($users);
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {

@@ -624,6 +624,9 @@ class DesignController extends BaseController
                         foreach ($item_users as $item_user) {
                             $item_user->delete();
                         }
+                        //减少子账户数量
+                        $user->child_count -= 1;
+                        $user->save();
                         DB::commit();
                         return $this->response->array($this->apiSuccess());
                     } else {
@@ -724,6 +727,10 @@ class DesignController extends BaseController
             return $this->response->array($this->apiError('该链接已过期，请联系邀请人', 404));
 
         }
+        //判断子账户的数量
+        if($master_user->child_count >= config('constant.child_count')){
+            return $this->response->array($this->apiError('当前只能邀请10个用户' , 403));
+        }
         $design_company_id = $master_user->design_company_id;
         //被恢复的成员
         $user_id = $this->auth_user_id;
@@ -731,9 +738,12 @@ class DesignController extends BaseController
         if (!$user_id) {
             return $this->response->array($this->apiError('被恢复的用户不存在', 404));
         }
+
         $user->design_company_id = $design_company_id;
         $user->invite_user_id = $master_user_id;
         if ($user->save()) {
+            $master_user->child_count += 1;
+            $master_user->save();
             return $this->response->array($this->apiSuccess());
 
         }

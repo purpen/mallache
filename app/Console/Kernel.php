@@ -54,6 +54,9 @@ class Kernel extends ConsoleKernel
         // 批量更新案例作品
         Commands\UpdateDesignCase::class,
 
+        //更改子账户数量
+        Commands\UpdateChildCount::class,
+
 
     ];
 

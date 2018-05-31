@@ -108,6 +108,10 @@ class UrlKeyValueController extends BaseController
             return $this->response->array($this->apiError('该链接已过期，请联系邀请人' , 403));
         }
         $user = User::where('id' , $user_id)->first();
+        //判断子账户的数量
+        if($user->child_count >= config('constant.child_count')){
+            return $this->response->array($this->apiError('当前只能邀请10个用户' , 403));
+        }
         $realName = $user->realname;
         //如果设计公司用户表的真实姓名没有，把设计公司表的联系人姓名更新的用户表
         if($realName == null) {

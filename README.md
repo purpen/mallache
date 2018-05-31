@@ -114,3 +114,7 @@ git@github.com:purpen/mallache.git
  
  ##### 修改设计公司主账号信息（子账户正式上线后不可使用）
  php artisan designUser:change
+ 
+ 
+ ##### 统计子账户数量（最多10个子账户）
+ php artisan childCount:update
