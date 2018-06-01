@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\DesignStageTransformer;
 use App\Models\DesignProject;
 use App\Models\DesignStage;
+use App\Models\DesignSubstage;
 use App\Models\ItemUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -304,6 +305,84 @@ class DesignStageController extends BaseController
             ->get();
 
         return $this->response->collection($lists, new DesignStageTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {put} /designStage/completes 设计工具--完成与未完成
+     * @apiVersion 1.0.0
+     * @apiName designStage completes
+     * @apiGroup designStage
+     *
+     * @apiParam {integer} id 阶段ID
+     * @apiParam {integer} status 0.未完成 1.完成
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "data": [{
+     *          "id": 1,
+     *          "design_project_id": "4",  // 项目ID
+     *          "name": "项目开始的阶段",   // 阶段名称
+     *          "duration": "1",           // 投入时间
+     *          "start_time": "1234567",   // 开始时间
+     *          "content": "我是描述",     // 交付内容
+     *          "user_id": 6,             // 操作用户
+     *          "status": 0               // 状态：0.未完成 1.完成
+     *          "design_substage": [{     // 子阶段信息
+     *              "id": 1,                // 子阶段ID
+     *              "design_project_id": 4,     // 项目ID
+     *              "design_stage_id": 1,       // 父阶段ID
+     *              "name": "我狮子阶段",        // 子阶段名称
+     *              "execute_user_id": null,    // 执行人
+     *              "duration": 1,              // 投入时间
+     *              "start_time": 123479,
+     *              "summary": "面熟面熟",          // 描述
+     *              "user_id": 6,
+     *              "status": 0,
+     *              "design_stage_node": {      // 节点信息
+     *                  "id": 1,
+     *                  "name": "第一个节点编辑",
+     *                  "time": 12,                 // 节点时间
+     *                  "is_owner": 0,              // 甲方参与：0.否 1.是
+     *                  "design_substage_id": 1,    // 子阶段ID
+     *                  "design_project_id": 4,
+     *                  "status": 0,
+     *                  "asset": []                 // 附件
+     *              }
+     *          }]
+     *       }],
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function completes(Request $request)
+    {
+        $id = $request->input('id' , 0);
+        $status = $request->input('status');
+        $design_stage = DesignStage::find($id);
+        if(!$design_stage){
+            return $this->response->array($this->apiError('没有找到项目阶段', 404));
+        }
+        if($status == 1){
+            //查看子项目阶段
+            $design_sub_stages = DesignSubstage::where('design_stage_id' , $id)->get();
+            foreach ($design_sub_stages as $design_sub_stage){
+                $sub_status = $design_sub_stage->status;
+                //如果子阶段有没有完成的，项目阶段不能点击完成
+                if($sub_status == 0){
+                    return $this->response->array($this->apiError('项目子阶段还有没有完成', 403));
+
+                }
+            }
+        }
+        $design_stage->status = $status;
+
+        if($design_stage->save()){
+            return $this->response->item($design_stage, new DesignStageTransformer())->setMeta($this->apiMeta());
+        }
     }
 
 }

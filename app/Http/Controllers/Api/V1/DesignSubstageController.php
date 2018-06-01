@@ -317,4 +317,50 @@ class DesignSubstageController extends BaseController
     }
 
 
+    /**
+     * @api {put} /designSubstage/completes 设计工具--子阶段完成与未完成
+     * @apiVersion 1.0.0
+     * @apiName designSubstage completes
+     * @apiGroup designSubstage
+     *
+     * @apiParam {integer} id 子阶段ID
+     * @apiParam {integer} status 0.未完成 1.完成
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "data": {
+     *          "id": 1,
+     *          "design_project_id": "4",  // 项目ID
+     *          "design_stage_id": "1",    // 父阶段ID
+     *          "name": "项目开始的阶段",   // 阶段名称
+     *          "execute_user_id": null,  // 执行人
+     *          "duration": "1",           // 投入时间
+     *          "start_time": "1234567",   // 开始时间
+     *          "summary": "我是描述",     // 交付内容
+     *          "user_id": 6,             // 操作用户
+     *          "status": 0               // 状态：0.未完成 1.完成
+     *       },
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function completes(Request $request)
+    {
+        $id = $request->input('id' , 0);
+        $status = $request->input('status');
+        $design_sub_stage = DesignSubstage::find($id);
+
+        $design_sub_stage->status = $status;
+
+        if($design_sub_stage->save()){
+            return $this->response->item($design_sub_stage, new DesignSubstageTransformer())->setMeta($this->apiMeta());
+        }
+
+    }
+
+
 }
