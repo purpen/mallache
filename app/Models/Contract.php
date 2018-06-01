@@ -46,6 +46,8 @@ class Contract extends BaseModel
         'first_payment_proportion',
         'commission_rate',
         'commission',
+        'demand_pay_limit',
+        'thn_pay_limit',
     ];
 
     //相对关联 项目表

@@ -58,6 +58,8 @@ class ContractController extends BaseController
      * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
+     * @apiParam {int} demand_pay_limit 需求方打款时限
+     * @apiParam {int} thn_pay_limit 平台收到项目款打款时限
      * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12','content' => ['内容一','内容二'],]]
      *
      * @apiParam {string} token
@@ -365,6 +367,8 @@ class ContractController extends BaseController
      * @apiParam {string} thn_company_phone 平台联系电话
      * @apiParam {string} thn_company_legal_person 平台联系人
      * @apiParam {string} title 合同名称
+     * @apiParam {int} demand_pay_limit 需求方打款时限
+     * @apiParam {int} thn_pay_limit 平台收到项目款打款时限
      * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12'],'content' => ['内容一','内容二'],]
      *
      * @apiParam {string} token

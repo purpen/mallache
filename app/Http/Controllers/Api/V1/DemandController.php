@@ -987,6 +987,8 @@ class DemandController extends BaseController
             //修改合同状态为已确认
             $contract = $item->contract;
             $contract->status = 1;
+            $contract->true_time = time();
+
             $contract->save();
 
             //触发项目状态变更事件

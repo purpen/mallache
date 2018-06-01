@@ -44,6 +44,8 @@ class ContractTransformer extends TransformerAbstract
             'commission' => $contract->commission,
             'commission_han' => NumberToHanZi::numberToH($contract->commission),
             'commission_rate' => $contract->commission_rate,
+            'demand_pay_limit' => $contract->demand_pay_limit,
+            'thn_pay_limit' => $contract->thn_pay_limit,
         ];
     }
 
