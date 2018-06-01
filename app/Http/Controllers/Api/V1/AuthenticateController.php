@@ -376,7 +376,13 @@ class AuthenticateController extends BaseController
      *          "price_frozen": "0.00", //冻结金额
      *           "image": "",
      *          "design_company_id": 1,
-     * "role_id": 1    // 角色：0.用户；1.管理员；
+     *          "role_id": 1    // 角色：0.用户；1.管理员；
+     *          "design_company_name":
+     *          "design_company_abbreviation": '',
+     *          "verify_status": -1,
+     *          "demand_company_name":
+     *          "demand_company_abbreviation": '',
+     *          "demand_verify_status": -1,
      * }
      *   }
      */
@@ -627,8 +633,8 @@ class AuthenticateController extends BaseController
     public function userId(Request $request)
     {
         $user_id = $request->input('user_id');
-        $user = User::where('id' , $user_id)->first();
-        if(!$user){
+        $user = User::where('id', $user_id)->first();
+        if (!$user) {
             return $this->response->array($this->apiError('没有找到该用户!', 404));
 
         }

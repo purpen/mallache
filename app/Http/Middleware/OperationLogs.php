@@ -31,7 +31,7 @@ class OperationLogs
 
         // 判断请求是否成功：成功下一步动态记录处理 ，失败则返回
         $response_arr = json_decode($response->getContent(), true);
-        if (empty($response_arr) || $response_arr['meta']['status_code'] != 200) {
+        if (empty($response_arr) || !isset($response_arr['meta']) || $response_arr['meta']['status_code'] != 200) {
             return;
         }
 

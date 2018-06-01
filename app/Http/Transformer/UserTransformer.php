@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\User;
 use League\Fractal\TransformerAbstract;
@@ -15,7 +16,14 @@ class UserTransformer extends TransformerAbstract
 {
     public function transform(User $user)
     {
-        $design = DesignCompanyModel::where('id', $user->design_company_id)->first();
+        $demand = null;
+        $design = null;
+        if ($user->type == 1) {
+            $demand = $user->demandCompany;
+        } else {
+            $design = $user->designCompany;
+        }
+
         return [
             'id' => (int)$user->id,
             'type' => (int)$user->type,
@@ -39,7 +47,11 @@ class UserTransformer extends TransformerAbstract
             'invite_user_id' => $user->invite_user_id,
             'design_company_name' => $design ? $design->company_name : '',
             'design_company_abbreviation' => $design ? $design->company_abbreviation : '',
-            'verify_status' => $design ? $design->verify_status : 0,
+            'verify_status' => $design ? $design->verify_status : -1,
+
+            'demand_company_name' => $demand ? $demand->company_name : '',
+            'demand_company_abbreviation' => $demand ? $demand->company_abbreviation : '',
+            'demand_verify_status' => $demand ? $demand->verify_status : -1,
             'created_at' => $user->created_at,
 
 
