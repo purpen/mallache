@@ -19,7 +19,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types','source'];
 
     /**
      * 添加返回字段
@@ -102,14 +102,16 @@ class Item extends BaseModel
     }
 
     //创建需求表
-    public static function createItem($user_id)
+    public static function createItem($user_id, $source = 0)
     {
-        $item = Item::create([
-            'user_id' => $user_id,
-            'status' => 1,
-            'type' => 0,
-            'design_type' => 0
-        ]);
+        $item = Item::query()
+            ->create([
+                'user_id' => $user_id,
+                'status' => 1,
+                'type' => 0,
+                'design_type' => 0,
+                'source' => $source,
+            ]);
         if ($item) {
             event(new ItemStatusEvent($item));
             return $item;
@@ -163,6 +165,7 @@ class Item extends BaseModel
                     'cycle' => null,
                     'design_types' => json_decode($item->design_types),
                     'design_types_value' => $item->design_types_value,
+                    'source' => $item->source,
                 ];
             case 1:
                 $info = $item->productDesign;
@@ -220,6 +223,7 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
                     'created_at' => $item->created_at,
+                    'source' => $item->source,
                 ];
                 break;
             case 2:
@@ -280,6 +284,7 @@ class Item extends BaseModel
                     'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
+                    'source' => $item->source,
                 ];
                 break;
         }

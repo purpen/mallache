@@ -138,14 +138,13 @@ class DemandController extends BaseController
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
         }
-        $item = Item::createItem($this->auth_user_id);
+        $source = $request->header('source-type') ?? 0;
+        $item = Item::createItem($this->auth_user_id, $source);
         if (!$item) {
             return $this->response->array($this->apiError());
         }
 
         return $this->update($request, $item->id);
-
-//        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -174,46 +173,47 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-     * "data": {
-     * "item": {
-     * "id": 13,
-     * "type": 1,
-     * "type_value": "产品设计类型",
-     * "design_type": 2,（停用）
-     * "design_type_value": "产品设计", （停用）
-     * "design_types": [
-     *      2
-     *  ],
-     * "design_types_value": [
-     *      "网页设计"
-     *  ],
-     * "status": 5,
-     * "field": 2,
-     * "field_value": "消费电子",
-     * "industry": 2,
-     * "industry_value": "消费零售",
-     * "name": "api UI",
-     * "product_features": "亮点",
-     * "competing_product": "竞品",
-     * "cycle": 1,
-     * "cycle_value": "1个月内",
-     * "design_cost": 2,
-     * "design_cost_value": "1-5万之间",
-     * "city": 2,
-     * "image": [],
-     * "price": 200000,
-     * "company_name": null,  //公司名称
-     * "company_abbreviation": null, //简称
-     * "company_size": null, //公司规模；1...
-     * "company_web": null,  //公司网址
-     * "company_province": null, //省份
-     * "company_city": null,  //城市
-     * "company_area": null,   //区县
-     * "address": null,    //详细地址
-     * "contact_name": null,   //联系人
-     * "phone": "172734923",
-     * "email": "qq@qq.com"
-     *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     *      "data": {
+     *      "item": {
+     *      "id": 13,
+     *      "type": 1,
+     *      "type_value": "产品设计类型",
+     *      "design_type": 2,（停用）
+     *      "design_type_value": "产品设计", （停用）
+     *      "design_types": [
+     *           2
+     *       ],
+     *      "design_types_value": [
+     *           "网页设计"
+     *       ],
+     *      "status": 5,
+     *      "field": 2,
+     *      "field_value": "消费电子",
+     *      "industry": 2,
+     *      "industry_value": "消费零售",
+     *      "name": "api UI",
+     *      "product_features": "亮点",
+     *      "competing_product": "竞品",
+     *      "cycle": 1,
+     *      "cycle_value": "1个月内",
+     *      "design_cost": 2,
+     *      "design_cost_value": "1-5万之间",
+     *      "city": 2,
+     *      "image": [],
+     *      "price": 200000,
+     *      "company_name": null,  //公司名称
+     *      "company_abbreviation": null, //简称
+     *      "company_size": null, //公司规模；1...
+     *      "company_web": null,  //公司网址
+     *      "company_province": null, //省份
+     *      "company_city": null,  //城市
+     *      "company_area": null,   //区县
+     *      "address": null,    //详细地址
+     *      "contact_name": null,   //联系人
+     *      "phone": "172734923",
+     *      "email": "qq@qq.com"
+     *      "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     *      "source": 0 //"source": 0, // 来源字段 0.默认 1.京东众创
      * },
      * "quotation": null, //报价单信息
      * "contract": null   //合同
@@ -987,6 +987,8 @@ class DemandController extends BaseController
             //修改合同状态为已确认
             $contract = $item->contract;
             $contract->status = 1;
+            $contract->true_time = time();
+
             $contract->save();
 
             //触发项目状态变更事件
