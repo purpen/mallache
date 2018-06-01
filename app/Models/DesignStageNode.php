@@ -22,13 +22,13 @@ class DesignStageNode extends BaseModel
     public function info()
     {
         return [
-            'id' => $this->id,
+            'id' => intval($this->id),
             'name' => $this->name,
-            'time' => $this->time,
-            'is_owner' => $this->is_owner,
-            'design_substage_id' => $this->design_substage_id,
-            'design_project_id' => $this->design_project_id,
-            'status' => $this->status,
+            'time' => intval($this->time),
+            'is_owner' => intval($this->is_owner),
+            'design_substage_id' => intval($this->design_substage_id),
+            'design_project_id' => intval($this->design_project_id),
+            'status' => intval($this->status),
             'asset' => AssetModel::getImageUrl($this->id, 31),
         ];
     }

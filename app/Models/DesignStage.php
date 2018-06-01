@@ -35,14 +35,14 @@ class DesignStage extends BaseModel
         }
 
         return [
-            'id' => $this->id,
-            'design_project_id' => $this->design_project_id,
+            'id' => intval($this->id),
+            'design_project_id' => intval($this->design_project_id),
             'name' => $this->name,
             'duration' => $this->duration,
-            'start_time' => $this->start_time,
+            'start_time' => intval($this->start_time),
             'content' => $this->content,
-            'user_id' => $this->user_id,
-            'status' => $this->status,
+            'user_id' => intval($this->user_id),
+            'status' => intval($this->status),
             'design_substage' => $arr,
         ];
     }
