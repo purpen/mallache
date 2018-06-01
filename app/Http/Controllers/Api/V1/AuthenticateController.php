@@ -79,15 +79,17 @@ class AuthenticateController extends BaseController
         }
 
         // 创建用户
-        $user = User::create([
-            'account' => $payload['account'],
-            'phone' => $payload['account'],
-            'username' => $payload['account'],
-            'type' => $payload['type'],
-            'password' => bcrypt($payload['password']),
-            'child_account' => 0,
-            'company_role' => $company_role,
-        ]);
+        $user = User::query()
+            ->create([
+                'account' => $payload['account'],
+                'phone' => $payload['account'],
+                'username' => $payload['account'],
+                'type' => $payload['type'],
+                'password' => bcrypt($payload['password']),
+                'child_account' => 0,
+                'company_role' => $company_role,
+                'source' => $request->header('source-type') ?? 0,
+            ]);
         if ($user->type == 1) {
             DemandCompany::createCompany($user->id);
         } else if ($user->type == 2) {
@@ -383,6 +385,7 @@ class AuthenticateController extends BaseController
      *          "demand_company_name":
      *          "demand_company_abbreviation": '',
      *          "demand_verify_status": -1,
+     *          "source": 0, // 来源字段 0.默认 1.京东众创
      * }
      *   }
      */

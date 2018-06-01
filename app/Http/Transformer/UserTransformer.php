@@ -53,6 +53,7 @@ class UserTransformer extends TransformerAbstract
             'demand_company_abbreviation' => $demand ? $demand->company_abbreviation : '',
             'demand_verify_status' => $demand ? $demand->verify_status : -1,
             'created_at' => $user->created_at,
+            'source' => $user->source,
 
 
         ];
