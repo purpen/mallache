@@ -598,6 +598,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/designStage/delete', 'DesignStageController@delete');
         // api {get} /designStage/lists 设计工具--项目阶段列表
         $api->get('/designStage/lists', 'DesignStageController@lists');
+        // api {put} /designStage/completes 设计工具--更新项目阶段完成
+        $api->put('/designStage/completes', 'DesignStageController@completes');
 
         // 项目规划子阶段
         // api {post} /designSubstage/create 设计工具--创建子阶段
@@ -606,6 +608,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designSubstage', 'DesignSubstageController@show');
         $api->delete('/designSubstage/delete', 'DesignSubstageController@delete');
         $api->put('/designSubstage/updateDuration', 'DesignSubstageController@updateDuration');
+        $api->put('/designSubstage/completes', 'DesignSubstageController@completes');
 
 
         // 阶段节点
