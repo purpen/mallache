@@ -77,7 +77,7 @@ class DesignProject extends BaseModel
      */
     public function getProvinceValueAttribute()
     {
-        return Tools::cityName($this->company_province);
+        return Tools::cityName($this->province);
     }
 
     /**
@@ -86,7 +86,7 @@ class DesignProject extends BaseModel
      */
     public function getCityValueAttribute()
     {
-        return Tools::cityName($this->company_city);
+        return Tools::cityName($this->city);
     }
 
     /**
@@ -95,7 +95,7 @@ class DesignProject extends BaseModel
      */
     public function getAreaValueAttribute()
     {
-        return Tools::cityName($this->company_area);
+        return Tools::cityName($this->area);
     }
 
     /**
@@ -196,9 +196,9 @@ class DesignProject extends BaseModel
     public function info()
     {
         $user = User::find($this->user_id);
-        if($user){
+        if ($user) {
             $user_name = $user->getUserName();
-        }else{
+        } else {
             $user_name = '';
         }
         return [
