@@ -117,24 +117,30 @@ class WithdrawOrderActionController extends BaseController
             $fund_log = new FundLog();
             $fund_log->outFund($withdraw_order->user_id, $withdraw_order->amount, 5, $withdraw_order->uid, '提现');
 
-            //通知设计公司
+            //通知
             $tools = new Tools();
             $title = '提现完成';
             $content = '单号：' . $withdraw_order->uid . '提现已完成';
             $tools->message($withdraw_order->user_id, $title, $content, 3, null);
-            // 短信通知设计公司
-            if ($design_user = User::find($withdraw_order->user_id)) {
-                if ($design_user->designCompany) {
-                    $this->sendSms($user->designCompany->phone);
-                }
-            }
-
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError('Error', 500));
+        }
+
+        // 短信通知
+        if ($company_user = User::find($withdraw_order->user_id)) {
+            if ($company_user->type == 1) {
+                if ($company_user->demandCompany) {
+                    $this->sendSms($company_user->demandCompany->phone);
+                }
+            } elseif ($company_user->type == 2) {
+                if ($company_user->designCompany) {
+                    $this->sendSms($company_user->designCompany->phone);
+                }
+            }
         }
 
         return $this->response->array($this->apiSuccess());
