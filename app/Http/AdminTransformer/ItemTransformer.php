@@ -44,8 +44,9 @@ class ItemTransformer extends TransformerAbstract
             ];
         }
 
+        $item_stages = $item->itemStage;
         $item_stage = [];
-        foreach ($item->itemStage as $item_stage) {
+        foreach ($item_stages as $item_stage) {
             $item_stage[] = $item_stage->info();
         }
 
