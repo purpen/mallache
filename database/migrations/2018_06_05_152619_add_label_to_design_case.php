@@ -14,7 +14,7 @@ class AddLabelToDesignCase extends Migration
     public function up()
     {
         Schema::table('design_case', function (Blueprint $table) {
-            $table->string('label', 100)->default();
+            $table->string('label', 100)->default('');
         });
     }
 
