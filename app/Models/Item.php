@@ -19,7 +19,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types','source'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types', 'source'];
 
     /**
      * 添加返回字段
@@ -99,6 +99,12 @@ class Item extends BaseModel
     public function panDirector()
     {
         return $this->hasMany('App\Models\PanDirector', 'item_id');
+    }
+
+    // 一对多关联项目阶段
+    public function itemStage()
+    {
+        return $this->hasMany('App\Models\ItemStage', 'item_id');
     }
 
     //创建需求表

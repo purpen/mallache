@@ -44,6 +44,12 @@ class ItemTransformer extends TransformerAbstract
             ];
         }
 
+        $item_stages = $item->itemStage;
+        $item_stage = [];
+        foreach ($item_stages as $v) {
+            $item_stage[] = $v->info();
+        }
+
 
         $item->user;
         unset($item->productDesign, $item->uDesign);
@@ -53,6 +59,8 @@ class ItemTransformer extends TransformerAbstract
             'info' => $info,
             'designCompany' => $designCompany,
             'recommend' => $recommend,
+            'item_stage' => $item_stage,
+            'quotation' => $item->quotation ? $item->quotation->info() : null,
         ];
     }
 }
