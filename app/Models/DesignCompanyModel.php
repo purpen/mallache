@@ -370,7 +370,7 @@ class DesignCompanyModel extends BaseModel
             return [];
         } else {
             $arr = explode(',', $key);
-            array_map(function ($v) {
+            $arr = array_map(function ($v) {
                 return intval($v);
             }, $arr);
 
