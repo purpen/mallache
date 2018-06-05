@@ -366,7 +366,16 @@ class DesignCompanyModel extends BaseModel
     // 擅长领域访问修改器
     public function getGoodFieldAttribute($key)
     {
-        return empty($key) ? [] : explode(',', $key);
+        if (empty($key)) {
+            return [];
+        } else {
+            $arr = explode(',', $key);
+            array_map(function ($v) {
+                return intval($v);
+            }, $arr);
+
+            return $arr;
+        }
     }
 
     // 擅长领域访问修改器--文字
