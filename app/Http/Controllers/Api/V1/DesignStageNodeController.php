@@ -223,4 +223,47 @@ class DesignStageNodeController extends BaseController
         return $this->response->array($this->apiSuccess());
     }
 
+
+    /**
+     * @api {put} /designStageNode/completes 设计工具--节点完成与未完成
+     * @apiVersion 1.0.0
+     * @apiName designStageNode completes
+     * @apiGroup designStageNode
+     *
+     * @apiParam {integer} stage_node_id 节点ID
+     * @apiParam {integer} status 0.未完成 1.完成
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "data": {
+     *
+     *       },
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function completes(Request $request)
+    {
+        $stage_node_id = $request->input('stage_node_id');
+        $status = $request->input('status');
+        $stage_node = DesignStageNode::find($stage_node_id);
+        if (!$stage_node) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        $design_project_id = $stage_node->design_project_id;
+        if (!ItemUser::checkUser($design_project_id, $this->auth_user_id)) {
+            return $this->response->array($this->apiError('无权限', 403));
+        }
+        $stage_node->status = $status;
+
+        if($stage_node->save()){
+            return $this->response->item($stage_node, new DesignStageNodeTransformer())->setMeta($this->apiMeta());
+        }
+    }
+
 }
