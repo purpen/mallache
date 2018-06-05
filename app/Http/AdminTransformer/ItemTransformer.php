@@ -60,6 +60,7 @@ class ItemTransformer extends TransformerAbstract
             'designCompany' => $designCompany,
             'recommend' => $recommend,
             'item_stage' => $item_stage,
+            'quotation' => $item->quotation ? $item->quotation->info() : null,
         ];
     }
 }
