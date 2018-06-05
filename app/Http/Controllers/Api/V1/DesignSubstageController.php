@@ -308,12 +308,8 @@ class DesignSubstageController extends BaseController
                 //检查是否有子节点
                 $designStageNode = $design_substage->designStageNode;
                 if($designStageNode){
-                    //转换日期
-                    $dt_start_time = date('Y-m-d',$start_time);
-                    //阶段开始时间加上投入时间
-                    $time = date('Y-m-d',$dt_start_time + $duration*24*60*60);
                     //最后节点需要改变的时间
-                    $last_time = strtotime($time);
+                    $last_time = $start_time + ($duration*86400);
                     //修改子节点的时间
                     $designStageNode->time = $last_time;
                     $designStageNode->save();
