@@ -287,7 +287,6 @@ class DesignSubstageController extends BaseController
     public function updateDuration(Request $request)
     {
         $durations = $request->input('durations') ?? '[]';
-
         //转换称数组格式
         $newDurations = json_decode($durations, true);
         try {
@@ -298,11 +297,26 @@ class DesignSubstageController extends BaseController
                 if(!$design_substage){
                     return $this->response->array($this->apiError('子阶段不存在', 404));
                 }
-                $design_substage->duration = $durationObj['duration'];
-                $design_substage->start_time = $durationObj['start_time'];
+                $duration = $durationObj['duration'];
+                $start_time = $durationObj['start_time'];
+                $design_substage->duration = $duration;
+                $design_substage->start_time = $start_time;
                 //更改子阶段的时间
                 if(!$design_substage->save()){
                     return $this->response->array($this->apiError('子阶段更改失败', 412));
+                }
+                //检查是否有子节点
+                $designStageNode = $design_substage->designStageNode;
+                if($designStageNode){
+                    //转换日期
+                    $dt_start_time = date('Y-m-d',$start_time);
+                    //阶段开始时间加上投入时间
+                    $time = date('Y-m-d',$dt_start_time + $duration*24*60*60);
+                    //最后节点需要改变的时间
+                    $last_time = strtotime($time);
+                    //修改子节点的时间
+                    $designStageNode->time = $last_time;
+                    $designStageNode->save();
                 }
             }
             DB::commit();
