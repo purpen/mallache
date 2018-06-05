@@ -37,6 +37,7 @@ class DesignCaseModel extends BaseModel
         'cover_id',
         'patent',
         'prizes',
+        'label'
     ];
 
     /**
@@ -188,4 +189,13 @@ class DesignCaseModel extends BaseModel
         return '';
     }
 
+    // 标签
+    public function getLabelAttribute($key)
+    {
+        if (empty($key)) {
+            return [];
+        } else {
+            return (array)explode(',', $key);
+        }
+    }
 }

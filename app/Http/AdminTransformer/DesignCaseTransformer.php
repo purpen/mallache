@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\AdminTransformer;
 
 use App\Models\DesignCaseModel;
@@ -58,6 +59,7 @@ class DesignCaseTransformer extends TransformerAbstract
             'created_at' => $designCase->created_at,
             'patent' => json_decode($designCase->patent),
             'prizes' => json_decode($designCase->prizes),
+            'label' => $designCase->label,
         ];
     }
 

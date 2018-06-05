@@ -62,7 +62,9 @@ class DesignCaseController extends BaseController
     public function index()
     {
         $user_id = intval($this->auth_user_id);
-        $designCase = DesignCaseModel::where('user_id', $user_id)->get();
+        $designCase = DesignCaseModel::query()
+            ->with('DesignCompany')
+            ->where('user_id', $user_id)->get();
 
         return $this->response->collection($designCase, new DesignCaseTransformer())->setMeta($this->apiMeta());
 
@@ -98,6 +100,7 @@ class DesignCaseController extends BaseController
      * @apiParam {integer} cover_id 封面图ID
      * @apiParam {json} patent 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利 [{'time':2018-1-1,'type': 1}]
      * @apiParam {json} prizes 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他 [{'time':2018-1-1,'type': 1}]
+     * @apiParam {array} label 标签
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -151,7 +154,8 @@ class DesignCaseController extends BaseController
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
-            'cover_id' => 'required|integer'
+            'cover_id' => 'required|integer',
+            'label' => 'array'
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -195,11 +199,19 @@ class DesignCaseController extends BaseController
             return $this->response->array($this->apiError('专利数据不正确', 403));
         }
 
-
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+
+        // 验证标签
+        $label = $request->input('label');
+        if (is_array($label)) {
+            $label = implode(',', $label);
+            $all['label'] = $label;
+        }
+
+
         try {
             $designCase = DesignCaseModel::create($all);
             $random = $request->input('random') ?? '';
@@ -321,6 +333,7 @@ class DesignCaseController extends BaseController
      * @apiParam {string} other_prize   其他奖项
      * @apiParam {json} patent 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利 [{'time':2018-1-1,'type': 1}]
      * @apiParam {json} prizes 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他 [{'time':2018-1-1,'type': 1}]
+     * @apiParam {array} label 标签
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -373,7 +386,8 @@ class DesignCaseController extends BaseController
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
             'sales_volume' => 'nullable|integer',
-            'cover_id' => 'nullable|integer'
+            'cover_id' => 'nullable|integer',
+            'label' => 'array',
         ];
         $messages = [
             'title.required' => '标题不能为空',
@@ -415,6 +429,14 @@ class DesignCaseController extends BaseController
         if ($case->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+
+        // 验证标签
+        $label = $request->input('label');
+        if (is_array($label)) {
+            $label = implode(',', $label);
+            $all['label'] = $label;
+        }
+
         $designCase = DesignCaseModel::where('id', intval($id))->first();
         $designCase->update($all);
         if (!$designCase) {
