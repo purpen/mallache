@@ -327,11 +327,18 @@ class Recommend
 
             foreach ($design_case as $case) {
                 $text_2 = $case->title;
-                $result = $ai_api->nlp($text_1, $text_2); // 调用百度ai接口
-                Log::info($result);
-                if (isset($result['score'])) {
-                    if ($result['score'] > $score) {
-                        $score = $result['score'];
+
+                /*$result = $ai_api->nlp($text_1, $text_2); // 调用百度ai接口
+                  if (isset($result['score'])) {
+                      if ($result['score'] > $score) {
+                          $score = $result['score'];
+                      }
+                  }*/
+
+                $result = $this->similarScore($text_1, $text_2); // 调用本地相似度方法
+                if (isset($result)) {
+                    if ($result > $score) {
+                        $score = $result;
                     }
                 }
 
@@ -349,4 +356,20 @@ class Recommend
 
         return $result_data;
     }
+
+    // 计算短语之间的相似性
+    public function similarScore($text_1, $text_2)
+    {
+        $text_1_len = strlen($text_1);
+        $text_2_len = strlen($text_2);
+
+        $n = levenshtein($text_1, $text_2);
+
+        if ($text_1_len > $text_2_len) {
+            return (($text_1_len - $n) / $text_1_len);
+        } else {
+            return (($text_2_len - $n) / $text_2_len);
+        }
+    }
+
 }
