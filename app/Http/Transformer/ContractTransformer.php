@@ -11,42 +11,9 @@ class ContractTransformer extends TransformerAbstract
 {
     public function transform(Contract $contract)
     {
-        return [
-            'id' => intval($contract->id),
-            'item_demand_id' => intval($contract->item_demand_id),
-            'design_company_id' => intval($contract->design_company_id),
-            'demand_company_name' => strval($contract->demand_company_name),
-            'demand_company_address' => strval($contract->demand_company_address),
-            'demand_company_phone' => strval($contract->demand_company_phone),
-            'demand_company_legal_person' => strval($contract->demand_company_legal_person),
-            'design_company_name' => strval($contract->design_company_name),
-            'design_company_address' => strval($contract->design_company_address),
-            'design_company_phone' => strval($contract->design_company_phone),
-            'design_company_legal_person' => strval($contract->design_company_legal_person),
-            'total' => strval($contract->total),
-            'total_han' => NumberToHanZi::numberToH($contract->total),
-//            'item_content' => $contract->item_content,
-//            'design_work_content' => strval($contract->design_work_content),
-            'status' => intval($contract->status),
-            'unique_id' => strval($contract->unique_id),
-            'item_name' => $contract->item_name,
-            'title' => strval($contract->title),
-            'warranty_money' => $contract->warranty_money,
-            'first_payment' => $contract->first_payment,
-            'warranty_money_proportion' => $contract->warranty_money_proportion,
-            'first_payment_proportion' => $contract->first_payment_proportion,
-            'item_stage' => $this->itemStage($contract->item_demand_id),
-
-            'thn_company_name' => strval($contract->thn_company_name),
-            'thn_company_address' => strval($contract->thn_company_address),
-            'thn_company_phone' => strval($contract->thn_company_phone),
-            'thn_company_legal_person' => strval($contract->thn_company_legal_person),
-            'commission' => $contract->commission,
-            'commission_han' => NumberToHanZi::numberToH($contract->commission),
-            'commission_rate' => $contract->commission_rate,
-            'demand_pay_limit' => $contract->demand_pay_limit,
-            'thn_pay_limit' => $contract->thn_pay_limit,
-        ];
+        $data = $contract->info();
+        $data['item_stage'] = $this->itemStage($contract->item_demand_id);
+        return $data;
     }
 
     protected function itemStage($item_id)

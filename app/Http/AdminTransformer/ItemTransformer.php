@@ -61,6 +61,7 @@ class ItemTransformer extends TransformerAbstract
             'recommend' => $recommend,
             'item_stage' => $item_stage,
             'quotation' => $item->quotation ? $item->quotation->info() : null,
+            'contract' => $item->contract ? $item->contract->info() : null,
         ];
     }
 }

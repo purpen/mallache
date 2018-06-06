@@ -76,14 +76,7 @@ class Contract extends BaseModel
             'design_company_address' => strval($this->design_company_address),
             'design_company_phone' => strval($this->design_company_phone),
             'design_company_legal_person' => strval($this->design_company_legal_person),
-            'thn_company_name' => strval($this->thn_company_name),
-            'thn_company_address' => strval($this->thn_company_address),
-            'thn_company_phone' => strval($this->thn_company_phone),
-            'thn_company_legal_person' => strval($this->thn_company_legal_person),
-            'commission' => $this->commission,
-            'commission_han' => NumberToHanZi::numberToH($this->commission),
-            'commission_rate' => $this->commission_rate,
-            'total' => $this->total,
+            'total' => strval($this->total),
             'total_han' => NumberToHanZi::numberToH($this->total),
 
             'status' => intval($this->status),
@@ -94,6 +87,18 @@ class Contract extends BaseModel
             'first_payment' => $this->first_payment,
             'warranty_money_proportion' => $this->warranty_money_proportion,
             'first_payment_proportion' => $this->first_payment_proportion,
+
+            'thn_company_name' => strval($this->thn_company_name),
+            'thn_company_address' => strval($this->thn_company_address),
+            'thn_company_phone' => strval($this->thn_company_phone),
+            'thn_company_legal_person' => strval($this->thn_company_legal_person),
+            'commission' => $this->commission,
+            'commission_han' => NumberToHanZi::numberToH($this->commission),
+            'commission_rate' => $this->commission_rate,
+            'demand_pay_limit' => $this->demand_pay_limit,
+            'thn_pay_limit' => $this->thn_pay_limit,
         ];
+
+
     }
 }
