@@ -20,7 +20,7 @@ class SurveyController extends BaseController
      * {
      * "data": {
      * 'design_info_status' => 1,        // 设计公司基础信息 0：未完善；1.已完善
-     * 'design_verify_status' => 1,      // 设计公司审核信息 审核状态：0.审核中；1.审核通过；2. 未通过审核
+     * 'design_verify_status' => 1,      // 设计公司审核信息 审核状态：0.未审核；1.审核通过；2. 未通过审核，3.审核中
      * 'design_case_status' => 1,        // 设计案例是否添加 0：未完善；1.已完善
      * 'design_item_status' => 1,        // 接单设置是否添加 0：未完善；1.已完善
      * },
@@ -117,8 +117,8 @@ class SurveyController extends BaseController
             return $this->response->array($this->apiError('无权限', 402));
         }
 
-        foreach ($demand_info as $v){
-            if(empty($demand_company->$v)){
+        foreach ($demand_info as $v) {
+            if (empty($demand_company->$v)) {
                 $demand_info_status = 0;
                 break;
             }
