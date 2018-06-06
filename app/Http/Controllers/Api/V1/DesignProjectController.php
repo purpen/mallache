@@ -10,6 +10,7 @@ use App\Models\AssetModel;
 use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
+use App\Models\DesignStage;
 use App\Models\ItemUser;
 use App\Models\OperationLog;
 use App\Models\PanDirector;
@@ -786,5 +787,63 @@ class DesignProjectController extends BaseController
         $design_project->save();
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {get} /designProject/statistical  项目统计
+     * @apiVersion 1.0.0
+     * @apiName designProject statistical
+     * @apiGroup designProject
+     *
+     * @apiParam {integer} item_id 项目id
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+        "meta": {
+            "message": "获取成功",
+            "status_code": 200
+        },
+        "data": {
+            "designStageCount": 1,       //阶段数量
+            "durations": 2,    //投入时间
+            "okDesignStage": 22,    //项目进度
+        }
+    }
+     */
+    public function statistical(Request $request)
+    {
+        $item_id = $request->input('item_id');
+        //查看项目是否存在
+        $designProduct = DesignProject::find($item_id);
+        if (!$designProduct) {
+            return $this->response->array($this->apiError('没有找到该项目', 404));
+        }
+        //项目阶段
+        $designStages = DesignStage::where('design_project_id' , $item_id)->get();
+        //项目阶段数量
+        $designStageCount = $designStages->count();
+
+        //项目完成数量
+        $designStageStatus = DesignStage::where('design_project_id' , $item_id)->where('status' , 1)->count();
+
+        //项目进度
+        $okDesignStage = round(($designStageStatus / $designStageCount) * 100, 0);
+        //项目投入时间
+        $durations = 0;
+        foreach ($designStages as $designStage){
+            $durations += $designStage->duration;
+        }
+
+        $statistical = [];
+        //阶段数量
+        $statistical['designStageCount'] = $designStageCount;
+        //投入时间
+        $statistical['durations'] = $durations;
+        //项目进度
+        $statistical['okDesignStage'] = $okDesignStage;
+
+        return $this->response->array($this->apiSuccess('获取成功' , 200 , $statistical));
+
     }
 }
