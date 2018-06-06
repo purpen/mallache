@@ -360,7 +360,16 @@ class Recommend
     // 计算短语之间的相似性
     public function similarScore($text_1, $text_2)
     {
+        $text_1_len = strlen($text_1);
+        $text_2_len = strlen($text_2);
+
         $n = levenshtein($text_1, $text_2);
-        return (20 / ($n + 20));
+
+        if ($text_1_len > $text_2_len) {
+            return (($text_1_len - $n) / $text_1_len);
+        } else {
+            return (($text_2_len - $n) / $text_2_len);
+        }
     }
+
 }
