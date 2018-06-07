@@ -8,6 +8,7 @@ use App\Http\Transformer\CommuneSummaryTransformer;
 use App\Models\AssetModel;
 use App\Models\CommuneSummary;
 use App\Models\CommuneSummaryUser;
+use App\Models\DesignProject;
 use App\Models\ItemUser;
 use Illuminate\Http\Request;
 
@@ -236,15 +237,22 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        //通过$_POST存储数据，记录到动态表中
-        $_POST['title'] = $communeSummary->title;
-        $_POST['id'] = $id;
-        $_POST['item_id'] = $communeSummary->item_id;
-        $ok = $communeSummary->delete();
-        if (!$ok) {
-            return $this->response->array($this->apiError());
+        $item = DesignProject::isPower($this->auth_user_id);
+        if ($item == true || $this->auth_user_id == $communeSummary->user_id) {
+            //通过$_POST存储数据，记录到动态表中
+            $_POST['title'] = $communeSummary->title;
+            $_POST['id'] = $id;
+            $_POST['item_id'] = $communeSummary->item_id;
+            $ok = $communeSummary->delete();
+            if (!$ok) {
+                return $this->response->array($this->apiError());
+            }
+            return $this->response->array($this->apiSuccess());
+        }else{
+            return $this->response->array($this->apiError('没有权限!', 403));
+
         }
-        return $this->response->array($this->apiSuccess());
+
     }
 
     /**
@@ -287,15 +295,17 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        //通过$_POST存储数据，记录到动态表中
-        $_POST['title'] = $communeSummary->title;
-        $_POST['id'] = $id;
-        $_POST['item_id'] = $communeSummary->item_id;
-        $new_all = array_diff($all , array(null));
-        $communeSummary->update($new_all);
-        if (!$communeSummary) {
-            return $this->response->array($this->apiError());
+        $item = DesignProject::isPower($this->auth_user_id);
+        if ($item == true || $this->auth_user_id == $communeSummary->user_id) {
+            $new_all = array_diff($all , array(null));
+            $communeSummary->update($new_all);
+            if (!$communeSummary) {
+                return $this->response->array($this->apiError());
+            }
+            return $this->response->item($communeSummary, new CommuneSummaryTransformer())->setMeta($this->apiMeta());
+        }else{
+            return $this->response->array($this->apiError('没有权限!', 403));
         }
-        return $this->response->item($communeSummary, new CommuneSummaryTransformer())->setMeta($this->apiMeta());
+
     }
 }
