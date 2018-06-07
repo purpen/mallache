@@ -828,7 +828,11 @@ class DesignProjectController extends BaseController
         $designStageStatus = DesignStage::where('design_project_id' , $item_id)->where('status' , 1)->count();
 
         //项目进度
-        $okDesignStage = round(($designStageStatus / $designStageCount) * 100, 0);
+        if($designStageCount != 0){
+            $okDesignStage = round(($designStageStatus / $designStageCount) * 100, 0);
+        }else{
+            $okDesignStage = 0;
+        }
         //项目投入时间
         $durations = 0;
         foreach ($designStages as $designStage){
