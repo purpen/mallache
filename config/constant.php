@@ -36,7 +36,7 @@ return [
     'notice_phone' => '15711016577',
 
     // 子账户的数量
-    'child_count' => 10,
+    'child_count' => 20,
 
     //产品领域配置
     'field' => [

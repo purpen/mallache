@@ -735,12 +735,17 @@ class DesignController extends BaseController
         //被恢复的成员
         $user_id = $this->auth_user_id;
         $user = User::where('id', $user_id)->first();
+        //判断被改变的账户是需求公司或者是主账户的话，不让更改
+        if($user->type == 1 || $user->child_account == 0){
+            return $this->response->array($this->apiError('被恢复的用户是需求公司，或者是主账户', 403));
+        }
         if (!$user_id) {
             return $this->response->array($this->apiError('被恢复的用户不存在', 404));
         }
 
         $user->design_company_id = $design_company_id;
         $user->invite_user_id = $master_user_id;
+        $user->company_role = 0;
         if ($user->save()) {
             $master_user->child_count += 1;
             $master_user->save();
