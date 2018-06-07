@@ -73,7 +73,7 @@ class DesignCompanyController extends BaseController
      *          "score": 0,
      *          "status": 1
      *          "is_recommend": 0,
-     *          "verify_status": 0,
+     *          "verify_status": 0, // 审核状态：0.未审核；1.审核通过；2. 未通过审核，3.审核中
      *          "logo_image": ""，
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
@@ -99,7 +99,6 @@ class DesignCompanyController extends BaseController
         }
         return $this->response->item($design, new DesignCompanyShowTransformer())->setMeta($this->apiMeta());
     }
-
 
 
     /**
@@ -217,7 +216,7 @@ class DesignCompanyController extends BaseController
      *          "awards": "",
      *          "status": 0,
      *          "is_recommend": 0,
-     *          "verify_status": 0,
+     *          "verify_status": 0,  // 设计公司审核信息 审核状态：0.未审核；1.审核通过；2. 未通过审核，3.审核中
      *          "logo_image": ""，
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
@@ -388,70 +387,70 @@ class DesignCompanyController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-    {
-    "data": {
-    "id": 49,
-    "user_id": 1,
-    "company_type": 1,
-    "company_type_val": "普通",
-    "company_name": "1",
-    "company_abbreviation": "1",
-    "registration_number": "111111111111111111",
-    "province": 1,
-    "city": 1,
-    "area": 1,
-    "province_value": "",
-    "city_value": "",
-    "area_value": "",
-    "address": "1",
-    "contact_name": "1",
-    "position": "1",
-    "phone": "11",
-    "email": "11@qq.com",
-    "company_size": 1,
-    "company_size_val": "20人以下",
-    "branch_office": 1,
-    "good_field": [],
-    "good_field_value": [],
-    "web": "1",
-    "company_profile": "1",
-    "design_type": "",
-    "establishment_time": "1991-01-20",
-    "professional_advantage": "1",
-    "awards": "1",
-    "score": 610,
-    "status": 1,
-    "is_recommend": 0,
-    "verify_status": 1,
-    "logo": 0,
-    "logo_image": null,
-    "license_image": [],
-    "design_type_val": null,
-    "unique_id": "59268453f207a",
-    "city_arr": [
-    "",
-    ""
-    ],
-    "company_english": "",
-    "revenue": null,
-    "revenue_value": null,
-    "weixin_id": "",
-    "high_tech_enterprises": null,
-    "industrial_design_center": null,
-    "investment_product": null,
-    "own_brand": null
-    },
-    "meta": {
-    "message": "Success",
-    "status_code": 200
-    }
-    }
+     * {
+     * "data": {
+     * "id": 49,
+     * "user_id": 1,
+     * "company_type": 1,
+     * "company_type_val": "普通",
+     * "company_name": "1",
+     * "company_abbreviation": "1",
+     * "registration_number": "111111111111111111",
+     * "province": 1,
+     * "city": 1,
+     * "area": 1,
+     * "province_value": "",
+     * "city_value": "",
+     * "area_value": "",
+     * "address": "1",
+     * "contact_name": "1",
+     * "position": "1",
+     * "phone": "11",
+     * "email": "11@qq.com",
+     * "company_size": 1,
+     * "company_size_val": "20人以下",
+     * "branch_office": 1,
+     * "good_field": [],
+     * "good_field_value": [],
+     * "web": "1",
+     * "company_profile": "1",
+     * "design_type": "",
+     * "establishment_time": "1991-01-20",
+     * "professional_advantage": "1",
+     * "awards": "1",
+     * "score": 610,
+     * "status": 1,
+     * "is_recommend": 0,
+     * "verify_status": 1,
+     * "logo": 0,
+     * "logo_image": null,
+     * "license_image": [],
+     * "design_type_val": null,
+     * "unique_id": "59268453f207a",
+     * "city_arr": [
+     * "",
+     * ""
+     * ],
+     * "company_english": "",
+     * "revenue": null,
+     * "revenue_value": null,
+     * "weixin_id": "",
+     * "high_tech_enterprises": null,
+     * "industrial_design_center": null,
+     * "investment_product": null,
+     * "own_brand": null
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
      */
     public function childShow()
     {
         $user_id = intval($this->auth_user_id);
-        $user = User::where('id' , $user_id)->first();
-        if(!$user){
+        $user = User::where('id', $user_id)->first();
+        if (!$user) {
             return $this->response->array($this->apiError('没有找到该用户', 404));
         }
         $design_company_id = $user->design_company_id;
