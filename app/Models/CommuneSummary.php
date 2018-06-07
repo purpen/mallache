@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class CommuneSummary extends BaseModel
 {
@@ -43,9 +44,8 @@ class CommuneSummary extends BaseModel
     public static function getCommuneSummaryUserArr(int $commune_summary_id)
     {
         $user_id_arr = CommuneSummaryUser::select('selected_user_id')
-            ->where('id', $commune_summary_id)
+            ->where('commune_summary_id', $commune_summary_id)
             ->get()->pluck('selected_user_id')->all();
-
         return $user_id_arr;
     }
 }
