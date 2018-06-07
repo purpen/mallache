@@ -668,14 +668,23 @@ class TaskController extends BaseController
             }
             //总数量
             $total_count = $no_get + $no_stage + $ok_stage + $overdue;
-            //未领取百分比
-            $no_get_percentage = round(($no_get / $total_count) * 100);
-            //未完成百分比
-            $no_stage_percentage = round(($no_stage / $total_count) * 100);
-            //已完成百分比
-            $ok_stage_percentage = round(($ok_stage / $total_count) * 100);
-            //已预期百分比
-            $overdue_percentage = round(100 - $no_get_percentage - $no_stage_percentage - $ok_stage_percentage);
+            if($total_count != 0){
+                //未领取百分比
+                $no_get_percentage = round(($no_get / $total_count) * 100);
+                //未完成百分比
+                $no_stage_percentage = round(($no_stage / $total_count) * 100);
+                //已完成百分比
+                $ok_stage_percentage = round(($ok_stage / $total_count) * 100);
+                //已预期百分比
+                $overdue_percentage = round(100 - $no_get_percentage - $no_stage_percentage - $ok_stage_percentage);
+            }else{
+                $no_get_percentage = 0;
+                $no_stage_percentage = 0;
+                $ok_stage_percentage = 0;
+                $overdue_percentage = 0;
+            }
+
+
 
             $statistical = [];
             $statistical['no_get'] = $no_get;
