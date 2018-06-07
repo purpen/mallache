@@ -237,7 +237,11 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $item = DesignProject::isPower($this->auth_user_id);
+        $design_project = DesignProject::find($communeSummary->item_id);
+        if(!$design_project){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
+        $item = $design_project->isPower($this->auth_user_id);
         if ($item == true || $this->auth_user_id == $communeSummary->user_id) {
             //通过$_POST存储数据，记录到动态表中
             $_POST['title'] = $communeSummary->title;
@@ -295,7 +299,11 @@ class CommuneSummaryController extends BaseController
         if (!$communeSummary) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $item = DesignProject::isPower($this->auth_user_id);
+        $design_project = DesignProject::find($communeSummary->item_id);
+        if(!$design_project){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
+        $item = $design_project->isPower($this->auth_user_id);
         if ($item == true || $this->auth_user_id == $communeSummary->user_id) {
             $new_all = array_diff($all , array(null));
             $communeSummary->update($new_all);
