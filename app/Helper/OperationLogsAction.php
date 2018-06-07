@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class OperationLogsAction
@@ -88,6 +89,12 @@ class OperationLogsAction
         return OperationLog::createLog($company_id, 1, $item_id, $action_type, 4, $target_id, $this->auth_user->id, $other_user_id, $content);
     }
 
+    // 项目管理--某某退出了项目
+    private function createOutItemLog($company_id ,int $item_id, int $action_type, int $target_id, int $user_id,int $other_user_id = null, string $content)
+    {
+        return OperationLog::createLog($company_id, 1, $item_id, $action_type, 5, $target_id, $user_id, $other_user_id, $content);
+    }
+
     /**
      * 获取返回数据
      *
@@ -127,11 +134,12 @@ class OperationLogsAction
     // 更改任务
     public function updateTask()
     {
+        $response_content = $this->getResponseContent();
         $all = $this->request->except(['token']);
         array_diff($all, array(null));
-        $target_id = $_POST['id'];
+        $target_id = $response_content['data']['id'];
+        $item_id = $response_content['data']['item_id'];
 
-        $item_id = intval($this->request->input('item_id'));
         $name = $this->request->input('name');
         $summary = $this->request->input('summary');
         $level = $this->request->input('level');
@@ -246,10 +254,9 @@ class OperationLogsAction
     public function createCommuneSummary()
     {
         $response_content = $this->getResponseContent();
-
-        $item_id = intval($this->request->input('item_id'));
-        $content = $this->request->input('title');
         $target_id = $response_content['data']['id'];
+        $item_id = $response_content['data']['item_id'];
+        $content = $response_content['data']['title'];
 
         $this->createSummariesLog($item_id, 15, $target_id, null, $content);
 
@@ -258,9 +265,11 @@ class OperationLogsAction
     //更改沟通纪要
     public function updateCommuneSummary()
     {
-        $content = $_POST['title'];
-        $target_id = $_POST['id'];
-        $item_id = $_POST['item_id'];
+        $response_content = $this->getResponseContent();
+        $target_id = $response_content['data']['id'];
+        $item_id = $response_content['data']['item_id'];
+        $content = $response_content['data']['title'];
+
         $this->createSummariesLog($item_id, 16, $target_id, null, $content);
 
     }
@@ -272,6 +281,19 @@ class OperationLogsAction
         $target_id = $_POST['id'];
         $item_id = $_POST['item_id'];
         $this->createSummariesLog($item_id, 17, $target_id, null, $content);
+
+    }
+
+    //某某退出了该项目
+    public function userOutItem()
+    {
+        $company_id = $_POST['company_id'];
+        $user_id = $_POST['user_id'];
+        $target_id = $_POST['id'];
+        $item_id = $_POST['item_id'];
+        $user = User::find($user_id);
+        $content = $user->getUserName();
+        $this->createOutItemLog($company_id , $item_id, 18, $target_id, $user_id , null , $content);
 
     }
 

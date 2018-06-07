@@ -625,8 +625,11 @@ class DesignController extends BaseController
                             $item_user->delete();
                         }
                         //减少子账户数量
-                        $user->child_count -= 1;
-                        $user->save();
+                        if($user->child_count > 0){
+                            $user->child_count -= 1;
+                            $user->save();
+                        }
+
                         DB::commit();
                         return $this->response->array($this->apiSuccess());
                     } else {
@@ -735,6 +738,13 @@ class DesignController extends BaseController
         //被恢复的成员
         $user_id = $this->auth_user_id;
         $user = User::where('id', $user_id)->first();
+        //原来的设计公司id
+        $old_design_company_id = $user->design_company_id;
+        //原来的主账户
+        $old_user = User::where('design_company_id', $old_design_company_id)->where('child_account' , 0)->first();
+        if(!$old_user){
+            return $this->response->array($this->apiError('没有找到原来的主账户', 404));
+        }
         //判断被改变的账户是需求公司或者是主账户的话，不让更改
         if($user->type == 1 || $user->child_account == 0){
             return $this->response->array($this->apiError('被恢复的用户是需求公司，或者是主账户', 403));
@@ -747,6 +757,22 @@ class DesignController extends BaseController
         $user->invite_user_id = $master_user_id;
         $user->company_role = 0;
         if ($user->save()) {
+            $item_users = ItemUser::where('user_id', $user_id)->get();
+            //移除项目成员中用户id为user_id
+            foreach ($item_users as $item_user) {
+                $_POST['id'] = $item_user->id;
+                $_POST['user_id'] = $user_id;
+                $_POST['item_id'] = $item_user->item_id;
+                $_POST['company_id'] = $old_design_company_id;
+                $item_user->delete();
+            }
+            //减少原来公司子账户数量-1
+            if($old_user->child_count > 0){
+                $old_user->child_count -= 1;
+                $old_user->save();
+            }
+
+            //新的主账户子账户数量+1
             $master_user->child_count += 1;
             $master_user->save();
             return $this->response->array($this->apiSuccess());

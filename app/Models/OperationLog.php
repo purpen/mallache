@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Illuminate\Support\Facades\Log;
+
 class OperationLog extends BaseModel
 {
     protected $table = 'operation_log';
@@ -12,6 +14,7 @@ class OperationLog extends BaseModel
         'tags' => [11 , 12],  // 标签--动作类型
         'item_user' => [13 , 14],  // 项目人员--动作类型
         'commune_summaries' => [15 , 16 , 17],  // 沟通纪要--动作类型
+        'user_out_item' => [18],  // 某某退出了该项目
     ];
 
     // 操作动态文字说明
@@ -33,6 +36,7 @@ class OperationLog extends BaseModel
         '15' => ' 创建沟通纪要',  // 创建沟通纪要
         '16' => ' 修改沟通纪要',  // 修改沟通纪要
         '17' => ' 删除沟通纪要',  // 删除沟通纪要
+        '18' => ' 退出了该项目',  // 退出了该项目
     ];
 
     //关联操作用户
@@ -80,6 +84,7 @@ class OperationLog extends BaseModel
                 case 4:
                     // 查看 沟通纪要相关人员
                     $user_id_arr = CommuneSummary::getCommuneSummaryUserArr($operation_log->target_id);
+                    Log::info($user_id_arr);
                     break;
             }
 
@@ -180,6 +185,9 @@ class OperationLog extends BaseModel
                 break;
             case 17:
                 $str = $this->deleteCommuneSummary();
+                break;
+            case 18:
+                $str = $this->userOutItem();
                 break;
         }
 
@@ -325,5 +333,10 @@ class OperationLog extends BaseModel
         return $this->user->getUserName() . $this->title_config['17'].$this->content;
     }
 
+    //某某退出项目
+    public function userOutItem()
+    {
+        return $this->user->getUserName() . $this->title_config['18'];
+    }
 
 }

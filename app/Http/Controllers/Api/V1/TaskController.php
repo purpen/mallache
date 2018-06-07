@@ -406,12 +406,14 @@ class TaskController extends BaseController
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        $_POST['id'] = $id;
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
+        $target_id = $_POST['id'];
+
+        $item_id = $_POST['item_id'];
         $all = $request->except(['token']);
         //不为空标签时，合并数组
         if(!empty($all['tags'])){
