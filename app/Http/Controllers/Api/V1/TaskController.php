@@ -406,6 +406,7 @@ class TaskController extends BaseController
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        $_POST['id'] = $id;
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
         if($itemUser == false){

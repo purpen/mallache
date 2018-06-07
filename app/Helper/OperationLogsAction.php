@@ -127,10 +127,9 @@ class OperationLogsAction
     // 更改任务
     public function updateTask()
     {
-        $response_content = $this->getResponseContent();
         $all = $this->request->except(['token']);
         array_diff($all, array(null));
-        $target_id = $response_content['data']['id'];
+        $target_id = $_POST['id'];
 
         $item_id = intval($this->request->input('item_id'));
         $name = $this->request->input('name');
