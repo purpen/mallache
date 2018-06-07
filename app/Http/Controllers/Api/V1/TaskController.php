@@ -411,9 +411,6 @@ class TaskController extends BaseController
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
-        $target_id = $_POST['id'];
-
-        $item_id = $_POST['item_id'];
         $all = $request->except(['token']);
         //不为空标签时，合并数组
         if(!empty($all['tags'])){
