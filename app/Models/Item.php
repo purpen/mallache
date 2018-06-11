@@ -19,7 +19,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types', 'source'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types', 'source', 'name'];
 
     /**
      * 添加返回字段
@@ -108,7 +108,7 @@ class Item extends BaseModel
     }
 
     //创建需求表
-    public static function createItem($user_id, $source = 0)
+    public static function createItem($user_id, $name, $source = 0)
     {
         $item = Item::query()
             ->create([
@@ -117,6 +117,7 @@ class Item extends BaseModel
                 'type' => 0,
                 'design_type' => 0,
                 'source' => $source,
+                'name' => $name,
             ]);
         if ($item) {
             event(new ItemStatusEvent($item));
@@ -140,47 +141,17 @@ class Item extends BaseModel
 
         switch ((int)$item->type) {
             case 0:
-                return [
-                    'id' => $item->id,
-                    'type' => (int)$item->type,
-                    'type_value' => $item->type_value,
-                    'design_type' => (int)$item->design_type,
-                    'design_type_value' => $item->design_type_value,
-                    'status' => $item->status,
-                    'status_value' => $item->status_value,
-                    'design_status_value' => $item->design_status_value,
-                    'price' => floatval($item->price),
-                    'company_name' => $item->company_name,
-                    'company_abbreviation' => $item->company_abbreviation,
-                    'company_size' => $item->company_size,
-                    'company_size_value' => $item->company_size_value,
-                    'company_web' => $item->company_web,
-                    'company_province' => $item->company_province,
-                    'company_city' => $item->company_city,
-                    'company_area' => $item->company_area,
-                    'company_province_value' => $item->company_province_value,
-                    'company_city_value' => $item->company_city_value,
-                    'company_area_value' => $item->company_area_value,
-                    'address' => $item->address,
-                    'contact_name' => $item->contact_name,
-                    'phone' => $item->phone,
-                    'email' => $item->email,
-                    'stage_status' => (int)$item->stage_status,
-                    'created_at' => $item->created_at,
-                    'design_cost' => null,
-                    'cycle' => null,
-                    'design_types' => json_decode($item->design_types),
-                    'design_types_value' => $item->design_types_value,
-                    'source' => $item->source,
-                ];
+                goto a1;
+                break;
             case 1:
                 $info = $item->productDesign;
+                if (!$info) {
+                    goto a1;
+                }
                 return [
                     'id' => $item->id,
                     'type' => (int)$item->type,
                     'type_value' => $item->type_value,
-                    'design_type' => $item->design_type,
-                    'design_type_value' => $item->design_type_value,
                     'design_types' => json_decode($item->design_types),
                     'design_types_value' => $item->design_types_value,
                     'status' => $item->status,
@@ -192,7 +163,7 @@ class Item extends BaseModel
                     'field_value' => $info->field_value,
                     'industry' => $info->industry,
                     'industry_value' => $info->industry_value,
-                    'name' => $info->name,
+                    'name' => $item->name,
                     'product_features' => $info->product_features,
                     'competing_product' => explode('&', $info->competing_product),
                     'cycle' => $info->cycle,
@@ -233,15 +204,14 @@ class Item extends BaseModel
                 ];
                 break;
             case 2:
-                if (!$info = $item->uDesign) {
-                    return [];
+                $info = $item->uDesign;
+                if (!$info) {
+                    goto a1;
                 }
                 return [
                     'id' => $item->id,
                     'type' => (int)$item->type,
                     'type_value' => $item->type_value,
-                    'design_type' => (int)$item->design_type,
-                    'design_type_value' => $item->design_type_value,
                     'design_types' => json_decode($item->design_types),
                     'design_types_value' => $item->design_types_value,
                     'industry' => $info->industry,
@@ -250,7 +220,7 @@ class Item extends BaseModel
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
                     'design_company_id' => $item->design_company_id,
-                    'name' => $info->name,
+                    'name' => $item->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
                     'complete_content' => $info->complete_content,
@@ -294,7 +264,42 @@ class Item extends BaseModel
                 ];
                 break;
         }
+
         return [];
+
+        a1:
+        return [
+            'id' => $item->id,
+            'type' => (int)$item->type,
+            'type_value' => $item->type_value,
+            'status' => $item->status,
+            'status_value' => $item->status_value,
+            'design_status_value' => $item->design_status_value,
+            'price' => floatval($item->price),
+            'company_name' => $item->company_name,
+            'company_abbreviation' => $item->company_abbreviation,
+            'company_size' => $item->company_size,
+            'company_size_value' => $item->company_size_value,
+            'company_web' => $item->company_web,
+            'company_province' => $item->company_province,
+            'company_city' => $item->company_city,
+            'company_area' => $item->company_area,
+            'company_province_value' => $item->company_province_value,
+            'company_city_value' => $item->company_city_value,
+            'company_area_value' => $item->company_area_value,
+            'address' => $item->address,
+            'contact_name' => $item->contact_name,
+            'phone' => $item->phone,
+            'email' => $item->email,
+            'stage_status' => (int)$item->stage_status,
+            'created_at' => $item->created_at,
+            'design_cost' => null,
+            'cycle' => null,
+            'design_types' => json_decode($item->design_types),
+            'design_types_value' => $item->design_types_value,
+            'source' => $item->source,
+            'name' => $item->name,
+        ];
     }
 
     //设计类型

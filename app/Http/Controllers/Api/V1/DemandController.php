@@ -12,15 +12,12 @@ use App\Events\ItemStatusEvent;
 use App\Helper\ItemCommissionAction;
 use App\Helper\Recommend;
 use App\Helper\Tools;
-use App\Http\Transformer\DemandCompanyTransformer;
-use App\Http\Transformer\DesignCompanyShowTransformer;
 use App\Http\Transformer\EvaluateTransformer;
 use App\Http\Transformer\ItemDesignListTransformer;
 use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendDesignCompanyTransformer;
 use App\Http\Transformer\RecommendListTransformer;
-use App\Models\Contract;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
@@ -28,9 +25,6 @@ use App\Models\Evaluate;
 use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\PayOrder;
-use App\Models\ProductDesign;
-use App\Models\UDesign;
-use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +118,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
+     * @apiParam {string} name 项目名称
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -135,41 +130,39 @@ class DemandController extends BaseController
      */
     public function create(Request $request)
     {
+        $rules = [
+            'name' => 'required|string|max:100',
+        ];
+        $all = $request->all();
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
         }
         $source = $request->header('source-type') ?? 0;
-        $item = Item::createItem($this->auth_user_id, $source);
+        $name = $request->input('name');
+        $item = Item::createItem($this->auth_user_id, $name, $source);
         if (!$item) {
             return $this->response->array($this->apiError());
         }
 
-        return $this->update($request, $item->id);
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {put} /demand/{id} 更改项目类型、领域
+     * @api {put} /demand/{id} 更改项目类型
      * @apiVersion 1.0.0
      * @apiName demand update
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
+     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
      * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
-     * @apiParam {integer} design_type 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）（停用）
-     * @apiParam {json} design_types 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）[1,2,3]
-     * @apiParam {integer} field 所属领域
-     * @apiParam {string} company_name 公司名称
-     * @apiParam {string} company_abbreviation 公司简称
-     * @apiParam {integer} company_size 公司规模
-     * @apiParam {string} company_web 公司网站
-     * @apiParam {integer} company_province 省份
-     * @apiParam {integer} company_city 城市
-     * @apiParam {integer} company_area 区域
-     * @apiParam {string} address 详细地址
-     * @apiParam {string} contact_name 联系人
-     * @apiParam {integer} phone 手机
-     * @apiParam {string} email 邮箱
+     * @apiParam {json} design_types 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；3. 界面设计, 4 . 服务设计, 5 .用户体验咨询）[1,2,3]
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -178,8 +171,6 @@ class DemandController extends BaseController
      *      "id": 13,
      *      "type": 1,
      *      "type_value": "产品设计类型",
-     *      "design_type": 2,（停用）
-     *      "design_type_value": "产品设计", （停用）
      *      "design_types": [
      *           2
      *       ],
@@ -226,142 +217,57 @@ class DemandController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $type = (int)$request->input('type');
+        $rules = [
+            'type' => 'required|integer',
+            'design_types' => 'required|JSON',
+        ];
 
-        //产品设计
-        if ($type === 1) {
+        $all = $request->only(['stage_status', 'type', 'design_types']);
 
-            $rules = [
-                'type' => 'required|integer',
-                'design_types' => 'required|JSON',
-                'field' => 'required|integer',
-            ];
-
-            $all = $request->only(['stage_status', 'type', 'design_types', 'field']);
-
-            $validator = Validator::make($all, $rules);
-            if ($validator->fails()) {
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            try {
-
-                if (!$item = Item::find(intval($id))) {
-                    return $this->response->array($this->apiError('not found!', 404));
-                }
-                //验证是否是当前用户对应的项目
-                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
-                    return $this->response->array($this->apiError('not found!', 404));
-                }
-
-                if (empty($all['stage_status'])) {
-                    unset($all['stage_status']);
-                }
-                $item->update($all);
-
-                $product_design = ProductDesign::firstOrCreate(['item_id' => intval($item->id)]);
-                $product_design->field = $request->input('field');
-//                $product_design->industry = $request->input('industry');
-                $product_design->save();
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-
-        } //UX UI设计
-        elseif ($type === 2) {
-            $rules = [
-                'type' => 'required|integer',
-                'design_types' => ['required', 'JSON'],
-            ];
-            $all = $request->only(['stage_status', 'type', 'design_types']);
-
-            $validator = Validator::make($all, $rules);
-            if ($validator->fails()) {
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            try {
-                if (!$item = Item::find(intval($id))) {
-                    return $this->response->array($this->apiError('not found!', 404));
-                }
-                //验证是否是当前用户对应的项目
-                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
-                    return $this->response->array($this->apiError('无编辑权限或当前状态禁止编辑!', 404));
-                }
-
-                if (empty($all['stage_status'])) {
-                    unset($all['stage_status']);
-                }
-
-                $item->update($all);
-
-                $product_design = UDesign::firstOrCreate(['item_id' => intval($item->id)]);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
-        } else {
-            $rules = [
-                'company_name' => 'required|min:1|max:50',
-                'company_abbreviation' => 'nullable|min:1|max:50',
-                'company_size' => 'required|integer',
-                'company_web' => 'nullable|min:1|max:50',
-                'company_province' => 'required|integer',
-                'company_city' => 'required|integer',
-                'company_area' => 'nullable|integer',
-                'address' => 'required|min:1|max:50',
-                'contact_name' => 'required|min:1|max:20',
-                'email' => 'required|email',
-                'position' => 'required|max:20',
-            ];
-
-            $all = $request->only(['stage_status', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'position']);
-
-            $validator = Validator::make($all, $rules);
-            if ($validator->fails()) {
-                throw new StoreResourceFailedException('Error', $validator->errors());
-            }
-
-            try {
-
-                if (!$item = Item::find(intval($id))) {
-                    return $this->response->array($this->apiError('not found!', 404));
-                }
-                //验证是否是当前用户对应的项目
-                if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
-                    return $this->response->array($this->apiError('not found!', 404));
-                }
-                $all['company_name'] = $request->input('company_name') ?? '';
-                $all['company_abbreviation'] = $request->input('company_abbreviation') ?? '';
-                $all['company_size'] = $request->input('company_size') ?? 0;
-                $all['company_web'] = $request->input('company_web') ?? '';
-                $all['company_province'] = $request->input('company_province') ?? 0;
-                $all['company_city'] = $request->input('company_city') ?? 0;
-                $all['company_area'] = $request->input('company_area') ?? 0;
-                $all['address'] = $request->input('address') ?? '';
-                $all['contact_name'] = $request->input('contact_name') ?? '';
-                $all['phone'] = $request->input('phone') ?? '';
-                $all['email'] = $request->input('email') ?? '';
-
-                if (empty($all['stage_status'])) {
-                    unset($all['stage_status']);
-                }
-                $item->update($all);
-
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return $this->response->array($this->apiError('Error', 500));
-            }
-
-            return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
+        try {
+
+            if (!$item = Item::find(intval($id))) {
+                return $this->response->array($this->apiError('not found!', 404));
+            }
+            //验证是否是当前用户对应的项目
+            if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
+                return $this->response->array($this->apiError('not found!', 404));
+            }
+
+            if (empty($all['stage_status'])) {
+                unset($all['stage_status']);
+            }
+
+            // 需求公司信息是否认证
+            $demand_company = $this->auth_user->demandCompany;
+            if ($demand_company->verify_status == 1) {
+                $all['company_name'] = $demand_company->company_name;
+                $all['company_abbreviation'] = $demand_company->company_abbreviation;
+                $all['company_size'] = $demand_company->company_size;
+                $all['company_web'] = $demand_company->company_web;
+                $all['company_province'] = $demand_company->province;
+                $all['company_city'] = $demand_company->city;
+                $all['company_area'] = $demand_company->area;
+                $all['address'] = $demand_company->address;
+                $all['contact_name'] = $demand_company->contact_name;
+                $all['phone'] = $demand_company->phone;
+                $all['email'] = $demand_company->email;
+            }
+
+            $item->update($all);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError('Error', 500));
+        }
+
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
+
 
     /**
      * @api {delete} /demand/{id} 删除项目

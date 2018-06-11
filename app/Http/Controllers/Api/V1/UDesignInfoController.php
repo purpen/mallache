@@ -30,59 +30,6 @@ class UDesignInfoController extends BaseController
     summary	varchar(500)	是		备注
     artificial	tinyint(4)	是	0	人工服务*/
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $item_id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($item_id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * @api {put} /UDesign/{item_id} 更改 UX UI详细信息
@@ -90,8 +37,7 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
-     * @apiParam {integer} stage_status //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
-     * @apiParam {string} name 项目名称
+     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {array} complete_content 已完成设计内容：
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
@@ -112,15 +58,14 @@ class UDesignInfoController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $item_id)
     {
         $all = $request->all();
         $rules = [
-            'name' => 'required|max:50',
             'stage' => ['required', 'integer', Rule::in([1, 2])],
             'complete_content' => 'array',
             'design_cost' => ['required', 'integer'],
@@ -130,44 +75,33 @@ class UDesignInfoController extends BaseController
             'industry' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        try{
-            if(!$item = Item::find($item_id)){
+        try {
+            if (!$item = Item::find($item_id)) {
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
             //验证是否是当前用户对应的项目
-            if($item->user_id !== $this->auth_user_id || $item->type != 2 || 1 != $item->status){
+            if ($item->user_id !== $this->auth_user_id || $item->type != 2 || 1 != $item->status) {
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
-            $item->stage_status = $request->input('stage_status') ?? 2;
+            $item->stage_status = $request->input('stage_status') ?? 3;
             $item->save();
-
-            $design = UDesign::where(['item_id' => intval($item_id)])->first();
 
             $all['complete_content'] = implode('&', $all['complete_content']);
             $all['other_content'] = $request->input('other_content') ?? '';
 
+            $design = UDesign::firstOrCreate(['item_id' => intval($item_id)]);
             $design->update($all);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return $this->response->array($this->apiError('Error', 500));
         }
 
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -291,8 +291,21 @@ class ItemActionController extends Controller
             return $this->response->array($this->apiError('该需求公司资料未审核', 403));
         }
 
-        $item->status = 3;
-        $item->save();
+        // 补充需求方信息
+        $all['company_name'] = $demand_company->company_name;
+        $all['company_abbreviation'] = $demand_company->company_abbreviation;
+        $all['company_size'] = $demand_company->company_size;
+        $all['company_web'] = $demand_company->company_web;
+        $all['company_province'] = $demand_company->province;
+        $all['company_city'] = $demand_company->city;
+        $all['company_area'] = $demand_company->area;
+        $all['address'] = $demand_company->address;
+        $all['contact_name'] = $demand_company->contact_name;
+        $all['phone'] = $demand_company->phone;
+        $all['email'] = $demand_company->email;
+        $all['status'] = 3;
+
+        $item->update($all);
 
         //触发事件
         event(new ItemStatusEvent($item));
