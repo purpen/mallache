@@ -105,6 +105,7 @@ class DesignProjectController extends BaseController
         } else {
             if ($user_status == 1){
                 $lists = DesignProject::where('user_id' , $this->auth_user_id)
+                    ->where('status', 1)
                     ->paginate($per_page);
             } else {
                 $lists = DesignProject::where('status', $status)
