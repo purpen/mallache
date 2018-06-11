@@ -193,6 +193,14 @@ class DesignProjectController extends BaseController
             $design_project->design_company_id = $design_company_id;
             $design_project->status = 1;
             $design_project->project_type = 2;
+            //添加判断项目名称是否已经存在
+            $item = DesignProject::where('name' , $request->input('name'))
+                ->where('design_company_id' , $design_company_id)
+                ->where('project_type' , 2)
+                ->first();
+            if($item){
+                throw new MassageException('该项目名称已经存在，请换个名称', 412);
+            }
             $design_project->save();
 
             // 将创建者添加入项目人员
