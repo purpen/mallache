@@ -57,6 +57,9 @@ class Kernel extends ConsoleKernel
         //更改子账户数量
         Commands\UpdateChildCount::class,
 
+        // 同步需求项目名称到item表
+        Commands\UpdateItemName::class,
+
 
     ];
 
