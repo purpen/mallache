@@ -395,7 +395,10 @@ class User extends Authenticatable implements JWTSubject
         if($this->design_notice_count <= 0){
             $this->design_notice_count = 0;
             $this->save();
+            Log::info($this->design_notice_count);
+            Log::info(1111);
         } else {
+            Log::info(222);
             $this->decrement('design_notice_count');
         }
     }
