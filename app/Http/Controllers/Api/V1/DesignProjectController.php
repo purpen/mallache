@@ -37,6 +37,7 @@ class DesignProjectController extends BaseController
      * @apiGroup designProject
      *
      * @apiParam {int} status 状态：1.正常 2.回收站
+     * @apiParam {int} user_status 创建状态：0.默认 1.创建的项目
      * @apiParam {int} collect 收藏状态：0.默认 1.收藏
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
@@ -91,6 +92,7 @@ class DesignProjectController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = $request->status ?? 1;
         $collect = $request->collect ?? 0;
+        $user_status = $request->user_status ?? 1;
 
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
@@ -100,10 +102,15 @@ class DesignProjectController extends BaseController
                 ->where('collect', $collect)
                 ->whereIn('id', $arr)
                 ->paginate($per_page);
-        }else{
-            $lists = DesignProject::where('status', $status)
-                ->whereIn('id', $arr)
-                ->paginate($per_page);
+        } else {
+            if ($user_status == 1){
+                $lists = DesignProject::where('user_id' , $this->auth_user_id)
+                    ->paginate($per_page);
+            } else {
+                $lists = DesignProject::where('status', $status)
+                    ->whereIn('id', $arr)
+                    ->paginate($per_page);
+            }
         }
 
 
