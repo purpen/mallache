@@ -386,4 +386,17 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->realname ?? $this->account;
     }
+
+    /**
+     * 设计通知数量减少
+     */
+    public function designNoticeCount()
+    {
+        if($this->design_notice_count <= 0){
+            $this->design_notice_count = 0;
+            $this->save();
+        } else {
+            $this->decrement('design_notice_count');
+        }
+    }
 }
