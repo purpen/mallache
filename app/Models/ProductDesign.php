@@ -34,7 +34,7 @@ class ProductDesign extends BaseModel
     //一对一关联项目表
     public function item()
     {
-        return $this->belongsTo('App\Models\item', 'item_id');
+        return $this->belongsTo('App\Models\Item', 'item_id');
     }
 
     /**
