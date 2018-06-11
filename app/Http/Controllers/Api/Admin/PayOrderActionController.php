@@ -83,15 +83,15 @@ class PayOrderActionController extends BaseController
     public function lists(Request $request)
     {
         //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-        $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? (int)$request->input('pay_type') : null;
+        $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? $request->input('pay_type') : null;
         //支付单类型 支付类型：1.预付押金；2.项目款；
-        $type = in_array($request->input('type'), [1, 2]) ? (int)$request->input('type') : null;
+        $type = in_array($request->input('type'), [1, 2]) ? $request->input('type') : null;
 
-        $status = in_array($request->input('status'), [0, 1]) ? (int)$request->input('status') : null;
+        $status = in_array($request->input('status'), [0, 1]) ? $request->input('status') : null;
 
         $per_page = $request->input('per_page') ?? $this->per_page;
 
-        $bank_transfer = in_array($request->input('bank_transfer'), [0, 1]) ? (int)$request->input('bank_transfer') : null;
+        $bank_transfer = in_array($request->input('bank_transfer'), [0, 1]) ? $request->input('bank_transfer') : null;
 
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
