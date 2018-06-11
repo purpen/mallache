@@ -95,7 +95,9 @@ class DesignNoticeController extends BaseController
 
         // 设计通知数量减少
         $user = $this->auth_user;
-        $user->designNoticeCount();
+//        $user->designNoticeCount();
+        $user->decrement('design_notice_count');
+
 
         return $this->response->array($this->apiSuccess());
     }
@@ -128,7 +130,9 @@ class DesignNoticeController extends BaseController
 
         // 设计通知数量减少
         $user = $this->auth_user;
-        $user->designNoticeCount();
+        $user->decrement('design_notice_count');
+
+//        $user->designNoticeCount();
 
         $design_notice->delete();
 
