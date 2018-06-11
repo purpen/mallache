@@ -92,7 +92,7 @@ class DesignProjectController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = $request->status ?? 1;
         $collect = $request->collect ?? 0;
-        $user_status = $request->user_status ?? 1;
+        $user_status = $request->user_status ?? 0;
 
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
