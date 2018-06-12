@@ -263,7 +263,6 @@ class DesignStageController extends BaseController
      *          "content": "我是描述",     // 交付内容
      *          "user_id": 6,             // 操作用户
      *          "status": 0               // 状态：0.未完成 1.完成
-     *          "statistical": 50               // 进度
      *          "design_substage": [{     // 子阶段信息
      *              "id": 1,                // 子阶段ID
      *              "design_project_id": 4,     // 项目ID
@@ -304,22 +303,7 @@ class DesignStageController extends BaseController
         $lists = DesignStage::with('designSubstage')
             ->where('design_project_id', $design_project_id)
             ->get();
-        //单个阶段的进度
-        if(!empty($lists)){
-            foreach ($lists as $list){
-                //子阶段总数
-                $designSbuStageCount = DesignSubstage::where('design_stage_id' , $list->id)->count();
-                //完成的数量
-                $okDesignSbuStageCount = DesignSubstage::where('design_stage_id' , $list->id)->where('status' , 1)->count();
 
-                if($okDesignSbuStageCount != 0){
-                    $statistical = round(($okDesignSbuStageCount / $designSbuStageCount) * 100, 0);
-                } else {
-                    $statistical = 0;
-                }
-                $list['statistical'] = $statistical;
-            }
-        }
         return $this->response->collection($lists, new DesignStageTransformer())->setMeta($this->apiMeta());
     }
 

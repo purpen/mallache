@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignSubstageTransformer;
+use App\Models\AssetModel;
 use App\Models\DesignProject;
 use App\Models\DesignStage;
 use App\Models\DesignSubstage;
@@ -37,6 +38,7 @@ class DesignSubstageController extends BaseController
      *
      * @apiParam {integer} design_stage_id 阶段ID
      * @apiParam {integer} execute_user_id 执行人
+     * @apiParam {integer} type 1.子阶段 2.里程碑 默认1
      * @apiParam {string} name 阶段名称
      * @apiParam {integer} duration 投入时间
      * @apiParam {integer} start_time 开始时间
@@ -99,12 +101,22 @@ class DesignSubstageController extends BaseController
         $design_substage->design_project_id = $design_project_id;
         $design_substage->design_stage_id = $design_stage_id;
         $design_substage->name = $request->input('name');
-        $design_substage->duration = $request->input('duration');
         $design_substage->start_time = $request->input('start_time');
         $design_substage->summary = $request->input('summary') ?? '';
+        $design_substage->type = $request->input('type') ?? 1;
+        //子阶段有投入时间，里程碑默认1天
+        if ($request->input('type') == 1){
+            $design_substage->duration = $request->input('duration');
+        } else {
+            $design_substage->duration = 1;
+        }
         $design_substage->user_id = $this->auth_user_id;
         $design_substage->status = 0;
-        $design_substage->save();
+        if($design_substage->save()){
+            if ($random = $request->input('random')) {
+                AssetModel::setRandom($design_substage->id, $random);
+            }
+        }
 
         return $this->response->item($design_substage, new DesignSubstageTransformer())->setMeta($this->apiMeta());
     }
@@ -117,6 +129,7 @@ class DesignSubstageController extends BaseController
      *
      * @apiParam {integer} id 子阶段ID
      * @apiParam {integer} execute_user_id 执行人
+     * @apiParam {integer} type 1.子阶段 2.里程碑
      * @apiParam {string} name 阶段名称
      * @apiParam {integer} duration 投入时间
      * @apiParam {integer} start_time 开始时间
@@ -147,10 +160,7 @@ class DesignSubstageController extends BaseController
     {
         $rules = [
             'id' => 'required|integer',
-            'execute_user_id' => 'integer',
             'name' => 'max:100',
-            'duration' => 'integer',
-            'start_time' => 'integer',
             'summary' => 'max:500',
         ];
 
@@ -176,7 +186,9 @@ class DesignSubstageController extends BaseController
         }
 
         $arr = array_diff($request->all(), [null]);
-
+        if ($request->input('type') == 2) {
+            $arr['duration'] = 1;
+        }
         $design_substage->update($arr);
 
         return $this->response->item($design_substage, new DesignSubstageTransformer())->setMeta($this->apiMeta());
