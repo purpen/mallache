@@ -43,6 +43,7 @@ class DesignSubstageController extends BaseController
      * @apiParam {integer} duration 投入时间
      * @apiParam {integer} start_time 开始时间
      * @apiParam {string} summary 描述
+     * @apiParam {string} random 随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
