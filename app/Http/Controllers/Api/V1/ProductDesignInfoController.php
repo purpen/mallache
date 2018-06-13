@@ -32,59 +32,6 @@ class ProductDesignInfoController extends BaseController
     stock_cooperation	tinyint(4)	否	0	是否考虑设计入股合作方式1.否；2.是
     summary	varchar(500)	否	''	备注*/
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
 
     /**
      * @api {put} /ProductDesign/{item_id} 更改 产品设计详细信息
@@ -92,8 +39,8 @@ class ProductDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandProductDesign
      *
-     * @apiParam {integer} stage_status //阶段；1.项目类型；2.需求信息；3.公司信息
-     * @apiParam {string} name 项目名称
+     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
+     * @apiParam {integer} field //所属领域
      * @apiParam {string} product_features 产品功能或两点
      * @apiParam {array} competing_product 竞品
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
@@ -113,12 +60,10 @@ class ProductDesignInfoController extends BaseController
      */
     public function update(Request $request, $item_id)
     {
-//        dd($request->input('competing_product'));
         $all = $request->all();
         $rules = [
-            'name' => 'required|max:50',
+            'field' => 'required|integer',
             'product_features' => 'required|max:500',
-//            'competing_product' => 'array',
             'cycle' => 'required|integer',
             'design_cost' => 'required|integer',
             'province' => 'required|integer',
@@ -126,40 +71,28 @@ class ProductDesignInfoController extends BaseController
             'industry' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        try{
-            if(!$item = Item::find($item_id)){
+        try {
+            if (!$item = Item::find($item_id)) {
                 return $this->response->array($this->apiError('not found!', 404));
-            }
-            //判断设计类型，用户权限是否正确
-            else if ((int)$item->type !== 1 || $item->user_id != $this->auth_user_id || 1 != $item->status){
+            } //判断设计类型，用户权限是否正确
+            else if ((int)$item->type !== 1 || $item->user_id != $this->auth_user_id || 1 != $item->status) {
                 return $this->response->array($this->apiError());
             }
 
-            $item->stage_status = $request->input('stage_status') ?? 2;
+            $item->stage_status = $request->input('stage_status') ?? 3;
             $item->save();
 
-            $design = ProductDesign::where(['item_id' => intval($item_id)])->first();
-//            $all['competing_product'] = implode('&', $request->input('competing_product'));
+            $design = ProductDesign::firstOrCreate(['item_id' => intval($item_id)]);
             $design->update($all);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return $this->response->array($this->apiError('Error', 500));
         }
 
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

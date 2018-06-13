@@ -310,7 +310,7 @@ class Recommend
     // 计算需求和设计公司案例的匹配程度，重新排序
     public function againSort($design_company_id_arr)
     {
-        $ai_api = new Api();
+//        $ai_api = new Api();
 
         $item_info = $this->item->itemInfo();
         $text_1 = $item_info['name'];

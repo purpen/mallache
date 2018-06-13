@@ -48,6 +48,7 @@ class Contract extends BaseModel
         'commission',
         'demand_pay_limit',
         'thn_pay_limit',
+        'version',
     ];
 
     //相对关联 项目表
@@ -97,6 +98,7 @@ class Contract extends BaseModel
             'commission_rate' => $this->commission_rate,
             'demand_pay_limit' => $this->demand_pay_limit,
             'thn_pay_limit' => $this->thn_pay_limit,
+            'version' => $this->version,
         ];
 
 

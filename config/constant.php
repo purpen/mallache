@@ -17,6 +17,9 @@ return [
     // 平台佣金比例
     'commission_rate' => 0.10,
 
+    //合同版本配置 合同版本：0.默认 1.1806版
+    'contract_version' => 1,
+
     //项目推荐失败后，是否人工后台介入处理
     'item_recommend_lose' => env('ITEM_RECOMMEND_LOSE', true),     // true:人工介入； false：项目匹配失败
 

@@ -19,24 +19,6 @@ use Illuminate\Support\Facades\Validator;
 class ContractController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-
-    /**
-     */
-    public function create(Request $request)
-    {
-        //
-    }
-
-    /**
      * @api {post} /contract 保存合同
      * @apiVersion 1.0.0
      * @apiName contract store
@@ -97,6 +79,7 @@ class ContractController extends BaseController
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
      *      "status": 0,
+     *      "version": 1, // 合同版本：0.默认 1.1806版
      *      "item_stage":
      *      },
      *      "meta": {
@@ -131,11 +114,12 @@ class ContractController extends BaseController
 
         //项目首付款
         $all['first_payment'] = sprintf("%0.2f", $item->price * config("constant.first_payment"));
-        // 项目验收之后支付金额
-        $all['warranty_money'] = sprintf("%0.2f", $item->price * config("constant.warranty_money"));
-
-        $all['warranty_money_proportion'] = config("constant.warranty_money");
         $all['first_payment_proportion'] = config("constant.first_payment");
+
+        // 项目验收之后支付金额
+        $all['warranty_money'] = 0;
+        $all['warranty_money_proportion'] = 0;
+
         $rules = [
             'item_demand_id' => 'required|integer',
             'demand_company_name' => 'required',
@@ -146,8 +130,6 @@ class ContractController extends BaseController
             'design_company_address' => 'required',
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
-//            'item_content' => 'required',
-//            'design_work_content' => 'required',
             'title' => 'required|max:50',
             'item_stage' => 'required',
             'thn_company_name' => 'required',
@@ -166,8 +148,6 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-//            'item_content' => '项目内容不能为空',
-//            'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
         ];
@@ -184,9 +164,9 @@ class ContractController extends BaseController
 
         //验证项目阶段数组数据
         // 阶段项目金额
-        $other_price = sprintf("%0.2f", $all['total'] - $all['warranty_money'] - $all['first_payment']);
+        $other_price = bcsub($all['total'], $all['first_payment'], 2);
         // 阶段百分比
-        $other_percentage = 1 - config("constant.first_payment") - config("constant.warranty_money");
+        $other_percentage = 1 - config("constant.first_payment");
         if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
             return $this->response->array($this->apiError('项目阶段数据不正确', 403));
         }
@@ -198,6 +178,7 @@ class ContractController extends BaseController
             $all['design_work_content'] = '';
             $all['commission'] = ItemCommissionAction::getCommission($item);
             $all['commission_rate'] = $item->commission_rate;
+            $all['version'] = config('constant.contract_version');
             $contract = Contract::create($all);
 
             foreach ($all['item_stage'] as $stage) {
@@ -311,6 +292,7 @@ class ContractController extends BaseController
      *      "first_payment_proportion": 0.40,    //首付款比例
      *      "unique_id": "ht59018f4e78ebe"
      *      "status": 0,
+     *      "version": 1, // 合同版本：0.默认 1.1806版
      *      "item_stage":
      *      },
      *      "meta": {
@@ -337,16 +319,6 @@ class ContractController extends BaseController
         return $this->response->item($contract, new ContractTransformer())->setMeta($this->apiMeta());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Contract $contract
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Contract $contract)
-    {
-        //
-    }
 
     /**
      * @api {put} /contract/{id} 更改合同
@@ -404,6 +376,7 @@ class ContractController extends BaseController
      *      "design_work_content": "",
      *      "unique_id": "ht59018f4e78ebe"
      *      "status": 0,
+     *      "version": 1, // 合同版本：0.默认 1.1806版
      *      "item_stage":
      *      },
      *      "meta": {
@@ -443,8 +416,6 @@ class ContractController extends BaseController
             'design_company_address' => 'required',
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
-//            'item_content' => 'required',
-//            'design_work_content' => 'required',
             'title' => 'required|max:20',
             'item_stage' => 'required',
             'thn_company_name' => 'required',
@@ -463,7 +434,6 @@ class ContractController extends BaseController
             'design_company_address.required' => '设计公司地址不能为空',
             'design_company_phone.required' => '设计公司电话不能为空',
             'design_company_legal_person.required' => '设计公司法人不能为空',
-//            'design_work_content.required' => '设计工作内容不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
         ];
@@ -473,9 +443,9 @@ class ContractController extends BaseController
         }
 
         //验证项目阶段数组数据
-        $other_price = sprintf("%0.2f", $contract->total - $contract->warranty_money - $contract->first_payment);
+        $other_price = bcsub($contract->total, $contract->first_payment, 2);
         // 阶段百分比
-        $other_percentage = 1 - $contract->warranty_money_proportion - $contract->first_payment_proportion;
+        $other_percentage = 1 - $contract->first_payment_proportion;
 
         if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
             return $this->response->array($this->apiError('项目阶段数据不正确', 403));
@@ -504,14 +474,4 @@ class ContractController extends BaseController
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Contract $contract
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Contract $contract)
-    {
-        //
-    }
 }
