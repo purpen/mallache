@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use App\Helper\Tools;
 
 class DesignCompanyModel extends BaseModel
 {
