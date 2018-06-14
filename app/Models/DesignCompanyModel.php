@@ -139,14 +139,17 @@ class DesignCompanyModel extends BaseModel
             $url = config('app.opalus_api') . 'company_queue/submit';
             try{
                 $result = Tools::request($url, $param, 'POST');
-                if (!$result || $result['code']) {
+                $result = json_decode($result, true);
+                if (!isset($result['code'])) {
+                    return false;       
+                }
+                if ($result['code']) {
                     return false;
                 }
             }
             catch (\Exception $e){
                 return false;
             }
-
         }
 
         return $design_company->save();
