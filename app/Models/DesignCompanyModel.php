@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Helper\Tools;
 
 class DesignCompanyModel extends BaseModel
 {
@@ -129,6 +130,24 @@ class DesignCompanyModel extends BaseModel
         $design_company->verify_status = $verify_status;
         if ($verify_summary) {
             $design_company->verify_summary = $verify_summary;
+        }
+
+        if ($verify_status == 1) {
+            $param = [
+              'id' => $design_company->id,
+              'name' => $design_company->company_name,
+            ];
+            $url = config('app.opalus_api') . 'company_queue/submit';
+            try{
+                $result = Tools::request($url, $param, 'POST');
+                if (!$result || $result['code']) {
+                    return false;
+                }
+            }
+            catch (\Exception $e){
+                return false;
+            }
+
         }
 
         return $design_company->save();
