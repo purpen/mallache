@@ -133,7 +133,7 @@ class DesignCompanyModel extends BaseModel
 
         if ($verify_status == 1) {
             $param = [
-              'id' => $design_company->id,
+              'd3in_id' => $design_company->id,
               'name' => $design_company->company_name,
             ];
             $url = config('app.opalus_api') . 'company_queue/submit';
