@@ -118,6 +118,7 @@ class Item extends BaseModel
                 'design_type' => 0,
                 'source' => $source,
                 'name' => $name,
+                'stage_status' => 1,
             ]);
         if ($item) {
             event(new ItemStatusEvent($item));

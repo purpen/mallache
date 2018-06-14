@@ -39,15 +39,9 @@ class ProductDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandProductDesign
      *
-     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
+     * @apiParam {json} design_types 设计类别：UXUI设计（1.app设计；2.网页设计；）。
      * @apiParam {integer} field //所属领域
      * @apiParam {string} product_features 产品功能或两点
-     * @apiParam {array} competing_product 竞品
-     * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
-     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-     * @apiParam {integer} province 省份
-     * @apiParam {integer} city 城市
-     * @apiParam {integer} industry 行业
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -64,11 +58,6 @@ class ProductDesignInfoController extends BaseController
         $rules = [
             'field' => 'required|integer',
             'product_features' => 'required|max:500',
-            'cycle' => 'required|integer',
-            'design_cost' => 'required|integer',
-            'province' => 'required|integer',
-            'city' => 'required|integer',
-            'industry' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -83,7 +72,8 @@ class ProductDesignInfoController extends BaseController
                 return $this->response->array($this->apiError());
             }
 
-            $item->stage_status = $request->input('stage_status') ?? 3;
+            $item->stage_status = 3;
+            $item->design_types = $request->input('design_types');
             $item->save();
 
             $design = ProductDesign::firstOrCreate(['item_id' => intval($item_id)]);

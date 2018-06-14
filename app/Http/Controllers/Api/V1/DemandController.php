@@ -160,9 +160,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
      * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
-     * @apiParam {json} design_types 产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；3. 界面设计, 4 . 服务设计, 5 .用户体验咨询）[1,2,3]
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -219,10 +217,9 @@ class DemandController extends BaseController
     {
         $rules = [
             'type' => 'required|integer',
-            'design_types' => 'required|JSON',
         ];
 
-        $all = $request->only(['stage_status', 'type', 'design_types']);
+        $all = $request->only(['type']);
 
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -239,10 +236,6 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
-            if (empty($all['stage_status'])) {
-                unset($all['stage_status']);
-            }
-
             // 需求公司信息是否认证
             $demand_company = $this->auth_user->demandCompany;
             if ($demand_company->verify_status == 1) {
@@ -257,6 +250,7 @@ class DemandController extends BaseController
                 $all['contact_name'] = $demand_company->contact_name;
                 $all['phone'] = $demand_company->phone;
                 $all['email'] = $demand_company->email;
+                $all['stage_status'] = 2;
             }
 
             $item->update($all);

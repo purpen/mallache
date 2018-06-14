@@ -121,3 +121,6 @@ git@github.com:purpen/mallache.git
  
  ##### 同步需求项目名称到item表
  php artisan ItemName:update
+ 
+ ##### 同步产品UI老数据到项目表中
+  php artisan update:itemUProduct
