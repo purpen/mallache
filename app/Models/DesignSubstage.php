@@ -41,7 +41,7 @@ class DesignSubstage extends BaseModel
             'summary' => $this->summary,
             'user_id' => intval($this->user_id),
             'status' => intval($this->status),
-            'sbu_stage_image' => $this->sbu_stage_image,
+            'sub_stage_image' => $this->sub_stage_image,
             'type' => intval($this->type),
             'design_stage_node' => $this->designStageNode ? $this->designStageNode->info() : null,
         ];
