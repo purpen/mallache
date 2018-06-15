@@ -18,6 +18,7 @@ use App\Http\Transformer\ItemListTransformer;
 use App\Http\Transformer\ItemTransformer;
 use App\Http\Transformer\RecommendDesignCompanyTransformer;
 use App\Http\Transformer\RecommendListTransformer;
+use App\Models\AssetModel;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignItemModel;
@@ -299,6 +300,12 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
+     * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
+     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     * @apiParam {integer} industry 所属行业 1.制造业,2 .消费零售,3 .信息技术,4 .能源,5 .金融地产,6 .服务业,7 .医疗保健,8 .原材料,9 .工业制品,10 .军工,11 .公用事业
+     * @apiParam {integer} item_province 省份
+     * @apiParam {integer} item_city 城市
+     * @apiParam {string} random 随机数
      * @apiParam {integer} id 项目ID
      *
      * @apiSuccessExample 成功响应:
@@ -335,6 +342,16 @@ class DemandController extends BaseController
         $demand_company = $this->auth_user->demandCompany;
         if (!$demand_company) {
             return $this->response->array($this->apiError('not found demandCompany!', 404));
+        }
+        $item->cycle = $request->input('cycle') ?? 0;
+        $item->design_cost = $request->input('design_cost') ?? 0;
+        $item->industry = $request->input('industry') ?? 0;
+        $item->item_province = $request->input('item_province') ?? 0;
+        $item->item_city = $request->input('item_city') ?? 0;
+        if($item->save()){
+            if ($random = $request->input('random')) {
+                AssetModel::setRandom($item->id, $random);
+            }
         }
 
         // 同步调用匹配方法

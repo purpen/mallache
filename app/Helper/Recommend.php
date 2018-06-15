@@ -166,12 +166,12 @@ class Recommend
     protected function productDesign($type, array $design_types)
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-        $max = $this->cost($this->item->productDesign->design_cost);
+        $max = $this->cost($this->item->design_cost);
 
         //所属领域
         $field = $this->item->productDesign->field;
 //        //周期
-//        $cycle = $this->item->productDesign->cycle;
+//        $cycle = $this->item->cycle;
 //        //项目公司地点
 //        $item_info = $this->item->itemInfo();
 //        $province = $item_info['province'];
@@ -222,7 +222,7 @@ class Recommend
     protected function uDesign($type, array $design_types)
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-        $max = $this->cost($this->item->uDesign->design_cost);
+        $max = $this->cost($this->item->design_cost);
 
         //所属领域
 //        $field =  $this->item->productDesign->field;
