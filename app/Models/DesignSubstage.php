@@ -7,7 +7,7 @@ class DesignSubstage extends BaseModel
 {
     protected $table = 'design_substage';
 
-    protected $fillable = ['execute_user_id', 'name', 'duration', 'start_time', 'summary'];
+    protected $fillable = ['execute_user_id', 'name', 'duration', 'start_time', 'summary' , 'type'];
 
     // 相对关联设计阶段表
     public function designStage()
@@ -41,6 +41,8 @@ class DesignSubstage extends BaseModel
             'summary' => $this->summary,
             'user_id' => intval($this->user_id),
             'status' => intval($this->status),
+            'sbu_stage_image' => $this->sbu_stage_image,
+            'type' => intval($this->type),
             'design_stage_node' => $this->designStageNode ? $this->designStageNode->info() : null,
         ];
     }
@@ -55,6 +57,14 @@ class DesignSubstage extends BaseModel
         }
 
         $this->delete();
+    }
+
+    /**
+     * 子阶段/里程碑附件
+     */
+    public function getSubStageImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 34, 1);
     }
 
 }
