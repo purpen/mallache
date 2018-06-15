@@ -340,16 +340,20 @@ class Item extends BaseModel
         $item_type = config('constant.item_type');
 
         $design_types = json_decode($this->design_types, true);
-        $arr = [];
-        if (array_key_exists($this->type, $item_type)) {
-            foreach ($design_types as $v) {
-                if (array_key_exists($v, $item_type[$this->type])) {
-                    $arr[] = $item_type[$this->type][$v];
+        if (empty($design_types)){
+            return [];
+        } else {
+            $arr = [];
+            if (array_key_exists($this->type, $item_type)) {
+                foreach ($design_types as $v) {
+                    if (array_key_exists($v, $item_type[$this->type])) {
+                        $arr[] = $item_type[$this->type][$v];
+                    }
                 }
             }
+            return $arr;
         }
 
-        return $arr;
     }
 
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
