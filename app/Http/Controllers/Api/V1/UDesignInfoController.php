@@ -41,7 +41,7 @@ class UDesignInfoController extends BaseController
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {array} complete_content 已完成设计内容：
      * @apiParam {string} other_content 其他设计内容：
-     * @apiParam {string} summary 项目需求描述
+     * @apiParam {string} product_features 项目需求描述
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -87,7 +87,7 @@ class UDesignInfoController extends BaseController
 
             $all['complete_content'] = implode('&', $all['complete_content']);
             $all['other_content'] = $request->input('other_content') ?? '';
-            $all['summary'] = $request->input('summary') ?? '';
+            $all['product_features'] = $request->input('product_features') ?? '';
 
             $design = UDesign::firstOrCreate(['item_id' => intval($item_id)]);
             $design->update($all);
