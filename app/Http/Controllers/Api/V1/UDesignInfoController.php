@@ -149,7 +149,7 @@ class UDesignInfoController extends BaseController
 
             $design = UDesign::where(['item_id' => intval($item_id)])->first();
 
-            $all['complete_content'] = implode('&', (int)$all['complete_content']);
+            $all['complete_content'] = implode('&', $all['complete_content']);
             $all['other_content'] = $request->input('other_content') ?? '';
 
             $design->update($all);

@@ -111,7 +111,7 @@ class UDesign extends BaseModel
         if(empty($key)){
             return [];
         }else{
-            return explode('&', $key);
+            return explode('&', (int)$key);
         }
 
     }
