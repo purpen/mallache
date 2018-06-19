@@ -197,6 +197,7 @@ class DesignProjectController extends BaseController
             $item = DesignProject::where('name' , $request->input('name'))
                 ->where('design_company_id' , $design_company_id)
                 ->where('project_type' , 2)
+                ->where('status' , 1)
                 ->first();
             if($item){
                 throw new MassageException('该项目名称已经存在，请换个名称', 412);
