@@ -251,8 +251,8 @@ class DemandController extends BaseController
                 $all['contact_name'] = $demand_company->contact_name;
                 $all['phone'] = $demand_company->phone;
                 $all['email'] = $demand_company->email;
-                $all['stage_status'] = 2;
             }
+            $all['stage_status'] = 2;
 
             $item->update($all);
         } catch (\Exception $e) {
