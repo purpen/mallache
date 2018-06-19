@@ -406,6 +406,11 @@ class TaskController extends BaseController
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
+        //检查是否是任务成员，不是不能更改
+        $taskUser = TaskUser::where('task_id' , $id)->orWhere('selected_user_id' , $user_id)->orWhere('user_id' , $user_id)->first();
+        if(!$taskUser){
+            return $this->response->array($this->apiError('没有权限更改任务', 403));
+        }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
         if($itemUser == false){
@@ -523,6 +528,11 @@ class TaskController extends BaseController
                     DB::rollBack();
                     return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
                 }
+                //检查是否是任务成员，不是不能更改
+                $taskUser = TaskUser::where('task_id' , $task->pid)->orWhere('selected_user_id' , $this->auth_user_id)->orWhere('user_id' , $this->auth_user_id)->first();
+                if(!$taskUser){
+                    return $this->response->array($this->apiError('没有权限更改任务', 403));
+                }
                 //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
                 if($stage == 0){
                     if($p_task->sub_finfished_count == 0){
@@ -600,6 +610,17 @@ class TaskController extends BaseController
         }
         $task->execute_user_id = $execute_user_id;
         if($task->save()){
+            //检查又没有创建过任务成员，创建过返回，没有创建过创建
+            $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+            if(!$find_task_user){
+                $task_user = new TaskUser();
+                $task_user->user_id = $this->auth_user_id;
+                $task_user->task_id = $task_id;
+                $task_user->selected_user_id = $execute_user_id;
+                $task_user->type = 1;
+                $task_user->status = 1;
+                $task_user->save();
+            }
             return $this->response->array($this->apiSuccess());
         }
     }
