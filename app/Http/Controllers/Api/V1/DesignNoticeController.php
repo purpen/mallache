@@ -90,13 +90,14 @@ class DesignNoticeController extends BaseController
             return $this->response->array($this->apiSuccess());
         }
 
-        $design_notice->is_read = 1;
-        $design_notice->save();
+        if ($design_notice->is_read == 0){
+            $design_notice->is_read = 1;
+            $design_notice->save();
 
-        // 设计通知数量减少
-        $user = $this->auth_user;
-        $user->designNoticeCount();
-
+            // 设计通知数量减少
+            $user = $this->auth_user;
+            $user->designNoticeCount();
+        }
 
         return $this->response->array($this->apiSuccess());
     }
