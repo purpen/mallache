@@ -85,7 +85,7 @@ class UDesignInfoController extends BaseController
             $item->design_types = $request->input('design_types');
             $item->save();
 
-            $all['complete_content'] = implode('&', $all['complete_content']);
+            $all['complete_content'] = implode('&', (int)$all['complete_content']);
             $all['other_content'] = $request->input('other_content') ?? '';
             $all['product_features'] = $request->input('product_features') ?? '';
 
