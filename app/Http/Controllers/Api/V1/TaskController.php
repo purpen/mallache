@@ -407,7 +407,7 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         //检查是否是任务成员，不是不能更改
-        $taskUser = TaskUser::where('task_id' , $id)->where('user_id' , $user_id)->orWhere('selected_user_id' , $user_id)->first();
+        $taskUser = TaskUser::where('task_id' , $id)->where('selected_user_id' , $user_id)->first();
         if(!$taskUser){
             return $this->response->array($this->apiError('没有权限更改任务', 403));
         }
@@ -529,7 +529,7 @@ class TaskController extends BaseController
                     return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
                 }
                 //检查是否是任务成员，不是不能更改
-                $taskUser = TaskUser::where('task_id' , $task->pid)->where('user_id' , $this->auth_user_id)->orWhere('selected_user_id' , $this->auth_user_id)->first();
+                $taskUser = TaskUser::where('task_id' , $task->pid)->where('selected_user_id' , $this->auth_user_id)->first();
                 if(!$taskUser){
                     return $this->response->array($this->apiError('没有权限更改任务', 403));
                 }
