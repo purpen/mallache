@@ -224,7 +224,7 @@ class Item extends BaseModel
                     'name' => $item->name,
                     'stage' => $info->stage,
                     'stage_value' => $info->stage_value,
-                    'complete_content' => $info->complete_content,
+                    'complete_content' => explode('&', (int)$info->complete_content),
                     'other_content' => $info->other_content,
                     'design_cost' => $item->design_cost,
                     'design_cost_value' => $item->design_cost_value,
@@ -262,7 +262,7 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
-                    'product_features' => $item->product_features,
+                    'product_features' => $info->product_features,
 
                 ];
                 break;
