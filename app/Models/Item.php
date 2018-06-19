@@ -291,6 +291,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'product_features' => $item->product_features,
+
                 ];
                 break;
         }
