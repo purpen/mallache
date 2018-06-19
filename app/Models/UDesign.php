@@ -40,6 +40,7 @@ class UDesign extends BaseModel
 //        'summary',
 //        'artificial',
         'industry',
+        'product_features',
     ];
 
     //一对一关联项目表
