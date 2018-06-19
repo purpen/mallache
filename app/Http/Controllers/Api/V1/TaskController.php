@@ -401,6 +401,7 @@ class TaskController extends BaseController
     {
         $user_id = $this->auth_user_id;
 
+        $execute_user_id = $request->input('execute_user_id');
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
@@ -416,6 +417,7 @@ class TaskController extends BaseController
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
+
         $all = $request->except(['token']);
         //不为空标签时，合并数组
         if(!empty($all['tags'])){
@@ -430,8 +432,9 @@ class TaskController extends BaseController
             $tasks['tagsAll'] = Tag::whereIn('id' , $new_tags)->get();
 
         }
-        if (!$tasks) {
-            return $this->response->array($this->apiError());
+        if($execute_user_id == 0){
+            $tasks->execute_user_id = 0;
+            $tasks->save();
         }
         return $this->response->item($tasks, new TaskChildTransformer())->setMeta($this->apiMeta());
 
