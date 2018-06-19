@@ -157,6 +157,10 @@ class Tools
         if (!$user) {
             return $data;
         }
+        if($user->design_notice_count < 0){
+            $user->design_notice_count = 0;
+            $user->save();
+        }
 
         if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
         if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
