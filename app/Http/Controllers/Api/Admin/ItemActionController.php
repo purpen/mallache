@@ -303,6 +303,7 @@ class ItemActionController extends Controller
         $all['contact_name'] = $demand_company->contact_name;
         $all['phone'] = $demand_company->phone;
         $all['email'] = $demand_company->email;
+        $all['position'] = $demand_company->position;
         $all['status'] = 3;
 
         $item->update($all);
