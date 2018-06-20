@@ -770,7 +770,7 @@ class DesignProjectController extends BaseController
      * @apiName designProject collect
      * @apiGroup designProject
      *
-     * @apiParam {int} id
+     * @apiParam {int} item_id 项目id
      * @apiParam {int} collect 0.默认 1.收藏
      * @apiParam {string} token
      *
@@ -784,18 +784,15 @@ class DesignProjectController extends BaseController
      */
     public function collect(Request $request)
     {
-        $id = $request->input('id');
+        $item_id = $request->input('item_id');
         $collect = $request->input('collect');
         $user_id = $this->auth_user_id;
 
-        if (!$this->auth_user->isDesignAdmin()) {
-            throw new MassageException('无权限', 403);
-        }
         if (!$design_company_id = User::designCompanyId($user_id)) {
             throw new MassageException('无权限', 403);
         }
 
-        $design_project = DesignProject::where(['id' => $id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
+        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
         if (!$design_project) {
             return $this->response->array($this->apiSuccess());
         }
