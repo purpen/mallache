@@ -804,8 +804,12 @@ class DesignProjectController extends BaseController
         }
 
         $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
-        if(!$collect_item){
-
+        if($collect_item) {
+            $collect_item->collect = $collect;
+            if($collect_item->save()){
+                return $this->response->array($this->apiSuccess());
+            }
+        }else{
             $collectItem = new CollectItem();
             $collectItem->item_id = $item_id;
             $collectItem->user_id = $user_id;
