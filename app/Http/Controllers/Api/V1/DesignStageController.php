@@ -303,6 +303,26 @@ class DesignStageController extends BaseController
         $lists = DesignStage::with('designSubstage')
             ->where('design_project_id', $design_project_id)
             ->get();
+        if(!empty($lists)){
+            foreach ($lists as $list){
+                //总天数
+                $count = $list->duration;
+                //子天数
+                $childCount = 0;
+                $subStages = DesignSubstage::where('design_stage_id' , $list->id)->where('status' , 1)->get();
+                if(!empty($subStages)){
+                    foreach ($subStages as $subStage){
+                        $childCount += $subStage->duration;
+                    }
+                    if($childCount != 0){
+                        $list['statistical'] = round(($childCount / $count) * 100);
+                    } else {
+                        $list['statistical'] = 0;
+                    }
+                }
+            }
+        }
+
 
         return $this->response->collection($lists, new DesignStageTransformer())->setMeta($this->apiMeta());
     }

@@ -43,6 +43,7 @@ class DesignStage extends BaseModel
             'content' => $this->content,
             'user_id' => intval($this->user_id),
             'status' => intval($this->status),
+            'statistical' => intval($this->statistical),
             'design_substage' => $arr,
         ];
     }

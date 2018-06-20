@@ -37,14 +37,11 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
-     * @apiParam {integer} stage_status //阶段；1.项目名称；2.需求类型；3.详细信息
+     * @apiParam {json} design_types 设计类别：UXUI设计（1.app设计；2.网页设计；）。
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {array} complete_content 已完成设计内容：
-     * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2个月；4.2-4个月；5.其他
-     * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-     * @apiParam {integer} province 省份
-     * @apiParam {integer} city 城市
-     * @apiParam {integer} industry 行业
+     * @apiParam {string} other_content 其他设计内容：
+     * @apiParam {string} product_features 项目需求描述
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -68,11 +65,6 @@ class UDesignInfoController extends BaseController
         $rules = [
             'stage' => ['required', 'integer', Rule::in([1, 2])],
             'complete_content' => 'array',
-            'design_cost' => ['required', 'integer'],
-            'province' => 'required|integer',
-            'city' => 'required|integer',
-            'cycle' => 'required|integer',
-            'industry' => 'required|integer',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -89,11 +81,14 @@ class UDesignInfoController extends BaseController
                 return $this->response->array($this->apiError('not found!', 404));
             }
 
-            $item->stage_status = $request->input('stage_status') ?? 3;
+            $item->stage_status = 3;
+            $item->design_types = $request->input('design_types');
             $item->save();
 
             $all['complete_content'] = implode('&', $all['complete_content']);
+
             $all['other_content'] = $request->input('other_content') ?? '';
+            $all['product_features'] = $request->input('product_features') ?? '';
 
             $design = UDesign::firstOrCreate(['item_id' => intval($item_id)]);
             $design->update($all);

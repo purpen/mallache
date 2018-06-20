@@ -99,7 +99,7 @@ class ItemUser extends BaseModel
     public static function getItemUserArr(int $item_user_id)
     {
         $user_id_arr = ItemUser::select('user_id')
-            ->where('id', $item_user_id)
+            ->where('item_id', $item_user_id)
             ->get()->pluck('user_id')->all();
 
         return $user_id_arr;

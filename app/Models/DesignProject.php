@@ -201,6 +201,7 @@ class DesignProject extends BaseModel
         } else {
             $user_name = '';
         }
+        $collectItem = CollectItem::where('item_id' , $this->id)->where('user_id' , $this->user_id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -249,7 +250,7 @@ class DesignProject extends BaseModel
             'design_types' => json_decode($this->design_types),
             'design_types_value' => $this->design_types_value,
             'project_demand' => $this->project_demand,
-            'collect' => intval($this->collect),
+            'collect' => $collectItem ? $collectItem->collect : 0,
             'user_name' => $user_name,
         ];
     }

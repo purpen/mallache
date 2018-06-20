@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Transformer\TaskUserTransformer;
 use App\Http\Transformer\UserTaskUserTransformer;
 use App\Http\Transformer\UserTransformer;
+use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -220,6 +221,14 @@ class TaskUserController extends BaseController
         //检验是否存在
         if (!$taskUsers) {
             return $this->response->array($this->apiError('not found!', 404));
+        }
+        //查看任务是否存在
+        $task = Task::find($task_id);
+        if(!$task){
+            return $this->response->array($this->apiError('not found task!', 404));
+        }
+        if($task->execute_user_id == $selected_user_id){
+            return $this->response->array($this->apiError('删除的成员是任务执行人，不能删除!', 403));
         }
 
         $ok = $taskUsers->delete();

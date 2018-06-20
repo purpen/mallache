@@ -59,6 +59,10 @@ class Kernel extends ConsoleKernel
 
         // 同步需求项目名称到item表
         Commands\UpdateItemName::class,
+        // 同步项目中产品UI老数据
+        Commands\UpdateItemUProductDesign::class,
+
+
 
 
     ];

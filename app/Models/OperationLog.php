@@ -195,7 +195,7 @@ class OperationLog extends BaseModel
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'logo_image' => $this->user->logo_image,
+            'logo_image' => $this->user ? $this->user->logo_image : '',
             'action_type' => $this->action_type,
             'type' => $this->type,
             'model_id' => $this->model_id,

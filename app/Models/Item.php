@@ -33,6 +33,11 @@ class Item extends BaseModel
         'status_value',
         'company_size_value',
         'design_types_value',
+        'industry_value',
+        'cycle_value',
+        'design_cost_value',
+        'province_value',
+        'city_value',
     ];
 
     //一对一关联UX UI设计表
@@ -124,6 +129,7 @@ class Item extends BaseModel
                 'design_type' => 0,
                 'source' => $source,
                 'name' => $name,
+                'stage_status' => 1,
             ]);
         if ($item) {
             event(new ItemStatusEvent($item));
@@ -167,19 +173,19 @@ class Item extends BaseModel
 
                     'field' => $info->field,
                     'field_value' => $info->field_value,
-                    'industry' => $info->industry,
-                    'industry_value' => $info->industry_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
                     'name' => $item->name,
                     'product_features' => $info->product_features,
                     'competing_product' => explode('&', $info->competing_product),
-                    'cycle' => $info->cycle,
-                    'cycle_value' => $info->cycle_value,
-                    'design_cost' => $info->design_cost,
-                    'design_cost_value' => $info->design_cost_value,
-                    'province' => $info->province,
-                    'city' => $info->city,
-                    'province_value' => $info->province_value,
-                    'city_value' => $info->city_value,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
                     'image' => $info->image,
 
                     'price' => $price,
@@ -220,8 +226,8 @@ class Item extends BaseModel
                     'type_value' => $item->type_value,
                     'design_types' => json_decode($item->design_types),
                     'design_types_value' => $item->design_types_value,
-                    'industry' => $info->industry,
-                    'industry_value' => $info->industry_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
                     'status' => $item->status,
                     'status_value' => $item->status_value,
                     'design_status_value' => $item->design_status_value,
@@ -231,12 +237,12 @@ class Item extends BaseModel
                     'stage_value' => $info->stage_value,
                     'complete_content' => $info->complete_content,
                     'other_content' => $info->other_content,
-                    'design_cost' => $info->design_cost,
-                    'design_cost_value' => $info->design_cost_value,
-                    'province' => $info->province,
-                    'city' => $info->city,
-                    'province_value' => $info->province_value,
-                    'city_value' => $info->city_value,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
                     'image' => $info->image,
 
                     'price' => $price,
@@ -246,8 +252,8 @@ class Item extends BaseModel
                     'commission_rate' => $item->commission_rate,
 
                     'stage_status' => (int)$item->stage_status,
-                    'cycle' => $info->cycle,
-                    'cycle_value' => $info->cycle_value,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
 
                     'company_name' => $item->company_name,
                     'company_abbreviation' => $item->company_abbreviation,
@@ -267,6 +273,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'product_features' => $info->product_features,
+
                 ];
                 break;
         }
@@ -345,58 +353,63 @@ class Item extends BaseModel
         $item_type = config('constant.item_type');
 
         $design_types = json_decode($this->design_types, true);
-        $arr = [];
-        if (array_key_exists($this->type, $item_type)) {
-            foreach ($design_types as $v) {
-                if (array_key_exists($v, $item_type[$this->type])) {
-                    $arr[] = $item_type[$this->type][$v];
+        if (empty($design_types)){
+            return [];
+        } else {
+            $arr = [];
+            if (array_key_exists($this->type, $item_type)) {
+                foreach ($design_types as $v) {
+                    if (array_key_exists($v, $item_type[$this->type])) {
+                        $arr[] = $item_type[$this->type][$v];
+                    }
                 }
             }
+            return $arr;
         }
 
-        return $arr;
     }
 
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
-    public function getStageValueAttribute()
-    {
-        switch ($this->stage) {
-            case 1:
-                $stage_value = '已有app／网站，需重新设计';
-                break;
-            case 2:
-                $stage_value = '没有app／网站，需要全新设计';
-                break;
-            default:
-                $stage_value = '';
-        }
-
-        return $stage_value;
-    }
+//    public function getStageValueAttribute()
+//    {
+//        switch ($this->stage) {
+//            case 1:
+//                $stage_value = '已有app／网站，需重新设计';
+//                break;
+//            case 2:
+//                $stage_value = '没有app／网站，需要全新设计';
+//                break;
+//            default:
+//                $stage_value = '';
+//        }
+//
+//        return $stage_value;
+//    }
 
     //已有项目设计内容格式化输出 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；
-    public function getCompleteContentValueAttribute()
-    {
-        switch ($this->complete_content) {
-            case 1:
-                $complete_content_value = '流程图';
-                break;
-            case 2:
-                $complete_content_value = '线框图';
-                break;
-            case 3:
-                $complete_content_value = '页面内容';
-                break;
-            case 4:
-                $complete_content_value = '产品功能需求点';
-                break;
-            case 5:
-                $complete_content_value = $this->other_content;
-                break;
-            default:
-                $complete_content_value = ' ';
-        }
-    }
+//    public function getCompleteContentValueAttribute()
+//    {
+//        switch ($this->complete_content) {
+//            case 1:
+//                $complete_content_value = '流程图';
+//                break;
+//            case 2:
+//                $complete_content_value = '线框图';
+//                break;
+//            case 3:
+//                $complete_content_value = '页面内容';
+//                break;
+//            case 4:
+//                $complete_content_value = '产品功能需求点';
+//                break;
+//            case 5:
+//                $complete_content_value = $this->other_content;
+//                break;
+//            default:
+//                $complete_content_value = ' ';
+//        }
+//        return $complete_content_value;
+//    }
 
     //公司规模
     public function getCompanySizeValueAttribute()
@@ -537,6 +550,66 @@ class Item extends BaseModel
         $status_time_arr[$status] = date("Y-m-d h:i:s");
         $this->status_time = (string)json_encode($status_time_arr);
         $this->save();
+    }
+
+    //所属行业
+    public function getIndustryValueAttribute()
+    {
+        $industries = config('constant.industry');
+        if(!array_key_exists($this->industry, $industries)){
+            return '';
+        }
+        return $industries[$this->industry];
+    }
+    //设计周期
+    public function getCycleValueAttribute()
+    {
+        $item_cycle = config('constant.item_cycle');
+        if(!array_key_exists($this->cycle, $item_cycle)){
+            return '';
+        }
+
+        return $item_cycle[$this->cycle];
+    }
+    //设计费用
+    public function getDesignCostValueAttribute()
+    {
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+        switch ($this->design_cost){
+            case 1:
+                $design_cost_value = '1-5万之间';
+                break;
+            case 2:
+                $design_cost_value = '5-10万之间';
+                break;
+            case 3:
+                $design_cost_value = '10-20万之间';
+                break;
+            case 4:
+                $design_cost_value = '20-30万之间';
+                break;
+            case 5:
+                $design_cost_value = '30-50万之间';
+                break;
+            case 6:
+                $design_cost_value = '50万以上';
+                break;
+            default:
+                $design_cost_value = '';
+        }
+        return $design_cost_value;
+    }
+
+    //省份访问修改器
+    public function getProvinceValueAttribute()
+    {
+        return Tools::cityName($this->item_province) ?? "";
+    }
+
+    //城市访问修改器
+    public function getCityValueAttribute()
+    {
+        return Tools::cityName($this->item_city) ?? "";
     }
 
 }

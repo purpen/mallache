@@ -401,16 +401,23 @@ class TaskController extends BaseController
     {
         $user_id = $this->auth_user_id;
 
+        $execute_user_id = $request->input('execute_user_id');
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
+        }
+        //检查是否是任务成员，不是不能更改
+        $taskUser = TaskUser::where('task_id' , $id)->where('selected_user_id' , $user_id)->first();
+        if(!$taskUser){
+            return $this->response->array($this->apiError('没有权限更改任务', 403));
         }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
+
         $all = $request->except(['token']);
         //不为空标签时，合并数组
         if(!empty($all['tags'])){
@@ -425,8 +432,9 @@ class TaskController extends BaseController
             $tasks['tagsAll'] = Tag::whereIn('id' , $new_tags)->get();
 
         }
-        if (!$tasks) {
-            return $this->response->array($this->apiError());
+        if($execute_user_id == 0){
+            $tasks->execute_user_id = 0;
+            $tasks->save();
         }
         return $this->response->item($tasks, new TaskChildTransformer())->setMeta($this->apiMeta());
 
@@ -523,6 +531,11 @@ class TaskController extends BaseController
                     DB::rollBack();
                     return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
                 }
+                //检查是否是任务成员，不是不能更改
+                $taskUser = TaskUser::where('task_id' , $task->pid)->where('selected_user_id' , $this->auth_user_id)->first();
+                if(!$taskUser){
+                    return $this->response->array($this->apiError('没有权限更改任务', 403));
+                }
                 //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
                 if($stage == 0){
                     if($p_task->sub_finfished_count == 0){
@@ -600,6 +613,17 @@ class TaskController extends BaseController
         }
         $task->execute_user_id = $execute_user_id;
         if($task->save()){
+            //检查又没有创建过任务成员，创建过返回，没有创建过创建
+            $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+            if(!$find_task_user){
+                $task_user = new TaskUser();
+                $task_user->user_id = $this->auth_user_id;
+                $task_user->task_id = $task_id;
+                $task_user->selected_user_id = $execute_user_id;
+                $task_user->type = 1;
+                $task_user->status = 1;
+                $task_user->save();
+            }
             return $this->response->array($this->apiSuccess());
         }
     }
@@ -670,13 +694,13 @@ class TaskController extends BaseController
             $total_count = $no_get + $no_stage + $ok_stage + $overdue;
             if($total_count != 0){
                 //未领取百分比
-                $no_get_percentage = round(($no_get / $total_count) * 100);
+                $no_get_percentage = bcdiv($no_get , $total_count , 2) * 100 ;
                 //未完成百分比
-                $no_stage_percentage = round(($no_stage / $total_count) * 100);
-                //已完成百分比
-                $ok_stage_percentage = round(($ok_stage / $total_count) * 100);
+                $no_stage_percentage = bcdiv($no_stage , $total_count , 2) * 100;
                 //已预期百分比
-                $overdue_percentage = round(100 - $no_get_percentage - $no_stage_percentage - $ok_stage_percentage);
+                $overdue_percentage = bcdiv($overdue , $total_count , 2) * 100;
+                //已完成百分比
+                $ok_stage_percentage = 100 - $no_get_percentage - $no_stage_percentage - $overdue_percentage;
             }else{
                 $no_get_percentage = 0;
                 $no_stage_percentage = 0;
@@ -782,28 +806,28 @@ class TaskController extends BaseController
                 $total_count = $no_get + $no_stage + $ok_stage + $overdue;
                 //未领取百分比
                 if($total_count != 0){
-                    $no_get_percentage = round(($no_get / $total_count) * 100);
+                    $no_get_percentage = bcdiv($no_get , $total_count , 2) * 100 ;
                 }else{
                     $no_get_percentage = 0;
                 }
                 //未完成百分比
                 if($total_count != 0){
-                    $no_stage_percentage = round(($no_stage / $total_count) * 100);
+                    $no_stage_percentage = bcdiv($no_stage , $total_count , 2) * 100;
                 }else{
                     $no_stage_percentage = 0;
                 }
-                //已完成百分比
-                if($total_count != 0){
-                    $ok_stage_percentage = round(($ok_stage / $total_count) * 100);
-                }else {
-                    $ok_stage_percentage = 0;
-                }
                 //已预期百分比
                 if($total_count != 0){
-//                    $overdue_percentage = round(($overdue / $total_count) * 100);
-                    $overdue_percentage = round(100 - $ok_stage_percentage - $no_stage_percentage - $no_get_percentage);
+                    $overdue_percentage = bcdiv($overdue , $total_count , 2) * 100;
+
                 }else{
                     $overdue_percentage = 0;
+                }
+                //已完成百分比
+                if($total_count != 0){
+                    $ok_stage_percentage = 100 - $no_get_percentage - $no_stage_percentage - $overdue_percentage;
+                }else {
+                    $ok_stage_percentage = 0;
                 }
 
                 $statistical = [];

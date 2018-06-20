@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helper\Tools;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class UDesign extends BaseModel
 {
@@ -40,6 +41,7 @@ class UDesign extends BaseModel
 //        'summary',
 //        'artificial',
         'industry',
+        'product_features',
     ];
 
     //一对一关联项目表
@@ -111,7 +113,12 @@ class UDesign extends BaseModel
         if(empty($key)){
             return [];
         }else{
-            return explode('&', $key);
+            $arrayKey = explode('&', $key);
+            //变成整形
+            for($i= 0 ; $i<count($arrayKey) ; $i++){
+                $arrayKey[$i] = intval($arrayKey[$i]);
+            }
+            return $arrayKey;
         }
 
     }

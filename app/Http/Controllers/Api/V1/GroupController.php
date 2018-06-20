@@ -270,6 +270,8 @@ class GroupController extends BaseController
      * @apiGroup group
      * @apiParam {string} token
      * @apiParam {integer} group_id 群组ID
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -288,6 +290,8 @@ class GroupController extends BaseController
      */
     public function groupUserLists(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 判断是否是设计公司管理员
         if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('无权限', 403));
@@ -302,8 +306,10 @@ class GroupController extends BaseController
 
         $group = Group::getGroup($group_id, $company_id);
         if ($group) {
-            $lists = $group->userList();
-            return $this->response->collection($lists, new UserTransformer())->setMeta($this->apiMeta());
+            //分页
+            $user_id_arr = json_decode($group->user_id_arr, true);
+            $lists = User::whereIn('id', $user_id_arr)->paginate($per_page);
+            return $this->response->paginator($lists, new UserTransformer())->setMeta($this->apiMeta());
         }
 
         return $this->response->array($this->apiError('not found', 404));
