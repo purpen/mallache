@@ -127,13 +127,13 @@ class InvoiceController extends BaseController
             return $this->response->array($this->apiError('not found', 404));
         }
 
-        if ($invoice->status == 1) {
+        if ($invoice->status == 2) {
             return $this->response->array($this->apiSuccess());
         }
 
         try {
             DB::beginTransaction();
-            $invoice->status = 1;
+            $invoice->status = 2;
             $invoice->save();
 
             // 完善发票信息
