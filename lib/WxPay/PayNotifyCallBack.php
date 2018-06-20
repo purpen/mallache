@@ -1,8 +1,10 @@
 <?php
+
 namespace Lib\WxPay;
 
 use App\Events\PayOrderEvent;
 use App\Models\PayOrder;
+use App\Servers\Pay\Pay;
 use Illuminate\Support\Facades\Log;
 use Lib\WxPay\lib\WxPayApi;
 use Lib\WxPay\lib\WxPayNotify;
@@ -22,11 +24,10 @@ class PayNotifyCallBack extends WxPayNotify
         $input = new WxPayOrderQuery();
         $input->SetTransaction_id($transaction_id);
         $result = WxPayApi::orderQuery($input);
-        if(array_key_exists("return_code", $result)
+        if (array_key_exists("return_code", $result)
             && array_key_exists("result_code", $result)
             && $result["return_code"] == "SUCCESS"
-            && $result["result_code"] == "SUCCESS")
-        {
+            && $result["result_code"] == "SUCCESS") {
             return true;
         }
         return false;
@@ -37,32 +38,34 @@ class PayNotifyCallBack extends WxPayNotify
     {
         $notfiyOutput = array();
 
-        if(!array_key_exists("transaction_id", $data)){
+        if (!array_key_exists("transaction_id", $data)) {
             $msg = "输入参数不正确";
             return false;
         }
         //查询订单，判断订单真实性
-        if(!$this->Queryorder($data["transaction_id"])){
+        if (!$this->Queryorder($data["transaction_id"])) {
             $msg = "订单查询失败";
             return false;
         }
 
         //网站业务处理
-        if($data['result_code'] === 'SUCCESS'){
-            try{
+        if ($data['result_code'] === 'SUCCESS') {
+            try {
                 $pay_order = PayOrder::where('uid', $data['out_trade_no'])->first();
 
                 //判断是否业务已处理
-                if($pay_order->status === 0){
+                if ($pay_order->status === 0) {
                     $pay_order->pay_type = 3; //微信
                     $pay_order->pay_no = $data['transaction_id'];
                     $pay_order->status = 1; //支付成功
                     $pay_order->save();
 
-                    event(new PayOrderEvent($pay_order));
+                    // 支付成功需要处理的业务
+                    $pay = new Pay($pay_order);
+                    $pay->paySuccess();
+//                    event(new PayOrderEvent($pay_order));
                 }
-            }
-            catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e);
                 $msg = "业务处理失败";
                 return false;

@@ -107,6 +107,12 @@ class Item extends BaseModel
         return $this->hasMany('App\Models\ItemStage', 'item_id');
     }
 
+    // 一对多关联发票invoice
+    public function invoice()
+    {
+        return $this->hasMany('App\Models\Invoice', 'item_id');
+    }
+
     //创建需求表
     public static function createItem($user_id, $name, $source = 0)
     {

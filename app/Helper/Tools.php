@@ -7,6 +7,7 @@
 
 namespace App\Helper;
 
+use App\Jobs\SendOneSms;
 use App\Models\Message;
 use App\Models\User;
 use Gregwar\Captcha\CaptchaBuilder;
@@ -346,5 +347,16 @@ class Tools
 
         return $shortUrl;
 
+    }
+
+    // 向用户发送系统信息
+    public static function sendSmsToPhone($phone, $content)
+    {
+        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+
+        // 判断短信通知是否开启
+        if (config('constant.sms_send')) {
+            dispatch(new SendOneSms($phone, $text));
+        }
     }
 }

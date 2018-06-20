@@ -6,9 +6,9 @@ class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type','item_id', 'summary', 'amount', 'bank_id','pay_type'];
+    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id'];
 
-    protected $appends = ['status_value', 'pay_type_value','bank'];
+    protected $appends = ['status_value', 'pay_type_value', 'bank'];
 
     //一对一相对关联用户表
     public function user()
@@ -24,7 +24,7 @@ class PayOrder extends BaseModel
     //支付状态值
     public function getStatusValueAttribute()
     {
-        switch ($this->status){
+        switch ($this->status) {
             case -1:
                 $val = '已关闭';
                 break;
@@ -46,7 +46,7 @@ class PayOrder extends BaseModel
     //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
     public function getPayTypeValueAttribute()
     {
-        switch ($this->pay_type){
+        switch ($this->pay_type) {
             case 1:
                 $val = '自平台';
                 break;
@@ -71,9 +71,9 @@ class PayOrder extends BaseModel
     public function getBankAttribute()
     {
         $bank_id = $this->bank_id;
-        if(array_key_exists($bank_id, config('constant.bank'))){
+        if (array_key_exists($bank_id, config('constant.bank'))) {
             $bank = config('constant.bank')[$bank_id];
-        }else{
+        } else {
             $bank = '';
         }
         return $bank;
