@@ -443,7 +443,7 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/itemBankPay/{pay_order_id} 支付项目尾款--公对公银行转账
+     * @api {get} /pay/itemBankPay/{pay_order_id} 支付项目款--公对公银行转账
      * @apiVersion 1.0.0
      * @apiName pay itemBankPay
      * @apiGroup pay

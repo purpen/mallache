@@ -28,10 +28,35 @@ class InvoiceController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
+     *      "data": [
+     *          {
+     *              "id": 1,
+     *              "type": 2,  // 收发类型：1. 收 2. 开
+     *              "pay_type": 1, // 支付类型： 1. 首付款 2. 阶段款
+     *              "company_type": 1, //公司类型 1. 需求公司 2. 设计公司
+     *              "target_id": 9,     // 公司ID
+     *              "company_name": "", // 公司名称
+     *              "duty_number": "",  // 税号
+     *              "price": "19080.00", // 金额
+     *              "item_id": 181, // 项目ID
+     *              "item_stage_id": null, // 项目阶段
+     *              "user_id": null, // 操作用户
+     *              "summary": "", // 备注
+     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *          }
+     *      ],
+     *          "meta": {
+     *              "message": "Success",
+     *              "status_code": 200,
+     *              "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *      }
      * }
      */
     public function pullLists(Request $request)
@@ -72,10 +97,35 @@ class InvoiceController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     *  "meta": {
-     *    "code": 200,
-     *    "message": "Success.",
-     *  }
+     *      "data": [
+     *          {
+     *              "id": 1,
+     *              "type": 2,  // 收发类型：1. 收 2. 开
+     *              "pay_type": 1, // 支付类型： 1. 首付款 2. 阶段款
+     *              "company_type": 1, //公司类型 1. 需求公司 2. 设计公司
+     *              "target_id": 9,     // 公司ID
+     *              "company_name": "", // 公司名称
+     *              "duty_number": "",  // 税号
+     *              "price": "19080.00", // 金额
+     *              "item_id": 181, // 项目ID
+     *              "item_stage_id": null, // 项目阶段
+     *              "user_id": null, // 操作用户
+     *              "summary": "", // 备注
+     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *          }
+     *      ],
+     *          "meta": {
+     *              "message": "Success",
+     *              "status_code": 200,
+     *              "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *          }
+     *      }
      * }
      */
     public function pushLists(Request $request)
@@ -134,6 +184,7 @@ class InvoiceController extends BaseController
         try {
             DB::beginTransaction();
             $invoice->status = 2;
+            $invoice->user_id = $this->auth_user_id;
             $invoice->save();
 
             // 完善发票信息
