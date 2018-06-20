@@ -33,6 +33,11 @@ class Item extends BaseModel
         'status_value',
         'company_size_value',
         'design_types_value',
+        'industry_value',
+        'cycle_value',
+        'design_cost_value',
+        'province_value',
+        'city_value',
     ];
 
     //一对一关联UX UI设计表
@@ -359,46 +364,46 @@ class Item extends BaseModel
     }
 
     //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
-    public function getStageValueAttribute()
-    {
-        switch ($this->stage) {
-            case 1:
-                $stage_value = '已有app／网站，需重新设计';
-                break;
-            case 2:
-                $stage_value = '没有app／网站，需要全新设计';
-                break;
-            default:
-                $stage_value = '';
-        }
-
-        return $stage_value;
-    }
+//    public function getStageValueAttribute()
+//    {
+//        switch ($this->stage) {
+//            case 1:
+//                $stage_value = '已有app／网站，需重新设计';
+//                break;
+//            case 2:
+//                $stage_value = '没有app／网站，需要全新设计';
+//                break;
+//            default:
+//                $stage_value = '';
+//        }
+//
+//        return $stage_value;
+//    }
 
     //已有项目设计内容格式化输出 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；
-    public function getCompleteContentValueAttribute()
-    {
-        switch ($this->complete_content) {
-            case 1:
-                $complete_content_value = '流程图';
-                break;
-            case 2:
-                $complete_content_value = '线框图';
-                break;
-            case 3:
-                $complete_content_value = '页面内容';
-                break;
-            case 4:
-                $complete_content_value = '产品功能需求点';
-                break;
-            case 5:
-                $complete_content_value = $this->other_content;
-                break;
-            default:
-                $complete_content_value = ' ';
-        }
-        return $complete_content_value;
-    }
+//    public function getCompleteContentValueAttribute()
+//    {
+//        switch ($this->complete_content) {
+//            case 1:
+//                $complete_content_value = '流程图';
+//                break;
+//            case 2:
+//                $complete_content_value = '线框图';
+//                break;
+//            case 3:
+//                $complete_content_value = '页面内容';
+//                break;
+//            case 4:
+//                $complete_content_value = '产品功能需求点';
+//                break;
+//            case 5:
+//                $complete_content_value = $this->other_content;
+//                break;
+//            default:
+//                $complete_content_value = ' ';
+//        }
+//        return $complete_content_value;
+//    }
 
     //公司规模
     public function getCompanySizeValueAttribute()
