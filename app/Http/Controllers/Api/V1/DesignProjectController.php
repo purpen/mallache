@@ -7,6 +7,7 @@ use App\Http\Middleware\OperationLogs;
 use App\Http\Transformer\DesignProjectStatisticalTransformer;
 use App\Http\Transformer\DesignProjectTransformer;
 use App\Models\AssetModel;
+use App\Models\CollectItem;
 use App\Models\Contract;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignProject;
@@ -97,10 +98,14 @@ class DesignProjectController extends BaseController
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
 
+        //获取收藏的所有项目id
+        $collectId = CollectItem::collectId($this->auth_user_id , $status , $collect);
+
         if ($collect == 1){
             $lists = DesignProject::where('status', $status)
                 ->where('collect', $collect)
                 ->whereIn('id', $arr)
+                ->whereIn('id', $collectId)
                 ->paginate($per_page);
         } else {
             if ($user_status == 1){
@@ -789,18 +794,28 @@ class DesignProjectController extends BaseController
         $user_id = $this->auth_user_id;
 
         if (!$design_company_id = User::designCompanyId($user_id)) {
-            throw new MassageException('无权限', 403);
+            return $this->response->array($this->apiError('没有找到设计公司', 404));
+
         }
 
         $design_project = DesignProject::where(['id' => $item_id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
         if (!$design_project) {
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('没有找到该项目', 404));
         }
 
-        $design_project->collect = $collect;
-        $design_project->save();
+        $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
+        if(!$collect_item){
 
-        return $this->response->array($this->apiSuccess());
+            $collectItem = new CollectItem();
+            $collectItem->item_id = $item_id;
+            $collectItem->user_id = $user_id;
+            $collectItem->collect = $collect;
+
+            if($collectItem->save()){
+                return $this->response->array($this->apiSuccess());
+            }
+        }
+
     }
 
     /**
