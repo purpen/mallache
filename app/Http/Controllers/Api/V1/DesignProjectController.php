@@ -798,7 +798,7 @@ class DesignProjectController extends BaseController
 
         }
 
-        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
+        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
         if (!$design_project) {
             return $this->response->array($this->apiError('没有找到该项目', 404));
         }
