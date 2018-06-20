@@ -803,7 +803,7 @@ class DesignProjectController extends BaseController
             return $this->response->array($this->apiError('没有找到该项目', 404));
         }
 
-        $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
+        $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->where('design_company_id' , $design_company_id)->first();
         if($collect_item) {
             $collect_item->collect = $collect;
             if($collect_item->save()){
