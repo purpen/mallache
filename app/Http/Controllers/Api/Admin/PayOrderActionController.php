@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Events\PayOrderEvent;
 use App\Http\AdminTransformer\PayOrderTransformer;
 use App\Models\PayOrder;
-use App\Servers\Pay\Pay;
+use App\Servers\Pay;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

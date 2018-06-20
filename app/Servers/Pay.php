@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Servers\Pay;
+namespace App\Servers;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\ItemCommissionAction;

@@ -10,7 +10,7 @@ use App\Models\AssetModel;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
-use App\Servers\Pay\Pay;
+use App\Servers\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
