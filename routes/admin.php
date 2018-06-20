@@ -315,7 +315,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // api {get} /admin/invoice/pushLists 需要平台给需求公司开具发票列表
         $api->get('/admin/invoice/pushLists', 'InvoiceController@pushLists');
         // api {put} /admin/invoice/trueInvoice 确认发票已开
-        $api->get('/admin/invoice/trueInvoice', 'InvoiceController@trueInvoice');
+        $api->put('/admin/invoice/trueInvoice', 'InvoiceController@trueInvoice');
 
     });
 
