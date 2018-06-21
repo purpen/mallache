@@ -432,9 +432,23 @@ class TaskController extends BaseController
             $tasks['tagsAll'] = Tag::whereIn('id' , $new_tags)->get();
 
         }
+        //主任务没有执行人时，同时移除子账户的执行人
         if($execute_user_id == 0){
             $tasks->execute_user_id = 0;
-            $tasks->save();
+            if($tasks->save()){
+                $childTasks = Task::where('pid' , $id)->get();
+                foreach ($childTasks as $childTask){
+                    $childTask->execute_user_id = 0;
+                    $childTask->save();
+                }
+            }
+        }else{
+            //不等于零时同时更新子任务的执行人
+            $childTasks = Task::where('pid' , $id)->get();
+            foreach ($childTasks as $childTask){
+                $childTask->execute_user_id = $execute_user_id;
+                $childTask->save();
+            }
         }
         return $this->response->item($tasks, new TaskChildTransformer())->setMeta($this->apiMeta());
 
