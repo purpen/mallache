@@ -410,11 +410,6 @@ class TaskController extends BaseController
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-//        //检查是否是任务成员，不是不能更改
-//        $taskUser = TaskUser::where('task_id' , $id)->where('selected_user_id' , $user_id)->first();
-//        if(!$taskUser){
-//            return $this->response->array($this->apiError('没有权限更改任务', 403));
-//        }
         //检测执行者与登录id是否是一个人，或者是否是创建者
         if($tasks->isUserExecute($user_id) == false){
             return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));

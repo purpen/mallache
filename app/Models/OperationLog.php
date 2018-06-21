@@ -10,7 +10,7 @@ class OperationLog extends BaseModel
     protected $table = 'operation_log';
 
     protected $action_type_config = [
-        'task' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],  // 任务--动作类型
+        'task' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ,19, 20, 21],  // 任务--动作类型
         'tags' => [11 , 12],  // 标签--动作类型
         'item_user' => [13 , 14],  // 项目人员--动作类型
         'commune_summaries' => [15 , 16 , 17],  // 沟通纪要--动作类型
@@ -37,6 +37,9 @@ class OperationLog extends BaseModel
         '16' => ' 修改沟通纪要',  // 修改沟通纪要
         '17' => ' 删除沟通纪要',  // 删除沟通纪要
         '18' => ' 退出了该项目',  // 退出了该项目
+        '19' => ' 认领了',  // 谁认领了
+        '20' => ' 指派给了',  // 谁指派了给谁
+        '21' => ' 移除了执行者',  // 谁移除了执行者
     ];
 
     //关联操作用户
@@ -190,6 +193,15 @@ class OperationLog extends BaseModel
             case 18:
                 $str = $this->userOutItem();
                 break;
+            case 19:
+                $str = $this->userClaimTask();
+                break;
+            case 20:
+                $str = $this->userAssignTask();
+                break;
+            case 21:
+                $str = $this->userDelTask();
+                break;
         }
 
         return [
@@ -338,6 +350,24 @@ class OperationLog extends BaseModel
     public function userOutItem()
     {
         return $this->user->getUserName() . $this->title_config['18'];
+    }
+
+    //认领了
+    public function userClaimTask()
+    {
+        return $this->user->getUserName() . $this->title_config['19'];
+    }
+
+    //指派给了
+    public function userAssignTask()
+    {
+        return $this->user->getUserName() . $this->title_config['20'] . $this->otherUser->getUserName();
+    }
+
+    //移除了执行者
+    public function userDelTask()
+    {
+        return $this->user->getUserName() . $this->title_config['21'];
     }
 
 }
