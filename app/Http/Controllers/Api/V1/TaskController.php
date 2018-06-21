@@ -612,13 +612,6 @@ class TaskController extends BaseController
         }
         $task->execute_user_id = $execute_user_id;
         if($task->save()){
-            //主任务没有执行人时，同时移除子账户的执行人 不等于零时同时更新子任务的执行人
-            $childTasks = Task::where('pid' , $task_id)->get();
-            foreach ($childTasks as $childTask){
-                $childTask->execute_user_id = $execute_user_id;
-                $childTask->save();
-            }
-
             //检查又没有创建过任务成员，创建过返回，没有创建过创建
             $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
             if(!$find_task_user){
