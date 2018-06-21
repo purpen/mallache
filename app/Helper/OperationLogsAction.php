@@ -115,6 +115,7 @@ class OperationLogsAction
     //创建任务，子任务
     public function createTask()
     {
+        Log::info(111);
         $response_content = $this->getResponseContent();
         $item_id = intval($this->request->input('item_id'));
         $target_id = $response_content['data']['id'];
