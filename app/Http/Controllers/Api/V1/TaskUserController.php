@@ -227,10 +227,10 @@ class TaskUserController extends BaseController
         if(!$task){
             return $this->response->array($this->apiError('not found task!', 404));
         }
-        if($task->execute_user_id == $selected_user_id){
-            return $this->response->array($this->apiError('删除的成员是任务执行人，不能删除!', 403));
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($task->isUserExecute($this->auth_user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
         }
-
         $ok = $taskUsers->delete();
         if (!$ok) {
             return $this->response->array($this->apiError());
@@ -284,6 +284,14 @@ class TaskUserController extends BaseController
         $taskUsers = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $selected_user_id)->first();
         if($taskUsers){
             return $this->response->array($this->apiError('已存在该任务成员', 412));
+        }
+        $task = Task::find($task_id);
+        if(!$task){
+            return $this->response->array($this->apiError('该任务不存在', 404));
+        }
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($task->isUserExecute($this->auth_user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
         }
         $taskUsers = TaskUser::create($params);
 
