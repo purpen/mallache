@@ -412,7 +412,7 @@ class TaskController extends BaseController
 //            return $this->response->array($this->apiError('没有权限更改任务', 403));
 //        }
         //检测执行者与登录id是否是一个人，或者是否是创建者
-        if($tasks->execute_user_id !== $this->auth_user_id && $tasks->user_id !== $this->auth_user_id){
+        if($tasks->isUserExecute($user_id) == false){
             return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，不能点击完成!', 403));
         }
         //检查是否有查看的权限
@@ -505,6 +505,10 @@ class TaskController extends BaseController
         if(!$task){
             return $this->response->array($this->apiError('not found task!', 404));
         }
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($task->isUserExecute($this->auth_user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+        }
         try {
             DB::beginTransaction();
             //主任务走上面，子任务走下面
@@ -517,10 +521,6 @@ class TaskController extends BaseController
                         return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
                     }
                 }
-                //检测执行者与登录id是否是一个人，或者是否是创建者
-                if($task->execute_user_id !== $this->auth_user_id && $task->user_id !== $this->auth_user_id){
-                    return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，不能点击完成!', 403));
-                }
                 $ok = $task::isStage($task_id , $stage);
             }else{
                 // 查找任务，任务id为子任务pid的任务
@@ -528,11 +528,6 @@ class TaskController extends BaseController
                 if(!$p_task){
                     DB::rollBack();
                     return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
-                }
-                //检查是否是任务成员，不是不能更改
-                $taskUser = TaskUser::where('task_id' , $task->pid)->where('selected_user_id' , $this->auth_user_id)->first();
-                if(!$taskUser){
-                    return $this->response->array($this->apiError('没有权限更改任务', 403));
                 }
 
                 //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
@@ -605,6 +600,10 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('没有找到该任务!', 404));
         }
         $user_id = $this->auth_user_id;
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($task->isUserExecute($user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+        }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($item_id , $user_id);
         if($itemUser == false){
