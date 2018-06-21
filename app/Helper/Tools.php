@@ -69,16 +69,18 @@ class Tools
      * @param string $message 消息内容
      * @param int $type 消息类型：1.系统通知。2.项目通知。3.资金通知
      * @param int $target_id 目标ID
+     * @param int $item_status 项目状态
      * @return bool 返回值
      */
-    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null)
+    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
     {
         $message = Message::create([
             'user_id' => $user_id,
             'title' => $title,
             'content' => $message,
             'type' => $type,
-            'target_id' => $target_id
+            'target_id' => $target_id,
+            'item_status' => $item_status,
         ]);
 
         if ($message) {
@@ -158,7 +160,7 @@ class Tools
         if (!$user) {
             return $data;
         }
-        if($user->design_notice_count < 0){
+        if ($user->design_notice_count < 0) {
             $user->design_notice_count = 0;
             $user->save();
         }

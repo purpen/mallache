@@ -127,7 +127,7 @@ class ItemMessageListener
         $tools = new Tools();
         $title = '查看匹配结果';
         $content = '您好，铟果平台为您的【' . $item_info['name'] . '】项目匹配了适合您的设计服务供应商';
-        $tools->message($item->user_id, $title, $content, 2, $item->id);
+        $tools->message($item->user_id, $title, $content, 2, $item->id, $item->status);
 
         //给项目联系人发送信息
         $this->sendSmsToPhone($item->phone, $content);

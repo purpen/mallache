@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Transformer;
 
 use App\Models\Message;
@@ -17,12 +18,13 @@ class MessageTransformer extends TransformerAbstract
             'created_at' => $message->created_at,
             'status' => $message->status,
             'is_url' => $this->isUrl((int)$message->type),
+            'item_status' => $message->item_status,
         ];
     }
 
     protected function isUrl($type)
     {
-        switch ($type){
+        switch ($type) {
             case 1:
                 $val = 0;
                 break;
