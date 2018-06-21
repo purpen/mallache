@@ -600,9 +600,9 @@ class TaskController extends BaseController
         }
         $user_id = $this->auth_user_id;
         //检测执行者与登录id是否是一个人，或者是否是创建者
-        if($task->isUserExecute($user_id) == false){
-            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
-        }
+//        if($task->isUserExecute($user_id) == false){
+//            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+//        }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($item_id , $user_id);
         if($itemUser == false){
