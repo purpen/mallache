@@ -149,6 +149,10 @@ class TaskController extends BaseController
                 }else{
                     //查看父id的任务，添加父id里面的子任务数量
                     $task_pid = Task::find($pid);
+                    //检测执行者与登录id是否是一个人，或者是否是创建者
+                    if($task_pid->isUserExecute($this->auth_user_id) == false){
+                        return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+                    }
                     if(!$task_pid){
                         DB::rollBack();
                         return $this->response->array($this->apiError('没有找到父id为'.$pid.'的任务', 404));
@@ -413,7 +417,7 @@ class TaskController extends BaseController
 //        }
         //检测执行者与登录id是否是一个人，或者是否是创建者
         if($tasks->isUserExecute($user_id) == false){
-            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，不能点击完成!', 403));
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
         }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
