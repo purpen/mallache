@@ -63,6 +63,7 @@ class OperationLogs
             '/communeSummaries:put' => 'updateCommuneSummary',  //更改沟通纪要
             '/communeSummaries:delete' => 'deleteCommuneSummary',  //删除沟通纪要
             '/design/restoreMember:put' => 'userOutItem',  //某某退出了该项目
+            '/tasks/executeUser:postt' => 'executeUser',  //某某领取了任务，某某指派给了谁，某某移除了谁
         ];
     }
 
