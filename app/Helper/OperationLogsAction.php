@@ -115,7 +115,6 @@ class OperationLogsAction
     //创建任务，子任务
     public function createTask()
     {
-        Log::info(111);
         $response_content = $this->getResponseContent();
         $item_id = intval($this->request->input('item_id'));
         $target_id = $response_content['data']['id'];
@@ -302,7 +301,7 @@ class OperationLogsAction
     //认领了 , 指派给了 , 移除了执行者
     public function executeUser()
     {
-        Log::info($this->request);
+        Log::info(222);
         $response_content = $this->getResponseContent();
         $target_id = $response_content['data']['id'];
         $execute_user_id = $response_content['data']['execute_user_id'];
