@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformer\DesignStageTransformer;
+use App\Models\AssetModel;
 use App\Models\DesignProject;
 use App\Models\DesignStage;
 use App\Models\DesignSubstage;
@@ -31,6 +32,7 @@ class DesignStageController extends BaseController
      * @apiParam {integer} duration 投入时间
      * @apiParam {integer} start_time 开始时间
      * @apiParam {string} content 交付内容
+     * @apiParam {string} random 随机数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -84,7 +86,11 @@ class DesignStageController extends BaseController
         $design_stage->content = $request->input('content') ?? '';
         $design_stage->user_id = $this->auth_user_id;
         $design_stage->status = 0;
-        $design_stage->save();
+        if($design_stage->save()){
+            if ($random = $request->input('random')) {
+                AssetModel::setRandom($design_stage->id, $random);
+            }
+        }
 
         return $this->response->item($design_stage, new DesignStageTransformer())->setMeta($this->apiMeta());
     }
