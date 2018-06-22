@@ -302,20 +302,24 @@ class OperationLogsAction
     public function executeUser()
     {
         Log::info($this->request);
-        $response_content = $this->getResponseContent();
-        $target_id = $response_content['data']['id'];
-        $execute_user_id = $response_content['data']['execute_user_id'];
-        $item_id = $response_content['data']['item_id'];
+//        $response_content = $this->getResponseContent();
+//        $target_id = $response_content['data']['id'];
+//        $execute_user_id = $response_content['data']['execute_user_id'];
+//        $item_id = $response_content['data']['item_id'];
+        $item_id = intval($this->request->input('item_id'));
+        $task_id = intval($this->request->input('task_id'));
+        $execute_user_id = intval($this->request->input('execute_user_id'));
+
         //移除了执行者
         if ($execute_user_id == 0){
-            $this->createTaskLog($item_id, 21, $target_id, null , null);
+            $this->createTaskLog($item_id, 21, $task_id, null , null);
         } else {
             $user_id = $this->auth_user->id;
             //相等的话领取了任务 ,不等的话指派给了谁
             if ($user_id == $execute_user_id){
-                $this->createTaskLog($item_id, 19, $target_id, null , null);
+                $this->createTaskLog($item_id, 19, $task_id, null , null);
             } else {
-                $this->createTaskLog($item_id, 20, $target_id, $execute_user_id , null);
+                $this->createTaskLog($item_id, 20, $task_id, $execute_user_id , null);
             }
         }
     }
