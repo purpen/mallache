@@ -98,6 +98,6 @@ class OperationLogs
 
         // 支持通配符
         $pattern = str_replace('\*', '.*', $pattern);
-        return (bool)preg_match('#^' . $pattern . '#u', $value);
+        return (bool)preg_match('#^' . $pattern . '$#u', $value);
     }
 }
