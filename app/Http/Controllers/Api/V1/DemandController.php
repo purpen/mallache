@@ -464,7 +464,7 @@ class DemandController extends BaseController
             foreach ($design_company as $designCompany) {
                 //$result['data']['rows']返回的多条数据
                 foreach ($result['data']['rows'] as $newRows){
-                    if ($designCompany->id == $newRows->d3ing_id) {
+                    if ($designCompany->id == $newRows['d3ing_id']) {
                         $designCompany['rows'] = $newRows;
                     }
                 }
