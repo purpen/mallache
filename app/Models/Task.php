@@ -152,7 +152,6 @@ class Task extends BaseModel
      */
     public function isUserExecute(int $user_id)
     {
-        Log::info([$user_id , $this->execute_user_id , $this->user_id]);
         //主任务
         if ($this->pid == 0){
             if (in_array($user_id , [$this->execute_user_id , $this->user_id])){
