@@ -599,30 +599,50 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('没有找到该任务!', 404));
         }
         $user_id = $this->auth_user_id;
-        //检测执行者与登录id是否是一个人，或者是否是创建者
-        if($task->isUserExecute($user_id) == false){
-            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
-        }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($item_id , $user_id);
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
-        $task->execute_user_id = $execute_user_id;
-        if($task->save()){
-            //检查又没有创建过任务成员，创建过返回，没有创建过创建
-            $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
-            if(!$find_task_user){
-                $task_user = new TaskUser();
-                $task_user->user_id = $this->auth_user_id;
-                $task_user->task_id = $task_id;
-                $task_user->selected_user_id = $execute_user_id;
-                $task_user->type = 1;
-                $task_user->status = 1;
-                $task_user->save();
+        //如果登陆用户等于执行者id可以认领，不等于的话需要判断权限
+        if ($user_id = $execute_user_id){
+            $task->execute_user_id = $execute_user_id;
+            if($task->save()){
+                //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+                if(!$find_task_user){
+                    $task_user = new TaskUser();
+                    $task_user->user_id = $this->auth_user_id;
+                    $task_user->task_id = $task_id;
+                    $task_user->selected_user_id = $execute_user_id;
+                    $task_user->type = 1;
+                    $task_user->status = 1;
+                    $task_user->save();
+                }
+                return $this->response->array($this->apiSuccess());
             }
-            return $this->response->array($this->apiSuccess());
+        } else {
+            //检测执行者与登录id是否是一个人，或者是否是创建者
+            if($task->isUserExecute($user_id) == false){
+                return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+            }
+            $task->execute_user_id = $execute_user_id;
+            if($task->save()){
+                //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+                if(!$find_task_user){
+                    $task_user = new TaskUser();
+                    $task_user->user_id = $this->auth_user_id;
+                    $task_user->task_id = $task_id;
+                    $task_user->selected_user_id = $execute_user_id;
+                    $task_user->type = 1;
+                    $task_user->status = 1;
+                    $task_user->save();
+                }
+                return $this->response->array($this->apiSuccess());
+            }
         }
+
     }
 
     /**

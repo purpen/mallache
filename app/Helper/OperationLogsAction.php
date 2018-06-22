@@ -314,7 +314,9 @@ class OperationLogsAction
             if ($user_id == $execute_user_id){
                 $this->createTaskLog($item_id, 19, $task_id, null , $task->name);
             } else {
-                $this->createTaskLog($item_id, 20, $task_id, $execute_user_id , $task->name);
+                $user = User::find($execute_user_id);
+                $content = $user->getUserName();
+                $this->createTaskLog($item_id, 20, $task_id, $execute_user_id , $content.$task->name);
             }
         }
     }
