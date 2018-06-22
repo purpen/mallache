@@ -18,6 +18,12 @@ class ItemStage extends BaseModel
         return $this->belongsTo('App\Models\Item', 'item_id');
     }
 
+    // 一对多关联发票invoice
+    public function invoice()
+    {
+        return $this->hasMany('App\Models\Invoice', 'item_stage_id');
+    }
+
     /**
      * 获取图片附件
      *

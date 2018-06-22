@@ -26,7 +26,6 @@ class Item extends BaseModel
      */
     protected $appends = [
         'type_value',
-        'design_type_value',
         'company_province_value',
         'company_city_value',
         'company_area_value',
@@ -110,6 +109,12 @@ class Item extends BaseModel
     public function itemStage()
     {
         return $this->hasMany('App\Models\ItemStage', 'item_id');
+    }
+
+    // 一对多关联发票invoice
+    public function invoice()
+    {
+        return $this->hasMany('App\Models\Invoice', 'item_id');
     }
 
     //创建需求表
@@ -313,22 +318,16 @@ class Item extends BaseModel
     //设计类型
     public function getTypeValueAttribute()
     {
-        switch ($this->type) {
-            case 1:
-                $type_value = '产品设计类型';
-                break;
-            case 2:
-                $type_value = 'UI UX设计类型';
-                break;
-            default:
-                $type_value = '';
+        $type = config('constant.type');
+        if (array_key_exists($this->type, $type)) {
+            return $type[$this->type];
         }
 
-        return $type_value;
+        return '';
     }
 
     //设计类别(准备停用)
-    public function getDesignTypeValueAttribute()
+    /*public function getDesignTypeValueAttribute()
     {
         $item_type = config('constant.item_type');
 
@@ -339,7 +338,7 @@ class Item extends BaseModel
         }
 
         return '';
-    }
+    }*/
 
     //设计类别多选
     public function getDesignTypesValueAttribute()
@@ -347,7 +346,7 @@ class Item extends BaseModel
         $item_type = config('constant.item_type');
 
         $design_types = json_decode($this->design_types, true);
-        if (empty($design_types)){
+        if (empty($design_types)) {
             return [];
         } else {
             $arr = [];
@@ -363,47 +362,6 @@ class Item extends BaseModel
 
     }
 
-    //UI/UX设计阶段 1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
-//    public function getStageValueAttribute()
-//    {
-//        switch ($this->stage) {
-//            case 1:
-//                $stage_value = '已有app／网站，需重新设计';
-//                break;
-//            case 2:
-//                $stage_value = '没有app／网站，需要全新设计';
-//                break;
-//            default:
-//                $stage_value = '';
-//        }
-//
-//        return $stage_value;
-//    }
-
-    //已有项目设计内容格式化输出 已完成设计内容：1.流程图；2.线框图；3.页面内容；4.产品功能需求点；
-//    public function getCompleteContentValueAttribute()
-//    {
-//        switch ($this->complete_content) {
-//            case 1:
-//                $complete_content_value = '流程图';
-//                break;
-//            case 2:
-//                $complete_content_value = '线框图';
-//                break;
-//            case 3:
-//                $complete_content_value = '页面内容';
-//                break;
-//            case 4:
-//                $complete_content_value = '产品功能需求点';
-//                break;
-//            case 5:
-//                $complete_content_value = $this->other_content;
-//                break;
-//            default:
-//                $complete_content_value = ' ';
-//        }
-//        return $complete_content_value;
-//    }
 
     //公司规模
     public function getCompanySizeValueAttribute()
@@ -550,26 +508,28 @@ class Item extends BaseModel
     public function getIndustryValueAttribute()
     {
         $industries = config('constant.industry');
-        if(!array_key_exists($this->industry, $industries)){
+        if (!array_key_exists($this->industry, $industries)) {
             return '';
         }
         return $industries[$this->industry];
     }
+
     //设计周期
     public function getCycleValueAttribute()
     {
         $item_cycle = config('constant.item_cycle');
-        if(!array_key_exists($this->cycle, $item_cycle)){
+        if (!array_key_exists($this->cycle, $item_cycle)) {
             return '';
         }
 
         return $item_cycle[$this->cycle];
     }
+
     //设计费用
     public function getDesignCostValueAttribute()
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-        switch ($this->design_cost){
+        switch ($this->design_cost) {
             case 1:
                 $design_cost_value = '1-5万之间';
                 break;

@@ -239,7 +239,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/itemJdPay/{pay_order_id}', 'PayController@itemJdPay');
 
         //创建尾款支付订单
-        $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
+//        $api->get('/pay/endPayOrder/{item_id}', 'PayController@endPayOrder');
+
+        // api {get} /pay/firstPayOrder/{item_id} 创建首付款支付订单
+        $api->get('/pay/firstPayOrder/{item_id}', 'PayController@firstPayOrder');
+
+        // {get} /pay/stagePayOrder/{item_stage_id} 创建项目阶段支付单
+        $api->get('/pay/stagePayOrder/{item_stage_id}', 'PayController@createItemStagePayOrder');
+
         //查询支付状态
         $api->get('/pay/getPayStatus/{uid}', 'PayController@getPayStatus');
 

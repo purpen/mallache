@@ -45,6 +45,7 @@ class PayOrderTransformer extends TransformerAbstract
             'item_name' => $name,
             'company_name' => $pay_order->item ? $pay_order->item->company_name : '',
             'created_at' => $pay_order->created_at,
+            'item_stage_id' => $pay_order->item_stage_id,
 
             'bank_transfer' => $pay_order->bank_transfer,
             'assets' => AssetModel::getOneImageUrl($pay_order->id, 33), // 转账附件

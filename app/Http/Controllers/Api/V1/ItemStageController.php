@@ -102,96 +102,6 @@ class ItemStageController extends BaseController
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * @api {post} /itemStage 保存项目阶段
-     * @apiVersion 1.0.0
-     * @apiName itemStage store
-     * @apiGroup itemStage
-     *
-     * @apiParam {integer} item_id 项目id
-     * @apiParam {string} title 项目阶段名称
-     * @apiParam {string} content 内容描述
-     * @apiParam {string} summary 备注
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     * "data": {
-     * "id": 2,
-     * "item_id": 2,
-     * "design_company_id": 49,
-     * "title": "哈哈",
-     * "content": "就是哈哈哈哈",
-     * "summary": "备注",
-     * "item_stage_image": []
-     * },
-     * "meta": {
-     * "message": "Success",
-     * "status_code": 200
-     * }
-     * }
-     */
-    // 【该方法弃用】
-//    public function store(Request $request)
-//    {
-//        $all['item_id'] = $request->input('item_id');
-//        $all['title'] = $request->input('title');
-//        $all['content'] = $request->input('content');
-//        $all['summary'] = $request->input('summary') ?? '';
-//        $all['status'] = $request->input('summary') ?? 0;
-//
-//        $item = Item::where('id', $request->input('item_id'))->first();
-//        if (!$item) {
-//            return $this->response->array($this->apiError('not found item', 404));
-//        }
-//        if ($item->design_company_id != $this->auth_user->design_company_id) {
-//            return $this->response->array($this->apiError('没有权限', 403));
-//        }
-//        $all['design_company_id'] = $item->design_company_id;
-//        $rules = [
-//            'item_id' => 'required|integer',
-//            'title' => 'required',
-//            'content' => 'required',
-//        ];
-//
-//        $messages = [
-//            'item_id.required' => '项目id不能为空',
-//            'title.required' => '项目阶段名称不能为空',
-//            'content.required' => '项目内容描述不能为空',
-//        ];
-//        $validator = Validator::make($all, $rules, $messages);
-//
-//        if ($validator->fails()) {
-//            throw new StoreResourceFailedException('Error', $validator->errors());
-//        }
-//
-//        try {
-//            if ($item->status == 11) {
-//                $itemStage = ItemStage::create($all);
-//                //附件
-//                $random = $request->input('random');
-//                AssetModel::setRandom($itemStage->id, $random);
-//            } else {
-//                return $this->response->array($this->apiError('项目还没有进行'));
-//            }
-//        } catch (\Exception $e) {
-//            return $this->response->array($this->apiError());
-//        }
-//
-//        return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
-//
-//
-//    }
 
     /**
      * @api {get} /itemStage/{itemStage_id} 根据项目阶段id查看详情
@@ -211,99 +121,9 @@ class ItemStageController extends BaseController
         return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
     }
 
-    /**
-     */
-    public function edit(ItemStage $itemStage)
-    {
-        //
-    }
 
     /**
-     * @api {put} /itemStage/{item_stage_id} 项目阶段更改
-     * @apiVersion 1.0.0
-     * @apiName itemStage put
-     * @apiGroup itemStage
-     *
-     * @apiParam {integer} item_id 项目id
-     * @apiParam {string} title 项目阶段名称
-     * @apiParam {string} content 内容描述
-     * @apiParam {string} summary 备注
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     * "data": {
-     * "id": 2,
-     * "item_id": 2,
-     * "design_company_id": 49,
-     * "title": "哈哈",
-     * "content": "就是哈哈哈哈",
-     * "summary": "备注",
-     * "item_stage_image": []
-     * },
-     * "meta": {
-     * "message": "Success",
-     * "status_code": 200
-     * }
-     * }
-     */
-    /*public function update(Request $request, $id)
-    {
-        $all['item_id'] = $request->input('item_id');
-        $all['title'] = $request->input('title');
-        $all['content'] = $request->input('content');
-        $all['summary'] = $request->input('summary') ?? '';
-        $all['status'] = $request->input('status') ?? 0;
-
-
-        $itemStage = ItemStage::where('id', $id)->first();
-        if (!$itemStage) {
-            return $this->response->array($this->apiError('not found item', 404));
-        }
-        $item = Item::where('id', $request->input('item_id'))->first();
-        if (!$item) {
-            return $this->response->array($this->apiError('not found item', 404));
-        }
-        if ($item->design_company_id != $this->auth_user->design_company_id) {
-            return $this->response->array($this->apiError('没有权限', 403));
-        }
-        $rules = [
-            'item_id' => 'required|integer',
-            'title' => 'required',
-            'content' => 'required',
-        ];
-
-        $messages = [
-            'item_id.required' => '项目id不能为空',
-            'title.required' => '项目阶段名称不能为空',
-            'content.required' => '项目内容描述不能为空',
-        ];
-        $validator = Validator::make($all, $rules, $messages);
-
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('Error', $validator->errors());
-        }
-        $itemStage->update($all);
-        if (!$itemStage) {
-            return $this->response->array($this->apiError());
-        }
-
-        return $this->response->item($itemStage, new ItemStageTransformer())->setMeta($this->apiMeta());
-    }*/
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\ItemStage $itemStage
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ItemStage $itemStage)
-    {
-        //
-    }
-
-    /**
-     * @api {put} /itemStage/ok/status 项目发布
+     * @api {put} /itemStage/ok/status 确认发布
      * @apiVersion 1.0.0
      * @apiName itemStage okStatus
      * @apiGroup itemStage
@@ -410,24 +230,47 @@ class ItemStageController extends BaseController
         if (!$next_item_stage) {
             return $this->response->array($this->apiSuccess());
         }
-        if ($next_item_stage->sort != $item_stage->sort) {
+        if ($next_item_stage->sort != $item_stage->sort || $item_stage->confir == 1) {
             return $this->response->array($this->apiError('当前阶段不可操作', 403));
         }
 
+        // 项目阶段确认
+        $item_stage->confirm = 1;
+        $item_stage->save();
+
+
         //项目信息
         $item = Item::find($item_stage->item_id);
+        $item_info = $item->itemInfo();
         // 设计公司用户信息
         $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
 
-        // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
-        if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
-            return $this->response->array($this->apiError());
+        $tools = new Tools();
+        //通知设计公司
+        $title2 = '需求公司确认阶段';
+        $content2 = '【' . $item_info['name'] . '】项目阶段已确认';
+        $tools->message($design_user->id, $title2, $content2, 2, $item_stage->item_id);
+        // 短信通知设计公司
+        $this->sendSms($item->designCompany->phone);
+
+        // 如果合同版本为 0 ，直接确认需求公司阶段款已付
+        $contract = $item->contract;
+        if ($contract && $contract == 0) {
+            $contract->pay_status = 1;
+            $contract->save();
+
+            // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
+            if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
+                return $this->response->array($this->apiError());
+            }
         }
 
         return $this->response->array($this->apiSuccess());
     }
 
+
     /**
+     * 阶段付款 （一次性托管版本：0）
      * @param int $demand_user_id 需求用户ID
      * @param int $design_user_id 设计公司ID
      * @param float $amount 支付金额

@@ -95,7 +95,7 @@ class ItemMessageListener
                 break;
             //项目进行中
             case 11:
-                // 支付首付款
+                // 支付首付款（合同版本：0）
                 $this->payFirstPayment($event);
                 //通知需求公司
                 $this->itemOngoing($event);
@@ -109,7 +109,7 @@ class ItemMessageListener
             case 18:
                 // 确认项目完成,通知设计公司
                 $this->trueItemDone($event);
-                // 向设计公司支付项目剩余款项
+                // 向设计公司支付项目剩余款项（合同版本：0）
                 $this->payRestFunds($event);
                 break;
         }
@@ -127,7 +127,7 @@ class ItemMessageListener
         $tools = new Tools();
         $title = '查看匹配结果';
         $content = '您好，铟果平台为您的【' . $item_info['name'] . '】项目匹配了适合您的设计服务供应商';
-        $tools->message($item->user_id, $title, $content, 2, $item->id);
+        $tools->message($item->user_id, $title, $content, 2, $item->id, $item->status);
 
         //给项目联系人发送信息
         $this->sendSmsToPhone($item->phone, $content);
@@ -250,7 +250,7 @@ class ItemMessageListener
         $this->sendSmsToPhone($phone, $content);
     }
 
-    //需求公司已托管项目资金
+    //需求公司已托管项目首付款
     public function demandTrustFunds(ItemStatusEvent $event)
     {
         $item = $event->item;
@@ -262,8 +262,8 @@ class ItemMessageListener
 
         //通知设计公司
         $tools = new Tools();
-        $title = '项目已托管项目资金';
-        $content = '【' . $item_info['name'] . '】' . '项目需求公司已托管项目资金，请开始设计工作';
+        $title = '项目已托管项目首付款';
+        $content = '【' . $item_info['name'] . '】' . '项目需求公司已托管项目首付款，请开始设计工作';
         $tools->message($user_id, $title, $content, 2, $item->id);
 
         $this->sendSmsToPhone($phone, $content);
@@ -323,6 +323,10 @@ class ItemMessageListener
     public function payRestFunds(ItemStatusEvent $event)
     {
         $item = $event->item;
+        // 当版本不是0版本时，跳过
+        if ($item->contract->version != 0) {
+            return;
+        }
 
         DB::beginTransaction();
         $user_model = new User();
@@ -380,6 +384,10 @@ class ItemMessageListener
     public function payFirstPayment(ItemStatusEvent $event)
     {
         $item = $event->item;
+        // 当版本不是0版本时，跳过
+        if ($item->contract->version != 0) {
+            return;
+        }
 
         DB::beginTransaction();
         $user_model = new User();

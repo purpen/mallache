@@ -251,6 +251,7 @@ class DemandController extends BaseController
                 $all['contact_name'] = $demand_company->contact_name;
                 $all['phone'] = $demand_company->phone;
                 $all['email'] = $demand_company->email;
+                $all['position'] = $demand_company->position;
             }
             $all['stage_status'] = 2;
 

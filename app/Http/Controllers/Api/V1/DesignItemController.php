@@ -54,15 +54,6 @@ class DesignItemController extends BaseController
         return $this->response->collection($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * @api {post} /designItem 保存服务项目类型
@@ -171,16 +162,6 @@ class DesignItemController extends BaseController
         return $this->response->item($designItem, new DesignItemTransformer())->setMeta($this->apiMeta());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\QuotationsItemModel  $quotationsItemModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(QuotationsItemModel $quotationsItemModel)
-    {
-        //
-    }
 
     /**
      * @api {put} /designItem/1 更新服务项目类型

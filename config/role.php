@@ -185,6 +185,13 @@ return [
         '/admin/commissionCount/add',
         // 设计公司优惠次数列表
         '/admin/commissionCount/lists',
+
+        //需要设计公司给平台开具发票列表
+        '/admin/invoice/pullLists',
+        // 需要平台给需求公司开具发票列表
+        '/admin/invoice/pushLists',
+        //确认发票已开
+        '/admin/invoice/trueInvoice',
     ],
 
     /**
@@ -363,6 +370,13 @@ return [
         '/admin/commissionCount/add',
         // 设计公司优惠次数列表
         '/admin/commissionCount/lists',
+
+        //需要设计公司给平台开具发票列表
+        '/admin/invoice/pullLists',
+        // 需要平台给需求公司开具发票列表
+        '/admin/invoice/pushLists',
+        //确认发票已开
+        '/admin/invoice/trueInvoice',
     ],
 
     /**
@@ -502,6 +516,11 @@ return [
         '/admin/commissionCount/add',
         // 设计公司优惠次数列表
         '/admin/commissionCount/lists',
+
+        //需要设计公司给平台开具发票列表
+        '/admin/invoice/pullLists',
+        // 需要平台给需求公司开具发票列表
+        '/admin/invoice/pushLists',
     ],
 
     /**

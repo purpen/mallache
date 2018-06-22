@@ -18,12 +18,12 @@ class DesignItemModel extends BaseModel
      * 允许批量赋值字段
      * @var array
      */
-    protected $fillable = ['user_id' , 'good_field' , 'project_cycle' , 'min_price' , 'type' , 'design_type'];
+    protected $fillable = ['user_id', 'good_field', 'project_cycle', 'min_price', 'type', 'design_type'];
 
     /**
      * 返回字段
      */
-    protected $appends = ['type_val' , 'design_type_val' , 'project_cycle_val'];
+    protected $appends = ['type_val', 'design_type_val', 'project_cycle_val'];
 
     /**
      * 相对关联到User用户表
@@ -36,7 +36,12 @@ class DesignItemModel extends BaseModel
     //判断设计类型
     public function getTypeValAttribute()
     {
-        return $this->attributes['type'] == 1 ? '产品设计' : 'UI UX 设计';
+        $type = config('constant.type');
+        if (array_key_exists($this->type, $type)) {
+            return $type[$this->type];
+        }
+
+        return '';
     }
 
     //判断设计类别
@@ -44,8 +49,8 @@ class DesignItemModel extends BaseModel
     {
         $item_type = config('constant.item_type');
 
-        if(array_key_exists($this->type, $item_type)){
-            if(array_key_exists($this->design_type, $item_type[$this->type])){
+        if (array_key_exists($this->type, $item_type)) {
+            if (array_key_exists($this->design_type, $item_type[$this->type])) {
                 return $item_type[$this->type][$this->design_type];
             }
         }
@@ -57,13 +62,12 @@ class DesignItemModel extends BaseModel
     public function getProjectCycleValAttribute()
     {
         $item_cycle = config('constant.item_cycle');
-        if(!array_key_exists($this->project_cycle, $item_cycle)){
+        if (!array_key_exists($this->project_cycle, $item_cycle)) {
             return '';
         }
 
         return $item_cycle[$this->project_cycle];
     }
-
 
 
 }

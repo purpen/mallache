@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Events\PayOrderEvent;
 use App\Http\AdminTransformer\PayOrderTransformer;
 use App\Models\PayOrder;
+use App\Servers\Pay;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -159,7 +160,10 @@ class PayOrderActionController extends BaseController
         $pay_order->bank_id = $all['bank_id'];
         $pay_order->save();
 
-        event(new PayOrderEvent($pay_order));
+        // 支付成功需要处理的业务
+        $pay = new Pay($pay_order);
+        $pay->paySuccess();
+//        event(new PayOrderEvent($pay_order));
 
         return $this->response->array($this->apiSuccess());
     }

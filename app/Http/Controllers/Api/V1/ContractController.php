@@ -454,6 +454,7 @@ class ContractController extends BaseController
         try {
             DB::beginTransaction();
 
+            $all['version'] = config('constant.contract_version');
             $contract->update($all);
 
             //删除项目阶段信息

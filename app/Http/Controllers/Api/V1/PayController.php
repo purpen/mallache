@@ -8,69 +8,31 @@ use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Models\AssetModel;
 use App\Models\Item;
+use App\Models\ItemStage;
 use App\Models\PayOrder;
+use App\Servers\Pay;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
 use Lib\JdPay\JdPay;
 use Lib\WxPay\PayNotifyCallBack;
 use Lib\WxPay\WxPay;
-use Qiniu\Http\Request;
 
 class PayController extends BaseController
 {
-    // 发布需求保证金---交易名称
-    protected $demand_pay_title = '发布需求保证金';
-
-    // 发布需求保证金---交易描述信息
-    protected $demand_pay_content = '';
-
-    /**
-     * @api {get} /pay/demandAliPay 发布需求保证金支付-支付宝
-     * @apiVersion 1.0.0
-     * @apiName pay demandAliPay
-     * @apiGroup pay
-     *
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *      "data": {
-     *          'html_text': ""
-     *      }
-     *  }
-     */
-    public function demandAliPay()
-    {
-        //验证是否是需求用户
-        if ($this->auth_user->type != 1) {
-            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
-        }
-        //总金额
-        $total_fee = config('constant.item_price');
-
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 2);
-        $alipay = new Alipay();
-        $html_text = $alipay->alipayApi($pay_order->uid, '发布需求保证金', $total_fee);
-
-        return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
-    }
-
     /**
      * 创建需求 支付单
-     * @param int $type 支付类型：1.预付押金;2.项目款
+     * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款
      * @param float $amount 支付金额
      * @param int $item_id 目标ID
      * @param int $user_id 用户ID
      * @param string $summary 备注
      * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     * @param int $item_stage_id 项目阶段ID
      * @return mixed
      */
-    protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0, $pay_type = 0)
+    protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0, $pay_type = 0, $item_stage_id = null)
     {
         $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
             ->first();
@@ -88,6 +50,7 @@ class PayController extends BaseController
             'item_id' => $item_id,
             'amount' => $amount,
             'pay_type' => $pay_type,
+            'item_stage_id' => $item_stage_id,
         ]);
         return $pay_order;
     }
@@ -103,7 +66,7 @@ class PayController extends BaseController
      */
     public function aliPayNotify()
     {
-        Log::info($_POST);
+//        Log::info($_POST);
         $alipay = new Alipay();
         //支付成功
         if ($alipay->notifyUrl()) {
@@ -129,8 +92,11 @@ class PayController extends BaseController
                         if (!$pay_order->save()) {
                             Log::error('支付吧业务处理失败');
                         }
-                        Log::info($pay_order);
-                        event(new PayOrderEvent($pay_order));
+
+                        // 支付成功需要处理的业务
+                        $pay = new Pay($pay_order);
+                        $pay->paySuccess();
+//                        event(new PayOrderEvent($pay_order));
                     }
                 } catch (\Exception $e) {
                     Log::error($e);
@@ -228,7 +194,7 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function endPayOrder($item_id)
+    /*public function endPayOrder($item_id)
     {
 
         $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->where('status', '!=', -1)->first();
@@ -277,10 +243,172 @@ class PayController extends BaseController
 
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
-    }
+    }*/
+
 
     /**
-     * @api {get} /pay/itemAliPay/{pay_order_id} 支付项目尾款-支付宝
+     * @api {get} /pay/firstPayOrder/{item_id} 创建首付款支付订单
+     * @apiVersion 1.0.0
+     * @apiName pay firstPayOrder
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     * @apiParam {int} item_id  项目ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          "id": 1,
+     *          "uid": "zf59006e63b3445",  //支付单号
+     *          "user_id": 2,              //用户ID
+     *          "type": 1,                 //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款
+     *          "item_id": 0,               //项目ID
+     *          "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *          "summary": "发布需求保证金",  //备注
+     *          "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *          "pay_no": "2017042621001004550211582926",  //平台交易号
+     *          "amount"：123， //应支付金额
+     *          "total": 22, //总金额
+     *          "item_name": ""  //项目名称
+     *          "company_name": "公司名称"  //公司名称
+     *          "first_pay": 11, //已支付金额
+     *      }
+     *  }
+     */
+    public function firstPayOrder($item_id)
+    {
+        // 支付首付款类型
+        $pay_type = 3;
+
+        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
+        if ($pay_order) {
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+        }
+
+        if (!$item = Item::find($item_id)) {
+            return $this->response->array("not found item", 404);
+        }
+        if ($item->user_id != $this->auth_user_id || !in_array($item->status, [7, 8])) {
+            return $this->response->array($this->apiError("无操作权限", 403));
+        }
+
+        // 合同
+        $contract = $item->contract;
+        // 合同不存在或合同版本不正确
+        if (!$contract || $contract->version != 1) {
+            return $this->response->array($this->apiError("not found", 404));
+        }
+
+        //查询项目押金的金额(兼容历史数据)
+        $first_pay_order = PayOrder::query()->where([
+            'user_id' => $this->auth_user_id,
+            'item_id' => $item_id,
+            'type' => 1,
+            'status' => 1,
+        ])->first();
+        // 当存在项目发布押金时
+        if ($first_pay_order) {
+            //计算应付金额
+            $price = bcsub($contract->first_payment, $first_pay_order->amount, 2);
+            $first_pay = $first_pay_order->amount;
+        } else {
+            $price = $contract->first_payment;
+            $first_pay = 0;
+        }
+
+
+        //支付说明
+        $summary = '项目首付款';
+
+        $pay_order = $this->createPayOrder($summary, $price, $pay_type, $item_id);
+
+        //修改项目状态为8，等待支付首付款
+        $item->status = 8;
+        $item->save();
+
+        event(new ItemStatusEvent($item));
+
+        $pay_order->total_price = $contract->first_payment;
+        $pay_order->first_pay = $first_pay;
+
+        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {get} /pay/stagePayOrder/{item_stage_id} 创建项目阶段支付单
+     * @apiVersion 1.0.0
+     * @apiName pay stagePayOrder
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     * @apiParam {int} item_stage_id  项目阶段ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          "id": 1,
+     *          "uid": "zf59006e63b3445",  //支付单号
+     *          "user_id": 2,              //用户ID
+     *          "type": 1,                 //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款
+     *          "item_id": 0,               //项目ID
+     *          "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *          "summary": "发布需求保证金",  //备注
+     *          "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *          "pay_no": "2017042621001004550211582926",  //平台交易号
+     *          "amount"：123， //应支付金额
+     *          "total": 22, //总金额
+     *          "item_name": ""  //项目名称
+     *          "company_name": "公司名称"  //公司名称
+     *          "first_pay": 11, //已支付金额
+     *          "item_stage_id": 1, // 项目阶段ID
+     *      }
+     *  }
+     */
+    public function createItemStagePayOrder(Request $request)
+    {
+        // 支付项目阶段款类型
+        $pay_type = 4;
+
+        $item_stage_id = $request->input('item_stage_id');
+
+        $pay_order = PayOrder::where(['item_stage_id' => $item_stage_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
+        if ($pay_order) {
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+        }
+
+
+        if (!$item_stage = ItemStage::find($item_stage_id)) {
+            return $this->response->array("not found item stage", 404);
+        }
+
+        if (!$item = $item_stage->item) {
+            return $this->response->array("not found item", 404);
+        }
+
+        if ($item->user_id != $this->auth_user_id || $item->status != 11 || $item_stage->pay_status == 1) {
+            return $this->response->array($this->apiError("无操作权限", 403));
+        }
+
+        //支付说明
+        $summary = '项目阶段款';
+
+        $pay_order = $this->createPayOrder($summary, $item_stage->amount, $pay_type, $item->id, 0, $item_stage_id);
+
+        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
+    }
+
+
+    /**
+     * @api {get} /pay/itemAliPay/{pay_order_id} 支付项目款-支付宝
      * @apiVersion 1.0.0
      * @apiName pay itemAliPay
      * @apiGroup pay
@@ -315,7 +443,7 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/itemBankPay/{pay_order_id} 支付项目尾款--公对公银行转账
+     * @api {get} /pay/itemBankPay/{pay_order_id} 支付项目款--公对公银行转账
      * @apiVersion 1.0.0
      * @apiName pay itemBankPay
      * @apiGroup pay
@@ -362,25 +490,25 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function demandWxPay()
-    {
-        //验证是否是需求用户
-        if ($this->auth_user->type != 1) {
-            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
-        }
-        //总金额
-        $total_fee = config('constant.item_price');
+    /* public function demandWxPay()
+     {
+         //验证是否是需求用户
+         if ($this->auth_user->type != 1) {
+             return $this->response->array($this->apiError('设计公司不能发布项目', 403));
+         }
+         //总金额
+         $total_fee = config('constant.item_price');
 
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 3);
+         $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 3);
 
-        $wx_pay = new WxPay();
-        $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee * 100, 1);
-        $uid = $pay_order->uid;
-        return $this->response->array($this->apiSuccess('Success', 200, compact('code_url', 'uid')));
-    }
+         $wx_pay = new WxPay();
+         $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee * 100, 1);
+         $uid = $pay_order->uid;
+         return $this->response->array($this->apiSuccess('Success', 200, compact('code_url', 'uid')));
+     }*/
 
     /**
-     * @api {get} /pay/itemWxPay/{pay_order_id} 支付项目尾款-微信
+     * @api {get} /pay/itemWxPay/{pay_order_id} 支付项目款-微信
      * @apiVersion 1.0.0
      * @apiName pay itemWxPay
      * @apiGroup pay
@@ -405,7 +533,7 @@ class PayController extends BaseController
             return $this->response->array($this->apiError('无操作权限', 403));
         }
 
-        $pay_order->pay_type = 3; // 维信
+        $pay_order->pay_type = 3; // 微信
         $pay_order->save();
 
         $wx_pay = new WxPay();
@@ -446,7 +574,7 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function demandJdPay()
+    /*public function demandJdPay()
     {
         //验证是否是需求用户
         if ($this->auth_user->type != 1) {
@@ -461,7 +589,7 @@ class PayController extends BaseController
         $html_text = $jdpay->payApi($pay_order->uid, $total_fee, '发布需求保证金');
 
         return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
-    }
+    }*/
 
 
     /*array (
@@ -521,7 +649,10 @@ class PayController extends BaseController
                         $pay_order->status = 1; //支付成功
                         $pay_order->save();
 
-                        event(new PayOrderEvent($pay_order));
+                        // 支付成功需要处理的业务
+                        $pay = new Pay($pay_order);
+                        $pay->paySuccess();
+//                        event(new PayOrderEvent($pay_order));
                     }
                     echo "ok";
                 } else {
@@ -537,7 +668,7 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/itemJdPay/{pay_order_id} 支付项目尾款-京东
+     * @api {get} /pay/itemJdPay/{pay_order_id} 支付项目款-京东
      * @apiVersion 1.0.0
      * @apiName pay itemJdPay
      * @apiGroup pay
