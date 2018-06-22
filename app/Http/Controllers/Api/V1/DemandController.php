@@ -462,8 +462,11 @@ class DemandController extends BaseController
             }
         } else {
             foreach ($design_company as $designCompany) {
-                if ($designCompany->id == $result['data']['rows']['d3ing_id']) {
-                    $designCompany['rows'] = $result['data']['rows'];
+                //$result['data']['rows']返回的多条数据
+                foreach ($result['data']['rows'] as $newRows){
+                    if ($designCompany->id == $newRows->d3ing_id) {
+                        $designCompany['rows'] = $newRows;
+                    }
                 }
             }
         }
