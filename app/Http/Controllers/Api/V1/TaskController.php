@@ -623,7 +623,7 @@ class TaskController extends BaseController
             }
         } else {
             //检测执行者与登录id是否是一个人，或者是否是创建者
-            if($task->isUserExecute($user_id) == false){
+            if($task->isUserExecute($this->auth_user_id) == false){
                 return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
             }
             $task->execute_user_id = $execute_user_id;
