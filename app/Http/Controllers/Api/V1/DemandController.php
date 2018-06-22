@@ -440,8 +440,33 @@ class DemandController extends BaseController
         if (empty($recommend_arr)) {
             return $this->response->array($this->apiSuccess('Success', 200, []));
         }
-
+        $url = config('app.opalus_api') . 'design_company/rank';
+        $d3in_ids = $item->recommend;
+        $result = Tools::request($url, $d3in_ids, 'GET');
+        $result = json_decode($result, true);
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
+        //如果不等于200的话，默认50所有值
+        if ($result['code'] != 200) {
+            foreach ($design_company as $designCompany){
+                $designCompany['rows'] = [
+                    'ave_score' => 50,
+                    'base_average' => 50,
+                    'business_average' => 50,
+                    'credit_average' => 50,
+                    'design_average' => 50,
+                    'effect_average' => 50,
+                    'innovate_average' => 50,
+                    'name' => $designCompany->company_name,
+                    'd3ing_id' => $designCompany->id,
+                ];
+            }
+        } else {
+            foreach ($design_company as $designCompany) {
+                if ($designCompany->id == $result['data']['rows']['d3ing_id']) {
+                    $designCompany['rows'] = $result['data']['rows'];
+                }
+            }
+        }
 
         return $this->response->collection($design_company, new RecommendListTransformer($item))->setMeta($this->apiMeta());
     }
