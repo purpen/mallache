@@ -44,6 +44,7 @@ class DesignStage extends BaseModel
             'user_id' => intval($this->user_id),
             'status' => intval($this->status),
             'statistical' => intval($this->statistical),
+            'stage_image' => $this->stage_image,
             'design_substage' => $arr,
         ];
     }
@@ -61,6 +62,14 @@ class DesignStage extends BaseModel
         }
 
         $this->delete();
+    }
+
+    /**
+     * 阶段附件图片
+     */
+    public function getStageImageAttribute()
+    {
+        return AssetModel::getImageUrl($this->id, 35, 1);
     }
 
 }
