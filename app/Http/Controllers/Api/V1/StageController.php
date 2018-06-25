@@ -41,7 +41,7 @@ class StageController extends BaseController
     public function index(Request $request)
     {
         $item_id = $request->input('item_id');
-        $stage_status = $request->input('stage');
+        $stage_status = $request->input('stage') ? intval($request->input('stage')) : 0;
         $stages = Stage::where('item_id' , $item_id)->orderBy('id', 'desc')->get();
         foreach ($stages as $stage){
             $stage->stage = $stage_status;
