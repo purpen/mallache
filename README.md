@@ -118,3 +118,6 @@ git@github.com:purpen/mallache.git
  
  ##### 统计子账户数量（最多10个子账户）
  php artisan childCount:update
+ 
+ ##### 更新项目下任务总数量，完成未完成数量的统计
+ php artisan taskCount:update

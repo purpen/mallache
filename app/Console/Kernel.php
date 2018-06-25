@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
         //更改子账户数量
         Commands\UpdateChildCount::class,
 
+        //更新项目下任务总数量，完成未完成数量的统计
+        Commands\UpdateTaskCount::class,
 
     ];
 
