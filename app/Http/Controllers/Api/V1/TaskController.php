@@ -72,13 +72,28 @@ class TaskController extends BaseController
     public function store(Request $request)
     {
 
+        //主任务走上，子任务走下
         $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
-        $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
-        $type = $request->input('type') ? (int)$request->input('type') : 1;
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        if($item_id == 0){
-            return $this->response->array($this->apiError('项目id不能为0', 412));
+        if ($tier == 0){
+            $pid = 0;
+            //主任务项目id不能为0
+            $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
+            if($item_id == 0){
+                return $this->response->array($this->apiError('项目id不能为0', 412));
+            }
+        } else {
+            $pid = $request->input('pid');
+            if($pid == 0){
+                return $this->response->array($this->apiError('子任务父id不能为为0', 412));
+            }
+            $task = Task::find($pid);
+            if(!$task){
+                return $this->response->array($this->apiError('没有找到父id', 404));
+            }
+            //子任务的项目id是查出来的
+            $item_id = $task->item_id;
         }
+        $type = $request->input('type') ? (int)$request->input('type') : 1;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? $request->input('start_time') : null;
