@@ -93,6 +93,12 @@ class TaskController extends BaseController
             //子任务的项目id是查出来的
             $item_id = $task->item_id;
         }
+        //判断项目中任务的数量不能大与1000
+        $item = DesignProject::find($item_id);
+        if ($item->task_count >= config('constant.task_count')){
+            return $this->response->array($this->apiError('当前项目下，任务不能在创建，请创建新的项目', 403));
+        }
+
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
@@ -130,6 +136,11 @@ class TaskController extends BaseController
                 }
                 $tasks = Task::create($params);
                 if($tasks){
+                    //同步项目中任务的数量
+                    $item->task_count += 1;
+                    $item->task_no_count += 1;
+                    $item->save();
+
                     $task_user = new TaskUser();
                     $task_user->user_id = $this->auth_user_id;
                     $task_user->task_id = $tasks->id;
@@ -179,6 +190,11 @@ class TaskController extends BaseController
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
                             if($tasks){
+                                //同步项目中任务的数量
+                                $item->task_count += 1;
+                                $item->task_no_count += 1;
+                                $item->save();
+
                                 $task_user = new TaskUser();
                                 $task_user->user_id = $this->auth_user_id;
                                 $task_user->task_id = $tasks->id;
@@ -471,6 +487,15 @@ class TaskController extends BaseController
     public function destroy($id)
     {
         $tasks = Task::find($id);
+        //项目id
+        $item_id = $tasks->item_id;
+        //查找项目
+        $item = DesignProject::find($item_id);
+        if(!$item){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
+        //完成还是未完成的任务
+        $p_stage = $tasks->stage;
         //检验是否是当前用户创建的作品
         if ($tasks->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('没有权限删除!', 403));
@@ -480,6 +505,10 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $child_tasks = Task::where('pid' , $id)->get();
+        //完成的子任务总数
+        $c_ok_task_count = Task::where('pid' , $id)->where('stage' , 2)->count();
+        //未完成的子任务总数
+        $c_no_task_count = Task::where('pid' , $id)->where('stage' , 0)->count();
         foreach ($child_tasks as $child_task){
             $child_task->delete();
         }
@@ -488,6 +517,40 @@ class TaskController extends BaseController
         if (!$ok) {
             return $this->response->array($this->apiError());
         }
+        //总数量
+        $task_count = $item->task_count;
+        //未完成
+        $task_no_count = $item->task_no_count;
+        //已完成
+        $task_ok_count = $item->task_ok_count;
+        //未完成上，以完成下
+        if ($p_stage == 0){
+            //未完成的数量,加上父任务1条
+            $new_task_no_count = $task_no_count - ($c_no_task_count+1);
+            if($new_task_no_count <= 0){
+                $new_task_no_count = 0;
+            }
+            //完成数量
+            $new_task_ok_count = $task_ok_count;
+
+        } else {
+            //已完成的数量,加上父任务1条
+            $new_task_ok_count = $task_ok_count - ($c_ok_task_count+1);
+            if($new_task_ok_count <= 0){
+                $new_task_ok_count = 0;
+            }
+            //未完成数量
+            $new_task_no_count = $task_no_count;
+        }
+        //剩余的总数量
+        $new_task_count = $task_count - ($c_no_task_count + $c_ok_task_count +1);
+        if($new_task_count <= 0){
+            $new_task_count = 0;
+        }
+        $item->task_count = $new_task_count;
+        $item->task_no_count = $new_task_no_count;
+        $item->task_ok_count = $new_task_ok_count;
+        $item->save();
         return $this->response->array($this->apiSuccess());
     }
 
@@ -523,6 +586,13 @@ class TaskController extends BaseController
         if($task->isUserExecute($this->auth_user_id) == false){
             return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
         }
+        //项目
+        $item_id = $task->item_id;
+        //查找项目
+        $item = DesignProject::find($item_id);
+        if(!$item){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
         try {
             DB::beginTransaction();
             //主任务走上面，子任务走下面
@@ -536,6 +606,24 @@ class TaskController extends BaseController
                     }
                 }
                 $ok = $task::isStage($task_id , $stage);
+                if ($ok) {
+                    //加减完成与未完成的数量
+                    if ($stage == 0) {
+                        $item->task_ok_count -= 1;
+                        if($item->task_ok_count <= 0){
+                            $item->task_ok_count = 0;
+                        }
+                        $item->task_no_count += 1;
+                        $item->save();
+                    } else {
+                        $item->task_ok_count += 1;
+                        $item->task_no_count -= 1;
+                        if($item->task_no_count <= 0){
+                            $item->task_no_count = 0;
+                        }
+                        $item->save();
+                    }
+                }
             }else{
                 // 查找任务，任务id为子任务pid的任务
                 $p_task = Task::where('id' , $task->pid)->first();
@@ -565,6 +653,24 @@ class TaskController extends BaseController
 
                 }
                 $ok = $task::isStage($task_id , $stage);
+                if ($ok) {
+                    //加减完成与未完成的数量
+                    if ($stage == 0) {
+                        $item->task_ok_count -= 1;
+                        if($item->task_ok_count <= 0){
+                            $item->task_ok_count = 0;
+                        }
+                        $item->task_no_count += 1;
+                        $item->save();
+                    } else {
+                        $item->task_ok_count += 1;
+                        $item->task_no_count -= 1;
+                        if($item->task_no_count <= 0){
+                            $item->task_no_count = 0;
+                        }
+                        $item->save();
+                    }
+                }
             }
             DB::commit();
 
