@@ -119,13 +119,10 @@ git@github.com:purpen/mallache.git
  ##### 统计子账户数量（最多10个子账户）
  php artisan childCount:update
  
-<<<<<<< HEAD
  ##### 同步需求项目名称到item表
  php artisan ItemName:update
  
  ##### 同步产品UI老数据到项目表中
   php artisan update:itemUProduct
-=======
  ##### 更新项目下任务总数量，完成未完成数量的统计
  php artisan taskCount:update
->>>>>>> origin/clg
