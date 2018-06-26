@@ -162,8 +162,11 @@ class PayToDesignCompany
         //增加设计公司账户总金额
         $this->addDesignPrice($design_user_id, $amount);
 
-        $item_info = $item->itemInfo();
+        // 更新阶段支付设计公司项目款状态
+        $item_stage->pay_design_status = 1;
+        $item_stage->save();
 
+        $item_info = $item->itemInfo();
         $fund_log = new FundLog();
         //需求公司资金流水记录
         $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');

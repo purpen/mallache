@@ -653,6 +653,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/designNotice/delete', 'DesignNoticeController@delete');
 
 
+        //设计公司确认发票已开出
+        $api->put('/invoice/designTrueSend', 'InvoiceController@designTrueSend');
+        // 需求公司确认收到发票
+        $api->put('/invoice/demandTrueGet', 'InvoiceController@demandTrueGet');
+
     });
 
 });

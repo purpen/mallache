@@ -78,6 +78,38 @@ class Invoice extends BaseModel
         ];
     }
 
+    // 获取设计项目对应设计公司的发票信息列表
+    public static function designInvoiceLists($item_id)
+    {
+        $lists = Invoice::query()
+            ->where('item_id', $item_id)
+            ->where('type', 1)
+            ->where('company_type', 2)
+            ->get();
+        $data = [];
+        foreach ($lists as $v) {
+            $data[] = $v->info();
+        }
+
+        return $data;
+    }
+
+    // 获取设计项目对应需求公司的发票信息列表
+    public static function demandInvoiceLists($item_id)
+    {
+        $lists = Invoice::query()
+            ->where('item_id', $item_id)
+            ->where('type', 2)
+            ->where('company_type', 1)
+            ->get();
+        $data = [];
+        foreach ($lists as $v) {
+            $data[] = $v->info();
+        }
+
+        return $data;
+    }
+
     // 一对多相对关联项目表
     public function item()
     {

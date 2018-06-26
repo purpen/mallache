@@ -2,6 +2,7 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\Invoice;
 use App\Models\Item;
 use App\Models\QuotationModel;
 use League\Fractal\TransformerAbstract;
@@ -31,6 +32,7 @@ class DesignShowItemTransformer extends TransformerAbstract
             'quotation' => $this->quotation($item->id) ? $this->quotation($item->id)->info() : null,
             'contract' => $item->contract,
             'evaluate' => $item->evaluate,
+            'invoice' => Invoice::designInvoiceLists($item->id),
         ];
     }
 

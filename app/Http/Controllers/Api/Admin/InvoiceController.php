@@ -21,7 +21,7 @@ class InvoiceController extends BaseController
      * @apiName AdminInvoice pullLists
      * @apiGroup AdminInvoice
      *
-     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票
+     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票 3. 收到发票
      * @apiParam {integer} per_page 每页数量
      * @apiParam {integer} page 页数
      * @apiParam {string} token
@@ -42,7 +42,7 @@ class InvoiceController extends BaseController
      *              "item_stage_id": null, // 项目阶段
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
-     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *              "status": 1  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
      *          }
      *      ],
      *          "meta": {
@@ -90,7 +90,7 @@ class InvoiceController extends BaseController
      * @apiName AdminInvoice pushLists
      * @apiGroup AdminInvoice
      *
-     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票
+     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票 3. 收到发票
      * @apiParam {integer} per_page 每页数量
      * @apiParam {integer} page 页数
      * @apiParam {string} token
@@ -111,7 +111,7 @@ class InvoiceController extends BaseController
      *              "item_stage_id": null, // 项目阶段
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
-     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *              "status": 1  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
      *          }
      *      ],
      *          "meta": {
@@ -153,7 +153,7 @@ class InvoiceController extends BaseController
     }
 
     /**
-     * @api {put} /admin/invoice/trueInvoice 确认发票已开
+     * @api {put} /admin/invoice/trueInvoice 确认收到设计公司发票
      * @apiVersion 1.0.0
      * @apiName AdminInvoice trueInvoice
      * @apiGroup AdminInvoice
@@ -176,8 +176,68 @@ class InvoiceController extends BaseController
         if (!$invoice) {
             return $this->response->array($this->apiError('not found', 404));
         }
+        // 设计公司的发票
+        if ($invoice->type != 1 || $invoice->company_type != 2) {
+            return $this->response->array($this->apiError('request error', 403));
+        }
+        if ($invoice->status == 3) {
+            return $this->response->array($this->apiSuccess());
+        }
 
-        if ($invoice->status == 2) {
+        try {
+            DB::beginTransaction();
+            $invoice->status = 3;
+            $invoice->user_id = $this->auth_user_id;
+            $invoice->save();
+
+            // 完善平台发票信息
+
+            //将对应款项打入设计公司钱包
+            $pay = new PayToDesignCompany($invoice);
+            $pay->pay();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {put} /admin/invoice/trueDemandInvoice 确认给需求公司的发票已开
+     * @apiVersion 1.0.0
+     * @apiName AdminInvoice trueInvoice
+     * @apiGroup AdminInvoice
+     *
+     * @apiParam {integer} id 发票记录ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function trueDemandInvoice(Request $request)
+    {
+        $id = $request->input('id');
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        // 需求公司发票
+        if ($invoice->type != 2 || $invoice->company_type != 1) {
+            return $this->response->array($this->apiError('request error', 403));
+        }
+
+        if ($invoice->status == 2 || $invoice->status == 3) {
             return $this->response->array($this->apiSuccess());
         }
 
@@ -187,13 +247,9 @@ class InvoiceController extends BaseController
             $invoice->user_id = $this->auth_user_id;
             $invoice->save();
 
-            // 完善发票信息
+            // 完善发票中需求公司的发票信息，如需求公司信息不完善，不通过--
 
-            // 如果是确认已收到设计公司的发票，将对应款项打入设计公司钱包
-            if ($invoice->type == 1 && $invoice->company_type == 2) {
-                $pay = new PayToDesignCompany($invoice);
-                $pay->pay();
-            }
+
 
             DB::commit();
         } catch (\Exception $e) {
