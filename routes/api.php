@@ -297,6 +297,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
+        //平面设计详情
+        $api->resource('/GraphicDesign', 'GraphicDesignInfoController');
+        //H5设计详情
+        $api->resource('/H5Design', 'H5DesignInfoController');
+        //包装设计详情
+        $api->resource('/PackDesign', 'PackDesignInfoController');
+        //插画设计详情
+        $api->resource('/IllustrationDesign', 'IllustrationDesignInfoController');
         //合同
         $api->resource('/contract', 'ContractController');
         $api->post('/contract/ok', 'ContractController@okContract');

@@ -51,6 +51,29 @@ class Item extends BaseModel
         return $this->hasOne('App\Models\ProductDesign', 'item_id');
     }
 
+    //一对一关联 平面设计表
+    public function graphicDesign()
+    {
+        return $this->hasOne('App\Models\GraphicDesign', 'item_id');
+    }
+
+    //一对一关联 H5设计表
+    public function h5Design()
+    {
+        return $this->hasOne('App\Models\H5Design', 'item_id');
+    }
+
+    //一对一关联 包装设计表
+    public function packDesign()
+    {
+        return $this->hasOne('App\Models\PackDesign', 'item_id');
+    }
+
+    //一对一关联 插画设计表
+    public function illustrationDesign()
+    {
+        return $this->hasOne('App\Models\IllustrationDesign', 'item_id');
+    }
     /**
      * 相对关联到User用户表
      */
@@ -274,6 +297,240 @@ class Item extends BaseModel
                     'source' => $item->source,
                     'product_features' => $info->product_features,
 
+                ];
+                break;
+            case 3:
+                $info = $item->graphicDesign;
+                if (!$info) {
+                    goto a1;
+                }
+                return [
+                    'id' => $item->id,
+                    'type' => (int)$item->type,
+                    'type_value' => $item->type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
+                    'status' => $item->status,
+                    'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
+                    'name' => $item->name,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
+                    'image' => $info->image,
+
+                    'price' => $price,
+                    'price_han' => NumberToHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberToHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
+
+                    'stage_status' => (int)$item->stage_status,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
+                    'address' => $item->address,
+                    'position' => $item->position,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'created_at' => $item->created_at,
+                    'source' => $item->source,
+                    'product_features' => $info->product_features,
+                    'present_situation' => (int)$info->present_situation,
+                    'existing_content' => (int)$info->existing_content,
+                ];
+                break;
+            case 4:
+                $info = $item->h5Design;
+                if (!$info) {
+                    goto a1;
+                }
+                return [
+                    'id' => $item->id,
+                    'type' => (int)$item->type,
+                    'type_value' => $item->type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
+                    'status' => $item->status,
+                    'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
+                    'name' => $item->name,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
+                    'image' => $info->image,
+
+                    'price' => $price,
+                    'price_han' => NumberToHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberToHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
+
+                    'stage_status' => (int)$item->stage_status,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
+                    'address' => $item->address,
+                    'position' => $item->position,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'created_at' => $item->created_at,
+                    'source' => $item->source,
+                    'product_features' => $info->product_features,
+                    'present_situation' => (int)$info->present_situation,
+                ];
+                break;
+            case 5:
+                $info = $item->packDesign;
+                if (!$info) {
+                    goto a1;
+                }
+                return [
+                    'id' => $item->id,
+                    'type' => (int)$item->type,
+                    'type_value' => $item->type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
+                    'status' => $item->status,
+                    'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
+                    'name' => $item->name,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
+                    'image' => $info->image,
+
+                    'price' => $price,
+                    'price_han' => NumberToHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberToHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
+
+                    'stage_status' => (int)$item->stage_status,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
+                    'address' => $item->address,
+                    'position' => $item->position,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'created_at' => $item->created_at,
+                    'source' => $item->source,
+                    'product_features' => $info->product_features,
+                    'present_situation' => (int)$info->present_situation,
+                    'existing_content' => (int)$info->existing_content,
+                ];
+                break;
+            case 6:
+                $info = $item->illustrationDesign;
+                if (!$info) {
+                    goto a1;
+                }
+                return [
+                    'id' => $item->id,
+                    'type' => (int)$item->type,
+                    'type_value' => $item->type_value,
+                    'design_types' => json_decode($item->design_types),
+                    'design_types_value' => $item->design_types_value,
+                    'industry' => $item->industry,
+                    'industry_value' => $item->industry_value,
+                    'status' => $item->status,
+                    'status_value' => $item->status_value,
+                    'design_status_value' => $item->design_status_value,
+                    'design_company_id' => $item->design_company_id,
+                    'name' => $item->name,
+                    'design_cost' => $item->design_cost,
+                    'design_cost_value' => $item->design_cost_value,
+                    'province' => $item->item_province,
+                    'city' => $item->item_city,
+                    'province_value' => $item->province_value,
+                    'city_value' => $item->city_value,
+                    'image' => $info->image,
+
+                    'price' => $price,
+                    'price_han' => NumberToHanZi::numberToH($price),
+                    'commission' => $commission,
+                    'commission_han' => NumberToHanZi::numberToH($commission),
+                    'commission_rate' => $item->commission_rate,
+
+                    'stage_status' => (int)$item->stage_status,
+                    'cycle' => $item->cycle,
+                    'cycle_value' => $item->cycle_value,
+
+                    'company_name' => $item->company_name,
+                    'company_abbreviation' => $item->company_abbreviation,
+                    'company_size' => $item->company_size,
+                    'company_size_value' => $item->company_size_value,
+                    'company_web' => $item->company_web,
+                    'company_province' => $item->company_province,
+                    'company_city' => $item->company_city,
+                    'company_area' => $item->company_area,
+                    'company_province_value' => $item->company_province_value,
+                    'company_city_value' => $item->company_city_value,
+                    'company_area_value' => $item->company_area_value,
+                    'address' => $item->address,
+                    'position' => $item->position,
+                    'contact_name' => $item->contact_name,
+                    'phone' => $item->phone,
+                    'email' => $item->email,
+                    'created_at' => $item->created_at,
+                    'source' => $item->source,
+                    'product_features' => $info->product_features,
+                    'present_situation' => (int)$info->present_situation,
                 ];
                 break;
         }

@@ -37,7 +37,7 @@ class UDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandUDesign
      *
-     * @apiParam {json} design_types 设计类别：UXUI设计（1.app设计；2.网页设计；）。
+     * @apiParam {json} design_types 设计类别：UXUI设计（1.app设计；2.网页设计；3.'界面设计', 4 . '服务设计', 5 . '用户体验咨询'）
      * @apiParam {integer} stage 阶段：1、已有app／网站，需重新设计；2、没有app／网站，需要全新设计；
      * @apiParam {array} complete_content 已完成设计内容：
      * @apiParam {string} other_content 其他设计内容：

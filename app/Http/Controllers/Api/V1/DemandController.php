@@ -161,7 +161,7 @@ class DemandController extends BaseController
      * @apiGroup demandType
      *
      * @apiParam {string} token
-     * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计
+     * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
      *
      * @apiSuccessExample 成功响应:
      *   {

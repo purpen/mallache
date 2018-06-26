@@ -39,7 +39,7 @@ class ProductDesignInfoController extends BaseController
      * @apiName demand update
      * @apiGroup demandProductDesign
      *
-     * @apiParam {json} design_types 设计类别：UXUI设计（1.app设计；2.网页设计；）。
+     * @apiParam {json} design_types 设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）
      * @apiParam {integer} field //所属领域
      * @apiParam {string} product_features 产品功能或两点
      * @apiParam {string} token
