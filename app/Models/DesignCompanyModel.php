@@ -59,7 +59,14 @@ class DesignCompanyModel extends BaseModel
         'high_tech_enterprises',
         'industrial_design_center',
         'investment_product',
-        'own_brand'
+        'own_brand',
+        'ave_score',
+        'base_average',
+        'credit_average',
+        'business_average',
+        'design_average',
+        'effect_average',
+        'innovate_average',
     ];
 
     /**

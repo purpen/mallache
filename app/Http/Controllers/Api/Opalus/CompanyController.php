@@ -175,4 +175,45 @@ class CompanyController extends Controller
 
         return $this->response->item($design, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
+
+    /**
+     * @api {put} /opalus/company/update 设计公司更新创新排行值
+     * @apiVersion 1.0.0
+     * @apiName OpalusDesignCompany update
+     * @apiGroup OpalusDesignCompany
+     *
+     * @apiParam {integer} id 设计公司ID
+     * @apiParam {integer} ave_score 平均分
+     * @apiParam {integer} base_average 基础运作力
+     * @apiParam {integer} credit_average 风险应激力
+     * @apiParam {integer} business_average 商业决策力
+     * @apiParam {integer} design_average 品牌溢价力
+     * @apiParam {integer} effect_average 客观公信力
+     * @apiParam {integer} innovate_average 创新交付力
+     */
+    public function update(Request $request)
+    {
+        $id = $request->input('id');
+        if(!$design = DesignCompanyModel::find($id)){
+            return $this->response->array($this->apiError('not found design company', 404));
+        }
+        $ave_score = $request->input('ave_score') ? $request->input('ave_score') : 0;
+        $base_average = $request->input('base_average') ? $request->input('base_average') : 0;
+        $credit_average = $request->input('credit_average') ? $request->input('credit_average') : 0;
+        $business_average = $request->input('business_average') ? $request->input('business_average') : 0;
+        $design_average = $request->input('design_average') ? $request->input('design_average') : 0;
+        $effect_average = $request->input('effect_average') ? $request->input('effect_average') : 0;
+        $innovate_average = $request->input('innovate_average') ? $request->input('innovate_average') : 0;
+
+        $design->ave_score = $ave_score;
+        $design->base_average = $base_average;
+        $design->credit_average = $credit_average;
+        $design->business_average = $business_average;
+        $design->design_average = $design_average;
+        $design->effect_average = $effect_average;
+        $design->innovate_average = $innovate_average;
+        if($design->save()){
+            return $this->response->array($this->apiSuccess());
+        }
+    }
 }

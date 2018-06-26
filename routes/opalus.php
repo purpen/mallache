@@ -19,6 +19,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Opalus'], function
             'as' => 'Company.show', 'uses' => 'CompanyController@show'
         ]);
 
+        //更新设计公司的雷达值
+        $api->put('/opalus/company/update', 'CompanyController@update');
+
+
         // 设计案例列表
         $api->get('/opalus/design_case/list', 'DesignCaseController@lists');
         // 设计案例详情
