@@ -59,7 +59,12 @@ class DesignCompanyModel extends BaseModel
         'high_tech_enterprises',
         'industrial_design_center',
         'investment_product',
-        'own_brand'
+        'own_brand',
+        'account_name',
+        'bank_name',
+        'account_number',
+        'taxable_type',
+        'invoice_type',
     ];
 
     /**

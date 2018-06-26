@@ -24,8 +24,7 @@ class DemandCompany extends BaseModel
         'company_property_value',
         'company_type_value',
         'logo_image',
-        'document_image'
-
+        'document_image',
     ];
 
     /**
@@ -54,12 +53,15 @@ class DemandCompany extends BaseModel
         'document_type',
         'document_number',
         'company_property',
+        'account_name',
+        'bank_name',
+        'account_number',
     ];
 
     //公司规模
     public function getCompanySizeValueAttribute()
     {
-        switch ($this->company_size){
+        switch ($this->company_size) {
             case 1:
                 $company_size_val = '20人以下';
                 break;
@@ -122,7 +124,7 @@ class DemandCompany extends BaseModel
     public function getDocumentTypeValueAttribute()
     {
         $key = $this->attributes['document_type'];
-        if(array_key_exists($key,config('constant.document_type'))){
+        if (array_key_exists($key, config('constant.document_type'))) {
             $document_type_val = config('constant.document_type')[$key];
             return $document_type_val;
 
@@ -133,7 +135,7 @@ class DemandCompany extends BaseModel
     //企业性质
     public function getCompanyPropertyValueAttribute()
     {
-        if(array_key_exists($this->company_property,config('constant.company_property'))){
+        if (array_key_exists($this->company_property, config('constant.company_property'))) {
             return config('constant.company_property')[$this->company_property];
 
         }
@@ -143,7 +145,7 @@ class DemandCompany extends BaseModel
     //企业类型
     public function getCompanyTypeValueAttribute()
     {
-        switch ($this->company_type){
+        switch ($this->company_type) {
             case 1:
                 $company_type_val = '普通';
                 break;
@@ -166,7 +168,7 @@ class DemandCompany extends BaseModel
     {
         $demand_company = self::findOrFail($id);
         $demand_company->verify_status = $verify_status;
-        if($verify_summary){
+        if ($verify_summary) {
             $demand_company->verify_summary = $verify_summary;
         }
 
@@ -180,7 +182,7 @@ class DemandCompany extends BaseModel
      */
     public function getLicenseImageAttribute()
     {
-        return AssetModel::getImageUrl($this->id, 9, 1 , 5);
+        return AssetModel::getImageUrl($this->id, 9, 1, 5);
     }
 
     /**
@@ -224,14 +226,14 @@ class DemandCompany extends BaseModel
             'document_type' => 0,
         ];
 
-        $user = User::where('id' , $user_id)->first();
+        $user = User::where('id', $user_id)->first();
         $demand = DemandCompany::create($all);
 
-        if($demand){
+        if ($demand) {
             $user->demand_company_id = $demand->id;
             $user->save();
             return $demand;
-        }else{
+        } else {
             return false;
         }
 
