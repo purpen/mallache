@@ -71,16 +71,6 @@ class DesignCaseController extends BaseController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * @api {post} /designCase 保存设计公司案例
      * @apiVersion 1.0.0
      * @apiName designCase store
@@ -93,7 +83,7 @@ class DesignCaseController extends BaseController
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
      * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
-     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {json} design_types   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）[1,2]
      * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
      * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
@@ -149,7 +139,7 @@ class DesignCaseController extends BaseController
             'profile' => 'required|max:500',
             'field' => 'nullable|integer',
             'type' => 'integer',
-            'design_type' => 'integer',
+            'design_types' => 'JSON',
             'industry' => 'nullable|integer',
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
@@ -167,7 +157,6 @@ class DesignCaseController extends BaseController
             'profile.max' => '最多500字符',
             'field.integer' => '所属领域必须为整形',
             'type.integer' => '设计类型必须为整形',
-            'design_type.integer' => '设计类别必须为整形',
             'industry.integer' => '所属行业必须为整形',
             'prize_time.date' => '日期格式不正确',
         ];
@@ -184,7 +173,7 @@ class DesignCaseController extends BaseController
         $all['profile'] = $request->input('profile');
         $all['user_id'] = $this->auth_user_id;
         $all['type'] = $request->input('type', 0);
-        $all['design_type'] = $request->input('design_type', 0);
+        $all['design_types'] = $request->input('design_types') ?? '[]';
         $all['industry'] = $request->input('industry') ?? 0;
         $all['status'] = 1;
         $all['design_company_id'] = $design->id;
@@ -304,30 +293,18 @@ class DesignCaseController extends BaseController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\DesignCaseModel $designCaseModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DesignCaseModel $designCaseModel)
-    {
-        //
-    }
-
-    /**
      * @api {put} /designCase/12 根据公司案例ID更新案例数据
      * @apiVersion 1.0.0
      * @apiName designCase update
      * @apiGroup designCase
      * @apiParam {string} title 标题
-     * @apiParam {integer} prize 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso d`Oro设计奖;12.英国设计奖;20:其他 (停用)
      * @apiParam {string} prize_time 获奖时间 （停用）
      * @apiParam {integer} mass_production 是否量产:0.否；1.是；
      * @apiParam {integer} sales_volume 销售金额:1.100-500w;2.500-1000w;3.1000-5000w;4.5000-10000w;5.10000w以上
      * @apiParam {string} customer 服务客户
      * @apiParam {string} profile   功能描述
      * @apiParam {integer} type   设计类型：1.产品设计；2.UI UX 设计；
-     * @apiParam {integer} design_type   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；）
+     * @apiParam {json} design_types   设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计；）UXUI设计（1.app设计；2.网页设计；3.'界面设计', 4 . '服务设计', 5 . '用户体验咨询'）平面设计（1.'logo/VI设计', 2.'海报/宣传册', 3 .'画册/书装'）H5(1.H5) 包装设计（1.包装设计）插画（1. '商业插画', 2. '书籍插画', 3. '形象/IP插画'）。[1,2]
      * @apiParam {integer} field 所属领域 1.智能硬件;2.消费电子;3.交通工具;4.工业设备;5.厨电厨具;6.医疗设备;7.家具用品;8.办公用品;9.大家电;10.小家电;11.卫浴;12.玩具;13.体育用品;14.军工设备;15.户外用品
      * @apiParam {integer} industry 所属行业 1.制造业;2.消费零售;3.信息技术;4.能源;5.金融地产;6.服务业;7.医疗保健;8.原材料;9.工业制品;10.军工;11.公用事业
      * @apiParam {string} other_prize   其他奖项
@@ -356,8 +333,8 @@ class DesignCaseController extends BaseController
      *      "industry_val": "消费零售",
      *      "type": 1,
      *      "type_val": "产品设计",
-     *      "design_type": 1,
-     *      "design_type_val": "产品策略",
+     *      "design_types": [1],
+     *      "design_types_val": ["产品策略"],
      *      "other_prize": "",
      *      "mass_production": 1,
      *      "cover": "",
@@ -381,7 +358,7 @@ class DesignCaseController extends BaseController
             'profile' => 'required|max:500',
             'field' => 'integer',
             'type' => 'integer',
-            'design_type' => 'integer',
+            'design_types' => 'JSON',
             'industry' => 'integer',
             'prize_time' => 'nullable|date',
             'prize' => 'nullable|integer',
@@ -399,15 +376,17 @@ class DesignCaseController extends BaseController
             'profile.max' => '最多500字符',
             'field.integer' => '所属领域必须为整形',
             'type.integer' => '设计类型必须为整形',
-            'design_type.integer' => '设计类别必须为整形',
             'industry.integer' => '所属行业必须为整形',
         ];
-        $validator = Validator::make($request->only(['type', 'design_type', 'industry', 'title', 'mass_production', 'customer', 'field', 'profile']), $rules, $messages);
+        $validator = Validator::make($request->only(['type', 'design_types', 'industry', 'title', 'mass_production', 'customer', 'field', 'profile']), $rules, $messages);
 
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
+        $all = $request->except(['token', 'status']);
+
+        $all['design_types'] = $request->input('design_types') ?? '[]';
         $all['patent'] = $request->input('patent') ?? '[]';
         $all['prizes'] = $request->input('prizes') ?? '[]';
 
@@ -417,8 +396,6 @@ class DesignCaseController extends BaseController
         if (!$this->isPrizes($all['patent'])) {
             return $this->response->array($this->apiError('专利数据不正确', 403));
         }
-
-        $all = $request->except(['token', 'status']);
 
         //检验是否存在该案例
         $case = DesignCaseModel::find($id);
