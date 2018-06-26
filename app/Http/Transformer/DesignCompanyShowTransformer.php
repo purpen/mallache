@@ -97,7 +97,14 @@ class DesignCompanyShowTransformer extends TransformerAbstract
             'high_tech_enterprises' => json_decode($DesignCompany->high_tech_enterprises),
             'industrial_design_center' => json_decode($DesignCompany->industrial_design_center),
             'investment_product' => $DesignCompany->investment_product,
-            'own_brand' => json_decode($DesignCompany->own_brand)
+            'own_brand' => json_decode($DesignCompany->own_brand),
+            'ave_score' => intval($DesignCompany->ave_score),
+            'base_average' => intval($DesignCompany->base_average),
+            'credit_average' => intval($DesignCompany->credit_average),
+            'business_average' => intval($DesignCompany->business_average),
+            'design_average' => intval($DesignCompany->design_average),
+            'effect_average' => intval($DesignCompany->effect_average),
+            'innovate_average' => intval($DesignCompany->innovate_average),
         ];
     }
 }
