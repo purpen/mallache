@@ -47,7 +47,7 @@ class DesignCaseModel extends BaseModel
         'field_val',
         'industry_val',
         'type_val',
-        'design_type_val',
+        'design_types_val',
         'prize_val',
         'case_image',
     ];
