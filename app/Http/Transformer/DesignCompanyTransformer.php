@@ -67,8 +67,6 @@ class DesignCompanyTransformer extends TransformerAbstract
             'company_size' => intval($DesignCompany->company_size),
             'company_size_val' => $DesignCompany->company_size_val,
             'branch_office' => intval($DesignCompany->branch_office),
-//            'item_quantity' => intval($DesignCompany->item_quantity),
-//            'item_quantity_val' => $DesignCompany->item_quantity_val,
             'good_field' => $DesignCompany->good_field,
             'good_field_value' => $DesignCompany->good_field_value,
             'web' => strval($DesignCompany->web),
@@ -101,7 +99,12 @@ class DesignCompanyTransformer extends TransformerAbstract
             'high_tech_enterprises' => json_decode($DesignCompany->high_tech_enterprises),
             'industrial_design_center' => json_decode($DesignCompany->industrial_design_center),
             'investment_product' => $DesignCompany->investment_product,
-            'own_brand' => json_decode($DesignCompany->own_brand)
+            'own_brand' => json_decode($DesignCompany->own_brand),
+            'account_name' => $DesignCompany->account_name,
+            'bank_name' => $DesignCompany->bank_name,
+            'account_number' => $DesignCompany->account_number,
+            'taxable_type' => (int)$DesignCompany->taxable_type,
+            'invoice_type' => (int)$DesignCompany->invoice_type,
         ];
     }
 }

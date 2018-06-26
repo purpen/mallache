@@ -45,7 +45,7 @@ class DemandCompanyTransformer extends TransformerAbstract
             'logo_image' => $demand->logo_image,
             'verify_status' => $demand->verify_status,
             'license_image' => $demand->license_image,
-            'position' =>$demand->position,
+            'position' => $demand->position,
             'company_type' => $demand->company_type,
             'company_type_value' => $demand->company_type_value,
             'registration_number' => $demand->registration_number,
@@ -57,6 +57,9 @@ class DemandCompanyTransformer extends TransformerAbstract
             'company_property_value' => $demand->company_property_value,
             'document_image' => $demand->document_image,
             'verify_summary' => $demand->verify_summary,
+            'account_name' => $demand->account_name,
+            'bank_name' => $demand->bank_name,
+            'account_number' => $demand->account_number,
         ];
     }
 }
