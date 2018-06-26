@@ -72,13 +72,34 @@ class TaskController extends BaseController
     public function store(Request $request)
     {
 
+        //主任务走上，子任务走下
         $tier = $request->input('tier') ? (int)$request->input('tier') : 0;
-        $pid = $request->input('pid') ? (int)$request->input('pid') : 0;
-        $type = $request->input('type') ? (int)$request->input('type') : 1;
-        $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
-        if($item_id == 0){
-            return $this->response->array($this->apiError('项目id不能为0', 412));
+        if ($tier == 0){
+            $pid = 0;
+            //主任务项目id不能为0
+            $item_id = $request->input('item_id') ? (int)$request->input('item_id') : 0;
+            if($item_id == 0){
+                return $this->response->array($this->apiError('项目id不能为0', 412));
+            }
+        } else {
+            $pid = $request->input('pid');
+            if($pid == 0){
+                return $this->response->array($this->apiError('子任务父id不能为为0', 412));
+            }
+            $task = Task::find($pid);
+            if(!$task){
+                return $this->response->array($this->apiError('没有找到父id', 404));
+            }
+            //子任务的项目id是查出来的
+            $item_id = $task->item_id;
         }
+        //判断项目中任务的数量不能大与1000
+        $item = DesignProject::find($item_id);
+        if ($item->task_count >= config('constant.task_count')){
+            return $this->response->array($this->apiError('当前项目下，任务不能在创建，请创建新的项目', 403));
+        }
+
+        $type = $request->input('type') ? (int)$request->input('type') : 1;
         $level = $request->input('level') ? (int)$request->input('level') : 1;
         $stage = $request->input('stage') ? (int)$request->input('stage') : 0;
         $start_time = $request->input('start_time') ? $request->input('start_time') : null;
@@ -115,6 +136,11 @@ class TaskController extends BaseController
                 }
                 $tasks = Task::create($params);
                 if($tasks){
+                    //同步项目中任务的数量
+                    $item->task_count += 1;
+                    $item->task_no_count += 1;
+                    $item->save();
+
                     $task_user = new TaskUser();
                     $task_user->user_id = $this->auth_user_id;
                     $task_user->task_id = $tasks->id;
@@ -149,6 +175,10 @@ class TaskController extends BaseController
                 }else{
                     //查看父id的任务，添加父id里面的子任务数量
                     $task_pid = Task::find($pid);
+                    //检测执行者与登录id是否是一个人，或者是否是创建者
+                    if($task_pid->isUserExecute($this->auth_user_id) == false){
+                        return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+                    }
                     if(!$task_pid){
                         DB::rollBack();
                         return $this->response->array($this->apiError('没有找到父id为'.$pid.'的任务', 404));
@@ -160,6 +190,11 @@ class TaskController extends BaseController
                             $params['pid'] = $pid;
                             $tasks = Task::create($params);
                             if($tasks){
+                                //同步项目中任务的数量
+                                $item->task_count += 1;
+                                $item->task_no_count += 1;
+                                $item->save();
+
                                 $task_user = new TaskUser();
                                 $task_user->user_id = $this->auth_user_id;
                                 $task_user->task_id = $tasks->id;
@@ -401,23 +436,20 @@ class TaskController extends BaseController
     {
         $user_id = $this->auth_user_id;
 
-        $execute_user_id = $request->input('execute_user_id');
         //检验是否存在任务
         $tasks = Task::find($id);
         if (!$tasks) {
             return $this->response->array($this->apiError('not found!', 404));
         }
-        //检查是否是任务成员，不是不能更改
-        $taskUser = TaskUser::where('task_id' , $id)->where('selected_user_id' , $user_id)->first();
-        if(!$taskUser){
-            return $this->response->array($this->apiError('没有权限更改任务', 403));
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($tasks->isUserExecute($user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
         }
         //检查是否有查看的权限
         $itemUser = ItemUser::checkUser($tasks->item_id , $user_id);
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
-
         $all = $request->except(['token']);
         //不为空标签时，合并数组
         if(!empty($all['tags'])){
@@ -431,10 +463,6 @@ class TaskController extends BaseController
             $new_tags = explode(',' , $tasks->tags);
             $tasks['tagsAll'] = Tag::whereIn('id' , $new_tags)->get();
 
-        }
-        if($execute_user_id == 0){
-            $tasks->execute_user_id = 0;
-            $tasks->save();
         }
         return $this->response->item($tasks, new TaskChildTransformer())->setMeta($this->apiMeta());
 
@@ -459,6 +487,15 @@ class TaskController extends BaseController
     public function destroy($id)
     {
         $tasks = Task::find($id);
+        //项目id
+        $item_id = $tasks->item_id;
+        //查找项目
+        $item = DesignProject::find($item_id);
+        if(!$item){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
+        //完成还是未完成的任务
+        $p_stage = $tasks->stage;
         //检验是否是当前用户创建的作品
         if ($tasks->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('没有权限删除!', 403));
@@ -468,6 +505,10 @@ class TaskController extends BaseController
             return $this->response->array($this->apiError('not found!', 404));
         }
         $child_tasks = Task::where('pid' , $id)->get();
+        //完成的子任务总数
+        $c_ok_task_count = Task::where('pid' , $id)->where('stage' , 2)->count();
+        //未完成的子任务总数
+        $c_no_task_count = Task::where('pid' , $id)->where('stage' , 0)->count();
         foreach ($child_tasks as $child_task){
             $child_task->delete();
         }
@@ -476,6 +517,40 @@ class TaskController extends BaseController
         if (!$ok) {
             return $this->response->array($this->apiError());
         }
+        //总数量
+        $task_count = $item->task_count;
+        //未完成
+        $task_no_count = $item->task_no_count;
+        //已完成
+        $task_ok_count = $item->task_ok_count;
+        //未完成上，以完成下
+        if ($p_stage == 0){
+            //未完成的数量,加上父任务1条
+            $new_task_no_count = $task_no_count - ($c_no_task_count+1);
+            if($new_task_no_count <= 0){
+                $new_task_no_count = 0;
+            }
+            //完成数量
+            $new_task_ok_count = $task_ok_count;
+
+        } else {
+            //已完成的数量,加上父任务1条
+            $new_task_ok_count = $task_ok_count - ($c_ok_task_count+1);
+            if($new_task_ok_count <= 0){
+                $new_task_ok_count = 0;
+            }
+            //未完成数量
+            $new_task_no_count = $task_no_count;
+        }
+        //剩余的总数量
+        $new_task_count = $task_count - ($c_no_task_count + $c_ok_task_count +1);
+        if($new_task_count <= 0){
+            $new_task_count = 0;
+        }
+        $item->task_count = $new_task_count;
+        $item->task_no_count = $new_task_no_count;
+        $item->task_ok_count = $new_task_ok_count;
+        $item->save();
         return $this->response->array($this->apiSuccess());
     }
 
@@ -507,6 +582,17 @@ class TaskController extends BaseController
         if(!$task){
             return $this->response->array($this->apiError('not found task!', 404));
         }
+        //检测执行者与登录id是否是一个人，或者是否是创建者
+        if($task->isUserExecute($this->auth_user_id) == false){
+            return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+        }
+        //项目
+        $item_id = $task->item_id;
+        //查找项目
+        $item = DesignProject::find($item_id);
+        if(!$item){
+            return $this->response->array($this->apiError('没有找到项目!', 404));
+        }
         try {
             DB::beginTransaction();
             //主任务走上面，子任务走下面
@@ -519,11 +605,25 @@ class TaskController extends BaseController
                         return $this->response->array($this->apiError('子任务'.$pid_task->name.'没有完成!', 412));
                     }
                 }
-                //检测执行者与登录id是否是一个人
-                if($task->execute_user_id !== $this->auth_user_id){
-                    return $this->response->array($this->apiError('当前用户不是执行者，不能点击完成!', 403));
-                }
                 $ok = $task::isStage($task_id , $stage);
+                if ($ok) {
+                    //加减完成与未完成的数量
+                    if ($stage == 0) {
+                        $item->task_ok_count -= 1;
+                        if($item->task_ok_count <= 0){
+                            $item->task_ok_count = 0;
+                        }
+                        $item->task_no_count += 1;
+                        $item->save();
+                    } else {
+                        $item->task_ok_count += 1;
+                        $item->task_no_count -= 1;
+                        if($item->task_no_count <= 0){
+                            $item->task_no_count = 0;
+                        }
+                        $item->save();
+                    }
+                }
             }else{
                 // 查找任务，任务id为子任务pid的任务
                 $p_task = Task::where('id' , $task->pid)->first();
@@ -531,11 +631,7 @@ class TaskController extends BaseController
                     DB::rollBack();
                     return $this->response->array($this->apiError('没有找到该子任务的主任务', 404));
                 }
-                //检查是否是任务成员，不是不能更改
-                $taskUser = TaskUser::where('task_id' , $task->pid)->where('selected_user_id' , $this->auth_user_id)->first();
-                if(!$taskUser){
-                    return $this->response->array($this->apiError('没有权限更改任务', 403));
-                }
+
                 //子任务设置成未完成的话，完成数量-1。完成，完成数量+1
                 if($stage == 0){
                     if($p_task->sub_finfished_count == 0){
@@ -557,6 +653,24 @@ class TaskController extends BaseController
 
                 }
                 $ok = $task::isStage($task_id , $stage);
+                if ($ok) {
+                    //加减完成与未完成的数量
+                    if ($stage == 0) {
+                        $item->task_ok_count -= 1;
+                        if($item->task_ok_count <= 0){
+                            $item->task_ok_count = 0;
+                        }
+                        $item->task_no_count += 1;
+                        $item->save();
+                    } else {
+                        $item->task_ok_count += 1;
+                        $item->task_no_count -= 1;
+                        if($item->task_no_count <= 0){
+                            $item->task_no_count = 0;
+                        }
+                        $item->save();
+                    }
+                }
             }
             DB::commit();
 
@@ -611,21 +725,45 @@ class TaskController extends BaseController
         if($itemUser == false){
             return $this->response->array($this->apiError('没有权限查看该项目', 403));
         }
-        $task->execute_user_id = $execute_user_id;
-        if($task->save()){
-            //检查又没有创建过任务成员，创建过返回，没有创建过创建
-            $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
-            if(!$find_task_user){
-                $task_user = new TaskUser();
-                $task_user->user_id = $this->auth_user_id;
-                $task_user->task_id = $task_id;
-                $task_user->selected_user_id = $execute_user_id;
-                $task_user->type = 1;
-                $task_user->status = 1;
-                $task_user->save();
+        //如果登陆用户等于执行者id可以认领，不等于的话需要判断权限
+        if ($user_id = $execute_user_id){
+            $task->execute_user_id = $execute_user_id;
+            if($task->save()){
+                //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+                if(!$find_task_user){
+                    $task_user = new TaskUser();
+                    $task_user->user_id = $this->auth_user_id;
+                    $task_user->task_id = $task_id;
+                    $task_user->selected_user_id = $execute_user_id;
+                    $task_user->type = 1;
+                    $task_user->status = 1;
+                    $task_user->save();
+                }
+                return $this->response->array($this->apiSuccess());
             }
-            return $this->response->array($this->apiSuccess());
+        } else {
+            //检测执行者与登录id是否是一个人，或者是否是创建者
+            if($task->isUserExecute($this->auth_user_id) == false){
+                return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
+            }
+            $task->execute_user_id = $execute_user_id;
+            if($task->save()){
+                //检查又没有创建过任务成员，创建过返回，没有创建过创建
+                $find_task_user = TaskUser::where('task_id' , $task_id)->where('selected_user_id' , $execute_user_id)->first();
+                if(!$find_task_user){
+                    $task_user = new TaskUser();
+                    $task_user->user_id = $this->auth_user_id;
+                    $task_user->task_id = $task_id;
+                    $task_user->selected_user_id = $execute_user_id;
+                    $task_user->type = 1;
+                    $task_user->status = 1;
+                    $task_user->save();
+                }
+                return $this->response->array($this->apiSuccess());
+            }
         }
+
     }
 
     /**

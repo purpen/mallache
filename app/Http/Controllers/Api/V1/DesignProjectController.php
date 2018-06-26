@@ -798,14 +798,18 @@ class DesignProjectController extends BaseController
 
         }
 
-        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1, 'design_company_id' => $design_company_id])->first();
+        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
         if (!$design_project) {
             return $this->response->array($this->apiError('没有找到该项目', 404));
         }
 
         $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
-        if(!$collect_item){
-
+        if($collect_item) {
+            $collect_item->collect = $collect;
+            if($collect_item->save()){
+                return $this->response->array($this->apiSuccess());
+            }
+        }else{
             $collectItem = new CollectItem();
             $collectItem->item_id = $item_id;
             $collectItem->user_id = $user_id;

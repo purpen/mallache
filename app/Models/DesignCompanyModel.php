@@ -60,11 +60,20 @@ class DesignCompanyModel extends BaseModel
         'industrial_design_center',
         'investment_product',
         'own_brand',
+
         'account_name',
         'bank_name',
         'account_number',
         'taxable_type',
         'invoice_type',
+
+        'ave_score',
+        'base_average',
+        'credit_average',
+        'business_average',
+        'design_average',
+        'effect_average',
+        'innovate_average',
     ];
 
     /**

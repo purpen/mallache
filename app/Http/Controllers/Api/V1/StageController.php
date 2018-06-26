@@ -20,6 +20,7 @@ class StageController extends BaseController
      * @apiGroup stages
      *
      * @apiParam {integer} item_id 项目id;
+     * @apiParam {integer} stage 默认10；0.全部 2.已完成 -1.未完成  默认0
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -40,8 +41,11 @@ class StageController extends BaseController
     public function index(Request $request)
     {
         $item_id = $request->input('item_id');
+        $stage_status = $request->input('stage') ? intval($request->input('stage')) : 0;
         $stages = Stage::where('item_id' , $item_id)->orderBy('id', 'desc')->get();
-
+        foreach ($stages as $stage){
+            $stage->stage = $stage_status;
+        }
         return $this->response->collection($stages, new StageTransformer())->setMeta($this->apiMeta());
 
     }

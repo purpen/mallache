@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Task extends BaseModel
 {
@@ -144,6 +145,29 @@ class Task extends BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * 判断创建者和执行人是否是当前登陆用户
+     */
+    public function isUserExecute(int $user_id)
+    {
+        //主任务
+        if ($this->pid == 0){
+            if (in_array($user_id , [$this->execute_user_id , $this->user_id])){
+                return true;
+            }
+        } else {
+            //子任务
+            $fTask = Task::find($this->pid);
+            if ($fTask) {
+                if (in_array($user_id , [$this->execute_user_id , $this->user_id , $fTask->execute_user_id , $fTask->user_id])){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
 

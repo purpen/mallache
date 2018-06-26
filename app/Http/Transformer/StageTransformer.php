@@ -18,7 +18,14 @@ title	varchar(100)	是		标题
 
     public function transform(Stage $stage)
     {
-        $tasks = Task::where('item_id' , $stage->item_id)->where('stage_id' , $stage->id)->get();
+        if($stage->stage !== 0){
+            if($stage->stage == -1){
+                $stage->stage = 0;
+            }
+            $tasks= Task::where(['item_id' => (int)$stage->item_id , 'stage_id' =>  $stage->id, 'status' => 1 , 'stage' => $stage->stage ])->get();
+        }else{
+            $tasks= Task::where(['item_id' => (int)$stage->item_id , 'stage_id' =>  $stage->id, 'status' => 1])->get();
+        }
         foreach ($tasks as $task){
             $user_id = $task->execute_user_id;
             $user = User::find($user_id);

@@ -45,7 +45,7 @@ class Recommend
             // 使用标题关联性重新排序
             $design = $this->againSort($design);
 
-            $design = array_slice($design, 0, 5);
+            $design = array_slice($design, 0, 4);
 
             //判断是否匹配到设计公司
             if (empty($design)) {

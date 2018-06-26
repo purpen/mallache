@@ -59,6 +59,8 @@ class RecommendListTransformer extends TransformerAbstract
             'city_arr' => $design_company->city_arr,
             'item_type' => $design_company->item_type,
             'design_case' => $this->designCase($design_company),
+            'rows' => $design_company->rows,
+
         ];
     }
 

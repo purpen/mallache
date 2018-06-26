@@ -2,6 +2,8 @@
 
 namespace App\Http\Transformer;
 
+use App\Models\DesignStage;
+use App\Models\Stage;
 use App\Models\Task;
 use League\Fractal\TransformerAbstract;
 use App\Models\OperationLog;
@@ -32,6 +34,7 @@ class TaskChildTransformer extends TransformerAbstract
 
     public function transform(Task $tasks)
     {
+        $stage = Stage::find($tasks->stage_id);
         return [
             'id' => intval($tasks->id),
             'name' => strval($tasks->name),
@@ -55,6 +58,7 @@ class TaskChildTransformer extends TransformerAbstract
             'tier' => intval($tasks->tier),
             'pid' => intval($tasks->pid),
             'stage_id' => intval($tasks->stage_id),
+            'stage_title' => $stage ? $stage->title : '',
             'childTask' => $tasks->childTask,
             'itemName' => $tasks->itemName,
             'log' => OperationLog::getTaskLog($tasks->id),
