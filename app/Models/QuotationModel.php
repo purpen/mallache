@@ -23,6 +23,8 @@ class QuotationModel extends BaseModel
         'tax_rate',
         'design_project_id',
         'total_price',
+        'taxable_type',
+        'invoice_type',
     ];
 
     /**
