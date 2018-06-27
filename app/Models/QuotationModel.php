@@ -137,6 +137,9 @@ class QuotationModel extends BaseModel
             'status' => $this->status,
             'item_demand_id' => intval($this->item_demand_id),
             'design_company_id' => intval($this->design_company_id),
+
+            'taxable_type' => $this->taxable_type,
+            'invoice_type' => $this->invoice_type,
         ];
     }
 
