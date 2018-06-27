@@ -94,11 +94,13 @@ class OperationLogs
         }
 
         $pattern = $pattern_arr[0];
-        $pattern = preg_quote($pattern, '#');
 
         // 支持通配符
         $pattern = str_replace('\*', '.*', $pattern);
         $pattern = str_replace('{}', '[0-9]*', $pattern);
+
+        Log::info($pattern);
+        $pattern = preg_quote($pattern, '#');
         Log::info($pattern);
 
         return (bool)preg_match('#^' . $pattern . '$#u', $value);
