@@ -144,7 +144,7 @@ class OperationLogsAction
         $summary = $this->request->input('summary');
         $level = $this->request->input('level');
         $over_time = $this->request->input('over_time');
-        Log::info($this->request);
+        Log::info(111);
         if (!empty($name)) {
             Log::info(33);
             $this->createTaskLog($item_id, 3, $target_id, null, $name);
