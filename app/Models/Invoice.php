@@ -80,6 +80,9 @@ class Invoice extends BaseModel
             'status' => $this->status,
             'taxable_type' => $this->taxable_type,
             'invoice_type' => $this->invoice_type,
+            'logistics_name' => $this->logistics_name,
+            'logistics_id' => $this->logistics_id,
+            'logistics_number' => $this->logistics_number,
         ];
     }
 
@@ -125,5 +128,16 @@ class Invoice extends BaseModel
     public function itemStage()
     {
         return $this->belongsTo('App\Models\ItemStage', 'item_stage_id');
+    }
+
+    // 物流名称
+    public function getLogisticsNameAttribute()
+    {
+        $logistics = config('constant.logistics');
+        if (array_key_exists($this->logistics_id, $logistics)) {
+            return $logistics[$this->logistics_id];
+        }
+
+        return '';
     }
 }

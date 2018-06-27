@@ -17,6 +17,8 @@ class InvoiceController extends BaseController
      * @apiGroup invoice
      *
      * @apiParam {integer} id 发票记录ID
+     * @apiParam {integer} logistics_id 物流公司ID
+     * @apiParam {integer} logistics_number 物流单号
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -30,6 +32,9 @@ class InvoiceController extends BaseController
     public function designTrueSend(Request $request)
     {
         $id = $request->input('id');
+        $logistics_id = $request->input('logistics_id');
+        $logistics_number = $request->input('logistics_number');
+
         $invoice = Invoice::find($id);
         if (!$invoice) {
             return $this->response->array($this->apiError('not found', 404));
@@ -46,6 +51,8 @@ class InvoiceController extends BaseController
             DB::beginTransaction();
             $invoice->status = 2;
             $invoice->user_id = $this->auth_user_id;
+            $invoice->logistics_id = $logistics_id;
+            $invoice->logistics_number = $logistics_number;
             $invoice->save();
 
             DB::commit();

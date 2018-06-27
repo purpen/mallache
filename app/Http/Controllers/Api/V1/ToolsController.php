@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Log;
 class ToolsController extends BaseController
 {
     // 返回图片验证码资源
-    public function captcha(Request $request,$str)
+    public function captcha(Request $request, $str)
     {
         if ($str) {
             Tools::captchaCreate($str);
-        }else{
+        } else {
             echo 'error';
         }
     }
@@ -46,5 +46,28 @@ class ToolsController extends BaseController
         ];
 
         return $this->response->array($this->apiSuccess('ok', 200, $data));
+    }
+
+    /**
+     * @api {get} /logisticsLists 物流公司列表
+     * @apiVersion 1.0.0
+     * @apiName logistics logisticsLists
+     * @apiGroup logistics
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "请求成功！",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *
+     *      }
+     *   }
+     */
+    public function logisticsLists()
+    {
+        $logistics = config('constant.logistics');
+        return $this->response->array($this->apiSuccess('Success.', 200, $logistics));
     }
 }

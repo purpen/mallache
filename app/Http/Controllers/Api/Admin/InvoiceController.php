@@ -42,7 +42,12 @@ class InvoiceController extends BaseController
      *              "item_stage_id": null, // 项目阶段
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
-     *              "status": 1  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
+     *              "status": 1,  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
+     *              "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *              "invoice_type": 1, // 发票类型 1. 专票 2. 普票
+     *              "logistics_id": 1, // 物流公司ID
+     *              "logistics_name": null, // 物流公司名称
+     *              "logistics_number": 124232, // 物流单号
      *          }
      *      ],
      *          "meta": {
@@ -210,7 +215,7 @@ class InvoiceController extends BaseController
     /**
      * @api {put} /admin/invoice/trueDemandInvoice 确认给需求公司的发票已开
      * @apiVersion 1.0.0
-     * @apiName AdminInvoice trueInvoice
+     * @apiName AdminInvoice trueDemandInvoice
      * @apiGroup AdminInvoice
      *
      * @apiParam {integer} id 发票记录ID
@@ -248,7 +253,6 @@ class InvoiceController extends BaseController
             $invoice->save();
 
             // 完善发票中需求公司的发票信息，如需求公司信息不完善，不通过--
-
 
 
             DB::commit();
