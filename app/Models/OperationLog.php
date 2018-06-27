@@ -87,8 +87,6 @@ class OperationLog extends BaseModel
                 case 4:
                     // 查看 沟通纪要相关人员
                     $user_id_arr = CommuneSummary::getCommuneSummaryUserArr($operation_log->target_id);
-                    Log::info($user_id_arr);
-                    Log::info($operation_log->target_id);
                     break;
             }
 
