@@ -146,10 +146,8 @@ class OperationLogsAction
         $over_time = $this->request->input('over_time');
         if (!empty($name)) {
             $this->createTaskLog($item_id, 3, $target_id, null, $name);
-
         } elseif (!empty($summary)) {
             $this->createTaskLog($item_id, 4, $target_id, null, $summary);
-
         } elseif (!empty($level)) {
             //优先级存普通，紧急，非常紧急
             if ($level == 1) {
@@ -160,7 +158,6 @@ class OperationLogsAction
                 $level = '非常紧级';
             }
             $this->createTaskLog($item_id, 5, $target_id, null, $level);
-
         } elseif (!empty($over_time)) {
             $this->createTaskLog($item_id, 10, $target_id, null, $over_time);
         }

@@ -310,6 +310,15 @@ class DesignSubstageController extends BaseController
                 if(!$design_substage){
                     return $this->response->array($this->apiError('子阶段不存在', 404));
                 }
+                $design_project_id = $design_substage->design_project_id;
+                $design_project = DesignProject::find($design_project_id);
+                if (!$design_project) {
+                    return $this->response->array($this->apiError('not found item', 404));
+                }
+
+                if (!$design_project->isPower($this->auth_user_id)) {
+                    return $this->response->array($this->apiError('无权限', 403));
+                }
                 $duration = $durationObj['duration'];
                 $start_time = $durationObj['start_time'];
                 $design_substage->duration = $duration;

@@ -293,10 +293,21 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/matchingCount/', 'DemandController@matchingCount');
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
+        //更改项目名称
+        $api->put('/demand/updateName', 'DemandController@updateName');
+
         //UX UI 设计详情
         $api->resource('/UDesign', 'UDesignInfoController');
         //产品设计详情
         $api->resource('/ProductDesign', 'ProductDesignInfoController');
+        //平面设计详情
+        $api->resource('/GraphicDesign', 'GraphicDesignInfoController');
+        //H5设计详情
+        $api->resource('/H5Design', 'H5DesignInfoController');
+        //包装设计详情
+        $api->resource('/PackDesign', 'PackDesignInfoController');
+        //插画设计详情
+        $api->resource('/IllustrationDesign', 'IllustrationDesignInfoController');
         //合同
         $api->resource('/contract', 'ContractController');
         $api->post('/contract/ok', 'ContractController@okContract');
