@@ -99,7 +99,6 @@ class OperationLogs
         // 支持通配符
         $pattern = str_replace('\*', '.*', $pattern);
         $pattern = str_replace('\{\}', '[0-9]*', $pattern);
-        Log::info($pattern);
 
         return (bool)preg_match('#^' . $pattern . '$#u', $value);
     }
