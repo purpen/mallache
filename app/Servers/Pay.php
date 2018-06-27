@@ -84,9 +84,15 @@ class Pay
         // 设计公司收到金额（扣除平台佣金）
         $design_amount = bcsub($this->pay_order->amount, $commission, 2);
 
+        // 扣除税点
+        $quotation = $item->quotation;
+        $tax = $quotation->getTax();
+        // 设计公司收到金额（扣除平台税点）
+        $design_amount = bcsub($design_amount, $tax, 2);
+
         // 生成需要收取设计公司发票的信息
         $design_invoice = new Invoice();
-        $design_invoice->createPullInvoice(1, $item->design_company_id, $design_amount, $this->pay_order->item_id, null);
+        $design_invoice->createPullInvoice(1, $item->design_company_id, $design_amount, $this->pay_order->item_id, null, $quotation->taxable_type, $quotation->invoice_type);
     }
 
     // 收到项目阶段付款
@@ -115,9 +121,10 @@ class Pay
         $demand_invoice->createPushInvoice(2, $demand_company->id, $this->pay_order->amount, $this->pay_order->item_id, null);
 
 
+        $quotation = $item->quotation;
         // 生成需要收取设计公司发票的信息
         $design_invoice = new Invoice();
-        $design_invoice->createPullInvoice(2, $item->design_company_id, $this->pay_order->amount, $this->pay_order->item_id, $this->pay_order->item_id);
+        $design_invoice->createPullInvoice(2, $item->design_company_id, $this->pay_order->amount, $this->pay_order->item_id, $this->pay_order->item_id, $quotation->taxable_type, $quotation->invoice_type);
     }
 
 }

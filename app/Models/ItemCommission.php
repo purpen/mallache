@@ -9,14 +9,16 @@ class ItemCommission extends BaseModel
     /**
      * 创建平台项目佣金收取记录
      *
+     * @param $type int 类型：1. 项目佣金 2. 扣税
      * @param $item_id
      * @param $design_company_id
      * @param $price
      * @param $commission
      */
-    public static function createCommission($item_id, $design_company_id, $price, $commission)
+    public static function createCommission($type, $item_id, $design_company_id, $price, $commission)
     {
         $item_commission = new ItemCommission();
+        $item_commission->type = $type;
         $item_commission->design_company_id = (int)$design_company_id;
         $item_commission->item_id = (int)$item_id;
         $item_commission->price = $price;
@@ -37,6 +39,7 @@ class ItemCommission extends BaseModel
          */
         return [
             'id' => $this->id,
+            'type' => $this->type,
             'design_company_id' => $this->design_company_id,
             'item_id' => $this->item_id,
             'price' => $this->price,

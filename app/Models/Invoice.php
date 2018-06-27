@@ -42,7 +42,7 @@ class Invoice extends BaseModel
      * @param $item_stage_id int 项目阶段ID
      * @return Invoice
      */
-    public function createPullInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id)
+    public function createPullInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id, $taxable_type, $invoice_type)
     {
         $invoice = new self();
         $invoice->type = 1; // 2. 开
@@ -53,6 +53,9 @@ class Invoice extends BaseModel
         $invoice->item_id = $item_id; //
         $invoice->item_stage_id = $item_stage_id; //
         $invoice->status = 1;
+        $invoice->taxable_type = $taxable_type;
+        $invoice->invoice_type = $invoice_type;
+
         $invoice->save();
 
         return $invoice;
@@ -75,6 +78,8 @@ class Invoice extends BaseModel
             'user_id' => $this->user_id,
             'summary' => $this->summary,
             'status' => $this->status,
+            'taxable_type' => $this->taxable_type,
+            'invoice_type' => $this->invoice_type,
         ];
     }
 

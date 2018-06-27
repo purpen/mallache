@@ -140,7 +140,29 @@ class QuotationModel extends BaseModel
 
             'taxable_type' => $this->taxable_type,
             'invoice_type' => $this->invoice_type,
+            'type' => $this->type,
         ];
     }
 
+
+    /**
+     * 计算平台扣除应扣除税点
+     * @return float
+     */
+    public function getTax()
+    {
+        $tax_rate = 0.0;
+
+        if ($this->taxable_type == 1) {
+            $tax_rate = 0.0;
+        } else if ($this->taxable_type == 2) {
+            if ($this->invoice_type == 1) {
+                $tax_rate = 0.04;
+            } else {
+                $tax_rate = 0.07;
+            }
+        }
+
+        return bcmul($this->price, $tax_rate, 2);
+    }
 }

@@ -84,10 +84,20 @@ class PayToDesignCompany
             throw new \Exception("首付款金额低于平台佣金", 500);
         }
         // 收取佣金记录
-        ItemCommission::createCommission($item->id, $design_company_id, $item->price, $commission);
+        ItemCommission::createCommission(1, $item->id, $design_company_id, $item->price, $commission);
+
+        // 增值税扣点金额
+        $quotation = $item->quotation;
+        $tax = $quotation->getTax();
+        // 收取项目增值税扣点
+        ItemCommission::createCommission(2, $item->id, $design_company_id, $item->price, $tax);
+
 
         // 设计公司收到金额（扣除平台佣金）
         $design_amount = bcsub($amount, $commission, 2);
+        // 设计公司收到金额（扣除增值税扣点）
+        $design_amount = bcsub($design_amount, $tax, 2);
+        // 设计公司收到金额
         $this->addDesignPrice($design_user_id, $design_amount);
 
 
@@ -100,6 +110,11 @@ class PayToDesignCompany
         if ($commission > 0) {
             //扣除佣金 设计公司流水记录
             $fund_log->outFund($design_user_id, $commission, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '平台扣除佣金');
+        }
+
+        if ($tax > 0) {
+            //扣除税点 设计公司流水记录
+            $fund_log->outFund($design_user_id, $tax, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '平台扣除税点');
         }
 
 

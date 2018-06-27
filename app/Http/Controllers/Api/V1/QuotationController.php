@@ -90,6 +90,9 @@ class QuotationController extends BaseController
      *          "price": "10000"
      *          "item_demand_id": 1,
      *          "design_company_id": 27,
+     *          "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *          "invoice_type": 1  // 发票类型 1. 专票 2. 普票
+     *          "type": 1, // 类型：0.线上 1.线下
      *      },
      *  }
      */
@@ -379,7 +382,10 @@ class QuotationController extends BaseController
      *          "is_invoice": null,
      *          "tax_rate": null,
      *          "total_price": "10000",
-     *          "price": "10000"
+     *          "price": "10000",
+     *          "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *          "invoice_type": 1  // 发票类型 1. 专票 2. 普票
+     *          "type": 1, // 类型：0.线上 1.线下
      *      },
      *   }
      */
