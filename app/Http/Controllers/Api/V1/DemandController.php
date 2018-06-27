@@ -1312,4 +1312,89 @@ class DemandController extends BaseController
         return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
     }
 
+    /**
+     * @api {put} /demand/updateName 更改项目名称
+     * @apiVersion 1.0.0
+     * @apiName demand updateName
+     * @apiGroup demandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id
+     * @apiParam {string} name 项目名称
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "data": {
+     *      "item": {
+     *      "id": 13,
+     *      "type": 1,
+     *      "type_value": "产品设计类型",
+     *      "design_types": [
+     *           2
+     *       ],
+     *      "design_types_value": [
+     *           "网页设计"
+     *       ],
+     *      "status": 5,
+     *      "field": 2,
+     *      "field_value": "消费电子",
+     *      "industry": 2,
+     *      "industry_value": "消费零售",
+     *      "name": "api UI",
+     *      "product_features": "亮点",
+     *      "competing_product": "竞品",
+     *      "cycle": 1,
+     *      "cycle_value": "1个月内",
+     *      "design_cost": 2,
+     *      "design_cost_value": "1-5万之间",
+     *      "city": 2,
+     *      "image": [],
+     *      "price": 200000,
+     *      "company_name": null,  //公司名称
+     *      "company_abbreviation": null, //简称
+     *      "company_size": null, //公司规模；1...
+     *      "company_web": null,  //公司网址
+     *      "company_province": null, //省份
+     *      "company_city": null,  //城市
+     *      "company_area": null,   //区县
+     *      "address": null,    //详细地址
+     *      "contact_name": null,   //联系人
+     *      "phone": "172734923",
+     *      "email": "qq@qq.com"
+     *      "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     *      "source": 0 //"source": 0, // 来源字段 0.默认 1.京东众创
+     * },
+     * "quotation": null, //报价单信息
+     * "contract": null   //合同
+     * },
+     * "meta": {
+     * "message": "Success",
+     * "status_code": 200
+     * }
+     * }
+     */
+    public function updateName(Request $request)
+    {
+        $rules = [
+            'name' => 'required|string|max:100',
+        ];
+        $all = $request->all();
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if (!$item = Item::find(intval($all['item_id']))) {
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        //验证是否是当前用户对应的项目
+        if ($item->user_id !== $this->auth_user_id || 1 != $item->status) {
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+
+        // 需求公司信息是否认证
+        $item->update($all);
+
+        return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
+    }
 }
