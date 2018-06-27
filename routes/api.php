@@ -31,6 +31,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/captcha/getCaptcha', [
         'as' => 'captcha.getCaptcha', 'uses' => 'ToolsController@getCaptcha'
     ]);
+
+    // 物流公司列表
+    $api->get('/logisticsLists', 'ToolsController@logisticsLists');
+
     // 验证码图片资源
     $api->get('/captcha/{str}', [
         'as' => 'captcha', 'uses' => 'ToolsController@captcha'
@@ -668,6 +672,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/invoice/designTrueSend', 'InvoiceController@designTrueSend');
         // 需求公司确认收到发票
         $api->put('/invoice/demandTrueGet', 'InvoiceController@demandTrueGet');
+
 
     });
 
