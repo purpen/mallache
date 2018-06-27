@@ -74,7 +74,9 @@ class Invoice extends BaseModel
             'duty_number' => $this->duty_number,
             'price' => $this->price,
             'item_id' => $this->item_id,
+            'item_name' => $this->item->name,
             'item_stage_id' => $this->item_stage_id,
+            'item_stage_name' => $this->itemStage->title,
             'user_id' => $this->user_id,
             'summary' => $this->summary,
             'status' => $this->status,
@@ -124,7 +126,7 @@ class Invoice extends BaseModel
         return $this->belongsTo('App\Models\Item', 'item_id');
     }
 
-    // 一对多相对关联项目表
+    // 一对多相对关联项目阶段表
     public function itemStage()
     {
         return $this->belongsTo('App\Models\ItemStage', 'item_stage_id');

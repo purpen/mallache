@@ -24,6 +24,8 @@ class ToolsController extends BaseController
      * @apiName captcha getCaptcha
      * @apiGroup Captcha
      *
+     * @apiParam {string} token
+     *
      * @apiSuccessExample 成功响应:
      * {
      *     "meta": {
