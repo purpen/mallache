@@ -54,13 +54,13 @@ class OperationLogs
             '/recycleBin/*:get' => 'task', // 测试
             '/tasks:post' => 'createTask',  // 创建任务
             '/isStage/tasks:put' => 'isStage',  // 任务完成与未完成
-            '/tasks:put' => 'updateTask',  // 更改任务名称，备注，优先级
+            '/tasks/{}:put' => 'updateTask',  // 更改任务名称，备注，优先级
             '/tags:post' => 'createTag',  // 创建标签
             '/tags:delete' => 'deleteTag',  // 删除标签
             '/itemUsers:post' => 'createItemUser',  //创建项目成员
             '/itemUsers:delete' => 'deleteItemUser',  //删除项目成员
             '/communeSummaries:post' => 'createCommuneSummary',  //创建沟通纪要
-            '/communeSummaries:put' => 'updateCommuneSummary',  //更改沟通纪要
+            '/communeSummaries/{}:put' => 'updateCommuneSummary',  //更改沟通纪要
             '/communeSummaries:delete' => 'deleteCommuneSummary',  //删除沟通纪要
             '/design/restoreMember:put' => 'userOutItem',  //某某退出了该项目
             '/tasks/executeUser:post' => 'executeUser',  //某某领取了任务，某某指派给了谁，某某移除了谁
@@ -98,6 +98,8 @@ class OperationLogs
 
         // 支持通配符
         $pattern = str_replace('\*', '.*', $pattern);
-        return (bool)preg_match('#^' . $pattern . '#u', $value);
+        $pattern = str_replace('{}', '[0-9]*', $pattern);
+
+        return (bool)preg_match('#^' . $pattern . '$#u', $value);
     }
 }
