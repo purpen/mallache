@@ -85,6 +85,7 @@ class Invoice extends BaseModel
             'logistics_name' => $this->logistics_name,
             'logistics_id' => $this->logistics_id,
             'logistics_number' => $this->logistics_number,
+            'created_at' => $this->created_at,
         ];
     }
 
