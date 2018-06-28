@@ -443,4 +443,16 @@ class DesignCompanyModel extends BaseModel
         }
     }
 
+    /**
+     * 判断需求公司是否通过审核
+     * @return bool
+     */
+    public function isVerify()
+    {
+        if ($this->verify_status == 1) {
+            return true;
+        }
+
+        return false;
+    }
 }

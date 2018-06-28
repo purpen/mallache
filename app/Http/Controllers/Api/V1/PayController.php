@@ -161,90 +161,6 @@ class PayController extends BaseController
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
 
-    /**
-     * @api {get} /pay/endPayOrder/{item_id} 创建尾款支付订单
-     * @apiVersion 1.0.0
-     * @apiName pay endPayOrder
-     * @apiGroup pay
-     *
-     * @apiParam {string} token
-     * @apiParam {int} item_id  项目ID
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *      "data": {
-     *          "id": 1,
-     * "uid": "zf59006e63b3445",  //支付单号
-     * "user_id": 2,              //用户ID
-     * "type": 1,                 //支付类型：1.预付押金；2.项目款；
-     * "item_id": 0,               //项目ID
-     * "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
-     * "summary": "发布需求保证金",  //备注
-     * "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-     * "pay_no": "2017042621001004550211582926",  //平台交易号
-     *          "amount"：123， //应支付金额
-     *          "total": 22, //总金额
-     *          "item_name": ""  //项目名称
-     *          "company_name": "公司名称"  //公司名称
-     *          "first_pay": 11, //已支付金额
-     *      }
-     *  }
-     */
-    /*public function endPayOrder($item_id)
-    {
-
-        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => 2])->where('status', '!=', -1)->first();
-        if ($pay_order) {
-            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
-        }
-
-        if (!$item = Item::find($item_id)) {
-            return $this->response->array("not found item", 404);
-        }
-        if ($item->user_id != $this->auth_user_id || !in_array($item->status, [7, 8])) {
-            return $this->response->array($this->apiError("无操作权限", 403));
-        }
-
-        //查询项目押金的金额(兼容历史数据)
-        $first_pay_order = PayOrder::where([
-            'user_id' => $this->auth_user_id,
-            'item_id' => $item_id,
-            'type' => 1,
-            'status' => 1,
-        ])->first();
-        // 当存在项目发布押金时
-        if ($first_pay_order) {
-            //计算应付金额
-            $price = bcsub($item->price, $first_pay_order->amount, 2);
-            $first_pay = $first_pay_order->amount;
-        } else {
-            $price = $item->price;
-            $first_pay = 0;
-        }
-
-
-        //支付说明
-        $summary = '项目尾款';
-
-        $pay_order = $this->createPayOrder($summary, $price, 2, $item_id);
-
-        //修改项目状态为8，等待托管项目金额
-        $item->status = 8;
-        $item->save();
-
-        event(new ItemStatusEvent($item));
-
-        $pay_order->total_price = $item->price;
-        $pay_order->first_pay = $first_pay;
-
-
-        return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
-    }*/
-
 
     /**
      * @api {get} /pay/firstPayOrder/{item_id} 创建首付款支付订单
@@ -472,42 +388,6 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/demandWxPay 发布需求保证金支付-微信
-     * @apiVersion 1.0.0
-     * @apiName pay demandWxPay
-     * @apiGroup pay
-     *
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *      "data": {
-     *          'code_url': ""  //二维码链接
-     *      }
-     *  }
-     */
-    /* public function demandWxPay()
-     {
-         //验证是否是需求用户
-         if ($this->auth_user->type != 1) {
-             return $this->response->array($this->apiError('设计公司不能发布项目', 403));
-         }
-         //总金额
-         $total_fee = config('constant.item_price');
-
-         $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 3);
-
-         $wx_pay = new WxPay();
-         $code_url = $wx_pay->wxPayApi('发布需求保证金', $pay_order->uid, $total_fee * 100, 1);
-         $uid = $pay_order->uid;
-         return $this->response->array($this->apiSuccess('Success', 200, compact('code_url', 'uid')));
-     }*/
-
-    /**
      * @api {get} /pay/itemWxPay/{pay_order_id} 支付项目款-微信
      * @apiVersion 1.0.0
      * @apiName pay itemWxPay
@@ -554,42 +434,6 @@ class PayController extends BaseController
         $notify = new PayNotifyCallBack();
         $notify->Handle(false);
     }
-
-    /**
-     * @api {get} /pay/demandJdPay 发布需求保证金支付-京东
-     * @apiVersion 1.0.0
-     * @apiName pay demandJdPay
-     * @apiGroup pay
-     *
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *      "data": {
-     *          'html_text': ""
-     *      }
-     *  }
-     */
-    /*public function demandJdPay()
-    {
-        //验证是否是需求用户
-        if ($this->auth_user->type != 1) {
-            return $this->response->array($this->apiError('设计公司不能发布项目', 403));
-        }
-        //总金额
-        $total_fee = config('constant.item_price');
-
-        $pay_order = $this->createPayOrder('发布需求保证金', $total_fee, 1, 0, 4);
-
-        $jdpay = new JdPay();
-        $html_text = $jdpay->payApi($pay_order->uid, $total_fee, '发布需求保证金');
-
-        return $this->response->array($this->apiSuccess('Success', 200, compact('html_text')));
-    }*/
 
 
     /*array (
