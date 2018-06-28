@@ -293,12 +293,10 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function createItemStagePayOrder(Request $request)
+    public function createItemStagePayOrder(Request $request, $item_stage_id)
     {
         // 支付项目阶段款类型
         $pay_type = 4;
-
-        $item_stage_id = $request->input('item_stage_id');
 
         $pay_order = PayOrder::where(['item_stage_id' => $item_stage_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
         if ($pay_order) {
