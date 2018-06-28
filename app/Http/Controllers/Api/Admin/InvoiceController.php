@@ -70,7 +70,7 @@ class InvoiceController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
 
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:0,1,2',
+            'status' => 'required|in:0,1,2,3',
         ]);
 
         if ($validator->fails()) {
@@ -139,7 +139,7 @@ class InvoiceController extends BaseController
         $per_page = $request->input('$per_page') ?? $this->per_page;
 
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:0,1,2',
+            'status' => 'required|in:0,1,2,3',
         ]);
 
         if ($validator->fails()) {
