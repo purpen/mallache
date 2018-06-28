@@ -812,8 +812,8 @@ class DemandController extends BaseController
             $item->preferential_type = $result_data['type'];
 
             // 获取扣税比例和金额
-            $item->tax_rate = $quotation->getTaxRate();
-            $item->tax = $quotation->getTax() * 100;
+            $item->tax_rate = $quotation->getTaxRate() * 100;
+            $item->tax = $quotation->getTax();
 
 
             $item->design_company_id = $all['design_company_id'];
