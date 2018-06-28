@@ -12,6 +12,7 @@ use App\Models\ItemStage;
 use App\Models\PayOrder;
 use App\Servers\Pay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
@@ -86,19 +87,22 @@ class PayController extends BaseController
 
                     //判断是否业务已处理
                     if ($pay_order->status == 0) {
+                        DB::beginTransaction();
                         $pay_order->pay_type = 2; //支付宝
                         $pay_order->pay_no = $trade_no;
                         $pay_order->status = 1; //支付成功
                         if (!$pay_order->save()) {
-                            Log::error('支付吧业务处理失败');
+                            throw new \Exception("支付宝业务处理失败");
                         }
 
                         // 支付成功需要处理的业务
                         $pay = new Pay($pay_order);
                         $pay->paySuccess();
-//                        event(new PayOrderEvent($pay_order));
+
+                        DB::commit();
                     }
                 } catch (\Exception $e) {
+                    DB::rollBack();
                     Log::error($e);
                     return;
                 }
@@ -488,6 +492,7 @@ class PayController extends BaseController
                     $pay_order = PayOrder::where('uid', $uid)->first();
                     //判断是否业务已处理
                     if ($pay_order->status === 0) {
+                        DB::beginTransaction();
                         $pay_order->pay_type = 4; //京东
                         $pay_order->pay_no = $uid;
                         $pay_order->status = 1; //支付成功
@@ -496,13 +501,14 @@ class PayController extends BaseController
                         // 支付成功需要处理的业务
                         $pay = new Pay($pay_order);
                         $pay->paySuccess();
-//                        event(new PayOrderEvent($pay_order));
+                        DB::commit();
                     }
                     echo "ok";
                 } else {
                     //退款
                 }
             } catch (\Exception $e) {
+                DB::rollBack();
                 Log::error($e);
                 return;
             }

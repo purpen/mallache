@@ -8,6 +8,8 @@ use App\Models\PayOrder;
 use App\Servers\Pay;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PayOrderActionController extends BaseController
@@ -153,17 +155,27 @@ class PayOrderActionController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        $pay_order = PayOrder::find($all['pay_order_id']);
-        $pay_order->pay_type = 5; //银行转账
-        $pay_order->pay_no = $all['pay_no'];
-        $pay_order->status = 1; //支付成功
-        $pay_order->bank_id = $all['bank_id'];
-        $pay_order->save();
 
-        // 支付成功需要处理的业务
-        $pay = new Pay($pay_order);
-        $pay->paySuccess();
-//        event(new PayOrderEvent($pay_order));
+        try {
+            DB::beginTransaction();
+            $pay_order = PayOrder::find($all['pay_order_id']);
+            $pay_order->pay_type = 5; //银行转账
+            $pay_order->pay_no = $all['pay_no'];
+            $pay_order->status = 1; //支付成功
+            $pay_order->bank_id = $all['bank_id'];
+            $pay_order->save();
+
+            // 支付成功需要处理的业务
+            $pay = new Pay($pay_order);
+            $pay->paySuccess();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->response->array($this->apiError('error', 500));
+        }
+
 
         return $this->response->array($this->apiSuccess());
     }
