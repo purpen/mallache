@@ -164,6 +164,7 @@ class InvoiceController extends BaseController
      * @apiGroup AdminInvoice
      *
      * @apiParam {integer} id 发票记录ID
+     * @apiParam {string} summary 备注
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -193,6 +194,7 @@ class InvoiceController extends BaseController
             DB::beginTransaction();
             $invoice->status = 3;
             $invoice->user_id = $this->auth_user_id;
+            $invoice->summary = $request->input('summary') ?? '';
             $invoice->save();
 
             // 完善平台发票信息
@@ -219,6 +221,7 @@ class InvoiceController extends BaseController
      * @apiGroup AdminInvoice
      *
      * @apiParam {integer} id 发票记录ID
+     * @apiParam {string} summary 备注
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -250,6 +253,7 @@ class InvoiceController extends BaseController
             DB::beginTransaction();
             $invoice->status = 2;
             $invoice->user_id = $this->auth_user_id;
+            $invoice->summary = $request->input('summary') ?? '';
             $invoice->save();
 
             // 完善发票中需求公司的发票信息，如需求公司信息不完善，不通过--
