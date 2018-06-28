@@ -298,7 +298,10 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
+
 
                 ];
                 break;
