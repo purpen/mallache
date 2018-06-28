@@ -39,7 +39,9 @@ class InvoiceController extends BaseController
      *              "duty_number": "",  // 税号
      *              "price": "19080.00", // 金额
      *              "item_id": 181, // 项目ID
-     *              "item_stage_id": null, // 项目阶段
+     *              "item_name": '名称', // 项目名称
+     *              "item_stage_id": null, // 项目阶段ID
+     *              "item_stage_name": null, // 项目阶段名称
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
      *              "status": 1,  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
@@ -113,7 +115,9 @@ class InvoiceController extends BaseController
      *              "duty_number": "",  // 税号
      *              "price": "19080.00", // 金额
      *              "item_id": 181, // 项目ID
-     *              "item_stage_id": null, // 项目阶段
+     *              "item_name": '名称', // 项目名称
+     *              "item_stage_id": null, // 项目阶段ID
+     *              "item_stage_name": null, // 项目阶段名称
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
      *              "status": 1  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
