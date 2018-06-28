@@ -323,7 +323,7 @@ class YunpianUploadController extends BaseController
     public function createDir(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|max:50',
+            'name' => 'required|max:100',
             'pan_director_id' => 'required|integer',
         ]);
 
