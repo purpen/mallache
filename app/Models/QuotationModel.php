@@ -146,10 +146,17 @@ class QuotationModel extends BaseModel
 
 
     /**
-     * 计算平台扣除应扣除税点
+     * 计算平台扣除应扣除税金额
      * @return float
      */
     public function getTax()
+    {
+        $tax_rate = $this->getTaxRate();
+        return bcmul($this->price, $tax_rate, 2);
+    }
+
+    // 代扣税比例
+    public function getTaxRate()
     {
         $tax_rate = 0.0;
 
@@ -163,6 +170,7 @@ class QuotationModel extends BaseModel
             }
         }
 
-        return bcmul($this->price, $tax_rate, 2);
+        return $tax_rate;
     }
+
 }

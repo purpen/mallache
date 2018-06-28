@@ -44,55 +44,57 @@ class DemandController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      *   {
-     * "data": {
-     * "item": {
-     * "id": 13,
-     * "type": 1,
-     * "type_value": "产品设计类型",
-     * "design_type": 2, (停用)
-     * "design_type_value": "产品设计", （停用）
-     * "design_types": [
-     *      2
-     *  ],
-     * "design_types_value": [
-     *      "网页设计"
-     *  ],
-     * "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。；22.已评价
-     * "field": 2,
-     * "field_value": "消费电子",
-     * "industry": 2,
-     * "industry_value": "消费零售",
-     * "name": "api UI",
-     * "product_features": "亮点",
-     * "competing_product": "竞品",
-     * "cycle": 1,
-     * "cycle_value": "1个月内",
-     * "design_cost": 2,
-     * "design_cost_value": "1-5万之间",
-     * "city": 2,
-     * "image": [],
-     * "price": 200000,
-     * "company_name": null,  //公司名称
-     * "company_abbreviation": null, //简称
-     * "company_size": null, //公司规模；1...
-     * "company_web": null,  //公司网址
-     * "company_province": null, //省份
-     * "company_city": null,  //城市
-     * "company_area": null,   //区县
-     * "address": null,    //详细地址
-     * "contact_name": null,   //联系人
-     * "phone": "172734923",
-     * "email": "qq@qq.com",
-     *                  "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
-     * },
-     * "quotation": null, //报价单信息
-     * "contract": null   //合同
-     * "evaluate": null  //评价
-     * },
-     * "meta": {
-     * "message": "Success",
-     * "status_code": 200
-     * }
+     *      "data": {
+     *          "item": {
+     *              "id": 13,
+     *              "type": 1,
+     *              "type_value": "产品设计类型",
+     *              "design_type": 2, (停用)
+     *              "design_type_value": "产品设计", （停用）
+     *              "design_types": [
+     *                   2
+     *               ],
+     *              "design_types_value": [
+     *                   "网页设计"
+     *               ],
+     *              "status": 5,  //-2.无设计接单关闭；-1.用户关闭；1.填写资料；2.人工干预；3.推送设计公司；4.等待设计公司接单(报价)；5.等待设计公司提交合同（提交合同）；6.确认合同（已提交合同）；7.已确定合同；8.托管项目资金；11.项目进行中；15.项目已完成；18.已项目验收。；22.已评价
+     *              "field": 2,
+     *              "field_value": "消费电子",
+     *              "industry": 2,
+     *              "industry_value": "消费零售",
+     *              "name": "api UI",
+     *              "product_features": "亮点",
+     *              "competing_product": "竞品",
+     *              "cycle": 1,
+     *              "cycle_value": "1个月内",
+     *              "design_cost": 2,
+     *              "design_cost_value": "1-5万之间",
+     *              "city": 2,
+     *              "image": [],
+     *              "price": 200000,
+     *              "company_name": null,  //公司名称
+     *              "company_abbreviation": null, //简称
+     *              "company_size": null, //公司规模；1...
+     *              "company_web": null,  //公司网址
+     *              "company_province": null, //省份
+     *              "company_city": null,  //城市
+     *              "company_area": null,   //区县
+     *              "address": null,    //详细地址
+     *              "contact_name": null,   //联系人
+     *              "phone": "172734923",
+     *              "email": "qq@qq.com",
+     *              "stage_status":0 //资料填写阶段；1.项目类型；2.需求信息；3.公司信息
+     *              'tax_rate': 10, // 代扣税比例
+     *              'tax': 1000, // 代扣税金额
+     *          },
+     *      "quotation": null, //报价单信息
+     *      "contract": null   //合同
+     *      "evaluate": null  //评价
+     *      },
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
      * }
      */
     public function show($id)
@@ -349,7 +351,7 @@ class DemandController extends BaseController
         $item->industry = $request->input('industry') ?? 0;
         $item->item_province = $request->input('item_province') ?? 0;
         $item->item_city = $request->input('item_city') ?? 0;
-        if($item->save()){
+        if ($item->save()) {
             if ($random = $request->input('random')) {
                 AssetModel::setRandom($item->id, $random);
             }
@@ -447,7 +449,7 @@ class DemandController extends BaseController
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
         //如果不等于200的话，默认50所有值
         if ($result['code'] != 200) {
-            foreach ($design_company as $designCompany){
+            foreach ($design_company as $designCompany) {
                 $designCompany['rows'] = [
                     'ave_score' => 50,
                     'base_average' => 50,
@@ -463,7 +465,7 @@ class DemandController extends BaseController
         } else {
             foreach ($design_company as $designCompany) {
                 //$result['data']['rows']返回的多条数据
-                foreach ($result['data']['rows'] as $newRows){
+                foreach ($result['data']['rows'] as $newRows) {
                     if ($designCompany->id == $newRows['d3ing_id']) {
                         $designCompany['rows'] = $newRows;
                     }
@@ -809,6 +811,10 @@ class DemandController extends BaseController
             $item->commission_rate = $result_data['rate'];
             $item->preferential_type = $result_data['type'];
 
+            // 获取扣税比例和金额
+            $item->tax_rate = $quotation->getTaxRate();
+            $item->tax = $quotation->getTax() * 100;
+
 
             $item->design_company_id = $all['design_company_id'];
             $item->price = $quotation->price;
@@ -927,15 +933,16 @@ class DemandController extends BaseController
         }
         try {
             DB::beginTransaction();
-            $item->status = 7;
-            $item->save();
+
 
             //修改合同状态为已确认
             $contract = $item->contract;
             $contract->status = 1;
             $contract->true_time = time();
-
             $contract->save();
+
+            $item->status = 7;
+            $item->save();
 
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
