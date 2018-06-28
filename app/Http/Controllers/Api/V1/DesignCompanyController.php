@@ -61,6 +61,9 @@ class DesignCompanyController extends BaseController
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
      *          "verify_summary": '',  // 审核备注
+     *          "account_name": '', // 银行开户名
+     *          "bank_name": "", // 开户支行
+     *          "account_number": '1234543', // 银行账号
      *      },
      *       "meta": {
      *           "message": "Success",
