@@ -190,8 +190,10 @@ return [
         '/admin/invoice/pullLists',
         // 需要平台给需求公司开具发票列表
         '/admin/invoice/pushLists',
-        //确认发票已开
+        //确认收到设计公司发票
         '/admin/invoice/trueInvoice',
+        // 确认给需求公司的发票已开
+        '/admin/invoice/trueDemandInvoice',
     ],
 
     /**
@@ -375,8 +377,10 @@ return [
         '/admin/invoice/pullLists',
         // 需要平台给需求公司开具发票列表
         '/admin/invoice/pushLists',
-        //确认发票已开
+        //确认收到设计公司发票
         '/admin/invoice/trueInvoice',
+        // 确认给需求公司的发票已开
+        '/admin/invoice/trueDemandInvoice',
     ],
 
     /**
