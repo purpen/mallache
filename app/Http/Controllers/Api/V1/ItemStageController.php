@@ -234,35 +234,44 @@ class ItemStageController extends BaseController
             return $this->response->array($this->apiError('当前阶段不可操作', 403));
         }
 
-        // 项目阶段确认
-        $item_stage->confirm = 1;
-        $item_stage->save();
+        try {
+            DB::beginTransaction();
 
+            // 项目阶段确认
+            $item_stage->confirm = 1;
+            $item_stage->save();
 
-        //项目信息
-        $item = Item::find($item_stage->item_id);
-        $item_info = $item->itemInfo();
-        // 设计公司用户信息
-        $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
+            //项目信息
+            $item = Item::find($item_stage->item_id);
+            $item_info = $item->itemInfo();
+            // 设计公司用户信息
+            $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
 
-        $tools = new Tools();
-        //通知设计公司
-        $title2 = '需求公司确认阶段';
-        $content2 = '【' . $item_info['name'] . '】项目阶段已确认';
-        $tools->message($design_user->id, $title2, $content2, 2, $item_stage->item_id);
-        // 短信通知设计公司
-        $this->sendSms($item->designCompany->phone);
+            $tools = new Tools();
+            //通知设计公司
+            $title2 = '需求公司确认阶段';
+            $content2 = '【' . $item_info['name'] . '】项目阶段已确认';
+            $tools->message($design_user->id, $title2, $content2, 2, $item_stage->item_id);
+            // 短信通知设计公司
+            $this->sendSms($item->designCompany->phone);
 
-        // 如果合同版本为 0 ，直接确认需求公司阶段款已付
-        $contract = $item->contract;
-        if ($contract && $contract == 0) {
-            $contract->pay_status = 1;
-            $contract->save();
+            // 如果合同版本为 0 ，直接确认需求公司阶段款已付
+            $contract = $item->contract;
+            if ($contract && $contract->version == 0) {
+                $contract->pay_status = 1;
+                $contract->save();
 
-            // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
-            if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
-                return $this->response->array($this->apiError());
+                // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
+                if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
+                    throw new \Exception('支付错误', 500);
+                }
             }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }
 
         return $this->response->array($this->apiSuccess());
@@ -280,54 +289,45 @@ class ItemStageController extends BaseController
      */
     protected function pay($demand_user_id, $design_user_id, $amount, $item, $item_stage)
     {
-        DB::beginTransaction();
-        try {
-            // 项目阶段确认
-            $item_stage->confirm = 1;
-            $item_stage->save();
+        // 项目阶段确认
+        $item_stage->confirm = 1;
+        $item_stage->save();
 
-            $user_model = new User();
-            //修改项目剩余项目款
-            $item->rest_fund = $item->rest_fund - $amount;
-            $item->save();
+        $user_model = new User();
+        //修改项目剩余项目款
+        $item->rest_fund = $item->rest_fund - $amount;
+        $item->save();
 
-            //减少需求公司账户金额（总金额、冻结金额）
-            $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
+        //减少需求公司账户金额（总金额、冻结金额）
+        $user_model->totalAndFrozenDecrease($demand_user_id, $amount);
 
-            //增加设计公司账户总金额
-            $user_model->totalIncrease($design_user_id, $amount);
+        //增加设计公司账户总金额
+        $user_model->totalIncrease($design_user_id, $amount);
 
-            $item_info = $item->itemInfo();
+        $item_info = $item->itemInfo();
 
-            $fund_log = new FundLog();
-            //需求公司资金流水记录
-            $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
-            //设计公司资金流水记录
-            $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
+        $fund_log = new FundLog();
+        //需求公司资金流水记录
+        $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
+        //设计公司资金流水记录
+        $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
 
 
-            $tools = new Tools();
-            //通知需求公司
-            $title1 = '支付阶段项目款';
-            $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
-            $tools->message($demand_user_id, $title1, $content1, 3, null);
-            // 短信通知需求公司
-            $this->sendSms($item->phone);
+        $tools = new Tools();
+        //通知需求公司
+        $title1 = '支付阶段项目款';
+        $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
+        $tools->message($demand_user_id, $title1, $content1, 3, null);
+        // 短信通知需求公司
+        $this->sendSms($item->phone);
 
-            //通知设计公司
-            $title2 = '收到阶段项目款';
-            $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
-            $tools->message($design_user_id, $title2, $content2, 3, null);
-            // 短信通知设计公司
-            $this->sendSms($item->designCompany->phone);
+        //通知设计公司
+        $title2 = '收到阶段项目款';
+        $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
+        $tools->message($design_user_id, $title2, $content2, 3, null);
+        // 短信通知设计公司
+        $this->sendSms($item->designCompany->phone);
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            return false;
-        }
-
-        DB::commit();
         return true;
     }
 

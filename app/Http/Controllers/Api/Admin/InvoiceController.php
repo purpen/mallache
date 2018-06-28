@@ -186,8 +186,9 @@ class InvoiceController extends BaseController
         if ($invoice->type != 1 || $invoice->company_type != 2) {
             return $this->response->array($this->apiError('request error', 403));
         }
-        if ($invoice->status == 3) {
-            return $this->response->array($this->apiSuccess());
+        // 状态必须是2
+        if ($invoice->status !== 2) {
+            return $this->response->array($this->apiError('当前状态不可操作', 403));
         }
 
         try {
