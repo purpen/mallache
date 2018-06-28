@@ -1320,7 +1320,7 @@ class DemandController extends BaseController
     }
 
     /**
-     * @api {put} /demand/updateName 更改项目名称
+     * @api {put} /updateName/demand 更改项目名称
      * @apiVersion 1.0.0
      * @apiName demand updateName
      * @apiGroup demandType

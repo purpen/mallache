@@ -295,7 +295,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //项目类型、领域
         $api->resource('/demand', 'DemandController');
         //更改项目名称
-        $api->put('/demand/updateName', 'DemandController@updateName');
+        $api->put('/updateName/demand', 'DemandController@updateName');
 
         //UX UI 设计详情
         $api->resource('/UDesign', 'UDesignInfoController');
