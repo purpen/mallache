@@ -307,11 +307,11 @@ class PayController extends BaseController
 
 
         if (!$item_stage = ItemStage::find($item_stage_id)) {
-            return $this->response->array("not found item stage", 404);
+            return $this->response->array($this->apiError("not found item stage", 404));
         }
 
         if (!$item = $item_stage->item) {
-            return $this->response->array("not found item", 404);
+            return $this->response->array($this->apiError("not found item", 404));
         }
 
         if ($item->user_id != $this->auth_user_id || $item->status != 11 || $item_stage->pay_status == 1) {
