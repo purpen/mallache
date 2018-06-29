@@ -14,7 +14,7 @@ class Invoice extends BaseModel
      * @param $price float 金额
      * @param $item_id int 项目ID
      * @param $item_stage_id int 项目阶段ID
-     * @return Invoice
+     * @return Invoice|false
      */
     public function createPushInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id)
     {
@@ -27,9 +27,11 @@ class Invoice extends BaseModel
         $invoice->item_id = $item_id; //
         $invoice->item_stage_id = $item_stage_id; //
         $invoice->status = 1; //
-        $invoice->save();
+        if ($invoice->save()) {
+            return $invoice;
+        }
 
-        return $invoice;
+        return false;
     }
 
     /**
@@ -40,7 +42,7 @@ class Invoice extends BaseModel
      * @param $price float 金额
      * @param $item_id int 项目ID
      * @param $item_stage_id int 项目阶段ID
-     * @return Invoice
+     * @return Invoice|false
      */
     public function createPullInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id, $taxable_type, $invoice_type)
     {
@@ -56,9 +58,11 @@ class Invoice extends BaseModel
         $invoice->taxable_type = $taxable_type;
         $invoice->invoice_type = $invoice_type;
 
-        $invoice->save();
+        if ($invoice->save()) {
+            return $invoice;
+        }
 
-        return $invoice;
+        return false;
     }
 
     // 信息详情

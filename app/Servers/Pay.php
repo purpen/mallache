@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 // 需求公司支付服务模块
 class Pay
@@ -76,7 +77,12 @@ class Pay
         // 生成需要给需求公司开发票信息
         $demand_company = DemandCompany::query()->where('user_id', $this->pay_order->user_id)->first();
         $demand_invoice = new Invoice();
-        $demand_invoice->createPushInvoice(1, $demand_company->id, $this->pay_order->amount, $this->pay_order->item_id, null);
+        $demand_result = $demand_invoice->createPushInvoice(1, $demand_company->id, $this->pay_order->amount, $this->pay_order->item_id, null);
+        if (!$demand_result) {
+            Log::error('生成需要给需求公司开发票信息失败');
+            throw new \Exception('生成需要给需求公司开发票信息失败');
+
+        }
 
 
         // 计算平台佣金
@@ -92,8 +98,14 @@ class Pay
 
         // 生成需要收取设计公司发票的信息
         $design_invoice = new Invoice();
-        $design_invoice->createPullInvoice(1, $item->design_company_id, $design_amount, $this->pay_order->item_id, null, $quotation->taxable_type, $quotation->invoice_type);
+        $design_result = $design_invoice->createPullInvoice(1, $item->design_company_id, $design_amount, $this->pay_order->item_id, null, $quotation->taxable_type, $quotation->invoice_type);
+        if (!$design_result) {
+            Log::error('生成需要收取设计公司发票的信息失败');
+            throw new \Exception('生成需要收取设计公司发票的信息失败');
+
+        }
     }
+
 
     // 收到项目阶段付款
     protected function itemStagePay()
