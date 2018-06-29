@@ -293,7 +293,7 @@ class PayController extends BaseController
      *      }
      *  }
      */
-    public function createItemStagePayOrder(Request $request, $item_stage_id)
+    public function createItemStagePayOrder($item_stage_id)
     {
         // 支付项目阶段款类型
         $pay_type = 4;

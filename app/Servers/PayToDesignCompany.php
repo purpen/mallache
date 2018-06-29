@@ -195,7 +195,6 @@ class PayToDesignCompany
         $tools->message($demand_user_id, $title1, $content1, 3, null);
         // 短信通知需求公司
         Tools::sendSmsToPhone($demand_phone, $content1);
-        $this->sendSms($item->phone);
 
         //通知设计公司
         $title2 = '收到阶段项目款';
