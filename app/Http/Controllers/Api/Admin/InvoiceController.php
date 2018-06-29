@@ -85,7 +85,9 @@ class InvoiceController extends BaseController
             $query = $query->where('status', $status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new InvoiceTransformer())->setMeta($this->apiMeta());
     }
@@ -156,7 +158,9 @@ class InvoiceController extends BaseController
             $query = $query->where('status', $status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new InvoiceTransformer())->setMeta($this->apiMeta());
     }
