@@ -30,7 +30,7 @@ class DesignCaseModel extends BaseModel
         'profile',
         'status',
         'type',
-        'design_type',
+        'design_types',
         'industry',
         'other_prize',
         'design_company_id',
@@ -47,7 +47,7 @@ class DesignCaseModel extends BaseModel
         'field_val',
         'industry_val',
         'type_val',
-        'design_type_val',
+        'design_types_val',
         'prize_val',
         'case_image',
     ];
@@ -109,14 +109,20 @@ class DesignCaseModel extends BaseModel
         return $sales_volume_val;
     }
 
-    //判断设计类型
+
+    //设计类型
     public function getTypeValAttribute()
     {
-        return $this->attributes['type'] == 1 ? '产品设计' : 'UI UX 设计';
+        $type = config('constant.type');
+        if (array_key_exists($this->type, $type)) {
+            return $type[$this->type];
+        }
+
+        return '';
     }
 
     //判断设计类别
-    public function getDesignTypeValAttribute()
+    /*public function getDesignTypeValAttribute()
     {
         if ($this->attributes['type'] == 1) {
             switch ($this->attributes['design_type']) {
@@ -146,7 +152,7 @@ class DesignCaseModel extends BaseModel
 
         }
         return $design_type_val;
-    }
+    }*/
 
 
     //判断领域
@@ -197,5 +203,27 @@ class DesignCaseModel extends BaseModel
         } else {
             return (array)explode(',', $key);
         }
+    }
+
+    //设计类别多选
+    public function getDesignTypesValAttribute()
+    {
+        $item_type = config('constant.item_type');
+
+        $design_types = json_decode($this->design_types, true);
+        if (empty($design_types)) {
+            return [];
+        } else {
+            $arr = [];
+            if (array_key_exists($this->type, $item_type)) {
+                foreach ($design_types as $v) {
+                    if (array_key_exists($v, $item_type[$this->type])) {
+                        $arr[] = $item_type[$this->type][$v];
+                    }
+                }
+            }
+            return $arr;
+        }
+
     }
 }

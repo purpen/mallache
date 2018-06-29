@@ -21,23 +21,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DesignCompanyController extends BaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * @api {get} /designCompany  设计公司展示
      * @apiVersion 1.0.0
      * @apiName designCompany show
@@ -78,6 +61,9 @@ class DesignCompanyController extends BaseController
      *          "license_image": ""，
      *          "unique_id": "58fdc5273db38"
      *          "verify_summary": '',  // 审核备注
+     *          "account_name": '', // 银行开户名
+     *          "bank_name": "", // 开户支行
+     *          "account_number": '1234543', // 银行账号
      *      },
      *       "meta": {
      *           "message": "Success",
@@ -142,17 +128,6 @@ class DesignCompanyController extends BaseController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\DesignCompanyModel $designCompanyModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DesignCompanyModel $designCompanyModel)
-    {
-        //
-    }
-
-    /**
      * @api {put} /designCompany 更新设计公司信息
      * @apiVersion 1.0.0
      * @apiName designCompany update
@@ -188,6 +163,12 @@ class DesignCompanyController extends BaseController
      * @apiParam {json} industrial_design_center 工业设计中心：1.市级；2.省级；3.国家级 [{'time': '2018-1-1','type': 1}]
      * @apiParam {integer} investment_product 投资孵化产品 0.无；1.有；
      * @apiParam {json} own_brand 自有产品品牌 []
+     * @apiParam {string} account_name 银行开户名
+     * @apiParam {string} bank_name 开户支行名称
+     * @apiParam {string} account_number 银行账号
+     * @apiParam {int} taxable_type 纳税类型 1. 一般纳税人 2. 小额纳税人
+     * @apiParam {int} invoice_type 发票类型 1. 专票 2. 普票
+     *
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      *   {
@@ -240,7 +221,12 @@ class DesignCompanyController extends BaseController
      *          "investment_product": "1",              // 投资孵化产品 0.无；1.有
      *          "own_brand": [                          // 自有产品品牌
      *          "se"
-     *          ]
+     *          ],
+     *          'account_name' => '', // 银行开户名
+     *          'bank_name' => ', // 银行分行名称
+     *          'account_number' => '2342323232', // 银行卡号
+     *          'taxable_type' => 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *          'invoice_type' => 1,  // 发票类型 1. 专票 2. 普票
      *      },
      *     "meta": {
      *       "message": "",
@@ -267,7 +253,6 @@ class DesignCompanyController extends BaseController
             'company_size' => 'nullable|integer',
             'branch_office' => 'nullable|integer',
             'position' => 'nullable',
-//            'item_quantity'  => 'nullable|integer',
             'web' => 'nullable|max:50',
             'company_profile' => 'nullable|max:500',
             'establishment_time' => 'nullable|date',
@@ -278,6 +263,11 @@ class DesignCompanyController extends BaseController
             'legal_person' => 'nullable|max:20',
             'document_type' => 'nullable|integer',
             'document_number' => 'nullable|max:20',
+            'account_name' => 'max:30',
+            'bank_name' => 'max:30',
+            'account_number' => 'max:50',
+            'taxable_type' => 'nullable|integer|in:1,2',
+            'invoice_type' => 'nullable|integer|in:1,2',
         ];
 
         $messages = [
@@ -339,12 +329,23 @@ class DesignCompanyController extends BaseController
             'legal_person',
             'document_type',
             'document_number',
+            'province',
+            'city',
+            'area',
+            'position',
+            'contact_name',
+            'phone',
+            'email',
+            'account_name',
+            'bank_name',
+            'account_number',
+            'taxable_type',
+            'invoice_type',
         ];
         if (!empty(array_intersect($verify, array_keys($all)))) {
             $all['verify_status'] = 3;
         }
 
-//        $design = DesignCompanyModel::firstOrCreate(['user_id' => $user_id]);
         $design = DesignCompanyModel::where(['user_id' => $user_id])->first();
         if (!$design) {
             $design = DesignCompanyModel::createDesign($user_id);
@@ -367,16 +368,6 @@ class DesignCompanyController extends BaseController
         return false;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\DesignCompanyModel $designCompanyModel
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DesignCompanyModel $designCompanyModel)
-    {
-        //
-    }
 
     /**
      * @api {get} /designCompany/child  子设计公司展示

@@ -14,7 +14,7 @@ class Invoice extends BaseModel
      * @param $price float 金额
      * @param $item_id int 项目ID
      * @param $item_stage_id int 项目阶段ID
-     * @return Invoice
+     * @return Invoice|false
      */
     public function createPushInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id)
     {
@@ -27,9 +27,11 @@ class Invoice extends BaseModel
         $invoice->item_id = $item_id; //
         $invoice->item_stage_id = $item_stage_id; //
         $invoice->status = 1; //
-        $invoice->save();
+        if ($invoice->save()) {
+            return $invoice;
+        }
 
-        return $invoice;
+        return false;
     }
 
     /**
@@ -40,9 +42,9 @@ class Invoice extends BaseModel
      * @param $price float 金额
      * @param $item_id int 项目ID
      * @param $item_stage_id int 项目阶段ID
-     * @return Invoice
+     * @return Invoice|false
      */
-    public function createPullInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id)
+    public function createPullInvoice($pay_type, $target_id, $price, $item_id, $item_stage_id, $taxable_type, $invoice_type)
     {
         $invoice = new self();
         $invoice->type = 1; // 2. 开
@@ -53,9 +55,14 @@ class Invoice extends BaseModel
         $invoice->item_id = $item_id; //
         $invoice->item_stage_id = $item_stage_id; //
         $invoice->status = 1;
-        $invoice->save();
+        $invoice->taxable_type = $taxable_type;
+        $invoice->invoice_type = $invoice_type;
 
-        return $invoice;
+        if ($invoice->save()) {
+            return $invoice;
+        }
+
+        return false;
     }
 
     // 信息详情
@@ -71,11 +78,51 @@ class Invoice extends BaseModel
             'duty_number' => $this->duty_number,
             'price' => $this->price,
             'item_id' => $this->item_id,
+            'item_name' => $this->item ? $this->item->name : '',
             'item_stage_id' => $this->item_stage_id,
+            'item_stage_name' => $this->itemStage ? $this->itemStage->title : '',
             'user_id' => $this->user_id,
             'summary' => $this->summary,
             'status' => $this->status,
+            'taxable_type' => $this->taxable_type,
+            'invoice_type' => $this->invoice_type,
+            'logistics_name' => $this->logistics_name,
+            'logistics_id' => $this->logistics_id,
+            'logistics_number' => $this->logistics_number,
+            'created_at' => $this->created_at,
         ];
+    }
+
+    // 获取设计项目对应设计公司的发票信息列表
+    public static function designInvoiceLists($item_id)
+    {
+        $lists = Invoice::query()
+            ->where('item_id', $item_id)
+            ->where('type', 1)
+            ->where('company_type', 2)
+            ->get();
+        $data = [];
+        foreach ($lists as $v) {
+            $data[] = $v->info();
+        }
+
+        return $data;
+    }
+
+    // 获取设计项目对应需求公司的发票信息列表
+    public static function demandInvoiceLists($item_id)
+    {
+        $lists = Invoice::query()
+            ->where('item_id', $item_id)
+            ->where('type', 2)
+            ->where('company_type', 1)
+            ->get();
+        $data = [];
+        foreach ($lists as $v) {
+            $data[] = $v->info();
+        }
+
+        return $data;
     }
 
     // 一对多相对关联项目表
@@ -84,9 +131,20 @@ class Invoice extends BaseModel
         return $this->belongsTo('App\Models\Item', 'item_id');
     }
 
-    // 一对多相对关联项目表
+    // 一对多相对关联项目阶段表
     public function itemStage()
     {
         return $this->belongsTo('App\Models\ItemStage', 'item_stage_id');
+    }
+
+    // 物流名称
+    public function getLogisticsNameAttribute()
+    {
+        $logistics = config('constant.logistics');
+        if (array_key_exists($this->logistics_id, $logistics)) {
+            return $logistics[$this->logistics_id];
+        }
+
+        return '';
     }
 }

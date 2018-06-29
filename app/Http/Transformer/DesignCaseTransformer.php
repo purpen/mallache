@@ -31,8 +31,6 @@ class DesignCaseTransformer extends TransformerAbstract
     {
         return [
             'id' => intval($designCase->id),
-//            'prize' => intval($designCase->prize),
-//            'prize_val' => $designCase->prize_val,
             'title' => strval($designCase->title),
             'prize_time' => strval($designCase->prize_time),
             'sales_volume' => intval($designCase->sales_volume),
@@ -50,8 +48,8 @@ class DesignCaseTransformer extends TransformerAbstract
             'type' => intval($designCase->type),
             'type_val' => $designCase->type_val,
             'mass_production' => intval($designCase->mass_production),
-            'design_type' => intval($designCase->design_type),
-            'design_type_val' => $designCase->design_type_val,
+            'design_types' => json_decode($designCase->design_types),
+            'design_types_val' => $designCase->design_types_val,
             'other_prize' => strval($designCase->other_prize),
             'open' => $designCase->open,
             'design_company' => $this->designCompany($designCase),

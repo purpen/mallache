@@ -64,7 +64,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         ]);
 
 
-
         //更新需求公司审核状态
         $api->put('/admin/demandCompany/verifyStatus', [
             'as' => 'AdminDemandCompany.verifyStatus', 'uses' => 'AdminDemandCompanyController@verifyStatus'
@@ -305,17 +304,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         /**
          * 佣金优惠
          */
-        // api {post} /admin/commissionCount/add 添加设计公司佣金免费次数
+        //添加设计公司佣金免费次数
         $api->post('/admin/commissionCount/add', 'CommissionCountController@addCount');
-        // api {get} /admin/commissionCount/lists 设计公司优惠次数列表
+        // 设计公司优惠次数列表
         $api->get('/admin/commissionCount/lists', 'CommissionCountController@lists');
 
-        //api {get} /admin/invoice/pullLists 需要设计公司给平台开具发票列表
+        // 需要设计公司给平台开具发票列表
         $api->get('/admin/invoice/pullLists', 'InvoiceController@pullLists');
-        // api {get} /admin/invoice/pushLists 需要平台给需求公司开具发票列表
+        // 需要平台给需求公司开具发票列表
         $api->get('/admin/invoice/pushLists', 'InvoiceController@pushLists');
-        // api {put} /admin/invoice/trueInvoice 确认发票已开
+        // 确认收到设计公司发票
         $api->put('/admin/invoice/trueInvoice', 'InvoiceController@trueInvoice');
+        // 确认给需求公司的发票已开
+        $api->put('/admin/invoice/trueDemandInvoice', 'InvoiceController@trueDemandInvoice');
+
 
     });
 

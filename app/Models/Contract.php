@@ -49,6 +49,7 @@ class Contract extends BaseModel
         'demand_pay_limit',
         'thn_pay_limit',
         'version',
+        'tax_price',
     ];
 
     //相对关联 项目表
@@ -99,6 +100,7 @@ class Contract extends BaseModel
             'demand_pay_limit' => $this->demand_pay_limit,
             'thn_pay_limit' => $this->thn_pay_limit,
             'version' => $this->version,
+            'tax_price' => $this->tax_price,
         ];
 
 

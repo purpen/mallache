@@ -31,6 +31,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->get('/captcha/getCaptcha', [
         'as' => 'captcha.getCaptcha', 'uses' => 'ToolsController@getCaptcha'
     ]);
+
     // 验证码图片资源
     $api->get('/captcha/{str}', [
         'as' => 'captcha', 'uses' => 'ToolsController@captcha'
@@ -663,6 +664,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // api {delete} /designNotice/delete 设计管理工具--消息删除
         $api->delete('/designNotice/delete', 'DesignNoticeController@delete');
 
+
+        //设计公司确认发票已开出
+        $api->put('/invoice/designTrueSend', 'InvoiceController@designTrueSend');
+        // 需求公司确认收到发票
+        $api->put('/invoice/demandTrueGet', 'InvoiceController@demandTrueGet');
+
+        // 物流公司列表
+        $api->get('/logisticsLists', 'ToolsController@logisticsLists');
 
     });
 

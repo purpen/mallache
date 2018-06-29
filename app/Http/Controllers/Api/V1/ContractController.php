@@ -179,6 +179,8 @@ class ContractController extends BaseController
             $all['commission'] = ItemCommissionAction::getCommission($item);
             $all['commission_rate'] = $item->commission_rate;
             $all['version'] = config('constant.contract_version');
+            $all['tax_price'] = $item->quotation->getTax();
+
             $contract = Contract::create($all);
 
             foreach ($all['item_stage'] as $stage) {

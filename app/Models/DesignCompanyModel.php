@@ -60,6 +60,13 @@ class DesignCompanyModel extends BaseModel
         'industrial_design_center',
         'investment_product',
         'own_brand',
+
+        'account_name',
+        'bank_name',
+        'account_number',
+        'taxable_type',
+        'invoice_type',
+
         'ave_score',
         'base_average',
         'credit_average',
@@ -436,4 +443,16 @@ class DesignCompanyModel extends BaseModel
         }
     }
 
+    /**
+     * 判断需求公司是否通过审核
+     * @return bool
+     */
+    public function isVerify()
+    {
+        if ($this->verify_status == 1) {
+            return true;
+        }
+
+        return false;
+    }
 }

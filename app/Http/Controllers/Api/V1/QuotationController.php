@@ -50,9 +50,8 @@ class QuotationController extends BaseController
      * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
-     * @apiParam {int} is_tax 是否含税
-     * @apiParam {int} is_invoice 是否开发票
-     * @apiParam {int} tax_rate 税率
+     * @apiParam {int} taxable_type 纳税类型 1. 一般纳税人 2. 小额纳税人
+     * @apiParam {int} invoice_type 发票类型 1. 专票 2. 普票
      * @apiParam {decimal} total_price 合计金额
      * @apiParam {decimal} price 总计金额
      * @apiParam {string} token
@@ -91,6 +90,9 @@ class QuotationController extends BaseController
      *          "price": "10000"
      *          "item_demand_id": 1,
      *          "design_company_id": 27,
+     *          "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *          "invoice_type": 1  // 发票类型 1. 专票 2. 普票
+     *          "type": 1, // 类型：0.线上 1.线下
      *      },
      *  }
      */
@@ -108,20 +110,6 @@ class QuotationController extends BaseController
         try {
             $rules = [
                 'item_demand_id' => 'required',
-                /*'company_name' => 'required|max:100',
-                'contact_name' => 'required|max:20',
-                'phone' => 'required|max:20',
-                'province' => 'integer',
-                'city' => 'integer',
-                'area' => 'integer',
-                'address' => 'required|string|max:100',
-                'design_company_name' => 'required|max:100',
-                'design_contact_name' => 'required|max:20',
-                'design_phone' => 'required|max:20',
-                'design_province' => 'integer',
-                'design_city' => 'integer',
-                'design_area' => 'integer',
-                'design_address' => 'required|string|max:100',*/
                 'company_name' => 'max:100',
                 'contact_name' => 'max:20',
                 'phone' => 'max:20',
@@ -136,12 +124,10 @@ class QuotationController extends BaseController
                 'design_city' => 'integer',
                 'design_area' => 'integer',
                 'design_address' => 'max:100',
-
+                'taxable_type' => 'integer|required|in:1,2',
+                'invoice_type' => 'integer|required|in:1,2',
 
                 'summary' => 'max:500',
-                'is_tax' => 'required|int',
-                'is_invoice' => 'int',
-                'tax_rate' => 'int',
                 'total_price' => 'required',
                 'plan' => 'string',
                 'price' => 'required',
@@ -179,28 +165,36 @@ class QuotationController extends BaseController
                 // 保存报价单信息
                 $quotation_info = $request->only([
                     'summary',
-                    'is_tax',
-                    'is_invoice',
-                    'tax_rate',
                     'price',
                     'total_price',
                     'item_demand_id',
+                    'taxable_type',
+                    'invoice_type',
                 ]);
                 $quotation_info['type'] = 0; // 线上项目
 
-                if ($quotation_info['is_tax'] == 1) { // 含税
-                    if ($quotation_info['price'] != $quotation_info['total_price']) {
-                        throw new MassageException('合计金额和总计金额不符', 403);
-                    }
-                    $quotation_info['is_invoice'] = null;
-                    $quotation_info['tax_rate'] = null;
-                } else if ($quotation_info['is_tax'] == 2) { // 不含税
-                    $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
-                    $a = bcdiv($a, 100, 2);
-                    if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
-                        throw new MassageException('合计金额和总计金额不符', 403);
+                // 根据纳税信息计算纳税比例
+                if ($quotation_info['taxable_type'] == 1) {  // 小额纳税人 6%
+                    $quotation_info['tax_rate'] = 6;
+                } else {
+                    // 1. 专票
+                    if ($quotation_info['invoice_type'] == 1) {
+                        $quotation_info['tax_rate'] = 7;
+                    } else {  // 普票
+                        $quotation_info['tax_rate'] = 10;
                     }
                 }
+
+                // 基础报价不含税
+                $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
+                $a = bcdiv($a, 100, 2);
+                if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
+                    throw new MassageException('合计金额和总计金额不符', 403);
+                }
+
+                $quotation_info['is_tax'] = 2; // 基础价格不含税
+                $quotation_info['is_invoice'] = 1; // 开票
+
                 $quotation_info['user_id'] = $this->auth_user_id;
                 $quotation_info['design_company_id'] = User::designCompanyId($this->auth_user_id);
                 $quotation_info['item_demand_id'] = $item_demand_id;
@@ -281,7 +275,8 @@ class QuotationController extends BaseController
             DB::rollBack();
             Log::error($e);
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
-        } catch (\Exception $e) {
+        } catch
+        (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
@@ -346,9 +341,8 @@ class QuotationController extends BaseController
      * @apiParam {string} design_address 设计详细地址
      * @apiParam {string} summary 项目目标
      * @apiParam {json} plan 项目计划 [            {                "content": "工作内容",                "arranged": [                    {                        "name": "结构师",                        "number": 2                    }                ],                "duration": 1,                "price": "500.00",                "summary": "备注"            }        ]
-     * @apiParam {int} is_tax 是否含税
-     * @apiParam {int} is_invoice 是否开发票
-     * @apiParam {int} tax_rate 税率
+     * @apiParam {int} taxable_type 纳税类型 1. 一般纳税人 2. 小额纳税人
+     * @apiParam {int} invoice_type 发票类型 1. 专票 2. 普票
      * @apiParam {decimal} total_price 合计金额
      * @apiParam {decimal} price 总计金额
      * @apiParam {string} token
@@ -388,7 +382,10 @@ class QuotationController extends BaseController
      *          "is_invoice": null,
      *          "tax_rate": null,
      *          "total_price": "10000",
-     *          "price": "10000"
+     *          "price": "10000",
+     *          "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *          "invoice_type": 1  // 发票类型 1. 专票 2. 普票
+     *          "type": 1, // 类型：0.线上 1.线下
      *      },
      *   }
      */
@@ -399,21 +396,14 @@ class QuotationController extends BaseController
                 'company_name' => 'max:100',
                 'contact_name' => 'max:20',
                 'phone' => 'max:20',
-//                'province' => 'integer',
-//                'city' => 'integer',
-//                'area' => 'integer',
                 'address' => 'max:100',
                 'design_company_name' => 'max:100',
                 'design_contact_name' => 'max:20',
                 'design_phone' => 'max:20',
-//                'design_province' => 'integer',
-//                'design_city' => 'integer',
-//                'design_area' => 'integer',
                 'design_address' => 'max:100',
                 'summary' => 'max:500',
-                'is_tax' => 'required|int',
-                'is_invoice' => 'int',
-                'tax_rate' => 'int',
+                'taxable_type' => 'integer|required|in:1,2',
+                'invoice_type' => 'integer|required|in:1,2',
                 'total_price' => 'required',
                 'plan' => 'string',
                 'price' => 'required',
@@ -444,8 +434,14 @@ class QuotationController extends BaseController
 
             // 保存甲方信息
             $jia_info = $request->only([
-                'company_name', 'contact_name', 'phone', 'address',
-                'design_company_name', 'design_contact_name', 'design_phone', 'design_address',
+                'company_name',
+                'contact_name',
+                'phone',
+                'address',
+                'design_company_name',
+                'design_contact_name',
+                'design_phone',
+                'design_address',
                 'province',
                 'city',
                 'area',
@@ -486,27 +482,35 @@ class QuotationController extends BaseController
             // 保存报价单信息
             $quotation_info = $request->only([
                 'summary',
-                'is_tax',
-                'is_invoice',
-                'tax_rate',
+                'taxable_type',
+                'invoice_type',
                 'price',
                 'total_price',
             ]);
 
-            $quotation_info['type'] = 1; // 线下项目
-            if ($quotation_info['is_tax'] == 1) { // 含税
-                if ($quotation_info['price'] != $quotation_info['total_price']) {
-                    throw new MassageException('合计金额和总计金额不符', 403);
-                }
-                $quotation_info['is_invoice'] = null;
-                $quotation_info['tax_rate'] = null;
-            } else if ($quotation_info['is_tax'] == 2) { // 不含税
-                $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
-                $a = bcdiv($a, 100, 2);
-                if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
-                    throw new MassageException('合计金额和总计金额不符', 403);
+            $quotation_info['type'] = 0; // 线上项目
+
+            // 根据纳税信息计算纳税比例
+            if ($quotation_info['taxable_type'] == 1) {  // 小额纳税人 6%
+                $quotation_info['tax_rate'] = 6;
+            } else {
+                // 1. 专票
+                if ($quotation_info['invoice_type'] == 1) {
+                    $quotation_info['tax_rate'] = 7;
+                } else {  // 普票
+                    $quotation_info['tax_rate'] = 10;
                 }
             }
+
+            // 基础报价不含税
+            $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
+            $a = bcdiv($a, 100, 2);
+            if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
+                throw new MassageException('合计金额和总计金额不符', 403);
+            }
+
+            $quotation_info['is_tax'] = 2; // 基础价格不含税
+            $quotation_info['is_invoice'] = 1; // 开票
             $quotation_info['user_id'] = $this->auth_user_id;
             $quotation_info['design_project_id'] = $design_project->id;
             $quotation->update($quotation_info);

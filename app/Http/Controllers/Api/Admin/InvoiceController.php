@@ -21,7 +21,7 @@ class InvoiceController extends BaseController
      * @apiName AdminInvoice pullLists
      * @apiGroup AdminInvoice
      *
-     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票
+     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票 3. 收到发票
      * @apiParam {integer} per_page 每页数量
      * @apiParam {integer} page 页数
      * @apiParam {string} token
@@ -39,10 +39,17 @@ class InvoiceController extends BaseController
      *              "duty_number": "",  // 税号
      *              "price": "19080.00", // 金额
      *              "item_id": 181, // 项目ID
-     *              "item_stage_id": null, // 项目阶段
+     *              "item_name": '名称', // 项目名称
+     *              "item_stage_id": null, // 项目阶段ID
+     *              "item_stage_name": null, // 项目阶段名称
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
-     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *              "status": 1,  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
+     *              "taxable_type": 1, // 纳税类型 1. 一般纳税人 2. 小额纳税人
+     *              "invoice_type": 1, // 发票类型 1. 专票 2. 普票
+     *              "logistics_id": 1, // 物流公司ID
+     *              "logistics_name": null, // 物流公司名称
+     *              "logistics_number": 124232, // 物流单号
      *          }
      *      ],
      *          "meta": {
@@ -65,7 +72,7 @@ class InvoiceController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
 
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:0,1,2',
+            'status' => 'required|in:0,1,2,3',
         ]);
 
         if ($validator->fails()) {
@@ -78,7 +85,9 @@ class InvoiceController extends BaseController
             $query = $query->where('status', $status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new InvoiceTransformer())->setMeta($this->apiMeta());
     }
@@ -90,7 +99,7 @@ class InvoiceController extends BaseController
      * @apiName AdminInvoice pushLists
      * @apiGroup AdminInvoice
      *
-     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票
+     * @apiParam {integer} status 状态：0.全部 1. 未开发票 2. 已开发票 3. 收到发票
      * @apiParam {integer} per_page 每页数量
      * @apiParam {integer} page 页数
      * @apiParam {string} token
@@ -108,10 +117,12 @@ class InvoiceController extends BaseController
      *              "duty_number": "",  // 税号
      *              "price": "19080.00", // 金额
      *              "item_id": 181, // 项目ID
-     *              "item_stage_id": null, // 项目阶段
+     *              "item_name": '名称', // 项目名称
+     *              "item_stage_id": null, // 项目阶段ID
+     *              "item_stage_name": null, // 项目阶段名称
      *              "user_id": null, // 操作用户
      *              "summary": "", // 备注
-     *              "status": 1  // 状态：1. 未开发票 2. 已开发票
+     *              "status": 1  // 状态：1. 未开发票 2. 已开发票 3. 收到发票
      *          }
      *      ],
      *          "meta": {
@@ -134,7 +145,7 @@ class InvoiceController extends BaseController
         $per_page = $request->input('$per_page') ?? $this->per_page;
 
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:0,1,2',
+            'status' => 'required|in:0,1,2,3',
         ]);
 
         if ($validator->fails()) {
@@ -147,18 +158,21 @@ class InvoiceController extends BaseController
             $query = $query->where('status', $status);
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
 
         return $this->response->paginator($lists, new InvoiceTransformer())->setMeta($this->apiMeta());
     }
 
     /**
-     * @api {put} /admin/invoice/trueInvoice 确认发票已开
+     * @api {put} /admin/invoice/trueInvoice 确认收到设计公司发票
      * @apiVersion 1.0.0
      * @apiName AdminInvoice trueInvoice
      * @apiGroup AdminInvoice
      *
      * @apiParam {integer} id 发票记录ID
+     * @apiParam {string} summary 备注
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -176,8 +190,71 @@ class InvoiceController extends BaseController
         if (!$invoice) {
             return $this->response->array($this->apiError('not found', 404));
         }
+        // 设计公司的发票
+        if ($invoice->type != 1 || $invoice->company_type != 2) {
+            return $this->response->array($this->apiError('request error', 403));
+        }
+        // 状态必须是2
+        if ($invoice->status !== 2) {
+            return $this->response->array($this->apiError('当前状态不可操作', 403));
+        }
 
-        if ($invoice->status == 2) {
+        try {
+            DB::beginTransaction();
+            $invoice->status = 3;
+            $invoice->user_id = $this->auth_user_id;
+            $invoice->summary = $request->input('summary') ?? '';
+            $invoice->save();
+
+            // 完善平台发票信息
+
+            //将对应款项打入设计公司钱包
+            $pay = new PayToDesignCompany($invoice);
+            $pay->pay();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
+        }
+
+        return $this->response->array($this->apiSuccess());
+    }
+
+
+    /**
+     * @api {put} /admin/invoice/trueDemandInvoice 确认给需求公司的发票已开
+     * @apiVersion 1.0.0
+     * @apiName AdminInvoice trueDemandInvoice
+     * @apiGroup AdminInvoice
+     *
+     * @apiParam {integer} id 发票记录ID
+     * @apiParam {string} summary 备注
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  }
+     * }
+     */
+    public function trueDemandInvoice(Request $request)
+    {
+        $id = $request->input('id');
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        // 需求公司发票
+        if ($invoice->type != 2 || $invoice->company_type != 1) {
+            return $this->response->array($this->apiError('request error', 403));
+        }
+
+        if ($invoice->status == 2 || $invoice->status == 3) {
             return $this->response->array($this->apiSuccess());
         }
 
@@ -185,15 +262,11 @@ class InvoiceController extends BaseController
             DB::beginTransaction();
             $invoice->status = 2;
             $invoice->user_id = $this->auth_user_id;
+            $invoice->summary = $request->input('summary') ?? '';
             $invoice->save();
 
-            // 完善发票信息
+            // 完善发票中需求公司的发票信息，如需求公司信息不完善，不通过--
 
-            // 如果是确认已收到设计公司的发票，将对应款项打入设计公司钱包
-            if ($invoice->type == 1 && $invoice->company_type == 2) {
-                $pay = new PayToDesignCompany($invoice);
-                $pay->pay();
-            }
 
             DB::commit();
         } catch (\Exception $e) {

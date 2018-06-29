@@ -84,22 +84,37 @@ class PayToDesignCompany
             throw new \Exception("首付款金额低于平台佣金", 500);
         }
         // 收取佣金记录
-        ItemCommission::createCommission($item->id, $design_company_id, $item->price, $commission);
+        ItemCommission::createCommission(1, $item->id, $design_company_id, $item->price, $commission);
+
+        // 增值税扣点金额
+        $quotation = $item->quotation;
+        $tax = $quotation->getTax();
+        // 收取项目增值税扣点
+        ItemCommission::createCommission(2, $item->id, $design_company_id, $item->price, $tax);
+
 
         // 设计公司收到金额（扣除平台佣金）
         $design_amount = bcsub($amount, $commission, 2);
+        // 设计公司收到金额（扣除增值税扣点）
+        $design_amount = bcsub($design_amount, $tax, 2);
+        // 设计公司收到金额
         $this->addDesignPrice($design_user_id, $design_amount);
 
 
         $fund_log = new FundLog();
         //需求公司流水记录
         $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付项目首付款');
-        //设计公司流水记录
-        $fund_log->inFund($design_user_id, $design_amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
+        //设计公司流水记录（项目首付款全款）
+        $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
 
         if ($commission > 0) {
             //扣除佣金 设计公司流水记录
             $fund_log->outFund($design_user_id, $commission, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '平台扣除佣金');
+        }
+
+        if ($tax > 0) {
+            //扣除税点 设计公司流水记录
+            $fund_log->outFund($design_user_id, $tax, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '平台扣除税点');
         }
 
 
@@ -162,8 +177,11 @@ class PayToDesignCompany
         //增加设计公司账户总金额
         $this->addDesignPrice($design_user_id, $amount);
 
-        $item_info = $item->itemInfo();
+        // 更新阶段支付设计公司项目款状态
+        $item_stage->pay_design_status = 1;
+        $item_stage->save();
 
+        $item_info = $item->itemInfo();
         $fund_log = new FundLog();
         //需求公司资金流水记录
         $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
@@ -177,7 +195,6 @@ class PayToDesignCompany
         $tools->message($demand_user_id, $title1, $content1, 3, null);
         // 短信通知需求公司
         Tools::sendSmsToPhone($demand_phone, $content1);
-        $this->sendSms($item->phone);
 
         //通知设计公司
         $title2 = '收到阶段项目款';

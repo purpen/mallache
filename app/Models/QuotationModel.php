@@ -23,6 +23,8 @@ class QuotationModel extends BaseModel
         'tax_rate',
         'design_project_id',
         'total_price',
+        'taxable_type',
+        'invoice_type',
     ];
 
     /**
@@ -135,7 +137,40 @@ class QuotationModel extends BaseModel
             'status' => $this->status,
             'item_demand_id' => intval($this->item_demand_id),
             'design_company_id' => intval($this->design_company_id),
+
+            'taxable_type' => $this->taxable_type,
+            'invoice_type' => $this->invoice_type,
+            'type' => $this->type,
         ];
+    }
+
+
+    /**
+     * 计算平台扣除应扣除税金额
+     * @return float
+     */
+    public function getTax()
+    {
+        $tax_rate = $this->getTaxRate();
+        return bcmul($this->price, $tax_rate, 2);
+    }
+
+    // 代扣税比例
+    public function getTaxRate()
+    {
+        $tax_rate = 0.0;
+
+        if ($this->taxable_type == 1) {
+            $tax_rate = 0.0;
+        } else if ($this->taxable_type == 2) {
+            if ($this->invoice_type == 1) {
+                $tax_rate = 0.04;
+            } else {
+                $tax_rate = 0.07;
+            }
+        }
+
+        return $tax_rate;
     }
 
 }

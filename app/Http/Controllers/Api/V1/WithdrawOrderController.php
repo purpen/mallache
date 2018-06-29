@@ -27,7 +27,6 @@ class WithdrawOrderController extends BaseController
      * @apiName withdraw create
      * @apiGroup Withdraw
      *
-     * @apiParam {integer} bank_id 银行账户ID；
      * @apiParam {float} amount 提现金额
      * @apiParam {string} token
      *
@@ -45,10 +44,9 @@ class WithdrawOrderController extends BaseController
     public function create(Request $request)
     {
         $rules = [
-            'bank_id' => 'required|integer',
             'amount' => 'required|numeric',
         ];
-        $payload = $request->only('bank_id', 'amount');
+        $payload = $request->only('amount');
         $validator = Validator::make($payload, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
@@ -58,7 +56,6 @@ class WithdrawOrderController extends BaseController
         }
 
         $amount = sprintf("%0.2f", $payload['amount']);
-        $bank_id = $payload['bank_id'];
 
         //可提现金额
         $cash = $this->auth_user->cash;
@@ -71,26 +68,35 @@ class WithdrawOrderController extends BaseController
             return $this->response->array($this->apiError('提现金额不能为空', 403));
         }
 
-        if (!$bank = Bank::where(['id' => $bank_id, 'status' => 0])->first()) {
-            return $this->response->array($this->apiError('该银行卡不存在', 404));
+        $user = $this->auth_user;
+        $company = null;
+        if ($user->type == 1) {  // 需求公司
+            $company = $user->demandCompany;
+        } else if ($user->type == 2) {  // 设计公司
+            $company = $user->designCompany;
         }
 
-        if ($this->auth_user_id !== $bank->user_id) {
-            return $this->response->array($this->apiError('银行卡错误', 403));
+        // 判断公司信息是否认证通过、对公账户信息是否填写
+        if (!$company->isVerify()) {
+            return $this->response->array($this->apiError('公司信息未认证通过', 403));
         }
+
+        if (empty($company->account_name) || empty($company->account_number) || empty($company->bank_name)) {
+            return $this->response->array($this->apiError('对公账户信息填写不完全', 403));
+        }
+
 
         try {
             DB::beginTransaction();
 
-            $withdraw = WithdrawOrder::create([
+            $withdraw = WithdrawOrder::query()->create([
                 'uid' => Tools::orderId($this->auth_user_id),
                 'user_id' => $this->auth_user_id,
                 'type' => 1,
                 'amount' => $amount,
-                'account_name' => $bank->account_name,
-                'account_number' => $bank->account_number,
-                'account_bank_id' => $bank->account_bank_id,
-                'branch_name' => $bank->branch_name,
+                'account_name' => $company->account_name,
+                'account_number' => $company->account_number,
+                'branch_name' => $company->bank_name,
                 'status' => 0,
             ]);
 

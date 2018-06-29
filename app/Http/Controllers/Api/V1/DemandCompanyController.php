@@ -97,6 +97,9 @@ class DemandCompanyController extends BaseController
      * @apiParam {integer}   document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
      * @apiParam {string}   document_number 证件号码
      * @apiParam {integer}   company_property 企业性质：1.初创企业、2.私企、3.国有企业、4.事业单位、5.外资、6.合资、7.上市公司
+     * @apiParam {string} account_name 银行开户名
+     * @apiParam {string} bank_name 开户支行名称
+     * @apiParam {string} account_number 银行账号
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -132,6 +135,9 @@ class DemandCompanyController extends BaseController
      *          "company_property_value": ""
      *          "document_image":[],  //法人证件，
      *          "verify_summary": '',  // 审核备注
+     *          'account_name' => '', // 银行开户名
+     *          'bank_name' => ', // 银行分行名称
+     *          'account_number' => '2342323232', // 银行卡号
      *      },
      *   }
      *  }
@@ -156,6 +162,9 @@ class DemandCompanyController extends BaseController
             'document_type' => 'integer',
             'document_number' => 'max:20',
             'company_property' => 'integer',
+            'account_name' => 'max:30',
+            'bank_name' => 'max:30',
+            'account_number' => 'max:50',
         ];
         $all = $request->except(['token']);
 
@@ -184,6 +193,9 @@ class DemandCompanyController extends BaseController
             'contact_name',
             'phone',
             'email',
+            'account_name',
+            'bank_name',
+            'account_number',
         ];
         if (!empty(array_intersect($verify, array_keys($all)))) {
             $all['verify_status'] = 3;

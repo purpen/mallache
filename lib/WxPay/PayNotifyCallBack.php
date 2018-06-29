@@ -5,6 +5,7 @@ namespace Lib\WxPay;
 use App\Events\PayOrderEvent;
 use App\Models\PayOrder;
 use App\Servers\Pay;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Lib\WxPay\lib\WxPayApi;
 use Lib\WxPay\lib\WxPayNotify;
@@ -55,6 +56,8 @@ class PayNotifyCallBack extends WxPayNotify
 
                 //判断是否业务已处理
                 if ($pay_order->status === 0) {
+                    DB::beginTransaction();
+
                     $pay_order->pay_type = 3; //微信
                     $pay_order->pay_no = $data['transaction_id'];
                     $pay_order->status = 1; //支付成功
@@ -63,9 +66,11 @@ class PayNotifyCallBack extends WxPayNotify
                     // 支付成功需要处理的业务
                     $pay = new Pay($pay_order);
                     $pay->paySuccess();
-//                    event(new PayOrderEvent($pay_order));
+
+                    DB::commit();
                 }
             } catch (\Exception $e) {
+                DB::rollBack();
                 Log::error($e);
                 $msg = "业务处理失败";
                 return false;

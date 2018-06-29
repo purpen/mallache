@@ -73,6 +73,8 @@ class ItemStage extends BaseModel
             'time' => $this->time,
             'confirm' => $this->confirm,
             'sort' => $this->sort,
+            'pay_status' => $this->pay_status,
+            'pay_design_status' => $this->pay_design_status,
         ];
     }
 }

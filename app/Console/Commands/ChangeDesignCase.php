@@ -38,17 +38,22 @@ class ChangeDesignCase extends Command
      */
     public function handle()
     {
-        DesignCaseModel::chunk(100, function ($cases){
-            foreach ($cases as $case){
-                if($case->prizes == null){
+        DesignCaseModel::query()->chunk(100, function ($cases) {
+            foreach ($cases as $case) {
+                if ($case->prizes == null) {
                     $prize = $case->prize;
                     $prize_time = $case->prize_time;
-                    if(!empty($prize) && !empty($prize_time)){
-                        $case->prizes = json_encode([['time' => $prize_time,'type' => $prize]]);
+                    if (!empty($prize) && !empty($prize_time)) {
+                        $case->prizes = json_encode([['time' => $prize_time, 'type' => $prize]]);
                         $case->save();
                     }
-
                 }
+
+                if (0 != $case->design_type && null == $case->design_types) {
+                    $case->design_types = json_encode([$case->design_type]);
+                    $case->save();
+                }
+
             }
         });
 

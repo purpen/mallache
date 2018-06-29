@@ -74,6 +74,7 @@ class Item extends BaseModel
     {
         return $this->hasOne('App\Models\IllustrationDesign', 'item_id');
     }
+
     /**
      * 相对关联到User用户表
      */
@@ -235,6 +236,8 @@ class Item extends BaseModel
                     'stage_status' => (int)$item->stage_status,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                 ];
                 break;
             case 2:
@@ -295,7 +298,10 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
+
 
                 ];
                 break;
@@ -353,6 +359,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                     'existing_content' => (int)$info->existing_content,
@@ -412,6 +420,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                 ];
@@ -470,6 +480,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                     'existing_content' => (int)$info->existing_content,
@@ -529,6 +541,8 @@ class Item extends BaseModel
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => $item->source,
+                    'tax_rate' => $item->tax_rate,
+                    'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                 ];
