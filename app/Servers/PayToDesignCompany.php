@@ -104,8 +104,8 @@ class PayToDesignCompany
         $fund_log = new FundLog();
         //需求公司流水记录
         $fund_log->outFund($demand_user_id, $amount, 1, $design_user_id, '【' . $item_info['name'] . '】' . '向设计公司支付项目首付款');
-        //设计公司流水记录
-        $fund_log->inFund($design_user_id, $design_amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
+        //设计公司流水记录（项目首付款全款）
+        $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '【' . $item_info['name'] . '】' . '收到项目首付款');
 
         if ($commission > 0) {
             //扣除佣金 设计公司流水记录
