@@ -81,7 +81,7 @@ class WithdrawOrderController extends BaseController
             return $this->response->array($this->apiError('公司信息未认证通过', 403));
         }
 
-        if (empty($company->account_name) || empty($company->account_number) || empty($company->branch_name)) {
+        if (empty($company->account_name) || empty($company->account_number) || empty($company->bank_name)) {
             return $this->response->array($this->apiError('对公账户信息填写不完全', 403));
         }
 
