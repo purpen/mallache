@@ -96,7 +96,7 @@ class WithdrawOrderController extends BaseController
                 'amount' => $amount,
                 'account_name' => $company->account_name,
                 'account_number' => $company->account_number,
-                'branch_name' => $company->branch_name,
+                'branch_name' => $company->bank_name,
                 'status' => 0,
             ]);
 
