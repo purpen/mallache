@@ -35,8 +35,14 @@ class PayController extends BaseController
      */
     protected function createPayOrder($summary = '', $amount, $type = 1, $item_id = 0, $pay_type = 0, $item_stage_id = null)
     {
-        $pay_order = PayOrder::where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id])
-            ->first();
+        $query = PayOrder::query()
+            ->where(['type' => $type, 'user_id' => $this->auth_user_id, 'status' => 0, 'item_id' => $item_id]);
+
+        if ($type == 4 && $item_stage_id) {
+            $query = $query->where('item_stage_id', $item_stage_id);
+        }
+
+        $pay_order = $query->first();
         if ($pay_order) {
             return $pay_order;
         }
@@ -319,7 +325,7 @@ class PayController extends BaseController
         //支付说明
         $summary = '项目阶段款';
 
-        $pay_order = $this->createPayOrder($summary, $item_stage->amount, $pay_type, $item->id, 0, $item_stage_id);
+        $pay_order = $this->createPayOrder($summary, $item_stage->amount, $pay_type, $item->id, 0, (int)$item_stage_id);
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
