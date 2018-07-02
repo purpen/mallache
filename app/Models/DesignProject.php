@@ -202,8 +202,7 @@ class DesignProject extends BaseModel
         } else {
             $user_name = '';
         }
-        $collectItem = CollectItem::where('item_id' , $this->id)->where('user_id' , $this->user_id)->first();
-        Log::info($collectItem);
+        $collectItem = CollectItem::where('item_id' , $this->id)->where('user_id' , $this->auth_user_id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
