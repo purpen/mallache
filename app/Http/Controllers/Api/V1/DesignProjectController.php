@@ -103,7 +103,6 @@ class DesignProjectController extends BaseController
 
         if ($collect == 1){
             $lists = DesignProject::where('status', $status)
-                ->where('collect', $collect)
                 ->whereIn('id', $arr)
                 ->whereIn('id', $collectId)
                 ->paginate($per_page);
