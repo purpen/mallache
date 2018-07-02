@@ -119,8 +119,6 @@ class DesignProjectController extends BaseController
                     ->paginate($per_page);
             }
         }
-        $lists['login_user_id'] = $login_user_id;
-
         return $this->response->paginator($lists, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
 
