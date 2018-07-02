@@ -805,11 +805,14 @@ class DesignProjectController extends BaseController
 
         $collect_item = CollectItem::where('item_id' , $item_id)->where('user_id' , $user_id)->first();
         if($collect_item) {
+            Log::info([$user_id,$item_id]);
             $collect_item->collect = $collect;
             if($collect_item->save()){
                 return $this->response->array($this->apiSuccess());
             }
         }else{
+            Log::info(222);
+
             $collectItem = new CollectItem();
             $collectItem->item_id = $item_id;
             $collectItem->user_id = $user_id;
