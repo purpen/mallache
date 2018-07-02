@@ -101,6 +101,7 @@ class DesignProjectController extends BaseController
         //获取收藏的所有项目id
         $collectId = CollectItem::collectId($this->auth_user_id , $status , $collect);
 
+        $login_user_id = $this->auth_user_id;
         if ($collect == 1){
             $lists = DesignProject::where('status', $status)
                 ->where('collect', $collect)
@@ -118,7 +119,7 @@ class DesignProjectController extends BaseController
                     ->paginate($per_page);
             }
         }
-
+        $lists['login_user_id'] = $login_user_id;
 
         return $this->response->paginator($lists, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
