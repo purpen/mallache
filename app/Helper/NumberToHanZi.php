@@ -65,6 +65,8 @@ class NumberToHanZi
             $n++;
         }
 
+        $str = str_replace('零角零分', '整', $str);
+
         return $str;
     }
 
