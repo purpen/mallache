@@ -197,14 +197,15 @@ class DesignProject extends BaseModel
     // 设计项目项目信息
     public function info()
     {
-        Log::info($this->login_user_id);
+        $user_id = Auth::id();
+        Log::info($user_id);
         $user = User::find($this->user_id);
         if ($user) {
             $user_name = $user->getUserName();
         } else {
             $user_name = '';
         }
-        $collectItem = CollectItem::where('item_id' , $this->id)->where('user_id' , $this->login_user_id)->first();
+        $collectItem = CollectItem::where('item_id' , $this->id)->where('user_id' , $user_id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
