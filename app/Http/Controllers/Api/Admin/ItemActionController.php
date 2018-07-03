@@ -241,7 +241,7 @@ class ItemActionController extends Controller
                 $design = array_diff($design, $ord_recommend_arr);
             }
 
-            $item->recommend = $item->recommend . ',' . implode(',', $design);
+            $item->recommend = implode(',', $design) . ',' . $item->recommend;
             $item->save();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
