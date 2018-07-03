@@ -239,7 +239,15 @@ class ItemActionController extends Controller
             if (!empty($ord_recommend)) {
                 $ord_recommend_arr = explode(',', $ord_recommend);
                 $design = array_diff($design, $ord_recommend_arr);
+
+                // 新推荐的设计公司数量
+                $n = count($design);
+                $ord_recommend = $design + $ord_recommend;
+                for ($i = 0; $i < $n; $i++) {
+                    array_pop($ord_recommend);
+                }
             }
+
 
             $item->recommend = implode(',', $design) . ',' . $item->recommend;
             $item->save();
