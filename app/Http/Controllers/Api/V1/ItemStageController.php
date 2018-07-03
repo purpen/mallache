@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\BaseController;
 use App\Http\Transformer\ItemStageTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\AssetModel;
+use App\Models\DesignCompanyModel;
 use App\Models\FundLog;
 use App\Models\Item;
 use App\Models\ItemStage;
@@ -245,7 +246,7 @@ class ItemStageController extends BaseController
             $item = Item::find($item_stage->item_id);
             $item_info = $item->itemInfo();
             // 设计公司用户信息
-            $design_user = User::where('design_company_id', $item_stage->design_company_id)->where('child_account', 0)->first();
+            $design_user = $item->designCompany->user;
 
             $tools = new Tools();
             //通知设计公司
