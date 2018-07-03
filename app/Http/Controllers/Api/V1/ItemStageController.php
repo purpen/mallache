@@ -258,8 +258,9 @@ class ItemStageController extends BaseController
             // 如果合同版本为 0 ，直接确认需求公司阶段款已付
             $contract = $item->contract;
             if ($contract && $contract->version == 0) {
-                $contract->pay_status = 1;
-                $contract->save();
+                // 确认需求公司阶段款已付
+                $item_stage->pay_status = 1;
+                $item_stage->save();
 
                 // 执行--- 阶段确认、钱包转账、资金流水记录、消息通知
                 if (!$this->pay($item->user_id, $design_user->id, $item_stage->amount, $item, $item_stage)) {
