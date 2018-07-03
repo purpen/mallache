@@ -245,7 +245,7 @@ class ItemStageController extends BaseController
             $item = Item::find($item_stage->item_id);
             $item_info = $item->itemInfo();
             // 设计公司用户信息
-            $design_user = User::where('design_company_id', $item_stage->design_company_id)->first();
+            $design_user = User::where('design_company_id', $item_stage->design_company_id)->where('child_account', 0)->first();
 
             $tools = new Tools();
             //通知设计公司
