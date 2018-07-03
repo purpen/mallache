@@ -103,7 +103,6 @@ class DesignProjectController extends BaseController
 
         if ($collect == 1){
             $lists = DesignProject::where('status', $status)
-                ->where('collect', $collect)
                 ->whereIn('id', $arr)
                 ->whereIn('id', $collectId)
                 ->paginate($per_page);
@@ -118,8 +117,6 @@ class DesignProjectController extends BaseController
                     ->paginate($per_page);
             }
         }
-
-
         return $this->response->paginator($lists, new DesignProjectTransformer())->setMeta($this->apiMeta());
     }
 
@@ -810,6 +807,7 @@ class DesignProjectController extends BaseController
                 return $this->response->array($this->apiSuccess());
             }
         }else{
+
             $collectItem = new CollectItem();
             $collectItem->item_id = $item_id;
             $collectItem->user_id = $user_id;
