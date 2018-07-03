@@ -234,22 +234,31 @@ class ItemActionController extends Controller
                 return $this->response->array($this->apiError('当前状态不可操作', 403));
             }
 
-            //验证
+            //验证过滤推荐过的
             $ord_recommend = $item->ord_recommend;
             if (!empty($ord_recommend)) {
                 $ord_recommend_arr = explode(',', $ord_recommend);
                 $design = array_diff($design, $ord_recommend_arr);
+            }
 
-                // 新推荐的设计公司数量
+            // 添加推荐设计公司并总数不超过4
+            $recommend = $item->recommend;
+            if (!empty($recommend)) {
+
+                $design = $design + explode(',', $recommend);;
+
                 $n = count($design);
-                $ord_recommend = $design + $ord_recommend;
-                for ($i = 0; $i < $n; $i++) {
-                    array_pop($ord_recommend);
+                if ($n > 4) {
+                    $n = $n - 4;
+                    for ($i = 0; $i < $n; $i++) {
+                        array_pop($design);
+                    }
                 }
+
             }
 
 
-            $item->recommend = implode(',', $design) . ',' . $item->recommend;
+            $item->recommend = implode(',', $design);
             $item->save();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
