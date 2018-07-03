@@ -417,7 +417,7 @@ class ItemMessageListener
                 throw new \Exception("首付款金额低于平台佣金", 500);
             }
             // 收取佣金记录
-            ItemCommission::createCommission($item->id, $design_company_id, $item->price, $commission);
+            ItemCommission::createCommission(1, $item->id, $design_company_id, $item->price, $commission);
 
             // 设计公司收到金额（扣除平台佣金）
             $design_amount = bcsub($amount, $commission, 2);
