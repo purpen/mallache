@@ -102,6 +102,13 @@ class AdminDesignCompanyTransformer extends TransformerAbstract
             'investment_product' => $DesignCompany->investment_product,
             'own_brand' => json_decode($DesignCompany->own_brand),
             'is_test_data' => (int)$DesignCompany->is_test_data,
+            'ave_score' => (int)$DesignCompany->ave_score,
+            'base_average' => (int)$DesignCompany->base_average,
+            'credit_average' => (int)$DesignCompany->credit_average,
+            'business_average' => (int)$DesignCompany->business_average,
+            'design_average' => (int)$DesignCompany->design_average,
+            'effect_average' => (int)$DesignCompany->effect_average,
+            'innovate_average' => (int)$DesignCompany->innovate_average,
         ];
     }
 }
