@@ -102,7 +102,7 @@ class WithdrawOrderActionController extends BaseController
 
         // 判断是否重复提交（幂等性判断）
         if ($withdraw_order->status == 1) {
-            $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiSuccess());
         }
 
         try {
