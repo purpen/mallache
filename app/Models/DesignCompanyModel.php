@@ -145,6 +145,27 @@ class DesignCompanyModel extends BaseModel
             $design_company->verify_summary = $verify_summary;
         }
 
+        if ($verify_status == 1) {
+            $param = [
+              'd3in_id' => $design_company->id,
+              'name' => $design_company->company_name,
+            ];
+            $url = config('app.opalus_api') . 'company_queue/submit';
+            try{
+                $result = Tools::request($url, $param, 'POST');
+                $result = json_decode($result, true);
+                if (!isset($result['code'])) {
+                    return false;       
+                }
+                if ($result['code']) {
+                    return false;
+                }
+            }
+            catch (\Exception $e){
+                return false;
+            }
+        }
+
         return $design_company->save();
     }
 
