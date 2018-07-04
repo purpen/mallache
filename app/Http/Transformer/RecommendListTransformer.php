@@ -59,7 +59,13 @@ class RecommendListTransformer extends TransformerAbstract
             'city_arr' => $design_company->city_arr,
             'item_type' => $design_company->item_type,
             'design_case' => $this->designCase($design_company),
-            'rows' => $design_company->rows,
+            'ave_score' => intval($design_company->ave_score),
+            'base_average' => intval($design_company->base_average),
+            'credit_average' => intval($design_company->credit_average),
+            'business_average' => intval($design_company->business_average),
+            'design_average' => intval($design_company->design_average),
+            'effect_average' => intval($design_company->effect_average),
+            'innovate_average' => intval($design_company->innovate_average),
 
         ];
     }
