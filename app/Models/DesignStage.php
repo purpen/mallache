@@ -22,15 +22,30 @@ class DesignStage extends BaseModel
         return $this->hasMany('App\Models\DesignSubstage', 'design_stage_id');
     }
 
+    //一对多关联阶段里程碑表
+    public function milestone()
+    {
+        return $this->hasMany('App\Models\Milestone', 'design_stage_id');
+    }
+
     public function info()
     {
         $design_substages = $this->designSubstage;
+        $milestones = $this->milestone;
         $arr = [];
         if ($design_substages->isEmpty()) {
             $arr = null;
         } else {
             foreach ($design_substages as $value) {
                 $arr[] = $value->info();
+            }
+        }
+        $arr_milestone = [];
+        if ($milestones->isEmpty()) {
+            $arr_milestone = null;
+        } else {
+            foreach ($milestones as $value) {
+                $arr_milestone[] = $value->info();
             }
         }
 
@@ -46,6 +61,7 @@ class DesignStage extends BaseModel
             'statistical' => intval($this->statistical),
             'stage_image' => $this->stage_image,
             'design_substage' => $arr,
+            'milestone' => $arr_milestone,
         ];
     }
 

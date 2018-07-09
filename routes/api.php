@@ -645,7 +645,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // api {delete} /designNotice/delete 设计管理工具--消息删除
         $api->delete('/designNotice/delete', 'DesignNoticeController@delete');
 
-
+        // 项目规划里程碑
+        $api->post('/milestone/create', 'MilestoneController@create');
+        $api->put('/milestone/update', 'MilestoneController@update');
+        $api->get('/milestone', 'MilestoneController@show');
+        $api->delete('/milestone/delete', 'MilestoneController@delete');
+        $api->put('/milestone/completes', 'MilestoneController@completes');
     });
 
 });
