@@ -673,6 +673,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         // 物流公司列表
         $api->get('/logisticsLists', 'ToolsController@logisticsLists');
 
+        // 项目规划里程碑
+        $api->post('/milestone/create', 'MilestoneController@create');
+        $api->put('/milestone/update', 'MilestoneController@update');
+        $api->get('/milestone', 'MilestoneController@show');
+        $api->delete('/milestone/delete', 'MilestoneController@delete');
+        $api->put('/milestone/completes', 'MilestoneController@completes');
     });
 
 });
