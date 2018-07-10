@@ -74,6 +74,7 @@ class DesignCompanyModel extends BaseModel
         'design_average',
         'effect_average',
         'innovate_average',
+        'source',
     ];
 
     /**
@@ -143,6 +144,26 @@ class DesignCompanyModel extends BaseModel
         $design_company->verify_status = $verify_status;
         if ($verify_summary) {
             $design_company->verify_summary = $verify_summary;
+        }
+
+        if ($verify_status == 1) {
+            $param = [
+                'd3in_id' => $design_company->id,
+                'name' => $design_company->company_name,
+            ];
+            $url = config('app.opalus_api') . 'company_queue/submit';
+            try {
+                $result = Tools::request($url, $param, 'POST');
+                $result = json_decode($result, true);
+                if (!isset($result['code'])) {
+                    return false;
+                }
+                if ($result['code']) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
         }
 
         return $design_company->save();
@@ -413,13 +434,17 @@ class DesignCompanyModel extends BaseModel
     //创建设计公司
     static public function createDesign($user_id)
     {
+        $user = User::where('id', $user_id)->first();
+
         $all['company_abbreviation'] = '';
         $all['legal_person'] = '';
         $all['document_type'] = 0;
         $all['document_number'] = '';
         $all['open'] = 0;
         $all['user_id'] = $user_id;
-        $user = User::where('id', $user_id)->first();
+        $all['source'] = $user->source;
+
+
         $design = DesignCompanyModel::create($all);
 
         if ($design) {

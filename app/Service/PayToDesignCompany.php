@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Servers;
+namespace App\Service;
 
 use App\Helper\ItemCommissionAction;
 use App\Helper\Tools;

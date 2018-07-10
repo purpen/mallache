@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Servers;
+namespace App\Service;
 
 use App\Events\ItemStatusEvent;
 use App\Helper\ItemCommissionAction;

@@ -10,7 +10,7 @@ use App\Models\AssetModel;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
-use App\Servers\Pay;
+use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +26,7 @@ class PayController extends BaseController
      * 创建需求 支付单
      * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款
      * @param float $amount 支付金额
-     * @param int $item_id 目标ID
+     * @param int $item_id 项目ID
      * @param int $user_id 用户ID
      * @param string $summary 备注
      * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
@@ -47,9 +47,11 @@ class PayController extends BaseController
             return $pay_order;
         }
 
+        $item = Item::find($item_id);
+
         $uid = Tools::orderId($this->auth_user_id);
 
-        $pay_order = PayOrder::create([
+        $pay_order = PayOrder::query()->create([
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
             'type' => $type,
@@ -58,6 +60,7 @@ class PayController extends BaseController
             'amount' => $amount,
             'pay_type' => $pay_type,
             'item_stage_id' => $item_stage_id,
+            'source' => $item->source,  // 添加来源
         ]);
         return $pay_order;
     }

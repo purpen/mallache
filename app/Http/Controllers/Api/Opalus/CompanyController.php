@@ -113,6 +113,7 @@ class CompanyController extends Controller
         $sort = in_array($request->input('sort'), [0,1,2]) ? $request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
+        $is_test_data = $request->input('is_test_data') ? (int)$request->input('is_test_data') : -1;
 
         $query = DesignCompanyModel::with('user','user.designItem');
         if($type_status !== null && $type_status !== ''){
@@ -120,6 +121,13 @@ class CompanyController extends Controller
         }
         if($type_verify_status !== null && $type_verify_status !== ''){
             $query->where('verify_status', $type_verify_status);
+        }
+        if($is_test_data){
+            if ($is_test_data == -1) {
+                $query->where('is_test_data', 0);
+            } else {
+                $query->where('is_test_data', 1);
+            }
         }
 
         if ($val) {

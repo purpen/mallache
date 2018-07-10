@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Events\PayOrderEvent;
 use App\Http\AdminTransformer\PayOrderTransformer;
 use App\Models\PayOrder;
-use App\Servers\Pay;
+use App\Service\Pay;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +96,9 @@ class PayOrderActionController extends BaseController
 
         $bank_transfer = in_array($request->input('bank_transfer'), [0, 1]) ? $request->input('bank_transfer') : null;
 
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
+
         if ($request->input('sort') == 0 && $request->input('sort') !== null) {
             $sort = 'asc';
         } else {
@@ -115,6 +118,25 @@ class PayOrderActionController extends BaseController
         }
         if ($bank_transfer !== null) {
             $query->where('bank_transfer', $bank_transfer);
+        }
+
+        if ($val) {
+            switch ($evt) {
+                case 1:
+                    $query->where('uid', $val);
+                    break;
+                case 2:
+                    $query->where('item_id', (int)$val);
+                    break;
+                case 3:
+                    $query->where('user_id', (int)$val);
+                    break;
+                case 4:
+                    $query->where('user_id', (int)$val);
+                    break;
+                default:
+                    $query->where('uid', $val);
+            }
         }
 
         $lists = $query->orderBy('id', $sort)->paginate($per_page);

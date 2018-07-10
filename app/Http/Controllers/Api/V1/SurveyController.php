@@ -88,7 +88,7 @@ class SurveyController extends BaseController
      * {
      * "data": {
      * 'demand_info_status' => 1,        // 需求公司基础信息 0：未完善；1.已完善
-     * 'demand_verify_status' => 1,      // 需求公司审核信息 审核状态：0.审核中；1.审核通过；2. 未通过审核
+     * 'demand_verify_status' => 1,      // 需求公司审核信息 0.未审核；1.审核通过；2. 未通过审核；3.审核中
      * },
      * "meta": {
      * "message": "Success",

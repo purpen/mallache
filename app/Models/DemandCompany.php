@@ -56,6 +56,7 @@ class DemandCompany extends BaseModel
         'account_name',
         'bank_name',
         'account_number',
+        'source',
     ];
 
     //公司规模
@@ -209,6 +210,8 @@ class DemandCompany extends BaseModel
      */
     public static function createCompany(int $user_id)
     {
+        $user = User::where('id', $user_id)->first();
+
         $all = [
             'company_name' => '',
             'company_abbreviation' => '',
@@ -224,9 +227,9 @@ class DemandCompany extends BaseModel
             'position' => '',
             'user_id' => $user_id,
             'document_type' => 0,
+            'source' => $user->source,
         ];
 
-        $user = User::where('id', $user_id)->first();
         $demand = DemandCompany::create($all);
 
         if ($demand) {

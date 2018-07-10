@@ -100,6 +100,11 @@ class WithdrawOrderActionController extends BaseController
             return $this->response->array($this->apiError('NOT FOUND', 404));
         }
 
+        // 判断是否重复提交（幂等性判断）
+        if ($withdraw_order->status == 1) {
+            return $this->response->array($this->apiSuccess());
+        }
+
         try {
             DB::beginTransaction();
 
