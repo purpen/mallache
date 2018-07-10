@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Api\Admin;
 // 发票控制器
 use App\Http\AdminTransformer\InvoiceTransformer;
 use App\Models\Invoice;
-use App\Servers\PayToDesignCompany;
+use App\Service\PayToDesignCompany;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

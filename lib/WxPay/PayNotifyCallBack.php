@@ -4,7 +4,7 @@ namespace Lib\WxPay;
 
 use App\Events\PayOrderEvent;
 use App\Models\PayOrder;
-use App\Servers\Pay;
+use App\Service\Pay;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Lib\WxPay\lib\WxPayApi;

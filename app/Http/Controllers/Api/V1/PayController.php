@@ -10,7 +10,7 @@ use App\Models\AssetModel;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
-use App\Servers\Pay;
+use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +47,8 @@ class PayController extends BaseController
             return $pay_order;
         }
 
+        $item = Item::find($item_id);
+
         $uid = Tools::orderId($this->auth_user_id);
 
         $pay_order = PayOrder::query()->create([
@@ -58,6 +60,7 @@ class PayController extends BaseController
             'amount' => $amount,
             'pay_type' => $pay_type,
             'item_stage_id' => $item_stage_id,
+            'source' => $item->source,  // 添加来源
         ]);
         return $pay_order;
     }
