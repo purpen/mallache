@@ -180,6 +180,8 @@ class ContractController extends BaseController
             $all['commission_rate'] = $item->commission_rate;
             $all['version'] = config('constant.contract_version');
             $all['tax_price'] = $item->quotation->getTax();
+            $all['source'] = $item->source;
+
 
             $contract = Contract::create($all);
 
