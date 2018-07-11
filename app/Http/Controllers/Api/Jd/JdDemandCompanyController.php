@@ -108,7 +108,7 @@ class JdDemandCompanyController extends Controller
                 break;
         }
 
-        $lists = $query->paginate($per_page);
+        $lists = $query->where('source' , 1)->paginate($per_page);
         return $this->response->paginator($lists, new DemandCompanyTransformer())->setMeta($this->apiMeta());
     }
 
