@@ -292,4 +292,46 @@ class UserActionController extends BaseController
         }
     }
 
+    /**
+     * @api {post} /admin/user/changeSourceAdmin 修改来源管理员
+     * @apiVersion 1.0.0
+     * @apiName user changeSourceAdmin
+     * @apiGroup AdminUser
+     *
+     * @apiParam {integer} user_id 用户ID
+     * @apiParam {int} source_admin 来源管理员: 1.京东众创 默认null
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function changeSourceAdmin(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'user_id' => ['required', 'integer'],
+            'source_admin' => ['required', 'integer'],
+        ];
+        $payload = $request->only('user_id' , 'source_admin');
+        $validator = Validator::make($payload, $rules);
+        if($validator->fails()){
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        if(!$user = User::find($payload['user_id'])){
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        $user->source_admin = $payload['source_admin'];
+        if(!$user->save()){
+            return $this->response->array($this->apiError());
+        }else{
+            return $this->response->array($this->apiSuccess());
+        }
+    }
+
 }

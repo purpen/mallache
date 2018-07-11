@@ -50,7 +50,8 @@ return [
         '/admin/user/changeRole',
         //修改用户状态
         '/admin/user/changeStatus',
-
+        //修改用户来源管理员
+        '/admin/user/changeSourceAdmin',
         /**
          * 支付单相关路由
          */
