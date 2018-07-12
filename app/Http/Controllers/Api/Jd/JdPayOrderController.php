@@ -17,7 +17,6 @@ class JdPayOrderController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {integer} type 0.全部；支付类型：1.预付押金；2.项目款；
-     * @apiParam {integer} pay_type  支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      * @apiParam {integer} status 状态：0.未支付；1.支付成功；
      * @apiParam {integer} bank_transfer 银行转账状态：0.未上传转账凭证；1.已上传转账凭证；
      * @apiParam {integer} per_page 分页数量  默认15
@@ -86,7 +85,7 @@ class JdPayOrderController extends BaseController
             return $this->response->array($this->apiSuccess('登陆用户没有权限查看', 403));
         }
         //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-        $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? $request->input('pay_type') : null;
+//        $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? $request->input('pay_type') : null;
         //支付单类型 支付类型：1.预付押金；2.项目款；
         $type = in_array($request->input('type'), [1, 2]) ? $request->input('type') : null;
 
@@ -112,9 +111,6 @@ class JdPayOrderController extends BaseController
         }
         if ($status !== null) {
             $query->where('status', $status);
-        }
-        if ($pay_type !== null) {
-            $query->where('pay_type', $pay_type);
         }
         if ($bank_transfer !== null) {
             $query->where('bank_transfer', $bank_transfer);
