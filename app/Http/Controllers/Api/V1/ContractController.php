@@ -37,6 +37,10 @@ class ContractController extends BaseController
      * @apiParam {string} thn_company_address 平台地址
      * @apiParam {string} thn_company_phone 平台联系电话
      * @apiParam {string} thn_company_legal_person 平台联系人
+     * @apiParam {string} other_company_name 第三方平台名称
+     * @apiParam {string} other_company_address 第三方平台地址
+     * @apiParam {string} other_company_phone 第三方平台联系电话
+     * @apiParam {string} other_company_legal_person 第三方平台联系人
      * @apiParam {string} item_content 项目内容
      * @apiParam {string} design_work_content 设计工作内容
      * @apiParam {string} title 合同名称
@@ -342,6 +346,10 @@ class ContractController extends BaseController
      * @apiParam {string} thn_company_address 平台地址
      * @apiParam {string} thn_company_phone 平台联系电话
      * @apiParam {string} thn_company_legal_person 平台联系人
+     * @apiParam {string} other_company_name 第三方平台名称
+     * @apiParam {string} other_company_address 第三方平台地址
+     * @apiParam {string} other_company_phone 第三方平台联系电话
+     * @apiParam {string} other_company_legal_person 第三方平台联系人
      * @apiParam {string} title 合同名称
      * @apiParam {int} demand_pay_limit 需求方打款时限
      * @apiParam {int} thn_pay_limit 平台收到项目款打款时限
@@ -409,7 +417,10 @@ class ContractController extends BaseController
             return $this->response->array($this->apiSuccess('没有权限修改', 403));
         }
 
-        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person', 'title', 'item_stage', 'thn_company_name', 'thn_company_address', 'thn_company_phone', 'thn_company_legal_person']);
+        $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person', 'title', 'item_stage', 'thn_company_name', 'thn_company_address', 'thn_company_phone', 'thn_company_legal_person', 'other_company_name',
+            'other_company_address',
+            'other_company_phone',
+            'other_company_legal_person',]);
 
         $rules = [
             'demand_company_name' => 'required',

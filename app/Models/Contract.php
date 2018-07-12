@@ -51,6 +51,10 @@ class Contract extends BaseModel
         'version',
         'tax_price',
         'source',
+        'other_company_name',
+        'other_company_address',
+        'other_company_phone',
+        'other_company_legal_person',
     ];
 
     //相对关联 项目表
@@ -103,6 +107,11 @@ class Contract extends BaseModel
             'version' => $this->version,
             'tax_price' => $this->tax_price,
             'source' => (int)$this->source,
+
+            'other_company_name' => strval($this->other_company_name),
+            'other_company_address' => strval($this->other_company_address),
+            'other_company_phone' => strval($this->other_company_phone),
+            'other_company_legal_person' => strval($this->other_company_legal_person),
         ];
 
 
