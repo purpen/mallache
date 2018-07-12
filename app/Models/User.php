@@ -399,4 +399,16 @@ class User extends Authenticatable implements JWTSubject
             $this->decrement('design_notice_count');
         }
     }
+
+    /**
+     * 获取是否是京东管理员
+     */
+    public static function sourceAdmin(int $user_id)
+    {
+        $user = self::find($user_id);
+        if ($user) {
+            $source_admin = $user->source_admin;
+            return $source_admin;
+        }
+    }
 }

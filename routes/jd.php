@@ -34,6 +34,29 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($a
             'as' => 'JdDemandCompany.show', 'uses' => 'JdDemandCompanyController@show'
         ]);
 
+        /**
+         * 项目
+         */
+        //项目列表
+        $api->get('/jd/item/lists', [
+            'as' => 'JdItem.lists', 'uses' => 'JdItemController@itemList'
+        ]);
+        // 项目详情
+        $api->get('/jd/item/show', [
+            'as' => 'JdItem.show', 'uses' => 'JdItemController@show'
+        ]);
+
+        /**
+         * 支付单
+         */
+        //支付单列表
+        $api->get('/jd/payOrder/lists', [
+            'as' => 'JdPayOrder.lists', 'uses' => 'JdPayOrderController@lists'
+        ]);
+        $api->get('/jd/payOrder/show', [
+            'as' => 'JdPayOrder.show', 'uses' => 'JdPayOrderController@show'
+        ]);
+
     });
 
 });
