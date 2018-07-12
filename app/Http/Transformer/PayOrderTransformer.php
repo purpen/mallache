@@ -49,6 +49,7 @@ class PayOrderTransformer extends TransformerAbstract
 
             'bank_transfer' => $pay_order->bank_transfer,
             'assets' => AssetModel::getOneImageUrl($pay_order->id, 33), // 转账附件
+            'source' => $pay_order->source,
         ];
     }
 }

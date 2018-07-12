@@ -6,7 +6,7 @@ class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id','source'];
+    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id', 'source'];
 
     protected $appends = ['status_value', 'pay_type_value', 'bank'];
 
@@ -60,7 +60,11 @@ class PayOrder extends BaseModel
                 $val = '京东支付';
                 break;
             case 5:
-                $val = '公对公打款';
+                if ($this->source == 1) { // 京东
+                    $val = '京东云市场';
+                } else {
+                    $val = '公对公打款';
+                }
                 break;
             default:
                 $val = '';
