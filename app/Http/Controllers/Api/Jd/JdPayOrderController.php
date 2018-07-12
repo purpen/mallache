@@ -5,7 +5,13 @@ namespace App\Http\Controllers\Api\Jd;
 use App\Http\JdTransformer\PayOrderTransformer;
 use App\Models\PayOrder;
 use App\Models\User;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use App\Service\Pay;
+
 
 class JdPayOrderController extends BaseController
 {
@@ -174,5 +180,63 @@ class JdPayOrderController extends BaseController
         }
 
         return $this->response->item($payOrder, new PayOrderTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {post} /jd/payOrder/truePay 确认项目支付单付款
+     * @apiVersion 1.0.0
+     * @apiName JdPayOrder truePay
+     * @apiGroup JdPayOrder
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} pay_order_id 支付单ID
+     * @apiParam {string} pay_no  银行交易单号
+     * @apiParam {integer} bank_id 银行id
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function truePay(Request $request)
+    {
+        $rules = [
+            'pay_order_id' => 'required|exists:pay_order,id',
+            'pay_no' => 'required',
+            'bank_id' => 'required|integer',
+        ];
+
+        $all = $request->only(['pay_order_id', 'pay_no', 'bank_id']);
+
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+
+        try {
+            DB::beginTransaction();
+            $pay_order = PayOrder::find($all['pay_order_id']);
+            $pay_order->pay_type = 5; //银行转账
+            $pay_order->pay_no = $all['pay_no'];
+            $pay_order->status = 1; //支付成功
+            $pay_order->bank_id = $all['bank_id'];
+            $pay_order->save();
+
+            // 支付成功需要处理的业务
+            $pay = new Pay($pay_order);
+            $pay->paySuccess();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->response->array($this->apiError('error', 500));
+        }
+
+
+        return $this->response->array($this->apiSuccess());
     }
 }

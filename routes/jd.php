@@ -53,8 +53,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($a
         $api->get('/jd/payOrder/lists', [
             'as' => 'JdPayOrder.lists', 'uses' => 'JdPayOrderController@lists'
         ]);
+        //详情
         $api->get('/jd/payOrder/show', [
             'as' => 'JdPayOrder.show', 'uses' => 'JdPayOrderController@show'
+        ]);
+        //确认支付单
+        $api->post('/jd/payOrder/truePay', [
+            'as' => 'JdPayOrder.truePay', 'uses' => 'JdPayOrderController@truePay'
         ]);
 
     });
