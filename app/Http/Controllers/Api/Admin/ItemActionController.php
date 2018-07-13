@@ -246,7 +246,7 @@ class ItemActionController extends Controller
             if (!empty($recommend)) {
 
                 $design = array_merge($design, explode(',', $recommend));
-
+                $design = array_unique($design);
                 $n = count($design);
                 if ($n > 4) {
                     $n = $n - 4;
