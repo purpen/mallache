@@ -832,11 +832,11 @@ class TaskController extends BaseController
             $total_count = $no_get + $no_stage + $ok_stage + $overdue;
             if($total_count != 0){
                 //未领取百分比
-                $no_get_percentage = bcdiv($no_get , $total_count , 2) * 100 ;
+                $no_get_percentage = (int)(bcdiv($no_get , $total_count , 2) * 100);
                 //未完成百分比
-                $no_stage_percentage = bcdiv($no_stage , $total_count , 2) * 100;
+                $no_stage_percentage = (int)(bcdiv($no_stage , $total_count , 2) * 100);
                 //已预期百分比
-                $overdue_percentage = bcdiv($overdue , $total_count , 2) * 100;
+                $overdue_percentage = (int)(bcdiv($overdue , $total_count , 2) * 100);
                 //已完成百分比
                 $ok_stage_percentage = 100 - $no_get_percentage - $no_stage_percentage - $overdue_percentage;
             }else{
@@ -944,19 +944,19 @@ class TaskController extends BaseController
                 $total_count = $no_get + $no_stage + $ok_stage + $overdue;
                 //未领取百分比
                 if($total_count != 0){
-                    $no_get_percentage = bcdiv($no_get , $total_count , 2) * 100 ;
+                    $no_get_percentage = (int)(bcdiv($no_get , $total_count , 2) * 100) ;
                 }else{
                     $no_get_percentage = 0;
                 }
                 //未完成百分比
                 if($total_count != 0){
-                    $no_stage_percentage = bcdiv($no_stage , $total_count , 2) * 100;
+                    $no_stage_percentage = (int)(bcdiv($no_stage , $total_count , 2) * 100);
                 }else{
                     $no_stage_percentage = 0;
                 }
                 //已预期百分比
                 if($total_count != 0){
-                    $overdue_percentage = bcdiv($overdue , $total_count , 2) * 100;
+                    $overdue_percentage = (int)(bcdiv($overdue , $total_count , 2) * 100);
 
                 }else{
                     $overdue_percentage = 0;
