@@ -72,7 +72,7 @@ class Tools
      * @param int $item_status 项目状态
      * @return bool 返回值
      */
-    public function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
+    public static function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
     {
         $message = Message::create([
             'user_id' => $user_id,
@@ -355,10 +355,21 @@ class Tools
 
     }
 
-    // 向用户发送系统信息
-    public static function sendSmsToPhone($phone, $content)
+    /**
+     * 向用户发送系统信息
+     *
+     * @param $phone
+     * @param $content
+     * @param null $source
+     */
+    public static function sendSmsToPhone($phone, $content, $source = null)
     {
-        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+        if ($source == 1) {
+            $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+        } else {
+            $text = config('constant.jd_sms_fix') . '您好，您在艺火平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+        }
+
 
         // 判断短信通知是否开启
         if (config('constant.sms_send')) {

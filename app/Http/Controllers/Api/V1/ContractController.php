@@ -482,6 +482,7 @@ class ContractController extends BaseController
                 ItemStage::create($stage);
             }
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return $this->response->array($this->apiError('创建失败', 500));
         }

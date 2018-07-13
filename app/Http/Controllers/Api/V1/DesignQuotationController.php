@@ -342,6 +342,10 @@ class DesignQuotationController extends BaseController
                 throw new MassageException('not found', 404);
             }
 
+            if ($quotation->type != 1) {
+                throw new MassageException('不可操作', 403);
+            }
+
             $design_project = $quotation->designProject;
             if (!$design_project->isPower($this->auth_user_id)) {
                 throw new MassageException('无权限', 403);
