@@ -832,7 +832,7 @@ class TaskController extends BaseController
             $total_count = $no_get + $no_stage + $ok_stage + $overdue;
             if($total_count != 0){
                 //未领取百分比
-                $no_get_percentage = bcdiv($no_get , $total_count , 2) * 100 ;
+                $no_get_percentage = (int)(bcdiv($no_get , $total_count , 2) * 100);
                 //未完成百分比
                 $no_stage_percentage = bcdiv($no_stage , $total_count , 2) * 100;
                 //已预期百分比
