@@ -42,7 +42,7 @@ class ContractTransformer extends TransformerAbstract
                     'content' => $v->array_content,
                     'summary' => $v->summary,
                     'percentage' => $v->percentage,
-                    'amount' => $v->amount,
+                    'amount' => number_format($v->amount, 2, '.', ''),
                     'time' => $v->time,
                     'sort' => $v->sort,
                 ];
