@@ -471,7 +471,7 @@ class ContractController extends BaseController
 
             $all['version'] = config('constant.contract_version');
 
-            $all = array_diff($all, [null]);
+            $all = array_filter($all);
             $contract->update($all);
 
             //删除项目阶段信息
