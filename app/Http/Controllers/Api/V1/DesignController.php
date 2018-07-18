@@ -434,11 +434,15 @@ class DesignController extends BaseController
 
         //验证项目阶段信息都已确认
         $item_stage_count = ItemStage::where(['item_id' => $item->id, 'confirm' => 0])->count();
-        $item_stage_pay_count = ItemStage::where(['item_id' => $item->id, 'pay_status' => 0])->count();
-        if ($item_stage_count || $item_stage_pay_count) {  //如果存在未确认的阶段，不能确认完成
+
+        if ($item_stage_count) {  //如果存在未确认的阶段，不能确认完成
             return $this->response->array($this->apiError('项目目前阶段未完成，不能确认完成', 403));
         }
         // 验证付款
+        $item_stage_pay_count = ItemStage::where(['item_id' => $item->id, 'pay_status' => 0])->count();
+        if ($item_stage_pay_count) {  //如果存在未确认的阶段，不能确认完成
+            return $this->response->array($this->apiError('有阶段款未支付，不能确认完成', 403));
+        }
 
         $item->status = 15;  //项目已完成
         $item->save();
