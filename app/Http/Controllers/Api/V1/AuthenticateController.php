@@ -155,6 +155,12 @@ class AuthenticateController extends BaseController
             if (!$this->phoneIsRegister($credentials['account'])) {
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
+
+            $user = User::where('account', $credentials['account'])->first();
+            if ($user->type == 2) {
+                return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
+            }
+
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('账户名或密码错误', 401));
