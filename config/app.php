@@ -187,6 +187,9 @@ return [
         // pdf
         Barryvdh\DomPDF\ServiceProvider::class,
 
+        //微信第三方
+        Overtrue\LaravelWeChat\ServiceProvider::class,
+
     ],
 
     /*
@@ -236,7 +239,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
     ],
 
     // 与官网对接接口

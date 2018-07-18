@@ -177,7 +177,7 @@ class JdItemController extends Controller
         }
 
 
-        $lists = $query->where('source' , 1)->paginate($per_page);
+        $lists = $query->where('source' , $source_admin)->paginate($per_page);
 
         return $this->response->paginator($lists, new ItemListTransformer())->setMeta($this->apiMeta());
     }

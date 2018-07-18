@@ -90,7 +90,7 @@ class UserJdController extends BaseController
                 break;
         }
 
-        $lists = $query->where('type' ,1)->where('source' , 1)->paginate($per_page);
+        $lists = $query->where('type' ,1)->where('source' , $source_admin)->paginate($per_page);
 
         return $this->response->paginator($lists,new UserTransformer())->setMeta($this->apiMeta());
     }

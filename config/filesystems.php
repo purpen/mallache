@@ -70,7 +70,7 @@ return [
             'secret_key'=> 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6',  //SecretKey
             'bucket'    => 'frmallache',  //Bucket名字
             'domain' => 'saas',
-            'call_back_url' => env('QINIU_CALL_BACK_URL', 'http://sa.taihuoniao.com/asset/callback'),
+            'call_back_url' => env('QINIU_CALL_BACK_URL', 'https://sa.taihuoniao.com/asset/callback'),
             //
             'url' => 'https://d3g.taihuoniao.com/',                    //图片服务器
             'small' => '-p280x210.jpg',       //缩略图
@@ -83,7 +83,7 @@ return [
         'yunpan_qiniu' => [
             'bucket' => 'yunpanmallache',
             'domain' => 'saas_yunpan',
-            'call_back_url' => env('QINIU_YUNPAN_CALL_BACK_URL', 'http://sa.taihuoniao.com/yunpanCallback'),
+            'call_back_url' => env('QINIU_YUNPAN_CALL_BACK_URL', 'https://sa.taihuoniao.com/yunpanCallback'),
             'url' => 'https://pan.d3ingo.com/', //图片服务器
             'small' => '-small',       //缩略图
 

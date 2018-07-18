@@ -141,7 +141,7 @@ class JdPayOrderController extends BaseController
             }
         }
 
-        $lists = $query->where('source' , 1)->orderBy('id', $sort)->paginate($per_page);
+        $lists = $query->where('source' , $source_admin)->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($lists, new PayOrderTransformer())->setMeta($this->apiMeta());
     }
