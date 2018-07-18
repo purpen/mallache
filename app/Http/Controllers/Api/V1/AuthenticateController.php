@@ -157,8 +157,11 @@ class AuthenticateController extends BaseController
             }
 
             $user = User::where('account', $credentials['account'])->first();
-            if ($user->type == 2) {
-                return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
+            $source = $request->header('source-type') ?? 0;
+            if ($source != 0) {
+                if ($user->type == 2) {
+                    return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
+                }
             }
 
             // attempt to verify the credentials and create a token for the user
