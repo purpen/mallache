@@ -16,6 +16,7 @@ use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -78,23 +79,33 @@ class AuthenticateController extends BaseController
             $company_role = 20;
         }
 
-        // 创建用户
-        $user = User::query()
-            ->create([
-                'account' => $payload['account'],
-                'phone' => $payload['account'],
-                'username' => $payload['account'],
-                'type' => $payload['type'],
-                'password' => bcrypt($payload['password']),
-                'child_account' => 0,
-                'company_role' => $company_role,
-                'source' => $request->header('source-type') ?? 0,
-            ]);
-        if ($user->type == 1) {
-            DemandCompany::createCompany($user->id);
-        } else if ($user->type == 2) {
-            DesignCompanyModel::createDesign($user->id);
+        try {
+            DB::beginTransaction();
+            // 创建用户
+            $user = User::query()
+                ->create([
+                    'account' => $payload['account'],
+                    'phone' => $payload['account'],
+                    'username' => $payload['account'],
+                    'type' => $payload['type'],
+                    'password' => bcrypt($payload['password']),
+                    'child_account' => 0,
+                    'company_role' => $company_role,
+                    'source' => $request->header('source-type') ?? 0,
+                ]);
+            if ($user->type == 1) {
+                DemandCompany::createCompany($user);
+            } else if ($user->type == 2) {
+                DesignCompanyModel::createDesign($user);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage(), $e->getCode());
+            return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
+
         if ($user) {
             $token = JWTAuth::fromUser($user);
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
