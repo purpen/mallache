@@ -24,9 +24,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {get} /wechat/token
+     * @api {get} /wechat/token 获取token，并添加openid,session_key到用户表
      * @apiVersion 1.0.0
-     * @apiName WxToken token 获取token，并添加openid,session_key到用户表
+     * @apiName WxToken token
      * @apiGroup Wx
      *
      * @apiParam {string} code
