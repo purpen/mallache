@@ -96,8 +96,11 @@ return [
          'default' => [
              'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', 'wxfcf0519445482921'),
              'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', '52f92fb9afc3c7e791eab27b1dc4cbb1'),
-//             'token'   => env('WECHAT_MINI_PROGRAM_TOKEN', ''),
-//             'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY', ''),
+             'response_type' => 'array',
+             'log' => [
+                 'level' => env('WECHAT_LOG_LEVEL', 'debug'),
+                 'file' => env('WECHAT_LOG_FILE', storage_path('logs/laravel.log')),
+             ],
          ],
      ],
 

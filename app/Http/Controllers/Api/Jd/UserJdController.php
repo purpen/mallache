@@ -51,7 +51,7 @@ class UserJdController extends BaseController
     {
         $login_user_id = $this->auth_user_id;
         $source_admin = User::sourceAdmin($login_user_id);
-        if($source_admin != 1){
+        if($source_admin == 0){
             return $this->response->array($this->apiSuccess('登陆用户没有权限查看', 403));
         }
         $per_page = $request->input('per_page') ?? $this->per_page;
@@ -134,7 +134,7 @@ class UserJdController extends BaseController
         ]);
         $login_user_id = $this->auth_user_id;
         $source_admin = User::sourceAdmin($login_user_id);
-        if($source_admin != 1){
+        if($source_admin == 0){
             return $this->response->array($this->apiSuccess('登陆用户没有权限查看', 403));
         }
         $user = User::find($request->input('id'));

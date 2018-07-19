@@ -7,6 +7,7 @@
 
 namespace App\Http\Controllers\Api\Wx;
 
+use App\Helper\Tools;
 use App\Http\Transformer\UserTransformer;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -23,47 +24,55 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {get} /wechat/login
+     * @api {get} /wechat/token
      * @apiVersion 1.0.0
-     * @apiName WxUser user
-     * @apiGroup WxUser
+     * @apiName WxToken token 获取token，并添加openid,session_key到用户表
+     * @apiGroup Wx
      *
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
-     *     }
-     *      "data": {
-     *          "id": 1,
-     *          "account": "18629493221",
-     *          "username": "",
-     *          "email": null,
-     *          "phone": "18629493221",
-     *          "status": 0, //状态：；-1：禁用；0.激活;
-     *          "item_sum": 0, //项目数量
-     *          "price_total": "0.00", //总金额
-     *          "price_frozen": "0.00", //冻结金额
-     *           "image": "",
-     *          "design_company_id": 1,
-     *          "role_id": 1    // 角色：0.用户；1.管理员；
-     *          "design_company_name":
-     *          "design_company_abbreviation": '',
-     *          "verify_status": -1,
-     *          "demand_company_name":
-     *          "demand_company_abbreviation": '',
-     *          "demand_verify_status": -1,
-     *          "source": 0, // 来源字段 0.默认 1.京东众创
-     * }
-     *   }
+     * @apiParam {string} code
      */
-    public function login()
+    public function openid(Request $request)
     {
-        $user = session('wechat.oauth_user');
-        $config = config('wechat.mini_program');
-        $app = Factory::miniProgram($config);
-        return [$app,$user];
-//        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
+        $code = $request->input('code');
+        if(empty($code)){
+            return $this->response->array($this->apiError('code 不能为空', 412));
+        }
+        $config = config('wechat.mini_program.default');
+        $mini = Factory::miniProgram($config);
+
+        //获取openid和session_key
+        $new_mini = $mini->auth->session($code);
+        $openid = $new_mini->openid ?? '';
+        if (!empty($openid)) {
+            $wxUser = User::where('wx_open_id' , $openid)->first();
+            //检测是否有openid,有创建，没有的话新建
+            if ($wxUser) {
+                $wxUser->session_key = $new_mini->session_key;
+                $wxUser->save();
+            } else {
+                //随机码
+                $randomNumber = Tools::randNumber();
+                // 创建用户
+                User::query()
+                    ->create([
+                        'account' => $randomNumber,
+                        'phone' => $randomNumber,
+                        'username' => $randomNumber,
+                        'type' => 1,
+                        'password' => $randomNumber,
+                        'child_account' => 0,
+                        'company_role' => 0,
+                        'source' => 0,
+                        'from_app' => 1,
+                        'wx_open_id' => $openid,
+                        'session_key' => $new_mini->session_key,
+                    ]);
+            }
+            //生成token
+            $token = JWTAuth::fromUser($new_mini);
+            return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+        } else {
+            return $this->response->array($this->apiError('code 已经失效', 412));
+        }
     }
 }

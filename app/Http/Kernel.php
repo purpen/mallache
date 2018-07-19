@@ -69,8 +69,6 @@ class Kernel extends HttpKernel
 
         //角色验证
         'role' => \App\Http\Middleware\CheckRole::class,
-        //微信
-        'wechat.oauth' => \Overtrue\LaravelWeChat\Middleware\OAuthAuthenticate::class,
 
     ];
 }
