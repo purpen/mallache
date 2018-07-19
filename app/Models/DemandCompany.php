@@ -208,10 +208,8 @@ class DemandCompany extends BaseModel
      * @param int $user_id
      * @return bool
      */
-    public static function createCompany(int $user_id)
+    public static function createCompany(User $user)
     {
-        $user = User::where('id', $user_id)->first();
-
         $all = [
             'company_name' => '',
             'company_abbreviation' => '',
@@ -225,7 +223,7 @@ class DemandCompany extends BaseModel
             'phone' => '',
             'email' => '',
             'position' => '',
-            'user_id' => $user_id,
+            'user_id' => $user->id,
             'document_type' => 0,
             'source' => $user->source,
         ];
