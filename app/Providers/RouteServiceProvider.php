@@ -44,6 +44,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapOpalusRoutes();
 
         $this->mapJdRoutes();
+
+        $this->mapWxRoutes();
     }
 
     /**
