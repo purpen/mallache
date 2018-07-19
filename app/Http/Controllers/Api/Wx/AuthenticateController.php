@@ -60,9 +60,10 @@ class AuthenticateController extends BaseController
      */
     public function login()
     {
+        $user = session('wechat.oauth_user');
         $config = config('wechat.mini_program');
         $app = Factory::miniProgram($config);
-        return $app;
+        return [$app,$user];
 //        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
     }
 }
