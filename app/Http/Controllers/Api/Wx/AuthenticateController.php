@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Api\Wx;
 
 use App\Helper\Tools;
 use App\Http\Transformer\UserTransformer;
+use App\Models\DemandCompany;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use EasyWeChat\Factory;
@@ -31,7 +32,7 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} code
      */
-    public function openid(Request $request)
+    public function token(Request $request)
     {
         $code = $request->input('code');
         if(empty($code)){
@@ -48,31 +49,127 @@ class AuthenticateController extends BaseController
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
                 $wxUser->session_key = $new_mini->session_key;
-                $wxUser->save();
+                if($wxUser->save()){
+                    //生成token
+                    $token = JWTAuth::fromUser($wxUser);
+                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+                }
             } else {
                 //随机码
                 $randomNumber = Tools::randNumber();
                 // 创建用户
-                User::query()
+                $user = User::query()
                     ->create([
                         'account' => $randomNumber,
                         'phone' => $randomNumber,
                         'username' => $randomNumber,
                         'type' => 1,
-                        'password' => $randomNumber,
+                        'password' => bcrypt($randomNumber),
                         'child_account' => 0,
                         'company_role' => 0,
                         'source' => 0,
                         'from_app' => 1,
                         'wx_open_id' => $openid,
                         'session_key' => $new_mini->session_key,
+                        'union_id' => $new_mini->unionId ?? '',
                     ]);
+                if($user){
+                    //创建需求公司
+                    DemandCompany::createCompany($user->id);
+                    //生成token
+                    $token = JWTAuth::fromUser($user);
+                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+                }
             }
-            //生成token
-            $token = JWTAuth::fromUser($new_mini);
-            return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+
         } else {
             return $this->response->array($this->apiError('code 已经失效', 412));
         }
+    }
+
+    /**
+     * @api {post} /wechat/decryptionMessage 解密信息
+     * @apiVersion 1.0.0
+     * @apiName WxDecryptionMessage decryptionMessage
+     * @apiGroup Wx
+     *
+     * @apiParam {string} iv
+     * @apiParam {string} encryptData
+     * @apiParam {string} token
+     *
+     */
+    public function decryptionMessage(Request $request)
+    {
+        $rules = [
+            'iv' => 'required',
+            'encryptData' => 'required',
+        ];
+
+        $payload = $request->only('iv', 'encryptData');
+        $validator = app('validator')->make($payload, $rules);
+
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $iv = $request->inpit('iv');
+        $encryptData = $request->inpit('encryptData');
+
+        $config = config('wechat.mini_program.default');
+        $mini = Factory::miniProgram($config);
+
+        $user = $this->auth_user;
+
+        $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
+
+        return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
+
+    }
+
+    /**
+     * @api {post} /wechat/bindingUser 绑定用户
+     * @apiVersion 1.0.0
+     * @apiName WxBindingUser bindingUser
+     * @apiGroup Wx
+     *
+     * @apiParam {string} phone 手机号
+     * @apiParam {string} password 密码
+     * @apiParam {string} token
+     *
+     */
+    public function bindingUser(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'password' => ['required', 'min:6']
+        ];
+
+
+        $payload = app('request')->only('phone', 'password');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $phone = $request->input('phone');
+        $password = $request->input('password');
+        //当前登陆的用户
+        $loginUser = $this->auth_user;
+        if ($loginUser){
+            $loginUser->account = $phone;
+            $loginUser->phone = $phone;
+            $loginUser->username = $phone;
+            $loginUser->password = bcrypt($password);
+            if ($loginUser->save()){
+                return $this->response->array($this->apiSuccess('绑定成功', 200));
+            }
+
+        } else {
+            return $this->response->array($this->apiError('没有找到用户', 404));
+        }
+
     }
 }
