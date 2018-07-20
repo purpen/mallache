@@ -29,7 +29,7 @@ class Milestone extends BaseModel
             'summary' => $this->summary,
             'user_id' => intval($this->user_id),
             'status' => intval($this->status),
-            'milestone_image' => $this->sub_stage_image,
+            'milestone_image' => $this->milestone_image,
         ];
     }
     /**

@@ -95,7 +95,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/user/changeRole', 'UserActionController@changeRole');
         //修改用户状态
         $api->post('/admin/user/changeStatus', 'UserActionController@changeStatus');
-
+        //修改来源管理员
+        $api->post('/admin/user/changeSourceAdmin', 'UserActionController@changeSourceAdmin');
         /**
          * 支付单相关路由
          */
