@@ -29,6 +29,7 @@ class ItemActionController extends Controller
      * @apiParam {integer} type 0.全部；1.填写资料ing；2.等待推荐； 默认0；
      * @apiParam {int} evt 查询条件：1.ID；2.公司名称；3.联系人电话；8.用户ID；9.--；
      * @apiParam {string} val 查询值
+     * @apiParam {int} source 来源：；0.全部；-1.铟果；1.京东;2.义乌；3.--；
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
      * @apiParam {integer} sort 0.降序（默认）；1.升序；
@@ -136,6 +137,7 @@ class ItemActionController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
+        $source = $request->input('source') ? (int)$request->input('source') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
 
@@ -166,6 +168,15 @@ class ItemActionController extends Controller
                     break;
                 default:
                     $query->where('id', (int)$val);
+            }
+        }
+
+        // 来源
+        if ($source) {
+            if ($source === -1) {
+                $query->where('source', 0);
+            } else {
+                $query->where('source', $source);
             }
         }
 
