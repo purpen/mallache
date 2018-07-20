@@ -16,6 +16,7 @@ use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -78,23 +79,33 @@ class AuthenticateController extends BaseController
             $company_role = 20;
         }
 
-        // 创建用户
-        $user = User::query()
-            ->create([
-                'account' => $payload['account'],
-                'phone' => $payload['account'],
-                'username' => $payload['account'],
-                'type' => $payload['type'],
-                'password' => bcrypt($payload['password']),
-                'child_account' => 0,
-                'company_role' => $company_role,
-                'source' => $request->header('source-type') ?? 0,
-            ]);
-        if ($user->type == 1) {
-            DemandCompany::createCompany($user->id);
-        } else if ($user->type == 2) {
-            DesignCompanyModel::createDesign($user->id);
+        try {
+            DB::beginTransaction();
+            // 创建用户
+            $user = User::query()
+                ->create([
+                    'account' => $payload['account'],
+                    'phone' => $payload['account'],
+                    'username' => $payload['account'],
+                    'type' => $payload['type'],
+                    'password' => bcrypt($payload['password']),
+                    'child_account' => 0,
+                    'company_role' => $company_role,
+                    'source' => $request->header('source-type') ?? 0,
+                ]);
+            if ($user->type == 1) {
+                DemandCompany::createCompany($user);
+            } else if ($user->type == 2) {
+                DesignCompanyModel::createDesign($user);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage(), $e->getCode());
+            return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
+
         if ($user) {
             $token = JWTAuth::fromUser($user);
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
@@ -155,6 +166,15 @@ class AuthenticateController extends BaseController
             if (!$this->phoneIsRegister($credentials['account'])) {
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
+
+            $user = User::where('account', $credentials['account'])->first();
+            $source = $request->header('source-type') ?? 0;
+            if ($source != 0) {
+                if ($user->type == 2) {
+                    return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
+                }
+            }
+
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->response->array($this->apiError('账户名或密码错误', 401));
@@ -265,7 +285,13 @@ class AuthenticateController extends BaseController
         $sms_code = Tools::randNumber();
         Cache::put($key, $sms_code, 10);
 
-        $text = ' 【太火鸟】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        // 根据请求来源判断
+        $source = $request->header('source-type') ?? 0;
+        if ($source == 1) {
+            $text = ' 【京东云艺火】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        } else {
+            $text = ' 【太火鸟铟果】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        }
         //插入单条短信发送队列
         $this->dispatch(new SendOneSms($phone, $text));
 

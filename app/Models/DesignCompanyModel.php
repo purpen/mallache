@@ -432,16 +432,14 @@ class DesignCompanyModel extends BaseModel
     }
 
     //创建设计公司
-    static public function createDesign($user_id)
+    static public function createDesign(User $user)
     {
-        $user = User::where('id', $user_id)->first();
-
         $all['company_abbreviation'] = '';
         $all['legal_person'] = '';
         $all['document_type'] = 0;
         $all['document_number'] = '';
         $all['open'] = 0;
-        $all['user_id'] = $user_id;
+        $all['user_id'] = $user->id;
         $all['source'] = $user->source;
 
 

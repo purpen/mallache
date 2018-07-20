@@ -123,10 +123,9 @@ class WithdrawOrderActionController extends BaseController
             $fund_log->outFund($withdraw_order->user_id, $withdraw_order->amount, 5, $withdraw_order->uid, '提现');
 
             //通知
-            $tools = new Tools();
             $title = '提现完成';
             $content = '单号：' . $withdraw_order->uid . '提现已完成';
-            $tools->message($withdraw_order->user_id, $title, $content, 3, null);
+            Tools::message($withdraw_order->user_id, $title, $content, 3, null);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -139,22 +138,16 @@ class WithdrawOrderActionController extends BaseController
         if ($company_user = User::find($withdraw_order->user_id)) {
             if ($company_user->type == 1) {
                 if ($company_user->demandCompany) {
-                    $this->sendSms($company_user->demandCompany->phone);
+                    Tools::sendSmsToPhone($company_user->demandCompany->phone, null);
                 }
             } elseif ($company_user->type == 2) {
                 if ($company_user->designCompany) {
-                    $this->sendSms($company_user->designCompany->phone);
+                    Tools::sendSmsToPhone($company_user->designCompany->phone, null);
                 }
             }
         }
 
         return $this->response->array($this->apiSuccess());
-    }
-
-    public function sendSms($phone)
-    {
-        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
-        dispatch(new SendOneSms($phone, $text));
     }
 
 }

@@ -261,10 +261,8 @@ class QuotationController extends BaseController
                 // 需求方通知信息
                 $title = '收到报价';
                 $content = '收到【' . $design->company_name . '】公司报价';
-                $tools = new Tools();
-                $tools->message($item->user_id, $title, $content, 2, $item->id);
-
-                $this->sendSms($item->phone);
+                Tools::message($item->user_id, $title, $content, 2, $item->id);
+                Tools::sendSmsToPhone($item->phone, $content, $item->source);
 
             } else {
                 throw new MassageException('该项目已经报价', 403);
@@ -552,10 +550,8 @@ class QuotationController extends BaseController
             // 需求方通知信息
             $title = '收到新报价';
             $content = '收到【' . $design->company_name . '】公司新报价';
-            $tools = new Tools();
-            $tools->message($item->user_id, $title, $content, 2, $item->id);
-
-            $this->sendSms($item->phone);
+            Tools::message($item->user_id, $title, $content, 2, $item->id);
+            Tools::sendSmsToPhone($item->phone, $content, $item->source);
 
             DB::commit();
         } catch (MassageException $e) {
@@ -567,9 +563,4 @@ class QuotationController extends BaseController
         return $this->response->item($quotation, new DesignQuotationTransformer())->setMeta($this->apiMeta());
     }
 
-    public function sendSms($phone)
-    {
-        $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
-        dispatch(new SendOneSms($phone, $text));
-    }
 }

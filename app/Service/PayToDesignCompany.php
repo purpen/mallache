@@ -122,20 +122,20 @@ class PayToDesignCompany
         //通知需求公司
         $title = '支付首付款';
         $content = '【' . $item_info['name'] . '】项目已向设计公司支付项目首付款';
-        $tools->message($demand_user_id, $title, $content, 3, null);
-        Tools::sendSmsToPhone($item->phone, $content);
+        Tools::message($demand_user_id, $title, $content, 3, null);
+        Tools::sendSmsToPhone($item->phone, $content, $item->source);
 
         //通知设计公司
         $title1 = '收到首付款';
         $content1 = '【' . $item_info['name'] . '】项目已收到项目首付款';
-        $tools->message($design_user_id, $title1, $content1, 3, null);
+        Tools::message($design_user_id, $title1, $content1, 3, null);
         Tools::sendSmsToPhone($design_phone, $content1);
 
         if ($commission > 0) {
             //扣除佣金 设计公司
             $title2 = '平台扣除佣金';
             $content2 = '【' . $item_info['name'] . '】项目已平台扣除佣金';
-            $tools->message($design_user_id, $title2, $content2, 3, null);
+            Tools::message($design_user_id, $title2, $content2, 3, null);
             Tools::sendSmsToPhone($design_phone, $content2);
         }
     }
@@ -188,18 +188,17 @@ class PayToDesignCompany
         //设计公司资金流水记录
         $fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
 
-        $tools = new Tools();
         //通知需求公司
         $title1 = '支付阶段项目款';
         $content1 = '已支付【' . $item_info['name'] . '】项目阶段项目款';
-        $tools->message($demand_user_id, $title1, $content1, 3, null);
+        Tools::message($demand_user_id, $title1, $content1, 3, null);
         // 短信通知需求公司
-        Tools::sendSmsToPhone($demand_phone, $content1);
+        Tools::sendSmsToPhone($demand_phone, $content1, $item->source);
 
         //通知设计公司
         $title2 = '收到阶段项目款';
         $content2 = '已收到【' . $item_info['name'] . '】项目阶段项目款';
-        $tools->message($design_user_id, $title2, $content2, 3, null);
+        Tools::message($design_user_id, $title2, $content2, 3, null);
         // 短信通知设计公司
         Tools::sendSmsToPhone($design_phone, $content2);
     }

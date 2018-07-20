@@ -470,6 +470,8 @@ class ContractController extends BaseController
             DB::beginTransaction();
 
             $all['version'] = config('constant.contract_version');
+
+            $all = array_filter($all);
             $contract->update($all);
 
             //删除项目阶段信息
@@ -482,6 +484,7 @@ class ContractController extends BaseController
                 ItemStage::create($stage);
             }
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollBack();
             return $this->response->array($this->apiError('创建失败', 500));
         }

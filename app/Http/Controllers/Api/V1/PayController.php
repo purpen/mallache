@@ -321,7 +321,7 @@ class PayController extends BaseController
             return $this->response->array($this->apiError("not found item", 404));
         }
 
-        if ($item->user_id != $this->auth_user_id || $item->status != 11 || $item_stage->pay_status == 1) {
+        if ($item->user_id != $this->auth_user_id || $item_stage->pay_status == 1) {
             return $this->response->array($this->apiError("无操作权限", 403));
         }
 

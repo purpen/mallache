@@ -434,8 +434,14 @@ class DesignController extends BaseController
 
         //验证项目阶段信息都已确认
         $item_stage_count = ItemStage::where(['item_id' => $item->id, 'confirm' => 0])->count();
+
         if ($item_stage_count) {  //如果存在未确认的阶段，不能确认完成
             return $this->response->array($this->apiError('项目目前阶段未完成，不能确认完成', 403));
+        }
+        // 验证付款
+        $item_stage_pay_count = ItemStage::where(['item_id' => $item->id, 'pay_status' => 0])->count();
+        if ($item_stage_pay_count) {  //如果存在未确认的阶段，不能确认完成
+            return $this->response->array($this->apiError('有阶段款未支付，不能确认完成', 403));
         }
 
         $item->status = 15;  //项目已完成
@@ -625,7 +631,7 @@ class DesignController extends BaseController
                             $item_user->delete();
                         }
                         //减少子账户数量
-                        if($user->child_count > 0){
+                        if ($user->child_count > 0) {
                             $user->child_count -= 1;
                             $user->save();
                         }
@@ -731,8 +737,8 @@ class DesignController extends BaseController
 
         }
         //判断子账户的数量
-        if($master_user->child_count >= config('constant.child_count')){
-            return $this->response->array($this->apiError('当前只能邀请10个用户' , 403));
+        if ($master_user->child_count >= config('constant.child_count')) {
+            return $this->response->array($this->apiError('当前只能邀请10个用户', 403));
         }
         $design_company_id = $master_user->design_company_id;
         //被恢复的成员
@@ -741,12 +747,12 @@ class DesignController extends BaseController
         //原来的设计公司id
         $old_design_company_id = $user->design_company_id;
         //原来的主账户
-        $old_user = User::where('design_company_id', $old_design_company_id)->where('child_account' , 0)->first();
-        if(!$old_user){
+        $old_user = User::where('design_company_id', $old_design_company_id)->where('child_account', 0)->first();
+        if (!$old_user) {
             return $this->response->array($this->apiError('没有找到原来的主账户', 404));
         }
         //判断被改变的账户是需求公司或者是主账户的话，不让更改
-        if($user->type == 1 || $user->child_account == 0){
+        if ($user->type == 1 || $user->child_account == 0) {
             return $this->response->array($this->apiError('被恢复的用户是需求公司，或者是主账户', 403));
         }
         if (!$user_id) {
@@ -767,7 +773,7 @@ class DesignController extends BaseController
                 $item_user->delete();
             }
             //减少原来公司子账户数量-1
-            if($old_user->child_count > 0){
+            if ($old_user->child_count > 0) {
                 $old_user->child_count -= 1;
                 $old_user->save();
             }
