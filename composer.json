@@ -41,15 +41,15 @@
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ echo '/opt/php-7.0/bin/php artisan optimize';}else{echo 'php artisan optimize';}\""
+            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ passthru '/opt/php-7.0/bin/php artisan optimize';}else{passthru 'php artisan optimize';}\""
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ echo '/opt/php-7.0/bin/php artisan optimize';}else{echo 'php artisan optimize';}\""
+            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ passthru('/opt/php-7.0/bin/php artisan optimize');}else{passthru('php artisan optimize');}\""
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ echo '/opt/php-7.0/bin/php artisan optimize';}else{echo 'php artisan optimize';}\""
+            "php -r \" if(file_exists('/opt/php-7.0/bin/')){ passthru '/opt/php-7.0/bin/php artisan optimize';}else{echo 'passthru artisan optimize';}\""
         ]
     },
     "config": {
