@@ -67,9 +67,6 @@ class Kernel extends ConsoleKernel
         //更新项目下任务总数量，完成未完成数量的统计
         Commands\UpdateTaskCount::class,
 
-        // 调用 系统 optimize命令
-        Commands\MyOptimize::class,
-
     ];
 
     /**

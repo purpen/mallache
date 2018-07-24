@@ -1,13 +1,4 @@
-@servers(['local' => '127.0.0.1','test_server' => 'tianxiaoyi@120.132.59.206'])
-
-# 本地测试部署任务
-@task('local', ['on' => 'local'])
-    cd /Users/llh/mycode/app/mallache
-    php artisan migrate
-    composer install
-    composer dump-autoload
-    apidoc -i app/Http/Controllers/Api/ -o public/apidoc
-@endtask
+@servers(['test_server' => 'tianxiaoyi@120.132.59.206'])
 
 # 铟果测试环境部署任务
 @task('test_server', ['on' => 'test_server'])

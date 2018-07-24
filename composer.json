@@ -41,15 +41,15 @@
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php artisan MyOptimize"
+            "/opt/php-7.0/bin/php artisan key:generate"
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan MyOptimize"
+            "/opt/php-7.0/bin/php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan MyOptimize"
+            "/opt/php-7.0/bin/php artisan optimize"
         ]
     },
     "config": {
