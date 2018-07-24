@@ -12,7 +12,7 @@
     @endif
     /opt/php-7.0/bin/php artisan migrate
     /opt/php-7.0/bin/php /usr/local/bin/composer install
-    composer dump-autoload
+    /opt/php-7.0/bin/php /usr/local/bin/composer dump-autoload
     apidoc -i app/Http/Controllers/Api/ -o public/apidoc
 @endtask
 
