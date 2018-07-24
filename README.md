@@ -84,6 +84,10 @@ git@github.com:purpen/mallache.git
      try_files $uri $uri/ /index.php?$query_string;
  }
  
+ #### 自动部署命令
+ envoy run [任务名称] --branch=[分支名称]
+ 
+ 测试环境 `envoy run test_server --branch=`
  
  ###### 生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
