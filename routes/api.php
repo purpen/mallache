@@ -679,6 +679,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/milestone', 'MilestoneController@show');
         $api->delete('/milestone/delete', 'MilestoneController@delete');
         $api->put('/milestone/completes', 'MilestoneController@completes');
+
+        //线上项目设定项目营业额，项目完成数量
+        $api->post('/designTarget/create', 'DesignTargetController@create');
+        $api->get('/designTarget/show', 'DesignTargetController@show');
+
     });
 
 });

@@ -36,4 +36,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/changePassword', [
         'as' => 'wechat.changePassword', 'uses' => 'AuthenticateController@changePassword'
     ]);
+
+    /**
+     * 发布项目
+     */
+    //选择类型
+    $api->post('/wechat/demand/create', [
+        'as' => 'wechat.demandCreate', 'uses' => 'DemandController@create'
+    ]);
+    //发布项目
+    $api->post('/wechat/demand/release', [
+        'as' => 'wechat.demandRelease', 'uses' => 'DemandController@release'
+    ]);
+    //获取推荐的设计公司
+    $api->post('/wechat/demand/recommendList/{item_id}', [
+        'as' => 'wechat.demandRecommendList', 'uses' => 'DemandController@recommendList'
+    ]);
 });
