@@ -44,7 +44,8 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        Log::info($new_mini);
+        Log::info($new_mini->openid,1);
+        Log::info($new_mini['openid'],2);
         $openid = $new_mini->openid ?? '';
         if (!empty($openid)) {
             $wxUser = User::where('wx_open_id' , $openid)->first();
