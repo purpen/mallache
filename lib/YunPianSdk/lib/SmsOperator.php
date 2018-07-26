@@ -41,7 +41,7 @@ class SmsOperator
         if (!array_key_exists('text', $data))
             return new Result(null, $data, null, 'text 为空');
         $data['apikey'] = $this->apikey;
-
+        Log::info(4442);
         return HttpUtil::PostCURL($this->yunpian_config['URI_SEND_SINGLE_SMS'], $data);
     }
 

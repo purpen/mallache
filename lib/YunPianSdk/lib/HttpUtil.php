@@ -1,6 +1,7 @@
 <?php
 namespace Lib\YunPianSdk\lib;
 
+use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\Yunpian;
 
 /**
@@ -10,7 +11,7 @@ use Lib\YunPianSdk\Yunpian;
 class HttpUtil
 {
     public static function PostCURL($url,$post_data){
-        
+        Log::info(4443);
         $yunpian = new Yunpian();
         $yunpian_config = $yunpian->config;
         
@@ -43,12 +44,15 @@ class HttpUtil
         if (curl_errno($ch) !== 0) {
             $r = new Result(null, $post_data, null,curl_error($ch));
             curl_close($ch);
+            Log::info(4444);
             return $r;
         }
         $output = trim($output, "\xEF\xBB\xBF");
         $statusCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
         $ret = new Result($statusCode,$post_data,json_decode($output,true),null);
         curl_close($ch);
+
+        Log::info(4445);
         return $ret;
     }
 }
