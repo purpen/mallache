@@ -30,6 +30,10 @@ class DesignTargetController extends BaseController
         $turnover = $request->input('turnover');
         $count = $request->input('count');
         $design_target = DesignTarget::where('year' , $year)->where('design_company_id' , $design_company_id)->first();
+        //检查是否是管理员以上级别
+        if (!$this->auth_user->isDesignAdmin()) {
+            return $this->response->array($this->apiError('没有权限创建', 403));
+        }
         //有的话更新，没有创建
         if ($design_target){
             if (!empty($turnover)){

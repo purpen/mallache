@@ -89,7 +89,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /wechat/decryptionMessage 解密信息
+     * @api {get} /wechat/decryptionMessage 解密信息
      * @apiVersion 1.0.0
      * @apiName WxDecryptionMessage decryptionMessage
      * @apiGroup Wx
