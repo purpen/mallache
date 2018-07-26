@@ -143,30 +143,35 @@ class ItemMessageListener
      */
     public function pushItemToDesign(ItemStatusEvent $event)
     {
-        $item = $event->item;
-        $design_company_id = $event->design_company_id;
+        try {
+            $item = $event->item;
+            $design_company_id = $event->design_company_id;
 
-        $design_company_arr = DesignCompanyModel::select(['user_id', 'phone'])
-            ->whereIn('id', $design_company_id)
-            ->get();
-        //设计公司ID 数组
-        $user_id_arr = $design_company_arr->pluck('user_id')->all();
+            $design_company_arr = DesignCompanyModel::select(['user_id', 'phone'])
+                ->whereIn('id', $design_company_id)
+                ->get();
+            //设计公司ID 数组
+            $user_id_arr = $design_company_arr->pluck('user_id')->all();
 
-        //设计公司联系人手机
-        $phone_arr = $design_company_arr->pluck('phone')->all();
+            //设计公司联系人手机
+            $phone_arr = $design_company_arr->pluck('phone')->all();
 
-        //添加系统通知
-        $tools = new Tools();
-        $n = count($user_id_arr);
+            //添加系统通知
+            $tools = new Tools();
+            $n = count($user_id_arr);
 
-        $title = '收到项目邀约';
-        $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
-        for ($i = 0; $i < $n; ++$i) {
-            Tools::message($user_id_arr[$i], $title, $content, 2, $item->id);
+            $title = '收到项目邀约';
+            $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
+            for ($i = 0; $i < $n; ++$i) {
+                Tools::message($user_id_arr[$i], $title, $content, 2, $item->id);
 
-            //短信通知设计公司有新项目推送
-            Tools::sendSmsToPhone($phone_arr[$i], $content);
+                //短信通知设计公司有新项目推送
+                Tools::sendSmsToPhone($phone_arr[$i], $content);
+            }
+        } catch (\Exception $e) {
+            Log::error($e);
         }
+
 
     }
 
