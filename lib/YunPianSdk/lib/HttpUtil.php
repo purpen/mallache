@@ -36,8 +36,11 @@ class HttpUtil
         Log::info(4447);
         $retry=0;
         // 若执行失败则重试
+        Log::info(4449);
         do{
+            Log::info(555);
             $output = curl_exec($ch);
+            Log::info(556);
             $retry++;
             Log::info(4448);
         }while((curl_errno($ch) !== 0) && $retry<$yunpian_config['RETRY_TIMES']);
