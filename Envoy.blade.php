@@ -19,17 +19,17 @@
 
 # 铟果正式环境自动部署
 @task('server', ['on' => ['server_1'], 'confirm' => true])
-cd /opt/project/mallache
-eval `ssh-agent -s`
-ssh-add ~/.ssh/herp
-@if ($branch)
-    git pull origin {{ $branch }}
-@else
-    git pull origin master
-@endif
-/opt/php-7.0/bin/php artisan migrate
-/opt/php-7.0/bin/php /usr/local/bin/composer install
-/opt/php-7.0/bin/php /usr/local/bin/composer dump-autoload
+    cd /opt/project/mallache
+    eval `ssh-agent -s`
+    ssh-add ~/.ssh/herp
+    @if ($branch)
+        git pull origin {{ $branch }}
+    @else
+        git pull origin master
+    @endif
+    /opt/php-7.0/bin/php artisan migrate
+    /opt/php-7.0/bin/php /usr/local/bin/composer install
+    /opt/php-7.0/bin/php /usr/local/bin/composer dump-autoload
 @endtask
 
 
