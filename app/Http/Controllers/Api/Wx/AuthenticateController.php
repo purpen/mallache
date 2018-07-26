@@ -71,8 +71,8 @@ class AuthenticateController extends BaseController
                         'source' => 0,
                         'from_app' => 1,
                         'wx_open_id' => $openid,
-                        'session_key' => $new_mini->session_key,
-                        'union_id' => $new_mini->unionId ?? '',
+                        'session_key' => $new_mini['session_key'],
+                        'union_id' => $new_mini['unionId'] ?? '',
                     ]);
                 if($user){
                     //创建需求公司
@@ -119,7 +119,12 @@ class AuthenticateController extends BaseController
 
         $user = $this->auth_user;
 
-        $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
+        $session = [
+            'session_key' => $user->session_key,
+            'openid' => $user->openid
+        ];
+
+        $decryptedData = $mini->encryptor->decryptData($session, $iv, $encryptData);
 
         return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
 
