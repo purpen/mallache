@@ -380,10 +380,12 @@ class Tools
                 $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
             }
 
-
+            Log::info(321);
             // 判断短信通知是否开启
             if (config('constant.sms_send')) {
+                Log::info(322);
                 dispatch(new SendOneSms($phone, $text));
+                Log::info(323);
             }
         }catch (\Exception $e){
             Log::error($e);
