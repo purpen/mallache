@@ -26,6 +26,7 @@ class HttpUtil
 
         /* 设置超时时间*/
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
 
         /* 设置通信方式 */
         curl_setopt($ch, CURLOPT_POST, 1);
