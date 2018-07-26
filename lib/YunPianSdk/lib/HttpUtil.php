@@ -14,7 +14,7 @@ class HttpUtil
         Log::info(4443);
         $yunpian = new Yunpian();
         $yunpian_config = $yunpian->config;
-        
+        Log::info(4446);
         $ch = curl_init();
 
         /* 设置验证方式 */
@@ -33,12 +33,13 @@ class HttpUtil
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt ($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-        
+        Log::info(4447);
         $retry=0;
         // 若执行失败则重试
         do{
             $output = curl_exec($ch);
             $retry++;
+            Log::info(4448);
         }while((curl_errno($ch) !== 0) && $retry<$yunpian_config['RETRY_TIMES']);
         Log::info(4445);
         if (curl_errno($ch) !== 0) {
