@@ -1,6 +1,7 @@
 <?php
 namespace Lib\YunPianSdk\lib;
 
+use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\Yunpian;
 
 
