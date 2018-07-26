@@ -39,7 +39,13 @@ class HttpUtil
         Log::info(4449);
         do{
             Log::info(555);
-            $output = curl_exec($ch);
+            try{
+                $output = curl_exec($ch);
+            }catch (\Exception $e){
+                Log::info(5551);
+                Log::error($e);
+            }
+
             Log::info(556);
             $retry++;
             Log::info(4448);
