@@ -34,6 +34,7 @@ class SmsOperator
 
     public function single_send($data = array())
     {
+        Log::info(4441);
         if (!array_key_exists('mobile', $data))
             return new Result(null, $data, null, 'mobile 为空');
         if (!array_key_exists('text', $data))

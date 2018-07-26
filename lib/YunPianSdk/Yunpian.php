@@ -1,6 +1,7 @@
 <?php
 namespace Lib\YunPianSdk;
 
+use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\lib\FlowOperator;
 use Lib\YunPianSdk\lib\SmsOperator;
 use Lib\YunPianSdk\lib\UserOperator;
@@ -80,6 +81,7 @@ class Yunpian
     */
     public function sendOneSms($mobile, $text)
     {
+        Log::info(444);
 //        $data['mobile'] = '13300000000';
 //        $data['text'] = '【云片网】您的验证码是1234';
         $smsOperator = new SmsOperator();
