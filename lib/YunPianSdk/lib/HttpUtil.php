@@ -40,7 +40,7 @@ class HttpUtil
             $output = curl_exec($ch);
             $retry++;
         }while((curl_errno($ch) !== 0) && $retry<$yunpian_config['RETRY_TIMES']);
-
+        Log::info(4445);
         if (curl_errno($ch) !== 0) {
             $r = new Result(null, $post_data, null,curl_error($ch));
             curl_close($ch);
