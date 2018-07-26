@@ -43,6 +43,7 @@ class ItemMessageListener
      */
     public function handle(ItemStatusEvent $event)
     {
+        Log::info(1);
         try {
             $item = $event->item;
 
@@ -143,6 +144,7 @@ class ItemMessageListener
      */
     public function pushItemToDesign(ItemStatusEvent $event)
     {
+        Log::info(2);
         try {
             $item = $event->item;
             $design_company_id = $event->design_company_id;
@@ -168,11 +170,12 @@ class ItemMessageListener
                 //短信通知设计公司有新项目推送
                 Tools::sendSmsToPhone($phone_arr[$i], $content);
             }
+            Log::info(3);
         } catch (\Exception $e) {
             Log::error($e);
         }
 
-
+        Log::info(4);
     }
 
     /**
