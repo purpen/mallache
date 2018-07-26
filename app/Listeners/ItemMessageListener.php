@@ -43,76 +43,82 @@ class ItemMessageListener
      */
     public function handle(ItemStatusEvent $event)
     {
-        $item = $event->item;
+        try {
+            $item = $event->item;
 
-        //记录项目状态变化时间
-        $item->statusTime($item->status);
+            //记录项目状态变化时间
+            $item->statusTime($item->status);
 
-        switch ($item->status) {
-            //项目匹配失败
-            case -2:
-                $this->itemFail($event);
-                break;
-            //用户关闭项目
-            case -1:
-                $this->closeItem($item);
-                break;
-            //创建项目
-            case 1:
-                break;
-            //发布项目
-            case 2:
-                // 通知平台运营人员
-                $this->newItemNotice($event);
-                break;
-            //已推荐设计公司
-            case 3:
-                $this->recommendDesign($item);
-                break;
-            //向设计公司推送项目
-            case 4:
-                $this->pushItemToDesign($event);
-                break;
-            //选定设计公司
-            case 5:
-                $this->trueDesign($event);
-                break;
-            //设计公司提交合同
-            case 6:
-                $this->designSubmitContract($event);
-                break;
-            //发布需求公司已确认合同，
-            case 7:
-                $this->demandTrueContract($event);
-                break;
-            //等待项目款托管
-            case 8:
-                break;
-            //项目款已托管
-            case 9:
-                //向设计公司通知
-                $this->demandTrustFunds($event);
-                break;
-            //项目进行中
-            case 11:
-                // 支付首付款（合同版本：0）
-                $this->payFirstPayment($event);
-                //通知需求公司
-                $this->itemOngoing($event);
-                break;
-            // 项目已完成
-            case 15:
-                //通知需求公司
-                $this->itemDone($event);
-                break;
-            //需求方 验收完成
-            case 18:
-                // 确认项目完成,通知设计公司
-                $this->trueItemDone($event);
-                // 向设计公司支付项目剩余款项（合同版本：0）
-                $this->payRestFunds($event);
-                break;
+            switch ($item->status) {
+                //项目匹配失败
+                case -2:
+                    $this->itemFail($event);
+                    break;
+                //用户关闭项目
+                case -1:
+                    $this->closeItem($item);
+                    break;
+                //创建项目
+                case 1:
+                    break;
+                //发布项目
+                case 2:
+                    // 通知平台运营人员
+                    $this->newItemNotice($event);
+                    break;
+                //已推荐设计公司
+                case 3:
+                    $this->recommendDesign($item);
+                    break;
+                //向设计公司推送项目
+                case 4:
+                    $this->pushItemToDesign($event);
+                    break;
+                //选定设计公司
+                case 5:
+                    $this->trueDesign($event);
+                    break;
+                //设计公司提交合同
+                case 6:
+                    $this->designSubmitContract($event);
+                    break;
+                //发布需求公司已确认合同，
+                case 7:
+                    $this->demandTrueContract($event);
+                    break;
+                //等待项目款托管
+                case 8:
+                    break;
+                //项目款已托管
+                case 9:
+                    //向设计公司通知
+                    $this->demandTrustFunds($event);
+                    break;
+                //项目进行中
+                case 11:
+                    // 支付首付款（合同版本：0）
+                    $this->payFirstPayment($event);
+                    //通知需求公司
+                    $this->itemOngoing($event);
+                    break;
+                // 项目已完成
+                case 15:
+                    //通知需求公司
+                    $this->itemDone($event);
+                    break;
+                //需求方 验收完成
+                case 18:
+                    // 确认项目完成,通知设计公司
+                    $this->trueItemDone($event);
+                    // 向设计公司支付项目剩余款项（合同版本：0）
+                    $this->payRestFunds($event);
+                    break;
+            }
+        } catch (\Exception $e) {
+            Log::error($e);
         }
+
+
     }
 
     /**
@@ -230,18 +236,23 @@ class ItemMessageListener
     //需求公司确认合同，通知设计公司
     public function demandTrueContract(ItemStatusEvent $event)
     {
-        $item = $event->item;
-        $item_info = $item->itemInfo();
+        try {
+            $item = $event->item;
+            $item_info = $item->itemInfo();
 
-        //获取设计公司user_id
-        $user_id = $item->designCompany->user_id;
-        $phone = $item->designCompany->phone;
+            //获取设计公司user_id
+            $user_id = $item->designCompany->user_id;
+            $phone = $item->designCompany->phone;
 
-        $title = '合同确认';
-        $content = '您与' . $item->company_name . '公司的【' . $item_info['name'] . '】合同已订立，请按合同规定在收到项目款后开始设计工作';
-        Tools::message($user_id, $title, $content, 2, $item->id);
+            $title = '合同确认';
+            $content = '您与' . $item->company_name . '公司的【' . $item_info['name'] . '】合同已订立，请按合同规定在收到项目款后开始设计工作';
+            Tools::message($user_id, $title, $content, 2, $item->id);
 
-        Tools::sendSmsToPhone($phone, $content);
+            Tools::sendSmsToPhone($phone, $content);
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
+
     }
 
     //需求公司已托管项目首付款
