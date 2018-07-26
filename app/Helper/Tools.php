@@ -75,24 +75,29 @@ class Tools
     public static function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
     {
         Log::info(31);
-        $message = Message::create([
-            'user_id' => $user_id,
-            'title' => $title,
-            'content' => $message,
-            'type' => $type,
-            'target_id' => $target_id,
-            'item_status' => $item_status,
-        ]);
+        try{
+            $message = Message::create([
+                'user_id' => $user_id,
+                'title' => $title,
+                'content' => $message,
+                'type' => $type,
+                'target_id' => $target_id,
+                'item_status' => $item_status,
+            ]);
 
-        if ($message) {
-            //新消息数量加1
-            $user = User::find($message->user_id);
-            if ($user) {
-                $user->increment('message_count');
-                return true;
+            if ($message) {
+                //新消息数量加1
+                $user = User::find($message->user_id);
+                if ($user) {
+                    $user->increment('message_count');
+                    return true;
+                }
             }
+            return false;
+        }catch (\Exception $e){
+            Log::error($e);
         }
-        return false;
+
     }
 
     /**
