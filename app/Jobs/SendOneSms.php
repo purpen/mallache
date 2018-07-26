@@ -43,11 +43,12 @@ class SendOneSms implements ShouldQueue
      */
     public function handle()
     {
+        Log::info(3331);
         if (!empty($this->mobile) && !empty($this->text)) {
             $yun_pian = new Yunpian();
             $result = $yun_pian->sendOneSms($this->mobile, $this->text);
 
-
+            Log::info(3332);
             if (intval($result->statusCode) !== 200) {
                 Log::error('短信发送：' . json_encode($result));
             }
@@ -57,6 +58,7 @@ class SendOneSms implements ShouldQueue
             Log::error('短信发送参数为空');
         }
 
+        Log::info(3332);
     }
 
     public function failed(\Exception $exception)
