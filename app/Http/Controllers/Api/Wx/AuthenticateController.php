@@ -36,7 +36,7 @@ class AuthenticateController extends BaseController
     public function token(Request $request)
     {
         $code = $request->input('code');
-        if(empty($code)){
+        if (empty($code)) {
             return $this->response->array($this->apiError('code 不能为空', 412));
         }
         $config = config('wechat.mini_program.default');
@@ -46,11 +46,11 @@ class AuthenticateController extends BaseController
         $new_mini = $mini->auth->session($code);
         $openid = $new_mini['openid'] ?? '';
         if (!empty($openid)) {
-            $wxUser = User::where('wx_open_id' , $openid)->first();
+            $wxUser = User::where('wx_open_id', $openid)->first();
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
                 $wxUser->session_key = $new_mini['session_key'];
-                if($wxUser->save()){
+                if ($wxUser->save()) {
                     //生成token
                     $token = JWTAuth::fromUser($wxUser);
                     return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
@@ -74,7 +74,7 @@ class AuthenticateController extends BaseController
                         'session_key' => $new_mini['session_key'],
                         'union_id' => $new_mini['unionId'] ?? '',
                     ]);
-                if($user){
+                if ($user) {
                     //创建需求公司
                     DemandCompany::createCompany($user->id);
                     //生成token
@@ -119,12 +119,7 @@ class AuthenticateController extends BaseController
 
         $user = $this->auth_user;
 
-        $session = [
-            'session_key' => $user->session_key,
-            'openid' => $user->openid
-        ];
-
-        $decryptedData = $mini->encryptor->decryptData($session, $iv, $encryptData);
+        $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
 
         return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
 
@@ -162,12 +157,12 @@ class AuthenticateController extends BaseController
         $password = $request->input('password');
         //当前登陆的用户
         $loginUser = $this->auth_user;
-        if ($loginUser){
+        if ($loginUser) {
             $loginUser->account = $phone;
             $loginUser->phone = $phone;
             $loginUser->username = $phone;
             $loginUser->password = bcrypt($password);
-            if ($loginUser->save()){
+            if ($loginUser->save()) {
                 return $this->response->array($this->apiSuccess('绑定成功', 200));
             }
 
@@ -220,12 +215,12 @@ class AuthenticateController extends BaseController
 
         //当前登陆的用户
         $loginUser = $this->auth_user;
-        if ($loginUser){
+        if ($loginUser) {
             $loginUser->account = $phone;
             $loginUser->phone = $phone;
             $loginUser->username = $phone;
             $loginUser->password = bcrypt($password);
-            if ($loginUser->save()){
+            if ($loginUser->save()) {
                 return $this->response->array($this->apiSuccess('绑定成功', 200));
             }
 
@@ -262,7 +257,7 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
-        $user = User::where('account' , $phone)->first();
+        $user = User::where('account', $phone)->first();
         if ($user) {
             return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
         } else {
