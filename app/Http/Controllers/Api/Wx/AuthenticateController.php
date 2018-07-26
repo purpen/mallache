@@ -111,8 +111,8 @@ class AuthenticateController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
-        $iv = $request->inpit('iv');
-        $encryptData = $request->inpit('encryptData');
+        $iv = $request->input('iv');
+        $encryptData = $request->input('encryptData');
 
         $config = config('wechat.mini_program.default');
         $mini = Factory::miniProgram($config);
