@@ -164,9 +164,10 @@ class ItemMessageListener
 
             $title = '收到项目邀约';
             $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
+            Log::info(21);
             for ($i = 0; $i < $n; ++$i) {
                 Tools::message($user_id_arr[$i], $title, $content, 2, $item->id);
-
+                Log::info(22);
                 //短信通知设计公司有新项目推送
                 Tools::sendSmsToPhone($phone_arr[$i], $content);
             }

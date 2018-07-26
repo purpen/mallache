@@ -74,6 +74,7 @@ class Tools
      */
     public static function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
     {
+        Log::info(31);
         $message = Message::create([
             'user_id' => $user_id,
             'title' => $title,
@@ -364,6 +365,7 @@ class Tools
      */
     public static function sendSmsToPhone($phone, $content, $source = null)
     {
+        Log::info(32);
         // 京东云艺火
         if ($source == 1) {
             $text = config('constant.jd_sms_fix') . '您好，您在艺火平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
@@ -376,5 +378,6 @@ class Tools
         if (config('constant.sms_send')) {
             dispatch(new SendOneSms($phone, $text));
         }
+        Log::info(33);
     }
 }
