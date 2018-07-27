@@ -7,6 +7,7 @@ use App\Http\Transformer\DesignTargetTransformer;
 use App\Models\DesignTarget;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DesignTargetController extends BaseController
 {
@@ -77,8 +78,24 @@ class DesignTargetController extends BaseController
     {
         //获取当年是那一年
         $year = strtotime(date('Y'));
+        dd($year);
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         $design_target = DesignTarget::where('year' , $year)->where('design_company_id' , $design_company_id)->first();
+
+        //获取当年的完成项目数量
+        $item_count = DB::table('design_project')
+            ->where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->whereYear('created_at', date('Y'))
+            ->count();
+        //已完成的项目百分比
+        dd($design_target);
+        if ($design_target->count == 0){
+            $ok_count = 0 ;
+        } else {
+            $ok_count = round(($item_count / $design_target->count) * 100, 0);
+        }
+        dd($ok_count);
     }
 }
