@@ -205,7 +205,7 @@ class AuthenticateController extends BaseController
         $phone = $request->input('phone');
         $password = $request->input('password');
         //验证手机验证码
-        $key = 'sms_code:' . strval($payload['account']);
+        $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
