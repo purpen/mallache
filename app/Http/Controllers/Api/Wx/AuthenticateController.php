@@ -50,6 +50,7 @@ class AuthenticateController extends BaseController
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
                 $wxUser->session_key = $new_mini['session_key'];
+                $wxUser->unionId = $new_mini['unionId'] ?? '';
                 if ($wxUser->save()) {
                     //生成token
                     $token = JWTAuth::fromUser($wxUser);
