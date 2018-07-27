@@ -522,6 +522,7 @@ class DemandController extends BaseController
             //修改项目状态为：等待设计公司接单(报价)
             $item->status = 4;
             $item->save();
+            Log::info(6);
             //触发事件
             event(new ItemStatusEvent($item, $all['design_company_id']));
 
@@ -529,7 +530,7 @@ class DemandController extends BaseController
             foreach ($all['design_company_id'] as $design_company_id) {
                 ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
             }
-
+            Log::info(5);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
