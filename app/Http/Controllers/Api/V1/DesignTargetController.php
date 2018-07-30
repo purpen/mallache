@@ -30,6 +30,7 @@ class DesignTargetController extends BaseController
         $design_company_id = User::designCompanyId($user_id);
         $turnover = $request->input('turnover');
         $count = $request->input('count');
+        $year = date('Y');
         $design_target = DesignTarget::where('design_company_id' , $design_company_id)->whereYear('created_at', date('Y'))
             ->first();
         //检查是否是管理员以上级别
@@ -40,10 +41,12 @@ class DesignTargetController extends BaseController
         if ($design_target){
             if (!empty($turnover)){
                 $design_target->turnover = $turnover;
+                $design_target->year = $year;
                 $design_target->save();
             }
             if ($count != 0){
                 $design_target->count = $count;
+                $design_target->year = $year;
                 $design_target->save();
             }
             return $this->response->item($design_target, new DesignTargetTransformer())->setMeta($this->apiMeta());
@@ -53,11 +56,13 @@ class DesignTargetController extends BaseController
             if (!empty($turnover)){
                 $new_design_target->turnover = $turnover;
                 $new_design_target->design_company_id = $design_company_id;
+                $new_design_target->year = $year;
                 $new_design_target->save();
             }
             if ($count != 0){
                 $design_target->count = $count;
                 $new_design_target->design_company_id = $design_company_id;
+                $new_design_target->year = $year;
                 $design_target->save();
             }
             return $this->response->item($new_design_target, new DesignTargetTransformer())->setMeta($this->apiMeta());
