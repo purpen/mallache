@@ -138,6 +138,7 @@ class AuthenticateController extends BaseController
      */
     public function bindingUser(Request $request)
     {
+        $credentials = $request->only('phone', 'password');
         // 验证规则
         $rules = [
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
@@ -154,20 +155,26 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
-        $password = $request->input('password');
+
+        if (!$this->phoneIsRegister($credentials['phone'])) {
+            return $this->response->array($this->apiError('手机号未注册', 404));
+        }
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return $this->response->array($this->apiError('账户名或密码错误', 412));
+        }
+        //已经存在的用户
+        $oldUser = User::where('account' , $phone)->first();
         //当前登陆的用户
         $loginUser = $this->auth_user;
-        if ($loginUser) {
-            $loginUser->account = $phone;
-            $loginUser->phone = $phone;
-            $loginUser->username = $phone;
-            $loginUser->password = bcrypt($password);
-            if ($loginUser->save()) {
-                return $this->response->array($this->apiSuccess('绑定成功', 200));
+        //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
+        $oldUser->wx_open_id = $loginUser->wx_open_id;
+        $oldUser->session_key = $loginUser->session_key;
+        $oldUser->union_id = $loginUser->union_id;
+        if($oldUser->save()){
+            if($loginUser->delete()){
+                return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
             }
-
-        } else {
-            return $this->response->array($this->apiError('没有找到用户', 404));
         }
 
     }
@@ -203,6 +210,11 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
+        //查看是否注册了
+        $oldUser = User::where('account' , $phone)->first();
+        if($oldUser){
+            return $this->response->array($this->apiError('该手机号已经注册过，请直接绑定', 412));
+        }
         $password = $request->input('password');
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
@@ -355,5 +367,12 @@ class AuthenticateController extends BaseController
         }
     }
 
-
+    protected function phoneIsRegister($account)
+    {
+        if (User::where('account', intval($account))->count() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
