@@ -328,7 +328,6 @@ class AuthenticateController extends BaseController
      * @apiGroup Wx
      *
      * @apiParam {string} password     新密码
-     * @apiParam {string} repeatPassword     重复密码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -345,16 +344,10 @@ class AuthenticateController extends BaseController
     public function changePassword(Request $request)
     {
         $this->validate($request, [
-            'repeatPassword' => 'required',
             'password' => 'required',
         ]);
 
-        $repeatPassword = $request->input('repeatPassword');
         $newPassword = $request->input('password');
-
-        if ($repeatPassword != $newPassword) {
-            return $this->response->array($this->apiError('两次密码不一致', 412));
-        }
 
         $user = JWTAuth::parseToken()->authenticate();
 

@@ -28,6 +28,7 @@ class DesignTargetTransformer extends TransformerAbstract
             'm_money' => $designTarget->m_money,
             'month_on_month' => $designTarget->month_on_month,
             'm_item' => $designTarget->m_item,
+            'quarter_on_quarter' => $designTarget->quarter_on_quarter,
 
         ];
     }

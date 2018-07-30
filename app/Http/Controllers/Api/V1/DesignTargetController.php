@@ -89,6 +89,7 @@ class DesignTargetController extends BaseController
     "ok_turnover_percentage": 2, //营业额百分比
     "m_money": 0.29, //月均收入
     "month_on_month": 0, //月环比
+    "quarter_on_quarter": 0, //季度环比
     "m_item": 0.3 //月均项目
     },
     "meta": {
@@ -99,6 +100,7 @@ class DesignTargetController extends BaseController
      */
     public function show()
     {
+
         //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
@@ -122,12 +124,17 @@ class DesignTargetController extends BaseController
         foreach ($item_counts as $item_count){
             $turnover += $item_count->cost;
         }
-        //已完成的项目百分比
-        if ($design_target->count == 0){
-            $ok_count_percentage = 0 ;
+        if ($design_target){
+            //已完成的项目百分比
+            if ($design_target->count == 0){
+                $ok_count_percentage = 0 ;
+            } else {
+                $ok_count_percentage = round(($item_counts->count() / $design_target->count) * 100, 0);
+            }
         } else {
-            $ok_count_percentage = round(($item_counts->count() / $design_target->count) * 100, 0);
+            $ok_count_percentage = 0;
         }
+
         //未完成的项目百分比
         $no_count_percentage = 100 - $ok_count_percentage;
         //已收入的百分比
@@ -160,12 +167,23 @@ class DesignTargetController extends BaseController
         foreach ($month_item_counts as $month_item_count){
             $current_m_money += $month_item_count->cost;
         }
-        //去年这个月完成的项目
-        $last_month_item_counts = DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->whereMonth('created_at', date('m')-1)
-            ->get();
+        //如果是1月份，就获取去年12月份的数据
+        if (date('m') == 1){
+            //上个月完成的项目
+            $last_month_item_counts = DesignProject
+                ::where('design_company_id', $design_company_id)
+                ->where('pigeonhole', 1)
+                ->whereYear('created_at', date('Y')-1)
+                ->whereMonth('created_at', 12)
+                ->get();
+        } else {
+            //上个月完成的项目
+            $last_month_item_counts = DesignProject
+                ::where('design_company_id', $design_company_id)
+                ->where('pigeonhole', 1)
+                ->whereMonth('created_at', date('m')-1)
+                ->get();
+        }
         //上月项目收入
         $last_current_m_money = 0;
         foreach ($last_month_item_counts as $last_month_item_count){
@@ -173,6 +191,21 @@ class DesignTargetController extends BaseController
         }
         //月环比
         $month_on_month = round((($current_m_money - $last_current_m_money) / 100 ) * 100 , 0);
+        //当前季度
+        $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now()) group by created_at");
+        $current_q_money = 0;
+        foreach ($quarter_item_counts as $quarter_item_count){
+            $current_q_money += $quarter_item_count->cost;
+        }
+        //上个季度
+        $last_quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(date_sub(now(),interval 1 quarter))");
+        $last_current_m_money = 0;
+        foreach ($last_quarter_item_counts as $last_quarter_item_count){
+            $last_current_m_money += $last_quarter_item_count->cost;
+        }
+        //季度环比
+        $quarter_on_quarter = round((($current_q_money - $last_current_m_money) / 100 ) * 100 , 0);
+
         //项目总数
         $design_target['total_item_counts'] = $total_item_counts;
         //当年完成的项目数
@@ -191,6 +224,9 @@ class DesignTargetController extends BaseController
         $design_target['month_on_month'] = $month_on_month;
         //月均项目
         $design_target['m_item'] = $m_item;
+        //季度环比
+        $design_target['quarter_on_quarter'] = $quarter_on_quarter;
+
 
         return $this->response->item($design_target, new DesignTargetTransformer())->setMeta($this->apiMeta());
 
