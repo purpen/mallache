@@ -273,7 +273,7 @@ class AuthenticateController extends BaseController
         if ($user) {
             return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
         } else {
-            return $this->response->array($this->apiError('该账户不存在,需要从新绑定', 404));
+            return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
         }
     }
 
@@ -373,6 +373,52 @@ class AuthenticateController extends BaseController
             return true;
         } else {
             return false;
+        }
+    }
+
+
+    /**
+     * @api {post} /wechat/findPassword 发送手机验证码，找回密码
+     * @apiVersion 1.0.0
+     * @apiName WxFindPassword findPassword
+     * @apiGroup Wx
+     *
+     * @apiParam {string} phone 手机号
+     * @apiParam {integer} sms_code 短信验证码
+     * @apiParam {string} token
+     *
+     */
+    public function findPassword(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+        ];
+
+
+        $payload = app('request')->only('phone', 'sms_code');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $phone = $request->input('phone');
+        //查看是否注册了
+        $oldUser = User::where('account' , $phone)->first();
+        if(!$oldUser){
+            return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
+        }
+        //验证手机验证码
+        $key = 'sms_code:' . strval($payload['phone']);
+        $sms_code_value = Cache::get($key);
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+            return $this->response->array($this->apiSuccess('获取成功', 200));
         }
     }
 }

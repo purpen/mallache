@@ -36,7 +36,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/changePassword', [
         'as' => 'wechat.changePassword', 'uses' => 'AuthenticateController@changePassword'
     ]);
-
+    //发送手机验证码，找回密码
+    $api->post('/wechat/findPassword', [
+        'as' => 'wechat.findPassword', 'uses' => 'AuthenticateController@findPassword'
+    ]);
     /**
      * 发布项目
      */
