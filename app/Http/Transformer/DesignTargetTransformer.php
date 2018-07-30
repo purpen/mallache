@@ -18,7 +18,6 @@ class DesignTargetTransformer extends TransformerAbstract
             'count' => intval($designTarget->count),
             'design_company_id' => intval($designTarget->design_company_id),
             'turnover' => intval($designTarget->turnover),
-            'year' => $designTarget->year ? (int)date('Y',$designTarget->year) : 0,
             'total_item_counts' => $designTarget->total_item_counts,
             'item_counts' => $designTarget->item_counts,
             'no_item_counts' => $designTarget->no_item_counts,
