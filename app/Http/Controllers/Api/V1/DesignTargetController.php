@@ -192,7 +192,7 @@ class DesignTargetController extends BaseController
         //月环比
         $month_on_month = round((($current_m_money - $last_current_m_money) / 100 ) * 100 , 0);
         //当前季度
-        $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now()) group by created_at");
+        $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now())");
         $current_q_money = 0;
         foreach ($quarter_item_counts as $quarter_item_count){
             $current_q_money += $quarter_item_count->cost;
