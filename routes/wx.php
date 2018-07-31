@@ -40,6 +40,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/findPassword', [
         'as' => 'wechat.findPassword', 'uses' => 'AuthenticateController@findPassword'
     ]);
+    //检测账号是否注册
+    $api->get('/wechat/checkAccount', [
+        'as' => 'wechat.checkAccount', 'uses' => 'AuthenticateController@checkAccount'
+    ]);
     /**
      * 发布项目
      */
