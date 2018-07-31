@@ -685,6 +685,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //线上项目设定项目营业额，项目完成数量
         $api->post('/designTarget/create', 'DesignTargetController@create');
         $api->get('/designTarget/show', 'DesignTargetController@show');
+        //收入报表
+        $api->get('/designTarget/incomeMonth', 'DesignTargetController@incomeMonth');
 
     });
 
