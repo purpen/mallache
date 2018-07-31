@@ -87,6 +87,7 @@ class DesignTargetController extends BaseController
     "ok_count_percentage": 100, //完成的项目百分比
     "no_count_percentage": 0, //没完成的项目百分比
     "ok_turnover_percentage": 2, //营业额百分比
+    "ok_turnover": 2, //已收入的营业额
     "m_money": 0.29, //月均收入
     "month_on_month": 0, //月环比
     "quarter_on_quarter": 0, //季度环比
@@ -223,6 +224,8 @@ class DesignTargetController extends BaseController
             $design_target['no_count_percentage'] = $no_count_percentage;
             //营业额百分比
             $design_target['ok_turnover_percentage'] = $ok_turnover_percentage;
+            //已收入的金额
+            $design_target['ok_turnover'] = $turnover;
             //月均收入
             $design_target['m_money'] = $m_money;
             //月环比
@@ -249,6 +252,8 @@ class DesignTargetController extends BaseController
             $design_target['no_count_percentage'] = 0;
             //营业额百分比
             $design_target['ok_turnover_percentage'] = 0;
+            //已收入的金额
+            $design_target['ok_turnover'] = 0;
             //月均收入
             $design_target['m_money'] = 0;
             //月环比
@@ -278,24 +283,117 @@ class DesignTargetController extends BaseController
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //当月完成的项目
-        $month_item_counts = DesignProject
+        $incomeMonths = DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->whereMonth('created_at', date('m'))
             ->get();
         //总数量
-        $total_count = $month_item_counts->count();
+        $total_count = $incomeMonths->count();
         //总价
         $total_money = 0;
-        foreach ($month_item_counts as $month_item_count){
-            $total_money += $month_item_count->cost;
+        $month = [];
+        foreach ($incomeMonths as $incomeMonth){
+            $v = [];
+            $v['id'] = $incomeMonth->id;
+            $v['cost'] = $incomeMonth->cost;
+            $v['created_at'] = $incomeMonth->created_at;
+            $month[] = $v;
+            $total_money += $incomeMonth->cost;
         }
-        //平均单价
-        $average = $total_money / $total_count;
-        $month_item_count['total_count'] = $total_count;
-        $month_item_count['total_money'] = $total_money;
-        $month_item_count['average'] = $average;
-        return $this->response->collection($month_item_counts, new MonthDesignProjectTransformer())->setMeta($this->apiMeta());
+        $data['incomeMonths'] = $month;
 
+        //平均单价
+        $average = round(($total_money / $total_count),1);
+        $data['total_count'] = $total_count;
+        $data['total_money'] = $total_money;
+        $data['average'] = $average;
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
+
+    /**
+     * @api {get} /designTarget/incomeQuarter 收入季度报表
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeQuarter
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function incomeQuarter()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+
+        //返回季度月份，总价
+        $incomeQuarters = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as quarter_month from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now()) group by quarter_month");
+
+        //总价
+        $total_money = 0;
+        //数量
+        $total_item_count = 0;
+        $quarter = [];
+        foreach ($incomeQuarters as $incomeQuarter){
+            $v = [];
+            $v['cost'] = $incomeQuarter->sum_month_cost;
+            $v['item_count'] = $incomeQuarter->item_count;
+            $v['quarter_month'] = $incomeQuarter->quarter_month;
+            $quarter[] = $v;
+            $total_money += $incomeQuarter->sum_month_cost;
+            $total_item_count += $incomeQuarter->item_count;
+        }
+
+        $data['incomeQuarters'] = $quarter;
+
+        //平均单价
+        $average = round(($total_money / $total_item_count),1);
+        $data['total_count'] = $total_item_count;
+        $data['total_money'] = $total_money;
+        $data['average'] = $average;
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
+
+    /**
+     * @api {get} /designTarget/incomeYear 收入年报表
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeYear
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function incomeYear()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的完成项目数量
+        //返回季度月份，总价
+        $incomeYears = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as year_m from design_project where design_company_id = $design_company_id and pigeonhole = 1 and YEAR(created_at)=YEAR(NOW()) group by year_m");
+
+        //总价
+        $total_money = 0;
+        //数量
+        $total_item_count = 0;
+        $quarter = [];
+        foreach ($incomeYears as $incomeYear){
+            $v = [];
+            $v['cost'] = $incomeYear->sum_month_cost;
+            $v['item_count'] = $incomeYear->item_count;
+            $v['year_m'] = $incomeYear->year_m;
+            $quarter[] = $v;
+            $total_money += $incomeYear->sum_month_cost;
+            $total_item_count += $incomeYear->item_count;
+        }
+
+        $data['incomeYears'] = $quarter;
+
+        //平均单价
+        $average = round(($total_money / $total_item_count),1);
+        $data['total_count'] = $total_item_count;
+        $data['total_money'] = $total_money;
+        $data['average'] = $average;
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
     }
 }

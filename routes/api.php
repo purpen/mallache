@@ -687,6 +687,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designTarget/show', 'DesignTargetController@show');
         //收入报表
         $api->get('/designTarget/incomeMonth', 'DesignTargetController@incomeMonth');
+        //季度报表
+        $api->get('/designTarget/incomeQuarter', 'DesignTargetController@incomeQuarter');
+        //年报表
+        $api->get('/designTarget/incomeYear', 'DesignTargetController@incomeYear');
+
 
     });
 
