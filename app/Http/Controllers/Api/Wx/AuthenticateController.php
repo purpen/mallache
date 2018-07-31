@@ -431,7 +431,7 @@ class AuthenticateController extends BaseController
         //当前登陆的用户
         $loginUser = $this->auth_user;
         if(!empty($loginUser->wx_open_id)){
-            return $this->response->array($this->apiError('你已绑定了账户', 412));
+            return $this->response->array($this->apiError('你已绑定了账户', 412 , $loginUser->account));
         }
         return $this->response->array($this->apiSuccess('没有绑定小程序', 200));
     }
