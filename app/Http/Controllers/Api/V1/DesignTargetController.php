@@ -443,4 +443,55 @@ class DesignTargetController extends BaseController
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
     }
+
+    /**
+     * @api {get} /designTarget/incomeRanked 项目收入排名
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeRanked
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function incomeRanked()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的项目
+        $total_year_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //总价钱
+        $total_year_item_money = 0;
+        foreach ($total_year_items as $total_year_item){
+            $total_year_item_money +=  $total_year_item->cost;
+        }
+        $year_20_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->whereYear('created_at', date('Y'))
+            ->orderBy('cost' , 'desc')
+            ->limit(20)
+            ->get();
+        $income = [];
+        //前20收入百分比
+        $total_cost_percentage = 0;
+        //前20的收入
+        $cost_money = 0;
+        foreach ($year_20_items as $year_20_item){
+            $v = [];
+            $v['name'] = $year_20_item->name;
+            $v['cost'] = $year_20_item->cost;
+            $v['cost_percentage'] = round(($year_20_item->cost / $total_year_item_money ) * 100 , 1) ;
+            $total_cost_percentage += $v['cost_percentage'];
+            $cost_money += $v['cost'];
+            $income[] = $v;
+        }
+        $data['income20'] = $income;
+        $data['incomeOther'] = 100 - (int)$total_cost_percentage;
+        $data['incomeOtherMoney'] = $total_year_item_money - (int)$cost_money;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
 }
