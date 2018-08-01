@@ -460,6 +460,7 @@ class DesignTargetController extends BaseController
         //获取当年的项目
         $total_year_items =  DesignProject
             ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         //总价钱
@@ -469,6 +470,7 @@ class DesignTargetController extends BaseController
         }
         $year_20_items =  DesignProject
             ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
             ->whereYear('created_at', date('Y'))
             ->orderBy('cost' , 'desc')
             ->limit(20)
@@ -515,6 +517,13 @@ class DesignTargetController extends BaseController
             ->where('type', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
+        //产品价钱，数量
+        $year_p_money = 0;
+        $year_p_count = 0;
+        foreach ($year_p_items as $year_p_item){
+            $year_p_money += $year_p_item->cost;
+            $year_p_count += 1;
+        }
 
         //获取当年的ui类型项目
         $year_u_items =  DesignProject
@@ -523,5 +532,32 @@ class DesignTargetController extends BaseController
             ->where('type', 2)
             ->whereYear('created_at', date('Y'))
             ->get();
+        //ui价钱，数量
+        $year_u_money = 0;
+        $year_u_count = 0;
+        foreach ($year_u_items as $year_u_item){
+            $year_u_money += $year_u_item->cost;
+            $year_u_count += 1;
+        }
+
+        $data['year_p_count'] = $year_p_count;
+        $data['year_p_money'] = $year_p_money;
+        if ($year_p_count + $year_u_count == 0){
+            $data['year_p_percentage'] = 0;
+        } else {
+            $data['year_p_percentage'] = round(($year_p_money / ($year_p_money + $year_u_money)) * 100 , 0);
+        }
+        $data['year_u_count'] = $year_u_count;
+        $data['year_u_money'] = $year_u_money;
+        if ($year_p_count + $year_u_count == 0){
+            $data['year_u_percentage'] = 0;
+        } else {
+            $data['year_u_percentage'] = round(($year_u_money / ($year_p_money + $year_u_money)) * 100 , 0);
+        }
+        $data['total_year_count'] = $year_p_count + $year_u_count;
+        $data['total_year_money'] = $year_p_money + $year_u_money;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
     }
 }
