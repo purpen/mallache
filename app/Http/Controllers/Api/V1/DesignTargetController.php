@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 
 use App\Http\Transformer\DesignTargetTransformer;
-use App\Http\Transformer\MonthDesignProjectTransformer;
 use App\Models\DesignProject;
 use App\Models\DesignTarget;
 use App\Models\User;
@@ -39,6 +38,12 @@ class DesignTargetController extends BaseController
         if (!$this->auth_user->isDesignAdmin()) {
             return $this->response->array($this->apiError('没有权限创建', 403));
         }
+        //获取当年的完成项目数量
+        $item_counts =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->whereYear('created_at', date('Y'))
+            ->count();
         //有的话更新，没有创建
         if ($design_target){
             if (!empty($turnover)){
@@ -47,6 +52,9 @@ class DesignTargetController extends BaseController
                 $design_target->save();
             }
             if ($count != 0){
+                if ($count < $item_counts){
+                    return $this->response->array($this->apiError("设定的目标不能小于".$item_counts, 412));
+                }
                 $design_target->count = $count;
                 $design_target->year = $year;
                 $design_target->save();
@@ -58,6 +66,9 @@ class DesignTargetController extends BaseController
             $new_design_target->design_company_id = $design_company_id;
             $new_design_target->year = $year;
             $new_design_target->count = $count ?? 0;
+            if ($count < $item_counts){
+                return $this->response->array($this->apiError("设定的目标不能小于".$item_counts, 412));
+            }
             $new_design_target->save();
 
             return $this->response->item($new_design_target, new DesignTargetTransformer())->setMeta($this->apiMeta());

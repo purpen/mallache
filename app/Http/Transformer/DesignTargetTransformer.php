@@ -24,6 +24,7 @@ class DesignTargetTransformer extends TransformerAbstract
             'ok_count_percentage' => $designTarget->ok_count_percentage,
             'no_count_percentage' => $designTarget->no_count_percentage,
             'ok_turnover_percentage' => $designTarget->ok_turnover_percentage,
+            'ok_turnover' => $designTarget->ok_turnover,
             'm_money' => $designTarget->m_money,
             'month_on_month' => $designTarget->month_on_month,
             'm_item' => $designTarget->m_item,
