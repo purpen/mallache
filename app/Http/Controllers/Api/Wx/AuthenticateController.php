@@ -410,6 +410,8 @@ class AuthenticateController extends BaseController
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
+        Log::info($payload['sms_code']);
+        Log::info($sms_code_value);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {

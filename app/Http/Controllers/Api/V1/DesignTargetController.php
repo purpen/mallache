@@ -494,4 +494,34 @@ class DesignTargetController extends BaseController
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
     }
+
+    /**
+     * @api {get} /designTarget/incomeType 设计类别
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeType
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function incomeType()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的产品类型项目
+        $year_p_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+
+        //获取当年的ui类型项目
+        $year_u_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+    }
 }
