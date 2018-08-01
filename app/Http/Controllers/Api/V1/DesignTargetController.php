@@ -52,9 +52,6 @@ class DesignTargetController extends BaseController
                 $design_target->save();
             }
             if ($count != 0){
-                if ($count < $item_counts){
-                    return $this->response->array($this->apiError("设定的目标不能小于".$item_counts, 412));
-                }
                 $design_target->count = $count;
                 $design_target->year = $year;
                 $design_target->save();
@@ -66,9 +63,6 @@ class DesignTargetController extends BaseController
             $new_design_target->design_company_id = $design_company_id;
             $new_design_target->year = $year;
             $new_design_target->count = $count ?? 0;
-            if ($count < $item_counts){
-                return $this->response->array($this->apiError("设定的目标不能小于".$item_counts, 412));
-            }
             $new_design_target->save();
 
             return $this->response->item($new_design_target, new DesignTargetTransformer())->setMeta($this->apiMeta());
@@ -294,31 +288,42 @@ class DesignTargetController extends BaseController
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //当月完成的项目
-        $incomeMonths = DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->whereMonth('created_at', date('m'))
-            ->get();
-        //总数量
-        $total_count = $incomeMonths->count();
+        $incomeMonths = DB::select("select sum(cost) as sum_day_cost , count(id) as item_day_count , date_format(created_at , '%Y%m%d') as month_day from design_project where design_company_id = $design_company_id and pigeonhole = 1 and DATE_FORMAT(created_at, '%Y%m' ) = DATE_FORMAT(CURDATE(),'%Y%m') group by month_day");
         //总价
         $total_money = 0;
+
+        $total_ok_item_count = 0;
+        //获取当年的项目总数量
+        $total_month_item_count =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->whereMonth('created_at', date('m'))
+            ->count();
+
         $month = [];
         foreach ($incomeMonths as $incomeMonth){
             $v = [];
-            $v['id'] = $incomeMonth->id;
-            $v['cost'] = $incomeMonth->cost;
-            $v['created_at'] = $incomeMonth->created_at;
+            $v['sum_day_cost'] = $incomeMonth->sum_day_cost;
+            $v['item_day_count'] = $incomeMonth->item_day_count;
+            $v['month_day'] = $incomeMonth->month_day;
             $month[] = $v;
-            $total_money += $incomeMonth->cost;
+            $total_money += $incomeMonth->sum_day_cost;
+            $total_ok_item_count += $incomeMonth->item_day_count;
         }
         $data['incomeMonths'] = $month;
 
         //平均单价
-        $average = round(($total_money / $total_count),1);
-        $data['total_count'] = $total_count;
+        $average = round(($total_money / $total_ok_item_count),1);
+        $data['total_month_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
+        //月总项目数量
+        $data['total_month_item_count'] = $total_month_item_count;
+        //没完成的月项目数量
+        $data['total_no_count'] = $total_month_item_count - $total_ok_item_count;
+        //完成的百分比
+        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_month_item_count) * 100 , 0);
+        //没完成的百分比
+        $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
     }
@@ -340,10 +345,18 @@ class DesignTargetController extends BaseController
         //返回季度月份，总价
         $incomeQuarters = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as quarter_month from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now()) group by quarter_month");
 
+        //获取当季度的项目总数量
+        $total_quarter_item_counts = DB::select("select count(id) as item_quarter_count from design_project where design_company_id = $design_company_id and quarter(created_at)=quarter(now())");
+
+        //季度总数量默认0
+        $total_quarter_item_count = 0;
+        foreach ($total_quarter_item_counts as $total_quarter){
+            $total_quarter_item_count = $total_quarter->item_quarter_count;
+        }
         //总价
         $total_money = 0;
         //数量
-        $total_item_count = 0;
+        $total_ok_item_count = 0;
         $quarter = [];
         foreach ($incomeQuarters as $incomeQuarter){
             $v = [];
@@ -352,16 +365,25 @@ class DesignTargetController extends BaseController
             $v['quarter_month'] = $incomeQuarter->quarter_month;
             $quarter[] = $v;
             $total_money += $incomeQuarter->sum_month_cost;
-            $total_item_count += $incomeQuarter->item_count;
+            $total_ok_item_count += $incomeQuarter->item_count;
         }
 
         $data['incomeQuarters'] = $quarter;
 
         //平均单价
-        $average = round(($total_money / $total_item_count),1);
-        $data['total_count'] = $total_item_count;
+        $average = round(($total_money / $total_ok_item_count),1);
+        $data['total_quarter_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
+        //季度总项目数量
+        $data['total_quarter_item_count'] = $total_quarter_item_count;
+        //没完成的季度项目数量
+        $data['total_no_count'] = $total_quarter_item_count - $total_ok_item_count;
+        //完成的百分比
+        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_quarter_item_count) * 100 , 0);
+        //没完成的百分比
+        $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
+
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
     }
@@ -383,10 +405,15 @@ class DesignTargetController extends BaseController
         //返回季度月份，总价
         $incomeYears = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as year_m from design_project where design_company_id = $design_company_id and pigeonhole = 1 and YEAR(created_at)=YEAR(NOW()) group by year_m");
 
+        //获取当年的项目总数量
+        $total_year_item_count =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->whereYear('created_at', date('Y'))
+            ->count();
         //总价
         $total_money = 0;
         //数量
-        $total_item_count = 0;
+        $total_ok_item_count = 0;
         $quarter = [];
         foreach ($incomeYears as $incomeYear){
             $v = [];
@@ -395,16 +422,25 @@ class DesignTargetController extends BaseController
             $v['year_m'] = $incomeYear->year_m;
             $quarter[] = $v;
             $total_money += $incomeYear->sum_month_cost;
-            $total_item_count += $incomeYear->item_count;
+            $total_ok_item_count += $incomeYear->item_count;
         }
 
         $data['incomeYears'] = $quarter;
 
         //平均单价
-        $average = round(($total_money / $total_item_count),1);
-        $data['total_count'] = $total_item_count;
+        $average = round(($total_money / $total_ok_item_count),1);
+        $data['total_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
+        //年总项目数量
+        $data['total_year_item_count'] = $total_year_item_count;
+        //没完成的年项目数量
+        $data['total_no_count'] = $total_year_item_count - $total_ok_item_count;
+        //完成的百分比
+        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_year_item_count) * 100 , 0);
+        //没完成的百分比
+        $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
+
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
     }
 }
