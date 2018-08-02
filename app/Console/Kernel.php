@@ -67,6 +67,8 @@ class Kernel extends ConsoleKernel
         //更新项目下任务总数量，完成未完成数量的统计
         Commands\UpdateTaskCount::class,
 
+        //更新所有设计公司信息统计
+        Commands\AveragePrice::class,
     ];
 
     /**

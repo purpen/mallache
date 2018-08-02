@@ -31,6 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Service\Statistics;
 
 class DemandController extends BaseController
 {
@@ -946,7 +947,9 @@ class DemandController extends BaseController
 
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
-
+            //设计公司平均价格
+            $id[] = $item->design_company_id;
+            Statistics::saveAveragePrice($id);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
