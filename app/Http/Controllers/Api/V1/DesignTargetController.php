@@ -312,7 +312,11 @@ class DesignTargetController extends BaseController
         $data['incomeMonths'] = $month;
 
         //平均单价
-        $average = round(($total_money / $total_ok_item_count),1);
+        if ($total_ok_item_count == 0){
+            $average = 0;
+        } else {
+            $average = round(($total_money / $total_ok_item_count),1);
+        }
         $data['total_month_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
@@ -321,7 +325,11 @@ class DesignTargetController extends BaseController
         //没完成的月项目数量
         $data['total_no_count'] = $total_month_item_count - $total_ok_item_count;
         //完成的百分比
-        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_month_item_count) * 100 , 0);
+        if ($total_month_item_count == 0){
+            $data['ok_count_percentage'] = 0;
+        } else {
+            $data['ok_count_percentage'] = round(($total_ok_item_count / $total_month_item_count) * 100 , 0);
+        }
         //没完成的百分比
         $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
@@ -371,7 +379,11 @@ class DesignTargetController extends BaseController
         $data['incomeQuarters'] = $quarter;
 
         //平均单价
-        $average = round(($total_money / $total_ok_item_count),1);
+        if ($total_ok_item_count == 0){
+            $average = 0;
+        } else {
+            $average = round(($total_money / $total_ok_item_count),1);
+        }
         $data['total_quarter_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
@@ -380,7 +392,11 @@ class DesignTargetController extends BaseController
         //没完成的季度项目数量
         $data['total_no_count'] = $total_quarter_item_count - $total_ok_item_count;
         //完成的百分比
-        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_quarter_item_count) * 100 , 0);
+        if ($total_quarter_item_count == 0){
+            $data['ok_count_percentage'] = 0;
+        } else {
+            $data['ok_count_percentage'] = round(($total_ok_item_count / $total_quarter_item_count) * 100 , 0);
+        }
         //没完成的百分比
         $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
 
@@ -428,7 +444,11 @@ class DesignTargetController extends BaseController
         $data['incomeYears'] = $quarter;
 
         //平均单价
-        $average = round(($total_money / $total_ok_item_count),1);
+        if ($total_ok_item_count == 0){
+            $average = 0;
+        } else {
+            $average = round(($total_money / $total_ok_item_count),1);
+        }
         $data['total_ok_count'] = $total_ok_item_count;
         $data['total_money'] = $total_money;
         $data['average'] = $average;
@@ -437,7 +457,11 @@ class DesignTargetController extends BaseController
         //没完成的年项目数量
         $data['total_no_count'] = $total_year_item_count - $total_ok_item_count;
         //完成的百分比
-        $data['ok_count_percentage'] = round(($total_ok_item_count / $total_year_item_count) * 100 , 0);
+        if ($total_year_item_count == 0){
+            $data['ok_count_percentage'] = 0;
+        } else {
+            $data['ok_count_percentage'] = round(($total_ok_item_count / $total_year_item_count) * 100 , 0);
+        }
         //没完成的百分比
         $data['no_count_percentage'] = 100 - $data['ok_count_percentage'];
 
@@ -484,7 +508,11 @@ class DesignTargetController extends BaseController
             $v = [];
             $v['name'] = $year_20_item->name;
             $v['cost'] = $year_20_item->cost;
-            $v['cost_percentage'] = round(($year_20_item->cost / $total_year_item_money ) * 100 , 1) ;
+            if ($total_year_item_money == 0){
+                $v['cost_percentage'] = 0;
+            } else {
+                $v['cost_percentage'] = round(($year_20_item->cost / $total_year_item_money ) * 100 , 1) ;
+            }
             $total_cost_percentage += $v['cost_percentage'];
             $cost_money += $v['cost'];
             $income[] = $v;
@@ -542,14 +570,14 @@ class DesignTargetController extends BaseController
 
         $data['year_p_count'] = $year_p_count;
         $data['year_p_money'] = $year_p_money;
-        if ($year_p_count + $year_u_count == 0){
+        if ($year_p_money + $year_u_money == 0){
             $data['year_p_percentage'] = 0;
         } else {
             $data['year_p_percentage'] = round(($year_p_money / ($year_p_money + $year_u_money)) * 100 , 0);
         }
         $data['year_u_count'] = $year_u_count;
         $data['year_u_money'] = $year_u_money;
-        if ($year_p_count + $year_u_count == 0){
+        if ($year_p_money + $year_u_money == 0){
             $data['year_u_percentage'] = 0;
         } else {
             $data['year_u_percentage'] = round(($year_u_money / ($year_p_money + $year_u_money)) * 100 , 0);
