@@ -1408,7 +1408,8 @@ class DesignTargetController extends BaseController
             }
             $positions[] = $v;
         }
-        $data = $positions;
+        $data['positions'] = $positions;
+        $data['total_user_count'] = $total_user_count;
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
