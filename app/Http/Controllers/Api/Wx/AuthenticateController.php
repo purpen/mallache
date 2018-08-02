@@ -74,9 +74,9 @@ class AuthenticateController extends BaseController
                         'session_key' => $new_mini['session_key'],
                         'union_id' => $new_mini['unionId'] ?? '',
                     ]);
-                if ($user) {
+                if ($user->type == 1) {
                     //创建需求公司
-                    DemandCompany::createCompany($user->id);
+                    DemandCompany::createCompany($user);
                     //生成token
                     $token = JWTAuth::fromUser($user);
                     return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
