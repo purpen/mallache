@@ -25,7 +25,6 @@ class DesignTargetController extends BaseController
      */
     public function create(Request $request)
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         $turnover = $request->input('turnover');
@@ -107,7 +106,6 @@ class DesignTargetController extends BaseController
     public function show()
     {
 
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         $design_target = DesignTarget::where('design_company_id' , $design_company_id)->whereYear('created_at', date('Y'))->first();
@@ -284,7 +282,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeMonth()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //当月完成的项目
@@ -346,7 +343,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeQuarter()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
 
@@ -414,7 +410,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeYear()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的完成项目数量
@@ -478,7 +473,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeRanked()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的项目
@@ -535,7 +529,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeType()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的产品类型项目
@@ -635,7 +628,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeDesignTypes()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的产品策略
@@ -817,7 +809,7 @@ class DesignTargetController extends BaseController
             if($year_u_u_money == 0){
                 $data['year_u_u_percentage'] = 0;
             }else{
-                $data['year_u_u_percentage'] = round(($year_u_u_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_u_u_percentage'] = 100 - ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money);
             }
         }
 
@@ -882,7 +874,6 @@ class DesignTargetController extends BaseController
      */
     public function incomeIndustry()
     {
-        //获取当年是那一年
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的行业-制造业
@@ -1121,7 +1112,7 @@ class DesignTargetController extends BaseController
             if($year_industry_p_c_money == 0){
                 $data['year_industry_p_c_percentage'] = 0;
             }else{
-                $data['year_industry_p_c_percentage'] = round(($year_industry_p_c_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+                $data['year_industry_p_c_percentage'] = 100 - ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money);
             }
         }
 
@@ -1132,5 +1123,295 @@ class DesignTargetController extends BaseController
 
     }
 
+
+    /**
+     * @api {get} /designTarget/incomeStage 收入阶段
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeStage
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "获取成功",
+    "status_code": 200
+    },
+    "data": {
+    "year_stage1_money": 226, //0-5w
+    "year_stage1_count": 8,
+    "year_stage2_money": 0, //5-10w
+    "year_stage2_count": 0,
+    "year_stage3_money": 0, //10-20w
+    "year_stage3_count": 0,
+    "year_stage4_money": 0, //20-30w
+    "year_stage4_count": 0,
+    "year_stage5_money": 0, //30-50w
+    "year_stage5_count": 0,
+    "year_stage6_money": 0, //50w以上
+    "year_stage6_count": 0,
+    "year_stage1_percentage": 100,
+    "year_stage2_percentage": 0,
+    "year_stage3_percentage": 0,
+    "year_stage4_percentage": 0,
+    "year_stage5_percentage": 0,
+    "year_stage6_percentage": 0,
+    "total_year_count": 8,
+    "total_year_money": 226
+    }
+    }
+     */
+    public function incomeStage()
+    {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的0-5w
+        $year_stage1_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->whereBetween('cost', [0 , 50000])
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage1_money = 0;
+        $year_stage1_count = 0;
+        foreach ($year_stage1_items as $year_stage1_item){
+            $year_stage1_money += $year_stage1_item->cost;
+            $year_stage1_count += 1;
+        }
+        $data['year_stage1_money'] = $year_stage1_money;
+        $data['year_stage1_count'] = $year_stage1_count;
+        //获取当年的5-10w
+        $year_stage2_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('cost', '>' ,50000)
+            ->where('cost', '<=',100000)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage2_money = 0;
+        $year_stage2_count = 0;
+        foreach ($year_stage2_items as $year_stage2_item){
+            $year_stage2_money += $year_stage2_item->cost;
+            $year_stage2_count += 1;
+        }
+        $data['year_stage2_money'] = $year_stage2_money;
+        $data['year_stage2_count'] = $year_stage2_count;
+        //获取当年的10-20w
+        $year_stage3_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('cost', '>',100000)
+            ->where('cost', '<=',200000)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage3_money = 0;
+        $year_stage3_count = 0;
+        foreach ($year_stage3_items as $year_stage3_item){
+            $year_stage3_money += $year_stage3_item->cost;
+            $year_stage3_count += 1;
+        }
+        $data['year_stage3_money'] = $year_stage3_money;
+        $data['year_stage3_count'] = $year_stage3_count;
+        //获取当年的20-30w
+        $year_stage4_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('cost', '>',200000)
+            ->where('cost', '<=',300000)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage4_money = 0;
+        $year_stage4_count = 0;
+        foreach ($year_stage4_items as $year_stage4_item){
+            $year_stage4_money += $year_stage4_item->cost;
+            $year_stage4_count += 1;
+        }
+        $data['year_stage4_money'] = $year_stage4_money;
+        $data['year_stage4_count'] = $year_stage4_count;
+        //获取当年的30-50w
+        $year_stage5_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('cost', '>',300001)
+            ->where('cost', '<=',500000)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage5_money = 0;
+        $year_stage5_count = 0;
+        foreach ($year_stage5_items as $year_stage5_item){
+            $year_stage5_money += $year_stage5_item->cost;
+            $year_stage5_count += 1;
+        }
+        $data['year_stage5_money'] = $year_stage5_money;
+        $data['year_stage5_count'] = $year_stage5_count;
+        //获取当年的50w以上
+        $year_stage6_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('cost', '>' , 50000)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_stage6_money = 0;
+        $year_stage6_count = 0;
+        foreach ($year_stage6_items as $year_stage6_item){
+            $year_stage6_money += $year_stage6_item->cost;
+            $year_stage6_count += 1;
+        }
+        $data['year_stage6_money'] = $year_stage6_money;
+        $data['year_stage6_count'] = $year_stage6_count;
+
+
+        if ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money == 0){
+            $data['year_stage1_percentage'] = 0;
+            $data['year_stage2_percentage'] = 0;
+            $data['year_stage3_percentage'] = 0;
+            $data['year_stage4_percentage'] = 0;
+            $data['year_stage5_percentage'] = 0;
+            $data['year_stage6_percentage'] = 0;
+        } else {
+            if($year_stage1_money == 0){
+                $data['year_stage1_percentage'] = 0;
+            }else{
+                $data['year_stage1_percentage'] = round(($year_stage1_money / ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money)) * 100 , 0);
+            }
+
+            if($year_stage2_money == 0){
+                $data['year_stage2_percentage'] = 0;
+            }else{
+                $data['year_stage2_percentage'] = round(($year_stage2_money / ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money)) * 100 , 0);
+            }
+            if($year_stage3_money == 0){
+                $data['year_stage3_percentage'] = 0;
+            }else{
+                $data['year_stage3_percentage'] = round(($year_stage3_money / ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money)) * 100 , 0);
+            }
+            if($year_stage4_money == 0){
+                $data['year_stage4_percentage'] = 0;
+            }else{
+                $data['year_stage4_percentage'] = round(($year_stage4_money / ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money)) * 100 , 0);
+            }
+            if($year_stage5_money == 0){
+                $data['year_stage5_percentage'] = 0;
+            }else{
+                $data['year_stage5_percentage'] = round(($year_stage5_money / ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money)) * 100 , 0);
+            }
+            if($year_stage6_money == 0){
+                $data['year_stage6_percentage'] = 0;
+            }else{
+                $data['year_stage6_percentage'] = 100 - ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money);
+            }
+        }
+
+        $data['total_year_count'] = $year_stage1_count + $year_stage2_count + $year_stage3_count + $year_stage4_count + $year_stage5_count + $year_stage6_count;
+        $data['total_year_money'] = $year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money + $year_stage6_money;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+    }
+
+    /**
+     * @api {get} /design/userPercentage 成员占比
+     * @apiVersion 1.0.0
+     * @apiName designTarget userPercentage
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function userPercentage()
+    {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //用户成员
+        $users =  User
+            ::where('design_company_id', $design_company_id)
+            ->where('company_role', 0)
+            ->count();
+        //管理员
+        $admin_users =  User
+            ::where('design_company_id', $design_company_id)
+            ->where('company_role', 10)
+            ->count();
+        //超级管理员
+        $super_admin_users =  User
+            ::where('design_company_id', $design_company_id)
+            ->where('company_role', 20)
+            ->count();
+        //所有成员
+        $total_users = $users + $admin_users + $super_admin_users;
+
+        if ($total_users == 0){
+            $data['users_percentage'] = 0;
+            $data['admin_users_percentage'] = 0;
+            $data['super_admin_users_percentage'] = 0;
+            $data['total_users'] = 0;
+        } else {
+            //成员
+            if ($users == 0){
+                $data['users'] = 0;
+                $data['users_percentage'] = 0;
+            } else {
+                $data['users'] = $users;
+                $data['users_percentage'] = round(($users / $total_users) * 100 , 0);
+            }
+            //管理员
+            if ($admin_users == 0){
+                $data['admin_users'] = 0;
+                $data['admin_users_percentage'] = 0;
+            } else {
+                $data['admin_users'] = $admin_users;
+                $data['admin_users_percentage'] = round(($admin_users / $total_users) * 100 , 0);
+            }
+            //超级管理员
+            if ($super_admin_users == 0){
+                $data['super_admin_users'] = 0;
+                $data['super_admin_users_percentage'] = 0;
+            } else {
+                $data['super_admin_users'] = $super_admin_users;
+                $data['super_admin_users_percentage'] = 100 - $data['users_percentage'] - $data['admin_users_percentage'];
+            }
+            $data['total_users'] = $total_users;
+
+        }
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
+
+    /**
+     * @api {get} /design/positionPercentage 职位占比
+     * @apiVersion 1.0.0
+     * @apiName designTarget positionPercentage
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function positionPercentage()
+    {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //用户总成员人数
+        $total_user_count =  User::where('design_company_id', $design_company_id)->count();
+        //按职位分组
+        $users = DB::select("select count(id) as user_count , position as user_position from users where design_company_id = $design_company_id group by user_position");
+
+        $positions = [];
+        foreach ($users as $user){
+            $v = [];
+            $position = $user->user_position;
+            $user_count = $user->user_count;
+            $v['position'] = $position;
+            $v['user_count'] = $user_count;
+            if ($total_user_count == 0){
+                $v['position_percentage'] = 0;
+            } else {
+                $v['position_percentage'] = round(($user_count / $total_user_count) * 100 ,0);
+            }
+            $positions[] = $v;
+        }
+        $data = $positions;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
 
 }

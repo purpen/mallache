@@ -699,6 +699,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designTarget/incomeDesignTypes', 'DesignTargetController@incomeDesignTypes');
         //项目行业
         $api->get('/designTarget/incomeIndustry', 'DesignTargetController@incomeIndustry');
+        //收入金额阶段
+        $api->get('/designTarget/incomeStage', 'DesignTargetController@incomeStage');
+        //成员占比
+        $api->get('/design/userPercentage', 'DesignTargetController@userPercentage');
+        //职位占比
+        $api->get('/design/positionPercentage', 'DesignTargetController@positionPercentage');
+
 
 
     });
