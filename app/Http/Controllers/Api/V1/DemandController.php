@@ -229,7 +229,7 @@ class DemandController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-        try {
+//        try {
 
             if (!$item = Item::find(intval($id))) {
                 return $this->response->array($this->apiError('not found!', 404));
@@ -258,10 +258,10 @@ class DemandController extends BaseController
             $all['stage_status'] = 2;
 
             $item->update($all);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return $this->response->array($this->apiError('Error', 500));
-        }
+//        } catch (\Exception $e) {
+//            Log::error($e->getMessage());
+//            return $this->response->array($this->apiError('Error', 500));
+//        }
 
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
