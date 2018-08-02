@@ -588,4 +588,549 @@ class DesignTargetController extends BaseController
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
     }
+
+    /**
+     * @api {get} /designTarget/incomeDesignTypes 设计详细类别
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeDesignTypes
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "获取成功",
+    "status_code": 200
+    },
+    "data": {
+    "year_p_s_count": 0, //获取当年的产品策略
+    "year_p_s_money": 0,
+    "year_p_p_count": 0, //产品设计
+    "year_p_p_money": 0,
+    "year_p_c_count": 0, //结构设计
+    "year_p_c_money": 0,
+    "year_u_a_count": 0, //ui类型app
+    "year_u_a_money": 0,
+    "year_u_w_count": 0, //ui类型,网页
+    "year_u_w_money": 0,
+    "year_u_i_count": 0,  //ui类型,界面
+    "year_u_i_money": 0,
+    "year_u_s_count": 0, //ui类型,服务
+    "year_u_s_money": 0,
+    "year_u_u_count": 0, //ui类型,用户体验
+    "year_u_u_money": 0,
+    "year_p_s_percentage": 0,
+    "year_p_p_percentage": 0,
+    "year_p_c_percentage": 0,
+    "year_u_a_percentage": 0,
+    "year_u_w_percentage": 0,
+    "year_u_i_percentage": 0,
+    "year_u_s_percentage": 0,
+    "year_u_u_percentage": 0,
+    "total_year_count": 0,
+    "total_year_money": 0
+    }
+    }
+     */
+    public function incomeDesignTypes()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的产品策略
+        $year_p_s_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 1)
+            ->where('design_types', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //产品策略价钱，数量
+        $year_p_s_money = 0;
+        $year_p_s_count = 0;
+        foreach ($year_p_s_items as $year_p_s_item){
+            $year_p_s_money += $year_p_s_item->cost;
+            $year_p_s_count += 1;
+        }
+        $data['year_p_s_count'] = $year_p_s_count;
+        $data['year_p_s_money'] = $year_p_s_money;
+        //产品设计
+        $year_p_p_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 1)
+            ->where('design_types', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_p_p_money = 0;
+        $year_p_p_count = 0;
+        foreach ($year_p_p_items as $year_p_p_item){
+            $year_p_p_money += $year_p_p_item->cost;
+            $year_p_p_count += 1;
+        }
+        $data['year_p_p_count'] = $year_p_p_count;
+        $data['year_p_p_money'] = $year_p_p_money;
+        //结构设计
+        $year_p_c_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 1)
+            ->where('design_types', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_p_c_money = 0;
+        $year_p_c_count = 0;
+        foreach ($year_p_c_items as $year_p_c_item){
+            $year_p_c_money += $year_p_c_item->cost;
+            $year_p_c_count += 1;
+        }
+        $data['year_p_c_count'] = $year_p_c_count;
+        $data['year_p_c_money'] = $year_p_c_money;
+        //获取当年的ui类型app
+        $year_u_a_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->where('design_types', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_u_a_money = 0;
+        $year_u_a_count = 0;
+        foreach ($year_u_a_items as $year_u_a_item){
+            $year_u_a_money += $year_u_a_item->cost;
+            $year_u_a_count += 1;
+        }
+        $data['year_u_a_count'] = $year_u_a_count;
+        $data['year_u_a_money'] = $year_u_a_money;
+        //ui类型,网页
+        $year_u_w_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->where('design_types', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_u_w_money = 0;
+        $year_u_w_count = 0;
+        foreach ($year_u_w_items as $year_u_w_item){
+            $year_u_w_money += $year_u_w_item->cost;
+            $year_u_w_count += 1;
+        }
+        $data['year_u_w_count'] = $year_u_w_count;
+        $data['year_u_w_money'] = $year_u_w_money;
+        //ui类型,界面
+        $year_u_i_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->where('design_types', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_u_i_money = 0;
+        $year_u_i_count = 0;
+        foreach ($year_u_i_items as $year_u_i_item){
+            $year_u_i_money += $year_u_i_item->cost;
+            $year_u_i_count += 1;
+        }
+        $data['year_u_i_count'] = $year_u_i_count;
+        $data['year_u_i_money'] = $year_u_i_money;
+        //ui类型,服务
+        $year_u_s_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->where('design_types', 4)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_u_s_money = 0;
+        $year_u_s_count = 0;
+        foreach ($year_u_s_items as $year_u_s_item){
+            $year_u_s_money += $year_u_s_item->cost;
+            $year_u_s_count += 1;
+        }
+        $data['year_u_s_count'] = $year_u_s_count;
+        $data['year_u_s_money'] = $year_u_s_money;
+        //ui类型,用户体验
+        $year_u_u_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 2)
+            ->where('design_types', 5)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_u_u_money = 0;
+        $year_u_u_count = 0;
+        foreach ($year_u_u_items as $year_u_u_item){
+            $year_u_u_money += $year_u_u_item->cost;
+            $year_u_u_count += 1;
+        }
+        $data['year_u_u_count'] = $year_u_u_count;
+        $data['year_u_u_money'] = $year_u_u_money;
+
+        if ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money == 0){
+            $data['year_p_s_percentage'] = 0;
+            $data['year_p_p_percentage'] = 0;
+            $data['year_p_c_percentage'] = 0;
+            $data['year_u_a_percentage'] = 0;
+            $data['year_u_w_percentage'] = 0;
+            $data['year_u_i_percentage'] = 0;
+            $data['year_u_s_percentage'] = 0;
+            $data['year_u_u_percentage'] = 0;
+        } else {
+            if($year_p_s_money == 0){
+                $data['year_p_s_percentage'] = 0;
+            }else{
+                $data['year_p_s_percentage'] = round(($year_p_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+
+            if($year_p_p_money == 0){
+                $data['year_p_p_percentage'] = 0;
+            }else{
+                $data['year_p_p_percentage'] = round(($year_p_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_p_c_money == 0){
+                $data['year_p_c_percentage'] = 0;
+            }else{
+                $data['year_p_c_percentage'] = round(($year_p_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_u_a_money == 0){
+                $data['year_u_a_percentage'] = 0;
+            }else{
+                $data['year_u_a_percentage'] = round(($year_u_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_u_w_money == 0){
+                $data['year_u_w_percentage'] = 0;
+            }else{
+                $data['year_u_w_percentage'] = round(($year_u_w_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_u_i_money == 0){
+                $data['year_u_i_percentage'] = 0;
+            }else{
+                $data['year_u_i_percentage'] = round(($year_u_i_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_u_s_money == 0){
+                $data['year_u_s_percentage'] = 0;
+            }else{
+                $data['year_u_s_percentage'] = round(($year_u_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+            if($year_u_u_money == 0){
+                $data['year_u_u_percentage'] = 0;
+            }else{
+                $data['year_u_u_percentage'] = round(($year_u_u_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+            }
+        }
+
+        $data['total_year_count'] = $year_p_s_count + $year_p_p_count + $year_p_c_count + $year_u_a_count + $year_u_w_count + $year_u_i_count + $year_u_s_count + $year_u_u_count;
+        $data['total_year_money'] = $year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+    }
+
+    /**
+     * @api {get} /designTarget/incomeIndustry 项目行业
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeIndustry
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "获取成功",
+    "status_code": 200
+    },
+    "data": {
+    "year_industry_m_money": 0, //制造业
+    "year_industry_m_count": 0,
+    "year_industry_c_r_money": 0, //消费零售
+    "year_industry_c_r_count": 0,
+    "year_industry_m_t_money": 205, //信息技术
+    "year_industry_m_t_count": 2,
+    "year_industry_e_money": 0, //能源
+    "year_industry_e_count": 0,
+    "year_industry_f_r_money": 0, //金融地产
+    "year_industry_f_r_count": 0,
+    "year_industry_s_money": 0, //服务业
+    "year_industry_s_count": 0,
+    "year_industry_m_h_money": 0, //医疗保健
+    "year_industry_m_h_count": 0,
+    "year_industry_r_money": 0, //原材料
+    "year_industry_r_count": 0,
+    "year_industry_i_p_money": 0, //工业制品
+    "year_industry_i_p_count": 0,
+    "year_industry_w_i_money": 0, //军工
+    "year_industry_w_i_count": 0,
+    "year_industry_p_c_money": 0, //公用事业
+    "year_industry_p_c_count": 0,
+    "year_industry_m_percentage": 0,
+    "year_industry_c_r_percentage": 0,
+    "year_industry_m_t_percentage": 100,
+    "year_industry_e_percentage": 0,
+    "year_industry_f_r_percentage": 0,
+    "year_industry_s_percentage": 0,
+    "year_industry_m_h_percentage": 0,
+    "year_industry_r_percentage": 0,
+    "year_industry_i_p_percentage": 0,
+    "year_industry_w_i_percentage": 0,
+    "year_industry_p_c_percentage": 0,
+    "total_year_count": 2,
+    "total_year_money": 205
+    }
+    }
+     */
+    public function incomeIndustry()
+    {
+        //获取当年是那一年
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+        //获取当年的行业-制造业
+        $year_industry_m_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_m_money = 0;
+        $year_industry_m_count = 0;
+        foreach ($year_industry_m_items as $year_industry_m_item){
+            $year_industry_m_money += $year_industry_m_item->cost;
+            $year_industry_m_count += 1;
+        }
+        $data['year_industry_m_money'] = $year_industry_m_money;
+        $data['year_industry_m_count'] = $year_industry_m_count;
+        //获取当年的行业-消费零售
+        $year_industry_c_r_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_c_r_money = 0;
+        $year_industry_c_r_count = 0;
+        foreach ($year_industry_c_r_items as $year_industry_c_r_item){
+            $year_industry_c_r_money += $year_industry_c_r_item->cost;
+            $year_industry_c_r_count += 1;
+        }
+        $data['year_industry_c_r_money'] = $year_industry_c_r_money;
+        $data['year_industry_c_r_count'] = $year_industry_c_r_count;
+        //获取当年的行业-信息技术
+        $year_industry_m_t_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_m_t_money = 0;
+        $year_industry_m_t_count = 0;
+        foreach ($year_industry_m_t_items as $year_industry_m_t_item){
+            $year_industry_m_t_money += $year_industry_m_t_item->cost;
+            $year_industry_m_t_count += 1;
+        }
+        $data['year_industry_m_t_money'] = $year_industry_m_t_money;
+        $data['year_industry_m_t_count'] = $year_industry_m_t_count;
+        //获取当年的行业-能源
+        $year_industry_e_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 4)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_e_money = 0;
+        $year_industry_e_count = 0;
+        foreach ($year_industry_e_items as $year_industry_e_item){
+            $year_industry_e_money += $year_industry_e_item->cost;
+            $year_industry_e_count += 1;
+        }
+        $data['year_industry_e_money'] = $year_industry_e_money;
+        $data['year_industry_e_count'] = $year_industry_e_count;
+        //获取当年的行业-金融地产
+        $year_industry_f_r_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 5)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_f_r_money = 0;
+        $year_industry_f_r_count = 0;
+        foreach ($year_industry_f_r_items as $year_industry_f_r_item){
+            $year_industry_f_r_money += $year_industry_f_r_item->cost;
+            $year_industry_f_r_count += 1;
+        }
+        $data['year_industry_f_r_money'] = $year_industry_f_r_money;
+        $data['year_industry_f_r_count'] = $year_industry_f_r_count;
+        //获取当年的行业-服务业
+        $year_industry_s_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 6)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_s_money = 0;
+        $year_industry_s_count = 0;
+        foreach ($year_industry_s_items as $year_industry_s_item){
+            $year_industry_s_money += $year_industry_s_item->cost;
+            $year_industry_s_count += 1;
+        }
+        $data['year_industry_s_money'] = $year_industry_s_money;
+        $data['year_industry_s_count'] = $year_industry_s_count;
+        //获取当年的行业-医疗保健
+        $year_industry_m_h_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 7)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_m_h_money = 0;
+        $year_industry_m_h_count = 0;
+        foreach ($year_industry_m_h_items as $year_industry_m_h_item){
+            $year_industry_m_h_money += $year_industry_m_h_item->cost;
+            $year_industry_m_h_count += 1;
+        }
+        $data['year_industry_m_h_money'] = $year_industry_m_h_money;
+        $data['year_industry_m_h_count'] = $year_industry_m_h_count;
+        //获取当年的行业-原材料
+        $year_industry_r_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 8)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_r_money = 0;
+        $year_industry_r_count = 0;
+        foreach ($year_industry_r_items as $year_industry_r_item){
+            $year_industry_r_money += $year_industry_r_item->cost;
+            $year_industry_r_count += 1;
+        }
+        $data['year_industry_r_money'] = $year_industry_r_money;
+        $data['year_industry_r_count'] = $year_industry_r_count;
+        //获取当年的行业-工业制品
+        $year_industry_i_p_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 9)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_i_p_money = 0;
+        $year_industry_i_p_count = 0;
+        foreach ($year_industry_i_p_items as $year_industry_i_p_item){
+            $year_industry_i_p_money += $year_industry_i_p_item->cost;
+            $year_industry_i_p_count += 1;
+        }
+        $data['year_industry_i_p_money'] = $year_industry_i_p_money;
+        $data['year_industry_i_p_count'] = $year_industry_i_p_count;
+        //获取当年的行业-军工
+        $year_industry_w_i_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 10)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_w_i_money = 0;
+        $year_industry_w_i_count = 0;
+        foreach ($year_industry_w_i_items as $year_industry_w_i_item){
+            $year_industry_w_i_money += $year_industry_w_i_item->cost;
+            $year_industry_w_i_count += 1;
+        }
+        $data['year_industry_w_i_money'] = $year_industry_w_i_money;
+        $data['year_industry_w_i_count'] = $year_industry_w_i_count;
+        //获取当年的行业-公用事业
+        $year_industry_p_c_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('industry', 11)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_industry_p_c_money = 0;
+        $year_industry_p_c_count = 0;
+        foreach ($year_industry_p_c_items as $year_industry_p_c_item){
+            $year_industry_p_c_money += $year_industry_p_c_item->cost;
+            $year_industry_p_c_count += 1;
+        }
+        $data['year_industry_p_c_money'] = $year_industry_p_c_money;
+        $data['year_industry_p_c_count'] = $year_industry_p_c_count;
+
+        if ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money == 0){
+            $data['year_industry_m_percentage'] = 0;
+            $data['year_industry_c_r_percentage'] = 0;
+            $data['year_industry_m_t_percentage'] = 0;
+            $data['year_industry_e_percentage'] = 0;
+            $data['year_industry_f_r_percentage'] = 0;
+            $data['year_industry_s_percentage'] = 0;
+            $data['year_industry_m_h_percentage'] = 0;
+            $data['year_industry_r_percentage'] = 0;
+            $data['year_industry_i_p_percentage'] = 0;
+            $data['year_industry_w_i_percentage'] = 0;
+            $data['year_industry_p_c_percentage'] = 0;
+        } else {
+            if($year_industry_m_money == 0){
+                $data['year_industry_m_percentage'] = 0;
+            }else{
+                $data['year_industry_m_percentage'] = round(($year_industry_m_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+
+            if($year_industry_c_r_money == 0){
+                $data['year_industry_c_r_percentage'] = 0;
+            }else{
+                $data['year_industry_c_r_percentage'] = round(($year_industry_c_r_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_m_t_money == 0){
+                $data['year_industry_m_t_percentage'] = 0;
+            }else{
+                $data['year_industry_m_t_percentage'] = round(($year_industry_m_t_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_e_money == 0){
+                $data['year_industry_e_percentage'] = 0;
+            }else{
+                $data['year_industry_e_percentage'] = round(($year_industry_e_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_f_r_money == 0){
+                $data['year_industry_f_r_percentage'] = 0;
+            }else{
+                $data['year_industry_f_r_percentage'] = round(($year_industry_f_r_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_s_money == 0){
+                $data['year_industry_s_percentage'] = 0;
+            }else{
+                $data['year_industry_s_percentage'] = round(($year_industry_s_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_m_h_money == 0){
+                $data['year_industry_m_h_percentage'] = 0;
+            }else{
+                $data['year_industry_m_h_percentage'] = round(($year_industry_m_h_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+            if($year_industry_r_money == 0){
+                $data['year_industry_r_percentage'] = 0;
+            }else{
+                $data['year_industry_r_percentage'] = round(($year_industry_r_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+
+            if($year_industry_i_p_money == 0){
+                $data['year_industry_i_p_percentage'] = 0;
+            }else{
+                $data['year_industry_i_p_percentage'] = round(($year_industry_i_p_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+
+            if($year_industry_w_i_money == 0){
+                $data['year_industry_w_i_percentage'] = 0;
+            }else{
+                $data['year_industry_w_i_percentage'] = round(($year_industry_w_i_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+
+            if($year_industry_p_c_money == 0){
+                $data['year_industry_p_c_percentage'] = 0;
+            }else{
+                $data['year_industry_p_c_percentage'] = round(($year_industry_p_c_money / ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money)) * 100 , 0);
+            }
+        }
+
+        $data['total_year_count'] = $year_industry_m_count + $year_industry_c_r_count + $year_industry_m_t_count + $year_industry_e_count + $year_industry_f_r_count + $year_industry_s_count + $year_industry_m_h_count + $year_industry_r_count + $year_industry_i_p_count + $year_industry_w_i_count + $year_industry_p_c_count;
+        $data['total_year_money'] = $year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money + $year_industry_p_c_money;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
+
+
 }

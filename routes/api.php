@@ -695,6 +695,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designTarget/incomeRanked', 'DesignTargetController@incomeRanked');
         //项目类别
         $api->get('/designTarget/incomeType', 'DesignTargetController@incomeType');
+        //项目详细类别
+        $api->get('/designTarget/incomeDesignTypes', 'DesignTargetController@incomeDesignTypes');
+        //项目行业
+        $api->get('/designTarget/incomeIndustry', 'DesignTargetController@incomeIndustry');
 
 
     });
