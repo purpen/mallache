@@ -120,11 +120,7 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        Log::info($decryptedData['nickName']);
-        if (!empty($decryptedData['unionId'])){
-            $user->union_id = $decryptedData['unionId'];
-            $user->save();
-        }
+        Log::info($decryptedData);
 
         return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
 
