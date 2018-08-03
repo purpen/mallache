@@ -7,6 +7,7 @@ use App\Helper\Tools;
 use App\Http\Transformer\DesignTargetTransformer;
 use App\Models\DesignProject;
 use App\Models\DesignTarget;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1502,5 +1503,98 @@ class DesignTargetController extends BaseController
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
+    }
+
+
+    /**
+     * @api {get} /design/itemTasks 所有项目任务统计
+     * @apiVersion 1.0.0
+     * @apiName designTarget itemTasks
+     * @apiGroup designTarget
+     *
+     * @apiParam {string} token
+     */
+    public function itemTasks()
+    {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+
+        //查询当年所有项目
+        $year_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_items_id = [];
+        //项目id
+        foreach ($year_items as $year_item){
+            $year_items_id[] = $year_item->id;
+        }
+        $year_items_tasks = $year_items_id;
+        $tasks = Task::whereIn('item_id' , $year_items_tasks)->get();
+        if(!empty($tasks)){
+            //未领取
+            $no_get = 0;
+            //未完成
+            $no_stage = 0;
+            //已完成
+            $ok_stage = 0;
+            //已预期
+            $overdue = 0;
+            //当前时间
+            $current_time = date('Y-m-d H:i:s');
+            foreach ($tasks as $task){
+                //未领取
+                if($task->execute_user_id == 0 && $task->stage == 0){
+                    $no_get += 1;
+                }
+                //未完成
+                if($task->stage == 0 && $task->execute_user_id != 0){
+                    $no_stage += 1;
+                }
+                //已完成
+                if($task->stage == 2 && $task->execute_user_id != 0){
+                    $ok_stage += 1;
+                }
+                //已预期
+                $over_time = $task->over_time;
+                if($over_time > $current_time && $task->stage == 0  && $task->execute_user_id != 0){
+                    $overdue += 1;
+                }
+            }
+            //总数量
+            $total_count = $no_get + $no_stage + $ok_stage + $overdue;
+            if($total_count != 0){
+                //未领取百分比
+                $no_get_percentage = (int)(bcdiv($no_get , $total_count , 2) * 100);
+                //未完成百分比
+                $no_stage_percentage = (int)(bcdiv($no_stage , $total_count , 2) * 100);
+                //已预期百分比
+                $overdue_percentage = (int)(bcdiv($overdue , $total_count , 2) * 100);
+                //已完成百分比
+                $ok_stage_percentage = 100 - $no_get_percentage - $no_stage_percentage - $overdue_percentage;
+            }else{
+                $no_get_percentage = 0;
+                $no_stage_percentage = 0;
+                $ok_stage_percentage = 0;
+                $overdue_percentage = 0;
+            }
+
+
+
+            $statistical = [];
+            $statistical['no_get'] = $no_get;
+            $statistical['no_stage'] = $no_stage;
+            $statistical['ok_stage'] = $ok_stage;
+            $statistical['overdue'] = $overdue;
+            $statistical['total_count'] = $total_count;
+            $statistical['no_get_percentage'] = $no_get_percentage;
+            $statistical['no_stage_percentage'] = $no_stage_percentage;
+            $statistical['ok_stage_percentage'] = $ok_stage_percentage;
+            $statistical['overdue_percentage'] = $overdue_percentage;
+
+            return $this->response->array($this->apiSuccess('获取成功' , 200 , $statistical));
+
+        }
+        return $this->response->array($this->apiError('该项目下没有任务', 404));
     }
 }

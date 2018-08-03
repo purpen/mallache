@@ -707,7 +707,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/positionPercentage', 'DesignTargetController@positionPercentage');
         //城市统计
         $api->get('/designTarget/incomeCity', 'DesignTargetController@incomeCity');
-
+        //所有项目的任务统计
+        $api->get('/design/itemTasks', 'DesignTargetController@itemTasks');
 
     });
 
