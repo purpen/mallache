@@ -66,8 +66,6 @@ class DemandController extends BaseController
                 $all['phone'] = $demand_company->phone;
                 $all['email'] = $demand_company->email;
                 $all['position'] = $demand_company->position;
-                //小类型默认1
-                $all['design_types'] = [1];
             }
             $all['stage_status'] = 3;
 
