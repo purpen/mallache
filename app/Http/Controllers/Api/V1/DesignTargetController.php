@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 
+use App\Helper\Tools;
 use App\Http\Transformer\DesignTargetTransformer;
 use App\Models\DesignProject;
 use App\Models\DesignTarget;
@@ -1392,7 +1393,10 @@ class DesignTargetController extends BaseController
         //用户总成员人数
         $total_user_count =  User::where('design_company_id', $design_company_id)->count();
         //按职位分组
-        $users = DB::select("select count(id) as user_count , position as user_position from users where design_company_id = $design_company_id group by user_position");
+        $users = User::select(DB::raw('count(id) as user_count, position as user_position'))
+                ->where('design_company_id', $design_company_id)
+                ->groupBy('user_position')
+                ->get();
 
         $positions = [];
         foreach ($users as $user){
@@ -1415,4 +1419,88 @@ class DesignTargetController extends BaseController
 
     }
 
+    /**
+     * @api {get} /designTarget/incomeCity 城市统计
+     * @apiVersion 1.0.0
+     * @apiName designTarget incomeCity
+     * @apiGroup designTarget
+     *
+     * @apiParam {integer} sort 1.金额排行 2.数量排行 默认1
+     * @apiParam {string} token
+     */
+    public function incomeCity(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $design_company_id = User::designCompanyId($user_id);
+
+        $sort = $request->input('sort') ?? 1;
+
+        if ( $sort == 1){
+            //查询金额，项目数量，城市
+            $year_city_items =  DesignProject
+                ::select(DB::raw('sum(cost) as city_cost , count(id) as item_count, province as item_province'))
+                ->where('design_company_id', $design_company_id)
+                ->where('pigeonhole', 1)
+                ->whereYear('created_at', date('Y'))
+                ->groupBy('item_province')
+                ->orderBy('city_cost' , 'desc')
+                ->get();
+        } else {
+            //查询金额，项目数量，城市
+            $year_city_items =  DesignProject
+                ::select(DB::raw('sum(cost) as city_cost , count(id) as item_count, province as item_province'))
+                ->where('design_company_id', $design_company_id)
+                ->where('pigeonhole', 1)
+                ->whereYear('created_at', date('Y'))
+                ->groupBy('item_province')
+                ->orderBy('item_count' , 'desc')
+                ->get();
+        }
+
+
+        //总数量
+        $total_items=  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //总价钱，总数量
+        $total_item_count = 0;
+        $total_city_cost = 0;
+        foreach ($total_items as $total_item){
+            $total_item_count += 1;
+            $total_city_cost += $total_item->cost;
+        }
+
+        $city = [];
+        foreach ($year_city_items as $year_city_item){
+            $v = [];
+            $v['item_count'] = $year_city_item->item_count;
+            $v['city_cost'] = $year_city_item->city_cost;
+            $v['item_province'] = $year_city_item->item_province;
+            if (empty($v['item_province'])){
+                $v['item_province_val'] = '';
+            } else {
+                $v['item_province_val'] = Tools::cityName($v['item_province']);
+            }
+            if ($total_item_count == 0){
+                $v['item_count_percentage'] = 0;
+            } else {
+                $v['item_count_percentage'] = round(($v['item_count'] / $total_item_count) * 100 , 0);
+            }
+
+            if ($total_city_cost == 0){
+                $v['city_cost_percentage'] = 0;
+            } else {
+                $v['city_cost_percentage'] = round(($v['city_cost'] / $total_city_cost) * 100 , 0);
+            }
+
+            $city[] = $v;
+
+        }
+        $data = $city;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
+
+    }
 }

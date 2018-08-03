@@ -705,7 +705,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/design/userPercentage', 'DesignTargetController@userPercentage');
         //职位占比
         $api->get('/design/positionPercentage', 'DesignTargetController@positionPercentage');
-
+        //城市统计
+        $api->get('/designTarget/incomeCity', 'DesignTargetController@incomeCity');
 
 
     });
