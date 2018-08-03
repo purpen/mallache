@@ -43,7 +43,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('error: not demand', 403));
         }
 
-//        try {
+        try {
             $source = $request->header('source-type') ?? 0;
             $name = '';
             $item = Item::createItem($this->auth_user_id, $name, $source);
@@ -67,16 +67,16 @@ class DemandController extends BaseController
                 $all['email'] = $demand_company->email;
                 $all['position'] = $demand_company->position;
                 //小类型默认1
-                $all['design_types'] = 1;
+                $all['design_types'] = [1];
             }
             $all['stage_status'] = 3;
 
             $item->update($all);
 
-//        } catch (\Exception $e) {
-//            Log::error($e->getMessage());
-//            return $this->response->array($this->apiError('Error', 500));
-//        }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->response->array($this->apiError('Error', 500));
+        }
         return $this->response->item($item, new ItemTransformer())->setMeta($this->apiMeta());
 
     }
