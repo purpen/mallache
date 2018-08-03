@@ -1480,7 +1480,7 @@ class DesignTargetController extends BaseController
             $v['city_cost'] = $year_city_item->city_cost;
             $v['item_province'] = $year_city_item->item_province;
             if (empty($v['item_province'])){
-                $v['item_province_val'] = '';
+                $v['item_province_val'] = '其他';
             } else {
                 $v['item_province_val'] = Tools::cityName($v['item_province']);
             }
