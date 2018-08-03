@@ -120,8 +120,9 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        if (!empty($decryptedData->unionId)){
-            $user->union_id = $decryptedData->unionId;
+        Log::info($decryptedData['nickName']);
+        if (!empty($decryptedData['unionId'])){
+            $user->union_id = $decryptedData['unionId'];
             $user->save();
         }
 
