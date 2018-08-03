@@ -385,7 +385,7 @@ class DesignCompanyModel extends BaseModel
         $item_type = config('constant.item_type');
         $arr = [];
         $design_item = $this->user ? $this->user->designItem : '';
-        if (!$design_item->isEmpty()) {
+        if (!empty($design_item)) {
             foreach ($design_item as $case) {
                 try {
                     $arr[] = $item_type[$case->type][$case->design_type];
