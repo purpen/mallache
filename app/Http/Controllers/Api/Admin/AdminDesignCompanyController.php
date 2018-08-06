@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Helper\Tools;
 use App\Http\AdminTransformer\AdminDesignCompanyTransformer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use App\Http\Controllers\Controller;
@@ -357,6 +358,12 @@ class AdminDesignCompanyController extends Controller
         }
 
         $lists = $query->paginate($per_page);
+        foreach ($lists as $list){
+            $user = User::find($list->user_id);
+            if (!$user){
+                continue;
+            }
+        }
         return $this->response->paginator($lists, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 
