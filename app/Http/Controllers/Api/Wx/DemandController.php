@@ -125,6 +125,7 @@ class DemandController extends BaseController
         $item->contact_name = $request->input('contact_name') ?? '';
         $item->position = $request->input('position') ?? '';
         $item->phone = $request->input('phone') ?? '';
+        $item->name = $request->input('name') ?? '';
         $item->save();
         // 同步调用匹配方法
         $recommend = new Recommend($item);
