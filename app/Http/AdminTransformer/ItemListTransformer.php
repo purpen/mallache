@@ -10,6 +10,10 @@ class ItemListTransformer extends TransformerAbstract
 {
     public function transform(Item $item)
     {
+        $user = User::find($item->user_id);
+        if (!$user){
+            return [];
+        }
         $type = $item->type;
         if ($type == 0) {
             $info = '';

@@ -3,6 +3,7 @@
 namespace App\Http\AdminTransformer;
 
 use App\Models\DesignCompanyModel;
+use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
 class AdminDesignCompanyTransformer extends TransformerAbstract
@@ -45,6 +46,10 @@ class AdminDesignCompanyTransformer extends TransformerAbstract
 
     public function transform(DesignCompanyModel $DesignCompany)
     {
+        $user = User::find($DesignCompany->user_id);
+        if (!$user){
+            return [];
+        }
         return [
             'id' => intval($DesignCompany->id),
             'user_id' => intval($DesignCompany->user_id),
