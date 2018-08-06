@@ -358,12 +358,6 @@ class AdminDesignCompanyController extends Controller
         }
 
         $lists = $query->paginate($per_page);
-        foreach ($lists as $list){
-            $user = User::find($list->user_id);
-            if (!$user){
-                continue;
-            }
-        }
         return $this->response->paginator($lists, new AdminDesignCompanyTransformer)->setMeta($this->apiMeta());
     }
 
