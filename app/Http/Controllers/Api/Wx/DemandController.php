@@ -68,6 +68,7 @@ class DemandController extends BaseController
                 $all['position'] = $demand_company->position;
             }
             $all['stage_status'] = 1;
+            $all['from_app'] = 1;
 
             $item->update($all);
 
