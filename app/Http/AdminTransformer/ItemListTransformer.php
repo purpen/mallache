@@ -13,7 +13,7 @@ class ItemListTransformer extends TransformerAbstract
     {
         $user = User::find($item->user_id);
         if (!$user){
-            return [];
+            return;
         }
         $type = $item->type;
         if ($type == 0) {

@@ -48,7 +48,7 @@ class AdminDesignCompanyTransformer extends TransformerAbstract
     {
         $user = User::find($DesignCompany->user_id);
         if (!$user){
-            return [];
+            return;
         }
         return [
             'id' => intval($DesignCompany->id),
