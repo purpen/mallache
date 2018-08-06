@@ -60,7 +60,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
         'as' => 'wechat.demandRelease', 'uses' => 'DemandController@release'
     ]);
     //获取推荐的设计公司
-    $api->post('/wechat/demand/recommendList/{item_id}', [
+    $api->get('/wechat/demand/recommendList/{item_id}', [
         'as' => 'wechat.demandRecommendList', 'uses' => 'DemandController@recommendList'
     ]);
 });

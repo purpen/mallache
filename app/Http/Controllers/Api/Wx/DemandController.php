@@ -173,7 +173,7 @@ class DemandController extends BaseController
     /**
      * @api {put} /wechat/demand/update 需求公司更改设计类型
      * @apiVersion 1.0.0
-     * @apiName wechatDemand create
+     * @apiName wechatDemand updateType
      * @apiGroup wechatDemandType
      *
      * @apiParam {string} token
