@@ -69,6 +69,7 @@ class DemandController extends BaseController
             }
             $all['stage_status'] = 1;
             $all['from_app'] = 1;
+            $all['design_types'] = json_encode([1]);
 
             $item->update($all);
 
