@@ -51,6 +51,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/demand/create', [
         'as' => 'wechat.demandCreate', 'uses' => 'DemandController@create'
     ]);
+    //选择类型
+    $api->put('/wechat/demand/update', [
+        'as' => 'wechat.demandUpdate', 'uses' => 'DemandController@update'
+    ]);
     //发布项目
     $api->post('/wechat/demand/release', [
         'as' => 'wechat.demandRelease', 'uses' => 'DemandController@release'

@@ -24,7 +24,7 @@ class DemandController extends BaseController
      * @apiGroup wechatDemandType
      *
      * @apiParam {string} token
-     * @apiParam {string} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
      */
     public function create(Request $request)
     {
@@ -168,5 +168,43 @@ class DemandController extends BaseController
         $design_company = DesignCompanyModel::whereIn('id', $recommend_arr)->get();
 
         return $this->response->collection($design_company, new RecommendListTransformer($item))->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {put} /wechat/demand/update 需求公司更改设计类型
+     * @apiVersion 1.0.0
+     * @apiName wechatDemand create
+     * @apiGroup wechatDemandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 项目ID
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
+     */
+    public function update(Request $request)
+    {
+        $id = (int)$request->input('id');
+        $type = (int)$request->input('type');
+        if (!$item = Item::find($id)) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+
+        if ($item->status != 1) {
+            return $this->response->array($this->apiError('项目已发布', 403));
+        }
+
+        //验证是否是当前用户对应的项目
+        if ($item->user_id !== $this->auth_user_id) {
+            return $this->response->array($this->apiError('不是当前用户创建的!', 403));
+        }
+        $auth_user = $this->auth_user;
+        if (!$auth_user) {
+            return $this->response->array($this->apiError('not found!', 404));
+        }
+        $item->type = $type;
+
+        if($item->save()){
+            return $this->response->item($item, new ItemTransformer())->setMeta($this->apiMeta());
+        }
+
     }
 }
