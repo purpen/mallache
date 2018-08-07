@@ -25,6 +25,7 @@ use App\Models\DesignItemModel;
 use App\Models\Evaluate;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\Notification;
 use App\Models\PayOrder;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -527,7 +528,16 @@ class DemandController extends BaseController
 
             //遍历插入推荐表
             foreach ($all['design_company_id'] as $design_company_id) {
-                ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
+                $itemRecommend = ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
+                //添加通知报价合同记录表
+                if($itemRecommend){
+                    $notification = new Notification();
+                    $notification->status = 0;
+                    $notification->type = 1;
+                    $notification->target_id = $itemRecommend->id;
+                    $notification->inform_time = time() + 172800;
+                    $notification->save();
+                }
             }
 
             DB::commit();

@@ -516,6 +516,7 @@ class DesignTargetController extends BaseController
         $data['income20'] = $income;
         $data['incomeOther'] = 100 - (int)$total_cost_percentage;
         $data['incomeOtherMoney'] = $total_year_item_money - (int)$cost_money;
+        $data['total_year_item_money'] = $total_year_item_money;
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
