@@ -17,6 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->increments('id');
             $table->integer('target_id');
             $table->integer('inform_time');
+            $table->integer('count')->default(1);
             $table->tinyInteger('status')->default(0);
             $table->tinyInteger('type')->default(0);
             $table->timestamps();

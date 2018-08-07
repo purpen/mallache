@@ -16,4 +16,5 @@ class Notification extends BaseModel
         'target_id',
         'status',
         'type',
+        'count'
     ];}
