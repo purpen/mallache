@@ -534,6 +534,7 @@ class DemandController extends BaseController
                     $notification = new Notification();
                     $notification->status = 0;
                     $notification->type = 1;
+                    $notification->count = 1;
                     $notification->target_id = $itemRecommend->id;
                     $notification->inform_time = time() + 172800;
                     $notification->save();
