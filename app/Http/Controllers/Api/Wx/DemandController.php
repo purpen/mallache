@@ -77,7 +77,6 @@ class DemandController extends BaseController
             Log::error($e->getMessage());
             return $this->response->array($this->apiError('Error', 500));
         }
-        dd($item);
         return $this->response->item($item, new ItemTransformer())->setMeta($this->apiMeta());
 
     }
