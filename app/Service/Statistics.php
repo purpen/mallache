@@ -12,6 +12,13 @@ use App\Models\Item;
 class Statistics
 {
     /**
+     * 关联模型到数据表
+     *
+     * @var string
+     */
+    protected $table = 'design_statistics';
+
+    /**
      * contractAveragePrice    更新所有设计公司平均价格
      *
      * @author 王松
@@ -271,16 +278,16 @@ class Statistics
     public function saveRecommendedTimes($params)
     {
         if(!is_array($params)){
-            return 0;
+            return false;
         }
         $designstatistics = new DesignStatistics;
         foreach($params as $v){
             $data = $designstatistics->saveRecommendedTimes((int)$v);
             if(empty($data)){
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     }
 
     /**

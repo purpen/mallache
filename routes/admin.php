@@ -319,7 +319,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 确认给需求公司的发票已开
         $api->put('/admin/invoice/trueDemandInvoice', 'InvoiceController@trueDemandInvoice');
 
-
+        /**
+         * 权重
+         */
+        //保存权重
+        $api->post('/admin/weight/save', 'WeightController@save');
+        //权重详情
+        $api->get('/admin/weight/show', 'WeightController@show');
+        /**
+         * 权重
+         */
+        //人工干预
+        $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
     });
 
 });
