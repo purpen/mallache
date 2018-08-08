@@ -831,7 +831,16 @@ class DemandController extends BaseController
             $item->price = $quotation->price;
             $item->quotation_id = $quotation->id;
             $item->status = 5;
-            $item->save();
+            //添加通知报价合同记录表
+            if($item->save()){
+                $notification = new Notification();
+                $notification->status = 0;
+                $notification->type = 2;
+                $notification->count = 1;
+                $notification->target_id = $item->id;
+                $notification->inform_time = time() + 172800;
+                $notification->save();
+            }
 
             // 将项目需求ID写入合作的设计公司的项目管理中
             if ($design_project = $quotation->designProject) {
