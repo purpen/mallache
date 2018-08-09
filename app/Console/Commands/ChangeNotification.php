@@ -64,7 +64,7 @@ class ChangeNotification extends Command
 
         //获取所有设计设计公司
         foreach ($q_item_recommends as $q_item_recommend){
-            $q_design_company = DesignCompanyModel::find($q_item_recommend->id);
+            $q_design_company = DesignCompanyModel::find($q_item_recommend->design_company_id);
             if($q_design_company){
                 Log::info($q_design_company);
                 Log::info(11);
@@ -96,7 +96,7 @@ class ChangeNotification extends Command
 
         //获取所有设计设计公司
         foreach ($c_item_recommends as $c_item_recommend){
-            $c_design_company = DesignCompanyModel::find($c_item_recommend->id);
+            $c_design_company = DesignCompanyModel::find($c_item_recommend->design_company_id);
             if($c_design_company){
                 Log::info($c_design_company->phone);
                 Tools::sendSmsToPhone($c_design_company->phone);
