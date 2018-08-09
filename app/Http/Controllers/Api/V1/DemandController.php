@@ -536,7 +536,7 @@ class DemandController extends BaseController
                     $notification->type = 1;
                     $notification->count = 1;
                     $notification->target_id = $itemRecommend->id;
-                    $notification->inform_time = time() + 172800;
+                    $notification->inform_time = time() + config('constant.inform_time');
                     $notification->save();
                 }
             }
@@ -838,7 +838,7 @@ class DemandController extends BaseController
                 $notification->type = 2;
                 $notification->count = 1;
                 $notification->target_id = $item->id;
-                $notification->inform_time = time() + 172800;
+                $notification->inform_time = time() + config('constant.inform_time');
                 $notification->save();
             }
 

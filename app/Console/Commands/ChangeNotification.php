@@ -52,7 +52,7 @@ class ChangeNotification extends Command
                 $q_notification->save();
             } else if(time() > $q_notification->inform_time && $q_notification->count < 3) {
                 $q_notification->count += 1;
-                $q_notification->inform_time = $q_notification->inform_time + 172800;
+                $q_notification->inform_time = $q_notification->inform_time + config('constant.inform_time');
                 $q_notification->save();
             }
             $q_item_recommend_ids[] = $q_notification->target_id;
