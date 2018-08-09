@@ -74,9 +74,9 @@ class AuthenticateController extends BaseController
                         'session_key' => $new_mini['session_key'],
                         'union_id' => $new_mini['unionId'] ?? '',
                     ]);
-                if ($user) {
+                if ($user->type == 1) {
                     //创建需求公司
-                    DemandCompany::createCompany($user->id);
+                    DemandCompany::createCompany($user);
                     //生成token
                     $token = JWTAuth::fromUser($user);
                     return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
@@ -120,6 +120,10 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
+        if (!empty($decryptedData['unionId'])){
+            $user->union_id = $decryptedData['unionId'];
+            $user->save();
+        }
 
         return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
 
@@ -138,6 +142,7 @@ class AuthenticateController extends BaseController
      */
     public function bindingUser(Request $request)
     {
+        $credentials = $request->only('phone', 'password');
         // 验证规则
         $rules = [
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
@@ -154,20 +159,29 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
-        $password = $request->input('password');
+
+        if (!$this->phoneIsRegister($credentials['phone'])) {
+            return $this->response->array($this->apiError('手机号未注册', 404));
+        }
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return $this->response->array($this->apiError('账户名或密码错误', 412));
+        }
+        //已经存在的用户
+        $oldUser = User::where('account' , $phone)->first();
+        if(!empty($oldUser->wx_open_id)){
+            return $this->response->array($this->apiError('你已经绑定了账户，无需再绑定', 412));
+        }
         //当前登陆的用户
         $loginUser = $this->auth_user;
-        if ($loginUser) {
-            $loginUser->account = $phone;
-            $loginUser->phone = $phone;
-            $loginUser->username = $phone;
-            $loginUser->password = bcrypt($password);
-            if ($loginUser->save()) {
-                return $this->response->array($this->apiSuccess('绑定成功', 200));
+        //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
+        $oldUser->wx_open_id = $loginUser->wx_open_id;
+        $oldUser->session_key = $loginUser->session_key;
+        $oldUser->union_id = $loginUser->union_id;
+        if($oldUser->save()){
+            if($loginUser->delete()){
+                return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
             }
-
-        } else {
-            return $this->response->array($this->apiError('没有找到用户', 404));
         }
 
     }
@@ -203,9 +217,14 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
+        //查看是否注册了
+        $oldUser = User::where('account' , $phone)->first();
+        if($oldUser){
+            return $this->response->array($this->apiError('该手机号已经注册过，请直接绑定', 412));
+        }
         $password = $request->input('password');
         //验证手机验证码
-        $key = 'sms_code:' . strval($payload['account']);
+        $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
@@ -261,7 +280,7 @@ class AuthenticateController extends BaseController
         if ($user) {
             return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
         } else {
-            return $this->response->array($this->apiError('该账户不存在,需要从新绑定', 404));
+            return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
         }
     }
 
@@ -282,7 +301,7 @@ class AuthenticateController extends BaseController
      *     },
      *   }
      */
-    public function getSmsCode(Request $request)
+    public function sms(Request $request)
     {
         $rules = [
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
@@ -316,7 +335,6 @@ class AuthenticateController extends BaseController
      * @apiGroup Wx
      *
      * @apiParam {string} password     新密码
-     * @apiParam {string} repeatPassword     重复密码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -333,16 +351,10 @@ class AuthenticateController extends BaseController
     public function changePassword(Request $request)
     {
         $this->validate($request, [
-            'repeatPassword' => 'required',
             'password' => 'required',
         ]);
 
-        $repeatPassword = $request->input('repeatPassword');
         $newPassword = $request->input('password');
-
-        if ($repeatPassword != $newPassword) {
-            return $this->response->array($this->apiError('两次密码不一致', 412));
-        }
 
         $user = JWTAuth::parseToken()->authenticate();
 
@@ -355,5 +367,76 @@ class AuthenticateController extends BaseController
         }
     }
 
+    protected function phoneIsRegister($account)
+    {
+        if (User::where('account', intval($account))->count() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+
+    /**
+     * @api {post} /wechat/findPassword 发送手机验证码，找回密码
+     * @apiVersion 1.0.0
+     * @apiName WxFindPassword findPassword
+     * @apiGroup Wx
+     *
+     * @apiParam {string} phone 手机号
+     * @apiParam {integer} sms_code 短信验证码
+     * @apiParam {string} token
+     *
+     */
+    public function findPassword(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
+        ];
+
+
+        $payload = app('request')->only('phone', 'sms_code');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $phone = $request->input('phone');
+        //查看是否注册了
+        $oldUser = User::where('account' , $phone)->first();
+        if(!$oldUser){
+            return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
+        }
+        //验证手机验证码
+        $key = 'sms_code:' . strval($payload['phone']);
+        $sms_code_value = Cache::get($key);
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+            return $this->response->array($this->apiSuccess('获取成功', 200));
+        }
+    }
+
+    /**
+     * @api {get} /wechat/checkAccount 检测账户是否绑定
+     * @apiVersion 1.0.0
+     * @apiName WxCheckAccount checkAccount
+     * @apiGroup Wx
+     *
+     * @apiParam {string} token
+     */
+    public function checkAccount()
+    {
+        //当前登陆的用户
+        $loginUser = $this->auth_user;
+        if(!empty($loginUser->wx_open_id)){
+            return $this->response->array($this->apiSuccess('你已绑定了账户', 200 , $loginUser->account));
+        }
+        return $this->response->array($this->apiSuccess('没有绑定小程序', 200));
+    }
 }

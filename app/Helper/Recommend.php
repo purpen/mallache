@@ -169,7 +169,7 @@ class Recommend
         $max = $this->cost($this->item->design_cost);
 
         //所属领域
-        $field = $this->item->productDesign->field;
+//        $field = $this->item->productDesign->field;
 //        //周期
 //        $cycle = $this->item->cycle;
 //        //项目公司地点
