@@ -332,6 +332,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //人工干预分值修改
         $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
+        /**
+         * 评价
+         */
+        //平台评价项目
+        $api->post('/admin/platform/evaluate', 'AdminEvaluateController@platformEvaluate');
     });
 
 });

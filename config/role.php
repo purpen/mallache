@@ -209,6 +209,12 @@ return [
          */
         //人工干预
         '/admin/saveIntervene',
+
+        /**
+         * 评价
+         */
+        //平台评价项目
+        '/admin/platform/evaluate',
     ],
 
     /**

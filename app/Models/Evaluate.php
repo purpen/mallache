@@ -11,11 +11,18 @@ class Evaluate extends BaseModel
         'item_id',
         'content',
         'score',
+        'platform_score',
+        'user_score',
     ];
 
     // 一对一 相对关联项目表
     public function item()
     {
         return $this->belongsTo('App\Models\Item', 'user_id');
+    }
+
+    public function get_one($itme_id)
+    {
+        return $this::where('item_id',$itme_id)->first();
     }
 }

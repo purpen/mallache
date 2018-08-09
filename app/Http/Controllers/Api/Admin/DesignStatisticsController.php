@@ -6,6 +6,7 @@ use Dingo\Api\Http\Request;
 use App\Models\DesignStatistics;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Dingo\Api\Exception\StoreResourceFailedException;
 class DesignStatisticsController extends Controller
 {
     /**
@@ -15,6 +16,7 @@ class DesignStatisticsController extends Controller
      * @apiGroup DesignStatistics
      * @apiParam {integer} id 设计公司id
      * @apiParam {integer} num 分值
+     * @apiParam {string} token
      * @apiSuccessExample 成功响应:
      * {
      *     "meta": {
@@ -38,7 +40,7 @@ class DesignStatisticsController extends Controller
         $data = DesignStatistics::select('id','intervene')->where('design_company_id',$params['id'])->first();
         if(empty($data)){
             //新增一条设计公司信息
-            $res = DesignStatistics::insert(['design_company_id'=>$params['id']]);
+            $res = DesignStatistics::insert(['design_company_id'=>$params['id'],'intervene'=>$params['num']]);
             if(empty($res)){
                 return $this->response->array($this->apiError('保存失败', 500));
             }

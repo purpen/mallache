@@ -1323,6 +1323,126 @@ class DemandController extends BaseController
     }
 
     /**
+     * @api {post} /users/evaluate 用户评价项目
+     * @apiVersion 1.0.0
+     * @apiName users evaluate
+     * @apiGroup userEvaluate
+     * @apiParam {string} token
+     * @apiParam {string} content 评价内容
+     * @apiParam {integer} item_id 项目id
+     * @apiParam {integer} design_level 设计水平(用户评价时必传)
+     * @apiParam {integer} response_speed 响应速度(用户评价时必传)
+     * @apiParam {integer} service 服务意识(用户评价时必传)
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function userEvaluate(Request $request)
+    {
+        $rules = [
+            'item_id' => 'required|integer',
+            'content' => 'required|max:500',
+            'service' => 'required|integer|max:10',
+            'design_level' => 'required|integer|max:10',
+            'response_speed' => 'required|integer|max:10',
+        ];
+        $params = $request->only(['item_id','content','service','design_level','response_speed']);
+        $validator = Validator::make($params, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+        if (!$item = Item::find($params['item_id'])) {
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+
+        /*if ($item->user_id != $this->auth_user_id || $item->status != 18) {
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }*/
+
+        $params['design_company_id'] = $item->design_company_id;
+        $params['demand_company_id'] = $this->auth_user->demand_company_id;
+        $evaluate = new Evaluate;
+        $res = $evaluate->get_one($params['item_id']);
+        $score = 0;
+        $score += $params['design_level'] * 0.6; //设计水平比重占6
+        $score += $params['response_speed'] * 0.3; //响应速度比重占3
+        $score += $params['service']  * 0.1; //服务意识比重占1
+        $user_score['service'] = (int)$params['service'];
+        $user_score['design_level'] = (int)$params['design_level'];
+        $user_score['response_speed'] = (int)$params['response_speed'];
+        $list['item_id'] = (int)$params['item_id'];
+        $list['content'] = $params['content'];
+        $list['user_score'] = json_encode($user_score);
+        $list['demand_company_id'] = $params['demand_company_id'];
+        $list['design_company_id'] = $params['design_company_id'];
+        if(!empty($res)){ //评价存在更新
+            if(!empty($res->user_score)){
+                return $this->response->array($this->apiError('已经评价过了', 200));
+            }
+            //计算评分
+            $score = $score / 2;
+            if($score > 5){
+                $score = 5;
+            }
+            if($score < 0){
+                $score = 0;
+            }
+            //把平台评分减去百分之五十,再加上用户评分,算出总评分
+            $score += $res->score / 2;
+            $score = sprintf('%.1f',$score);
+            if(empty($res->demand_company_id)){
+                $res->demand_company_id = $params['demand_company_id'];
+            }
+            if(empty($res->design_company_id)){
+                $res->design_company_id = $params['design_company_id'];
+            }
+            try {
+                DB::beginTransaction();
+                $res->content = $list['content'];
+                $res->score = $score;
+                $res->user_score = $list['user_score'];
+                $res->save();
+                $item->status = 22;
+                $item->save();
+                event(new ItemStatusEvent($item));
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return $this->response->array($this->apiError('database error', 500));
+            }
+            return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
+        }else{ //评价不存在新增
+            if($score > 10){
+                $score = 10;
+            }
+            if($score < 0){
+                $score = 0;
+            }
+            $score = sprintf('%.1f',$score);
+            $list['score'] = $score;
+            $list['platform_score'] = '';
+            try {
+                DB::beginTransaction();
+                Evaluate::create($list);
+                $item->status = 22;
+                $item->save();
+                event(new ItemStatusEvent($item));
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return $this->response->array($this->apiError('database error', 500));
+            }
+            return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
+        }
+    }
+
+    /**
      * @api {put} /updateName/demand 更改项目名称
      * @apiVersion 1.0.0
      * @apiName demand updateName
