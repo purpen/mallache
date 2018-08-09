@@ -66,6 +66,8 @@ class ChangeNotification extends Command
         foreach ($q_item_recommends as $q_item_recommend){
             $q_design_company = DesignCompanyModel::find($q_item_recommend->id);
             if($q_design_company){
+                Log::info($q_design_company);
+                Log::info(11);
                 Log::info($q_design_company->phone);
                 Tools::sendSmsToPhone($q_design_company->phone);
             }
