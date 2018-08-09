@@ -9,26 +9,18 @@ use Illuminate\Support\Facades\Validator;
 class DesignStatisticsController extends Controller
 {
     /**
-     * saveIntervene        人工干预分值修改
-     *
-     * @author 王松
-     * @params $id    int    设计公司id
-     * @params $num   int    人工干预分值
-     * @return boolean      true|false   1|0
-     */
-    /**
-     * @api {post} /admin/weight/save 人工干预分值修改
+     * @api {post} /admin/saveIntervene 人工干预分值修改
      * @apiVersion 1.0.0
      * @apiName saveIntervene
      * @apiGroup DesignStatistics
-     * @apiParam {integer} id 案列数量
-     * @apiParam {integer} num 地区
+     * @apiParam {integer} id 设计公司id
+     * @apiParam {integer} num 分值
      * @apiSuccessExample 成功响应:
      * {
-     * "meta": {
-     * "message": "Success",
-     * "status_code": 200
-     * }
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
      * }
      */
     public function saveIntervene(Request $request)

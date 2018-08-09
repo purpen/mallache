@@ -326,10 +326,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/weight/save', 'WeightController@save');
         //权重详情
         $api->get('/admin/weight/show', 'WeightController@show');
+
         /**
-         * 权重
+         * 设计公司数据统计
          */
-        //人工干预
+        //人工干预分值修改
         $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
     });
 
