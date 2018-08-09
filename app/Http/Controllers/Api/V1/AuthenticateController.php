@@ -546,7 +546,7 @@ class AuthenticateController extends BaseController
             }
             //判断子账户的数量
             if($user->child_count >= config('constant.child_count')){
-                return $this->response->array($this->apiError('当前只能邀请10个用户' , 403));
+                return $this->response->array($this->apiError('当前只能邀请30个用户' , 403));
             }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));
