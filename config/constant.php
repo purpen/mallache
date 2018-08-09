@@ -42,7 +42,7 @@ return [
     'notice_phone' => '13031154842',
 
     // 子账户的数量
-    'child_count' => 20,
+    'child_count' => 30,
 
     // 项目下任务总数量限制
     'task_count' => 1000,
