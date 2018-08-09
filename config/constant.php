@@ -349,6 +349,6 @@ return [
     ],
 
     //通知时间5分钟
-    'inform_time' => 600,
+    'inform_time' => 240,
 
 ];

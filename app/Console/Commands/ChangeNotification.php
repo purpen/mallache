@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemRecommend;
 use App\Models\Notification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ChangeNotification extends Command
 {
@@ -64,6 +65,7 @@ class ChangeNotification extends Command
         //获取所有设计设计公司
         foreach ($q_item_recommends as $q_item_recommend){
             $q_design_company = DesignCompanyModel::find($q_item_recommend->id);
+            Log::info($q_design_company->phone);
             if($q_design_company){
                 Tools::sendSmsToPhone($q_design_company->phone);
             }
@@ -93,6 +95,7 @@ class ChangeNotification extends Command
         //获取所有设计设计公司
         foreach ($c_item_recommends as $c_item_recommend){
             $c_design_company = DesignCompanyModel::find($c_item_recommend->id);
+            Log::info($c_design_company);
             if($c_design_company){
                 Tools::sendSmsToPhone($c_design_company->phone);
             }
