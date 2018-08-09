@@ -51,6 +51,7 @@ class ChangeNotification extends Command
             if($q_notification->count == 3){
                 $q_notification->status = 1;
                 $q_notification->save();
+                return;
             } else if(time() > $q_notification->inform_time && $q_notification->count < 3) {
                 $q_notification->count += 1;
                 $q_notification->inform_time = $q_notification->inform_time + config('constant.inform_time');
