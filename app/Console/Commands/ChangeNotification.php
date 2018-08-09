@@ -67,7 +67,6 @@ class ChangeNotification extends Command
             $q_design_company = DesignCompanyModel::where('id' , $q_item_recommend->design_company_id)->first();
             if($q_design_company){
                 $q_content = '需求方已选择贵公司，请您尽快报价';
-                Log::info($q_design_company->phone);
                 Tools::sendSmsToPhone($q_design_company->phone , $q_content);
             }
         }
@@ -98,7 +97,6 @@ class ChangeNotification extends Command
             $c_design_company = DesignCompanyModel::where('id' , $c_item_recommend->design_company_id)->first();
             if($c_design_company){
                 $c_content = '需求方已选择贵公司，请您尽快填写合同';
-                Log::info($c_design_company->phone);
                 Tools::sendSmsToPhone($c_design_company->phone , $c_content);
             }
         }
