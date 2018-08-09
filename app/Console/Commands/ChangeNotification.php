@@ -83,7 +83,7 @@ class ChangeNotification extends Command
                 $c_notification->save();
             } else if(time() > $c_notification->inform_time && $c_notification->count < 3) {
                 $c_notification->count += 1;
-                $c_notification->inform_time = $c_notification->inform_time + 172800;
+                $c_notification->inform_time = $c_notification->inform_time + config('constant.inform_time');
                 $c_notification->save();
             }
             $c_item_recommend_ids[] = $c_notification->target_id;
