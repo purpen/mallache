@@ -97,7 +97,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('clear:RecycleBin')->dailyAt('3:00');
 
         // 每五分钟检测一次
-        $schedule->command('change:notification')->everyFiveMinutes();
+//        $schedule->command('change:notification')->everyFiveMinutes();
 
     }
 
