@@ -186,9 +186,9 @@ class QuotationController extends BaseController
                 }
 
                 // 基础报价不含税
-                $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 4);
-                $a = bcdiv($a, 100, 4);
-                if (round($quotation_info['price'], 2) != round(bcadd($quotation_info['total_price'], $a, 4), 2)) {
+                $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
+                if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
+
                     throw new MassageException('合计金额和总计金额不符', 403);
                 }
 
