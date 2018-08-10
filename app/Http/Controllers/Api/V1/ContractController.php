@@ -216,7 +216,7 @@ class ContractController extends BaseController
     {
         Log::info($item_stage);
         Log::info($total);
-        Log::info($other_percentage);
+        Log::info($other_percentage*100);
         $percentage = 0;
         $amount = 0;
         $title_is_set = true;
@@ -228,13 +228,13 @@ class ContractController extends BaseController
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        Log::info($percentage);
+        Log::info($percentage*100);
         Log::info($amount);
         Log::info($title_is_set);
         Log::info($time_is_set);
-        Log::info($percentage == $other_percentage);
+        Log::info($percentage*100 == $other_percentage*100);
         Log::info($amount == $total);
-        if (($percentage == $other_percentage) && ($amount == $total) && $title_is_set && $time_is_set) {
+        if (($percentage*100 == $other_percentage*100) && ($amount == $total) && $title_is_set && $time_is_set) {
             Log::info('ok');
             return true;
         } else {
