@@ -56,10 +56,12 @@ class ChangeNotification extends Command
                 $q_notification->count += 1;
                 $q_notification->inform_time = $q_notification->inform_time + config('constant.inform_time');
                 $q_notification->save();
-            } else {
-                Log::info('跳出循环1');
-                continue;
             }
+                            Log::info('跳出循环11');
+
+//            } else {
+//                continue;
+//            }
             $q_item_recommend_ids[] = $q_notification->target_id;
         }
         $q_new_item_recommend_ids = $q_item_recommend_ids;
@@ -90,10 +92,12 @@ class ChangeNotification extends Command
                 $c_notification->count += 1;
                 $c_notification->inform_time = $c_notification->inform_time + config('constant.inform_time');
                 $c_notification->save();
-            } else {
-                Log::info('跳出循环2');
-                continue;
             }
+                            Log::info('跳出循环22');
+
+//            } else {
+//                continue;
+//            }
             $c_item_recommend_ids[] = $c_notification->target_id;
         }
         $c_new_item_recommend_ids = $c_item_recommend_ids;
