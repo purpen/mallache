@@ -100,6 +100,8 @@ class AuthenticateController extends BaseController
                 $res = $res->toArray();
                 $statistics = new Statistics;
                 $statistics->saveDesignInfo($res['id']);
+                DesignCompanyModel::createDesign($user);
+
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -572,8 +574,8 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
             //判断子账户的数量
-            if ($user->child_count >= config('constant.child_count')) {
-                return $this->response->array($this->apiError('当前只能邀请10个用户', 403));
+            if($user->child_count >= config('constant.child_count')){
+                return $this->response->array($this->apiError('当前只能邀请30个用户' , 403));
             }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));

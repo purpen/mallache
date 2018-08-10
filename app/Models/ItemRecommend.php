@@ -11,6 +11,8 @@ class ItemRecommend extends BaseModel
     protected $fillable = [
         'item_id',
         'design_company_id',
+        'summary',
+        'refuse_types',
     ];
 
 
