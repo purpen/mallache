@@ -214,6 +214,9 @@ class ContractController extends BaseController
      */
     protected function validationItemStage($item_stage, $total, $other_percentage)
     {
+        Log::info($item_stage);
+        Log::info($total);
+        Log::info($other_percentage);
         $percentage = 0;
         $amount = 0;
         $title_is_set = true;
