@@ -233,9 +233,10 @@ class ContractController extends BaseController
         Log::info($title_is_set);
         Log::info($time_is_set);
         if ($percentage == $other_percentage && $amount == $total && $title_is_set && $time_is_set) {
-
+            Log::info('ok');
             return true;
         } else {
+            Log::info('no');
             return false;
         }
     }
