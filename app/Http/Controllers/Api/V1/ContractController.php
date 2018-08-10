@@ -226,7 +226,7 @@ class ContractController extends BaseController
             $time_is_set = !empty($stage['time']);
         }
 
-        if ((intval($percentage * 100) == intval($other_percentage * 100)) && ($amount == $total) && $title_is_set && $time_is_set) {
+        if ((intval($percentage * 100) == intval($other_percentage * 100)) && (round($amount, 2) == round($total, 2)) && $title_is_set && $time_is_set) {
             return true;
         } else {
             return false;
