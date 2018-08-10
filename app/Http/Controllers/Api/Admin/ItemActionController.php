@@ -27,7 +27,7 @@ class ItemActionController extends Controller
      *
      * @apiParam {string} token
      * @apiParam {integer} type 0.全部；1.填写资料ing；2.等待推荐； 默认0；
-     * @apiParam {int} evt 查询条件：1.ID；2.公司名称；3.联系人电话；8.用户ID；9.--；
+     * @apiParam {int} evt 查询条件：1.ID；2.公司名称；3.联系人电话；4.项目名称；8.用户ID；9.--；
      * @apiParam {string} val 查询值
      * @apiParam {int} source 来源：；0.全部；-1.铟果；1.京东;2.义乌；3.--；
      * @apiParam {integer} per_page 分页数量  默认15
@@ -162,6 +162,9 @@ class ItemActionController extends Controller
                     break;
                 case 3:
                     $query->where('phone', $val);
+                    break;
+                case 4:
+                    $query->where('name', 'like', '%' . $val . '%');
                     break;
                 case 8:
                     $query->where('user_id', $val);
