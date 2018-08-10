@@ -577,12 +577,14 @@ class Item extends BaseModel
             'email' => $item->email,
             'stage_status' => (int)$item->stage_status,
             'created_at' => $item->created_at,
-            'design_cost' => null,
             'cycle' => null,
             'design_types' => json_decode($item->design_types),
             'design_types_value' => $item->design_types_value,
             'source' => (int)$item->source,
             'name' => $item->name,
+            'position' => $item->position,
+            'design_cost' => $item->design_cost,
+            'design_cost_value' => $item->design_cost_value,
         ];
     }
 

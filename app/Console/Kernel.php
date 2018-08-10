@@ -67,6 +67,9 @@ class Kernel extends ConsoleKernel
         //更新项目下任务总数量，完成未完成数量的统计
         Commands\UpdateTaskCount::class,
 
+        //更新报价合同记录表的状态
+        Commands\ChangeNotification::class,
+
     ];
 
     /**
@@ -93,6 +96,8 @@ class Kernel extends ConsoleKernel
         // 每天凌晨3点 清除设计云盘回收站过期的文件
         $schedule->command('clear:RecycleBin')->dailyAt('3:00');
 
+        // 每五分钟检测一次
+//        $schedule->command('change:notification')->everyFiveMinutes();
 
     }
 

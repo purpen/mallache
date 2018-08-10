@@ -685,6 +685,30 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //线上项目设定项目营业额，项目完成数量
         $api->post('/designTarget/create', 'DesignTargetController@create');
         $api->get('/designTarget/show', 'DesignTargetController@show');
+        //收入报表
+        $api->get('/designTarget/incomeMonth', 'DesignTargetController@incomeMonth');
+        //季度报表
+        $api->get('/designTarget/incomeQuarter', 'DesignTargetController@incomeQuarter');
+        //年报表
+        $api->get('/designTarget/incomeYear', 'DesignTargetController@incomeYear');
+        //项目收入排名
+        $api->get('/designTarget/incomeRanked', 'DesignTargetController@incomeRanked');
+        //项目类别
+        $api->get('/designTarget/incomeType', 'DesignTargetController@incomeType');
+        //项目详细类别
+        $api->get('/designTarget/incomeDesignTypes', 'DesignTargetController@incomeDesignTypes');
+        //项目行业
+        $api->get('/designTarget/incomeIndustry', 'DesignTargetController@incomeIndustry');
+        //收入金额阶段
+        $api->get('/designTarget/incomeStage', 'DesignTargetController@incomeStage');
+        //成员占比
+        $api->get('/design/userPercentage', 'DesignTargetController@userPercentage');
+        //职位占比
+        $api->get('/design/positionPercentage', 'DesignTargetController@positionPercentage');
+        //城市统计
+        $api->get('/designTarget/incomeCity', 'DesignTargetController@incomeCity');
+        //所有项目的任务统计
+        $api->get('/design/itemTasks', 'DesignTargetController@itemTasks');
 
     });
 

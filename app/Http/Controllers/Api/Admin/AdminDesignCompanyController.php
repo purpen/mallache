@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Helper\Tools;
 use App\Http\AdminTransformer\AdminDesignCompanyTransformer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\DesignCompanyModel;
 use App\Http\Controllers\Controller;

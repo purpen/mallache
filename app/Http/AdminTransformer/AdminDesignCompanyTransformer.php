@@ -3,6 +3,7 @@
 namespace App\Http\AdminTransformer;
 
 use App\Models\DesignCompanyModel;
+use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
 class AdminDesignCompanyTransformer extends TransformerAbstract

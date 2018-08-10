@@ -36,7 +36,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/changePassword', [
         'as' => 'wechat.changePassword', 'uses' => 'AuthenticateController@changePassword'
     ]);
-
+    //发送手机验证码，找回密码
+    $api->post('/wechat/findPassword', [
+        'as' => 'wechat.findPassword', 'uses' => 'AuthenticateController@findPassword'
+    ]);
+    //检测账号是否注册
+    $api->get('/wechat/checkAccount', [
+        'as' => 'wechat.checkAccount', 'uses' => 'AuthenticateController@checkAccount'
+    ]);
     /**
      * 发布项目
      */
@@ -44,12 +51,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/demand/create', [
         'as' => 'wechat.demandCreate', 'uses' => 'DemandController@create'
     ]);
+    //选择类型
+    $api->put('/wechat/demand/update', [
+        'as' => 'wechat.demandUpdate', 'uses' => 'DemandController@update'
+    ]);
     //发布项目
     $api->post('/wechat/demand/release', [
         'as' => 'wechat.demandRelease', 'uses' => 'DemandController@release'
     ]);
     //获取推荐的设计公司
-    $api->post('/wechat/demand/recommendList/{item_id}', [
+    $api->get('/wechat/demand/recommendList/{item_id}', [
         'as' => 'wechat.demandRecommendList', 'uses' => 'DemandController@recommendList'
     ]);
 });
