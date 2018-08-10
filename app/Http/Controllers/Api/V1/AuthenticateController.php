@@ -418,7 +418,7 @@ class AuthenticateController extends BaseController
      */
     public function AuthUser()
     {
-        return $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
+        $this->response->item($this->auth_user, new UserTransformer)->setMeta($this->apiMeta());
     }
 
 
