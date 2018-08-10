@@ -1384,18 +1384,18 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError('not found item', 404));
         }
 
-        /*if ($item->user_id != $this->auth_user_id || $item->status != 18) {
+        if ($item->user_id != $this->auth_user_id || $item->status != 18) {
             return $this->response->array($this->apiError('Permission denied', 403));
-        }*/
+        }
 
         $params['design_company_id'] = $item->design_company_id;
         $params['demand_company_id'] = $this->auth_user->demand_company_id;
         $evaluate = new Evaluate;
         $res = $evaluate->get_one($params['item_id']);
         $score = 0;
-        $score += $params['design_level'] * 0.6; //设计水平比重占6
-        $score += $params['response_speed'] * 0.3; //响应速度比重占3
-        $score += $params['service']  * 0.1; //服务意识比重占1
+        $score += $params['design_level'] * config('evaluate.design_level'); //设计水平比重
+        $score += $params['response_speed'] * config('evaluate.response_speed'); //响应速度比重
+        $score += $params['service']  * config('evaluate.service'); //服务意识比重
         $user_score['service'] = (int)$params['service'];
         $user_score['design_level'] = (int)$params['design_level'];
         $user_score['response_speed'] = (int)$params['response_speed'];
@@ -1409,15 +1409,10 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('已经评价过了', 200));
             }
             //计算评分
-            $score = $score / 2;
-            if($score > 5){
-                $score = 5;
-            }
-            if($score < 0){
-                $score = 0;
-            }
+            $score = $score * 0.5;
+
             //把平台评分减去百分之五十,再加上用户评分,算出总评分
-            $score += $res->score / 2;
+            $score += $res->score * 0.5;
             $score = sprintf('%.1f',$score);
             if(empty($res->demand_company_id)){
                 $res->demand_company_id = $params['demand_company_id'];

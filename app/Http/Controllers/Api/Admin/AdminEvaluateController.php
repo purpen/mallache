@@ -59,12 +59,12 @@ class AdminEvaluateController extends Controller
         $evaluate = new Evaluate;
         $res = $evaluate->get_one($params['item_id']);
         $score = 0;
-        $score += $params['results'] * 0.6; //成果质量比重占6
-        $score += $params['design_progress'] * 0.6; //设计进度比重占6
-        $score += $params['contract'] * 0.3; //合同签约比重占3
-        $score += $params['project_quotation'] * 0.3; //项目报价比重占3
-        $score += $params['efficiency']  * 0.1; //解决效率比重占1
-        $score += $params['communicate']  * 0.1; //沟通态度比重占1
+        $score += $params['results'] * config('evaluate.results'); //成果质量比重
+        $score += $params['design_progress'] * config('evaluate.design_progress'); //设计进度比重
+        $score += $params['contract'] * config('evaluate.contract'); //合同签约比重
+        $score += $params['project_quotation'] * config('evaluate.project_quotation'); //项目报价比重
+        $score += $params['efficiency']  * config('evaluate.efficiency'); //解决效率比重
+        $score += $params['communicate']  * config('evaluate.communicate'); //沟通态度比重
         $platform_score['results'] = (int)$params['results'];
         $platform_score['design_progress'] = (int)$params['design_progress'];
         $platform_score['contract'] = (int)$params['contract'];
@@ -77,15 +77,9 @@ class AdminEvaluateController extends Controller
                 return $this->response->array($this->apiError('已经评价过了', 200));
             }
             //计算评分
-            $score = $score / 2;
-            if($score > 5){
-                $score = 5;
-            }
-            if($score < 0){
-                $score = 0;
-            }
+            $score = $score * 0.5;
             //把平台评分减去百分之五十,再加上用户评分,算出总评分
-            $score += $res->score / 2;
+            $score += $res->score * 0.5;
             $score = sprintf('%.1f',$score);
             try {
                 DB::beginTransaction();
@@ -100,7 +94,6 @@ class AdminEvaluateController extends Controller
                 $res->save();
                 $item->status = 22;
                 $item->save();
-                event(new ItemStatusEvent($item));
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -127,7 +120,6 @@ class AdminEvaluateController extends Controller
                 Evaluate::create($list);
                 $item->status = 22;
                 $item->save();
-                event(new ItemStatusEvent($item));
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
