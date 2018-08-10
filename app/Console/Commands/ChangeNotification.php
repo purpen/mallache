@@ -51,11 +51,14 @@ class ChangeNotification extends Command
             if($q_notification->count == 3){
                 $q_notification->status = 1;
                 $q_notification->save();
-                return;
+                continue;
             } else if(time() > $q_notification->inform_time && $q_notification->count < 3) {
                 $q_notification->count += 1;
                 $q_notification->inform_time = $q_notification->inform_time + config('constant.inform_time');
                 $q_notification->save();
+            } else {
+                Log::info('跳出循环1');
+                continue;
             }
             $q_item_recommend_ids[] = $q_notification->target_id;
         }
@@ -82,10 +85,14 @@ class ChangeNotification extends Command
             if($c_notification->count == 3){
                 $c_notification->status = 1;
                 $c_notification->save();
+                continue;
             } else if(time() > $c_notification->inform_time && $c_notification->count < 3) {
                 $c_notification->count += 1;
                 $c_notification->inform_time = $c_notification->inform_time + config('constant.inform_time');
                 $c_notification->save();
+            } else {
+                Log::info('跳出循环2');
+                continue;
             }
             $c_item_recommend_ids[] = $c_notification->target_id;
         }
