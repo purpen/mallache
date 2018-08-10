@@ -382,6 +382,7 @@ class Tools
                 dispatch(new SendOneSms($phone, $text));
             }
         }catch (\Exception $e){
+            Log::error($e);
         }
     }
 }
