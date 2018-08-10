@@ -97,6 +97,7 @@ class AuthenticateController extends BaseController
                 DemandCompany::createCompany($user);
             } else if ($user->type == 2) {
                 DesignCompanyModel::createDesign($user);
+
             }
 
             DB::commit();

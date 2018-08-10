@@ -45,8 +45,10 @@ class DropPayOrder extends Command
         // 过期时间
         $time = date("Y-m-d H:i:s", time() - $out_time);
 
-        $pay_orders = PayOrder::where(['status' => 0])->where('created_at','<', $time)->get();
-        foreach ($pay_orders as $obj){
+        $pay_orders = PayOrder::where(['status' => 0])
+            ->where('pay_type', '!=', 5)// 忽略银行转账
+            ->where('created_at', '<', $time)->get();
+        foreach ($pay_orders as $obj) {
             $obj->status = -1;
             $obj->save();
         }

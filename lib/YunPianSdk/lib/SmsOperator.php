@@ -1,6 +1,7 @@
 <?php
 namespace Lib\YunPianSdk\lib;
 
+use Illuminate\Support\Facades\Log;
 use Lib\YunPianSdk\Yunpian;
 
 
@@ -34,12 +35,13 @@ class SmsOperator
 
     public function single_send($data = array())
     {
+        Log::info(4441);
         if (!array_key_exists('mobile', $data))
             return new Result(null, $data, null, 'mobile 为空');
         if (!array_key_exists('text', $data))
             return new Result(null, $data, null, 'text 为空');
         $data['apikey'] = $this->apikey;
-
+        Log::info(4442);
         return HttpUtil::PostCURL($this->yunpian_config['URI_SEND_SINGLE_SMS'], $data);
     }
 

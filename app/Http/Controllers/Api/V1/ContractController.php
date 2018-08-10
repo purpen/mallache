@@ -168,7 +168,7 @@ class ContractController extends BaseController
 
         //验证项目阶段数组数据
         // 阶段项目金额
-        $other_price = bcsub($all['total'], $all['first_payment'], 2);
+        $other_price = $all['total'] - $all['first_payment'];
         // 阶段百分比
         $other_percentage = 1 - config("constant.first_payment");
         if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
@@ -220,12 +220,12 @@ class ContractController extends BaseController
         $time_is_set = true;
 
         foreach ($item_stage as $stage) {
-            $percentage += ($stage['percentage'] * 10000);
-            $amount += ($stage['amount'] * 10000);
+            $percentage += $stage['percentage'];
+            $amount += $stage['amount'];
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        if ($percentage == ($other_percentage * 10000) && $amount == ($total * 10000) && $title_is_set && $time_is_set) {
+        if ($percentage == $other_percentage && $amount == $total && $title_is_set && $time_is_set) {
             return true;
         } else {
             return false;
