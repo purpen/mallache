@@ -153,9 +153,13 @@ class DesignController extends BaseController
 
             $title = '项目报价被拒';
             if (empty($refuse_types)){
-                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因.'.$refuse_types . $summary;
+                if(empty($summary)){
+                    $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:无';
+                } else {
+                    $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:'.$refuse_types . $summary;
+                }
             } else {
-                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因.'.$refuse_types .'.'. $summary;
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:'.$refuse_types .'.'. $summary;
             }
             $tools->message($item->user_id, $title, $content, 1, null);
 
