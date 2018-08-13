@@ -872,7 +872,7 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} design_company_id 设计公司ID
-     * @apiParam {array} refuse_types 1.价格高 2.不擅长. 10.其他 [价格高,不擅长]
+     * @apiParam {array} refuse_types 1价格高 2需求变动 10其他 [需求变动,其他]
      * @apiParam {string} summary 拒单原因
      *
      * @apiSuccessExample 成功响应:
