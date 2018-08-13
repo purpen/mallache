@@ -6,6 +6,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
+use App\Helper\Tools;
 use App\Http\Transformer\DesignGetItemListTransformer;
 use App\Http\Transformer\DesignItemListTransformer;
 use App\Http\Transformer\DesignShowItemTransformer;
@@ -112,6 +113,8 @@ class DesignController extends BaseController
      * @apiGroup design
      *
      * @apiParam {string} token
+     * @apiParam {array} refuse_types 1不擅长 2排期紧张 10其他 [排期紧张,不擅长]
+     * @apiParam {string} summary 拒单原因
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -121,13 +124,18 @@ class DesignController extends BaseController
      * }
      * }
      */
-    public function refuseItem($item_id)
+    public function refuseItem(Request $request , $item_id)
     {
         $item_id = (int)$item_id;
         $design_company = $this->auth_user->designCompany;
         if (!$design_company) {
             return $this->response->array($this->apiError());
         }
+        if (!$item = Item::find($item_id)) {
+            return $this->response->array($this->apiError('not found', 404));
+        }
+        $summary = $request->input('summary') ? $request->input('summary') : '';
+        $refuse_types = $request->input('refuse_types') ? implode(',' , $request->input('refuse_types')) : '';
 
         try {
             $item_recommend = ItemRecommend
@@ -137,7 +145,23 @@ class DesignController extends BaseController
                 return $this->response->array($this->apiError());
             }
             $item_recommend->design_company_status = -1;
+            $item_recommend->summary = $summary;
+            $item_recommend->refuse_types = $refuse_types;
             $item_recommend->save();
+
+            $tools = new Tools();
+
+            $title = '项目报价被拒';
+            if (empty($refuse_types)){
+                if(empty($summary)){
+                    $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:无';
+                } else {
+                    $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:'.$refuse_types . $summary;
+                }
+            } else {
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:'.$refuse_types .'.'. $summary;
+            }
+            $tools->message($item->user_id, $title, $content, 1, null);
 
             //项目是否匹配失败
             $item = new Item();

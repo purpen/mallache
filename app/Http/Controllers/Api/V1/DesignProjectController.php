@@ -40,6 +40,7 @@ class DesignProjectController extends BaseController
      * @apiParam {int} status 状态：1.正常 2.回收站
      * @apiParam {int} user_status 创建状态：0.默认 1.创建的项目
      * @apiParam {int} collect 收藏状态：0.默认 1.收藏
+     * @apiParam {int} pigeonhole 归档状态：0.默认 1.归档
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
@@ -94,6 +95,7 @@ class DesignProjectController extends BaseController
         $status = $request->status ?? 1;
         $collect = $request->collect ?? 0;
         $user_status = $request->user_status ?? 0;
+        $pigeonhole = $request->pigeonhole ?? 0;
 
         // 获取所在的所有项目ID
         $arr = ItemUser::projectId($this->auth_user_id);
@@ -101,20 +103,32 @@ class DesignProjectController extends BaseController
         //获取收藏的所有项目id
         $collectId = CollectItem::collectId($this->auth_user_id , $status , $collect);
 
+        //收藏的
         if ($collect == 1){
             $lists = DesignProject::where('status', $status)
                 ->whereIn('id', $arr)
                 ->whereIn('id', $collectId)
                 ->paginate($per_page);
         } else {
+            //我创建的
             if ($user_status == 1){
                 $lists = DesignProject::where('user_id' , $this->auth_user_id)
                     ->where('status', 1)
                     ->paginate($per_page);
             } else {
-                $lists = DesignProject::where('status', $status)
-                    ->whereIn('id', $arr)
-                    ->paginate($per_page);
+                //归档的
+                if ($pigeonhole == 1){
+                    $lists = DesignProject::where('status', $status)
+                        ->where('pigeonhole' , 1)
+                        ->whereIn('id', $arr)
+                        ->paginate($per_page);
+                } else {
+                    //所有的
+                    $lists = DesignProject::where('status', $status)
+                        ->whereIn('id', $arr)
+                        ->paginate($per_page);
+                }
+
             }
         }
         return $this->response->paginator($lists, new DesignProjectTransformer())->setMeta($this->apiMeta());
@@ -879,6 +893,48 @@ class DesignProjectController extends BaseController
         $statistical['okDesignStage'] = $okDesignStage;
 
         return $this->response->array($this->apiSuccess('获取成功' , 200 , $statistical));
+
+    }
+
+
+    /**
+     * @api {put} /designProject/pigeonhole 设计工具项目归档
+     * @apiVersion 1.0.0
+     * @apiName designProject pigeonhole
+     * @apiGroup designProject
+     *
+     * @apiParam {int} item_id 项目id
+     * @apiParam {int} pigeonhole 0.默认 1.归档
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *       "meta": {
+     *           "message": "Success",
+     *           "status_code": 200
+     *       }
+     *   }
+     */
+    public function pigeonhole(Request $request)
+    {
+        $item_id = $request->input('item_id');
+        $pigeonhole = $request->input('pigeonhole');
+        $user_id = $this->auth_user_id;
+
+        if (!$design_company_id = User::designCompanyId($user_id)) {
+            return $this->response->array($this->apiError('没有找到设计公司', 404));
+
+        }
+
+        $design_project = DesignProject::where(['id' => $item_id, 'status' => 1])->first();
+        if (!$design_project) {
+            return $this->response->array($this->apiError('没有找到该项目', 404));
+        }
+
+        $design_project->pigeonhole = $pigeonhole;
+        if ($design_project->save()) {
+            return $this->response->array($this->apiSuccess());
+        }
 
     }
 }

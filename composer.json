@@ -13,6 +13,7 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^2.1",
+        "overtrue/wechat": "~4.0",
         "predis/predis": "~1.0",
         "qiniu/php-sdk": "^7.1",
         "tymon/jwt-auth": "1.0.x-dev"
@@ -41,15 +42,15 @@
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "/opt/php-7.0/bin/php artisan key:generate"
+            "php artisan key:generate"
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "/opt/php-7.0/bin/php artisan optimize"
+            "php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "/opt/php-7.0/bin/php artisan optimize"
+            "php artisan optimize"
         ]
     },
     "config": {

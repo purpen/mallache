@@ -87,7 +87,7 @@ class JdPayOrderController extends BaseController
     {
         $login_user_id = $this->auth_user_id;
         $source_admin = User::sourceAdmin($login_user_id);
-        if($source_admin != 1){
+        if($source_admin  == 0){
             return $this->response->array($this->apiSuccess('登陆用户没有权限查看', 403));
         }
         //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
@@ -141,7 +141,7 @@ class JdPayOrderController extends BaseController
             }
         }
 
-        $lists = $query->where('source' , 1)->orderBy('id', $sort)->paginate($per_page);
+        $lists = $query->where('source' , $source_admin)->orderBy('id', $sort)->paginate($per_page);
 
         return $this->response->paginator($lists, new PayOrderTransformer())->setMeta($this->apiMeta());
     }
@@ -171,7 +171,7 @@ class JdPayOrderController extends BaseController
     {
         $login_user_id = $this->auth_user_id;
         $source_admin = User::sourceAdmin($login_user_id);
-        if($source_admin != 1){
+        if($source_admin == 0){
             return $this->response->array($this->apiSuccess('登陆用户没有权限查看', 403));
         }
         $id = $request->input('id');

@@ -157,6 +157,7 @@ class AdminDemandCompanyController extends Controller
      *
      * @apiParam {integer} per_page 分页数量  默认15
      * @apiParam {integer} page 页码
+     * @apiParam {int} source 来源：；0.全部；-1.铟果；1.京东;2.义乌；3.--；
      * @apiParam {integer} sort 0.升序；1.降序（默认）
      * @apiParam {integer} type_verify_status 0.审核中；1.审核通过；2.未通过审核 3.审核中
      * @apiParam {integer} evt 查询条件：1.ID; 2.公司名称；3.短名称；4.用户ID；5.--；
@@ -203,6 +204,7 @@ class AdminDemandCompanyController extends Controller
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type_verify_status = in_array($request->input('type_verify_status'), [0, 1, 2, 3]) ? $request->input('type_verify_status') : null;
+        $source = $request->input('source') ? (int)$request->input('source') : 0;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
         $val = $request->input('val') ? $request->input('val') : '';
@@ -228,6 +230,15 @@ class AdminDemandCompanyController extends Controller
                     break;
                 default:
                     $query->where('id', (int)$val);
+            }
+        }
+
+        // 来源
+        if ($source) {
+            if ($source === -1) {
+                $query->where('source', 0);
+            } else {
+                $query->where('source', $source);
             }
         }
 

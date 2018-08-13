@@ -44,6 +44,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapOpalusRoutes();
 
         $this->mapJdRoutes();
+
+        $this->mapWxRoutes();
     }
 
     /**
@@ -100,5 +102,14 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/jd.php'));
+    }
+
+    //微信路由文件
+    protected function mapWxRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/wx.php'));
     }
 }
