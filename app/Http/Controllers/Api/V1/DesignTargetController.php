@@ -201,7 +201,7 @@ class DesignTargetController extends BaseController
                 $last_current_m_money += $last_month_item_count->cost;
             }
             //月环比
-            $month_on_month = round((($current_m_money - $last_current_m_money) / 100 ) * 100 , 0);
+            $month_on_month = round((($current_m_money - $last_current_m_money) / $last_current_m_money ) * 100 , 0);
             //当前季度
             $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now())");
             $current_q_money = 0;
@@ -215,7 +215,7 @@ class DesignTargetController extends BaseController
                 $last_current_m_money += $last_quarter_item_count->cost;
             }
             //季度环比
-            $quarter_on_quarter = round((($current_q_money - $last_current_m_money) / 100 ) * 100 , 0);
+            $quarter_on_quarter = round((($current_q_money - $last_current_m_money) / $last_current_m_money ) * 100 , 0);
 
             //项目总数
             $design_target['total_item_counts'] = $total_item_counts;
