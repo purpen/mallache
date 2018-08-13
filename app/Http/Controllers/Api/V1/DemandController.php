@@ -852,6 +852,8 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} design_company_id 设计公司ID
+     * @apiParam {array} refuse_types 1.价格低 2.不擅长. 10.其他 [1,2]
+     * @apiParam {string} summary 拒单原因
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -867,7 +869,7 @@ class DemandController extends BaseController
             'item_id' => 'required|integer',
             'design_company_id' => 'required|integer',
         ];
-        $all = $request->only(['item_id', 'design_company_id']);
+        $all = $request->only(['item_id', 'design_company_id' , 'summary' , 'refuse_types']);
 
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -888,6 +890,8 @@ class DemandController extends BaseController
 
         //修改推荐关联表中需求方的状态
         $item_recommend->item_status = -1;
+        $item_recommend->summary = $all['summary'];
+        $item_recommend->refuse_types = $all['refuse_types'] ? implode(',' ,$all['refuse_types']) : '';
         if (!$item_recommend->save()) {
             return $this->response->array($this->apiError('状态修改失败', 500));
         }
