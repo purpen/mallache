@@ -51,6 +51,8 @@ class AveragePrice extends Command
             $statistics->saveRecommend($data);
             //更新所有设计公司成功率
             $statistics->successRate($data);
+            //评价平均分
+            $statistics->evaluationScore($data);
         }
     }
 

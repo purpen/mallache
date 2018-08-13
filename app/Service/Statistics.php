@@ -4,6 +4,7 @@ use App\Models\Contract;
 use App\Models\DesignStatistics;
 use App\Models\DesignCaseModel;
 use App\Models\Item;
+use App\Models\Evaluate;
 /**
  * Class Statistics 设计公司信息统计
  * @package App\Service
@@ -328,4 +329,74 @@ class Statistics
         $statistics = new DesignStatistics;
         return $statistics->saveDesignInfo($id);
     }
+
+    /**
+     * recommendTime       更新最近推荐时间
+     *
+     * @author 王松
+     * @params $id    int   设计公司id
+     * @return boolean      true|false
+     */
+    public function recommendTime($id)
+    {
+        $data = DesignStatistics::where(['design_company_id'=>$id])->first();
+        if(!empty($data)){
+            $data->recommend_time = time();
+            return $data->save();
+        }else{
+            //新增一条设计公司信息
+            $res = DesignStatistics::insert(['recommend_time'=>time(),'design_company_id'=>$id]);
+            if($res > 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * evaluationScore       评价平均分
+     *
+     * @author 王松
+     * @params $id    int    设计公司id    [1,2,3]
+     * @return boolean    true|false    1|0
+     */
+    public function evaluationScore($data)
+    {
+        $evaluate = new Evaluate;
+        foreach ($data as $key => $id){
+            $data = $evaluate->select('score')->where('design_company_id',$id)->get();
+            $average = 0;
+            if(!empty($data)){
+                $num = 0;
+                $score = 0;
+                foreach ($data as $val){
+                    $num++;
+                    $score += (int)$val->score;
+                }
+                if($score == 0 || $num == 0){
+                    $average = 0;
+                }else{
+                    $average = $score / $num;
+                }
+            }
+            if($average > 0){
+                $data = DesignStatistics::where(['design_company_id'=>$id])->first();
+                if(!empty($data)){
+                    $data->score = $average;
+                    $res = $data->save();
+                    if(empty($res)){
+                        return false;
+                    }
+                }else{
+                    //新增一条设计公司信息
+                    $res = DesignStatistics::insert(['score'=>$average,'design_company_id'=>$id]);
+                    if(empty($res)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }
