@@ -373,6 +373,8 @@ class Tools
             // 京东云艺火
             if ($source == 1) {
                 $text = config('constant.jd_sms_fix') . $content . config('constant.notice_phone') . '。';
+            } else if($source == 2){
+                $text = config('constant.yw_sms_fix') . $content . config('constant.notice_phone') . '。';
             } else {
                 $text = config('constant.sms_fix') . $content . config('constant.notice_phone') . '。';
             }
