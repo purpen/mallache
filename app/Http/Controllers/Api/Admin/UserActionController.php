@@ -22,6 +22,7 @@ class UserActionController extends BaseController
      * @apiParam {int} per_page   每页数量 （默认：10）
      * @apiParam {int} sort 排序：0.正序；1.倒序；（默认：倒序）；
      * @apiParam {int} status 状态：；-1：禁用；0.激活;
+     * @apiParam {int} source 来源：；0.全部；-1.铟果；1.京东;2.义乌；3.--；
      * @apiParam {int} type 0.全部；1.需求公司；2.设计公司;
      * @apiParam {int} evt 查询条件：1.ID；2.手机号；3.昵称；4.邮箱；
      * @apiParam {string} val 查询值
@@ -61,6 +62,7 @@ class UserActionController extends BaseController
         $type = $request->input('type') ? (int)$request->input('type') : 0;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $source = $request->input('source') ? (int)$request->input('source') : 0;
         $val = $request->input('val') ? $request->input('val') : '';
 
         $query = User::query();
@@ -73,6 +75,14 @@ class UserActionController extends BaseController
         }
         if($type !==0 ){
             $query->where('type', (int)$type);
+        }
+        // 来源
+        if ($source) {
+            if ($source === -1) {
+                $query->where('source', 0);
+            } else {
+                $query->where('source', $source);
+            }
         }
 
         if ($val) {
