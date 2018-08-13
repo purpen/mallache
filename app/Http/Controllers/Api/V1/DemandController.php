@@ -896,6 +896,7 @@ class DemandController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $refuse_types = $request->input('refuse_types') ? implode(',' , $request->input('refuse_types')) : '';
+        $summary = $request->input('summary') ? $request->input('summary') : '';
 
         if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
@@ -911,7 +912,7 @@ class DemandController extends BaseController
 
         //修改推荐关联表中需求方的状态
         $item_recommend->item_status = -1;
-        $item_recommend->summary = $request->input('summary') ? $request->input('summary') : '';
+        $item_recommend->summary = $summary;
         $item_recommend->refuse_types = $refuse_types;
         if (!$item_recommend->save()) {
             return $this->response->array($this->apiError('状态修改失败', 500));
@@ -922,7 +923,11 @@ class DemandController extends BaseController
         $tools = new Tools();
 
         $title = '项目报价被拒';
-        $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因'.$refuse_types;
+        if(empty($refuse_types)){
+            $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因.'.$refuse_types . $summary;
+        } else {
+            $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因.'.$refuse_types .'.'. $summary;
+        }
         $tools->message($design->user_id, $title, $content, 1, null);
 
         //项目是否匹配失败

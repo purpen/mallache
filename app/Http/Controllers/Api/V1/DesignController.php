@@ -152,7 +152,11 @@ class DesignController extends BaseController
             $tools = new Tools();
 
             $title = '项目报价被拒';
-            $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因'.$refuse_types;
+            if (empty($refuse_types)){
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因.'.$refuse_types . $summary;
+            } else {
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因.'.$refuse_types .'.'. $summary;
+            }
             $tools->message($item->user_id, $title, $content, 1, null);
 
             //项目是否匹配失败
