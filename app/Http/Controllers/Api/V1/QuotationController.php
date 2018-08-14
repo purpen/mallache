@@ -203,7 +203,10 @@ class QuotationController extends BaseController
 
                 $item_recommend->quotation_id = $quotation->id;
                 $item_recommend->design_company_status = 2;
-                $item_recommend->save();
+                if ($item_recommend->save()){
+                    $item->status = 45;
+                    $item->save();
+                }
 
 
                 // 保存甲方信息
