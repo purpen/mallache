@@ -63,4 +63,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->get('/wechat/demand/recommendList/{item_id}', [
         'as' => 'wechat.demandRecommendList', 'uses' => 'DemandController@recommendList'
     ]);
+
+
+
+
+
+
+
+
+
+
+    //智能报价
+    $api->post('/wechat/quotationAdd',[
+        'as' => 'wechat.quotationAdd', 'uses' => 'QuotationController@quotationAdd'
+    ]);
 });
