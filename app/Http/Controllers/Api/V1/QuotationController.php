@@ -262,7 +262,8 @@ class QuotationController extends BaseController
                 $title = '收到报价';
                 $content = '收到【' . $design->company_name . '】公司报价';
                 Tools::message($item->user_id, $title, $content, 2, $item->id);
-                Tools::sendSmsToPhone($item->phone, $content, $item->source);
+                $message_content = '已有设计公司报价，请查阅。感谢您的信任，如有疑问欢迎致电 ';
+                Tools::sendSmsToPhone($item->phone, $message_content, $item->source);
 
             } else {
                 throw new MassageException('该项目已经报价', 403);
