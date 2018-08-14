@@ -490,7 +490,7 @@ class ItemActionController extends Controller
     public function testStatus(Request $request)
     {
         $item_id = $request->input('item_id');
-        $test_status = $request->input('test_status');
+        $test_status = $request->input('test_status') ?? 0;
         if (!$item = Item::find($item_id)) {
             return $this->response->array($this->apiError('not found item', 404));
         }
