@@ -31,6 +31,8 @@ class Recommend
             $design = $this->productDesign($type, $design_types);
         } else if ($type == 2) {
             $design = $this->uDesign($type, $design_types);
+        } else {
+            $design = $this->publicDesign($type, $design_types);
         }
 
 
@@ -370,6 +372,59 @@ class Recommend
         } else {
             return (($text_2_len - $n) / $text_2_len);
         }
+    }
+
+    //公共 设计 推荐设计公司ID数组
+    protected function publicDesign($type, array $design_types)
+    {
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+        $max = $this->cost($this->item->design_cost);
+
+        //所属领域
+//        $field =  $this->item->productDesign->field;
+        //周期
+//        $cycle = $this->item->uDesign->cycle;
+
+        //项目公司地点
+//        $item_info = $this->item->itemInfo();
+//        $province = $item_info['province'];
+//        $city = $item_info['city'];
+
+        $arr = [];
+        foreach ($design_types as $design_type) {
+            //获取符合 设计类型 和 设计费用 的设计公司ID数组
+            $design_id_arr = DesignItemModel::select('user_id')
+                ->where('type', $type)
+                ->where('design_type', $design_type)
+                ->where('min_price', '<=', $max)
+//                ->where('project_cycle', $cycle)
+                ->get()
+                ->pluck('user_id')->all();
+
+            if (empty($arr)) {
+                $arr = $design_id_arr;
+            } else {
+                $arr = array_intersect($arr, $design_id_arr);
+            }
+        }
+        $design_id_arr = $arr;
+
+        //获取 擅长 的设计公司ID数组
+        $design = DesignCompanyModel::select(['id', 'user_id'])
+            ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
+
+//        if($province && $province != -1){
+//            $design->where('province', $province)
+//                ->where('city', $city);
+//        }
+
+        $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
+            ->orderBy('score', 'desc')
+            ->get()
+            ->pluck('id')
+            ->all();
+
+        return $design_user_id_arr;
     }
 
 }
