@@ -11,6 +11,7 @@ return [
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
         '/admin/item/closeItem',        // 后台强制关闭当前项目并分配项目款
+        '/admin/item/testStatus',        // 后台设定项目类型
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
@@ -216,6 +217,7 @@ return [
         '/admin/item/show',           // 项目详情
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
+        '/admin/item/testStatus',        // 后台设定项目类型
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
@@ -395,6 +397,7 @@ return [
 
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
+        '/admin/item/testStatus',        // 后台设定项目类型
 
         '/admin/designCompany/lists',    // 设计公司列表
         // 设计公司详情

@@ -469,4 +469,38 @@ class ItemActionController extends Controller
         return $this->response->array($this->apiSuccess());
     }
 
+    /**
+     * @api {put} /admin/item/testStatus 设定项目类型
+     * @apiVersion 1.0.0
+     * @apiName item testStatus
+     * @apiGroup AdminItem
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} item_id 项目ID
+     * @apiParam {integer} test_status 测试类型：1.测试；2.刷单
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function testStatus(Request $request)
+    {
+        $item_id = $request->input('item_id');
+        $test_status = $request->input('test_status');
+        if (!$item = Item::find($item_id)) {
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+        $item->test_status = $test_status;
+        if($item->save()){
+            return $this->response->array($this->apiSuccess());
+        }
+
+        return $this->response->array($this->apiError('设置失败', 412));
+
+    }
+
 }
