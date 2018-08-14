@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Service\Statistics;
-
+use App\Service\Matching;
 class DemandController extends BaseController
 {
     /**
@@ -1404,6 +1404,7 @@ class DemandController extends BaseController
         $list['user_score'] = json_encode($user_score);
         $list['demand_company_id'] = $params['demand_company_id'];
         $list['design_company_id'] = $params['design_company_id'];
+        $statistics = new Statistics;
         if(!empty($res)){ //评价存在更新
             if(!empty($res->user_score)){
                 return $this->response->array($this->apiError('已经评价过了', 200));
@@ -1429,6 +1430,8 @@ class DemandController extends BaseController
                 $item->status = 22;
                 $item->save();
                 event(new ItemStatusEvent($item));
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -1452,6 +1455,8 @@ class DemandController extends BaseController
                 $item->status = 22;
                 $item->save();
                 event(new ItemStatusEvent($item));
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();

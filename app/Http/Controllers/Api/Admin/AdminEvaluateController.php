@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Item;
 use App\Models\Evaluate;
+use App\Service\Statistics;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Dingo\Api\Exception\StoreResourceFailedException;
-use Illuminate\Support\Facades\DB;
-use App\Events\ItemStatusEvent;
 use App\Http\Transformer\EvaluateTransformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
 class AdminEvaluateController extends Controller
 {
     /**
@@ -72,6 +72,7 @@ class AdminEvaluateController extends Controller
         $platform_score['efficiency'] = (int)$params['efficiency'];
         $platform_score['communicate'] = (int)$params['communicate'];
         $list['platform_score'] = json_encode($platform_score);
+        $statistics = new Statistics;
         if(!empty($res)){ //评价存在更新
             if(!empty($res->platform_score)){
                 return $this->response->array($this->apiError('已经评价过了', 200));
@@ -94,6 +95,8 @@ class AdminEvaluateController extends Controller
                 $res->save();
                 $item->status = 22;
                 $item->save();
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -120,6 +123,8 @@ class AdminEvaluateController extends Controller
                 Evaluate::create($list);
                 $item->status = 22;
                 $item->save();
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();

@@ -357,19 +357,19 @@ class Statistics
      * evaluationScore       评价平均分
      *
      * @author 王松
-     * @params $id    int    设计公司id    [1,2,3]
+     * @params $data      int    设计公司id    [1,2,3]
      * @return boolean    true|false    1|0
      */
     public function evaluationScore($data)
     {
         $evaluate = new Evaluate;
         foreach ($data as $key => $id){
-            $data = $evaluate->select('score')->where('design_company_id',$id)->get();
+            $score_data = $evaluate->where('design_company_id',$id)->get();
             $average = 0;
-            if(!empty($data)){
+            if(!empty($score_data)){
                 $num = 0;
                 $score = 0;
-                foreach ($data as $val){
+                foreach ($score_data as $val){
                     $num++;
                     $score += (int)$val->score;
                 }
