@@ -477,7 +477,7 @@ class ItemActionController extends Controller
      *
      * @apiParam {string} token
      * @apiParam {integer} item_id 项目ID
-     * @apiParam {integer} test_status 测试类型：1.测试；2.刷单
+     * @apiParam {integer} test_status 测试类型：1.内测；2.公测
      *
      * @apiSuccessExample 成功响应:
      *   {
