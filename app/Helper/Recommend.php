@@ -379,17 +379,6 @@ class Recommend
     {
         //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
         $max = $this->cost($this->item->design_cost);
-
-        //所属领域
-//        $field =  $this->item->productDesign->field;
-        //周期
-//        $cycle = $this->item->uDesign->cycle;
-
-        //项目公司地点
-//        $item_info = $this->item->itemInfo();
-//        $province = $item_info['province'];
-//        $city = $item_info['city'];
-
         $arr = [];
         foreach ($design_types as $design_type) {
             //获取符合 设计类型 和 设计费用 的设计公司ID数组
@@ -397,7 +386,6 @@ class Recommend
                 ->where('type', $type)
                 ->where('design_type', $design_type)
                 ->where('min_price', '<=', $max)
-//                ->where('project_cycle', $cycle)
                 ->get()
                 ->pluck('user_id')->all();
 
@@ -412,11 +400,6 @@ class Recommend
         //获取 擅长 的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
-
-//        if($province && $province != -1){
-//            $design->where('province', $province)
-//                ->where('city', $city);
-//        }
 
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
