@@ -647,7 +647,7 @@ class DemandController extends BaseController
                 $where_in = [1];
                 break;
             case 2:
-                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22];
+                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22 , 45];
                 break;
             case 3:
                 $where_in = [18, 22];

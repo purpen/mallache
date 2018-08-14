@@ -64,6 +64,7 @@ class PackDesignInfoController extends BaseController
             }
 
             $item->stage_status = 3;
+            $item->design_types = '[1]';
             $item->save();
 
             $design = PackDesign::firstOrCreate(['item_id' => intval($item_id)]);
