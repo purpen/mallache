@@ -13,7 +13,7 @@ class DesignStatistics extends Migration
      */
     public function up()
     {
-        Schema::create('design_substage', function (Blueprint $table) {
+        Schema::create('design_statistics', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('design_company_id')->default(0);
             $table->integer('score')->default(0);
