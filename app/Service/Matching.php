@@ -242,16 +242,12 @@ class Matching
                         //省份占比重30
                         $score = 30;
                     }
-                    if($company->city == $demand->city){
-                        //城市占比重70
-                        $score = 70;
-                    }
+                    $score = 30;
                     if($company->city == $demand->city && $company->province == $demand->province){
                         //省份和城市都存在占比重100
                         $score = 100;
                     }
-                    $area = $area / 100;
-                    $score = $score * $area;
+                    $score = $score / $area;
                 }
                 $sore['sore'] = $score;
             }
