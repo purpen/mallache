@@ -23,7 +23,7 @@ class Matching
      * 匹配执行
      * @params $uid    int    当前登录用户id
      */
-    public function handle($uid)
+    public function handle()
     {
         //设计类型
         $type = (int)$this->item->type;
@@ -43,7 +43,7 @@ class Matching
             //大于4个则会执行精准匹配
             if(count($design) > 4){
                 //地区 第一步
-                $area = $this->sortArea($design,$uid,$weight_data->area);
+                $area = $this->sortArea($design,$weight_data->area);
                 //接单成功率
                 $success_rate = $this->sortSuccessRate($area,$weight_data->success_rate);
                 //评价分值
@@ -222,7 +222,7 @@ class Matching
     }
 
     //地区分值
-    public function sortArea($design=[],$uid=0,$area=0)
+    public function sortArea($design=[],$area=0)
     {
         $design_company = new DesignCompanyModel;
         //总的排序内容
@@ -235,15 +235,13 @@ class Matching
             if($area > 0){
                 //查询公司详情
                 $company = $design_company->where('id',$item)->first();
-                $demand = DemandCompany::select('province','city')->where('user_id',$uid)->first();
                 $score = 0;
-                if(!empty($demand) && !empty($company)){
-                    if($company->province == $demand->province){
+                if(!empty($company)){
+                    if($this->item->company_province == $company->province){
                         //省份占比重30
                         $score = 30;
                     }
-                    $score = 30;
-                    if($company->city == $demand->city && $company->province == $demand->province){
+                    if($company->city == $this->item->company_city && $company->province == $this->item->company_province){
                         //省份和城市都存在占比重100
                         $score = 100;
                     }
