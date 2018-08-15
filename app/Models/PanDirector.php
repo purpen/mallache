@@ -279,8 +279,8 @@ class PanDirector extends BaseModel
             return true;
         }
 
-        // 是否是项目成员 （功能暂缺）
-        if ($this->isItemPersonnel()) {
+        // 是否是项目成员
+        if ($this->isItemPersonnel($user->id)) {
             return true;
         }
 
