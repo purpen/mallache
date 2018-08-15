@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Service;
-use App\Events\ItemStatusEvent;
-use App\Models\DesignCaseModel;
-use App\Models\DesignCompanyModel;
-use App\Models\DesignItemModel;
+
 use App\Models\Item;
-use Illuminate\Support\Facades\Log;
-use Lib\AiBaiDu\Api;
 use App\Models\Weight;
-use App\Models\DesignStatistics;
+use App\Service\Statistics;
 use App\Models\DemandCompany;
+use App\Models\DesignItemModel;
+use App\Events\ItemStatusEvent;
+use App\Models\DesignStatistics;
+use App\Models\DesignCompanyModel;
+use Illuminate\Support\Facades\Log;
+
 class Matching
 {
     public function __construct(Item $item)
@@ -20,6 +21,7 @@ class Matching
 
     /**
      * 匹配执行
+     * @params $uid    int    当前登录用户id
      */
     public function handle($uid)
     {
@@ -31,20 +33,6 @@ class Matching
         //权重
         $weight = new Weight;
         $weight_data = $weight->getWeight();
-        //地区
-        $area = $this->sortArea($design,$uid,$weight_data->area);
-        //接单成功率
-        $success_rate = $this->sortSuccessRate($area,$weight_data->success_rate);
-        //评价分值
-        $evaluate = $this->sortEvaluate($success_rate,$weight_data->score);
-        //案例数量
-        $sase = $this->sortSase($evaluate,$weight_data->case);
-        /*
-         //最近推荐时间
-        $time = $this->sortTime($sase,$weight_data->last_time);
-        */
-        //接单均价
-        //$design = $this->sortPrice($sase,$weight_data->average_price);
         if (count($design) > 0) {
             //剔除已推荐的
             $ord_recommend = $this->item->ord_recommend;
@@ -52,22 +40,39 @@ class Matching
                 $ord_recommend_arr = explode(',', $ord_recommend);
                 $design = array_diff($design, $ord_recommend_arr);
             }
-            $design = array_slice($design, 0, 4);
-            foreach ($design as $id){
-                //更新最近推荐时间
-                Statistics::recommendTime($id);
+            //大于4个则会执行精准匹配
+            if(count($design) > 4){
+                //地区 第一步
+                $area = $this->sortArea($design,$uid,$weight_data->area);
+                //接单成功率
+                $success_rate = $this->sortSuccessRate($area,$weight_data->success_rate);
+                //评价分值
+                $evaluate = $this->sortEvaluate($success_rate,$weight_data->score);
+                //案例数量
+                $sase = $this->sortSase($evaluate,$weight_data->case);
+                //最近推荐时间
+                //$time = $this->sortTime($sase,$weight_data->last_time);
+                //接单均价
+                //$design = $this->sortPrice($sase,$weight_data->average_price);
+                //人工干预 最后步骤
+                $intervent = $this->sortIntervene($sase);
+                //最多取4个设计公司
+                $design = array_slice($intervent, 0, 4);
+            }
+            //更新设计公司的最近推荐时间
+            foreach ($design as $id) {
+                $statistics = new Statistics;
+                $statistics->recommendTime($id);
             }
             //判断是否匹配到设计公司
             if (empty($design)) {
-                 //临时处理 永不匹配失败
-                 //$this->failAction();
-
-                 //原处理
+                //临时处理 永不匹配失败
+                //$this->failAction();
+                //匹配失败
                 $this->itemFail();
             } else {
                 $recommend = implode(',', $design);
                 $this->item->recommend = $recommend;
-
                 //判断需求公司资料是否审核
                 $demand_company = $this->item->user->demandCompany;
                 if ($demand_company->verify_status == 1) {
@@ -75,27 +80,19 @@ class Matching
                 } else {
                     $this->item->status = 2;  //2.人工干预
                 }
-
+                //保存匹配信息,更改状态
                 $this->item->save();
-
                 // 特殊用户处理
                 $this->PSTestAction();
-
                 //触发项目状态变更事件
                 event(new ItemStatusEvent($this->item));
             }
-
         } else {
-            // 临时处理 永不匹配失败
-            // $this->failAction();
-
-            // 原处理
+            //匹配失败处理
             $this->itemFail();
         }
-
         //注销变量
         unset($design_type, $field, $design_id_arr, $design, $recommend);
-
     }
 
     //匹配失败
@@ -106,12 +103,9 @@ class Matching
         } else {
             $this->item->status = -2;  //匹配失败
         }
-
         $this->item->save();
-
         // 特殊用户处理
         $this->PSTestAction();
-
         //触发项目状态变更事件
         event(new ItemStatusEvent($this->item));
     }
@@ -119,17 +113,15 @@ class Matching
     // 匹配失败后随机匹配2个设计公司
     protected function failAction()
     {
-        $design_id_arr = DesignCompanyModel::select('id')->where(['status' => 1, 'verify_status' => 1])
+        $design_id_arr = DesignCompanyModel::select('id')
+            ->where(['status' => 1, 'verify_status' => 1])
             ->get()
             ->pluck('id')->all();
-
         $key_arr = array_rand($design_id_arr, 2);
-
         $design_id_arr_rand = [];
         foreach ($key_arr as $value) {
             $design_id_arr_rand[] = $design_id_arr[$value];
         }
-
         $recommend = implode(',', $design_id_arr_rand);
         $this->item->recommend = $recommend;
 
@@ -140,15 +132,11 @@ class Matching
         } else {
             $this->item->status = 2;  //2.人工干预
         }
-
         $this->item->save();
-
         // 特殊用户处理
         $this->PSTestAction();
-
         //触发项目状态变更事件
         event(new ItemStatusEvent($this->item));
-
     }
 
     // 为测试账号默认匹配固定设计公司
@@ -166,7 +154,6 @@ class Matching
         }
     }
 
-
     /**
      * 产品设计推荐 设计公司ID
      *
@@ -177,22 +164,7 @@ class Matching
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($this->item->design_cost);
-
-        //所属领域
-        $field = $this->item->productDesign->field;
-//        //周期
-//        $cycle = $this->item->cycle;
-//        //项目公司地点
-//        $item_info = $this->item->itemInfo();
-//        $province = $item_info['province'];
-//        $city = $item_info['city'];
-
-        /*$province = 210000;
-        $city = 210600;
-        //权重
-        $weight = new Weight;
-        $weight_data = $weight->getWeight();
-        $arr = [];*/
+        $design_id_arr = [];
         foreach ($design_types as $design_type) {
             //获取符合设计类型和设计费用的设计公司ID数组
             $design_id_arr = DesignItemModel::select('user_id')
@@ -200,83 +172,15 @@ class Matching
                 ->where('design_type', $design_type)
                 ->where('min_price', '<=', $max)
                 ->get()
-                ->pluck('user_id')->all();
-
-            if (empty($arr)) {
-                $arr = $design_id_arr;
-            } else {
-                $arr = array_intersect($arr, $design_id_arr);
-            }
+                ->pluck('user_id')
+                ->all();
         }
-        $design_id_arr = $arr;
-        /*$design_company = new DesignCompanyModel;
-        $design_statistics = new DesignStatistics;
-        //没有推荐过的
-        $rate = [];
-        //总的排序内容
-        $data = array();
-        //成功总数
-        $success_score = 0;
-        //成功总数
-        $area_num = 0;
-        //循环处理分设计公司的分值
-        foreach ($design_id_arr as $key => $item) {
-            $sore['id'] = $item;
-            $sore['sore'] = 0;
-            //查询公司详情
-            $company = $design_company->where('id',$item)->first();
-            $statistics = $design_statistics->where('design_company_id',$item)->first();
-            if(empty($company)){
-                //地区分值计算
-                $sore['sore'] += $this->sortArea($company->province,$company->city,$weight_data->area,$province,$city);
-            }
-            //公司统计信息
-            if(empty($statistics)){
-
-            }else{
-                //推荐和接单次数分值
-                $sort_success_rate = $this->sortSuccessRate($statistics->recommend_count,$statistics->cooperation_count,$weight_data->success_rate);
-                if($sort_success_rate == 0){
-                    //没有推荐过的
-                    $rate[] = $key;
-                }elseif($sort_success_rate != -1){
-                    //成功率总分
-                    $success_score += $sort_success_rate;
-                    $area_num ++;
-                    $sore['sore'] += $sort_success_rate;
-                }
-            }
-            //单个
-            $data[$key] = $sore;
-        }
-        dd($data);
-        if($success_score > 0){
-            //成功率平均分值
-            $average_area = $success_score / $area_num;
-            //只要平均分大于0,就把没有推荐过的加上平均分
-            if($rate > 0){
-                foreach ($rate as $v){
-                    $data[$v]['sore'] += $average_area;
-                }
-            }
-        }
-        //排序分值
-        $sore = array_column($data, 'sore');
-        array_multisort($sore,SORT_DESC,$data);
-        $id = array_slice(array_column($data, 'id'),0,4);
-        dd($id);*/
-
-//Log::info($design_id_arr);
+        //Log::info($design_id_arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
 
-//        if($province && $province != -1){
-//            $design->where('province', $province)
-//                ->where('city', $city);
-//        }
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
-//            ->whereRaw('find_in_set(' . $field . ', good_field)')  // 擅长领域
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
@@ -314,77 +218,11 @@ class Matching
                 $max = 500000;
                 break;
         }
-
         return $max;
     }
 
-    // 计算需求和设计公司案例的匹配程度，重新排序
-    public function againSort($design_company_id_arr)
-    {
-//        $ai_api = new Api();
-
-        $item_info = $this->item->itemInfo();
-        $text_1 = $item_info['name'];
-
-        $data = [];
-        foreach ($design_company_id_arr as $id) {
-            $score = 0; // 设计公司案例最高匹配度
-
-            $design = DesignCompanyModel::find($id);
-
-            $design_case = DesignCaseModel::query()
-                ->select('title', 'profile')
-                ->where('design_company_id', $id)->get();
-
-            foreach ($design_case as $case) {
-                $text_2 = $case->title;
-
-                /*$result = $ai_api->nlp($text_1, $text_2); // 调用百度ai接口
-                  if (isset($result['score'])) {
-                      if ($result['score'] > $score) {
-                          $score = $result['score'];
-                      }
-                  }*/
-
-                $result = $this->similarScore($text_1, $text_2); // 调用本地相似度方法
-                if (isset($result)) {
-                    if ($result > $score) {
-                        $score = $result;
-                    }
-                }
-
-            }
-
-            $data[$id] = $design->score * $score;
-        }
-
-        arsort($data, SORT_NUMERIC);
-
-        $result_data = [];
-        foreach ($data as $k => $v) {
-            $result_data[] = $k;
-        }
-
-        return $result_data;
-    }
-
-    // 计算短语之间的相似性
-    public function similarScore($text_1, $text_2)
-    {
-        $text_1_len = strlen($text_1);
-        $text_2_len = strlen($text_2);
-
-        $n = levenshtein($text_1, $text_2);
-
-        if ($text_1_len > $text_2_len) {
-            return (($text_1_len - $n) / $text_1_len);
-        } else {
-            return (($text_2_len - $n) / $text_2_len);
-        }
-    }
-
     //地区分值
-    public function sortArea($design = [],$uid=0,$area = 0)
+    public function sortArea($design=[],$uid=0,$area=0)
     {
         $design_company = new DesignCompanyModel;
         //总的排序内容
@@ -426,7 +264,7 @@ class Matching
     }
 
     //推荐和接单次数分值
-    public function sortSuccessRate($design = [],$success_rate)
+    public function sortSuccessRate($design=[],$success_rate=0)
     {
         //总的排序内容
         $data = [];
@@ -480,7 +318,7 @@ class Matching
     }
 
     //评价
-    public function sortEvaluate($design = [],$weight_score)
+    public function sortEvaluate($design=[],$weight_score=0)
     {
         //总的排序内容
         $data = [];
@@ -519,7 +357,7 @@ class Matching
     }
 
     //案例数量
-    public function sortSase($design = [],$case)
+    public function sortSase($design=[],$case=0)
     {
         //总的排序内容
         $data = [];
@@ -548,6 +386,7 @@ class Matching
                 }
                 $num--;
             }
+            //按id排序并加案例数量分值
             $id = array_column($data, 'id');
             array_multisort($id,SORT_ASC,$data);
             foreach ($data as $key => $val){
@@ -558,7 +397,7 @@ class Matching
     }
 
     //最近推荐时间
-    public function sortTime($design = [],$time)
+    public function sortTime($design=[],$time=0)
     {
         //总的排序内容
         $data = [];
@@ -589,8 +428,10 @@ class Matching
                 }
                 $num--;
             }
+            //按照id升序排序
             $id = array_column($data, 'id');
             array_multisort($id,SORT_ASC,$data);
+            //循环增加分值
             foreach ($data as $key => $val){
                 $design[$key]['sore'] += $val['sore'];
             }
@@ -599,7 +440,7 @@ class Matching
     }
 
     //接单均价
-    public function sortPrice($design = [],$average_price)
+    public function sortPrice($design=[],$average_price=0)
     {
         //总的排序内容
         $data = [];
@@ -640,6 +481,22 @@ class Matching
         return $design;
     }
 
-
+    //人工干预 最后处理步骤
+    public function sortIntervene($design=[])
+    {
+        //循环处理分设计公司的分值
+        foreach ($design as $key => $item) {
+            $res = DesignStatistics::select('intervene')->where(['design_company_id'=>$item['id']])->first();
+            if(!empty($res)){
+                $design[$key]['sore'] += (int)$res->intervene;
+            }
+        }
+        //按分数降序排序
+        $sore = array_column($design, 'sore');
+        array_multisort($sore,SORT_DESC,$design);
+        //把排序后的id取出来
+        $design = array_column($design, 'id');
+        return $design;
+    }
 
 }
