@@ -360,12 +360,12 @@ class DemandController extends BaseController
         }
 
         // 同步调用匹配方法
-        $recommend = new Recommend($item);
-        $recommend->handle();
+        /*$recommend = new Recommend($item);
+        $recommend->handle();*/
 
         //新的匹配方法
-        /*$recommend = new Matching($item);
-        $recommend->handle($this->auth_user_id);*/
+        $recommend = new Matching($item);
+        $recommend->handle($this->auth_user_id);
 
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if (!$demand_company || $demand_company->verify_status != 1) {
