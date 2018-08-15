@@ -319,7 +319,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 确认给需求公司的发票已开
         $api->put('/admin/invoice/trueDemandInvoice', 'InvoiceController@trueDemandInvoice');
 
+        /**
+         * 权重
+         */
+        //保存权重
+        $api->post('/admin/weight/save', 'WeightController@save');
+        //权重详情
+        $api->get('/admin/weight/show', 'WeightController@show');
 
+        /**
+         * 设计公司数据统计
+         */
+        //人工干预分值修改
+        $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
+        /**
+         * 评价
+         */
+        //平台评价项目
+        $api->post('/admin/platform/evaluate', 'AdminEvaluateController@platformEvaluate');
     });
 
 });
