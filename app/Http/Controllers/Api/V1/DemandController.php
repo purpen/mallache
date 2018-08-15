@@ -1352,7 +1352,7 @@ class DemandController extends BaseController
     }
 
     /**
-     * @api {post} /users/evaluate 用户评价项目
+     * @api {post} /demand/users/evaluate 用户评价项目
      * @apiVersion 1.0.0
      * @apiName users evaluate
      * @apiGroup userEvaluate
@@ -1387,11 +1387,9 @@ class DemandController extends BaseController
         if (!$item = Item::find($params['item_id'])) {
             return $this->response->array($this->apiError('not found item', 404));
         }
-
         if ($item->user_id != $this->auth_user_id || $item->status != 18) {
             return $this->response->array($this->apiError('Permission denied', 403));
         }
-
         $params['design_company_id'] = $item->design_company_id;
         $params['demand_company_id'] = $this->auth_user->demand_company_id;
         $evaluate = new Evaluate;

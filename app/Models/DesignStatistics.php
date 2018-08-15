@@ -39,9 +39,9 @@ class DesignStatistics extends BaseModel
      */
     public function saveDesignInfo($id)
     {
-        $data = $this->select('id')->where(['design_company_id'=>$id])->first();
+        $data = $this::where(['design_company_id'=>$id])->first();
         if(empty($data)){
-            $res = $this->insert(['design_company_id'=>$id]);
+            $res = $this::insert(['design_company_id'=>$id]);
             if(empty($res)){
                 return false;
             }

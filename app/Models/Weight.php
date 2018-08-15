@@ -33,7 +33,13 @@ class Weight extends BaseModel
             $params['created_at'] = date('Y-m-d H:i:s',time());
             return $this::insert($params);
         }else{
-            return $this::where('id',$res->id)->update($params);
+            $res->area = $params['area'];
+            $res->case = $params['case'];
+            $res->score = $params['score'];
+            $res->last_time = $params['last_time'];
+            $res->success_rate = $params['success_rate'];
+            $res->average_price = $params['average_price'];
+            return $res->save();
         }
     }
 
@@ -42,6 +48,6 @@ class Weight extends BaseModel
      */
     public function getWeight()
     {
-        return $this::select('score','case','last_time','success_rate','average_price','area')->first();
+        return $this::select('case','area','score','last_time','success_rate','average_price')->first();
     }
 }

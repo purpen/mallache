@@ -28,13 +28,10 @@ class Statistics
      */
     public function contractAveragePrice($data = [])
     {
-        $contract = new Contract;
-        $designstatistics = new DesignStatistics;
         foreach ($data as $key => $val){
             //查询公司所有合同
-            $c_data = $contract->select('total')->where(['design_company_id'=>$val])->get();
+            $c_data = Contract::select('total')->where(['design_company_id'=>$val])->get();
             if(!empty($c_data)){
-                $c_data = json_decode($c_data,1);
                 $num = count($c_data);
                 $total = 0;
                 foreach($c_data as $k => $v){
@@ -48,17 +45,18 @@ class Statistics
                 }
                 $price = $total / $num;
                 $price = sprintf("%.2f", $price);
-                $data = $designstatistics->select('id')->where(['design_company_id'=>$val])->first();
+                $data = DesignStatistics::select('id','average_price','cooperation_count','design_company_id')->where(['design_company_id'=>$val])->first();
                 if(empty($data)){
                     //新增公司记录
-                    $res = $designstatistics->insert(['average_price'=>$price,'cooperation_count'=>$num,'design_company_id'=>$val]);
+                    $res = DesignStatistics::insert(['average_price'=>$price,'cooperation_count'=>$num,'design_company_id'=>$val]);
                     if(empty($res)){
                         return false;
                     }
                 }else{
-                    $data = json_decode($data,1);
+                    $data->average_price = $price;
+                    $data->cooperation_count = $num;
+                    $res = $data->save();
                     //更新均价
-                    $res = $designstatistics->where(['id'=>$data['id']])->update(['average_price'=>$price,'cooperation_count'=>$num]);
                     if(empty($res)){
                         return false;
                     }
@@ -83,18 +81,17 @@ class Statistics
             if($num <= 0){
                 continue;
             }
-            $designstatistics = new DesignStatistics;
-            $data = $designstatistics->select('id')->where(['design_company_id'=>$val])->first();
+            $data = DesignStatistics::select('id','case')->where(['design_company_id'=>$val])->first();
             if(empty($data)){
                 //新增公司记录
-                $res = $designstatistics->insert(['case'=>$num,'design_company_id'=>$val]);
+                $res = DesignStatistics::insert(['case'=>$num,'design_company_id'=>$val]);
                 if(empty($res)){
                     return false;
                 }
             }else{
-                $data = json_decode($data,1);
                 //更新案例数量
-                $res = $designstatistics->where(['id'=>$data['id']])->update(['case'=>$num]);
+                $data->case = $num;
+                $res = $data->save();
                 if(empty($res)){
                     return false;
                 }
@@ -114,8 +111,7 @@ class Statistics
     {
         foreach ($data as $key => $val){
             //查询公司案例数量
-            $item = new Item;
-            $res = $item->select('recommend','ord_recommend')->where('recommend','like',"%$val%")->orWhere('ord_recommend','like',"%$val%")->get();
+            $res = Item::select('recommend','ord_recommend')->where('recommend','like',"%$val%")->orWhere('ord_recommend','like',"%$val%")->get();
             if(!empty($res)){
                 $res = $res->toArray();
                 $num = 0;
@@ -132,18 +128,17 @@ class Statistics
                 if($num <= 0){
                     continue;
                 }
-                $designstatistics = new DesignStatistics;
-                $statistics = $designstatistics->select('id')->where(['design_company_id'=>$val])->first();
+                $statistics = DesignStatistics::select('id','recommend_count')->where(['design_company_id'=>$val])->first();
                 if(empty($statistics)){
                     //新增公司记录
-                    $res = $designstatistics->insert(['recommend_count'=>$num,'design_company_id'=>$val]);
+                    $res = DesignStatistics::insert(['recommend_count'=>$num,'design_company_id'=>$val]);
                     if(empty($res)){
                         return false;
                     }
                 }else{
-                    $statistics = $statistics->toArray();
                     //更新推荐次数
-                    $res = $designstatistics->where(['id'=>$statistics['id']])->update(['recommend_count'=>$num]);
+                    $statistics->recommend_count = $num;
+                    $res = $statistics->save();
                     if(empty($res)){
                         return false;
                     }
@@ -300,21 +295,24 @@ class Statistics
      */
     public function saveSuccessRate($id)
     {
-        $data = DesignStatistics::select('id','cooperation_count','recommend_count')->where(['design_company_id'=>$id])->first();
+        $data = DesignStatistics::select('id','cooperation_count','recommend_count','success_rate')->where(['design_company_id'=>$id])->first();
         if(!empty($data)){
-            $data = $data->toArray();
-            $success_rate = $data['cooperation_count'] / $data['recommend_count'];
-            $success_rate = sprintf("%.4f", $success_rate);
-            if($success_rate > 0){
-                //更新成功率
-                $res = DesignStatistics::where(['id'=>$data['id']])->update(['success_rate'=>$success_rate]);
-                if(!empty($res)){
-                    return true;
+            //接单数量大于0才会更新
+            if($data->cooperation_count >= 0){
+                //根据接单次数和推荐次数计算接单成功率
+                $success_rate = $data->cooperation_count / $data->recommend_count;
+                $success_rate = sprintf("%.4f", $success_rate);
+                if($success_rate > 0){
+                    //更新成功率
+                    $data->success_rate = $success_rate;
+                    $res = $data->save();
+                    if(empty($res)){
+                        return false;
+                    }
                 }
-                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -339,7 +337,7 @@ class Statistics
      */
     public function recommendTime($id)
     {
-        $data = DesignStatistics::where(['design_company_id'=>$id])->first();
+        $data = DesignStatistics::select('id','recommend_time')->where(['design_company_id'=>$id])->first();
         if(!empty($data)){
             $data->recommend_time = time();
             return $data->save();
@@ -362,9 +360,8 @@ class Statistics
      */
     public function evaluationScore($data)
     {
-        $evaluate = new Evaluate;
         foreach ($data as $key => $id){
-            $score_data = $evaluate->where('design_company_id',$id)->get();
+            $score_data = Evaluate::where('design_company_id',$id)->get();
             $average = 0;
             if(!empty($score_data)){
                 $num = 0;
