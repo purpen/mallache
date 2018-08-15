@@ -69,6 +69,9 @@ class GraphicDesignInfoController extends BaseController
             $item->save();
 
             $design = GraphicDesign::firstOrCreate(['item_id' => intval($item_id)]);
+            $all['existing_content'] = implode('&', $all['existing_content']);
+
+            $all['other_content'] = $request->input('other_content') ?? '';
             $design->update($all);
         } catch (\Exception $e) {
             return $this->response->array($this->apiError('Error', 500));
