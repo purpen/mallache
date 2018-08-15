@@ -245,7 +245,12 @@ class Matching
                         //省份和城市都存在占比重100
                         $score = 100;
                     }
-                    $score = $score / $area;
+                    $area = $area / 100;
+                    if($score <= 0){
+                        $score = 0;
+                    }else{
+                        $score = $score * $area;
+                    }
                 }
                 $sore['sore'] = $score;
             }
