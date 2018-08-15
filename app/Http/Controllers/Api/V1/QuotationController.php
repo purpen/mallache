@@ -222,6 +222,7 @@ class QuotationController extends BaseController
                     'design_position',
                     'position'
                 ]);
+                $jia_info['position'] = $request->input('position') ?? '';
                 if (!$design_project) {
                     throw new MassageException('not found', 404);
                 }
@@ -453,6 +454,7 @@ class QuotationController extends BaseController
                 'design_position',
                 'position'
             ]);
+            $jia_info['position'] = $request->input('position') ?? '';
 
             if (!$item = Item::find($quotation->item_demand_id)) {
                 throw new MassageException('not found3', 404);
