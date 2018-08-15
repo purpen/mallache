@@ -30,8 +30,9 @@ class GraphicDesignInfoController extends BaseController
      *
      * @apiParam {json} design_types 设计类别：平面设计（1.'logo/VI设计', 2.'海报/宣传册', 3 .'画册/书装'）
      * @apiParam {integer} present_situation 项目现状 1.设计理念与需求明确 2.设计理念与需求部分明确/待定 3. 无设计理念
-     * @apiParam {integer} existing_content 项目现有内容 1.所需设计内容齐全 2.有核心视觉元素与标识使用手册 3.只有核心视觉元素 4.只有标识使用手册 5.没有任何设计元素
+     * @apiParam {array} existing_content 项目现有内容  1.核心视觉元素 2.标识使用手册 3.其他
      * @apiParam {string} product_features 项目详细描述
+     * @apiParam {string} other_content 其他设计内容：
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -47,7 +48,7 @@ class GraphicDesignInfoController extends BaseController
         $all = $request->all();
         $rules = [
             'present_situation' => 'required|integer',
-            'existing_content' => 'required|integer',
+            'existing_content' => 'required',
             'product_features' => 'required|max:500',
         ];
         $validator = Validator::make($all, $rules);

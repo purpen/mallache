@@ -365,7 +365,7 @@ class Item extends BaseModel
                     'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
-                    'existing_content' => (int)$info->existing_content,
+                    'existing_content' => $info->existing_content,
                     'test_status' => $item->test_status,
 
                 ];
@@ -490,7 +490,7 @@ class Item extends BaseModel
                     'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
-                    'existing_content' => (int)$info->existing_content,
+                    'existing_content' => $info->existing_content,
                     'test_status' => $item->test_status,
 
                 ];
