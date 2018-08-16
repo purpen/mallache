@@ -56,8 +56,10 @@ class Matching
                 //$design = $this->sortPrice($sase,$weight_data->average_price);
                 //人工干预 最后步骤
                 $intervent = $this->sortIntervene($sase);
+                //取出id
+                $data = array_keys($intervent);
                 //最多取4个设计公司
-                $design = array_slice($intervent, 0, 4);
+                $design = array_slice($data, 0, 4);
             }
             //更新设计公司的最近推荐时间
             foreach ($design as $id) {
@@ -85,7 +87,7 @@ class Matching
                 // 特殊用户处理
                 $this->PSTestAction();
                 //触发项目状态变更事件
-                event(new ItemStatusEvent($this->item));
+                //event(new ItemStatusEvent($this->item));
             }
         } else {
             //匹配失败处理
@@ -224,7 +226,7 @@ class Matching
     //地区分值
     public function sortArea($design=[],$area=0)
     {
-        $design_company = new DesignCompanyModel;
+        /*$design_company = new DesignCompanyModel;
         //总的排序内容
         $data = [];
         //循环处理分设计公司的分值
@@ -259,13 +261,40 @@ class Matching
         }
         $id = array_column($data, 'id');
         array_multisort($id,SORT_ASC,$data);
-        return $data;
+        return $data;*/
+        if(!empty($design) && is_array($design) && $area > 0){
+            //返回的设计公司
+            $data = [];
+            foreach ($design as $val){
+                //查询公司详情
+                $company = DesignCompanyModel::where('id',$val)->first();
+                if(!empty($company)){
+                    if($this->item->item_province == $company->province){
+                        //省份占比重30
+                        $score = 30;
+                    }
+                    if($company->city == $this->item->item_city && $company->province == $this->item->item_province){
+                        //省份和城市都存在占比重100
+                        $score = 100;
+                    }
+                    $weight = $area / 100;
+                    if($score <= 0){
+                        $score = 0;
+                    }else{
+                        $score = $score * $weight;
+                    }
+                }
+                $data[$val] = $score;
+            }
+            return $data;
+        }
+        return [];
     }
 
     //推荐和接单次数分值
     public function sortSuccessRate($design=[],$success_rate=0)
     {
-        //总的排序内容
+       /* //总的排序内容
         $data = [];
         //未推荐过的
         $recommend = [];
@@ -326,6 +355,56 @@ class Matching
                 $design[$key]['sore'] += $val['sore'];
             }
         }
+        return $design;*/
+
+        if(!empty($design) && is_array($design) && $success_rate > 0){
+            //成功总分值
+            $scores = 0;
+            //成功总数量
+            $number = 0;
+            foreach ($design as $key => $val){
+                $sore[$key]['sore'] = 0;
+                //查询公司详情
+                $statistics = DesignStatistics::select('success_rate','recommend_count')->where('design_company_id',$key)->first();
+                if(!empty($statistics)){
+                    //推荐次数
+                    if(empty($statistics->recommend_count)){
+                        $recommend[] = $key;
+                    }
+                    //接单次数
+                    if(!empty($statistics->success_rate)){
+                        //接单成功率
+                        $sore[$key]['sore'] = $statistics->success_rate;
+                        $scores += $statistics->success_rate;
+                        $number++;
+                    }
+                }
+            }
+            //未推荐过的
+            if(!empty($recommend) && $scores > 0 && $number > 0){;
+                //平均值
+                $mean_value = $scores / $number;
+                $mean_value = (float)sprintf('%.4f', $mean_value);
+                //循环赋值
+                foreach ($recommend as $val){
+                    $sore[$val]['sore'] = $mean_value;
+                }
+            }
+            //安值降序排列
+            arsort($sore);
+            $num = 100;
+            $success_rate = $success_rate / 100;
+            foreach ($sore as $k => $v){
+                if($num <= 0){
+                    $num = 1;
+                }else{
+                    $weight = $num * $success_rate;
+                    $design[$k] += $weight;
+                }
+                $num--;
+            }
+            return $design;
+        }
         return $design;
     }
 
@@ -333,7 +412,7 @@ class Matching
     public function sortEvaluate($design=[],$weight_score=0)
     {
         //总的排序内容
-        $data = [];
+        /*$data = [];
         if($weight_score > 0){
             //循环处理分设计公司的分值
             foreach ($design as $key => $item) {
@@ -365,6 +444,31 @@ class Matching
                 $design[$key]['sore'] += $val['sore'];
             }
         }
+        return $design;*/
+        if(!empty($design) && is_array($design) && $weight_score > 0){
+            foreach ($design as $key => $val){
+                $sore[$key]['sore'] = 0;
+                //查询公司详情
+                $statistics = DesignStatistics::select('score')->where(['design_company_id'=>$key])->first();
+                if(!empty($statistics)){
+                    $sore[$key]['sore'] = (int)$statistics->score;
+                }
+            }
+            //按值降序排列
+            arsort($sore);
+            $num = 100;
+            $weight_score = $weight_score / 100;
+            foreach ($sore as $k => $v){
+                if($num <= 0){
+                    $num = 1;
+                }else{
+                    $weight = $num * $weight_score;
+                    $design[$k] += $weight;
+                }
+                $num--;
+            }
+            return $design;
+        }
         return $design;
     }
 
@@ -372,7 +476,7 @@ class Matching
     public function sortSase($design=[],$case=0)
     {
         //总的排序内容
-        $data = [];
+        /*$data = [];
         if($case > 0){
             //循环处理分设计公司的分值
             foreach ($design as $key => $item) {
@@ -404,6 +508,33 @@ class Matching
             foreach ($data as $key => $val){
                 $design[$key]['sore'] += $val['sore'];
             }
+        }
+        return $design;*/
+
+        if(!empty($design) && is_array($design) && $case > 0){
+            foreach ($design as $key => $val){
+                $sore[$key]['sore'] = 0;
+                //查询公司详情
+                $statistics = DesignStatistics::select('case')->where(['design_company_id'=>$key])->first();
+                if(!empty($statistics)){
+                    $sore[$key]['sore'] = (int)$statistics->case;
+                }
+            }
+            //按值降序排列
+            arsort($sore);
+            $num = 100;
+            $case = $case / 100;
+            foreach ($sore as $k => $v){
+                if($num <= 0){
+                    $num = 1;
+                }else{
+                    $weight = $num * $case;
+                    $design[$k] += $weight;
+
+                }
+                $num--;
+            }
+            return $design;
         }
         return $design;
     }
@@ -497,7 +628,7 @@ class Matching
     public function sortIntervene($design=[])
     {
         //循环处理分设计公司的分值
-        foreach ($design as $key => $item) {
+        /*foreach ($design as $key => $item) {
             $res = DesignStatistics::select('intervene')->where(['design_company_id'=>$item['id']])->first();
             if(!empty($res)){
                 $design[$key]['sore'] += (int)$res->intervene;
@@ -508,6 +639,19 @@ class Matching
         array_multisort($sore,SORT_DESC,$design);
         //把排序后的id取出来
         $design = array_column($design, 'id');
+        return $design;*/
+
+        if(!empty($design) && is_array($design)){
+            foreach ($design as $key => $val){
+                //查询公司详情
+                $statistics = DesignStatistics::select('intervene')->where(['design_company_id'=>$key])->first();
+                if(!empty($statistics)){
+                    $design[$key] += (int)$statistics->intervene;
+                }
+            }
+            arsort($design);
+            return $design;
+        }
         return $design;
     }
 
