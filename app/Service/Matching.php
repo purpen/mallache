@@ -271,6 +271,10 @@ class Matching
         $recommend = [];
         //权重必须大于0
         if($success_rate > 0){
+            //成功总分值
+            $scores = 0;
+            //成功总数量
+            $number = 0;
             //循环处理分设计公司的分值
             foreach ($design as $key => $item) {
                 $id = $item['id'];
@@ -283,15 +287,24 @@ class Matching
                         $recommend[] = $key;
                     }
                     //接单次数
-                    $score = (int)$res->cooperation_count / (int)$res->recommend_count;
-                    if($score == 0){
-                        //推荐过,未接单的
-                        $sore['sore'] = 0;
-                    }else{
-                        //正常的
+                    if($res->cooperation_count > 0 && $res->recommend_count > 0){
+                        //接单成功率
+                        $score = (int)$res->cooperation_count / (int)$res->recommend_count;
                         $sore['sore'] = $score;
+                        $scores += $score;
+                        $number++;
                     }
                     $data[$key] = $sore;
+                }
+            }
+            $recommend[] = 8;
+            //未推荐过的
+            if(!empty($recommend) && $scores > 0 && $number > 0){;
+                //平均值
+                $mean_value = $scores / $number;
+                //循环赋值
+                foreach ($recommend as $val){
+                    $data[$val]['sore'] = $mean_value;
                 }
             }
             $sore = array_column($data, 'sore');
