@@ -223,45 +223,14 @@ class Matching
         return $max;
     }
 
-    //地区分值
+    /**
+     * sortArea    计算地区分值
+     *
+     * $design array      设计公司id    [1,2,3]
+     * $area   int        权重值        默认:0
+     */
     public function sortArea($design=[],$area=0)
     {
-        /*$design_company = new DesignCompanyModel;
-        //总的排序内容
-        $data = [];
-        //循环处理分设计公司的分值
-        foreach ($design as $key => $item) {
-            $sore['id'] = $item;
-            $sore['sore'] = 0;
-            //权重必须大于0
-            if($area > 0){
-                //查询公司详情
-                $company = $design_company->where('id',$item)->first();
-                $score = 0;
-                if(!empty($company)){
-                    if($this->item->item_province == $company->province){
-                        //省份占比重30
-                        $score = 30;
-                    }
-                    if($company->city == $this->item->item_city && $company->province == $this->item->item_province){
-                        //省份和城市都存在占比重100
-                        $score = 100;
-                    }
-                    $weight = $area / 100;
-                    if($score <= 0){
-                        $score = 0;
-                    }else{
-                        $score = $score * $weight;
-                    }
-                }
-                $sore['sore'] = $score;
-            }
-            //单个
-            $data[$key] = $sore;
-        }
-        $id = array_column($data, 'id');
-        array_multisort($id,SORT_ASC,$data);
-        return $data;*/
         if(!empty($design) && is_array($design) && $area > 0){
             //返回的设计公司
             $data = [];
@@ -291,72 +260,14 @@ class Matching
         return [];
     }
 
-    //推荐和接单次数分值
+    /**
+     * sortSuccessRate    计算接单成功率
+     *
+     * $design     array      设计公司id    [1,2,3]
+     * $success_rate   int    成功率权重值   默认:0
+     */
     public function sortSuccessRate($design=[],$success_rate=0)
     {
-       /* //总的排序内容
-        $data = [];
-        //未推荐过的
-        $recommend = [];
-        //权重必须大于0
-        if($success_rate > 0){
-            //成功总分值
-            $scores = 0;
-            //成功总数量
-            $number = 0;
-            //循环处理分设计公司的分值
-            foreach ($design as $key => $item) {
-                $id = $item['id'];
-                $sore['id'] = $id;
-                $sore['sore'] = 0;
-                $res = DesignStatistics::select('recommend_count','cooperation_count')->where(['design_company_id'=>$id])->first();
-                if(!empty($res)){
-                    //推荐次数
-                    if($res->recommend_count == 0){
-                        $recommend[] = $key;
-                    }
-                    //接单次数
-                    if($res->cooperation_count > 0 && $res->recommend_count > 0){
-                        //接单成功率
-                        $score = (int)$res->cooperation_count / (int)$res->recommend_count;
-                        $sore['sore'] = $score;
-                        $scores += $score;
-                        $number++;
-                    }
-                    $data[$key] = $sore;
-                }
-            }
-            $recommend[] = 8;
-            //未推荐过的
-            if(!empty($recommend) && $scores > 0 && $number > 0){;
-                //平均值
-                $mean_value = $scores / $number;
-                //循环赋值
-                foreach ($recommend as $val){
-                    $data[$val]['sore'] = $mean_value;
-                }
-            }
-            $sore = array_column($data, 'sore');
-            array_multisort($sore,SORT_DESC,$data);
-            $num = 100;
-            $success_rate = $success_rate / 100;
-            foreach ($data as $k => $v){
-                if($num <= 0){
-                    $data[$k]['sore'] = 0;
-                }else{
-                    $weight = $num * $success_rate;
-                    $data[$k]['sore'] = $weight;
-                }
-                $num--;
-            }
-            $id = array_column($data, 'id');
-            array_multisort($id,SORT_ASC,$data);
-            foreach ($data as $key => $val){
-                $design[$key]['sore'] += $val['sore'];
-            }
-        }
-        return $design;*/
-
         if(!empty($design) && is_array($design) && $success_rate > 0){
             //成功总分值
             $scores = 0;
@@ -408,43 +319,15 @@ class Matching
         return $design;
     }
 
-    //评价
+    /**
+     * sortEvaluate    计算评价分值
+     *
+     * $design     array      设计公司id    [1,2,3]
+     * $weight_score   int    评价权重值    默认:0
+     */
     public function sortEvaluate($design=[],$weight_score=0)
     {
         //总的排序内容
-        /*$data = [];
-        if($weight_score > 0){
-            //循环处理分设计公司的分值
-            foreach ($design as $key => $item) {
-                $id = $item['id'];
-                $sore['id'] = $id;
-                $sore['sore'] = 0;
-                $res = DesignStatistics::select('score')->where(['design_company_id'=>$id])->first();
-                if(!empty($res)){
-                    $sore['sore'] = (int)$res->score;
-                }
-                $data[$key] = $sore;
-            }
-            $sore = array_column($data, 'sore');
-            array_multisort($sore,SORT_DESC,$data);
-            $num = 100;
-            $weight_score = $weight_score / 100;
-            foreach ($data as $k => $v){
-                if($num <= 0){
-                    $data[$k]['sore'] = 0;
-                }else{
-                    $weight = $num * $weight_score;
-                    $data[$k]['sore'] = $weight;
-                }
-                $num--;
-            }
-            $id = array_column($data, 'id');
-            array_multisort($id,SORT_ASC,$data);
-            foreach ($data as $key => $val){
-                $design[$key]['sore'] += $val['sore'];
-            }
-        }
-        return $design;*/
         if(!empty($design) && is_array($design) && $weight_score > 0){
             foreach ($design as $key => $val){
                 $sore[$key]['sore'] = 0;
@@ -472,45 +355,14 @@ class Matching
         return $design;
     }
 
-    //案例数量
+    /**
+     * sortSase    计算案例分值
+     *
+     * $design     array      设计公司id    [1,2,3]
+     * $weight_score   int    案例权重值    默认:0
+     */
     public function sortSase($design=[],$case=0)
     {
-        //总的排序内容
-        /*$data = [];
-        if($case > 0){
-            //循环处理分设计公司的分值
-            foreach ($design as $key => $item) {
-                $id = $item['id'];
-                $sore['id'] = $id;
-                $sore['sore'] = 0;
-                $res = DesignStatistics::select('case')->where(['design_company_id'=>$id])->first();
-                if(!empty($res)){
-                    $sore['sore'] = (int)$res->case;
-                }
-                $data[$key] = $sore;
-            }
-            $sore = array_column($data, 'sore');
-            array_multisort($sore,SORT_DESC,$data);
-            $num = 100;
-            $case = $case / 100;
-            foreach ($data as $k => $v){
-                if($num <= 0){
-                    $data[$k]['sore'] = 0;
-                }else{
-                    $weight = $num * $case;
-                    $data[$k]['sore'] = $weight;
-                }
-                $num--;
-            }
-            //按id排序并加案例数量分值
-            $id = array_column($data, 'id');
-            array_multisort($id,SORT_ASC,$data);
-            foreach ($data as $key => $val){
-                $design[$key]['sore'] += $val['sore'];
-            }
-        }
-        return $design;*/
-
         if(!empty($design) && is_array($design) && $case > 0){
             foreach ($design as $key => $val){
                 $sore[$key]['sore'] = 0;
@@ -627,20 +479,6 @@ class Matching
     //人工干预 最后处理步骤
     public function sortIntervene($design=[])
     {
-        //循环处理分设计公司的分值
-        /*foreach ($design as $key => $item) {
-            $res = DesignStatistics::select('intervene')->where(['design_company_id'=>$item['id']])->first();
-            if(!empty($res)){
-                $design[$key]['sore'] += (int)$res->intervene;
-            }
-        }
-        //按分数降序排序
-        $sore = array_column($design, 'sore');
-        array_multisort($sore,SORT_DESC,$design);
-        //把排序后的id取出来
-        $design = array_column($design, 'id');
-        return $design;*/
-
         if(!empty($design) && is_array($design)){
             foreach ($design as $key => $val){
                 //查询公司详情
