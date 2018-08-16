@@ -15,6 +15,7 @@ class PackDesign extends BaseModel
         'present_situation',
         'existing_content',
         'status',
+        'other_content',
     ];
 
     //一对一关联项目表
