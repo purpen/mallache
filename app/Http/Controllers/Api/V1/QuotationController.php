@@ -265,7 +265,7 @@ class QuotationController extends BaseController
                 // 需求方通知信息
                 $title = '收到报价';
                 $content = '收到【' . $design->company_name . '】公司报价';
-                Tools::message($item->user_id, $title, $content, 2, $item->id);
+                Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
                 $message_content = '已有设计公司报价，请查阅。感谢您的信任，如有疑问欢迎致电 ';
                 Tools::sendSmsToPhone($item->phone, $message_content, $item->source);
 
@@ -556,7 +556,7 @@ class QuotationController extends BaseController
             // 需求方通知信息
             $title = '收到新报价';
             $content = '收到【' . $design->company_name . '】公司新报价';
-            Tools::message($item->user_id, $title, $content, 2, $item->id);
+            Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
             Tools::sendSmsToPhone($item->phone, $content, $item->source);
 
             DB::commit();
