@@ -367,6 +367,7 @@ class Item extends BaseModel
                     'present_situation' => (int)$info->present_situation,
                     'existing_content' => $info->existing_content ? explode('&', $info->existing_content) : [],
                     'test_status' => $item->test_status,
+                    'other_content' => $info->other_content,
 
                 ];
                 break;
@@ -492,6 +493,7 @@ class Item extends BaseModel
                     'present_situation' => (int)$info->present_situation,
                     'existing_content' =>  $info->existing_content ? explode('&', $info->existing_content) : [],
                     'test_status' => $item->test_status,
+                    'other_content' => $info->other_content,
 
                 ];
                 break;
