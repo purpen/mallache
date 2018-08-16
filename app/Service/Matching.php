@@ -87,7 +87,7 @@ class Matching
                 // 特殊用户处理
                 $this->PSTestAction();
                 //触发项目状态变更事件
-                //event(new ItemStatusEvent($this->item));
+                event(new ItemStatusEvent($this->item));
             }
         } else {
             //匹配失败处理
@@ -231,10 +231,11 @@ class Matching
      */
     public function sortArea($design=[],$area=0)
     {
-        if(!empty($design) && is_array($design) && $area > 0){
-            //返回的设计公司
-            $data = [];
-            foreach ($design as $val){
+        //返回的设计公司
+        $data = [];
+        foreach ($design as $val){
+            $score = 0;
+            if($area > 0){
                 //查询公司详情
                 $company = DesignCompanyModel::where('id',$val)->first();
                 if(!empty($company)){
@@ -254,10 +255,11 @@ class Matching
                     }
                 }
                 $data[$val] = $score;
+            }else{
+                $data[$val] = 0;
             }
-            return $data;
         }
-        return [];
+        return $data;
     }
 
     /**
