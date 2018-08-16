@@ -54,12 +54,14 @@ class Matching
                 //$time = $this->sortTime($sase,$weight_data->last_time);
                 //接单均价
                 //$design = $this->sortPrice($sase,$weight_data->average_price);
-                //人工干预 最后步骤
+                //人工干预
                 $intervent = $this->sortIntervene($sase);
+                Log::info($intervent);
                 //取出id
                 $data = array_keys($intervent);
                 //最多取4个设计公司
                 $design = array_slice($data, 0, 4);
+                Log::info($design);
             }
             //更新设计公司的最近推荐时间
             foreach ($design as $id) {
