@@ -383,7 +383,7 @@ class DemandController extends BaseController
     {
         $item = $this->checkItemStatusAndAuth($id);
 
-        if ($item->status != -2) {
+        if (!in_array($item->status , [-1 , -2 , -3])) {
             return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
         }
 
