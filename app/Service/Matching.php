@@ -237,19 +237,19 @@ class Matching
                 $company = $design_company->where('id',$item)->first();
                 $score = 0;
                 if(!empty($company)){
-                    if($this->item->company_province == $company->province){
+                    if($this->item->item_province == $company->province){
                         //省份占比重30
                         $score = 30;
                     }
-                    if($company->city == $this->item->company_city && $company->province == $this->item->company_province){
+                    if($company->city == $this->item->item_city && $company->province == $this->item->item_province){
                         //省份和城市都存在占比重100
                         $score = 100;
                     }
-                    $area = $area / 100;
+                    $weight = $area / 100;
                     if($score <= 0){
                         $score = 0;
                     }else{
-                        $score = $score * $area;
+                        $score = $score * $weight;
                     }
                 }
                 $sore['sore'] = $score;
