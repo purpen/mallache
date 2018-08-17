@@ -203,6 +203,8 @@ return [
         '/admin/weight/save',
         //权重详情
         '/admin/weight/show',
+        //设计公司信息列表
+        '/admin/statistics/list',
 
         /**
          * 设计公司数据统计
@@ -404,6 +406,28 @@ return [
         '/admin/invoice/trueInvoice',
         // 确认给需求公司的发票已开
         '/admin/invoice/trueDemandInvoice',
+
+        /**
+         * 权重
+         */
+        //保存权重
+        '/admin/weight/save',
+        //权重详情
+        '/admin/weight/show',
+        //设计公司信息列表
+        '/admin/statistics/list',
+
+        /**
+         * 设计公司数据统计
+         */
+        //人工干预
+        '/admin/saveIntervene',
+
+        /**
+         * 评价
+         */
+        //平台评价项目
+        '/admin/platform/evaluate',
     ],
 
     /**
