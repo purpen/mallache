@@ -48,7 +48,7 @@ class GraphicDesignInfoController extends BaseController
         $all = $request->all();
         $rules = [
             'present_situation' => 'required|integer',
-            'existing_content' => 'required',
+            'existing_content' => 'required|array',
             'product_features' => 'required|max:500',
         ];
         $validator = Validator::make($all, $rules);
