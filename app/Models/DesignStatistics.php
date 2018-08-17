@@ -6,6 +6,21 @@ namespace App\Models;
 class DesignStatistics extends BaseModel
 {
     /**
+     * 关联模型到数据表
+     *
+     * @var string
+     */
+    protected $table = 'design_statistics';
+
+    /**
+     * 一对一关联设计公司
+     */
+    public function companyName()
+    {
+        return $this->hasOne('App\Models\DesignCompanyModel','id','design_company_id');
+    }
+
+    /**
      * saveRecommendedTimes        更新设计公司推荐次数
      *
      * @author yuluo

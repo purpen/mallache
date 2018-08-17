@@ -332,6 +332,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //人工干预分值修改
         $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
+        //设计公司信息列表
+        $api->get('/admin/statistics/list', 'DesignStatisticsController@statisticsList');
         /**
          * 评价
          */
