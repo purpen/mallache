@@ -169,7 +169,7 @@ class ItemMessageListener
             $title = '收到项目邀约';
             $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
             for ($i = 0; $i < $n; ++$i) {
-                Tools::message($user_id_arr[$i], $title, $content, 2, $item->id);
+                Tools::message($user_id_arr[$i], $title, $content, 2, $item->id , $item->status);
                 $message_content = '收到新项⽬，请报价并等待客户确认。感谢您的信任，如有疑问欢迎致电 ';
                 //短信通知设计公司有新项目推送
                 Tools::sendSmsToPhone($phone_arr[$i], $message_content);
