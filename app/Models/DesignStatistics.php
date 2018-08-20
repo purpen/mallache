@@ -13,7 +13,7 @@ class DesignStatistics extends BaseModel
     protected $table = 'design_statistics';
 
     /**
-     * 一对一关联设计公司
+     * 关联设计公司模型
      */
     public function companyName()
     {

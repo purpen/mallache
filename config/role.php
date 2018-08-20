@@ -203,14 +203,16 @@ return [
         '/admin/weight/save',
         //权重详情
         '/admin/weight/show',
-        //设计公司信息列表
-        '/admin/statistics/list',
 
         /**
          * 设计公司数据统计
          */
         //人工干预
         '/admin/saveIntervene',
+        //设计公司信息列表
+        '/admin/statistics/list',
+        //测试设计公司匹配
+        '/admin/test/matching',
 
         /**
          * 评价
@@ -414,14 +416,16 @@ return [
         '/admin/weight/save',
         //权重详情
         '/admin/weight/show',
-        //设计公司信息列表
-        '/admin/statistics/list',
 
         /**
          * 设计公司数据统计
          */
         //人工干预
         '/admin/saveIntervene',
+        //设计公司信息列表
+        '/admin/statistics/list',
+        //测试设计公司匹配
+        '/admin/test/matching',
 
         /**
          * 评价

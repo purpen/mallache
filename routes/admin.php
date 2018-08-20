@@ -334,6 +334,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
         //设计公司信息列表
         $api->get('/admin/statistics/list', 'DesignStatisticsController@statisticsList');
+        //测试设计公司匹配
+        $api->get('/admin/test/matching', 'DesignStatisticsController@testMatching');
         /**
          * 评价
          */

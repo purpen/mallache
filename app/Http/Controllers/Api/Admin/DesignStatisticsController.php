@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Service\Statistics;
 use Dingo\Api\Http\Request;
 use App\Models\DesignStatistics;
 use App\Http\Controllers\Controller;
@@ -99,7 +100,7 @@ class DesignStatisticsController extends Controller
      */
     public function statisticsList(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = (int)$request->input('per_page') ?? $this->per_page;
         $statissttics = DesignStatistics::query();
         $lists = $statissttics->orderBy('id','desc')->paginate($per_page);
         if(!empty($lists)){
@@ -113,6 +114,24 @@ class DesignStatisticsController extends Controller
             }
         }
         return $this->response->paginator($lists, new DesignStatisticsTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /admin/test/matching 测试设计公司匹配
+     * @apiVersion 1.0.0
+     * @apiName testMatching
+     * @apiGroup DesignStatistics
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
+     * @apiParam {string} design_types 设计类别：1,2,3
+     * @apiParam {string} token
+     * @apiSuccessExample 成功响应:
+     *
+     */
+    public function testMatching(Request $request)
+    {
+        $params = $request->all();
+        $statistics = new Statistics;
+        return $statistics->testMatching(11,2);
     }
 
 }
