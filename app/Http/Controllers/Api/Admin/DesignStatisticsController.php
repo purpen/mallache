@@ -117,17 +117,23 @@ class DesignStatisticsController extends Controller
     }
 
     /**
-     * @api {get} /admin/test/matching 测试设计公司匹配
+     * @api {post} /admin/test/matching 测试设计公司匹配
      * @apiVersion 1.0.0
      * @apiName testMatching
      * @apiGroup DesignStatistics
-     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
-     * @apiParam {string} design_types 设计类别：1,2,3
      * @apiParam {string} token
+     * @apiParam {string} design_types 设计类别：[1,2,3]
+     * @apiParam {integer} design_cost 设计费用：1. 1-5万；2. 5-10万；3. 10-20；4. 20-30；5. 30-50；6. 50以上
+     * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
      * @apiSuccessExample 成功响应:
-     *{
+     * {
      * "data": [
-     *
+     *     {
+     *         "company_name": "YANG DESGIN", //公司名称
+     *         "address": "268号", //详细地址
+     *         "contact_name": "杨先生", //联系人姓名
+     *         "phone": "198278787" //手机
+     *      }
      * ],
      * "meta": {
      *     "message": "Success",
@@ -137,8 +143,21 @@ class DesignStatisticsController extends Controller
     public function testMatching(Request $request)
     {
         $params = $request->all();
+        $rules = [
+            'type' => 'required|integer',
+            'design_types' => 'required',
+            'design_cost' => 'required|integer'
+        ];
+        $validator = Validator::make($params, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
         $statistics = new Statistics;
-        return $statistics->testMatching(11,2);
+        $data = $statistics->testMatching($params);
+        if(!empty($data)){
+            return $this->response->array($this->apiSuccess('Success','200',$data));
+        }
+        return $this->response->array($this->apiSuccess('Success','200',[]));
     }
 
 }

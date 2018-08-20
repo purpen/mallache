@@ -1,10 +1,14 @@
 <?php
 namespace App\Service;
-use App\Models\Contract;
-use App\Models\DesignStatistics;
-use App\Models\DesignCaseModel;
+
 use App\Models\Item;
+use App\Models\Weight;
+use App\Models\Contract;
 use App\Models\Evaluate;
+use App\Models\DesignCaseModel;
+use App\Models\DesignItemModel;
+use App\Models\DesignStatistics;
+use App\Models\DesignCompanyModel;
 /**
  * Class Statistics 设计公司信息统计
  * @package App\Service
@@ -395,16 +399,15 @@ class Statistics
      * @param $design_types 设计类别
      * @return array
      */
-    public function testMatching($type,$design_types)
-    {
-        $design_types = explode(',',$design_types);
+    public function testMatching($params)
+    {;
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
-        $max = $this->cost($this->item->design_cost);
+        $max = $this->cost($params['design_cost']);
         $design_id_arr = [];
-        foreach ($design_types as $design_type) {
+        foreach ($params['design_types'] as $design_type) {
             //获取符合设计类型和设计费用的设计公司ID数组
             $arr = DesignItemModel::select('user_id')
-                ->where('type', $type)
+                ->where('type', $params['type'])
                 ->where('design_type', $design_type)
                 ->where('min_price', '<=', $max)
                 ->get()
@@ -417,77 +420,78 @@ class Statistics
         $design_data = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
 
+        $matching = new Matching(new Item);
         $design = $design_data->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
             ->pluck('id')
             ->all();
-        return $design;
         //权重
         $weight = new Weight;
         $weight_data = $weight->getWeight();
-        if (count($design) > 0) {
-            //剔除已推荐的
-            $ord_recommend = $this->item->ord_recommend;
-            if (!empty($ord_recommend)) {
-                $ord_recommend_arr = explode(',', $ord_recommend);
-                $design = array_diff($design, $ord_recommend_arr);
-            }
+        if (!empty($design)) {
             //大于4个则会执行精准匹配
             if(count($design) > 4){
                 //地区 第一步
-                $area = $this->sortArea($design,$weight_data->area);
+                $area = $matching->sortArea($design,$weight_data->area);
                 //接单成功率
-                $success_rate = $this->sortSuccessRate($area,$weight_data->success_rate);
+                $success_rate = $matching->sortSuccessRate($area,$weight_data->success_rate);
                 //评价分值
-                $evaluate = $this->sortEvaluate($success_rate,$weight_data->score);
+                $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
                 //案例数量
-                $sase = $this->sortSase($evaluate,$weight_data->case);
+                $sase = $matching->sortSase($evaluate,$weight_data->case);
                 //最近推荐时间
                 //$time = $this->sortTime($sase,$weight_data->last_time);
                 //接单均价
                 //$design = $this->sortPrice($sase,$weight_data->average_price);
                 //人工干预
-                $intervent = $this->sortIntervene($sase);
+                $intervent = $matching->sortIntervene($sase);
                 //取出id
                 $data = array_keys($intervent);
                 //最多取4个设计公司
                 $design = array_slice($data, 0, 4);
             }
-            //更新设计公司的最近推荐时间
-            foreach ($design as $id) {
-                $statistics = new Statistics;
-                $statistics->recommendTime($id);
-            }
-            //判断是否匹配到设计公司
-            if (empty($design)) {
-                //临时处理 永不匹配失败
-                //$this->failAction();
-                //匹配失败
-                $this->itemFail();
-            } else {
-                $recommend = implode(',', $design);
-                $this->item->recommend = $recommend;
-                //判断需求公司资料是否审核
-                $demand_company = $this->item->user->demandCompany;
-                if ($demand_company->verify_status == 1) {
-                    $this->item->status = 3;   //已匹配设计公司
-                } else {
-                    $this->item->status = 2;  //2.人工干预
-                }
-                //保存匹配信息,更改状态
-                $this->item->save();
-                // 特殊用户处理
-                $this->PSTestAction();
-                //触发项目状态变更事件
-                event(new ItemStatusEvent($this->item));
-            }
+            //取出设计公司信息
+            return DesignCompanyModel::select('company_name','address','contact_name','phone')
+                ->whereIn('id', $design)
+                ->get();
         } else {
-            //匹配失败处理
-            $this->itemFail();
+            //匹配失败
+            return [];
         }
-        //注销变量
-        unset($design_type, $field, $design_id_arr, $design, $recommend);
+    }
+
+    /**
+     * 设计费用转换
+     *
+     * @param $design_cost
+     * @return int
+     */
+    protected function cost($design_cost)
+    {
+        //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+        $max = 10000;
+        switch ($design_cost) {
+            case 1:
+                $max = 50000;
+                break;
+            case 2:
+                $max = 100000;
+                break;
+            case 3:
+                $max = 200000;
+                break;
+            case 4:
+                $max = 300000;
+                break;
+            case 5:
+                $max = 500000;
+                break;
+            case 6:
+                $max = 500000;
+                break;
+        }
+        return $max;
     }
 
 }
