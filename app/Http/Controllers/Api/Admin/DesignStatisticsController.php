@@ -125,7 +125,14 @@ class DesignStatisticsController extends Controller
      * @apiParam {string} design_types 设计类别：1,2,3
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
+     *{
+     * "data": [
      *
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200,
+     * }
      */
     public function testMatching(Request $request)
     {
