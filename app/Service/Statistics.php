@@ -170,19 +170,17 @@ class Statistics
      */
     public function saveAveragePrice($id,$price)
     {
-        $designstatistics = new DesignStatistics;
-        $data = $designstatistics->select('id','average_price','cooperation_count')->where(['design_company_id'=>$id])->first();
+        $data = DesignStatistics::select('id','average_price','cooperation_count')->where(['design_company_id'=>$id])->first();
         if(!empty($data)){
-            $data = json_decode($data,1);
             //总价格
-            $prices = $data['average_price'] * $data['cooperation_count'];
+            $prices = $data->average_price * $data->cooperation_count;
             $prices = $prices + $price;
-            $cooperation_count = $data['cooperation_count'] + 1;
+            $cooperation_count = $data->cooperation_count + 1;
             $average_price = $prices / $cooperation_count;
             $average_price = sprintf("%.2f", $average_price);
-            $list = ['average_price'=>$average_price,'cooperation_count'=>$cooperation_count];
-            //更新平均价格与合作次数
-            $res = $designstatistics->where(['id'=>$data['id']])->update($list);
+            $data->average_price = $average_price;
+            $data->cooperation_count = $cooperation_count;
+            $res = $data->save();
             if(empty($res)){
                 return false;
             }
@@ -202,20 +200,20 @@ class Statistics
      */
     public function saveSingleTime($design_company_id,$last_time)
     {
-        $designstatistics = new DesignStatistics;
         foreach($design_company_id as $v){
             //查询公司信息是否存在
-            $data = $designstatistics->select('id')->where(['design_company_id'=>$v])->first();
+            $data = DesignStatistics::select('id','last_time')->where(['design_company_id'=>$v])->first();
             if(empty($data)){
+                $designstatistics = new DesignStatistics;
                 //新增一条公司信息
                 $res = $designstatistics->insert(['last_time'=>$last_time,'design_company_id'=>$v]);
                 if(empty($res)){
                     return false;
                 }
             }else{
-                $data = json_decode($data,1);
                 //更新最近接单时间
-                $res = $designstatistics->where(['id'=>$data['id']])->update(['last_time'=>$last_time]);
+                $data->last_time = $last_time;
+                $res = $data->save();
                 if(empty($res)){
                     return false;
                 }
@@ -239,7 +237,7 @@ class Statistics
         $designstatistics = new DesignStatistics;
         foreach($params as $v){
             //查询设计公司信息是否存在
-            $data = $designstatistics->select('id','case')->where(['design_company_id'=>$v])->first();
+            $data = DesignStatistics::select('id','case')->where(['design_company_id'=>$v])->first();
             if(empty($data)){
                 //新增一条设计公司信息
                 $res = $designstatistics->insert(['case'=>1,'design_company_id'=>$v]);
@@ -247,10 +245,9 @@ class Statistics
                     return false;
                 }
             }else{
-                $data = json_decode($data,1);
-                $case = (int)$data['case'] + 1;
+                $data->case = (int)$data->case + 1;
                 //更新设计公司案例数量
-                $res = $designstatistics->where(['id'=>$data['id']])->update(['case'=>$case]);
+                $res = $data->save();
                 if(empty($res)){
                     return false;
                 }
