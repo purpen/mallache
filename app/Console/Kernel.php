@@ -98,8 +98,8 @@ class Kernel extends ConsoleKernel
         // 每天凌晨3点 清除设计云盘回收站过期的文件
         $schedule->command('clear:RecycleBin')->dailyAt('3:00');
 
-        // 每五分钟检测一次
-//        $schedule->command('change:notification')->everyFiveMinutes();
+        // 每五分钟检测一次 通知报价合同
+        $schedule->command('change:notification')->everyFiveMinutes();
 
     }
 

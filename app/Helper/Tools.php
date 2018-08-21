@@ -74,7 +74,6 @@ class Tools
      */
     public static function message(int $user_id, string $title, string $message, int $type = 1, int $target_id = null, $item_status = null)
     {
-        Log::info(31);
         try{
             $message = Message::create([
                 'user_id' => $user_id,
@@ -140,17 +139,6 @@ class Tools
      */
     public function getMessageQuantity(int $user_id)
     {
-//        //有序列表key
-//        $key = 'mallache:user:message';
-//        //member
-//        $member = 'user:' . $user_id;
-//
-//        //ZSCORE key member
-//        $quantity = Redis::zscore($key, $member);
-//        if ($quantity == 'nil') {
-//            return 0;
-//        }
-
         $data = array(
             'message' => 0,
             'notice' => 0,
@@ -176,7 +164,6 @@ class Tools
         if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
         $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
 
-        // $data = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return $data;
     }
 
@@ -370,27 +357,22 @@ class Tools
      */
     public static function sendSmsToPhone($phone, $content, $source = null)
     {
-        Log::info(32);
-
         try{
             // 京东云艺火
             if ($source == 1) {
-                $text = config('constant.jd_sms_fix') . '您好，您在艺火平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+                $text = config('constant.jd_sms_fix') . $content . config('constant.notice_phone') . '。';
+            } else if($source == 2){
+                $text = config('constant.yw_sms_fix') . $content . config('constant.notice_phone') . '。';
             } else {
-                $text = config('constant.sms_fix') . '您好，您在铟果平台的项目最新状态已更新，请您及时登录查看，并进行相应操作。感谢您的信任，如有疑问欢迎致电 ' . config('constant.notice_phone') . '。';
+                $text = config('constant.sms_fix') . $content . config('constant.notice_phone') . '。';
             }
 
-            Log::info(321);
             // 判断短信通知是否开启
             if (config('constant.sms_send')) {
-                Log::info(322);
                 dispatch(new SendOneSms($phone, $text));
-                Log::info(323);
             }
         }catch (\Exception $e){
             Log::error($e);
         }
-
-        Log::info(33);
     }
 }

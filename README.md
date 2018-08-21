@@ -94,6 +94,11 @@ git@github.com:purpen/mallache.git
  ###### 生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
  
+ 对接平台需求api 
+ ```
+ apidoc -i app/Http/Controllers/Api/V1/ -o public/V1apidoc -e "UrlKeyValue.*|TaskUser.*|Task.*|Tag.*|Stage.*|RecycleBin.*|PanShare.*|Nodes.*|Milestone.*|ItemUser.*|Group.*|DesignTarget.*|DesignSubstage.*|DesignStageNode.*|DesignStage.*|DesignQuotation.*|DesignProject.*|DesignPosition.*|DesignNotice.*|Commune.*|Yunpian.*"
+ ```
+ 
  ###### 请求api版本
  Accept: application/x.saas.v1+json
 
