@@ -966,7 +966,7 @@ class DemandController extends BaseController
         if ($item->user_id !== $this->auth_user_id || $item->status !== 6) {
             return $this->response->array($this->apiError());
         }
-        try {
+//        try {
             DB::beginTransaction();
 
 
@@ -983,11 +983,11 @@ class DemandController extends BaseController
             event(new ItemStatusEvent($item));
 
             DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            return $this->response->array($this->apiError('Error', 500));
-        }
+//        } catch (\Exception $e) {
+//            DB::rollBack();
+//            Log::error($e);
+//            return $this->response->array($this->apiError('Error', 500));
+//        }
 
         return $this->response->array($this->apiSuccess());
     }
