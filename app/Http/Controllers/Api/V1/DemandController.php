@@ -967,7 +967,7 @@ class DemandController extends BaseController
             return $this->response->array($this->apiError());
         }
 //        try {
-            DB::beginTransaction();
+//            DB::beginTransaction();
 
 
             //修改合同状态为已确认
@@ -982,7 +982,7 @@ class DemandController extends BaseController
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
 
-            DB::commit();
+//            DB::commit();
 //        } catch (\Exception $e) {
 //            DB::rollBack();
 //            Log::error($e);
