@@ -285,6 +285,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
         // 需求公司评价
         $api->post('/demand/evaluate', 'DemandController@evaluate');
+        //用户评价项目
+        $api->post('/demand/users/evaluate', 'DemandController@userEvaluate');
         // 发布需求方确认项目阶段
         $api->post('/itemStage/demandFirmItemStage', 'ItemStageController@demandFirmItemStage');
         // {delete} /demand/{id} 删除项目

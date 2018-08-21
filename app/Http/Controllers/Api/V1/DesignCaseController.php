@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Service\Statistics;
+use Illuminate\Support\Facades\DB;
 
 class DesignCaseController extends BaseController
 {
@@ -200,13 +202,17 @@ class DesignCaseController extends BaseController
             $all['label'] = $label;
         }
 
-
         try {
+            DB::beginTransaction();
             $designCase = DesignCaseModel::create($all);
             $random = $request->input('random') ?? '';
             AssetModel::setRandom($designCase->id, $random);
+            //案例数量
+            $id[] = $design->id;
+            Statistics::saveDesignCaseNum($id);
+            DB::commit();
         } catch (\Exception $e) {
-
+            DB::rollBack();
             throw new HttpException($e->getMessage(), $e->getCode());
         }
 
