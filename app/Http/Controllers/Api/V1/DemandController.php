@@ -979,7 +979,7 @@ class DemandController extends BaseController
             //设计公司平均价格
             $id[] = $item->design_company_id;
             $statistics = new Statistics;
-            $statistics->saveAveragePrice($id);
+            $statistics->saveAveragePrice($id,$contract->total);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
