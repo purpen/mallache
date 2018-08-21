@@ -289,7 +289,7 @@ class DemandController extends BaseController
     {
         $item = $this->checkItemStatusAndAuth($id);
 
-        if ($item->status != -2) {
+        if (!in_array($item->status , [-1 , -2 , -3])) {
             return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
         }
 
@@ -652,7 +652,7 @@ class DemandController extends BaseController
                 $where_in = [1];
                 break;
             case 2:
-                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22];
+                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22 , 45];
                 break;
             case 3:
                 $where_in = [18, 22];
@@ -786,7 +786,7 @@ class DemandController extends BaseController
         if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if ($item->user_id !== $this->auth_user_id || $item->status !== 4) {
+        if ($item->user_id !== $this->auth_user_id || $item->status !== 45) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
@@ -906,7 +906,7 @@ class DemandController extends BaseController
         if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if ($item->user_id != $this->auth_user_id || $item->status != 4) {
+        if ($item->user_id != $this->auth_user_id || $item->status != 45) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 

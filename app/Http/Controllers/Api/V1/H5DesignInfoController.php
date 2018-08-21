@@ -61,6 +61,7 @@ class H5DesignInfoController extends BaseController
             }
 
             $item->stage_status = 3;
+            $item->design_types = '[1]';
             $item->save();
 
             $design = H5Design::firstOrCreate(['item_id' => intval($item_id)]);
