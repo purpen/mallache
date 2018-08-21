@@ -139,17 +139,6 @@ class Tools
      */
     public function getMessageQuantity(int $user_id)
     {
-//        //有序列表key
-//        $key = 'mallache:user:message';
-//        //member
-//        $member = 'user:' . $user_id;
-//
-//        //ZSCORE key member
-//        $quantity = Redis::zscore($key, $member);
-//        if ($quantity == 'nil') {
-//            return 0;
-//        }
-
         $data = array(
             'message' => 0,
             'notice' => 0,
@@ -175,7 +164,6 @@ class Tools
         if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
         $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
 
-        // $data = Message::where(['status' => 0, 'user_id' => $user_id])->count();
         return $data;
     }
 
