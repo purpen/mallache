@@ -978,7 +978,8 @@ class DemandController extends BaseController
             event(new ItemStatusEvent($item));
             //设计公司平均价格
             $id[] = $item->design_company_id;
-            Statistics::saveAveragePrice($id);
+            $statistics = new Statistics;
+            $statistics->saveAveragePrice($id);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

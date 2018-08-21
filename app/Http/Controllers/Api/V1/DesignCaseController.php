@@ -209,7 +209,8 @@ class DesignCaseController extends BaseController
             AssetModel::setRandom($designCase->id, $random);
             //案例数量
             $id[] = $design->id;
-            Statistics::saveDesignCaseNum($id);
+            $statistics = new Statistics;
+            $statistics->saveDesignCaseNum($id);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

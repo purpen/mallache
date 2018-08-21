@@ -400,7 +400,7 @@ class Statistics
      * @return array
      */
     public function testMatching($params)
-    {;
+    {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($params['design_cost']);
         $design_id_arr = [];
