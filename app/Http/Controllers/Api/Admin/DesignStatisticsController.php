@@ -63,6 +63,8 @@ class DesignStatisticsController extends Controller
      * @apiName statisticsList
      * @apiGroup DesignStatistics
      * @apiParam {integer} page 页数
+     * @apiParam {integer} sort 排序:0正序,1倒叙
+     * @apiParam {integer} type 排序类型:0id,1人工干预分值
      * @apiParam {integer} per_page 条数
      * @apiParam {string} token
      * @apiSuccessExample 成功响应:
@@ -102,9 +104,19 @@ class DesignStatisticsController extends Controller
     public function statisticsList(Request $request)
     {
         $per_page = (int)$request->input('per_page') ?? $this->per_page;
-        $per_page = (int)$request->input('per_page') ?? $this->per_page;
+        //排序类型
+        $type = (int)$request->input('type') ?? 0;
+        //排序
+        $request->input('sort') != 0 ? $sort = 'desc' : $sort = 'asc';
         $statissttics = DesignStatistics::query();
-        $lists = $statissttics->orderBy('id','desc')->paginate($per_page);
+        if($type == 1){
+            //分工干预分值
+            $field = 'intervene';
+        }else{
+            //默认主键
+            $field = 'id';
+        }
+        $lists = $statissttics->orderBy($field,$sort)->paginate($per_page);
         if(!empty($lists)){
             foreach ($lists as $key => $val){
                 $company_name = DesignCompanyModel::select('company_name','contact_name','phone','address')->where('id',(int)$val->design_company_id)->first();
@@ -124,6 +136,8 @@ class DesignStatisticsController extends Controller
      * @apiName testMatching
      * @apiGroup DesignStatistics
      * @apiParam {string} token
+     * @apiParam {integer} city 城市
+     * @apiParam {integer} province 省份
      * @apiParam {string} design_types 设计类别：[1,2,3]
      * @apiParam {integer} design_cost 设计费用：1. 1-5万；2. 5-10万；3. 10-20；4. 20-30；5. 30-50；6. 50以上
      * @apiParam {integer} type 设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
@@ -162,6 +176,8 @@ class DesignStatisticsController extends Controller
         $rules = [
             'type' => 'required|integer',
             'design_types' => 'required',
+            'city' => 'required|integer',
+            'province' => 'required|integer',
             'design_cost' => 'required|integer'
         ];
         $validator = Validator::make($params, $rules);

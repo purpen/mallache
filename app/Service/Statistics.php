@@ -433,9 +433,35 @@ class Statistics
             //大于4个则会执行精准匹配
             if(count($design) > 4){
                 //地区 第一步
-                $area = $matching->sortArea($design,$weight_data->area);
+                $areas = [];
+                foreach ($design as $val){
+                    $score = 0;
+                    if($weight_data->area > 0){
+                        //查询公司详情
+                        $company = DesignCompanyModel::where('id',$val)->first();
+                        if(!empty($company)){
+                            if($params['province'] == $company->province){
+                                //省份占比重30
+                                $score = 30;
+                            }
+                            if($company->city == $params['city'] && $company->province == $params['province']){
+                                //省份和城市都存在占比重100
+                                $score = 100;
+                            }
+                            $area = $weight_data->area / 100;
+                            if($score <= 0){
+                                $score = 0;
+                            }else{
+                                $score = $score * $area;
+                            }
+                        }
+                        $areas[$val] = $score;
+                    }else{
+                        $areas[$val] = 0;
+                    }
+                }
                 //接单成功率
-                $success_rate = $matching->sortSuccessRate($area,$weight_data->success_rate);
+                $success_rate = $matching->sortSuccessRate($areas,$weight_data->success_rate);
                 //评价分值
                 $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
                 //案例数量
