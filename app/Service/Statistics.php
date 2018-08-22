@@ -477,15 +477,14 @@ class Statistics
                 //最多取4个设计公司
                 $design = array_slice($data, 0, 4);
             }
-            $designCompanys = DesignCompanyModel::select('company_name','address','contact_name','phone','id')
-                ->whereIn('id', $design)
-                ->get();
-            if(!empty($designCompanys)){
-                foreach ($designCompanys as $designCompany){
+            $designCompanys = DesignCompanyModel::query();
+            $res = $designCompanys->select('id','company_name','province','city','address','contact_name','phone','company_abbreviation')->whereIn('id', $design)->paginate(4);
+            if(!empty($res)){
+                foreach ($res as $designCompany){
                     $designCompany->design_statistic = $designCompany->designStatistic;
                 }
             }
-            return $designCompanys;
+            return $res;
         } else {
             //匹配失败
             return $designCompanys;

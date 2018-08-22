@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\DesignStatisticsTransformer;
+use App\Http\Transformer\DesignCompanyStatisticsTransformer;
 class DesignStatisticsController extends Controller
 {
     /**
@@ -146,6 +147,8 @@ class DesignStatisticsController extends Controller
      * "data": [
      *     {
      *         "company_name": "YANG DESGIN",      //公司名称
+     *         "province_value": "北京市",          //省份
+     *         "city_value": "市辖区",              //城市
      *         "address": "268号",                 //详细地址
      *         "contact_name": "杨先生",            //联系人姓名
      *         "phone": "198278787",               //手机
@@ -168,6 +171,14 @@ class DesignStatisticsController extends Controller
      * "meta": {
      *     "message": "Success",
      *     "status_code": 200,
+     *     "pagination": {
+     *         "total": 4,
+     *         "count": 4,
+     *         "per_page": 4,
+     *         "current_page": 1,
+     *         "total_pages": 1,
+     *         "links": []
+     *      }
      * }
      */
     public function testMatching(Request $request)
@@ -185,9 +196,9 @@ class DesignStatisticsController extends Controller
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
         $statistics = new Statistics;
-        $data = $statistics->testMatching($params);
-        if(!empty($data)){
-            return $this->response->array($this->apiSuccess('Success','200',$data));
+        $lists = $statistics->testMatching($params);
+        if(!empty($lists)){
+            return $this->response->paginator($lists,new DesignCompanyStatisticsTransformer)->setMeta($this->apiMeta());
         }
         return $this->response->array($this->apiSuccess('Success','200',[]));
     }
