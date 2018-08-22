@@ -9,6 +9,8 @@ use App\Models\DesignCaseModel;
 use App\Models\DesignItemModel;
 use App\Models\DesignStatistics;
 use App\Models\DesignCompanyModel;
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class Statistics 设计公司信息统计
  * @package App\Service
@@ -426,6 +428,7 @@ class Statistics
         //权重
         $weight = new Weight;
         $weight_data = $weight->getWeight();
+        $designCompanys = [];
         if (!empty($design)) {
             //大于4个则会执行精准匹配
             if(count($design) > 4){
@@ -448,13 +451,18 @@ class Statistics
                 //最多取4个设计公司
                 $design = array_slice($data, 0, 4);
             }
-            //取出设计公司信息
-            return DesignCompanyModel::select('company_name','address','contact_name','phone')
+            $designCompanys = DesignCompanyModel::select('company_name','address','contact_name','phone','id')
                 ->whereIn('id', $design)
                 ->get();
+            if(!empty($designCompanys)){
+                foreach ($designCompanys as $designCompany){
+                    $designCompany->design_statistic = $designCompany->designStatistic;
+                }
+            }
+            return $designCompanys;
         } else {
             //匹配失败
-            return [];
+            return $designCompanys;
         }
     }
 

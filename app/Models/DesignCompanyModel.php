@@ -85,7 +85,6 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
         'logo_image',
         'design_type_value',
-
     ];
 
     /**
@@ -94,6 +93,14 @@ class DesignCompanyModel extends BaseModel
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
+     * 一对一关联到公司信息统计
+     */
+    public function designStatistic()
+    {
+        return $this->hasOne('App\Models\DesignStatistics','design_company_id');
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Service\Statistics;
 use Dingo\Api\Http\Request;
 use App\Models\DesignStatistics;
+use App\Models\DesignCompanyModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -101,11 +102,12 @@ class DesignStatisticsController extends Controller
     public function statisticsList(Request $request)
     {
         $per_page = (int)$request->input('per_page') ?? $this->per_page;
+        $per_page = (int)$request->input('per_page') ?? $this->per_page;
         $statissttics = DesignStatistics::query();
         $lists = $statissttics->orderBy('id','desc')->paginate($per_page);
         if(!empty($lists)){
             foreach ($lists as $key => $val){
-                $company_name = DesignStatistics::find($val->id)->companyName;
+                $company_name = DesignCompanyModel::select('company_name','contact_name','phone','address')->where('id',(int)$val->design_company_id)->first();
                 if(!empty($company_name)){
                     $lists{$key}->company_name = $company_name->company_name;
                 }else{
@@ -129,10 +131,24 @@ class DesignStatisticsController extends Controller
      * {
      * "data": [
      *     {
-     *         "company_name": "YANG DESGIN", //公司名称
-     *         "address": "268号", //详细地址
-     *         "contact_name": "杨先生", //联系人姓名
-     *         "phone": "198278787" //手机
+     *         "company_name": "YANG DESGIN",      //公司名称
+     *         "address": "268号",                 //详细地址
+     *         "contact_name": "杨先生",            //联系人姓名
+     *         "phone": "198278787",               //手机
+     *         "design_statistic": {               //公司统计信息
+     *              "design_company_id": 7,        //设计公司ID
+     *              "score": 0,                    //公司评分
+     *              "jump_count": 0,               //跳单次数
+     *              "level": 0,                    //人工分级
+     *              "average_price": "8.60",       //接单均价
+     *              "last_time": 0,                //最近接单时间
+     *              "recommend_count": 117,        //推荐次数
+     *              "cooperation_count": 5,        //合作次数
+     *              "success_rate": 0.0427,        //成功率
+     *              "case": 3,                     //作品案例数
+     *              "intervene": 0,                //人工干预分值
+     *              "recommend_time": 1534331831   //最近推荐时间
+     *          }
      *      }
      * ],
      * "meta": {
