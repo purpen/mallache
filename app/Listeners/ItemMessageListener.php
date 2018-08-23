@@ -224,7 +224,7 @@ class ItemMessageListener
         $item = $event->item;
         $item_info = $item->itemInfo();
 
-        $title = '匹配失败';
+        $title = '项目对接失败，请重新发布需求';
         $content = '【' . $item_info['name'] . '】' . '未达成合作，匹配失败';
         Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
 

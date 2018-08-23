@@ -927,7 +927,7 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::find($all['design_company_id']);
         $tools = new Tools();
 
-        $title = '项目报价被拒';
+        $title = '项目被拒';
         if(empty($refuse_types)){
             if(empty($summary)){
                 $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:无';
