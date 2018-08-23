@@ -189,6 +189,8 @@ class QuotationController extends BaseController
                 $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
                 if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
 
+                    Log::info(round($quotation_info['price'], 2));
+                    Log::info(round(((float)$quotation_info['total_price'] + $a), 2));
                     throw new MassageException('合计金额和总计金额不符', 403);
                 }
 
@@ -203,7 +205,7 @@ class QuotationController extends BaseController
 
                 $item_recommend->quotation_id = $quotation->id;
                 $item_recommend->design_company_status = 2;
-                if ($item_recommend->save()){
+                if ($item_recommend->save()) {
                     $item->status = 45;
                     $item->save();
                 }
