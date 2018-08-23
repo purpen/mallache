@@ -15,9 +15,9 @@ class DesignStatistics extends BaseModel
     /**
      * 关联设计公司模型
      */
-    public function companyName()
+    public function designCompany()
     {
-        return $this->hasOne('App\Models\DesignCompanyModel','id','design_company_id');
+        return $this->belongsTo('App\Models\DesignCompanyModel','design_company_id');
     }
 
     /**

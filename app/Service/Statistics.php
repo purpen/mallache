@@ -8,7 +8,10 @@ use App\Models\Evaluate;
 use App\Models\DesignCaseModel;
 use App\Models\DesignItemModel;
 use App\Models\DesignStatistics;
+use Illuminate\Support\Facades\DB;
 use App\Models\DesignCompanyModel;
+use Illuminate\Support\Facades\Log;
+
 /**
  * Class Statistics 设计公司信息统计
  * @package App\Service
@@ -170,19 +173,17 @@ class Statistics
      */
     public function saveAveragePrice($id,$price)
     {
-        $designstatistics = new DesignStatistics;
-        $data = $designstatistics->select('id','average_price','cooperation_count')->where(['design_company_id'=>$id])->first();
+        $data = DesignStatistics::select('id','average_price','cooperation_count')->where(['design_company_id'=>$id])->first();
         if(!empty($data)){
-            $data = json_decode($data,1);
             //总价格
-            $prices = $data['average_price'] * $data['cooperation_count'];
+            $prices = $data->average_price * $data->cooperation_count;
             $prices = $prices + $price;
-            $cooperation_count = $data['cooperation_count'] + 1;
+            $cooperation_count = $data->cooperation_count + 1;
             $average_price = $prices / $cooperation_count;
             $average_price = sprintf("%.2f", $average_price);
-            $list = ['average_price'=>$average_price,'cooperation_count'=>$cooperation_count];
-            //更新平均价格与合作次数
-            $res = $designstatistics->where(['id'=>$data['id']])->update($list);
+            $data->average_price = $average_price;
+            $data->cooperation_count = $cooperation_count;
+            $res = $data->save();
             if(empty($res)){
                 return false;
             }
@@ -202,20 +203,20 @@ class Statistics
      */
     public function saveSingleTime($design_company_id,$last_time)
     {
-        $designstatistics = new DesignStatistics;
         foreach($design_company_id as $v){
             //查询公司信息是否存在
-            $data = $designstatistics->select('id')->where(['design_company_id'=>$v])->first();
+            $data = DesignStatistics::select('id','last_time')->where(['design_company_id'=>$v])->first();
             if(empty($data)){
+                $designstatistics = new DesignStatistics;
                 //新增一条公司信息
                 $res = $designstatistics->insert(['last_time'=>$last_time,'design_company_id'=>$v]);
                 if(empty($res)){
                     return false;
                 }
             }else{
-                $data = json_decode($data,1);
                 //更新最近接单时间
-                $res = $designstatistics->where(['id'=>$data['id']])->update(['last_time'=>$last_time]);
+                $data->last_time = $last_time;
+                $res = $data->save();
                 if(empty($res)){
                     return false;
                 }
@@ -239,7 +240,7 @@ class Statistics
         $designstatistics = new DesignStatistics;
         foreach($params as $v){
             //查询设计公司信息是否存在
-            $data = $designstatistics->select('id','case')->where(['design_company_id'=>$v])->first();
+            $data = DesignStatistics::select('id','case')->where(['design_company_id'=>$v])->first();
             if(empty($data)){
                 //新增一条设计公司信息
                 $res = $designstatistics->insert(['case'=>1,'design_company_id'=>$v]);
@@ -247,10 +248,9 @@ class Statistics
                     return false;
                 }
             }else{
-                $data = json_decode($data,1);
-                $case = (int)$data['case'] + 1;
+                $data->case = (int)$data->case + 1;
                 //更新设计公司案例数量
-                $res = $designstatistics->where(['id'=>$data['id']])->update(['case'=>$case]);
+                $res = $data->save();
                 if(empty($res)){
                     return false;
                 }
@@ -429,35 +429,70 @@ class Statistics
         //权重
         $weight = new Weight;
         $weight_data = $weight->getWeight();
+        if(empty($weight_data)){
+            return [];
+        }
+        $designCompanys = [];
+        //只要有设计公司就可以精准匹配
         if (!empty($design)) {
-            //大于4个则会执行精准匹配
-            if(count($design) > 4){
-                //地区 第一步
-                $area = $matching->sortArea($design,$weight_data->area);
-                //接单成功率
-                $success_rate = $matching->sortSuccessRate($area,$weight_data->success_rate);
-                //评价分值
-                $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
-                //案例数量
-                $sase = $matching->sortSase($evaluate,$weight_data->case);
-                //最近推荐时间
-                //$time = $this->sortTime($sase,$weight_data->last_time);
-                //接单均价
-                //$design = $this->sortPrice($sase,$weight_data->average_price);
-                //人工干预
-                $intervent = $matching->sortIntervene($sase);
-                //取出id
-                $data = array_keys($intervent);
-                //最多取4个设计公司
-                $design = array_slice($data, 0, 4);
+            //地区 第一步
+            $areas = [];
+            foreach ($design as $val){
+                $score = 0;
+                if($weight_data->area > 0){
+                    //查询公司详情
+                    $company = DesignCompanyModel::where('id',$val)->first();
+                    if(!empty($company)){
+                        if($params['province'] == $company->province){
+                            //省份占比重30
+                            $score = 30;
+                        }
+                        if($company->city == $params['city'] && $company->province == $params['province']){
+                            //省份和城市都存在占比重100
+                            $score = 100;
+                        }
+                        $area = $weight_data->area / 100;
+                        if($score <= 0){
+                            $score = 0;
+                        }else{
+                            $score = $score * $area;
+                        }
+                    }
+                    $areas[$val] = $score;
+                }else{
+                    $areas[$val] = 0;
+                }
             }
-            //取出设计公司信息
-            return DesignCompanyModel::select('company_name','address','contact_name','phone')
-                ->whereIn('id', $design)
-                ->get();
+            //接单成功率
+            $success_rate = $matching->sortSuccessRate($areas,$weight_data->success_rate);
+            //评价分值
+            $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
+            //案例数量
+            $sase = $matching->sortSase($evaluate,$weight_data->case);
+            //最近推荐时间
+            //$time = $matching->sortTime($sase,$weight_data->last_time);
+            //接单均价
+            //$design = $matching->sortPrice($time,$weight_data->average_price);
+            //人工干预
+            $intervent = $matching->sortIntervene($sase);
+            //取出id
+            $data = array_keys($intervent);
+            //测试可以给20个设计公司
+            $design = array_slice($data, 0, 20);
+            $designCompanys = DesignCompanyModel::query();
+            $res = $designCompanys->select('id','company_name','province','city','address','contact_name','phone','company_abbreviation')
+                                  ->orderByRaw(DB::raw("FIND_IN_SET(id, '" . implode(',', $design) . "'" . ')'))
+                                  ->whereIn('id', $design)
+                                  ->paginate(20);
+            if(!empty($res)){
+                foreach ($res as $designCompany){
+                    $designCompany->design_statistic = $designCompany->designStatistic;
+                }
+            }
+            return $res;
         } else {
             //匹配失败
-            return [];
+            return $designCompanys;
         }
     }
 

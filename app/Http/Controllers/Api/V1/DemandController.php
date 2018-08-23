@@ -973,8 +973,6 @@ class DemandController extends BaseController
         }
         try {
             DB::beginTransaction();
-
-
             //修改合同状态为已确认
             $contract = $item->contract;
             $contract->status = 1;
@@ -986,7 +984,7 @@ class DemandController extends BaseController
 
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
-            //设计公司平均价格
+            //增加设计公司平均价格和接单次数
             $id[] = $item->design_company_id;
             $statistics = new Statistics;
             $statistics->saveAveragePrice($id,$contract->total);
