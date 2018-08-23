@@ -188,6 +188,7 @@ class QuotationController extends BaseController
                 // 基础报价不含税
                 $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
 
+                Log::info(1111111);
                 Log::info(round($quotation_info['price'], 2));
                 Log::info(round(((float)$quotation_info['total_price'] + $a), 2));
 
