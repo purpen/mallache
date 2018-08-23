@@ -17,11 +17,12 @@ class Matching
     public function __construct(Item $item)
     {
         $this->item = $item;
+        //新设计公司
+        $this->unmatch = [];
     }
 
     /**
      * 匹配执行
-     * @params $uid    int    当前登录用户id
      */
     public function handle()
     {
@@ -60,11 +61,8 @@ class Matching
                 $data = array_keys($intervent);
                 //最多取4个设计公司
                 $design = array_slice($data, 0, 4);
-            }
-            //更新设计公司的最近推荐时间
-            foreach ($design as $id) {
-                $statistics = new Statistics;
-                $statistics->recommendTime($id);
+                //新设计公司策略
+                $design = $this->newDesignCompany($design);
             }
             //判断是否匹配到设计公司
             if (empty($design)) {
@@ -84,6 +82,11 @@ class Matching
                 }
                 //保存匹配信息,更改状态
                 $this->item->save();
+                //更新设计公司的最近推荐时间
+                $statistics = new Statistics;
+                foreach ($design as $id) {
+                    $statistics->recommendTime($id);
+                }
                 // 特殊用户处理
                 $this->PSTestAction();
                 //触发项目状态变更事件
@@ -275,6 +278,7 @@ class Matching
             $scores = 0;
             //成功总数量
             $number = 0;
+            $recommend = [];
             foreach ($design as $key => $val){
                 $sore[$key]['sore'] = 0;
                 //查询公司详情
@@ -293,6 +297,8 @@ class Matching
                     }
                 }
             }
+            //未推荐过的新用户
+            $this->unmatch = $recommend;
             //未推荐过的
             if(!empty($recommend) && $scores > 0 && $number > 0){;
                 //平均值
@@ -344,11 +350,17 @@ class Matching
             $num = 100;
             $weight_score = $weight_score / 100;
             foreach ($sore as $k => $v){
-                if($num <= 0){
-                    $num = 1;
-                }else{
-                    $weight = $num * $weight_score;
+                //评分为0的新用户本项分值默认为80分
+                if($v['sore'] == 0){
+                    $weight = 80 * $weight_score;
                     $design[$k] += $weight;
+                }else{
+                    if($num <= 0){
+                        $num = 1;
+                    }else{
+                        $weight = $num * $weight_score;
+                        $design[$k] += $weight;
+                    }
                 }
                 $num--;
             }
@@ -495,4 +507,17 @@ class Matching
         return $design;
     }
 
+    //新设计公司策略
+    public function newDesignCompany($design=[])
+    {
+        if(!empty($this->unmatch)){
+            //返回新设计公司差集
+            $unmatch = array_diff($this->unmatch,$design);
+            if(!empty($unmatch)){
+                //随机一个新设计公司到推荐里
+                $design[3] = $unmatch[array_rand($unmatch,1)];
+            }
+        }
+        return $design;
+    }
 }
