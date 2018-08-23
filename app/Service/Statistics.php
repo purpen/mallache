@@ -8,6 +8,7 @@ use App\Models\Evaluate;
 use App\Models\DesignCaseModel;
 use App\Models\DesignItemModel;
 use App\Models\DesignStatistics;
+use Illuminate\Support\Facades\DB;
 use App\Models\DesignCompanyModel;
 use Illuminate\Support\Facades\Log;
 
@@ -428,57 +429,61 @@ class Statistics
         //权重
         $weight = new Weight;
         $weight_data = $weight->getWeight();
+        if(empty($weight_data)){
+            return [];
+        }
         $designCompanys = [];
+        //只要有设计公司就可以精准匹配
         if (!empty($design)) {
-            //大于4个则会执行精准匹配
-            if(count($design) > 4){
-                //地区 第一步
-                $areas = [];
-                foreach ($design as $val){
-                    $score = 0;
-                    if($weight_data->area > 0){
-                        //查询公司详情
-                        $company = DesignCompanyModel::where('id',$val)->first();
-                        if(!empty($company)){
-                            if($params['province'] == $company->province){
-                                //省份占比重30
-                                $score = 30;
-                            }
-                            if($company->city == $params['city'] && $company->province == $params['province']){
-                                //省份和城市都存在占比重100
-                                $score = 100;
-                            }
-                            $area = $weight_data->area / 100;
-                            if($score <= 0){
-                                $score = 0;
-                            }else{
-                                $score = $score * $area;
-                            }
+            //地区 第一步
+            $areas = [];
+            foreach ($design as $val){
+                $score = 0;
+                if($weight_data->area > 0){
+                    //查询公司详情
+                    $company = DesignCompanyModel::where('id',$val)->first();
+                    if(!empty($company)){
+                        if($params['province'] == $company->province){
+                            //省份占比重30
+                            $score = 30;
                         }
-                        $areas[$val] = $score;
-                    }else{
-                        $areas[$val] = 0;
+                        if($company->city == $params['city'] && $company->province == $params['province']){
+                            //省份和城市都存在占比重100
+                            $score = 100;
+                        }
+                        $area = $weight_data->area / 100;
+                        if($score <= 0){
+                            $score = 0;
+                        }else{
+                            $score = $score * $area;
+                        }
                     }
+                    $areas[$val] = $score;
+                }else{
+                    $areas[$val] = 0;
                 }
-                //接单成功率
-                $success_rate = $matching->sortSuccessRate($areas,$weight_data->success_rate);
-                //评价分值
-                $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
-                //案例数量
-                $sase = $matching->sortSase($evaluate,$weight_data->case);
-                //最近推荐时间
-                //$time = $this->sortTime($sase,$weight_data->last_time);
-                //接单均价
-                //$design = $this->sortPrice($sase,$weight_data->average_price);
-                //人工干预
-                $intervent = $matching->sortIntervene($sase);
-                //取出id
-                $data = array_keys($intervent);
-                //最多取4个设计公司
-                $design = array_slice($data, 0, 4);
             }
+            //接单成功率
+            $success_rate = $matching->sortSuccessRate($areas,$weight_data->success_rate);
+            //评价分值
+            $evaluate = $matching->sortEvaluate($success_rate,$weight_data->score);
+            //案例数量
+            $sase = $matching->sortSase($evaluate,$weight_data->case);
+            //最近推荐时间
+            //$time = $matching->sortTime($sase,$weight_data->last_time);
+            //接单均价
+            //$design = $matching->sortPrice($time,$weight_data->average_price);
+            //人工干预
+            $intervent = $matching->sortIntervene($sase);
+            //取出id
+            $data = array_keys($intervent);
+            //测试可以给20个设计公司
+            $design = array_slice($data, 0, 20);
             $designCompanys = DesignCompanyModel::query();
-            $res = $designCompanys->select('id','company_name','province','city','address','contact_name','phone','company_abbreviation')->whereIn('id', $design)->paginate(4);
+            $res = $designCompanys->select('id','company_name','province','city','address','contact_name','phone','company_abbreviation')
+                                  ->orderByRaw(DB::raw("FIND_IN_SET(id, '" . implode(',', $design) . "'" . ')'))
+                                  ->whereIn('id', $design)
+                                  ->paginate(20);
             if(!empty($res)){
                 foreach ($res as $designCompany){
                     $designCompany->design_statistic = $designCompany->designStatistic;
