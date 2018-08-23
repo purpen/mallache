@@ -281,6 +281,11 @@ class QuotationController extends BaseController
         } catch (MassageException $e) {
             DB::rollBack();
             Log::error($e);
+
+            Log::error(1111111);
+            Log::error(round($quotation_info['price'], 2));
+            Log::error(round(((float)$quotation_info['total_price'] + $a), 2));
+
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         } catch
         (\Exception $e) {
