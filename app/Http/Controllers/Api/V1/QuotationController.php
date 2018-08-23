@@ -280,7 +280,6 @@ class QuotationController extends BaseController
             DB::commit();
         } catch (MassageException $e) {
             DB::rollBack();
-            Log::error($e);
 
             Log::error(1111111);
             Log::error(round($quotation_info['price'], 2));
