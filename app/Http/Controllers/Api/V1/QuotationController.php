@@ -187,10 +187,11 @@ class QuotationController extends BaseController
 
                 // 基础报价不含税
                 $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
-                if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
 
-                    Log::info(round($quotation_info['price'], 2));
-                    Log::info(round(((float)$quotation_info['total_price'] + $a), 2));
+                Log::info(round($quotation_info['price'], 2));
+                Log::info(round(((float)$quotation_info['total_price'] + $a), 2));
+
+                if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
                     throw new MassageException('合计金额和总计金额不符', 403);
                 }
 
