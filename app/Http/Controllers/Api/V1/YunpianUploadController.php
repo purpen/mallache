@@ -1202,7 +1202,7 @@ class YunpianUploadController extends BaseController
         $pan_dir->name = trim($name);
         $pan_dir->save();
 
-        return $this->response->array($this->apiSuccess());
+        return $this->response->item($pan_dir, new YunpanListTransformer())->setMeta($this->apiMeta());
     }
 
 
