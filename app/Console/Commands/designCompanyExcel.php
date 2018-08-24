@@ -52,11 +52,16 @@ class designCompanyExcel extends Command
         ->setCellValue( 'B1', '公司全称' )
             ->setCellValue( 'C1', '公司简称' )
             ->setCellValue( 'D1', '用户id' )
-            ->setCellValue( 'E1', '用户手机号' );
+            ->setCellValue( 'E1', '用户手机号' )
+            ->setCellValue( 'F1', '网址' )
+            ->setCellValue( 'G1', '详细地址' )
+            ->setCellValue( 'H1', '联系人' )
+            ->setCellValue( 'I1', '联系人邮箱' )
+            ->setCellValue( 'J1', '擅长领域' );
 
         $designObj = DB::table('design_company')
             ->join('users','design_company.id', '=', 'users.design_company_id' )
-            ->select(['design_company.id as ID', 'company_name as 公司全称', 'company_abbreviation as 公司简称' , 'users.id as 用户id'  , 'users.phone as 用户手机号'])
+            ->select(['design_company.id as ID', 'company_name as 公司全称', 'company_abbreviation as 公司简称', 'contact_name as 联系人', 'design_company.email as 联系人邮箱', 'address as 详细地址', 'web as 网址', 'good_field as 擅长领域' , 'users.id as 用户id'  , 'users.phone as 用户手机号'])
             ->get();
 
         $new_data = [];
@@ -71,7 +76,7 @@ class designCompanyExcel extends Command
 
         $j = 2;
         foreach($new_data as $val){
-            $currentSheet->setCellValue('A'.$j,$val['ID'])->setCellValue('B'.$j,$val['公司全称'])->setCellValue('C'.$j, $val['公司简称'])->setCellValue('D'.$j, $val['用户id'])->setCellValue('E'.$j, $val['用户手机号']);
+            $currentSheet->setCellValue('A'.$j,$val['ID'])->setCellValue('B'.$j,$val['公司全称'])->setCellValue('C'.$j, $val['公司简称'])->setCellValue('D'.$j, $val['用户id'])->setCellValue('E'.$j, $val['用户手机号'])->setCellValue('F'.$j, $val['网址'])->setCellValue('G'.$j, $val['详细地址'])->setCellValue('H'.$j, $val['联系人'])->setCellValue('I'.$j, $val['联系人邮箱'])->setCellValue('J'.$j, $val['擅长领域']);
             $j++; // 每循环一次换一行写入数据
         }
         $sheeetWrite = \PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');

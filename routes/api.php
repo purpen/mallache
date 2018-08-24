@@ -387,6 +387,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/message/getMessageList', 'MessageController@getMessageList');
         //新消息数量确认阅读
         $api->put('/message/trueRead', 'MessageController@trueRead');
+        //获取项目通知数量
+        $api->get('/message/getMessageProjectNotice', 'MessageController@getMessageProjectNotice');
 
         /**
          * 资金流水记录列表

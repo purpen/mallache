@@ -151,7 +151,7 @@ class DesignController extends BaseController
 
             $tools = new Tools();
 
-            $title = '项目报价被拒';
+            $title = '项目被拒';
             if (empty($refuse_types)){
                 if(empty($summary)){
                     $content = '【' . ($item->itemInfo())['name'] . '】' . '设计公司拒单原因:无';
