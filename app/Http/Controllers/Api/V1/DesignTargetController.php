@@ -581,23 +581,139 @@ class DesignTargetController extends BaseController
             $year_u_money += $year_u_item->cost;
             $year_u_count += 1;
         }
+        //平面
+        $year_g_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('status', 1)
+            ->where('type', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //平面价钱，数量
+        $year_g_money = 0;
+        $year_g_count = 0;
+        foreach ($year_g_items as $year_g_item){
+            $year_g_money += $year_g_item->cost;
+            $year_g_count += 1;
+        }
+        //H5
+        $year_h_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('status', 1)
+            ->where('type', 4)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //h5价钱，数量
+        $year_h_money = 0;
+        $year_h_count = 0;
+        foreach ($year_h_items as $year_h_item){
+            $year_h_money += $year_h_item->cost;
+            $year_h_count += 1;
+        }
+        //包装
+        $year_pack_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('status', 1)
+            ->where('type', 5)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //包装价钱，数量
+        $year_pack_money = 0;
+        $year_pack_count = 0;
+        foreach ($year_pack_items as $year_pack_item){
+            $year_pack_money += $year_pack_item->cost;
+            $year_pack_count += 1;
+        }
+        //插画
+        $year_i_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('status', 1)
+            ->where('type', 6)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        //插画价钱，数量
+        $year_i_money = 0;
+        $year_i_count = 0;
+        foreach ($year_i_items as $year_i_item){
+            $year_i_money += $year_i_item->cost;
+            $year_i_count += 1;
+        }
 
+        //产品
         $data['year_p_count'] = $year_p_count;
         $data['year_p_money'] = $year_p_money;
-        if ($year_p_money + $year_u_money == 0){
-            $data['year_p_percentage'] = 0;
-        } else {
-            $data['year_p_percentage'] = round(($year_p_money / ($year_p_money + $year_u_money)) * 100 , 0);
-        }
+
+        //ui
         $data['year_u_count'] = $year_u_count;
         $data['year_u_money'] = $year_u_money;
-        if ($year_p_money + $year_u_money == 0){
+
+        //平面
+        $data['year_g_count'] = $year_g_count;
+        $data['year_g_money'] = $year_g_money;
+
+        //h5
+        $data['year_h_count'] = $year_h_count;
+        $data['year_h_money'] = $year_h_money;
+
+        //包装
+        $data['year_pack_count'] = $year_pack_count;
+        $data['year_pack_money'] = $year_pack_money;
+
+        //插画
+        $data['year_i_count'] = $year_i_count;
+        $data['year_i_money'] = $year_i_money;
+
+        if ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money == 0){
+            $data['year_p_percentage'] = 0;
             $data['year_u_percentage'] = 0;
+            $data['year_g_percentage'] = 0;
+            $data['year_h_percentage'] = 0;
+            $data['year_pack_percentage'] = 0;
+            $data['year_i_percentage'] = 0;
         } else {
-            $data['year_u_percentage'] = round(($year_u_money / ($year_p_money + $year_u_money)) * 100 , 0);
+            //产品
+            if ($year_p_money == 0){
+                $data['year_p_percentage'] = 0;
+            } else {
+                $data['year_p_percentage'] = round(($year_p_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
+            //ui
+            if ($year_u_money == 0){
+                $data['year_u_percentage'] = 0;
+            } else {
+                $data['year_u_percentage'] = round(($year_u_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
+            //平面
+            if ($year_g_money == 0){
+                $data['year_g_percentage'] = 0;
+            } else {
+                $data['year_g_percentage'] = round(($year_g_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
+            //h5
+            if ($year_h_money == 0){
+                $data['year_h_percentage'] = 0;
+            } else {
+                $data['year_h_percentage'] = round(($year_h_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
+            //包装
+            if ($year_pack_money == 0){
+                $data['year_pack_percentage'] = 0;
+            } else {
+                $data['year_pack_percentage'] = round(($year_pack_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
+            //插画
+            if ($year_i_money == 0){
+                $data['year_i_percentage'] = 0;
+            } else {
+                $data['year_i_percentage'] = round(($year_i_money / ($year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money)) * 100 , 0);
+            }
         }
-        $data['total_year_count'] = $year_p_count + $year_u_count;
-        $data['total_year_money'] = $year_p_money + $year_u_money;
+        //总的
+        $data['total_year_count'] = $year_p_count + $year_u_count + $year_g_count + $year_h_count + $year_pack_count + $year_i_count;
+        $data['total_year_money'] = $year_p_money + $year_u_money + $year_g_money + $year_h_money + $year_pack_money + $year_i_money;
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , $data));
 
@@ -634,6 +750,27 @@ class DesignTargetController extends BaseController
     "year_u_s_money": 0,
     "year_u_u_count": 0, //ui类型,用户体验
     "year_u_u_money": 0,
+
+    "year_g_v_count": 0, //平面 logo/VI设计
+    "year_g_v_count": 0,
+    "year_g_p_count": 0, //平面,海报/宣传册
+    "year_g_p_count": 0,
+    "year_g_a_count": 0, //平面,画册/书装
+    "year_g_a_count": 0,
+
+    "year_h_h_count": 0, //h5
+    "year_h_h_money": 0,
+
+    "year_pack_p_count": 0, //包装
+    "year_pack_p_money": 0,
+
+    "year_i_c_count": 0, //插画,商业
+    "year_i_c_money": 0,
+    "year_i_b_count": 0, //插画,书籍
+    "year_i_b_money": 0,
+    "year_i_i_count": 0, //插画,形象
+    "year_i_i_money": 0,
+
     "year_p_s_percentage": 0,
     "year_p_p_percentage": 0,
     "year_p_c_percentage": 0,
@@ -642,6 +779,18 @@ class DesignTargetController extends BaseController
     "year_u_i_percentage": 0,
     "year_u_s_percentage": 0,
     "year_u_u_percentage": 0,
+
+    "year_g_v_percentage": 0;
+    "year_g_p_percentage": 0;
+    "year_g_a_percentage": 0;
+
+    "year_h_h_percentage": 0;
+
+    "year_pack_p_percentage": 0;
+
+    "year_i_c_percentage": 0;
+    "year_i_b_percentage": 0;
+    "year_i_i_percentage": 0;
     "total_year_count": 0,
     "total_year_money": 0
     }
@@ -789,7 +938,149 @@ class DesignTargetController extends BaseController
         $data['year_u_u_count'] = $year_u_u_count;
         $data['year_u_u_money'] = $year_u_u_money;
 
-        if ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money == 0){
+        //平面logo vi
+        $year_g_v_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 3)
+            ->where('status', 1)
+            ->where('design_types', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_g_v_money = 0;
+        $year_g_v_count = 0;
+        foreach ($year_g_v_items as $year_g_v_item){
+            $year_g_v_money += $year_g_v_item->cost;
+            $year_g_v_count += 1;
+        }
+        $data['year_g_v_count'] = $year_g_v_count;
+        $data['year_g_v_money'] = $year_g_v_money;
+
+        //平面，海报
+        $year_g_p_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 3)
+            ->where('status', 1)
+            ->where('design_types', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_g_p_money = 0;
+        $year_g_p_count = 0;
+        foreach ($year_g_p_items as $year_g_p_item){
+            $year_g_p_money += $year_g_p_item->cost;
+            $year_g_p_count += 1;
+        }
+        $data['year_g_p_count'] = $year_g_p_count;
+        $data['year_g_p_money'] = $year_g_p_money;
+
+        //平面，画册书装
+        $year_g_a_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 3)
+            ->where('status', 1)
+            ->where('design_types', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_g_a_money = 0;
+        $year_g_a_count = 0;
+        foreach ($year_g_a_items as $year_g_a_item){
+            $year_g_a_money += $year_g_a_item->cost;
+            $year_g_a_count += 1;
+        }
+        $data['year_g_a_count'] = $year_g_a_count;
+        $data['year_g_a_money'] = $year_g_a_money;
+
+        //h5
+        $year_h_h_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 4)
+            ->where('status', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_h_h_money = 0;
+        $year_h_h_count = 0;
+        foreach ($year_h_h_items as $year_h_h_item){
+            $year_h_h_money += $year_h_h_item->cost;
+            $year_h_h_count += 1;
+        }
+        $data['year_h_h_count'] = $year_h_h_count;
+        $data['year_h_h_money'] = $year_h_h_money;
+
+        //包装
+        $year_pack_p_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 5)
+            ->where('status', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_pack_p_money = 0;
+        $year_pack_p_count = 0;
+        foreach ($year_pack_p_items as $year_pack_p_item){
+            $year_pack_p_money += $year_pack_p_item->cost;
+            $year_pack_p_count += 1;
+        }
+        $data['year_pack_p_count'] = $year_pack_p_count;
+        $data['year_pack_p_money'] = $year_pack_p_money;
+
+        //插画 商业
+        $year_i_c_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 6)
+            ->where('status', 1)
+            ->where('design_types', 1)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_i_c_money = 0;
+        $year_i_c_count = 0;
+        foreach ($year_i_c_items as $year_i_c_item){
+            $year_i_c_money += $year_i_c_item->cost;
+            $year_i_c_count += 1;
+        }
+        $data['year_i_c_count'] = $year_i_c_count;
+        $data['year_i_c_money'] = $year_i_c_money;
+
+        //插画 书
+        $year_i_b_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 6)
+            ->where('status', 1)
+            ->where('design_types', 2)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_i_b_money = 0;
+        $year_i_b_count = 0;
+        foreach ($year_i_b_items as $year_i_b_item){
+            $year_i_b_money += $year_i_b_item->cost;
+            $year_i_b_count += 1;
+        }
+        $data['year_i_b_count'] = $year_i_b_count;
+        $data['year_i_b_money'] = $year_i_b_money;
+
+        //插画 形象
+        $year_i_i_items =  DesignProject
+            ::where('design_company_id', $design_company_id)
+            ->where('pigeonhole', 1)
+            ->where('type', 6)
+            ->where('status', 1)
+            ->where('design_types', 3)
+            ->whereYear('created_at', date('Y'))
+            ->get();
+        $year_i_i_money = 0;
+        $year_i_i_count = 0;
+        foreach ($year_i_i_items as $year_i_i_item){
+            $year_i_i_money += $year_i_i_item->cost;
+            $year_i_i_count += 1;
+        }
+        $data['year_i_i_count'] = $year_i_i_count;
+        $data['year_i_i_money'] = $year_i_i_money;
+
+        if ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money == 0){
             $data['year_p_s_percentage'] = 0;
             $data['year_p_p_percentage'] = 0;
             $data['year_p_c_percentage'] = 0;
@@ -798,47 +1089,105 @@ class DesignTargetController extends BaseController
             $data['year_u_i_percentage'] = 0;
             $data['year_u_s_percentage'] = 0;
             $data['year_u_u_percentage'] = 0;
+
+            $data['year_g_v_percentage'] = 0;
+            $data['year_g_p_percentage'] = 0;
+            $data['year_g_a_percentage'] = 0;
+
+            $data['year_h_h_percentage'] = 0;
+
+            $data['year_pack_p_percentage'] = 0;
+
+            $data['year_i_c_percentage'] = 0;
+            $data['year_i_b_percentage'] = 0;
+            $data['year_i_i_percentage'] = 0;
         } else {
+            //产品
             if($year_p_s_money == 0){
                 $data['year_p_s_percentage'] = 0;
             }else{
-                $data['year_p_s_percentage'] = round(($year_p_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_p_s_percentage'] = round(($year_p_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
 
             if($year_p_p_money == 0){
                 $data['year_p_p_percentage'] = 0;
             }else{
-                $data['year_p_p_percentage'] = round(($year_p_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_p_p_percentage'] = round(($year_p_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
             if($year_p_c_money == 0){
                 $data['year_p_c_percentage'] = 0;
             }else{
-                $data['year_p_c_percentage'] = round(($year_p_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_p_c_percentage'] = round(($year_p_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
+            //ui
             if($year_u_a_money == 0){
                 $data['year_u_a_percentage'] = 0;
             }else{
-                $data['year_u_a_percentage'] = round(($year_u_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_u_a_percentage'] = round(($year_u_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
             if($year_u_w_money == 0){
                 $data['year_u_w_percentage'] = 0;
             }else{
-                $data['year_u_w_percentage'] = round(($year_u_w_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_u_w_percentage'] = round(($year_u_w_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
             if($year_u_i_money == 0){
                 $data['year_u_i_percentage'] = 0;
             }else{
-                $data['year_u_i_percentage'] = round(($year_u_i_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_u_i_percentage'] = round(($year_u_i_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
             if($year_u_s_money == 0){
                 $data['year_u_s_percentage'] = 0;
             }else{
-                $data['year_u_s_percentage'] = round(($year_u_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money)) * 100 , 0);
+                $data['year_u_s_percentage'] = round(($year_u_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
             }
             if($year_u_u_money == 0){
                 $data['year_u_u_percentage'] = 0;
             }else{
-                $data['year_u_u_percentage'] = 100 - ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money);
+                $data['year_u_u_percentage'] = round(($year_u_u_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            //平面
+            if($year_g_v_money == 0){
+                $data['year_g_v_percentage'] = 0;
+            }else{
+                $data['year_g_v_percentage'] = round(($year_g_v_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            if($year_g_p_money == 0){
+                $data['year_g_p_percentage'] = 0;
+            }else{
+                $data['year_g_p_percentage'] = round(($year_g_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            if($year_g_a_money == 0){
+                $data['year_g_a_percentage'] = 0;
+            }else{
+                $data['year_g_a_percentage'] = round(($year_g_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            //h5
+            if($year_h_h_money == 0){
+                $data['year_h_h_percentage'] = 0;
+            }else{
+                $data['year_h_h_percentage'] = round(($year_h_h_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            //包装
+            if($year_pack_p_money == 0){
+                $data['year_pack_p_percentage'] = 0;
+            }else{
+                $data['year_pack_p_percentage'] = round(($year_pack_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            //插画
+            if($year_i_c_money == 0){
+                $data['year_i_c_percentage'] = 0;
+            }else{
+                $data['year_i_c_percentage'] = round(($year_i_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            if($year_i_b_money == 0){
+                $data['year_i_b_percentage'] = 0;
+            }else{
+                $data['year_i_b_percentage'] = round(($year_i_b_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+            }
+            if($year_i_i_money == 0){
+                $data['year_i_i_percentage'] = 0;
+            }else{
+                $data['year_i_i_percentage'] = 100 - ($data['year_p_s_percentage'] + $data['year_p_p_percentage'] + $data['year_p_c_percentage'] + $data['year_u_a_percentage'] + $data['year_u_w_percentage'] + $data['year_u_i_percentage'] + $data['year_u_s_percentage'] + $data['year_u_u_percentage'] + $data['year_g_v_percentage'] + $data['year_g_p_percentage'] + $data['year_g_a_percentage'] + $data['year_h_h_percentage'] + $data['year_pack_p_percentage'] + $data['year_i_c_percentage'] + $data['year_i_b_percentage']);
             }
         }
 
@@ -1152,7 +1501,7 @@ class DesignTargetController extends BaseController
             if($year_industry_p_c_money == 0){
                 $data['year_industry_p_c_percentage'] = 0;
             }else{
-                $data['year_industry_p_c_percentage'] = 100 - ($year_industry_m_money + $year_industry_c_r_money + $year_industry_m_t_money + $year_industry_e_money + $year_industry_f_r_money + $year_industry_s_money + $year_industry_m_h_money + $year_industry_r_money + $year_industry_i_p_money + $year_industry_w_i_money);
+                $data['year_industry_p_c_percentage'] = 100 - ($data['year_industry_m_percentage'] + $data['year_industry_c_r_percentage'] + $data['year_industry_m_t_percentage'] + $data['year_industry_e_percentage'] + $data['year_industry_f_r_percentage'] + $data['year_industry_s_percentage'] + $data['year_industry_m_h_percentage'] + $data['year_industry_r_percentage'] + $data['year_industry_i_p_percentage'] + $data['year_industry_p_c_percentage']);
             }
         }
 
@@ -1345,7 +1694,7 @@ class DesignTargetController extends BaseController
             if($year_stage6_money == 0){
                 $data['year_stage6_percentage'] = 0;
             }else{
-                $data['year_stage6_percentage'] = 100 - ($year_stage1_money + $year_stage2_money + $year_stage3_money + $year_stage4_money + $year_stage5_money);
+                $data['year_stage6_percentage'] = 100 - ($data['year_stage1_percentage'] + $data['year_stage2_percentage'] + $data['year_stage3_percentage'] + $data['year_stage4_percentage'] + $data['year_stage5_percentage']);
             }
         }
 
