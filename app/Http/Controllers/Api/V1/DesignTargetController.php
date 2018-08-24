@@ -806,50 +806,54 @@ class DesignTargetController extends BaseController
             ->where('pigeonhole', 1)
             ->where('status', 1)
             ->where('type', 1)
-            ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         //产品策略价钱，数量
         $year_p_s_money = 0;
         $year_p_s_count = 0;
+        //产品设计
+        $year_p_p_money = 0;
+        $year_p_p_count = 0;
+        //结构设计
+        $year_p_c_money = 0;
+        $year_p_c_count = 0;
         foreach ($year_p_s_items as $year_p_s_item){
-            $year_p_s_money += $year_p_s_item->cost;
-            $year_p_s_count += 1;
+            //转换小分类
+            $p_design_types = json_decode($year_p_s_item->design_types);
+            if(!empty($p_design_types)){
+                foreach ($p_design_types as $p_design_type){
+                    $count_p_design_type = count($p_design_types);
+                    if($count_p_design_type == 0){
+                        $year_p_s_money = 0;
+                        $year_p_s_count = 0;
+
+                        $year_p_p_money = 0;
+                        $year_p_p_count = 0;
+
+                        $year_p_c_money = 0;
+                        $year_p_c_count = 0;
+                    } else {
+                        if ($p_design_type == 1){
+                            $year_p_s_money += round (($year_p_s_item->cost)/$count_p_design_type , 2);
+                            $year_p_s_count += 1;
+                        } else if($p_design_type == 2) {
+                            $year_p_p_money += round (($year_p_s_item->cost)/$count_p_design_type , 2);
+                            $year_p_p_count += 1;
+                        } else if($p_design_type == 3) {
+                            $year_p_c_money += round (($year_p_s_item->cost)/$count_p_design_type , 2);
+                            $year_p_c_count += 1;
+                        }
+                    }
+                }
+            }
+
         }
         $data['year_p_s_count'] = $year_p_s_count;
         $data['year_p_s_money'] = $year_p_s_money;
-        //产品设计
-        $year_p_p_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 1)
-            ->where('status', 1)
-            ->where('design_types', 2)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_p_p_money = 0;
-        $year_p_p_count = 0;
-        foreach ($year_p_p_items as $year_p_p_item){
-            $year_p_p_money += $year_p_p_item->cost;
-            $year_p_p_count += 1;
-        }
+
         $data['year_p_p_count'] = $year_p_p_count;
         $data['year_p_p_money'] = $year_p_p_money;
-        //结构设计
-        $year_p_c_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 1)
-            ->where('status', 1)
-            ->where('design_types', 3)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_p_c_money = 0;
-        $year_p_c_count = 0;
-        foreach ($year_p_c_items as $year_p_c_item){
-            $year_p_c_money += $year_p_c_item->cost;
-            $year_p_c_count += 1;
-        }
+
         $data['year_p_c_count'] = $year_p_c_count;
         $data['year_p_c_money'] = $year_p_c_money;
         //获取当年的ui类型app
@@ -858,137 +862,133 @@ class DesignTargetController extends BaseController
             ->where('pigeonhole', 1)
             ->where('type', 2)
             ->where('status', 1)
-            ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
+        //ui类型app
         $year_u_a_money = 0;
         $year_u_a_count = 0;
+        //ui类型,网页
+        $year_u_w_money = 0;
+        $year_u_w_count = 0;
+        //ui类型,界面
+        $year_u_i_money = 0;
+        $year_u_i_count = 0;
+        //ui类型,服务
+        $year_u_s_money = 0;
+        $year_u_s_count = 0;
+        //ui类型,用户体验
+        $year_u_u_money = 0;
+        $year_u_u_count = 0;
         foreach ($year_u_a_items as $year_u_a_item){
-            $year_u_a_money += $year_u_a_item->cost;
-            $year_u_a_count += 1;
+            //转换小分类
+            $u_design_types = json_decode($year_u_a_item->design_types);
+            if(!empty($u_design_types)){
+                foreach ($u_design_types as $u_design_type){
+                    $count_u_design_type = count($u_design_types);
+                    if($count_u_design_type == 0){
+                        $year_u_a_money = 0;
+                        $year_u_a_count = 0;
+
+                        $year_u_w_money = 0;
+                        $year_u_w_count = 0;
+
+                        $year_u_i_money = 0;
+                        $year_u_i_count = 0;
+
+                        $year_u_s_money = 0;
+                        $year_u_s_count = 0;
+
+                        $year_u_u_money = 0;
+                        $year_u_u_count = 0;
+                    } else {
+                        if ($u_design_type == 1){
+                            $year_u_a_money += round (($year_u_a_item->cost)/$count_u_design_type , 2);
+                            $year_u_a_count += 1;
+                        } else if($u_design_type == 2) {
+                            $year_u_w_money += round (($year_u_a_item->cost)/$count_u_design_type , 2);
+                            $year_u_w_count += 1;
+                        } else if($u_design_type == 3) {
+                            $year_u_i_money = round (($year_u_a_item->cost)/$count_u_design_type , 2);
+                            $year_u_i_count += 1;
+                        } else if($u_design_type == 4) {
+                            $year_u_s_money = round (($year_u_a_item->cost)/$count_u_design_type , 2);
+                            $year_u_s_count += 1;
+                        } else if($u_design_type == 5) {
+                            $year_u_u_money = round (($year_u_a_item->cost)/$count_u_design_type , 2);
+                            $year_u_u_count += 1;
+                        }
+                    }
+                }
+            }
+
         }
         $data['year_u_a_count'] = $year_u_a_count;
         $data['year_u_a_money'] = $year_u_a_money;
-        //ui类型,网页
-        $year_u_w_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 2)
-            ->where('status', 1)
-            ->where('design_types', 2)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_u_w_money = 0;
-        $year_u_w_count = 0;
-        foreach ($year_u_w_items as $year_u_w_item){
-            $year_u_w_money += $year_u_w_item->cost;
-            $year_u_w_count += 1;
-        }
+
         $data['year_u_w_count'] = $year_u_w_count;
         $data['year_u_w_money'] = $year_u_w_money;
-        //ui类型,界面
-        $year_u_i_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 2)
-            ->where('status', 1)
-            ->where('design_types', 3)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_u_i_money = 0;
-        $year_u_i_count = 0;
-        foreach ($year_u_i_items as $year_u_i_item){
-            $year_u_i_money += $year_u_i_item->cost;
-            $year_u_i_count += 1;
-        }
+
         $data['year_u_i_count'] = $year_u_i_count;
         $data['year_u_i_money'] = $year_u_i_money;
-        //ui类型,服务
-        $year_u_s_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 2)
-            ->where('status', 1)
-            ->where('design_types', 4)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_u_s_money = 0;
-        $year_u_s_count = 0;
-        foreach ($year_u_s_items as $year_u_s_item){
-            $year_u_s_money += $year_u_s_item->cost;
-            $year_u_s_count += 1;
-        }
+
         $data['year_u_s_count'] = $year_u_s_count;
         $data['year_u_s_money'] = $year_u_s_money;
-        //ui类型,用户体验
-        $year_u_u_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 2)
-            ->where('status', 1)
-            ->where('design_types', 5)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_u_u_money = 0;
-        $year_u_u_count = 0;
-        foreach ($year_u_u_items as $year_u_u_item){
-            $year_u_u_money += $year_u_u_item->cost;
-            $year_u_u_count += 1;
-        }
+
         $data['year_u_u_count'] = $year_u_u_count;
         $data['year_u_u_money'] = $year_u_u_money;
-
         //平面logo vi
         $year_g_v_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 3)
             ->where('status', 1)
-            ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         $year_g_v_money = 0;
         $year_g_v_count = 0;
+        //平面，海报
+        $year_g_p_money = 0;
+        $year_g_p_count = 0;
+        //平面，画册书装
+        $year_g_a_money = 0;
+        $year_g_a_count = 0;
+
         foreach ($year_g_v_items as $year_g_v_item){
-            $year_g_v_money += $year_g_v_item->cost;
-            $year_g_v_count += 1;
+            //转换小分类
+            $g_design_types = json_decode($year_g_v_item->design_types);
+            if(!empty($p_design_types)){
+                foreach ($g_design_types as $g_design_type){
+                    $count_g_design_type = count($g_design_types);
+                    if($count_g_design_type == 0){
+                        $year_g_v_money = 0;
+                        $year_g_v_count = 0;
+                        //平面，海报
+                        $year_g_p_money = 0;
+                        $year_g_p_count = 0;
+                        //平面，画册书装
+                        $year_g_a_money = 0;
+                        $year_g_a_count = 0;
+                    } else {
+                        if ($g_design_type == 1){
+                            $year_g_v_money += round (($g_design_type->cost)/$count_g_design_type , 2);
+                            $year_g_v_count += 1;
+                        } else if($g_design_type == 2) {
+                            $year_g_p_money += round (($g_design_type->cost)/$count_g_design_type , 2);
+                            $year_g_p_count += 1;
+                        } else if($g_design_type == 3) {
+                            $year_g_a_money += round (($g_design_type->cost)/$count_g_design_type , 2);
+                            $year_g_a_count += 1;
+                        }
+                    }
+                }
+            }
         }
         $data['year_g_v_count'] = $year_g_v_count;
         $data['year_g_v_money'] = $year_g_v_money;
 
-        //平面，海报
-        $year_g_p_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 3)
-            ->where('status', 1)
-            ->where('design_types', 2)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_g_p_money = 0;
-        $year_g_p_count = 0;
-        foreach ($year_g_p_items as $year_g_p_item){
-            $year_g_p_money += $year_g_p_item->cost;
-            $year_g_p_count += 1;
-        }
         $data['year_g_p_count'] = $year_g_p_count;
         $data['year_g_p_money'] = $year_g_p_money;
 
-        //平面，画册书装
-        $year_g_a_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 3)
-            ->where('status', 1)
-            ->where('design_types', 3)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_g_a_money = 0;
-        $year_g_a_count = 0;
-        foreach ($year_g_a_items as $year_g_a_item){
-            $year_g_a_money += $year_g_a_item->cost;
-            $year_g_a_count += 1;
-        }
         $data['year_g_a_count'] = $year_g_a_count;
         $data['year_g_a_money'] = $year_g_a_money;
 
@@ -1032,51 +1032,54 @@ class DesignTargetController extends BaseController
             ->where('pigeonhole', 1)
             ->where('type', 6)
             ->where('status', 1)
-            ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
+        //插画 商业
         $year_i_c_money = 0;
         $year_i_c_count = 0;
+        //插画 书
+        $year_i_b_money = 0;
+        $year_i_b_count = 0;
+        //插画 形象
+        $year_i_i_money = 0;
+        $year_i_i_count = 0;
         foreach ($year_i_c_items as $year_i_c_item){
-            $year_i_c_money += $year_i_c_item->cost;
-            $year_i_c_count += 1;
+            //转换小分类
+            $i_design_types = json_decode($year_i_c_item->design_types);
+            if(!empty($i_design_types)){
+                foreach ($i_design_types as $i_design_type){
+                    $count_i_design_type = count($i_design_types);
+                    if($count_i_design_type == 0){
+                        //插画 商业
+                        $year_i_c_money = 0;
+                        $year_i_c_count = 0;
+                        //插画 书
+                        $year_i_b_money = 0;
+                        $year_i_b_count = 0;
+                        //插画 形象
+                        $year_i_i_money = 0;
+                        $year_i_i_count = 0;
+                    } else {
+                        if ($i_design_type == 1){
+                            $year_i_c_money += round (($year_i_c_item->cost)/$count_i_design_type , 2);
+                            $year_i_c_count += 1;
+                        } else if($i_design_type == 2) {
+                            $year_i_b_money += round (($year_i_c_item->cost)/$count_i_design_type , 2);
+                            $year_i_b_count += 1;
+                        } else if($i_design_type == 3) {
+                            $year_i_i_money += round (($year_i_c_item->cost)/$count_i_design_type , 2);
+                            $year_i_i_count += 1;
+                        }
+                    }
+                }
+            }
         }
         $data['year_i_c_count'] = $year_i_c_count;
         $data['year_i_c_money'] = $year_i_c_money;
 
-        //插画 书
-        $year_i_b_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 6)
-            ->where('status', 1)
-            ->where('design_types', 2)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_i_b_money = 0;
-        $year_i_b_count = 0;
-        foreach ($year_i_b_items as $year_i_b_item){
-            $year_i_b_money += $year_i_b_item->cost;
-            $year_i_b_count += 1;
-        }
         $data['year_i_b_count'] = $year_i_b_count;
         $data['year_i_b_money'] = $year_i_b_money;
 
-        //插画 形象
-        $year_i_i_items =  DesignProject
-            ::where('design_company_id', $design_company_id)
-            ->where('pigeonhole', 1)
-            ->where('type', 6)
-            ->where('status', 1)
-            ->where('design_types', 3)
-            ->whereYear('created_at', date('Y'))
-            ->get();
-        $year_i_i_money = 0;
-        $year_i_i_count = 0;
-        foreach ($year_i_i_items as $year_i_i_item){
-            $year_i_i_money += $year_i_i_item->cost;
-            $year_i_i_count += 1;
-        }
         $data['year_i_i_count'] = $year_i_i_count;
         $data['year_i_i_money'] = $year_i_i_money;
 
