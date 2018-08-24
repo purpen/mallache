@@ -169,7 +169,7 @@ class Matching
     {
         //设计费用：1、1万以下；2、1-5万；3、5-10万；4.10-20；5、20-30；6、30-50；7、50以上
         $max = $this->cost($this->item->design_cost);
-        $design_id_arr = [];
+        $arr = [];
         foreach ($design_types as $design_type) {
             //获取符合设计类型和设计费用的设计公司ID数组
             $design_id_arr = DesignItemModel::select('user_id')
@@ -179,12 +179,22 @@ class Matching
                 ->get()
                 ->pluck('user_id')
                 ->all();
+            if (empty($arr)) {
+                $arr = $design_id_arr;
+            } else {
+                //合并设计公司
+                $arr = array_merge($arr, $design_id_arr);
+            }
         }
         //Log::info($design_id_arr);
+        if(empty($arr)){
+            return [];
+        }
+        //去除重复设计公司
+        $design_id_arr = array_unique($arr);
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
-
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
             ->get()
