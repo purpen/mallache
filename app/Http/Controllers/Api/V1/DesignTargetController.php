@@ -116,12 +116,14 @@ class DesignTargetController extends BaseController
             //获取项目总数
             $total_item_counts = DesignProject
                 ::where('design_company_id', $design_company_id)
+                ->where('status', 1)
                 ->whereYear('created_at', date('Y'))
                 ->count();
             //获取当年的完成项目数量
             $item_counts =  DesignProject
                 ::where('design_company_id', $design_company_id)
                 ->where('pigeonhole', 1)
+                ->where('status', 1)
                 ->whereYear('created_at', date('Y'))
                 ->get();
             //没有归档的项目数
@@ -171,6 +173,7 @@ class DesignTargetController extends BaseController
             $month_item_counts = DesignProject
                 ::where('design_company_id', $design_company_id)
                 ->where('pigeonhole', 1)
+                ->where('status', 1)
                 ->whereMonth('created_at', date('m'))
                 ->get();
             //当月项目收入
@@ -184,6 +187,7 @@ class DesignTargetController extends BaseController
                 $last_month_item_counts = DesignProject
                     ::where('design_company_id', $design_company_id)
                     ->where('pigeonhole', 1)
+                    ->where('status', 1)
                     ->whereYear('created_at', date('Y')-1)
                     ->whereMonth('created_at', 12)
                     ->get();
@@ -192,6 +196,7 @@ class DesignTargetController extends BaseController
                 $last_month_item_counts = DesignProject
                     ::where('design_company_id', $design_company_id)
                     ->where('pigeonhole', 1)
+                    ->where('status', 1)
                     ->whereMonth('created_at', date('m')-1)
                     ->get();
             }
@@ -207,13 +212,13 @@ class DesignTargetController extends BaseController
                 $month_on_month = round((($current_m_money - $last_current_m_money) / $last_current_m_money ) * 100 , 0);
             }
             //当前季度
-            $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now())");
+            $quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1  and status = 1 and quarter(created_at)=quarter(now())");
             $current_q_money = 0;
             foreach ($quarter_item_counts as $quarter_item_count){
                 $current_q_money += $quarter_item_count->cost;
             }
             //上个季度
-            $last_quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(date_sub(now(),interval 1 quarter))");
+            $last_quarter_item_counts = DB::select("select * from design_project where design_company_id = $design_company_id and pigeonhole = 1  and status = 1  and quarter(created_at)=quarter(date_sub(now(),interval 1 quarter))");
             $last_current_m_money = 0;
             foreach ($last_quarter_item_counts as $last_quarter_item_count){
                 $last_current_m_money += $last_quarter_item_count->cost;
@@ -294,7 +299,7 @@ class DesignTargetController extends BaseController
         $user_id = $this->auth_user_id;
         $design_company_id = User::designCompanyId($user_id);
         //当月完成的项目
-        $incomeMonths = DB::select("select sum(cost) as sum_day_cost , count(id) as item_day_count , date_format(created_at , '%Y%m%d') as month_day from design_project where design_company_id = $design_company_id and pigeonhole = 1 and DATE_FORMAT(created_at, '%Y%m' ) = DATE_FORMAT(CURDATE(),'%Y%m') group by month_day");
+        $incomeMonths = DB::select("select sum(cost) as sum_day_cost , count(id) as item_day_count , date_format(created_at , '%Y%m%d') as month_day from design_project where design_company_id = $design_company_id and pigeonhole = 1  and status = 1  and DATE_FORMAT(created_at, '%Y%m' ) = DATE_FORMAT(CURDATE(),'%Y%m') group by month_day");
         //总价
         $total_money = 0;
 
@@ -302,6 +307,7 @@ class DesignTargetController extends BaseController
         //获取当年的项目总数量
         $total_month_item_count =  DesignProject
             ::where('design_company_id', $design_company_id)
+            ->where('status', 1)
             ->whereMonth('created_at', date('m'))
             ->count();
 
@@ -356,10 +362,10 @@ class DesignTargetController extends BaseController
         $design_company_id = User::designCompanyId($user_id);
 
         //返回季度月份，总价
-        $incomeQuarters = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as quarter_month from design_project where design_company_id = $design_company_id and pigeonhole = 1 and quarter(created_at)=quarter(now()) group by quarter_month");
+        $incomeQuarters = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as quarter_month from design_project where design_company_id = $design_company_id and pigeonhole = 1  and status = 1  and quarter(created_at)=quarter(now()) group by quarter_month");
 
         //获取当季度的项目总数量
-        $total_quarter_item_counts = DB::select("select count(id) as item_quarter_count from design_project where design_company_id = $design_company_id and quarter(created_at)=quarter(now())");
+        $total_quarter_item_counts = DB::select("select count(id) as item_quarter_count from design_project where design_company_id = $design_company_id  and status = 1  and quarter(created_at)=quarter(now())");
 
         //季度总数量默认0
         $total_quarter_item_count = 0;
@@ -423,11 +429,12 @@ class DesignTargetController extends BaseController
         $design_company_id = User::designCompanyId($user_id);
         //获取当年的完成项目数量
         //返回季度月份，总价
-        $incomeYears = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as year_m from design_project where design_company_id = $design_company_id and pigeonhole = 1 and YEAR(created_at)=YEAR(NOW()) group by year_m");
+        $incomeYears = DB::select("select sum(cost) as sum_month_cost , count(id) as item_count , date_format(created_at , '%Y%m') as year_m from design_project where design_company_id = $design_company_id and pigeonhole = 1  and status = 1  and YEAR(created_at)=YEAR(NOW()) group by year_m");
 
         //获取当年的项目总数量
         $total_year_item_count =  DesignProject
             ::where('design_company_id', $design_company_id)
+            ->where('status', 1)
             ->whereYear('created_at', date('Y'))
             ->count();
         //总价
@@ -488,6 +495,7 @@ class DesignTargetController extends BaseController
         $total_year_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         //总价钱
@@ -498,6 +506,7 @@ class DesignTargetController extends BaseController
         $year_20_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->whereYear('created_at', date('Y'))
             ->orderBy('cost' , 'desc')
             ->limit(20)
@@ -545,6 +554,7 @@ class DesignTargetController extends BaseController
         $year_p_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('type', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -560,6 +570,7 @@ class DesignTargetController extends BaseController
         $year_u_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('type', 2)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -644,6 +655,7 @@ class DesignTargetController extends BaseController
         $year_p_s_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('type', 1)
             ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
@@ -662,6 +674,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 1)
+            ->where('status', 1)
             ->where('design_types', 2)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -678,6 +691,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 1)
+            ->where('status', 1)
             ->where('design_types', 3)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -694,6 +708,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 2)
+            ->where('status', 1)
             ->where('design_types', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -710,6 +725,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 2)
+            ->where('status', 1)
             ->where('design_types', 2)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -726,6 +742,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 2)
+            ->where('status', 1)
             ->where('design_types', 3)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -742,6 +759,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 2)
+            ->where('status', 1)
             ->where('design_types', 4)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -758,6 +776,7 @@ class DesignTargetController extends BaseController
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
             ->where('type', 2)
+            ->where('status', 1)
             ->where('design_types', 5)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -890,6 +909,7 @@ class DesignTargetController extends BaseController
         $year_industry_m_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -905,6 +925,7 @@ class DesignTargetController extends BaseController
         $year_industry_c_r_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 2)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -920,6 +941,7 @@ class DesignTargetController extends BaseController
         $year_industry_m_t_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 3)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -935,6 +957,7 @@ class DesignTargetController extends BaseController
         $year_industry_e_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 4)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -950,6 +973,7 @@ class DesignTargetController extends BaseController
         $year_industry_f_r_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 5)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -965,6 +989,7 @@ class DesignTargetController extends BaseController
         $year_industry_s_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 6)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -980,6 +1005,7 @@ class DesignTargetController extends BaseController
         $year_industry_m_h_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 7)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -995,6 +1021,7 @@ class DesignTargetController extends BaseController
         $year_industry_r_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 8)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1010,6 +1037,7 @@ class DesignTargetController extends BaseController
         $year_industry_i_p_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 9)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1025,6 +1053,7 @@ class DesignTargetController extends BaseController
         $year_industry_w_i_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 10)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1040,6 +1069,7 @@ class DesignTargetController extends BaseController
         $year_industry_p_c_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('industry', 11)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1180,6 +1210,7 @@ class DesignTargetController extends BaseController
         $year_stage1_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->whereBetween('cost', [0 , 50000])
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1195,6 +1226,7 @@ class DesignTargetController extends BaseController
         $year_stage2_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('cost', '>' ,50000)
             ->where('cost', '<=',100000)
             ->whereYear('created_at', date('Y'))
@@ -1211,6 +1243,7 @@ class DesignTargetController extends BaseController
         $year_stage3_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('cost', '>',100000)
             ->where('cost', '<=',200000)
             ->whereYear('created_at', date('Y'))
@@ -1227,6 +1260,7 @@ class DesignTargetController extends BaseController
         $year_stage4_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('cost', '>',200000)
             ->where('cost', '<=',300000)
             ->whereYear('created_at', date('Y'))
@@ -1243,6 +1277,7 @@ class DesignTargetController extends BaseController
         $year_stage5_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('cost', '>',300001)
             ->where('cost', '<=',500000)
             ->whereYear('created_at', date('Y'))
@@ -1259,6 +1294,7 @@ class DesignTargetController extends BaseController
         $year_stage6_items =  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->where('cost', '>' , 50000)
             ->whereYear('created_at', date('Y'))
             ->get();
@@ -1450,6 +1486,7 @@ class DesignTargetController extends BaseController
                 ::select(DB::raw('sum(cost) as city_cost , count(id) as item_count, province as item_province'))
                 ->where('design_company_id', $design_company_id)
                 ->where('pigeonhole', 1)
+                ->where('status', 1)
                 ->whereYear('created_at', date('Y'))
                 ->groupBy('item_province')
                 ->orderBy('city_cost' , 'desc')
@@ -1460,6 +1497,7 @@ class DesignTargetController extends BaseController
                 ::select(DB::raw('sum(cost) as city_cost , count(id) as item_count, province as item_province'))
                 ->where('design_company_id', $design_company_id)
                 ->where('pigeonhole', 1)
+                ->where('status', 1)
                 ->whereYear('created_at', date('Y'))
                 ->groupBy('item_province')
                 ->orderBy('item_count' , 'desc')
@@ -1471,6 +1509,7 @@ class DesignTargetController extends BaseController
         $total_items=  DesignProject
             ::where('design_company_id', $design_company_id)
             ->where('pigeonhole', 1)
+            ->where('status', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         //总价钱，总数量
@@ -1530,6 +1569,7 @@ class DesignTargetController extends BaseController
         //查询当年所有项目
         $year_items =  DesignProject
             ::where('design_company_id', $design_company_id)
+            ->where('status', 1)
             ->whereYear('created_at', date('Y'))
             ->get();
         $year_items_id = [];
