@@ -196,6 +196,9 @@ class DesignStatisticsController extends Controller
         $statistics = new Statistics;
         //测试设计公司匹配
         $lists = $statistics->testMatching($params);
+        if(empty($lists)){
+            return $this->apiSuccess('Success','200',[]);
+        }
         return $this->response->paginator($lists,new DesignCompanyStatisticsTransformer)->setMeta($this->apiMeta());
     }
 
