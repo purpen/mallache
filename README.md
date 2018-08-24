@@ -138,5 +138,8 @@ git@github.com:purpen/mallache.git
  ##### 更新项目下任务总数量，完成未完成数量的统计
  php artisan taskCount:update
  
+ ##### 统计所有设计公司信息
+ php artisan company:statistics
+ 
  ##### composer路径
  /opt/php-7.0/bin/php /usr/local/bin/composer update

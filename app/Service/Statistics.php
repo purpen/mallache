@@ -294,8 +294,8 @@ class Statistics
     {
         $data = DesignStatistics::select('id','cooperation_count','recommend_count','success_rate')->where(['design_company_id'=>$id])->first();
         if(!empty($data)){
-            //接单数量大于0才会更新
-            if($data->cooperation_count >= 0){
+            //接单数量和推荐数量大于0才会更新
+            if($data->cooperation_count > 0 && $data->recommend_count > 0){
                 //根据接单次数和推荐次数计算接单成功率
                 $success_rate = $data->cooperation_count / $data->recommend_count;
                 $success_rate = sprintf("%.4f", $success_rate);
