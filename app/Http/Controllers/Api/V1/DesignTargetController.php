@@ -1082,8 +1082,10 @@ class DesignTargetController extends BaseController
 
         $data['year_i_i_count'] = $year_i_i_count;
         $data['year_i_i_money'] = $year_i_i_money;
+        //总价钱
+        $total_year_money = $year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money;
 
-        if ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money == 0){
+        if ($total_year_money == 0){
             $data['year_p_s_percentage'] = 0;
             $data['year_p_p_percentage'] = 0;
             $data['year_p_c_percentage'] = 0;
@@ -1105,92 +1107,93 @@ class DesignTargetController extends BaseController
             $data['year_i_b_percentage'] = 0;
             $data['year_i_i_percentage'] = 0;
         } else {
+
             //产品
             if($year_p_s_money == 0){
                 $data['year_p_s_percentage'] = 0;
             }else{
-                $data['year_p_s_percentage'] = round(($year_p_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_p_s_percentage'] = round(($year_p_s_money / $total_year_money) * 100 , 2);
             }
 
             if($year_p_p_money == 0){
                 $data['year_p_p_percentage'] = 0;
             }else{
-                $data['year_p_p_percentage'] = round(($year_p_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_p_p_percentage'] = round(($year_p_p_money / $total_year_money) * 100 , 2);
             }
             if($year_p_c_money == 0){
                 $data['year_p_c_percentage'] = 0;
             }else{
-                $data['year_p_c_percentage'] = round(($year_p_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_p_c_percentage'] = round(($year_p_c_money / $total_year_money) * 100 , 2);
             }
             //ui
             if($year_u_a_money == 0){
                 $data['year_u_a_percentage'] = 0;
             }else{
-                $data['year_u_a_percentage'] = round(($year_u_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_u_a_percentage'] = round(($year_u_a_money / $total_year_money) * 100 , 2);
             }
             if($year_u_w_money == 0){
                 $data['year_u_w_percentage'] = 0;
             }else{
-                $data['year_u_w_percentage'] = round(($year_u_w_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_u_w_percentage'] = round(($year_u_w_money / $total_year_money) * 100 , 2);
             }
             if($year_u_i_money == 0){
                 $data['year_u_i_percentage'] = 0;
             }else{
-                $data['year_u_i_percentage'] = round(($year_u_i_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_u_i_percentage'] = round(($year_u_i_money / $total_year_money) * 100 , 2);
             }
             if($year_u_s_money == 0){
                 $data['year_u_s_percentage'] = 0;
             }else{
-                $data['year_u_s_percentage'] = round(($year_u_s_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_u_s_percentage'] = round(($year_u_s_money / $total_year_money) * 100 , 2);
             }
             if($year_u_u_money == 0){
                 $data['year_u_u_percentage'] = 0;
             }else{
-                $data['year_u_u_percentage'] = round(($year_u_u_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_u_u_percentage'] = round(($year_u_u_money / $total_year_money) * 100 , 2);
             }
             //平面
             if($year_g_v_money == 0){
                 $data['year_g_v_percentage'] = 0;
             }else{
-                $data['year_g_v_percentage'] = round(($year_g_v_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_g_v_percentage'] = round(($year_g_v_money / $total_year_money) * 100 , 2);
             }
             if($year_g_p_money == 0){
                 $data['year_g_p_percentage'] = 0;
             }else{
-                $data['year_g_p_percentage'] = round(($year_g_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_g_p_percentage'] = round(($year_g_p_money / $total_year_money) * 100 , 2);
             }
             if($year_g_a_money == 0){
                 $data['year_g_a_percentage'] = 0;
             }else{
-                $data['year_g_a_percentage'] = round(($year_g_a_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_g_a_percentage'] = round(($year_g_a_money / $total_year_money) * 100 , 2);
             }
             //h5
             if($year_h_h_money == 0){
                 $data['year_h_h_percentage'] = 0;
             }else{
-                $data['year_h_h_percentage'] = round(($year_h_h_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_h_h_percentage'] = round(($year_h_h_money / $total_year_money) * 100 , 2);
             }
             //包装
             if($year_pack_p_money == 0){
                 $data['year_pack_p_percentage'] = 0;
             }else{
-                $data['year_pack_p_percentage'] = round(($year_pack_p_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_pack_p_percentage'] = round(($year_pack_p_money / $total_year_money) * 100 , 2);
             }
             //插画
             if($year_i_c_money == 0){
                 $data['year_i_c_percentage'] = 0;
             }else{
-                $data['year_i_c_percentage'] = round(($year_i_c_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_i_c_percentage'] = round(($year_i_c_money / $total_year_money) * 100 , 2);
             }
             if($year_i_b_money == 0){
                 $data['year_i_b_percentage'] = 0;
             }else{
-                $data['year_i_b_percentage'] = round(($year_i_b_money / ($year_p_s_money + $year_p_p_money + $year_p_c_money + $year_u_a_money + $year_u_w_money + $year_u_i_money + $year_u_s_money + $year_u_u_money + $year_g_v_money + $year_g_p_money + $year_g_a_money + $year_h_h_money + $year_pack_p_money + $year_i_c_money + $year_i_b_money + $year_i_i_money)) * 100 , 0);
+                $data['year_i_b_percentage'] = round(($year_i_b_money / $total_year_money) * 100 , 2);
             }
             if($year_i_i_money == 0){
                 $data['year_i_i_percentage'] = 0;
             }else{
-                $data['year_i_i_percentage'] = 100 - ($data['year_p_s_percentage'] + $data['year_p_p_percentage'] + $data['year_p_c_percentage'] + $data['year_u_a_percentage'] + $data['year_u_w_percentage'] + $data['year_u_i_percentage'] + $data['year_u_s_percentage'] + $data['year_u_u_percentage'] + $data['year_g_v_percentage'] + $data['year_g_p_percentage'] + $data['year_g_a_percentage'] + $data['year_h_h_percentage'] + $data['year_pack_p_percentage'] + $data['year_i_c_percentage'] + $data['year_i_b_percentage']);
+                $data['year_i_i_percentage'] = round(($year_i_i_money / $total_year_money) * 100 , 2);
             }
         }
 
