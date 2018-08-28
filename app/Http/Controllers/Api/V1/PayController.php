@@ -214,10 +214,6 @@ class PayController extends BaseController
         $pay_type = 3;
 
         $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
-        if ($pay_order) {
-            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
-        }
-
         if (!$item = Item::find($item_id)) {
             return $this->response->array("not found item", 404);
         }
@@ -227,9 +223,16 @@ class PayController extends BaseController
 
         // 合同
         $contract = $item->contract;
+
         // 合同不存在或合同版本不正确
         if (!$contract || $contract->version != 1) {
             return $this->response->array($this->apiError("not found", 404));
+        }
+
+        $pay_order->total_price = $contract->total;
+
+        if ($pay_order) {
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
         //查询项目押金的金额(兼容历史数据)
@@ -260,9 +263,6 @@ class PayController extends BaseController
         $item->save();
 
         event(new ItemStatusEvent($item));
-
-        $pay_order->total_price = $contract->first_payment;
-        $pay_order->first_pay = $first_pay;
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }

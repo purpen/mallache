@@ -12,6 +12,7 @@ return [
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
         '/admin/item/closeItem',        // 后台强制关闭当前项目并分配项目款
         '/admin/item/testStatus',        // 后台设定项目类型
+        '/admin/item/deleteIds',        // 后台批量删除项目
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
@@ -242,6 +243,7 @@ return [
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
         '/admin/item/testStatus',        // 后台设定项目类型
+        '/admin/item/deleteIds',        // 后台批量删除项目
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
