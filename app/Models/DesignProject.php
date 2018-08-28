@@ -203,6 +203,7 @@ class DesignProject extends BaseModel
         } else {
             $user_name = '';
         }
+        $collect_item = CollectItem::where('item_id' , $this->id)->where('user_id' , $this->user_id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -253,6 +254,7 @@ class DesignProject extends BaseModel
             'project_demand' => $this->project_demand,
             'pigeonhole' => $this->pigeonhole,
             'user_name' => $user_name,
+            'collect' => $collect_item ? $collect_item->collect : 0
         ];
     }
 
