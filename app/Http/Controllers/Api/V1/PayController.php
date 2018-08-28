@@ -261,7 +261,7 @@ class PayController extends BaseController
 
         event(new ItemStatusEvent($item));
 
-        $pay_order->total_price = $contract->first_payment;
+        $pay_order->total_price = $contract->total;
         $pay_order->first_pay = $first_pay;
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
