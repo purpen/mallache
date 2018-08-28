@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Service\Statistics;
 use App\Service\Matching;
+
 class DemandController extends BaseController
 {
     /**
@@ -144,10 +145,18 @@ class DemandController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
         }
+
+        $count = Item::query()
+            ->where('user_id', $this->auth_user_id)
+            ->where('created_at', ">", date("Y-m-d"))
+            ->count();
+        if ($count > 20) {
+            return $this->response->array('发布超过当天限制', 403);
+        }
+
         $source = $request->header('source-type') ?? 0;
         $name = $request->input('name');
         $item = Item::createItem($this->auth_user_id, $name, $source);
@@ -289,7 +298,7 @@ class DemandController extends BaseController
     {
         $item = $this->checkItemStatusAndAuth($id);
 
-        if (!in_array($item->status , [-1 , -2 , -3])) {
+        if (!in_array($item->status, [-1, -2, -3])) {
             return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
         }
 
@@ -536,7 +545,7 @@ class DemandController extends BaseController
             foreach ($all['design_company_id'] as $design_company_id) {
                 $itemRecommend = ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
                 //添加通知报价合同记录表
-                if($itemRecommend){
+                if ($itemRecommend) {
                     $notification = new Notification();
                     $notification->status = 0;
                     $notification->type = 1;
@@ -652,7 +661,7 @@ class DemandController extends BaseController
                 $where_in = [1];
                 break;
             case 2:
-                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22 , 45];
+                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22, 45];
                 break;
             case 3:
                 $where_in = [18, 22];
@@ -838,7 +847,7 @@ class DemandController extends BaseController
             $item->quotation_id = $quotation->id;
             $item->status = 5;
             //添加通知报价合同记录表
-            if($item->save()){
+            if ($item->save()) {
                 $notification = new Notification();
                 $notification->status = 0;
                 $notification->type = 2;
@@ -894,13 +903,13 @@ class DemandController extends BaseController
             'item_id' => 'required|integer',
             'design_company_id' => 'required|integer',
         ];
-        $all = $request->only(['item_id', 'design_company_id' , 'refuse_types' , 'summary']);
+        $all = $request->only(['item_id', 'design_company_id', 'refuse_types', 'summary']);
 
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
-        $refuse_types = $request->input('refuse_types') ? implode(',' , $request->input('refuse_types')) : '';
+        $refuse_types = $request->input('refuse_types') ? implode(',', $request->input('refuse_types')) : '';
         $summary = $request->input('summary') ? $request->input('summary') : '';
 
         if (!$item = Item::find($all['item_id'])) {
@@ -928,14 +937,14 @@ class DemandController extends BaseController
         $tools = new Tools();
 
         $title = '项目被拒';
-        if(empty($refuse_types)){
-            if(empty($summary)){
+        if (empty($refuse_types)) {
+            if (empty($summary)) {
                 $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:无';
             } else {
-                $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:'.$refuse_types . $summary;
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:' . $refuse_types . $summary;
             }
         } else {
-            $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:'.$refuse_types .'.'. $summary;
+            $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:' . $refuse_types . '.' . $summary;
         }
         $tools->message($design->user_id, $title, $content, 1, null);
 
@@ -987,7 +996,7 @@ class DemandController extends BaseController
             //增加设计公司平均价格和接单次数
             $id[] = $item->design_company_id;
             $statistics = new Statistics;
-            $statistics->saveAveragePrice($id,$contract->total);
+            $statistics->saveAveragePrice($id, $contract->total);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1388,7 +1397,7 @@ class DemandController extends BaseController
             'design_level' => 'required|integer|max:10',
             'response_speed' => 'required|integer|max:10',
         ];
-        $params = $request->only(['item_id','content','service','design_level','response_speed']);
+        $params = $request->only(['item_id', 'content', 'service', 'design_level', 'response_speed']);
         $validator = Validator::make($params, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
@@ -1406,7 +1415,7 @@ class DemandController extends BaseController
         $score = 0;
         $score += $params['design_level'] * config('evaluate.design_level'); //设计水平比重
         $score += $params['response_speed'] * config('evaluate.response_speed'); //响应速度比重
-        $score += $params['service']  * config('evaluate.service'); //服务意识比重
+        $score += $params['service'] * config('evaluate.service'); //服务意识比重
         $user_score['service'] = (int)$params['service'];
         $user_score['design_level'] = (int)$params['design_level'];
         $user_score['response_speed'] = (int)$params['response_speed'];
@@ -1416,8 +1425,8 @@ class DemandController extends BaseController
         $list['demand_company_id'] = $params['demand_company_id'];
         $list['design_company_id'] = $params['design_company_id'];
         $statistics = new Statistics;
-        if(!empty($res)){ //评价存在更新
-            if(!empty($res->user_score)){
+        if (!empty($res)) { //评价存在更新
+            if (!empty($res->user_score)) {
                 return $this->response->array($this->apiError('已经评价过了', 200));
             }
             //计算评分
@@ -1425,11 +1434,11 @@ class DemandController extends BaseController
 
             //把平台评分减去百分之五十,再加上用户评分,算出总评分
             $score += $res->score * 0.5;
-            $score = sprintf('%.1f',$score);
-            if(empty($res->demand_company_id)){
+            $score = sprintf('%.1f', $score);
+            if (empty($res->demand_company_id)) {
                 $res->demand_company_id = $params['demand_company_id'];
             }
-            if(empty($res->design_company_id)){
+            if (empty($res->design_company_id)) {
                 $res->design_company_id = $params['design_company_id'];
             }
             try {
@@ -1450,14 +1459,14 @@ class DemandController extends BaseController
                 return $this->response->array($this->apiError('database error', 500));
             }
             return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
-        }else{ //评价不存在新增
-            if($score > 10){
+        } else { //评价不存在新增
+            if ($score > 10) {
                 $score = 10;
             }
-            if($score < 0){
+            if ($score < 0) {
                 $score = 0;
             }
-            $score = sprintf('%.1f',$score);
+            $score = sprintf('%.1f', $score);
             $list['score'] = $score;
             $list['platform_score'] = '';
             try {
