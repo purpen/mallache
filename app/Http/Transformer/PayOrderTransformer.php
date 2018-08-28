@@ -20,7 +20,6 @@ class PayOrderTransformer extends TransformerAbstract
         summary	varcahr(100)	是	‘’	备注
         pay_type	tinyint(4)	是	0	支付方式；1.支付宝；2.微信；3.京东；
         pay_no	varchar(30)	是	’‘	对应平台支付交易号*/
-Log::info($pay_order);
         if ($pay_order->item) {
             $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()['name'] : '';
         } else {
@@ -39,7 +38,7 @@ Log::info($pay_order);
             'pay_type_value' => $pay_order->pay_type_value,
             'pay_no' => $pay_order->pay_no,
             'amount' => $pay_order->amount,
-            'total_price' => $pay_order->total ?? null,
+            'total_price' => $pay_order->total_price ?? null,
             'first_pay' => $pay_order->first_pay ?? null,
             'bank_id' => $pay_order->bank_id,
             'bank' => $pay_order->bank,
