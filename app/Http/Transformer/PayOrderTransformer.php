@@ -4,6 +4,7 @@ namespace App\Http\Transformer;
 
 use App\Models\AssetModel;
 use App\Models\PayOrder;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\TransformerAbstract;
 
 class PayOrderTransformer extends TransformerAbstract
@@ -19,7 +20,7 @@ class PayOrderTransformer extends TransformerAbstract
         summary	varcahr(100)	是	‘’	备注
         pay_type	tinyint(4)	是	0	支付方式；1.支付宝；2.微信；3.京东；
         pay_no	varchar(30)	是	’‘	对应平台支付交易号*/
-
+Log::info($pay_order);
         if ($pay_order->item) {
             $name = array_key_exists('name', $pay_order->item->itemInfo()) ? $pay_order->item->itemInfo()['name'] : '';
         } else {
