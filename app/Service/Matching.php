@@ -195,6 +195,9 @@ class Matching
         //获取擅长的设计公司ID数组
         $design = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
+        if(empty($design)){
+            return [];
+        }
         $design_user_id_arr = $design->whereIn('user_id', $design_id_arr)
             ->orderBy('score', 'desc')
             ->get()

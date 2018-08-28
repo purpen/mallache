@@ -413,9 +413,18 @@ class Statistics
                 ->get()
                 ->pluck('user_id')
                 ->all();
-            $design_id_arr = array_merge($arr,$design_id_arr);
+            if (empty($design_id_arr)) {
+                $design_id_arr = $arr;
+            } else {
+                //合并设计公司
+                $design_id_arr = array_merge($arr,$design_id_arr);
+            }
         }
+        //去除重复的设计公司
         $design_id_arr = array_unique($design_id_arr);
+        if(empty($design_id_arr)){
+            return [];
+        }
         //获取擅长的设计公司ID数组
         $design_data = DesignCompanyModel::select(['id', 'user_id'])
             ->where(['status' => 1, 'verify_status' => 1, 'is_test_data' => 0]);
