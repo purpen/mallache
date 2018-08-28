@@ -255,15 +255,15 @@ class PayController extends BaseController
 
         $pay_order = $this->createPayOrder($summary, $price, $pay_type, $item_id);
 
+        $pay_order['total_price'] = $contract->total;
+        $pay_order['first_pay'] = $first_pay;
         //修改项目状态为8，等待支付首付款
         $item->status = 8;
         $item->save();
+        dd($pay_order);
 
         event(new ItemStatusEvent($item));
 
-        $pay_order['total_price'] = $contract->total;
-        $pay_order['first_pay'] = $first_pay;
-dd($pay_order);
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
 
