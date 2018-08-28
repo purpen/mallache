@@ -263,7 +263,7 @@ class PayController extends BaseController
 
         $pay_order->total_price = $contract->total;
         $pay_order->first_pay = $first_pay;
-
+Log::info($pay_order);
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
 
