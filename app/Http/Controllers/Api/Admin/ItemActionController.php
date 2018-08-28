@@ -524,19 +524,20 @@ class ItemActionController extends Controller
     public function deleteIds(Request $request)
     {
         $ids = $request->input('ids');
-        foreach ($ids as $id){
-            $item = Item::where('id' , $id)->first();
-            if(!$item){
-                Log::info('id为'.$id.'的项目没有找到');
-                continue;
+        if (!empty($ids)){
+            foreach ($ids as $id){
+                $item = Item::where('id' , $id)->first();
+                if(!$item){
+                    Log::info('id为'.$id.'的项目没有找到');
+                    continue;
+                }
+                if (!in_array($item->status , [-1 , -2 , -3 , 1 ,2 ,3])) {
+                    Log::info('id为'.$id.'的项目不能删除');
+                    continue;
+                }
+                $item->delete();
             }
-            if (!in_array($item->status , [-1 , -2 , -3 , 1 ,2 ,3])) {
-                Log::info('id为'.$id.'的项目不能删除');
-                continue;
-            }
-            $item->delete();
         }
-
         return $this->response->array($this->apiSuccess('Success', 200));
     }
 }
