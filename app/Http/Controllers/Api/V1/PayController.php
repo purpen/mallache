@@ -212,8 +212,6 @@ class PayController extends BaseController
     {
         // 支付首付款类型
         $pay_type = 3;
-
-        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
         if (!$item = Item::find($item_id)) {
             return $this->response->array("not found item", 404);
         }
@@ -229,9 +227,10 @@ class PayController extends BaseController
             return $this->response->array($this->apiError("not found", 404));
         }
 
-        $pay_order->total_price = $contract->total;
+        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
 
         if ($pay_order) {
+            $pay_order->total_price = $contract->total;
             return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
@@ -257,6 +256,7 @@ class PayController extends BaseController
         $summary = '项目首付款';
 
         $pay_order = $this->createPayOrder($summary, $price, $pay_type, $item_id);
+        $pay_order->total_price = $contract->total;
 
         //修改项目状态为8，等待支付首付款
         $item->status = 8;
