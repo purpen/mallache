@@ -229,11 +229,11 @@ class PayController extends BaseController
             return $this->response->array($this->apiError("not found", 404));
         }
 
-        $pay_order->total_price = $contract->total;
-
         if ($pay_order) {
             return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
+
+        $pay_order->total_price = $contract->total;
 
         //查询项目押金的金额(兼容历史数据)
         $first_pay_order = PayOrder::query()->where([
