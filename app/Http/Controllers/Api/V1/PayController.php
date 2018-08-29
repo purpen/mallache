@@ -228,9 +228,9 @@ class PayController extends BaseController
         }
 
         $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
-        $pay_order->total_price = $contract->total;
 
         if ($pay_order) {
+            $pay_order->total_price = $contract->total;
             return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
@@ -256,6 +256,7 @@ class PayController extends BaseController
         $summary = '项目首付款';
 
         $pay_order = $this->createPayOrder($summary, $price, $pay_type, $item_id);
+        $pay_order->total_price = $contract->total;
 
         //修改项目状态为8，等待支付首付款
         $item->status = 8;
