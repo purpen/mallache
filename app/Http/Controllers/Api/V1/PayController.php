@@ -7,6 +7,7 @@ use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Models\AssetModel;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
@@ -329,6 +330,11 @@ class PayController extends BaseController
         $summary = '项目阶段款';
 
         $pay_order = $this->createPayOrder($summary, $item_stage->amount, $pay_type, $item->id, 0, (int)$item_stage_id);
+        $design = DesignCompanyModel::find($item_stage->design_company_id);
+        $content = '收到【' .$item->name. '】阶段款付款';
+        Tools::message($design->user_id, $item_stage->title, $content, 2, $item->id, $item->status);
+        $message_content = '收到项目阶段款，请注意查看。感谢您的信任，如有疑问欢迎致电 ';
+        Tools::sendSmsToPhone($design->phone, $message_content, $item->source);
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
