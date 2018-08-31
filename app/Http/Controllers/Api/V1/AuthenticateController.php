@@ -292,7 +292,9 @@ class AuthenticateController extends BaseController
         $source = $request->header('source-type') ?? 0;
         if ($source == 1) {
             $text = ' 【京东云艺火】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-        } else {
+        } else if($source == 2){
+            $text = ' 【义乌设计大脑】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        } else{
             $text = ' 【太火鸟铟果】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         }
         //插入单条短信发送队列
