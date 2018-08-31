@@ -280,7 +280,7 @@ class ItemMessageListener
 
         //通知设计公司
         $title = '项目已托管项目首付款';
-        $content = '【' . $item_info['name'] . '】' . '项目需求公司已托管项目首付款，请开始设计工作';
+        $content = '【' . $item_info['name'] . '】' . '项目首付款已托管';
         Tools::message($user_id, $title, $content, 2, $item->id, $item->status);
         $design_m_content = '客户已⽀付项⽬款，请启动项目。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($phone, $design_m_content);
