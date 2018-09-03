@@ -126,9 +126,9 @@ class Pay
         $item_info = $item->itemInfo();
         //站内信，短信通知设计公司
         $design = DesignCompanyModel::find($item_stage->design_company_id);
-        $content = '收到【' .$item->name. '】阶段款付款';
+        $content = '【' .$item->name. '】项目阶段款已托管';
         Tools::message($design->user_id, $item_stage->title, $content, 2, $item->id, $item->status);
-        $message_content = '收到项目阶段款，请注意查看。感谢您的信任，如有疑问欢迎致电 ';
+        $message_content = '项目阶段款已托管，请保证项目按时顺利进行。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($design->phone, $message_content, $item->source);
         //资金流水记录
         $fund_log = new FundLog();
