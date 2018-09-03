@@ -71,7 +71,7 @@ class PanDirector extends BaseModel
             'open_set' => $this->open_set,
             'width' => $this->width,
             'height' => $this->height,
-            'item_id' => $this->item_id,
+//            'item_id' => $this->item_id,
         ];
     }
 
