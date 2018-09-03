@@ -1471,7 +1471,7 @@ class YunpianUploadController extends BaseController
         // 用户 所属项目ID数组
         $item_id_arr = ItemUser::projectId($user_id); //
 
-        $list = PanDirector::query()
+        $list = PanDirector::query()->with('item')
             ->where('status', 1)
             ->where('type', 2)
             ->where('user_id', $user_id)
