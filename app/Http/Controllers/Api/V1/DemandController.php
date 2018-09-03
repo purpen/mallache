@@ -103,15 +103,11 @@ class DemandController extends BaseController
     public function show($id)
     {
         if (!$item = Item::find(intval($id))) {
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('not found item!', 404));
         }
         //验证是否是当前用户对应的项目
         if ($item->user_id !== $this->auth_user_id) {
-            return $this->response->array($this->apiError('not found!', 404));
-        }
-
-        if (!$item) {
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiError('没有权限!', 403));
         }
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
