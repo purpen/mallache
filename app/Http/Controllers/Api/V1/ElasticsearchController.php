@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\V1;
 
 use DB;
 use Illuminate\Http\Request;
+use App\Service\Elasticsearch;
 use Elasticsearch\ClientBuilder;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
-class YuluoController extends Controller
+class ElasticsearchController extends Controller
 {
     public function __construct()
     {
@@ -19,40 +21,83 @@ class YuluoController extends Controller
         $table = 'article';
         $client = $this->client;
         //删除索引
-        return $this->deleteIndex('index');
+        $es = new Elasticsearch;
+        //return $es->deleteIndex($table);
         /*$params = [
-            'index'=> $table,
+            'index' => 'accounts',
             'body' => [
                 'settings' => [
-                    "analysis"=>[
-                        "analyzer"=>[
-                            "ik"=>[
-                                "tokenizer"=>"ik_max_word" //创建索引时使用中文分词
-                            ]
+                    'number_of_shards' => 3,
+                    'number_of_replicas' => 2
+                ],
+                "person"=> [
+                    "properties"=> [
+                        "user"=> [
+                            "type"=> "text",
+                            "analyzer"=> "ik_max_word",
+                            "search_analyzer"=> "ik_max_word"
+                        ],
+                        "title"=> [
+                            "type"=> "text",
+                            "analyzer"=> "ik_max_word",
+                            "search_analyzer"=> "ik_max_word"
+                        ],
+                        "desc"=> [
+                            "type"=> "text",
+                            "analyzer"=> "ik_max_word",
+                            "search_analyzer"=> "ik_max_word"
                         ]
                     ]
-                ],
-                "type"=>"text",
-                "analyzer"=>"ik_max_word",
-            ],
-            'client'=> ['ignore'=> [400,404]] //异常报错
+                ]
+            ]
         ];
         dump($params);
         //创建索引
         $index = $client->indices()->create($params);
         dd($index);*/
+
         //添加索引文档
         /*$params = [
-            'index' => $table,
+            'index' => 'accounts',
             'type' => 'text',
-            'id' => 7,
+            'id' => 2,
             'body' => [
-                'content' => '我们才是真正的部落',
-                //'title' => '荣耀'
+                'user' => '今天我们是',
+                'title' => '今天天气格外的冷',
+                'desc' => '9月10号是个大晴天啊',
             ]
         ];
+
         $index = $client->index($params);
-        dd($index);*/
+
+        return $index;*/
+
+        // Set the index and type
+        /*$params = [
+            'index' => 'index',
+            'type' => 'text',
+            'body' => [
+                "_all"=> [
+                    "analyzer"=> "ik_max_word",
+                    "search_analyzer"=> "ik_max_word",
+                    "term_vector"=> "no",
+                    "store"=> "false"
+                ],
+                "properties"=> [
+                    "content"=>[
+                        "type"=> "string", //字段的类型为string，只有string类型才涉及到分词
+                        "store"=> "no", //定义字段的存储方式，no代表不单独存储，查询的时候会从_source中解析。当你频繁的针对某个字段查询时，可以考虑设置成true
+                        "term_vector"=> "with_positions_offsets", //定义了词的存储方式，with_position_offsets，意思是存储词语的偏移位置，在结果高亮的时候有用
+                        "analyzer"=> "ik_max_word", //定义了索引时的分词方法
+                        "search_analyzer"=> "ik_max_word", //定义了搜索时的分词方法
+                        "include_in_all"=> "true", //定义了是否包含在_all字段中
+                        "boost"=> 8 //是跟计算分值相关的
+                    ]
+                ]
+            ]
+        ];
+
+        return $client->indices()->putSettings($params);*/
 
         //获取一个索引的配置信息
         //return $client->indices()->getSettings(['index'=>$table]);
@@ -71,25 +116,23 @@ class YuluoController extends Controller
                         'content'=>$val->content,
                         'title'=>$val->title
                     ];
-
-                    dump($params);
-
                     //添加索引文档
                     $index = $client->index($params);
-                    dump($index);
                 }
             }
         });*/
-        /*$params = [
-            'index' => 'index',
-            'type' => 'text',
-            'id' => 2, //索引id
+
+        $params = [
+            'index' => $table,
+            'type' => $table,
+            'id' => 1, //索引id
             'client'=> ['ignore'=> [400,404]] //异常报错
         ];
 
         //索引文档内容
-        return $client->get($params);*/
+        return $client->get($params);
 
+        //return $client->indices()->getSettings(['index'=>'article']);
         /*unset($params['body']);
         //查询索引
         $res = $client->get($params);
@@ -101,44 +144,10 @@ class YuluoController extends Controller
         ];
         $response = $client->indices()->getMapping($params);
         return $response;*/
-        $params = [
-            //'index' => 'ws', //索引名称
-            //'type' => 'text', //索引类型
-            'size' => 50, //条数
-            //'scroll' => '5s',
-            'from' => 1, //页数
-            /*'sort' => [  // 排序
-                'age' => 'desc'   //对age字段进行降序排序
-            ],*/
-            'body' => [
-                'query' => [
-                    /*'constant_score'=>[
-                        'filter' => [ //过滤器，不会计算相关度，速度快
-                            'term' => [ //精确查找，不支持多个条件
-                                'content' => '列表内容'
-                            ]
-                        ]
-                    ]*/
-                    /*'match' => [
-                        'content' => '糯言' //指定content字段搜索
-                    ]*/
-                    'query_string' => [
-                        'query' => '的', //全局搜索(搜索所有字段)
-                    ]
-                ],
-//                "highlight"=>[
-//                    "pre_tags"=>"<tag1>", "<tag2>",
-//                    "post_tags"=>"</tag1>", "</tag2>",
-//                    "fields"=>[
-//                        "content"=>[]
-//                    ]
-//                ]
-            ]
-        ];
         //return $params;
         //搜索
-        $res = $this->searchIndex('的');
-        dd($res);
+        $res = $es->searchIndex('今天不');
+        return $res;
         $index['index'] = 'yuluo';
         $index['type'] = 'yuluo';
         //索引id
@@ -146,6 +155,13 @@ class YuluoController extends Controller
         //删除单个索引文档
         return $this->deleteIndex($index);
 
+
+    }
+
+
+    public function search(Request $request)
+    {
+        $request = $request->all();
 
     }
 
@@ -203,6 +219,7 @@ class YuluoController extends Controller
             }
             $params['client'] = ['ignore'=> [400,404]]; //异常报错
             //创建索引
+            $es = new Elasticsearch;
             $data = $this->client->indices()->create($params);
             if(isset($data['error']) || isset($data['status'])){
                 return 0; //创建索引失败
@@ -212,46 +229,37 @@ class YuluoController extends Controller
     }
 
     /**
-     * 添加中分索引
+     * 全文搜索
      * $content 搜索内容 string
      * $limit   条数 int
      * $page    页数 int
      */
-    public function searchIndex($content,$page=1,$limit=10)
+    public function searchIndex(Request $request)
     {
-        if(empty($content)){
+        $request = $request->all();
+        $params = [
+            'content' => 'required'
+        ];
+        $page = $request['page'] ?? 1;
+        $limit = $request['limit'] ?? 10;
+        $validator = Validator::make($request, $params);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+        $es = new Elasticsearch;
+        $list = $es->searchIndex($request['content'],$page,$limit);
+        if(!empty($list)){
+            return $list;
+        }else{
             return [];
         }
-        $params = [
-            'size' => (int)$limit, //条数
-            'from' => (int)$page, //页数
-            /*'sort' => [  // 排序
-                'age' => 'desc'   //对age字段进行降序排序
-            ],*/
-            'body' => [
-                'query' => [
-                    /*'match' => [
-                        'content' => '糯言' //指定content字段搜索
-                    ]*/
-                    'query_string' => [
-                        'query' => $content, //全局搜索(搜索所有字段)
-                    ]
-                ],
-//                "highlight"=>[
-//                    "pre_tags"=>"<tag1>", "<tag2>",
-//                    "post_tags"=>"</tag1>", "</tag2>",
-//                    "fields"=>[
-//                        "content"=>[]
-//                    ]
-//                ]
-            ]
-        ];
-        //搜索
-        $data = $this->client->search($params);
-        if(!empty($data) && isset($data['hits']['hits']) && !empty($data['hits']['hits'])){
-            return $data['hits']['hits'];
-        }
-        return [];
+    }
+
+    public function addArticleIndex()
+    {
+        $es = new Elasticsearch;
+        //return $es->deleteIndex('article');
+        return $es->addArticleIndex();
     }
 
 }

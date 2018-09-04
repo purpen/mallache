@@ -4,6 +4,8 @@ namespace App\Service;
 
 use DB;
 use Elasticsearch\ClientBuilder;
+use App\Models\AssetModel;
+use Illuminate\Support\Facades\Log;
 
 class Elasticsearch
 {
@@ -53,7 +55,7 @@ class Elasticsearch
         dd($index);*/
 
         //获取一个索引的配置信息
-        //return $client->indices()->getSettings(['index'=>$table]);
+        return $client->indices()->getSettings(['index'=>'index']);
 
         //分块创建索引文档
         /*DB::table($table)->orderBy('id')->select('id','title','content')->chunk(100, function ($res) {
@@ -153,7 +155,11 @@ class Elasticsearch
      */
     public function deleteIndex($index = '')
     {
-        return $this->client->indices()->delete(['index'=>$index,'client'=> ['ignore'=> [400,404]]]);
+        $data = $this->client->indices()->delete(['index'=>$index,'client'=> ['ignore'=> [400,404]]]);
+        if(isset($data['error']) || isset($data['status'])){
+            return 0; //删除失败
+        }
+        return 1;//删除成功
     }
 
     //删除单个索引文档
@@ -166,7 +172,7 @@ class Elasticsearch
     }
 
     /**
-     * 添加中分索引
+     * 添加中文索引
      * $index 索引名称 string
      * $type  索引类型 string
      * $ppl   分词 1:中文分词,2:英文 int
@@ -177,15 +183,14 @@ class Elasticsearch
             $params = [
                 'index' => $index, //索引名称
             ];
-            if(!empty($type)){
-                $params['type'] = $type; //索引类型
-            }
             if($ppl == 1){
                 //创建索引时使用中文分词
                 $params['body'] = [
-                    'analyzer' => 'ik_max_word',
+                    'type' => 'text',
+                    'analyzer' => 'ik_max_word',//细分
+                    'search_analyzer'=> 'ik_smart',
                     'settings' => [
-                        "analysis" => [
+                        'analysis' => [
                             'analyzer' => [
                                 'ik' => [
                                     'tokenizer' => 'ik_max_word'
@@ -194,15 +199,21 @@ class Elasticsearch
                         ]
                     ]
                 ];
+                if(!empty($type)){
+                    $params['body']['type'] = $type; //索引类型
+                }
             }
-            $params['client'] = ['ignore'=> [400,404]]; //异常报错
+            $params['client'] = [
+                'ignore'=> [400,404],
+                'timeout'=>10 //设置超时
+            ]; //异常报错
             //创建索引
             return $this->client->indices()->create($params);
         }
     }
 
     /**
-     * 添加中分索引
+     * 全文搜索
      * $content 搜索内容 string
      * $limit   条数 int
      * $page    页数 int
@@ -215,14 +226,8 @@ class Elasticsearch
         $params = [
             'size' => (int)$limit, //条数
             'from' => (int)$page, //页数
-            /*'sort' => [  // 排序
-                'age' => 'desc'   //对age字段进行降序排序
-            ],*/
             'body' => [
                 'query' => [
-                    /*'match' => [
-                        'content' => '糯言' //指定content字段搜索
-                    ]*/
                     'query_string' => [
                         'query' => $content, //全局搜索(搜索所有字段)
                     ]
@@ -250,26 +255,129 @@ class Elasticsearch
      */
     public function addArticleIndex()
     {
-        //创建index索引
-        $index = $this->addMiddleIndex($index='',$type='',$ppl=1);
-        DB::table(article)->orderBy('id')->select('id','title','content')->chunk(1000, function ($res) {
-            if(!empty($res)){
-                $index = [];
-                foreach ($res as $val){
-                    $params = [
-                        'index' => 'article',
-                        'type' => 'text',
-                        'id' => $val->id,
-                    ];
-                    $params['body'] = [
-                        'content'=>$val->content,
-                        'title'=>$val->title
-                    ];
-                    //添加索引文档
-                    $index[] = $this->client->index($params);
+        /*$params = [
+            'index' => 'article',
+            'client'=> ['ignore'=> [400,404]] //抛出异常
+        ];
+        $response = $this->client->indices()->getMapping($params);
+        $article = $this->client->indices()->getSettings($params);
+        dump($article);
+        dd($response);*/
+
+        $params = [
+            'index' => 'article',
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 3,
+                    'number_of_replicas' => 2
+                ],
+                "mappings"=> [
+                    'article'=>[ //类型
+                        "properties"=> [
+                            "content"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_max_word"
+                            ],
+                            "title"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_max_word"
+                            ],
+                            "label"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_max_word"
+                            ],
+                            "author"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_max_word"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        //创建索引
+        $index = $this->client->indices()->create($params);
+
+        //$index['acknowledged'] = 'true';
+        //分块处理索引数据
+        if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
+            DB::table('article')
+                ->orderBy('id')
+                ->select('id','title','content','updated_at','label','cover_id','source_from')
+                ->where(['type'=>1,'status'=>1])
+                ->chunk(500, function ($res) {
+                if(!empty($res)){
+                    $index = [];
+                    $asset = new AssetModel;
+                    foreach ($res as $val){
+                        $params = [
+                            'index' => 'article',
+                            'type' => 'article',
+                            'id' => $val->id,
+                            'body' =>[
+                                'content'=>$val->content,
+                                'title'=>$val->title,
+                                'updated_at' => $val->updated_at,
+                                'label' => $val->label,
+                                'cover' =>'', //封面图
+                                'source_from' => $val->source_from //文章来源
+                            ]
+                        ];
+                        $img = $asset->getOneImage((int)$val->cover_id);
+                        if(!empty($img)){
+                            $params['body']['cover'] = $img['small'] ?? '';
+                        }
+                        dump($params);
+                        //添加索引文档
+                        $index[] = $this->client->index($params);
+                    }
+                    dump($index);
                 }
-                return $index;
-            }
-        });
+            });
+            Log::info('已生成文章索引');
+            return 1;
+        }
+        Log::info('生成文章索引失败');
+        return 0;
     }
+
+    /**
+     * 添加案例索引
+     * $content 搜索内容 string
+     */
+    public function addCaseIndex()
+    {
+        //创建索引
+        $index = $this->addMiddleIndex('article',$type='',$ppl=1);
+        //分块处理索引数据
+        if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
+            DB::table('article')->orderBy('id')->select('id','title','content')->chunk(500, function ($res) {
+                if(!empty($res)){
+                    $index = [];
+                    foreach ($res as $val){
+                        $params = [
+                            'index' => 'article',
+                            'id' => $val->id,
+                            'type' => 'text'
+                        ];
+                        $params['body'] = [
+                            'content'=>$val->content,
+                            'title'=>$val->title
+                        ];
+                        //添加索引文档
+                        $index[] = $this->client->index($params);
+                    }
+                }
+            });
+            Log::info('文章索引已生成');
+            return 1;
+        }
+        Log::info('文章索引生成失败');
+        return 0;
+    }
+
 }
