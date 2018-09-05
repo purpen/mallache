@@ -179,9 +179,18 @@ class AuthenticateController extends BaseController
         $oldUser->session_key = $loginUser->session_key;
         $oldUser->union_id = $loginUser->union_id;
         if($oldUser->save()){
-            if($loginUser->delete()){
-                return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
+            //判断登陆的手机号是否是6位，是的话删除，不是的话清除open_id,session_key
+            if(strlen($loginUser->phone) == 6){
+                $loginUser->delete();
+            } else {
+                $loginUser->wx_open_id = "";
+                $loginUser->session_key = "";
+                $loginUser->union_id = "";
+                $loginUser->save();
             }
+            return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
+
+
         }
 
     }
