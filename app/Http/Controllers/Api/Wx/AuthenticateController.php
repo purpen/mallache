@@ -169,9 +169,7 @@ class AuthenticateController extends BaseController
         }
         //已经存在的用户
         $oldUser = User::where('account' , $phone)->first();
-        if(!empty($oldUser->wx_open_id)){
-            return $this->response->array($this->apiError('你已经绑定了账户，无需再绑定', 412));
-        }
+
         //当前登陆的用户
         $loginUser = $this->auth_user;
         //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
