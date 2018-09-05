@@ -7,6 +7,7 @@ use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Models\AssetModel;
+use App\Models\DesignCompanyModel;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
@@ -212,12 +213,6 @@ class PayController extends BaseController
     {
         // 支付首付款类型
         $pay_type = 3;
-
-        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
-        if ($pay_order) {
-            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
-        }
-
         if (!$item = Item::find($item_id)) {
             return $this->response->array("not found item", 404);
         }
@@ -227,9 +222,17 @@ class PayController extends BaseController
 
         // 合同
         $contract = $item->contract;
+
         // 合同不存在或合同版本不正确
         if (!$contract || $contract->version != 1) {
             return $this->response->array($this->apiError("not found", 404));
+        }
+
+        $pay_order = PayOrder::where(['item_id' => $item_id, 'type' => $pay_type])->where('status', '!=', -1)->first();
+
+        if ($pay_order) {
+            $pay_order->total_price = $contract->total;
+            return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
         }
 
         //查询项目押金的金额(兼容历史数据)
@@ -254,15 +257,13 @@ class PayController extends BaseController
         $summary = '项目首付款';
 
         $pay_order = $this->createPayOrder($summary, $price, $pay_type, $item_id);
+        $pay_order->total_price = $contract->total;
 
         //修改项目状态为8，等待支付首付款
         $item->status = 8;
         $item->save();
 
         event(new ItemStatusEvent($item));
-
-        $pay_order->total_price = $contract->first_payment;
-        $pay_order->first_pay = $first_pay;
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }
@@ -329,6 +330,11 @@ class PayController extends BaseController
         $summary = '项目阶段款';
 
         $pay_order = $this->createPayOrder($summary, $item_stage->amount, $pay_type, $item->id, 0, (int)$item_stage_id);
+        $design = DesignCompanyModel::find($item_stage->design_company_id);
+        $content = '收到【' .$item->name. '】阶段款付款';
+        Tools::message($design->user_id, $item_stage->title, $content, 2, $item->id, $item->status);
+        $message_content = '收到项目阶段款，请注意查看。感谢您的信任，如有疑问欢迎致电 ';
+        Tools::sendSmsToPhone($design->phone, $message_content, $item->source);
 
         return $this->response->item($pay_order, new PayOrderTransformer)->setMeta($this->apiMeta());
     }

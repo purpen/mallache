@@ -169,7 +169,7 @@ class ItemMessageListener
             $title = '收到项目邀约';
             $content = '新收到【' . $item->itemInfo()['name'] . '】项目邀约';
             for ($i = 0; $i < $n; ++$i) {
-                Tools::message($user_id_arr[$i], $title, $content, 2, $item->id , $item->status);
+                Tools::message($user_id_arr[$i], $title, $content, 2, $item->id, $item->status);
                 $message_content = '收到新项⽬，请报价并等待客户确认。感谢您的信任，如有疑问欢迎致电 ';
                 //短信通知设计公司有新项目推送
                 Tools::sendSmsToPhone($phone_arr[$i], $message_content);
@@ -239,7 +239,7 @@ class ItemMessageListener
 
         $title = '收到合同';
         $content = '收到设计公司发来【' . $item_info['name'] . '】项目合同书请查看并确认或与设计服务供应商沟通做进一步修改';
-        Tools::message($item->user_id, $title, $content, 2, $item->id , $item->status);
+        Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
 
         $message_content = '收到合同，请查阅。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($item->phone, $message_content, $item->source);
@@ -258,7 +258,7 @@ class ItemMessageListener
 
             $title = '合同确认';
             $content = '您与' . $item->company_name . '公司的【' . $item_info['name'] . '】合同已订立，请按合同规定在收到项目款后开始设计工作';
-            Tools::message($user_id, $title, $content, 2, $item->id , $item->status);
+            Tools::message($user_id, $title, $content, 2, $item->id, $item->status);
 
             $message_content = '合同已订⽴，等待客户⽀付项⽬款。感谢您的信任，如有疑问欢迎致电 ';
             Tools::sendSmsToPhone($phone, $message_content);
@@ -279,14 +279,14 @@ class ItemMessageListener
         $phone = $item->designCompany->phone;
 
         //通知设计公司
-        $title = '项目已托管项目首付款';
-        $content = '【' . $item_info['name'] . '】' . '项目需求公司已托管项目首付款，请开始设计工作';
+        $title = '项目首付款已托管';
+        $content = '【' . $item_info['name'] . '】' . '项目首付款已托管，请保证项目按时顺利进行';
         Tools::message($user_id, $title, $content, 2, $item->id, $item->status);
         $design_m_content = '客户已⽀付项⽬款，请启动项目。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($phone, $design_m_content);
         //需求公司
         $demand_m_content = '项⽬款已支付，等待设计服务商启动。感谢您的信任，如有疑问欢迎致电 ';
-        Tools::sendSmsToPhone($item->phone , $demand_m_content , $item->source);
+        Tools::sendSmsToPhone($item->phone, $demand_m_content, $item->source);
 
     }
 
@@ -326,12 +326,13 @@ class ItemMessageListener
         $item = $event->item;
         $item_info = $item->itemInfo();
 
-        $design_company = User::where('design_company_id', $item->design_company_id)->first();
-        $design_company_id = $design_company->id;
+        $design_company = DesignCompanyModel::find($item->design_company_id);
+        $user_id = $design_company->user_id;
+
         //系统消息通知设计公司
         $title = '项目确认验收';
         $content = '需求方已对【' . $item_info['name'] . '】' . '项目确认验收';
-        Tools::message($design_company_id, $title, $content, 2, $item->id, $item->status);
+        Tools::message($user_id, $title, $content, 2, $item->id, $item->status);
 
         $message_content = '客户已验收项目。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($design_company->phone, $message_content);
@@ -546,7 +547,7 @@ class ItemMessageListener
         Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
         //通知需求公司支付项目款
         $message_content = '请⽀付项⽬款。感谢您的信任，如有疑问欢迎致电 ';
-        Tools::sendSmsToPhone($item->phone, $message_content , $item->source);
+        Tools::sendSmsToPhone($item->phone, $message_content, $item->source);
     }
 
     /**
@@ -557,12 +558,13 @@ class ItemMessageListener
         $item = $event->item;
         $item_info = $item->itemInfo();
 
-        $design_company = User::where('design_company_id', $item->design_company_id)->first();
-        $design_company_id = $design_company->id;
+        $design_company = DesignCompanyModel::find($item->design_company_id);
+
+        $user_id = $design_company->user_id;
         //系统消息通知设计公司
         $title = '项目已评价';
         $content = '需求方已对【' . $item_info['name'] . '】' . '项目已评价';
-        Tools::message($design_company_id, $title, $content, 2, $item->id, $item->status);
+        Tools::message($user_id, $title, $content, 2, $item->id, $item->status);
 
         $message_content = '项目已评价。感谢您的信任，如有疑问欢迎致电 ';
         Tools::sendSmsToPhone($design_company->phone, $message_content);

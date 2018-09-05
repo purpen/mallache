@@ -457,11 +457,12 @@ class DesignProjectController extends BaseController
             if (!ItemUser::checkUser($id, $this->auth_user_id)) {
                 throw new MassageException('无权限', 403);
             }
-
+            $collect_item = CollectItem::where('item_id' , $id)->where('user_id' , $this->auth_user_id)->first();
             $design_project = DesignProject::where(['id' => $id, 'status' => 1])->first();
             if (!$design_project) {
                 throw new MassageException('不存在', 404);
             }
+            $design_project['collect'] = $collect_item ? $collect_item->collect : 0;
         } catch (MassageException $e) {
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         }

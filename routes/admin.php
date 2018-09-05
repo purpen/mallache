@@ -23,6 +23,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/item/closeItem', 'ItemActionController@closeItem');
         // 后台设定项目类型
         $api->put('/admin/item/testStatus', 'ItemActionController@testStatus');
+        //后台批量删除项目
+        $api->delete('/admin/item/deleteIds', 'ItemActionController@deleteIds');
 
         //更新设计公司审核状态
         $api->put('/admin/designCompany/verifyStatus', [
