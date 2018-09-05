@@ -258,8 +258,32 @@ class ElasticsearchController extends Controller
     public function addArticleIndex()
     {
         $es = new Elasticsearch;
-        //return $es->deleteIndex('article');
         return $es->addArticleIndex();
+    }
+
+    public function addCaseIndex()
+    {
+        $es = new Elasticsearch;
+        return $es->addCaseIndex();
+    }
+
+    public function addAwardCaseIndex()
+    {
+        $es = new Elasticsearch;
+        return $es->addAwardCaseIndex();
+    }
+
+    public function addTrendReportsIndex()
+    {
+        $es = new Elasticsearch;
+        return $es->addTrendReportsIndex();
+    }
+
+    //保存报告
+    public function saveTrendReportsIndex(Request $request)
+    {
+        $es = new Elasticsearch;
+        return $es->saveArticleIndex(4);
     }
 
 }

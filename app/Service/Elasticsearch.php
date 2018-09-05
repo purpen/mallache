@@ -3,8 +3,12 @@
 namespace App\Service;
 
 use DB;
-use Elasticsearch\ClientBuilder;
+use App\Models\Article;
+use App\Models\AwardCase;
 use App\Models\AssetModel;
+use App\Models\TrendReports;
+use App\Models\DesignCaseModel;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
 
 class Elasticsearch
@@ -251,48 +255,42 @@ class Elasticsearch
 
     /**
      * 添加文章索引
-     * $content 搜索内容 string
      */
     public function addArticleIndex()
     {
-        /*$params = [
+        $params = [
             'index' => 'article',
             'client'=> ['ignore'=> [400,404]] //抛出异常
         ];
-        $response = $this->client->indices()->getMapping($params);
-        $article = $this->client->indices()->getSettings($params);
-        dump($article);
-        dd($response);*/
-
+        //查询索引信息
+        $article = $this->client->indices()->getMapping($params);
+        if(isset($article['article'])){
+            $this->deleteIndex('article');
+        }
         $params = [
             'index' => 'article',
             'body' => [
                 'settings' => [
-                    'number_of_shards' => 3,
-                    'number_of_replicas' => 2
+                    'number_of_shards' => 3, //分片
+                    'number_of_replicas' => 2 //副本
                 ],
                 "mappings"=> [
-                    'article'=>[ //类型
+                    'article'=>[ //索引类型
                         "properties"=> [
                             "content"=> [
                                 "type"=> "text",
                                 "analyzer"=> "ik_max_word",
-                                "search_analyzer"=> "ik_max_word"
+                                "search_analyzer"=> "ik_smart"
                             ],
                             "title"=> [
                                 "type"=> "text",
                                 "analyzer"=> "ik_max_word",
-                                "search_analyzer"=> "ik_max_word"
+                                "search_analyzer"=> "ik_smart"
                             ],
                             "label"=> [
                                 "type"=> "text",
                                 "analyzer"=> "ik_max_word",
-                                "search_analyzer"=> "ik_max_word"
-                            ],
-                            "author"=> [
-                                "type"=> "text",
-                                "analyzer"=> "ik_max_word",
-                                "search_analyzer"=> "ik_max_word"
+                                "search_analyzer"=> "ik_smart"
                             ]
                         ]
                     ]
@@ -301,13 +299,11 @@ class Elasticsearch
         ];
         //创建索引
         $index = $this->client->indices()->create($params);
-
-        //$index['acknowledged'] = 'true';
-        //分块处理索引数据
+        //添加索引文档
         if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
             DB::table('article')
                 ->orderBy('id')
-                ->select('id','title','content','updated_at','label','cover_id','source_from')
+                ->select('id','title','content','updated_at','label','cover_id')
                 ->where(['type'=>1,'status'=>1])
                 ->chunk(500, function ($res) {
                 if(!empty($res)){
@@ -319,23 +315,20 @@ class Elasticsearch
                             'type' => 'article',
                             'id' => $val->id,
                             'body' =>[
-                                'content'=>$val->content,
-                                'title'=>$val->title,
-                                'updated_at' => $val->updated_at,
-                                'label' => $val->label,
-                                'cover' =>'', //封面图
-                                'source_from' => $val->source_from //文章来源
+                                'content'=>$val->content, //内容
+                                'title'=>$val->title, //标题
+                                'updated_at' => $val->updated_at ?? '', //更新时间
+                                'label' => $val->label, //标签
+                                'cover' =>'' //封面图
                             ]
                         ];
                         $img = $asset->getOneImage((int)$val->cover_id);
                         if(!empty($img)){
                             $params['body']['cover'] = $img['small'] ?? '';
                         }
-                        dump($params);
                         //添加索引文档
                         $index[] = $this->client->index($params);
                     }
-                    dump($index);
                 }
             });
             Log::info('已生成文章索引');
@@ -347,36 +340,454 @@ class Elasticsearch
 
     /**
      * 添加案例索引
-     * $content 搜索内容 string
      */
     public function addCaseIndex()
     {
+        $params = [
+            'index' => 'case',
+            'client'=> ['ignore'=> [400,404]] //抛出异常
+        ];
+        //查询索引信息
+        $article = $this->client->indices()->getMapping($params);
+        if(isset($article['case'])){
+            $this->deleteIndex('case');
+        }
+        $params = [
+            'index' => 'case',
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 3, //分片
+                    'number_of_replicas' => 2 //副本
+                ],
+                "mappings"=> [
+                    'case'=>[ //索引类型
+                        "properties"=> [
+                            "content"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "title"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "label"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "company_name"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
         //创建索引
-        $index = $this->addMiddleIndex('article',$type='',$ppl=1);
-        //分块处理索引数据
+        $index = $this->client->indices()->create($params);
+        //添加索引文档
         if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
-            DB::table('article')->orderBy('id')->select('id','title','content')->chunk(500, function ($res) {
-                if(!empty($res)){
-                    $index = [];
-                    foreach ($res as $val){
-                        $params = [
-                            'index' => 'article',
-                            'id' => $val->id,
-                            'type' => 'text'
-                        ];
-                        $params['body'] = [
-                            'content'=>$val->content,
-                            'title'=>$val->title
-                        ];
-                        //添加索引文档
-                        $index[] = $this->client->index($params);
+            DB::table('design_case')
+                ->orderBy('id')
+                ->select('id','title','profile','updated_at','label','cover_id','prizes','design_company_id')
+                ->where(['open'=>1,'status'=>1])
+                ->chunk(500, function ($res) {
+                    if(!empty($res)){
+                        $index = [];
+                        $prize = config('constant.prize');
+                        $asset = new AssetModel;
+                        foreach ($res as $val){
+                            $params = [
+                                'index' => 'case',
+                                'type' => 'case',
+                                'id' => $val->id,
+                                'body' =>[
+                                    'content'=>$val->profile, //描述
+                                    'title'=>$val->title, //标题
+                                    'updated_at' => $val->updated_at ?? '', //更新时间
+                                    'label' => $val->label, //标签
+                                    'cover' =>'', //封面图
+                                    'prizes' =>'' //奖项
+                                ]
+                            ];
+                            $img = $asset->getOneImage((int)$val->cover_id);
+                            if(!empty($img)){
+                                //封面图
+                                $params['body']['cover'] = $img['small'] ?? '';
+                            }
+                            $company = DB::table('design_company')->where(['id'=>(int)$val->design_company_id])->select('company_name')->first();
+                            //公司名称
+                            $params['body']['company_name'] = $company->company_name ?? '';
+                            //奖项
+                            if(!empty($val->prizes)){
+                                $prizes = json_decode($val->prizes,1);
+                                foreach ($prizes as $v){
+                                    $type = $v['type'];
+                                    if (array_key_exists($type, $prize)) {
+                                        $params['body']['prizes'] = $prize[$type];
+                                    }else{
+                                        $params['body']['prizes'] = '';
+                                    }
+                                }
+                            }
+                            //保存索引文档
+                            $index[] = $this->client->index($params);
+                        }
                     }
-                }
-            });
-            Log::info('文章索引已生成');
+                });
+            Log::info('已生成案例索引');
             return 1;
         }
-        Log::info('文章索引生成失败');
+        Log::info('生成案例索引失败');
+        return 0;
+    }
+
+    /**
+     * 添加设计奖项索引
+     */
+    public function addAwardCaseIndex()
+    {
+        $params = [
+            'index' => 'award_case',
+            'client'=> ['ignore'=> [400,404]] //抛出异常
+        ];
+        //查询索引信息
+        $article = $this->client->indices()->getMapping($params);
+        if(isset($article['award_case'])){
+            $this->deleteIndex('award_case');
+        }
+        $params = [
+            'index' => 'award_case',
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 3, //分片
+                    'number_of_replicas' => 2 //副本
+                ],
+                "mappings"=> [
+                    'award_case'=>[ //索引类型
+                        "properties"=> [
+                            "content"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "title"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "label"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "prize"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        //创建索引
+        $index = $this->client->indices()->create($params);
+        //添加索引文档
+        if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
+            DB::table('award_case')
+                ->orderBy('id')
+                ->select('id','title','content','updated_at','tags','cover_id','category_id')
+                ->where(['status'=>1])
+                ->chunk(500, function ($res) {
+                    if(!empty($res)){
+                        $index = [];
+                        $asset = new AssetModel;
+                        $awardCase = config('constant.awardCase_category');
+                        foreach ($res as $val){
+                            $category_id = $val->category_id;
+                            if (array_key_exists($category_id, $awardCase)) {
+                                $prize = $awardCase[$category_id];
+                            }else{
+                                $prize = '';
+                            }
+                            $params = [
+                                'index' => 'award_case',
+                                'type' => 'award_case',
+                                'id' => $val->id,
+                                'body' =>[
+                                    'content'=>$val->content, //内容
+                                    'title'=>$val->title, //标题
+                                    'updated_at' => $val->updated_at ?? '', //更新时间
+                                    'label' => $val->tags, //标签
+                                    'cover' =>'', //封面图
+                                    'prize' =>$prize //奖项
+                                ]
+                            ];
+                            $img = $asset->getOneImage((int)$val->cover_id);
+                            if(!empty($img)){
+                                $params['body']['cover'] = $img['small'] ?? '';
+                            }
+                            //保存索引文档
+                            $index[] = $this->client->index($params);
+                        }
+                    }
+                });
+            Log::info('已生成案例索引');
+            return 1;
+        }
+        Log::info('生成案例索引失败');
+        return 0;
+    }
+
+    /**
+     * 添加报告索引
+     */
+    public function addTrendReportsIndex()
+    {
+        $params = [
+            'index' => 'trend_reports',
+            'client'=> ['ignore'=> [400,404]] //抛出异常
+        ];
+        //查询索引信息
+        $article = $this->client->indices()->getMapping($params);
+        if(isset($article['trend_reports'])){
+            $this->deleteIndex('trend_reports');
+        }
+        $params = [
+            'index' => 'trend_reports',
+            'body' => [
+                'settings' => [
+                    'number_of_shards' => 3, //分片
+                    'number_of_replicas' => 2 //副本
+                ],
+                "mappings"=> [
+                    'trend_reports'=>[ //索引类型
+                        "properties"=> [
+                            "title"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ],
+                            "label"=> [
+                                "type"=> "text",
+                                "analyzer"=> "ik_max_word",
+                                "search_analyzer"=> "ik_smart"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        //创建索引
+        $index = $this->client->indices()->create($params);
+        //添加索引文档
+        if(isset($index['acknowledged']) && $index['acknowledged'] == 'true'){
+            DB::table('award_case')
+                ->orderBy('id')
+                ->select('id','title','updated_at','tags','cover_id')
+                ->where(['status'=>1])
+                ->chunk(500, function ($res) {
+                    if(!empty($res)){
+                        $index = [];
+                        $asset = new AssetModel;
+                        foreach ($res as $val){
+                            $params = [
+                                'index' => 'trend_reports',
+                                'type' => 'trend_reports',
+                                'id' => $val->id,
+                                'body' =>[
+                                    'title'=>$val->title, //标题
+                                    'updated_at' => $val->updated_at ?? '', //更新时间
+                                    'label' => $val->tags, //标签
+                                    'cover' =>'', //封面图
+                                ]
+                            ];
+                            $img = $asset->getOneImage((int)$val->cover_id);
+                            if(!empty($img)){
+                                $params['body']['cover'] = $img['small'] ?? '';
+                            }
+                            //保存索引文档
+                            $index[] = $this->client->index($params);
+                        }
+                    }
+                });
+            Log::info('已生成案例索引');
+            return 1;
+        }
+        Log::info('生成案例索引失败');
+        return 0;
+    }
+
+    /**
+     * 保存报告
+     * $id 报告id
+     */
+    public function saveTrendReportsIndex($id)
+    {
+        $trend = TrendReports::where(['id'=>$id,'status'=>1])->first();
+        if(!empty($trend)){
+            $asset = new AssetModel;
+            $params = [
+                'index' => 'trend_reports',
+                'type' => 'trend_reports',
+                'id' => $trend->id,
+                'client'=> ['ignore'=> [400,404,500]], //异常报错
+                'body' =>[
+                    'title'=>$trend->title, //标题
+                    'updated_at' => $trend->updated_at ?? '', //更新时间
+                    'label' => $trend->tags, //标签
+                    'cover' =>'', //封面图
+                ]
+            ];
+            $img = $asset->getOneImage((int)$trend->cover_id);
+            if(!empty($img)){
+                $params['body']['cover'] = $img['small'] ?? '';
+            }
+            //保存索引文档
+            $index = $this->client->index($params);
+            if(isset($index['error']) || isset($index['status'])){
+                return 0;
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * 保存设计奖项
+     * $id 奖项id
+     */
+    public function saveAwardCaseIndex($id)
+    {
+        $award_case = AwardCase::where(['id'=>$id,'status'=>1])->first();
+        if(!empty($award_case)){
+            $asset = new AssetModel;
+            $awardCase = config('constant.awardCase_category');
+            $category_id = $award_case->category_id;
+            if (array_key_exists($category_id, $awardCase)) {
+                $prize = $awardCase[$category_id];
+            }else{
+                $prize = '';
+            }
+            $params = [
+                'index' => 'award_case',
+                'type' => 'award_case',
+                'id' => $award_case->id,
+                'client'=> ['ignore'=> [400,404,500]], //异常报错
+                'body' =>[
+                    'content'=>$award_case->content, //内容
+                    'title'=>$award_case->title, //标题
+                    'updated_at' => $award_case->updated_at ?? '', //更新时间
+                    'label' => $award_case->tags, //标签
+                    'cover' =>'', //封面图
+                    'prize' =>$prize //奖项
+                ]
+            ];
+            $img = $asset->getOneImage((int)$award_case->cover_id);
+            if(!empty($img)){
+                $params['body']['cover'] = $img['small'] ?? '';
+            }
+            //保存索引文档
+            $index = $this->client->index($params);
+            if(isset($index['error']) || isset($index['status'])){
+                return 0;
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * 保存案例
+     * $id 案例id
+     */
+    public function saveCaseIndex($id)
+    {
+        $case = DesignCaseModel::where(['id'=>$id,'status'=>1])->first();
+        if(!empty($case)){
+            $prize = config('constant.prize');
+            $asset = new AssetModel;
+            $params = [
+                'index' => 'case',
+                'type' => 'text',
+                'id' => $case->id,
+                'client'=> ['ignore'=> [400,404,500]], //异常报错
+                'body' =>[
+                    'content'=>$case->profile, //描述
+                    'title'=>$case->title, //标题
+                    'updated_at' => $case->updated_at ?? '', //更新时间
+                    'label' => $case->label, //标签
+                    'cover' =>'', //封面图
+                    'prizes' =>'' //奖项
+                ]
+            ];
+            $img = $asset->getOneImage((int)$case->cover_id);
+            if(!empty($img)){
+                //封面图
+                $params['body']['cover'] = $img['small'] ?? '';
+            }
+            $company = DB::table('design_company')->where(['id'=>(int)$case->design_company_id])->select('company_name')->first();
+            //公司名称
+            $params['body']['company_name'] = $company->company_name ?? '';
+            //奖项
+            if(!empty($case->prizes)){
+                $prizes = json_decode($case->prizes,1);
+                foreach ($prizes as $v){
+                    $type = $v['type'];
+                    if (array_key_exists($type, $prize)) {
+                        $params['body']['prizes'] = $prize[$type];
+                    }else{
+                        $params['body']['prizes'] = '';
+                    }
+                }
+            }
+            //保存索引文档
+            $index = $this->client->index($params);
+            if(isset($index['error']) || isset($index['status'])){
+                return 0;
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * 保存文章
+     * $id 文章id
+     */
+    public function saveArticleIndex($id)
+    {
+        $article = Article::where(['id'=>$id,'status'=>1])->first();
+        if(!empty($article)){
+            $asset = new AssetModel;
+            $params = [
+                'index' => 'article',
+                'type' => 'article',
+                'id' => $article->id,
+                'body' =>[
+                    'content'=>$article->content, //内容
+                    'title'=>$article->title, //标题
+                    'updated_at' => $article->updated_at ?? '', //更新时间
+                    'label' => $article->label, //标签
+                    'cover' =>'' //封面图
+                ]
+            ];
+            $img = $asset->getOneImage((int)$article->cover_id);
+            if(!empty($img)){
+                $params['body']['cover'] = $img['small'] ?? '';
+            }
+            //保存索引文档
+            $index = $this->client->index($params);
+            if(isset($index['error']) || isset($index['status'])){
+                return 0;
+            }
+            return 1;
+        }
         return 0;
     }
 
