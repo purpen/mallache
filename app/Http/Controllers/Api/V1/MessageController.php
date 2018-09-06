@@ -5,6 +5,7 @@ use App\Helper\Tools;
 use App\Http\Transformer\MessageTransformer;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class MessageController extends BaseController
 {
@@ -106,5 +107,54 @@ class MessageController extends BaseController
 
 
     }
+
+    /**
+     * @api {get} /message/getMessageProjectNotice 获取项目通知数量
+     * @apiVersion 1.0.0
+     * @apiName message getMessageProjectNotice
+     * @apiGroup Message
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      },
+     *      "data":{
+     *          "design_notice": 0,  // 设计项目管理通知
+     *      }
+     *  }
+     */
+    public function getMessageProjectNotice()
+    {
+        //初始数据
+        $data = [
+            'design_notice' => 0,
+        ];
+        //判断用户ID
+        if (!$this->auth_user_id) {
+            return $data;
+        }
+        //查询数据
+        $user = User::find($this->auth_user_id);
+
+        if (!$user) {
+            return $data;
+        }
+
+        if ($user->design_notice_count < 0) {
+            $user->design_notice_count = 0;
+            $user->save();
+        }
+
+        if (isset($user->design_notice_count)) {
+            $data['design_notice'] = (int)$user->design_notice_count;
+        }
+        //成功返回
+        return $this->response->array($this->apiSuccess('Success', 200, $data));
+    }
+
 
 }

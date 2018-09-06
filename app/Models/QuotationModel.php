@@ -25,6 +25,7 @@ class QuotationModel extends BaseModel
         'total_price',
         'taxable_type',
         'invoice_type',
+        'type',
     ];
 
     /**

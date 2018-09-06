@@ -135,6 +135,7 @@ class ContractController extends BaseController
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
             'title' => 'required|max:50',
+            'item_content' => 'required|max:500',
             'item_stage' => 'required',
             'thn_company_name' => 'required',
             'thn_company_address' => 'required',
@@ -154,6 +155,8 @@ class ContractController extends BaseController
             'design_company_legal_person.required' => '设计公司法人不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
+            'item_content.required' => '项目描述不能为空',
+            'item_content.max' => '项目描述不能超过500个字符',
         ];
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {
@@ -168,7 +171,7 @@ class ContractController extends BaseController
 
         //验证项目阶段数组数据
         // 阶段项目金额
-        $other_price = bcsub($all['total'], $all['first_payment'], 2);
+        $other_price = $all['total'] - $all['first_payment'];
         // 阶段百分比
         $other_percentage = 1 - config("constant.first_payment");
         if (!$this->validationItemStage($all['item_stage'], $other_price, $other_percentage)) {
@@ -178,7 +181,6 @@ class ContractController extends BaseController
         try {
             DB::beginTransaction();
 
-            $all['item_content'] = '';
             $all['design_work_content'] = '';
             $all['commission'] = ItemCommissionAction::getCommission($item);
             $all['commission_rate'] = $item->commission_rate;
@@ -220,12 +222,13 @@ class ContractController extends BaseController
         $time_is_set = true;
 
         foreach ($item_stage as $stage) {
-            $percentage += ($stage['percentage'] * 10000);
-            $amount += ($stage['amount'] * 10000);
+            $percentage += $stage['percentage'];
+            $amount += $stage['amount'];
             $title_is_set = !empty($stage['title']);
             $time_is_set = !empty($stage['time']);
         }
-        if ($percentage == ($other_percentage * 10000) && $amount == ($total * 10000) && $title_is_set && $time_is_set) {
+
+        if ((intval($percentage * 100) == intval($other_percentage * 100)) && (round($amount, 2) == round($total, 2)) && $title_is_set && $time_is_set) {
             return true;
         } else {
             return false;
@@ -351,6 +354,7 @@ class ContractController extends BaseController
      * @apiParam {string} other_company_phone 第三方平台联系电话
      * @apiParam {string} other_company_legal_person 第三方平台联系人
      * @apiParam {string} title 合同名称
+     * @apiParam {string} item_content 项目内容
      * @apiParam {int} demand_pay_limit 需求方打款时限
      * @apiParam {int} thn_pay_limit 平台收到项目款打款时限
      * @apiParam {array} item_stage 项目阶段 [['sort' => '1','percentage' => '0.1 百分比', 'amount' => '1.99 金额', 'title' => '阶段名称'， 'time' => '2012-12'],'content' => ['内容一','内容二'],]
@@ -420,7 +424,7 @@ class ContractController extends BaseController
         $all = $request->only(['demand_company_name', 'demand_company_address', 'demand_company_phone', 'demand_company_legal_person', 'design_company_name', 'design_company_address', 'design_company_phone', 'design_company_legal_person', 'title', 'item_stage', 'thn_company_name', 'thn_company_address', 'thn_company_phone', 'thn_company_legal_person', 'other_company_name',
             'other_company_address',
             'other_company_phone',
-            'other_company_legal_person',]);
+            'other_company_legal_person','item_content']);
 
         $rules = [
             'demand_company_name' => 'required',
@@ -432,6 +436,7 @@ class ContractController extends BaseController
             'design_company_phone' => 'required',
             'design_company_legal_person' => 'required',
             'title' => 'required|max:20',
+            'item_content' => 'required|max:500',
             'item_stage' => 'required',
             'thn_company_name' => 'required',
             'thn_company_address' => 'required',
@@ -451,6 +456,8 @@ class ContractController extends BaseController
             'design_company_legal_person.required' => '设计公司法人不能为空',
             'title.required' => '合同名称不能为空',
             'title.max' => '合同名称不能超过20个字符',
+            'item_content.required' => '项目描述不能为空',
+            'item_content.max' => '项目描述不能超过500个字符',
         ];
         $validator = Validator::make($all, $rules, $messages);
         if ($validator->fails()) {

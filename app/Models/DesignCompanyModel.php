@@ -85,7 +85,6 @@ class DesignCompanyModel extends BaseModel
         'company_size_val',
         'logo_image',
         'design_type_value',
-
     ];
 
     /**
@@ -94,6 +93,14 @@ class DesignCompanyModel extends BaseModel
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
+     * 一对一关联到公司信息统计
+     */
+    public function designStatistic()
+    {
+        return $this->hasOne('App\Models\DesignStatistics','design_company_id');
     }
 
     /**
@@ -384,8 +391,8 @@ class DesignCompanyModel extends BaseModel
     {
         $item_type = config('constant.item_type');
         $arr = [];
-        $design_item = $this->user->designItem;
-        if (!$design_item->isEmpty()) {
+        $design_item = $this->user ? $this->user->designItem : '';
+        if (!empty($design_item)) {
             foreach ($design_item as $case) {
                 try {
                     $arr[] = $item_type[$case->type][$case->design_type];

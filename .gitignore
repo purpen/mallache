@@ -26,3 +26,4 @@ page/.idea
 *.jsbeautifyrc
 composer.lock
 /public/AdminApidoc
+/public/V1apidoc/

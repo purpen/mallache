@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Service\Statistics;
 
 class AuthenticateController extends BaseController
 {
@@ -78,7 +79,6 @@ class AuthenticateController extends BaseController
         } else if ($payload['type'] == 2) {
             $company_role = 20;
         }
-
         try {
             DB::beginTransaction();
             // 创建用户
@@ -96,16 +96,19 @@ class AuthenticateController extends BaseController
             if ($user->type == 1) {
                 DemandCompany::createCompany($user);
             } else if ($user->type == 2) {
+                $res = DesignCompanyModel::createDesign($user);
+                $res = $res->toArray();
+                $statistics = new Statistics;
+                $statistics->saveDesignInfo($res['id']);
                 DesignCompanyModel::createDesign($user);
-            }
 
+            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage(), $e->getCode());
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
-
         if ($user) {
             $token = JWTAuth::fromUser($user);
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
@@ -289,7 +292,9 @@ class AuthenticateController extends BaseController
         $source = $request->header('source-type') ?? 0;
         if ($source == 1) {
             $text = ' 【京东云艺火】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-        } else {
+        } else if($source == 2){
+            $text = ' 【义乌设计大脑】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        } else{
             $text = ' 【太火鸟铟果】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         }
         //插入单条短信发送队列
@@ -571,8 +576,8 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
             //判断子账户的数量
-            if ($user->child_count >= config('constant.child_count')) {
-                return $this->response->array($this->apiError('当前只能邀请10个用户', 403));
+            if($user->child_count >= config('constant.child_count')){
+                return $this->response->array($this->apiError('当前只能邀请30个用户' , 403));
             }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));

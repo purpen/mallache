@@ -179,6 +179,10 @@ class TaskController extends BaseController
                     if($task_pid->isUserExecute($this->auth_user_id) == false){
                         return $this->response->array($this->apiError('当前用户不是执行者或者不是创建人，没有权限!', 403));
                     }
+                    //如果父任务完成，不能再添加子任务
+                    if($task_pid->stage == 2){
+                        return $this->response->array($this->apiError('父任务已完成，不能创建子任务!', 403));
+                    }
                     if(!$task_pid){
                         DB::rollBack();
                         return $this->response->array($this->apiError('没有找到父id为'.$pid.'的任务', 404));
@@ -202,6 +206,28 @@ class TaskController extends BaseController
                                 $task_user->type = 1;
                                 $task_user->status = 1;
                                 $task_user->save();
+
+                                //把父任务中的任务成员同步到子任务里
+                                $p_task_users = TaskUser::where('task_id' , $pid)->get();
+                                $p_task_users_arr = [];
+                                foreach ($p_task_users as $p_task_user){
+                                    $p_task_users_arr[] = $p_task_user->selected_user_id;
+                                }
+                                $new_p_task_users_arr = $p_task_users_arr;
+                                foreach ($new_p_task_users_arr as $new_p_task_user_id){
+                                    $s_find_task_user = TaskUser::where('task_id' , $tasks->id)->where('selected_user_id' , $new_p_task_user_id)->first();
+                                    if($s_find_task_user){
+                                        continue;
+                                    }else{
+                                        $task_user = new TaskUser();
+                                        $task_user->user_id = $this->auth_user_id;
+                                        $task_user->task_id = $tasks->id;
+                                        $task_user->selected_user_id =  $new_p_task_user_id;
+                                        $task_user->type = 1;
+                                        $task_user->status = 1;
+                                        $task_user->save();
+                                    }
+                                }
                             }
                             //如果选中的用户不为空，把用户更新到用户成员里
                             if(!empty($selected_user_id_arr)){

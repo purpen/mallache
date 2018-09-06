@@ -84,9 +84,20 @@ git@github.com:purpen/mallache.git
      try_files $uri $uri/ /index.php?$query_string;
  }
  
+ ## 自动部署命令
+ envoy run [任务名称] --branch=[分支名称]
+ 
+ 测试环境 `envoy run test_server --branch=`
+ 
+ 正式环境 `envoy run server --branch=master`
  
  ###### 生成API文档
  apidoc -i app/Http/Controllers/Api/ -o public/apidoc
+ 
+ 对接平台需求api 
+ ```
+ apidoc -i app/Http/Controllers/Api/V1/ -o public/V1apidoc -e "UrlKeyValue.*|TaskUser.*|Task.*|Tag.*|Stage.*|RecycleBin.*|PanShare.*|Nodes.*|Milestone.*|ItemUser.*|Group.*|DesignTarget.*|DesignSubstage.*|DesignStageNode.*|DesignStage.*|DesignQuotation.*|DesignProject.*|DesignPosition.*|DesignNotice.*|Commune.*|Yunpian.*"
+ ```
  
  ###### 请求api版本
  Accept: application/x.saas.v1+json
@@ -126,6 +137,9 @@ git@github.com:purpen/mallache.git
   php artisan update:itemUProduct
  ##### 更新项目下任务总数量，完成未完成数量的统计
  php artisan taskCount:update
+ 
+ ##### 统计所有设计公司信息
+ php artisan company:statistics
  
  ##### composer路径
  /opt/php-7.0/bin/php /usr/local/bin/composer update

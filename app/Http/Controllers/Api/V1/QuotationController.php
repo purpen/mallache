@@ -186,9 +186,8 @@ class QuotationController extends BaseController
                 }
 
                 // 基础报价不含税
-                $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
-                $a = bcdiv($a, 100, 2);
-                if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
+                $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
+                if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
                     throw new MassageException('合计金额和总计金额不符', 403);
                 }
 
@@ -203,7 +202,10 @@ class QuotationController extends BaseController
 
                 $item_recommend->quotation_id = $quotation->id;
                 $item_recommend->design_company_status = 2;
-                $item_recommend->save();
+                if ($item_recommend->save()) {
+                    $item->status = 45;
+                    $item->save();
+                }
 
 
                 // 保存甲方信息
@@ -219,6 +221,8 @@ class QuotationController extends BaseController
                     'design_position',
                     'position'
                 ]);
+                $jia_info['position'] = $request->input('position') ?? '';
+                $jia_info['design_company_name'] = $request->input('design_company_name') ?? '';
                 if (!$design_project) {
                     throw new MassageException('not found', 404);
                 }
@@ -261,8 +265,9 @@ class QuotationController extends BaseController
                 // 需求方通知信息
                 $title = '收到报价';
                 $content = '收到【' . $design->company_name . '】公司报价';
-                Tools::message($item->user_id, $title, $content, 2, $item->id);
-                Tools::sendSmsToPhone($item->phone, $content, $item->source);
+                Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
+                $message_content = '已有设计公司报价，请查阅。感谢您的信任，如有疑问欢迎致电 ';
+                Tools::sendSmsToPhone($item->phone, $message_content, $item->source);
 
             } else {
                 throw new MassageException('该项目已经报价', 403);
@@ -271,7 +276,7 @@ class QuotationController extends BaseController
             DB::commit();
         } catch (MassageException $e) {
             DB::rollBack();
-            Log::error($e);
+
             return $this->response->array($this->apiError($e->getMessage(), $e->getCode()));
         } catch
         (\Exception $e) {
@@ -449,6 +454,7 @@ class QuotationController extends BaseController
                 'design_position',
                 'position'
             ]);
+            $jia_info['position'] = $request->input('position') ?? '';
 
             if (!$item = Item::find($quotation->item_demand_id)) {
                 throw new MassageException('not found3', 404);
@@ -501,9 +507,8 @@ class QuotationController extends BaseController
             }
 
             // 基础报价不含税
-            $a = bcmul($quotation_info['total_price'], $quotation_info['tax_rate'], 2);
-            $a = bcdiv($a, 100, 2);
-            if ($quotation_info['price'] != bcadd($quotation_info['total_price'], $a, 2)) {
+            $a = ($quotation_info['total_price'] * $quotation_info['tax_rate']) / 100;
+            if (round($quotation_info['price'], 2) != round(((float)$quotation_info['total_price'] + $a), 2)) {
                 throw new MassageException('合计金额和总计金额不符', 403);
             }
 
@@ -550,7 +555,7 @@ class QuotationController extends BaseController
             // 需求方通知信息
             $title = '收到新报价';
             $content = '收到【' . $design->company_name . '】公司新报价';
-            Tools::message($item->user_id, $title, $content, 2, $item->id);
+            Tools::message($item->user_id, $title, $content, 2, $item->id, $item->status);
             Tools::sendSmsToPhone($item->phone, $content, $item->source);
 
             DB::commit();

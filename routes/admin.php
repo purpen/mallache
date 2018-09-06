@@ -21,7 +21,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/item/show', 'ItemActionController@show');
         // 后台强制关闭当前项目并分配项目款
         $api->post('/admin/item/closeItem', 'ItemActionController@closeItem');
-
+        // 后台设定项目类型
+        $api->put('/admin/item/testStatus', 'ItemActionController@testStatus');
+        //后台批量删除项目
+        $api->delete('/admin/item/deleteIds', 'ItemActionController@deleteIds');
 
         //更新设计公司审核状态
         $api->put('/admin/designCompany/verifyStatus', [
@@ -319,7 +322,28 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         // 确认给需求公司的发票已开
         $api->put('/admin/invoice/trueDemandInvoice', 'InvoiceController@trueDemandInvoice');
 
+        /**
+         * 权重
+         */
+        //保存权重
+        $api->post('/admin/weight/save', 'WeightController@save');
+        //权重详情
+        $api->get('/admin/weight/show', 'WeightController@show');
 
+        /**
+         * 设计公司数据统计
+         */
+        //人工干预分值修改
+        $api->post('/admin/saveIntervene', 'DesignStatisticsController@saveIntervene');
+        //设计公司信息列表
+        $api->get('/admin/statistics/list', 'DesignStatisticsController@statisticsList');
+        //测试设计公司匹配
+        $api->post('/admin/test/matching', 'DesignStatisticsController@testMatching');
+        /**
+         * 评价
+         */
+        //平台评价项目
+        $api->post('/admin/platform/evaluate', 'AdminEvaluateController@platformEvaluate');
     });
 
 });

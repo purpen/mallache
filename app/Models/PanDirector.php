@@ -279,8 +279,8 @@ class PanDirector extends BaseModel
             return true;
         }
 
-        // 是否是项目成员 （功能暂缺）
-        if ($this->isItemPersonnel()) {
+        // 是否是项目成员
+        if ($this->isItemPersonnel($user->id)) {
             return true;
         }
 
@@ -319,8 +319,8 @@ class PanDirector extends BaseModel
             return true;
         }
 
-        // 是否是项目成员 （功能暂缺）
-        if ($this->isItemPersonnel()) {
+        // 是否是项目成员
+        if ($this->isItemPersonnel($user->id)) {
             return true;
         }
 
@@ -352,9 +352,14 @@ class PanDirector extends BaseModel
     }
 
     // 判断是否是项目成员
-    public function isItemPersonnel()
+    public function isItemPersonnel($user_id)
     {
-        return false;  // 为完成
+        $arr = ItemUser::getItemUserArr($this->item_id);
+        if(in_array($user_id, $arr)){
+            return true;
+        }
+
+        return false;
     }
 
     // 判断用户是否是文件群组成员

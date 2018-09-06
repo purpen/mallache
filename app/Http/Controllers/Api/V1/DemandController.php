@@ -25,12 +25,15 @@ use App\Models\DesignItemModel;
 use App\Models\Evaluate;
 use App\Models\Item;
 use App\Models\ItemRecommend;
+use App\Models\Notification;
 use App\Models\PayOrder;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Service\Statistics;
+use App\Service\Matching;
 
 class DemandController extends BaseController
 {
@@ -100,15 +103,11 @@ class DemandController extends BaseController
     public function show($id)
     {
         if (!$item = Item::find(intval($id))) {
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('not found item!', 404));
         }
         //验证是否是当前用户对应的项目
         if ($item->user_id !== $this->auth_user_id) {
-            return $this->response->array($this->apiError('not found!', 404));
-        }
-
-        if (!$item) {
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiError('没有权限!', 403));
         }
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
@@ -142,10 +141,18 @@ class DemandController extends BaseController
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
 
-
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('error: not demand', 403));
         }
+
+        $count = Item::query()
+            ->where('user_id', $this->auth_user_id)
+            ->where('created_at', ">", date("Y-m-d"))
+            ->count();
+        if ($count > 20) {
+            return $this->response->array('发布超过当天限制', 403);
+        }
+
         $source = $request->header('source-type') ?? 0;
         $name = $request->input('name');
         $item = Item::createItem($this->auth_user_id, $name, $source);
@@ -287,7 +294,7 @@ class DemandController extends BaseController
     {
         $item = $this->checkItemStatusAndAuth($id);
 
-        if ($item->status != -2) {
+        if (!in_array($item->status, [-1, -2, -3])) {
             return $this->response->array($this->apiError('当前项目状态不能删除！', 403));
         }
 
@@ -358,7 +365,11 @@ class DemandController extends BaseController
         }
 
         // 同步调用匹配方法
-        $recommend = new Recommend($item);
+        /*$recommend = new Recommend($item);
+        $recommend->handle();*/
+
+        //新的匹配方法
+        $recommend = new Matching($item);
         $recommend->handle();
 
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
@@ -522,14 +533,25 @@ class DemandController extends BaseController
             //修改项目状态为：等待设计公司接单(报价)
             $item->status = 4;
             $item->save();
+            Log::info(6);
             //触发事件
             event(new ItemStatusEvent($item, $all['design_company_id']));
 
             //遍历插入推荐表
             foreach ($all['design_company_id'] as $design_company_id) {
-                ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
+                $itemRecommend = ItemRecommend::create(['item_id' => $all['item_id'], 'design_company_id' => $design_company_id]);
+                //添加通知报价合同记录表
+                if ($itemRecommend) {
+                    $notification = new Notification();
+                    $notification->status = 0;
+                    $notification->type = 1;
+                    $notification->count = 1;
+                    $notification->target_id = $itemRecommend->id;
+                    $notification->inform_time = time() + config('constant.inform_time');
+                    $notification->save();
+                }
             }
-
+            Log::info(5);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -635,7 +657,7 @@ class DemandController extends BaseController
                 $where_in = [1];
                 break;
             case 2:
-                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22];
+                $where_in = [-2, -1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 18, 22, 45];
                 break;
             case 3:
                 $where_in = [18, 22];
@@ -769,7 +791,7 @@ class DemandController extends BaseController
         if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if ($item->user_id !== $this->auth_user_id || $item->status !== 4) {
+        if ($item->user_id !== $this->auth_user_id || $item->status !== 45) {
             return $this->response->array($this->apiError('not found', 404));
         }
 
@@ -820,7 +842,16 @@ class DemandController extends BaseController
             $item->price = $quotation->price;
             $item->quotation_id = $quotation->id;
             $item->status = 5;
-            $item->save();
+            //添加通知报价合同记录表
+            if ($item->save()) {
+                $notification = new Notification();
+                $notification->status = 0;
+                $notification->type = 2;
+                $notification->count = 1;
+                $notification->target_id = $item->id;
+                $notification->inform_time = time() + config('constant.inform_time');
+                $notification->save();
+            }
 
             // 将项目需求ID写入合作的设计公司的项目管理中
             if ($design_project = $quotation->designProject) {
@@ -851,6 +882,8 @@ class DemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} item_id 项目ID
      * @apiParam {integer} design_company_id 设计公司ID
+     * @apiParam {array} refuse_types 1价格高 2需求变动 10其他 [需求变动,其他]
+     * @apiParam {string} summary 拒单原因
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -866,17 +899,19 @@ class DemandController extends BaseController
             'item_id' => 'required|integer',
             'design_company_id' => 'required|integer',
         ];
-        $all = $request->only(['item_id', 'design_company_id']);
+        $all = $request->only(['item_id', 'design_company_id', 'refuse_types', 'summary']);
 
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('Error', $validator->errors());
         }
+        $refuse_types = $request->input('refuse_types') ? implode(',', $request->input('refuse_types')) : '';
+        $summary = $request->input('summary') ? $request->input('summary') : '';
 
         if (!$item = Item::find($all['item_id'])) {
             return $this->response->array($this->apiError('not found', 404));
         }
-        if ($item->user_id != $this->auth_user_id || $item->status != 4) {
+        if ($item->user_id != $this->auth_user_id || $item->status != 45) {
             return $this->response->array($this->apiError('无权限', 403));
         }
 
@@ -887,6 +922,8 @@ class DemandController extends BaseController
 
         //修改推荐关联表中需求方的状态
         $item_recommend->item_status = -1;
+        $item_recommend->summary = $summary;
+        $item_recommend->refuse_types = $refuse_types;
         if (!$item_recommend->save()) {
             return $this->response->array($this->apiError('状态修改失败', 500));
         }
@@ -895,8 +932,16 @@ class DemandController extends BaseController
         $design = DesignCompanyModel::find($all['design_company_id']);
         $tools = new Tools();
 
-        $title = '项目报价被拒';
-        $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司';;
+        $title = '项目被拒';
+        if (empty($refuse_types)) {
+            if (empty($summary)) {
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:无';
+            } else {
+                $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:' . $refuse_types . $summary;
+            }
+        } else {
+            $content = '【' . ($item->itemInfo())['name'] . '】' . '项目需求方已选择其他设计公司拒单原因:' . $refuse_types . '.' . $summary;
+        }
         $tools->message($design->user_id, $title, $content, 1, null);
 
         //项目是否匹配失败
@@ -933,8 +978,6 @@ class DemandController extends BaseController
         }
         try {
             DB::beginTransaction();
-
-
             //修改合同状态为已确认
             $contract = $item->contract;
             $contract->status = 1;
@@ -946,7 +989,10 @@ class DemandController extends BaseController
 
             //触发项目状态变更事件
             event(new ItemStatusEvent($item));
-
+            //增加设计公司平均价格和接单次数
+            $id[] = $item->design_company_id;
+            $statistics = new Statistics;
+            $statistics->saveAveragePrice($id, $contract->total);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1320,6 +1366,124 @@ class DemandController extends BaseController
     }
 
     /**
+     * @api {post} /demand/users/evaluate 用户评价项目
+     * @apiVersion 1.0.0
+     * @apiName users evaluate
+     * @apiGroup userEvaluate
+     * @apiParam {string} token
+     * @apiParam {string} content 评价内容
+     * @apiParam {integer} item_id 项目id
+     * @apiParam {integer} design_level 设计水平(用户评价时必传)
+     * @apiParam {integer} response_speed 响应速度(用户评价时必传)
+     * @apiParam {integer} service 服务意识(用户评价时必传)
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function userEvaluate(Request $request)
+    {
+        $rules = [
+            'item_id' => 'required|integer',
+            'content' => 'required|max:500',
+            'service' => 'required|integer|max:10',
+            'design_level' => 'required|integer|max:10',
+            'response_speed' => 'required|integer|max:10',
+        ];
+        $params = $request->only(['item_id', 'content', 'service', 'design_level', 'response_speed']);
+        $validator = Validator::make($params, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+        if (!$item = Item::find($params['item_id'])) {
+            return $this->response->array($this->apiError('not found item', 404));
+        }
+        if ($item->user_id != $this->auth_user_id || $item->status != 18) {
+            return $this->response->array($this->apiError('Permission denied', 403));
+        }
+        $params['design_company_id'] = $item->design_company_id;
+        $params['demand_company_id'] = $this->auth_user->demand_company_id;
+        $evaluate = new Evaluate;
+        $res = $evaluate->get_one($params['item_id']);
+        $score = 0;
+        $score += $params['design_level'] * config('evaluate.design_level'); //设计水平比重
+        $score += $params['response_speed'] * config('evaluate.response_speed'); //响应速度比重
+        $score += $params['service'] * config('evaluate.service'); //服务意识比重
+        $user_score['service'] = (int)$params['service'];
+        $user_score['design_level'] = (int)$params['design_level'];
+        $user_score['response_speed'] = (int)$params['response_speed'];
+        $list['item_id'] = (int)$params['item_id'];
+        $list['content'] = $params['content'];
+        $list['user_score'] = json_encode($user_score);
+        $list['demand_company_id'] = $params['demand_company_id'];
+        $list['design_company_id'] = $params['design_company_id'];
+        $statistics = new Statistics;
+        if (!empty($res)) { //评价存在更新
+            if (!empty($res->user_score)) {
+                return $this->response->array($this->apiError('已经评价过了', 200));
+            }
+            //计算评分
+            $score = $score * 0.5;
+
+            //把平台评分减去百分之五十,再加上用户评分,算出总评分
+            $score += $res->score * 0.5;
+            $score = sprintf('%.1f', $score);
+            if (empty($res->demand_company_id)) {
+                $res->demand_company_id = $params['demand_company_id'];
+            }
+            if (empty($res->design_company_id)) {
+                $res->design_company_id = $params['design_company_id'];
+            }
+            try {
+                DB::beginTransaction();
+                $res->content = $list['content'];
+                $res->score = $score;
+                $res->user_score = $list['user_score'];
+                $res->save();
+                $item->status = 22;
+                $item->save();
+                event(new ItemStatusEvent($item));
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return $this->response->array($this->apiError('database error', 500));
+            }
+            return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
+        } else { //评价不存在新增
+            if ($score > 10) {
+                $score = 10;
+            }
+            if ($score < 0) {
+                $score = 0;
+            }
+            $score = sprintf('%.1f', $score);
+            $list['score'] = $score;
+            $list['platform_score'] = '';
+            try {
+                DB::beginTransaction();
+                Evaluate::create($list);
+                $item->status = 22;
+                $item->save();
+                event(new ItemStatusEvent($item));
+                //更新评价分值
+                $statistics->evaluationScore([$params['design_company_id']]);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return $this->response->array($this->apiError('database error', 500));
+            }
+            return $this->response->item($evaluate, new EvaluateTransformer)->setMeta($this->apiMeta());
+        }
+    }
+
+    /**
      * @api {put} /updateName/demand 更改项目名称
      * @apiVersion 1.0.0
      * @apiName demand updateName
@@ -1404,4 +1568,5 @@ class DemandController extends BaseController
 
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
+
 }

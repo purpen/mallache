@@ -285,6 +285,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/demand/trueItemDone/{item_id}', 'DemandController@trueItemDone');
         // 需求公司评价
         $api->post('/demand/evaluate', 'DemandController@evaluate');
+        //用户评价项目
+        $api->post('/demand/users/evaluate', 'DemandController@userEvaluate');
         // 发布需求方确认项目阶段
         $api->post('/itemStage/demandFirmItemStage', 'ItemStageController@demandFirmItemStage');
         // {delete} /demand/{id} 删除项目
@@ -385,6 +387,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/message/getMessageList', 'MessageController@getMessageList');
         //新消息数量确认阅读
         $api->put('/message/trueRead', 'MessageController@trueRead');
+        //获取项目通知数量
+        $api->get('/message/getMessageProjectNotice', 'MessageController@getMessageProjectNotice');
 
         /**
          * 资金流水记录列表
@@ -572,6 +576,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->delete('/designProject/delete', 'DesignProjectController@delete');
         // api {put} /designProject/collect 设计工具项目收藏
         $api->put('/designProject/collect', 'DesignProjectController@collect');
+        // api {put} /designProject/pigeonhole 设计工具项目归档
+        $api->put('/designProject/pigeonhole', 'DesignProjectController@pigeonhole');
 
         //设计公司客户
         // api {get} /designClient/lists 客户信息列表
@@ -679,6 +685,35 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/milestone', 'MilestoneController@show');
         $api->delete('/milestone/delete', 'MilestoneController@delete');
         $api->put('/milestone/completes', 'MilestoneController@completes');
+
+        //线上项目设定项目营业额，项目完成数量
+        $api->post('/designTarget/create', 'DesignTargetController@create');
+        $api->get('/designTarget/show', 'DesignTargetController@show');
+        //收入报表
+        $api->get('/designTarget/incomeMonth', 'DesignTargetController@incomeMonth');
+        //季度报表
+        $api->get('/designTarget/incomeQuarter', 'DesignTargetController@incomeQuarter');
+        //年报表
+        $api->get('/designTarget/incomeYear', 'DesignTargetController@incomeYear');
+        //项目收入排名
+        $api->get('/designTarget/incomeRanked', 'DesignTargetController@incomeRanked');
+        //项目类别
+        $api->get('/designTarget/incomeType', 'DesignTargetController@incomeType');
+        //项目详细类别
+        $api->get('/designTarget/incomeDesignTypes', 'DesignTargetController@incomeDesignTypes');
+        //项目行业
+        $api->get('/designTarget/incomeIndustry', 'DesignTargetController@incomeIndustry');
+        //收入金额阶段
+        $api->get('/designTarget/incomeStage', 'DesignTargetController@incomeStage');
+        //成员占比
+        $api->get('/design/userPercentage', 'DesignTargetController@userPercentage');
+        //职位占比
+        $api->get('/design/positionPercentage', 'DesignTargetController@positionPercentage');
+        //城市统计
+        $api->get('/designTarget/incomeCity', 'DesignTargetController@incomeCity');
+        //所有项目的任务统计
+        $api->get('/design/itemTasks', 'DesignTargetController@itemTasks');
+
     });
 
 });
