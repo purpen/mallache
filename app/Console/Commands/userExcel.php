@@ -82,6 +82,6 @@ class userExcel extends Command
             $j++; // 每循环一次换一行写入数据
         }
         $sheeetWrite = \PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
-        $sheeetWrite->save($dir.'设计公司名称.xlsx');
+        $sheeetWrite->save($dir.'用户表信息.xlsx');
     }
 }
