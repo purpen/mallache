@@ -27,7 +27,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     // 获取设计企业排行榜
     $api->get('/opalus/company_record/list', 'OpalusController@getCompanyRecord');
 
-    $api->get('/get/ceshi', 'YuluoController@get_ceshi');
+    /****** 王松的索引测试开始 *****/
+    $api->get('/get/ceshi', 'ElasticsearchController@get_ceshi');
+    $api->get('/search/index', 'ElasticsearchController@searchIndex');
+    $api->get('/add/article/index', 'ElasticsearchController@addArticleIndex');
+    $api->get('/add/case/index', 'ElasticsearchController@addCaseIndex');
+    $api->get('/add/award/case', 'ElasticsearchController@addAwardCaseIndex');
+    $api->get('/add/rend/reports', 'ElasticsearchController@addTrendReportsIndex');
+    $api->get('/save/trend/reports', 'ElasticsearchController@saveTrendReportsIndex');
+    /****** 王松的索引测试结束 *****/
 
     // 获取验证码url
     $api->get('/captcha/getCaptcha', [
