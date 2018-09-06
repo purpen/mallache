@@ -44,8 +44,6 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        Log::info("1啊");
-        Log::info($new_mini);
         $openid = $new_mini['openid'] ?? '';
         if (!empty($openid)) {
             $wxUser = User::where('wx_open_id', $openid)->first();
@@ -74,7 +72,7 @@ class AuthenticateController extends BaseController
                         'from_app' => 1,
                         'wx_open_id' => $openid,
                         'session_key' => $new_mini['session_key'],
-                        'union_id' => $new_mini['unionId'] ?? '',
+                        'union_id' => $new_mini['unionid'] ?? '',
                     ]);
                 if ($user->type == 1) {
                     //创建需求公司
@@ -122,10 +120,8 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        Log::info("2啊");
-        Log::info($decryptedData);
-        if (!empty($decryptedData['unionId'])){
-            $user->union_id = $decryptedData['unionId'];
+        if (!empty($decryptedData['unionid'])){
+            $user->union_id = $decryptedData['unionid'];
             $user->save();
         }
 
