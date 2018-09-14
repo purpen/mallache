@@ -100,7 +100,6 @@ class AuthenticateController extends BaseController
                 $res = $res->toArray();
                 $statistics = new Statistics;
                 $statistics->saveDesignInfo($res['id']);
-                DesignCompanyModel::createDesign($user);
 
             }
             DB::commit();

@@ -673,9 +673,6 @@ class DemandController extends BaseController
         }
 
         $items = $items->orderBy('id', 'desc')->paginate($per_page);
-        if ($items->isEmpty()) {
-            return $this->response->array($this->apiSuccess());
-        }
 
         return $this->response->paginator($items, new ItemListTransformer)->setMeta($this->apiMeta());
     }

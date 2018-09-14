@@ -72,7 +72,7 @@ class AuthenticateController extends BaseController
                         'from_app' => 1,
                         'wx_open_id' => $openid,
                         'session_key' => $new_mini['session_key'],
-                        'union_id' => $new_mini['unionId'] ?? '',
+                        'union_id' => $new_mini['unionid'] ?? '',
                     ]);
                 if ($user->type == 1) {
                     //创建需求公司
@@ -120,8 +120,8 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        if (!empty($decryptedData['unionId'])){
-            $user->union_id = $decryptedData['unionId'];
+        if (!empty($decryptedData['unionid'])){
+            $user->union_id = $decryptedData['unionid'];
             $user->save();
         }
 
@@ -169,9 +169,7 @@ class AuthenticateController extends BaseController
         }
         //已经存在的用户
         $oldUser = User::where('account' , $phone)->first();
-        if(!empty($oldUser->wx_open_id)){
-            return $this->response->array($this->apiError('你已经绑定了账户，无需再绑定', 412));
-        }
+
         //当前登陆的用户
         $loginUser = $this->auth_user;
         //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
@@ -179,9 +177,18 @@ class AuthenticateController extends BaseController
         $oldUser->session_key = $loginUser->session_key;
         $oldUser->union_id = $loginUser->union_id;
         if($oldUser->save()){
-            if($loginUser->delete()){
-                return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
+            //判断登陆的手机号是否是6位，是的话删除，不是的话清除open_id,session_key
+            if(strlen($loginUser->phone) == 6){
+                $loginUser->delete();
+            } else {
+                $loginUser->wx_open_id = "";
+                $loginUser->session_key = "";
+                $loginUser->union_id = "";
+                $loginUser->save();
             }
+            return $this->response->array($this->apiSuccess('绑定成功', 200, compact('token')));
+
+
         }
 
     }
