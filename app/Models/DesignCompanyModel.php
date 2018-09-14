@@ -100,7 +100,7 @@ class DesignCompanyModel extends BaseModel
      */
     public function designStatistic()
     {
-        return $this->hasOne('App\Models\DesignStatistics','design_company_id');
+        return $this->hasOne('App\Models\DesignStatistics', 'design_company_id');
     }
 
     /**
@@ -163,12 +163,16 @@ class DesignCompanyModel extends BaseModel
                 $result = Tools::request($url, $param, 'POST');
                 $result = json_decode($result, true);
                 if (!isset($result['code'])) {
+                    Log::error($result);
                     return false;
                 }
+                Log::error($result);
                 if ($result['code']) {
+
                     return false;
                 }
             } catch (\Exception $e) {
+                Log::error($e);
                 return false;
             }
         }
