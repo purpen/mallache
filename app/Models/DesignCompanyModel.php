@@ -163,16 +163,15 @@ class DesignCompanyModel extends BaseModel
                 $result = Tools::request($url, $param, 'POST');
                 $result = json_decode($result, true);
                 if (!isset($result['code'])) {
-                    Log::error($result);
+                    Log::error("调取app.opalus_api失败1", $result);
                     return false;
                 }
-                Log::error($result);
                 if ($result['code']) {
-
+                    Log::error("调取app.opalus_api失败2", $result);
                     return false;
                 }
             } catch (\Exception $e) {
-                Log::error($e);
+                Log::error("调取app.opalus_api失败3", $e);
                 return false;
             }
         }
