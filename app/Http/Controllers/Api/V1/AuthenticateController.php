@@ -813,7 +813,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {put} /auth/setUserType 用户设置账户类型
+     * @api {post} /auth/setUserType 用户设置账户类型
      * @apiVersion 1.0.0
      * @apiName user setUserType
      * @apiGroup User

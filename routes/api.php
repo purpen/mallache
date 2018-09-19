@@ -186,7 +186,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         ]);
 
         // api {put} /auth/setUserType 用户设置账户类型
-        $api->put('/auth/setUserType', [
+        $api->post('/auth/setUserType', [
             'as' => 'auth.setUserType', 'uses' => 'AuthenticateController@setUserType'
         ]);
 
