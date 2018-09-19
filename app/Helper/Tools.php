@@ -388,7 +388,7 @@ class Tools
             $array = (array)$array;  
          } if(is_array($array)) {  
             foreach($array as $key=>$value) {  
-                $array[$key] = self::object_to_array($value);  
+                $array[$key] = self::objectToArray($value);  
             }  
          }  
          return $array;  

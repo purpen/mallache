@@ -50,7 +50,7 @@ class Sso
         }
         try {
             $new_sso_params = self::apiParamEncrypt($params);
-            $sso_url = config('sso.url');
+            $sso_url = config('sso.url').$path;
 
             $sso_result = Tools::request($sso_url, $new_sso_params, 'POST');
             $sso_result = Tools::objectToArray(json_decode($sso_result));
