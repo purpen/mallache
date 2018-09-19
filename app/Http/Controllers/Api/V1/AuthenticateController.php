@@ -91,7 +91,7 @@ class AuthenticateController extends BaseController
                 );
                 $ssoResult = Sso::request(6, $ssoParam);
                 if ($ssoResult['success']) {
-                    return $this->response->array($this->apiError('用户系统已存在该账号!', 412));               
+                    return $this->response->array($this->apiError('用户系统已存在该账号!', 412));
                 }
             }
             DB::beginTransaction();
@@ -202,13 +202,13 @@ class AuthenticateController extends BaseController
             if ($ssoEnable) {
                 // 访问单点登录系统
                 $ssoParam = array(
-                    'account' => $payload['account'],  
+                    'account' => $payload['account'],
                     'password' => $payload['password'],
                     'device_to' => 1,
                 );
                 $ssoResult = Sso::request(1, $ssoParam);
                 if (!$ssoResult['success']) {
-                    return $this->response->array($this->apiError($ssoResult['message'], 401));               
+                    return $this->response->array($this->apiError($ssoResult['message'], 401));
                 }
             }
 
@@ -218,17 +218,18 @@ class AuthenticateController extends BaseController
             if ($ssoEnable) {
                 if (!$user) {
                     $user = User::query()
-                      ->create([
-                          'account' => $payload['account'],
-                          'phone' => $payload['account'],
-                          'username' => $payload['account'],
-                          'password' => bcrypt($payload['password']),
-                          'child_account' => 0,
-                          'source' => 0,
-                      ]);
+                        ->create([
+                            'account' => $payload['account'],
+                            'phone' => $payload['account'],
+                            'username' => $payload['account'],
+                            'password' => bcrypt($payload['password']),
+                            'child_account' => 0,
+                            'source' => 0,
+                            'type' => 0,
+                        ]);
 
                     if (!$user) {
-                        return $this->response->array($this->apiError('生成本地用户失败！', 500)); 
+                        return $this->response->array($this->apiError('生成本地用户失败！', 500));
                     }
                 }
             }
@@ -350,9 +351,9 @@ class AuthenticateController extends BaseController
         $source = $request->header('source-type') ?? 0;
         if ($source == 1) {
             $text = ' 【京东云艺火】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-        } else if($source == 2){
+        } else if ($source == 2) {
             $text = ' 【义乌设计大脑】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-        } else{
+        } else {
             $text = ' 【太火鸟铟果】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         }
         //插入单条短信发送队列
@@ -407,14 +408,14 @@ class AuthenticateController extends BaseController
             );
             $ssoResult = Sso::request(5, $ssoParam);
             if (!$ssoResult['success']) {
-                return $this->response->array($this->apiError($ssoResult['message'], 500));               
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
             }
         }
 
         if (!$ssoEnable) {
-          if (!Hash::check($old_password, $user->password)) {
-              return $this->response->array($this->apiError('原密码不正确', 403));
-          }       
+            if (!Hash::check($old_password, $user->password)) {
+                return $this->response->array($this->apiError('原密码不正确', 403));
+            }
         }
 
         $user->password = bcrypt($newPassword);
@@ -571,24 +572,24 @@ class AuthenticateController extends BaseController
             // 用户不存在，则注册
             if (!$user) {
                 $user = User::query()
-                  ->create([
-                      'account' => $request->input('phone'),
-                      'phone' => $request->input('phone'),
-                      'username' => $request->input('phone'),
-                      'password' => bcrypt($request->input('password')),
-                      'child_account' => 0,
-                      'source' => 0,
-                  ]);
+                    ->create([
+                        'account' => $request->input('phone'),
+                        'phone' => $request->input('phone'),
+                        'username' => $request->input('phone'),
+                        'password' => bcrypt($request->input('password')),
+                        'child_account' => 0,
+                        'source' => 0,
+                    ]);
 
                 if (!$user) {
-                    return $this->response->array($this->apiError('生成本地用户失败！', 500)); 
+                    return $this->response->array($this->apiError('生成本地用户失败！', 500));
                 }
 
-            } 
+            }
         } else {
             if (!$user) {
                 return $this->response->array($this->apiError('手机号还没有注册过！', 404));
-            }       
+            }
         }
 
         if (!$ssoEnable) {
@@ -598,7 +599,7 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiSuccess('修改成功', 200));
             } else {
                 return $this->response->array($this->apiError('修改失败', 500));
-            }    
+            }
         }
         return $this->response->array($this->apiSuccess('修改成功!', 200));
     }
@@ -706,8 +707,8 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
             //判断子账户的数量
-            if($user->child_count >= config('constant.child_count')){
-                return $this->response->array($this->apiError('当前只能邀请30个用户' , 403));
+            if ($user->child_count >= config('constant.child_count')) {
+                return $this->response->array($this->apiError('当前只能邀请30个用户', 403));
             }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));
@@ -809,6 +810,48 @@ class AuthenticateController extends BaseController
 
         }
         return $this->response->item($user, new UserTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {put} /auth/setUserType 用户设置账户类型
+     * @apiVersion 1.0.0
+     * @apiName user setUserType
+     * @apiGroup User
+     *
+     * @apiParam {integer} type 用户类型：1.需求公司；2.设计公司；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function setUserType(Request $request)
+    {
+        $type = (int)$request->input('type');
+        $user = $this->auth_user;
+        if ($user->type == 0 && in_array($type, [1, 2])) {
+            $user->type;
+            DB::beginTransaction();
+            if ($user->save()) {
+                if ($user->type == 1) {
+                    DemandCompany::createCompany($user);
+                } else if ($user->type == 2) {
+                    $res = DesignCompanyModel::createDesign($user);
+                    $statistics = new Statistics;
+                    $statistics->saveDesignInfo($res->id);
+
+                }
+                DB::commit();
+            } else {
+                return $this->response->array($this->apiError('error', 500));
+            }
+        } else {
+            return $this->response->array($this->apiError('用户类型已设置', 403));
+        }
     }
 
 }

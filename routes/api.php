@@ -185,6 +185,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
         ]);
 
+        // api {put} /auth/setUserType 用户设置账户类型
+        $api->put('/auth/setUserType', [
+            'as' => 'auth.setUserType', 'uses' => 'AuthenticateController@setUserType'
+        ]);
+
         //用户钱包信息
         $api->get('/auth/fundInfo', ['as' => 'auth.fundInfo', 'uses' => 'AuthenticateController@fundInfo']);
         //根据用户id获取用户信息
