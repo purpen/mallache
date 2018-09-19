@@ -843,7 +843,6 @@ class AuthenticateController extends BaseController
                     $res = DesignCompanyModel::createDesign($user);
                     $statistics = new Statistics;
                     $statistics->saveDesignInfo($res->id);
-
                 }
                 DB::commit();
                 return $this->response->array($this->apiSuccess());
