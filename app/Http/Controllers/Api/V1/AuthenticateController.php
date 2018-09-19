@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Helper\Sso;
 use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\DemandCompany;
@@ -80,6 +81,19 @@ class AuthenticateController extends BaseController
             $company_role = 20;
         }
         try {
+
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 查看是否存在账号
+                $ssoParam = array(
+                    'phone' => $payload['account']
+                );
+                $ssoResult = Sso::request(6, $ssoParam);
+                if ($ssoResult['success']) {
+                    return $this->response->array($this->apiError('用户系统已存在该账号!', 412));               
+                }
+            }
             DB::beginTransaction();
             // 创建用户
             $user = User::query()
@@ -110,6 +124,20 @@ class AuthenticateController extends BaseController
         }
         if ($user) {
             $token = JWTAuth::fromUser($user);
+            if ($ssoEnable) {
+                // 当前系统创建成功后再创建太火鸟用户 
+                $ssoParam = array(
+                    'account' => $payload['account'],
+                    'phone' => $payload['account'],
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                    'status' => 1,
+                );
+                $ssoResult = Sso::request(2, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
@@ -169,7 +197,41 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
 
+            // 单点登录
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 访问单点登录系统
+                $ssoParam = array(
+                    'account' => $payload['account'],  
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                );
+                $ssoResult = Sso::request(1, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 401));               
+                }
+            }
+
             $user = User::where('account', $credentials['account'])->first();
+
+            // 如果本地用户不存在，则创建 
+            if ($ssoEnable) {
+                if (!$user) {
+                    $user = User::query()
+                      ->create([
+                          'account' => $payload['account'],
+                          'phone' => $payload['account'],
+                          'username' => $payload['account'],
+                          'password' => bcrypt($payload['password']),
+                          'child_account' => 0,
+                          'source' => 0,
+                      ]);
+
+                    if (!$user) {
+                        return $this->response->array($this->apiError('生成本地用户失败！', 500)); 
+                    }
+                }
+            }
             $source = $request->header('source-type') ?? 0;
             if ($source != 0) {
                 if ($user->type == 2) {
@@ -177,9 +239,11 @@ class AuthenticateController extends BaseController
                 }
             }
 
-            // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->response->array($this->apiError('账户名或密码错误', 401));
+            if (!$ssoEnable) {
+                // attempt to verify the credentials and create a token for the user
+                if (!$token = JWTAuth::attempt($credentials)) {
+                    return $this->response->array($this->apiError('账户名或密码错误', 401));
+                }    
             }
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
@@ -375,11 +439,23 @@ class AuthenticateController extends BaseController
 
     protected function phoneIsRegister($account)
     {
-        if (User::where('account', intval($account))->count() > 0) {
-            return true;
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return true;
+            }
         } else {
-            return false;
+            if (User::where('account', intval($account))->count() > 0) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
