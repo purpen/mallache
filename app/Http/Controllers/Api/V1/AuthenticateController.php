@@ -399,8 +399,27 @@ class AuthenticateController extends BaseController
 
         $user = JWTAuth::parseToken()->authenticate();
 
-        if (!Hash::check($old_password, $user->password)) {
-            return $this->response->array($this->apiError('原密码不正确', 403));
+        // 单点登录
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 访问单点登录系统
+            $ssoParam = array(
+                'name' => $user->account,
+                'evt' => 1,
+                'password' => $old_password,
+                'new_password' => $newPassword,
+                'device_to' => 1,
+            );
+            $ssoResult = Sso::request(5, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));               
+            }
+        }
+
+        if (!$ssoEnable) {
+          if (!Hash::check($old_password, $user->password)) {
+              return $this->response->array($this->apiError('原密码不正确', 403));
+          }       
         }
 
         $user->password = bcrypt($newPassword);
@@ -534,18 +553,59 @@ class AuthenticateController extends BaseController
         } else {
             Cache::forget($key);
         }
-        $user = User::where('phone', intval($request->input('phone')))->first();
-        if (!$user) {
-            return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'name' => $request->input('phone'),
+                'evt' => 2,
+                'password' => $request->input('password'),
+                'device_to' => 1,
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
+            }
         }
 
-        $newPassword = $request->input('password');
-        $user->password = bcrypt($newPassword);
-        if ($user->save()) {
-            return $this->response->array($this->apiSuccess('修改成功', 200));
+        $user = User::where('phone', intval($request->input('phone')))->first();
+
+        if ($ssoEnable) {
+            // 用户不存在，则注册
+            if (!$user) {
+                $user = User::query()
+                  ->create([
+                      'account' => $request->input('phone'),
+                      'phone' => $request->input('phone'),
+                      'username' => $request->input('phone'),
+                      'password' => bcrypt($request->input('password')),
+                      'child_account' => 0,
+                      'source' => 0,
+                  ]);
+
+                if (!$user) {
+                    return $this->response->array($this->apiError('生成本地用户失败！', 500)); 
+                }
+
+            } 
         } else {
-            return $this->response->array($this->apiError('修改失败', 500));
+            if (!$user) {
+                return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+            }       
         }
+
+        if (!$ssoEnable) {
+            $newPassword = $request->input('password');
+            $user->password = bcrypt($newPassword);
+            if ($user->save()) {
+                return $this->response->array($this->apiSuccess('修改成功', 200));
+            } else {
+                return $this->response->array($this->apiError('修改失败', 500));
+            }    
+        }
+        return $this->response->array($this->apiSuccess('修改成功!', 200));
     }
 
     /**

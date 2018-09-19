@@ -294,6 +294,27 @@ class UserActionController extends BaseController
         if(!$user = User::find($payload['user_id'])){
             return $this->response->array($this->apiError('not found', 404));
         }
+
+        // 单点登录
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            if ($payload['status'] == -1) {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            // 访问单点登录系统
+            $ssoParam = array(
+                'name' => $user->account,
+                'evt' => 1,
+                'status' => $status,
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
+            }
+        }
+
         $user->status = $payload['status'];
         if(!$user->save()){
             return $this->response->array($this->apiError());
