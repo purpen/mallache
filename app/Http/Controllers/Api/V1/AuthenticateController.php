@@ -831,12 +831,15 @@ class AuthenticateController extends BaseController
      */
     public function setUserType(Request $request)
     {
+        Log::info($request);
         $type = (int)$request->input('type');
         $user = $this->auth_user;
         if ($user->type == 0 && in_array($type, [1, 2])) {
+            Log::info(1);
             $user->type;
             DB::beginTransaction();
             if ($user->save()) {
+                Log::info(2);
                 if ($user->type == 1) {
                     DemandCompany::createCompany($user);
                 } else if ($user->type == 2) {
