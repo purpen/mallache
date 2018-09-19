@@ -208,7 +208,7 @@ class AuthenticateController extends BaseController
                 );
                 $ssoResult = Sso::request(1, $ssoParam);
                 if (!$ssoResult['success']) {
-                    return $this->response->array($this->apiError($ssoResult['message'], 401));               
+                    return $this->response->array($this->apiError($ssoResult['message'], 401));
                 }
             }
 
