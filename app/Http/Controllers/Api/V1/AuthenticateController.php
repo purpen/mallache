@@ -846,6 +846,7 @@ class AuthenticateController extends BaseController
 
                 }
                 DB::commit();
+                return $this->response->array($this->apiSuccess());
             } else {
                 return $this->response->array($this->apiError('error', 500));
             }
