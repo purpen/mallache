@@ -281,7 +281,7 @@ class AuthenticateController extends BaseController
             );
             $ssoResult = Sso::request(7, $ssoParam);
             if (!$ssoResult['success']) {
-                return $this->response->array($this->apiError($ssoResult['message'], 412));
+                return $this->response->array($this->apiError($ssoResult['message'], 413));
             }
 
             // sso更新
@@ -294,7 +294,7 @@ class AuthenticateController extends BaseController
 
             $ssoResult = Sso::request(4, $ssoParam);
             if (!$ssoResult['success']) {
-                return $this->response->array($this->apiError($ssoResult['message'], 412));
+                return $this->response->array($this->apiError($ssoResult['message'], 414));
             }
         }
         
