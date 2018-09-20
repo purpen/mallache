@@ -208,18 +208,10 @@ class AuthenticateController extends BaseController
                 if (!$ssoResult['success']) {
                     return $this->response->array($this->apiError($ssoResult['message'], 401));
                 }
-            } else {
-                $user = User::query()
-                    ->where('account', $payload['account'])
-                    ->first();
-                if (!Hash::check($payload['password'], $user->password)) {
-                    return $this->response->array($this->apiError('密码不正确', 403));
-                }
             }
 
-            if (!isset($user)) {
-                $user = User::query()->where('account', $payload['account'])->first();
-            }
+            $user = User::query()->where('account', $payload['account'])->first();
+            $source = $request->header('source-type') ?? 0;
 
             // 如果本地用户不存在，则创建 
             if ($ssoEnable) {
@@ -231,7 +223,7 @@ class AuthenticateController extends BaseController
                             'username' => $payload['account'],
                             'password' => bcrypt($payload['password']),
                             'child_account' => 0,
-                            'source' => 0,
+                            'source' => $source,
                             'type' => 0,
                         ]);
 
@@ -239,8 +231,15 @@ class AuthenticateController extends BaseController
                         return $this->response->array($this->apiError('生成本地用户失败！', 500));
                     }
                 }
+            } else {
+                if (!$user) {
+                    return $this->response->array($this->apiError('用户不存在！', 404));
+                }
+                if (!Hash::check($payload['password'], $user->password)) {
+                    return $this->response->array($this->apiError('密码不正确', 403));
+                }
             }
-            $source = $request->header('source-type') ?? 0;
+
             if ($source != 0) {
                 if ($user->type == 2) {
                     return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));

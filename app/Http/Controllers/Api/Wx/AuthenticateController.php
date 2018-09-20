@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\Wx;
 
 use App\Helper\Tools;
+use App\Helper\Sso;
 use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\DemandCompany;
@@ -44,9 +45,24 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        Log::info($new_mini);
         $openid = $new_mini['openid'] ?? '';
         if (!empty($openid)) {
+
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 快捷登录或注册
+                $ssoParam = array(
+                    'name' => $openid,
+                    'evt' => 6,
+                    'device_to' => 3,
+                );
+                $ssoResult = Sso::request(3, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
+
             $wxUser = User::where('wx_open_id', $openid)->first();
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
@@ -73,7 +89,7 @@ class AuthenticateController extends BaseController
                         'from_app' => 1,
                         'wx_open_id' => $openid,
                         'session_key' => $new_mini['session_key'],
-                        'union_id' => $new_mini['unionId'] ?? '',
+                        'union_id' => $new_mini['unionid'] ?? '',
                     ]);
                 if ($user->type == 1) {
                     //创建需求公司
@@ -117,12 +133,12 @@ class AuthenticateController extends BaseController
 
         $config = config('wechat.mini_program.default');
         $mini = Factory::miniProgram($config);
+
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        Log::info($decryptedData);
-        if (!empty($decryptedData['unionId'])){
-            $user->union_id = $decryptedData['unionId'];
+        if (!empty($decryptedData['unionid'])){
+            $user->union_id = $decryptedData['unionid'];
             $user->save();
         }
 
@@ -165,15 +181,62 @@ class AuthenticateController extends BaseController
             return $this->response->array($this->apiError('手机号未注册', 404));
         }
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return $this->response->array($this->apiError('账户名或密码错误', 412));
-        }
         //已经存在的用户
         $oldUser = User::where('account' , $phone)->first();
+
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // sso登录
+            $ssoParam = array(
+                'account' => $phone,
+                'password' => $payload['password'],
+                'device_to' => 3,
+            );
+            $ssoResult = Sso::request(1, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 412));
+            }
+        } else {
+            if (!$oldUser) {
+                return $this->response->array($this->apiError('用户不存在！', 404));
+            }
+            if (!Hash::check($payload['password'], $oldUser->password)) {
+                return $this->response->array($this->apiError('密码不正确', 403));
+            }
+        }
+
+        $token = JWTAuth::fromUser($user);
 
         //当前登陆的用户
         $loginUser = $this->auth_user;
         //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
+        if ($ssoEnable) {
+            // sso更新
+            $ssoParam = array(
+                'name' => $phone,
+                'evt' => 2,
+                'wx_union_id' => $loginUser->union_id,
+                'wx_uid' => $loginUser->wx_open_id,
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 412));
+            }
+
+            // sso更新
+            $ssoParam = array(
+                'name' => $loginUser->union_id,
+                'evt' => 5,
+                'wx_union_id' => '',
+                'wx_uid' => '',
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 412));
+            }
+        }
+        
         $oldUser->wx_open_id = $loginUser->wx_open_id;
         $oldUser->session_key = $loginUser->session_key;
         $oldUser->union_id = $loginUser->union_id;
@@ -226,6 +289,20 @@ class AuthenticateController extends BaseController
 
         $phone = $request->input('phone');
         //查看是否注册了
+        //
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return $this->response->array($this->apiError('该手机号已经注册过，请直接绑定!', 412));
+            }
+        }
+
         $oldUser = User::where('account' , $phone)->first();
         if($oldUser){
             return $this->response->array($this->apiError('该手机号已经注册过，请直接绑定', 412));
@@ -243,6 +320,21 @@ class AuthenticateController extends BaseController
         //当前登陆的用户
         $loginUser = $this->auth_user;
         if ($loginUser) {
+            if ($ssoEnable) {
+                // 更新
+                $ssoParam = array(
+                    'name' => $loginUser->union_id,
+                    'evt' => 5,
+                    'account' => $phone,
+                    'phone' => $phone,
+                    'password' => $password,
+                );
+                $ssoResult = Sso::request(4, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 500));
+                }
+            }
+
             $loginUser->account = $phone;
             $loginUser->phone = $phone;
             $loginUser->username = $phone;
@@ -284,12 +376,26 @@ class AuthenticateController extends BaseController
         }
 
         $phone = $request->input('phone');
-        $user = User::where('account', $phone)->first();
-        if ($user) {
-            return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
+
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => $phone
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return $this->response->array($this->apiSuccess('已经存在,可以直接绑定!', 200));
+            }
         } else {
-            return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
+            $user = User::where('account', $phone)->first();
+            if ($user) {
+                return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
+            }
         }
+        return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
+
     }
 
 
@@ -377,11 +483,23 @@ class AuthenticateController extends BaseController
 
     protected function phoneIsRegister($account)
     {
-        if (User::where('account', intval($account))->count() > 0) {
-            return true;
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return true;
+            }
         } else {
-            return false;
+            if (User::where('account', intval($account))->count() > 0) {
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -415,10 +533,24 @@ class AuthenticateController extends BaseController
 
         $phone = $request->input('phone');
         //查看是否注册了
-        $oldUser = User::where('account' , $phone)->first();
-        if(!$oldUser){
-            return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
+            }
+        } else {
+            $oldUser = User::where('account' , $phone)->first();
+            if(!$oldUser){
+                return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
+            }
         }
+
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
