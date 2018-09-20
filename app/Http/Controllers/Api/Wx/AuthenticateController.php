@@ -243,6 +243,14 @@ class AuthenticateController extends BaseController
         if ($ssoEnable) {
             // sso更新
             $ssoParam = array(
+                'name' => $loginUser->union_id,
+                'evt' => 5,
+                'wx_union_id' => '',
+                'wx_uid' => '',
+            );
+
+            // sso更新
+            $ssoParam = array(
                 'name' => $phone,
                 'evt' => 2,
                 'wx_union_id' => $loginUser->union_id,
@@ -253,13 +261,6 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
             }
 
-            // sso更新
-            $ssoParam = array(
-                'name' => $loginUser->union_id,
-                'evt' => 5,
-                'wx_union_id' => '',
-                'wx_uid' => '',
-            );
             $ssoResult = Sso::request(4, $ssoParam);
             if (!$ssoResult['success']) {
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
