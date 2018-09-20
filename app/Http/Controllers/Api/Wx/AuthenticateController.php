@@ -278,6 +278,10 @@ Log::info($encryptData);
                 'wx_union_id' => '',
                 'wx_uid' => '',
             );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 412));
+            }
 
             // sso更新
             $ssoParam = array(
@@ -286,10 +290,6 @@ Log::info($encryptData);
                 'wx_union_id' => $loginUser->union_id,
                 'wx_uid' => $loginUser->wx_open_id,
             );
-            $ssoResult = Sso::request(4, $ssoParam);
-            if (!$ssoResult['success']) {
-                return $this->response->array($this->apiError($ssoResult['message'], 412));
-            }
 
             $ssoResult = Sso::request(4, $ssoParam);
             if (!$ssoResult['success']) {
