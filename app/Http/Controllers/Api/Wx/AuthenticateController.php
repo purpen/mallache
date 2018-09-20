@@ -57,6 +57,7 @@ class AuthenticateController extends BaseController
                     'name' => $unionId,
                     'evt' => 5,
                     'device_to' => 3,
+                    'wx_uid' => $openid,
                 );
                 $ssoResult = Sso::request(3, $ssoParam);
                 if (!$ssoResult['success']) {
@@ -225,6 +226,26 @@ class AuthenticateController extends BaseController
             $ssoResult = Sso::request(1, $ssoParam);
             if (!$ssoResult['success']) {
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
+            }
+
+            if (!$oldUser) {
+                // 创建用户
+                $oldUser = User::query()
+                    ->create([
+                        'account' => $phone,
+                        'phone' => $phone,
+                        'username' => $phone,
+                        'type' => 1,
+                        'password' => bcrypt($payload['password']),
+                        'child_account' => 0,
+                        'company_role' => 0,
+                        'source' => 0,
+                        'from_app' => 1,
+                    ]);
+
+                if (!$oldUser) {
+                    return $this->response->array($this->apiError('本地创建用户失败！', 500));
+                }
             }
         } else {
             if (!$oldUser) {
