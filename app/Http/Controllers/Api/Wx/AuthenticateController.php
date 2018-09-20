@@ -157,6 +157,9 @@ class AuthenticateController extends BaseController
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
 
         if (!empty($decryptedData['unionId'])){
+            if($user->union_id == $decryptedData['unionId']){
+                return $this->response->array($this->apiSuccess('不需要解密', 200));
+            }
             $user->union_id = $decryptedData['unionId'];
             $user->save();
 
