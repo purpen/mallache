@@ -155,13 +155,11 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-Log::info($encryptData);
         if (!empty($decryptedData['unionId'])){
-            if($user->union_id == $decryptedData['unionId']){
-                return $this->response->array($this->apiSuccess('不需要解密', 200));
+            if(empty($user->union_id)){
+                $user->union_id = $decryptedData['unionId'];
+                $user->save();
             }
-            $user->union_id = $decryptedData['unionId'];
-            $user->save();
 
             // 请求单点登录系统
             $ssoEnable = (int)config('sso.enable');
@@ -614,9 +612,13 @@ Log::info($encryptData);
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
+        Log::info($sms_code_value);
+        Log::info($payload['sms_code']);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
+            Log::info(11);
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
+            Log::info(22);
             Cache::forget($key);
             return $this->response->array($this->apiSuccess('获取成功', 200));
         }
