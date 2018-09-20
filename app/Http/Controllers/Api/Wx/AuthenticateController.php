@@ -274,7 +274,6 @@ class AuthenticateController extends BaseController
                 'evt' => 5,
                 'wx_union_id' => '',
                 'wx_uid' => '',
-                'account' => $loginUser->union_id . '_back',
             );
 
             // sso更新
