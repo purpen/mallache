@@ -57,34 +57,33 @@ class AuthenticateController extends BaseController
                     $token = JWTAuth::fromUser($wxUser);
                     return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
                 }
-            } else {
-                //随机码
-                $randomNumber = Tools::randNumber();
-                // 创建用户
-                $user = User::query()
-                    ->create([
-                        'account' => $randomNumber,
-                        'phone' => $randomNumber,
-                        'username' => $randomNumber,
-                        'type' => 1,
-                        'password' => bcrypt($randomNumber),
-                        'child_account' => 0,
-                        'company_role' => 0,
-                        'source' => 0,
-                        'from_app' => 1,
-                        'wx_open_id' => $openid,
-                        'session_key' => $new_mini['session_key'],
-                        'union_id' => $new_mini['unionid'] ?? '',
-                    ]);
-                if ($user->type == 1) {
-                    //创建需求公司
-                    DemandCompany::createCompany($user);
-                    //生成token
-                    $token = JWTAuth::fromUser($user);
-                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
-                }
             }
-
+        } else {
+            //随机码
+            $randomNumber = Tools::randNumber();
+            // 创建用户
+            $user = User::query()
+                ->create([
+                    'account' => $randomNumber,
+                    'phone' => $randomNumber,
+                    'username' => $randomNumber,
+                    'type' => 1,
+                    'password' => bcrypt($randomNumber),
+                    'child_account' => 0,
+                    'company_role' => 0,
+                    'source' => 0,
+                    'from_app' => 1,
+                    'wx_open_id' => $openid,
+                    'session_key' => $new_mini['session_key'],
+                    'union_id' => $new_mini['unionid'] ?? '',
+                ]);
+            if ($user->type == 1) {
+                //创建需求公司
+                DemandCompany::createCompany($user);
+                //生成token
+                $token = JWTAuth::fromUser($user);
+                return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+            }
         }
     }
 
