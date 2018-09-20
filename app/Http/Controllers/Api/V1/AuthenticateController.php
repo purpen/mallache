@@ -834,7 +834,7 @@ class AuthenticateController extends BaseController
         $type = (int)$request->input('type');
         $user = $this->auth_user;
         if ($user->type == 0 && in_array($type, [1, 2])) {
-            $user->type;
+            $user->type = $type;
             DB::beginTransaction();
             if ($user->save()) {
                 if ($user->type == 1) {
