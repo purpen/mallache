@@ -155,13 +155,11 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-Log::info($encryptData);
         if (!empty($decryptedData['unionId'])){
-            if($user->union_id == $decryptedData['unionId']){
-                return $this->response->array($this->apiSuccess('不需要解密', 200));
+            if(empty($user->union_id)){
+                $user->union_id = $decryptedData['unionId'];
+                $user->save();
             }
-            $user->union_id = $decryptedData['unionId'];
-            $user->save();
 
             // 请求单点登录系统
             $ssoEnable = (int)config('sso.enable');
