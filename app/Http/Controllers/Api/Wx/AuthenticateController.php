@@ -44,13 +44,14 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        Log::info($new_mini);
         $openid = $new_mini['openid'] ?? '';
-        if (!empty($openid)) {
-            $wxUser = User::where('wx_open_id', $openid)->first();
+        $unionId = $new_mini['unionid'] ?? '';
+        if (!empty($unionId)) {
+            $wxUser = User::where('union_id', $unionId)->first();
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
-                $wxUser->session_key = $new_mini['session_key'];
+                $wxUser->wx_open_id = $new_mini['session_key'];
+                $wxUser->session_key = $openid;
                 if ($wxUser->save()) {
                     //生成token
                     $token = JWTAuth::fromUser($wxUser);
@@ -120,7 +121,6 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        Log::info($decryptedData);
         if (!empty($decryptedData['unionId'])){
             $user->union_id = $decryptedData['unionId'];
             $user->save();
