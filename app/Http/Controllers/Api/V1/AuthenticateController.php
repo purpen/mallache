@@ -834,21 +834,25 @@ class AuthenticateController extends BaseController
         $type = (int)$request->input('type');
         $user = $this->auth_user;
         if ($user->type == 0 && in_array($type, [1, 2])) {
-            $user->type = $type;
             DB::beginTransaction();
-            if ($user->save()) {
-                if ($user->type == 1) {
-                    DemandCompany::createCompany($user);
-                } else if ($user->type == 2) {
-                    $res = DesignCompanyModel::createDesign($user);
-                    $statistics = new Statistics;
-                    $statistics->saveDesignInfo($res->id);
-                }
-                DB::commit();
-                return $this->response->array($this->apiSuccess());
-            } else {
-                return $this->response->array($this->apiError('error', 500));
+
+            if ($type == 1) {
+                $user->type = 1;
+                $user->save();
+                DemandCompany::createCompany($user);
+            } else if ($type == 2) {
+                $user->type = 2;
+                $user->company_role = 20;
+                $user->save();
+
+                $res = DesignCompanyModel::createDesign($user);
+                $statistics = new Statistics;
+                $statistics->saveDesignInfo($res->id);
             }
+
+            DB::commit();
+            return $this->response->array($this->apiSuccess());
+
         } else {
             return $this->response->array($this->apiError('用户类型已设置', 403));
         }
