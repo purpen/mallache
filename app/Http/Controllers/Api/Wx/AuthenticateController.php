@@ -268,6 +268,9 @@ class AuthenticateController extends BaseController
         //当前登陆的用户
         $loginUser = $this->auth_user;
         //登陆的用户信息，绑定到老用户信息上，删除登陆的用户
+        if (!$loginUser->union_id) {
+            return $this->response->array($this->apiError('union_id不存在！', 500));       
+        }
         if ($ssoEnable) {
             // sso更新
             $ssoParam = array(
