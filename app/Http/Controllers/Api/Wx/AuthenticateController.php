@@ -616,10 +616,10 @@ class AuthenticateController extends BaseController
         Log::info($sms_code_value);
         Log::info($payload['sms_code']);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
-            Log::info(11);
+            Log::info('验证码错误');
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
-            Log::info(22);
+            Log::info('获取成功');
             Cache::forget($key);
             return $this->response->array($this->apiSuccess('获取成功', 200));
         }
