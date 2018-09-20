@@ -78,7 +78,7 @@ class AuthenticateController extends BaseController
                 }
             } else {
                 //随机码
-                $randomNumber = Tools::randNumber();
+                $randomNumber = Tools::url_short('wxRandNumber');
                 // 创建用户
                 $user = User::query()
                     ->create([
@@ -106,7 +106,7 @@ class AuthenticateController extends BaseController
             }
         } else {
             //随机码
-            $randomNumber = Tools::randNumber();
+            $randomNumber = Tools::url_short('wxRandNumber');
             // 创建用户
             $user = User::query()
                 ->create([
