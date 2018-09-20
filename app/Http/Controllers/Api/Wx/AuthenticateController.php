@@ -617,7 +617,7 @@ Log::info($encryptData);
         $sms_code_value = Cache::get($key);
         Log::info($sms_code_value);
         Log::info($payload['sms_code']);
-        if (intval($payload['sms_code']) != intval($sms_code_value)) {
+        if (intval($payload['sms_code']) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
             Cache::forget($key);
