@@ -621,6 +621,7 @@ Log::info($encryptData);
             Log::info(11);
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
+            Log::info(22);
             Cache::forget($key);
             return $this->response->array($this->apiSuccess('获取成功', 200));
         }
