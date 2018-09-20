@@ -273,8 +273,8 @@ class AuthenticateController extends BaseController
             $ssoParam = array(
                 'name' => $loginUser->union_id,
                 'evt' => 5,
-                'wx_union_id' => '',
-                'wx_uid' => '',
+                'wx_union_id' => 'None',
+                'wx_uid' => 'None',
             );
             $ssoResult = Sso::request(4, $ssoParam);
             if (!$ssoResult['success']) {
