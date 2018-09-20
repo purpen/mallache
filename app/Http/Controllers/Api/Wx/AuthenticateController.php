@@ -57,6 +57,7 @@ class AuthenticateController extends BaseController
                     'name' => $unionId,
                     'evt' => 5,
                     'device_to' => 3,
+                    'wx_uid' => $openid,
                 );
                 $ssoResult = Sso::request(3, $ssoParam);
                 if (!$ssoResult['success']) {
@@ -226,6 +227,26 @@ class AuthenticateController extends BaseController
             if (!$ssoResult['success']) {
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
             }
+
+            if (!$oldUser) {
+                // 创建用户
+                $oldUser = User::query()
+                    ->create([
+                        'account' => $phone,
+                        'phone' => $phone,
+                        'username' => $phone,
+                        'type' => 1,
+                        'password' => bcrypt($payload['password']),
+                        'child_account' => 0,
+                        'company_role' => 0,
+                        'source' => 0,
+                        'from_app' => 1,
+                    ]);
+
+                if (!$oldUser) {
+                    return $this->response->array($this->apiError('本地创建用户失败！', 500));
+                }
+            }
         } else {
             if (!$oldUser) {
                 return $this->response->array($this->apiError('用户不存在！', 404));
@@ -243,6 +264,14 @@ class AuthenticateController extends BaseController
         if ($ssoEnable) {
             // sso更新
             $ssoParam = array(
+                'name' => $loginUser->union_id,
+                'evt' => 5,
+                'wx_union_id' => '',
+                'wx_uid' => '',
+            );
+
+            // sso更新
+            $ssoParam = array(
                 'name' => $phone,
                 'evt' => 2,
                 'wx_union_id' => $loginUser->union_id,
@@ -253,13 +282,6 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
             }
 
-            // sso更新
-            $ssoParam = array(
-                'name' => $loginUser->union_id,
-                'evt' => 5,
-                'wx_union_id' => '',
-                'wx_uid' => '',
-            );
             $ssoResult = Sso::request(4, $ssoParam);
             if (!$ssoResult['success']) {
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
