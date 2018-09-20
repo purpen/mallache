@@ -228,7 +228,7 @@ Log::info($encryptData);
         if ($ssoEnable) {
             // sso登录
             $ssoParam = array(
-                'account' => $phone,
+                'phone' => $phone,
                 'password' => $payload['password'],
                 'device_to' => 3,
             );
