@@ -65,12 +65,12 @@ class AuthenticateController extends BaseController
                 }
             }
 
-            $wxUser = User::where('union_id', $openid)->first();
+            $wxUser = User::where('union_id', $unionId)->first();
 
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
-                $wxUser->wx_open_id = $new_mini['session_key'];
-                $wxUser->session_key = $openid;
+                $wxUser->wx_open_id = $openid;
+                $wxUser->session_key = $new_mini['session_key'];
                 if ($wxUser->save()) {
                     //生成token
                     $token = JWTAuth::fromUser($wxUser);
