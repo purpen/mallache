@@ -528,11 +528,11 @@ class AuthenticateController extends BaseController
 
         $newPassword = $request->input('password');
 
-        $user = JWTAuth::parseToken()->authenticate();
+        $user = $this->auth_user;
 
         $user->password = bcrypt($newPassword);
         if ($user->save()) {
-            $token = JWTAuth::refresh();
+            $token = JWTAuth::fromUser($user);
             return $this->response->array($this->apiSuccess('请求成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('Error', 500));
@@ -612,13 +612,9 @@ class AuthenticateController extends BaseController
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
-        Log::info($sms_code_value);
-        Log::info($payload['sms_code']);
         if (intval($payload['sms_code']) !== intval($sms_code_value)) {
-            Log::info('验证码错误');
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
-            Log::info('获取成功');
             Cache::forget($key);
             return $this->response->array($this->apiSuccess('获取成功', 200));
         }
