@@ -235,7 +235,7 @@ class AuthenticateController extends BaseController
             }
         }
 
-        $token = JWTAuth::fromUser($user);
+        $token = JWTAuth::fromUser($oldUser);
 
         //当前登陆的用户
         $loginUser = $this->auth_user;
