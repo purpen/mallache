@@ -48,23 +48,6 @@ class AuthenticateController extends BaseController
         $openid = $new_mini['openid'] ?? '';
         $unionId = $new_mini['unionid'] ?? '';
         if (!empty($unionId)) {
-
-            // 请求单点登录系统
-            $ssoEnable = (int)config('sso.enable');
-            if ($ssoEnable) {
-                // 快捷登录或注册
-                $ssoParam = array(
-                    'name' => $unionId,
-                    'evt' => 5,
-                    'device_to' => 3,
-                    'wx_uid' => $openid,
-                );
-                $ssoResult = Sso::request(3, $ssoParam);
-                if (!$ssoResult['success']) {
-                    return $this->response->array($this->apiError($ssoResult['message'], 412));
-                }
-            }
-
             $wxUser = User::where('union_id', $unionId)->first();
 
             //检测是否有openid,有创建，没有的话新建
@@ -172,9 +155,27 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
+
         if (!empty($decryptedData['unionId'])){
             $user->union_id = $decryptedData['unionId'];
             $user->save();
+
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 快捷登录或注册
+                $ssoParam = array(
+                    'name' => $decryptedData['unionId'],
+                    'evt' => 5,
+                    'device_to' => 3,
+                    'wx_uid' => $decryptedData['openId'],
+                );
+                $ssoResult = Sso::request(3, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
+
         }
 
         return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
