@@ -117,10 +117,10 @@ class AuthenticateController extends BaseController
 
         $config = config('wechat.mini_program.default');
         $mini = Factory::miniProgram($config);
-
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
+        Log::info($decryptedData);
         if (!empty($decryptedData['unionid'])){
             $user->union_id = $decryptedData['unionid'];
             $user->save();
