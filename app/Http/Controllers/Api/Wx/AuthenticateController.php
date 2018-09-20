@@ -78,7 +78,7 @@ class AuthenticateController extends BaseController
                 }
             } else {
                 //随机码
-                $randomNumber = Tools::randNumber();
+                $randomNumber = Tools::url_short('wxRandNumber');
                 // 创建用户
                 $user = User::query()
                     ->create([
@@ -106,7 +106,7 @@ class AuthenticateController extends BaseController
             }
         } else {
             //随机码
-            $randomNumber = Tools::randNumber();
+            $randomNumber = Tools::url_short('wxRandNumber');
             // 创建用户
             $user = User::query()
                 ->create([
@@ -141,6 +141,7 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} iv
      * @apiParam {string} encryptData
+     * @apiParam {integer} is_login 是否需要解密
      * @apiParam {string} token
      *
      */
@@ -151,7 +152,7 @@ class AuthenticateController extends BaseController
             'encryptData' => 'required',
         ];
 
-        $payload = $request->only('iv', 'encryptData');
+        $payload = $request->only('iv', 'encryptData' , 'is_login');
         $validator = app('validator')->make($payload, $rules);
 
         if ($validator->fails()) {
@@ -160,6 +161,10 @@ class AuthenticateController extends BaseController
 
         $iv = $request->input('iv');
         $encryptData = $request->input('encryptData');
+        $isLogin = $request->input('is_login');
+        if($isLogin != 1){
+            return $this->response->array($this->apiSuccess('不需要解密', 200));
+        }
 
         $config = config('wechat.mini_program.default');
         $mini = Factory::miniProgram($config);
