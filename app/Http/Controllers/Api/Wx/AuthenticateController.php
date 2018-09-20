@@ -637,7 +637,7 @@ class AuthenticateController extends BaseController
     {
         //当前登陆的用户
         $loginUser = $this->auth_user;
-        if(!empty($loginUser->union_id)){
+        if($loginUser->phone == 11){
             return $this->response->array($this->apiSuccess('你已绑定了账户', 200 , $loginUser->account));
         }
         return $this->response->array($this->apiSuccess('没有绑定小程序', 200));
