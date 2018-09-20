@@ -324,7 +324,7 @@ class AuthenticateController extends BaseController
         if ($ssoEnable) {
             // 查看是否存在账号
             $ssoParam = array(
-                'phone' => (string)$account
+                'phone' => (string)$phone
             );
             $ssoResult = Sso::request(6, $ssoParam);
             if ($ssoResult['success']) {
@@ -567,7 +567,7 @@ class AuthenticateController extends BaseController
         if ($ssoEnable) {
             // 查看是否存在账号
             $ssoParam = array(
-                'phone' => (string)$account
+                'phone' => (string)$phone
             );
             $ssoResult = Sso::request(6, $ssoParam);
             if (!$ssoResult['success']) {
