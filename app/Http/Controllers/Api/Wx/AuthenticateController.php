@@ -46,15 +46,16 @@ class AuthenticateController extends BaseController
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
         $openid = $new_mini['openid'] ?? '';
-        if (!empty($openid)) {
+        $unionId = $new_mini['unionid'] ?? '';
+        if (!empty($unionId)) {
 
             // 请求单点登录系统
             $ssoEnable = (int)config('sso.enable');
             if ($ssoEnable) {
                 // 快捷登录或注册
                 $ssoParam = array(
-                    'name' => $openid,
-                    'evt' => 6,
+                    'name' => $unionId,
+                    'evt' => 5,
                     'device_to' => 3,
                 );
                 $ssoResult = Sso::request(3, $ssoParam);
@@ -63,10 +64,12 @@ class AuthenticateController extends BaseController
                 }
             }
 
-            $wxUser = User::where('wx_open_id', $openid)->first();
+            $wxUser = User::where('union_id', $openid)->first();
+
             //检测是否有openid,有创建，没有的话新建
             if ($wxUser) {
-                $wxUser->session_key = $new_mini['session_key'];
+                $wxUser->wx_open_id = $new_mini['session_key'];
+                $wxUser->session_key = $openid;
                 if ($wxUser->save()) {
                     //生成token
                     $token = JWTAuth::fromUser($wxUser);
@@ -98,8 +101,34 @@ class AuthenticateController extends BaseController
                     $token = JWTAuth::fromUser($user);
                     return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
                 }
-            }
 
+            }
+        } else {
+            //随机码
+            $randomNumber = Tools::randNumber();
+            // 创建用户
+            $user = User::query()
+                ->create([
+                    'account' => $randomNumber,
+                    'phone' => $randomNumber,
+                    'username' => $randomNumber,
+                    'type' => 1,
+                    'password' => bcrypt($randomNumber),
+                    'child_account' => 0,
+                    'company_role' => 0,
+                    'source' => 0,
+                    'from_app' => 1,
+                    'wx_open_id' => $openid,
+                    'session_key' => $new_mini['session_key'],
+                    'union_id' => $new_mini['unionid'] ?? '',
+                ]);
+            if ($user->type == 1) {
+                //创建需求公司
+                DemandCompany::createCompany($user);
+                //生成token
+                $token = JWTAuth::fromUser($user);
+                return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+            }
         }
     }
 
@@ -137,8 +166,8 @@ class AuthenticateController extends BaseController
         $user = $this->auth_user;
 
         $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        if (!empty($decryptedData['unionid'])){
-            $user->union_id = $decryptedData['unionid'];
+        if (!empty($decryptedData['unionId'])){
+            $user->union_id = $decryptedData['unionId'];
             $user->save();
         }
 
