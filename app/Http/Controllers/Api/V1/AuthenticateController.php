@@ -175,8 +175,6 @@ class AuthenticateController extends BaseController
      */
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('account', 'password');
-
         try {
             // 验证规则
             $rules = [
@@ -193,7 +191,7 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
-            if (!$this->phoneIsRegister($credentials['account'])) {
+            if (!$this->phoneIsRegister($payload['account'])) {
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
 
@@ -210,9 +208,18 @@ class AuthenticateController extends BaseController
                 if (!$ssoResult['success']) {
                     return $this->response->array($this->apiError($ssoResult['message'], 401));
                 }
+            } else {
+                $user = User::query()
+                    ->where('account', $payload['account'])
+                    ->first();
+                if (!Hash::check($payload['password'], $user->password)) {
+                    return $this->response->array($this->apiError('密码不正确', 403));
+                }
             }
 
-            $user = User::where('account', $credentials['account'])->first();
+            if (!isset($user)) {
+                $user = User::query()->where('account', $payload['account'])->first();
+            }
 
             // 如果本地用户不存在，则创建 
             if ($ssoEnable) {
