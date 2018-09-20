@@ -14,7 +14,7 @@ class Sso
 {
     /**
      * 请求sso系统
-     * @param int evt 1.登录；2.注册；3.快捷登录；4.更新；5.修改密码；6.查看；7.--；
+     * @param int evt 1.登录；2.注册；3.快捷登录；4.更新；5.修改密码；6.查看；7.清空数据；
      * @param array params 参数集合
      * @return array 返回成功或失败
      *
@@ -44,6 +44,9 @@ class Sso
                 break;
             case 6:
                 $path = 'auth/view';
+                break;
+            case 7:
+                $path = 'auth/clear';
                 break;
         }
         if (!$path) {

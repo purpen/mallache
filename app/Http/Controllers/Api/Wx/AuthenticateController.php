@@ -273,10 +273,10 @@ class AuthenticateController extends BaseController
             $ssoParam = array(
                 'name' => $loginUser->union_id,
                 'evt' => 5,
-                'wx_union_id' => 'None',
-                'wx_uid' => 'None',
+                'wx_union_id' => 1,
+                'wx_uid' => 1,
             );
-            $ssoResult = Sso::request(4, $ssoParam);
+            $ssoResult = Sso::request(7, $ssoParam);
             if (!$ssoResult['success']) {
                 return $this->response->array($this->apiError($ssoResult['message'], 412));
             }
