@@ -171,7 +171,7 @@ class AuthenticateController extends BaseController
             Log::info(333);
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
             Log::info($oldUser);
-            if($oldUser && $oldUser->phone == 11){
+            if($oldUser && strlen($oldUser->phone) == 11){
                 Log::info(666);
 
                 $token = JWTAuth::fromUser($oldUser);
