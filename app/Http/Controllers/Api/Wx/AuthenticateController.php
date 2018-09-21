@@ -135,6 +135,7 @@ class AuthenticateController extends BaseController
      */
     public function decryptionMessage(Request $request)
     {
+        Log::info(000);
         $rules = [
             'iv' => 'required',
             'encryptData' => 'required',
