@@ -45,49 +45,128 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        $openid = $new_mini['openid'] ?? '';
-        $unionId = $new_mini['unionid'] ?? '';
-        if (!empty($unionId)) {
-            $wxUser = User::where('union_id', $unionId)->first();
+        $open_id = $new_mini['openid'];
+        $session_key = $new_mini['session_key'];
+        Cache::put($open_id, $session_key, 10);
+        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('open_id')));
 
-            //检测是否有openid,有创建，没有的话新建
-            if ($wxUser) {
-                $wxUser->wx_open_id = $openid;
-                $wxUser->session_key = $new_mini['session_key'];
-                if ($wxUser->save()) {
-                    //生成token
-                    $token = JWTAuth::fromUser($wxUser);
-                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
-                }
-            } else {
-                //随机码
-                $randomNumber = Tools::url_short(Tools::microsecondUniqueStr());
-                // 创建用户
-                $user = User::query()
-                    ->create([
-                        'account' => $randomNumber,
-                        'phone' => $randomNumber,
-                        'username' => $randomNumber,
-                        'type' => 1,
-                        'password' => bcrypt($randomNumber),
-                        'child_account' => 0,
-                        'company_role' => 0,
-                        'source' => 0,
-                        'from_app' => 1,
-                        'wx_open_id' => $openid,
-                        'session_key' => $new_mini['session_key'],
-                        'union_id' => $new_mini['unionid'] ?? '',
-                    ]);
-                if ($user->type == 1) {
-                    //创建需求公司
-                    DemandCompany::createCompany($user);
-                    //生成token
-                    $token = JWTAuth::fromUser($user);
-                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
-                }
+//        $openid = $new_mini['openid'] ?? '';
+//        $unionId = $new_mini['unionid'] ?? '';
+//        if (!empty($unionId)) {
+//            $wxUser = User::where('union_id', $unionId)->first();
+//
+//            //检测是否有openid,有创建，没有的话新建
+//            if ($wxUser) {
+//                $wxUser->wx_open_id = $openid;
+//                $wxUser->session_key = $new_mini['session_key'];
+//                if ($wxUser->save()) {
+//                    //生成token
+//                    $token = JWTAuth::fromUser($wxUser);
+//                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+//                }
+//            } else {
+//                //随机码
+//                $randomNumber = Tools::url_short(Tools::microsecondUniqueStr());
+//                // 创建用户
+//                $user = User::query()
+//                    ->create([
+//                        'account' => $randomNumber,
+//                        'phone' => $randomNumber,
+//                        'username' => $randomNumber,
+//                        'type' => 1,
+//                        'password' => bcrypt($randomNumber),
+//                        'child_account' => 0,
+//                        'company_role' => 0,
+//                        'source' => 0,
+//                        'from_app' => 1,
+//                        'wx_open_id' => $openid,
+//                        'session_key' => $new_mini['session_key'],
+//                        'union_id' => $new_mini['unionid'] ?? '',
+//                    ]);
+//                if ($user->type == 1) {
+//                    //创建需求公司
+//                    DemandCompany::createCompany($user);
+//                    //生成token
+//                    $token = JWTAuth::fromUser($user);
+//                    return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+//                }
+//
+//            }
+//        } else {
+//            //随机码
+//            $randomNumber = Tools::url_short(Tools::microsecondUniqueStr());
+//            // 创建用户
+//            $user = User::query()
+//                ->create([
+//                    'account' => $randomNumber,
+//                    'phone' => $randomNumber,
+//                    'username' => $randomNumber,
+//                    'type' => 1,
+//                    'password' => bcrypt($randomNumber),
+//                    'child_account' => 0,
+//                    'company_role' => 0,
+//                    'source' => 0,
+//                    'from_app' => 1,
+//                    'wx_open_id' => $openid,
+//                    'session_key' => $new_mini['session_key'],
+//                    'union_id' => $new_mini['unionid'] ?? '',
+//                ]);
+//            if ($user->type == 1) {
+//                //创建需求公司
+//                DemandCompany::createCompany($user);
+//                //生成token
+//                $token = JWTAuth::fromUser($user);
+//                return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
+//            }
+//        }
+    }
 
+    /**
+     * @api {get} /wechat/decryptionMessage 解密信息
+     * @apiVersion 1.0.0
+     * @apiName WxDecryptionMessage decryptionMessage
+     * @apiGroup Wx
+     *
+     * @apiParam {string} iv
+     * @apiParam {string} encryptData
+     * @apiParam {string} open_id
+     * @apiParam {integer} is_login 是否需要解密
+     *
+     */
+    public function decryptionMessage(Request $request)
+    {
+        $rules = [
+            'iv' => 'required',
+            'encryptData' => 'required',
+        ];
+
+        $payload = $request->only('iv', 'encryptData' , 'is_login' , 'open_id');
+        $validator = app('validator')->make($payload, $rules);
+
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $iv = $request->input('iv');
+        $encryptData = $request->input('encryptData');
+        $isLogin = $request->input('is_login');
+        $openId = $request->input('open_id');
+        if($isLogin != 1){
+            return $this->response->array($this->apiSuccess('不需要解密', 200));
+        }
+
+        $config = config('wechat.mini_program.default');
+        $mini = Factory::miniProgram($config);
+
+//        $user = $this->auth_user;
+        $session_key = Cache::get($openId);
+        $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
+        if (!empty($decryptedData['unionId'])){
+            $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
+            if($oldUser && $oldUser->phone == 11){
+                $token = JWTAuth::fromUser($oldUser);
+                return $this->response->array($this->apiSuccess('获取成功', 200, compact('token' , 'decryptedData')));
             }
-        } else {
             //随机码
             $randomNumber = Tools::url_short(Tools::microsecondUniqueStr());
             // 创建用户
@@ -102,64 +181,22 @@ class AuthenticateController extends BaseController
                     'company_role' => 0,
                     'source' => 0,
                     'from_app' => 1,
-                    'wx_open_id' => $openid,
-                    'session_key' => $new_mini['session_key'],
-                    'union_id' => $new_mini['unionid'] ?? '',
+                    'wx_open_id' => $openId,
+                    'session_key' => $session_key,
+                    'union_id' => $decryptedData['unionId'],
                 ]);
+            Cache::forget($openId);
+
             if ($user->type == 1) {
                 //创建需求公司
                 DemandCompany::createCompany($user);
                 //生成token
                 $token = JWTAuth::fromUser($user);
-                return $this->response->array($this->apiSuccess('获取成功', 200, compact('token')));
             }
-        }
-    }
-
-    /**
-     * @api {get} /wechat/decryptionMessage 解密信息
-     * @apiVersion 1.0.0
-     * @apiName WxDecryptionMessage decryptionMessage
-     * @apiGroup Wx
-     *
-     * @apiParam {string} iv
-     * @apiParam {string} encryptData
-     * @apiParam {integer} is_login 是否需要解密
-     * @apiParam {string} token
-     *
-     */
-    public function decryptionMessage(Request $request)
-    {
-        $rules = [
-            'iv' => 'required',
-            'encryptData' => 'required',
-        ];
-
-        $payload = $request->only('iv', 'encryptData' , 'is_login');
-        $validator = app('validator')->make($payload, $rules);
-
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
-        }
-
-        $iv = $request->input('iv');
-        $encryptData = $request->input('encryptData');
-        $isLogin = $request->input('is_login');
-        if($isLogin != 1){
-            return $this->response->array($this->apiSuccess('不需要解密', 200));
-        }
-
-        $config = config('wechat.mini_program.default');
-        $mini = Factory::miniProgram($config);
-
-        $user = $this->auth_user;
-
-        $decryptedData = $mini->encryptor->decryptData($user->session_key, $iv, $encryptData);
-        if (!empty($decryptedData['unionId'])){
-            if(empty($user->union_id)){
-                $user->union_id = $decryptedData['unionId'];
-                $user->save();
-            }
+//            if(empty($user->union_id)){
+//                $user->union_id = $decryptedData['unionId'];
+//                $user->save();
+//            }
 
             // 请求单点登录系统
             $ssoEnable = (int)config('sso.enable');
@@ -176,11 +213,8 @@ class AuthenticateController extends BaseController
                     return $this->response->array($this->apiError($ssoResult['message'], 412));
                 }
             }
-
         }
-
-        return $this->response->array($this->apiSuccess('解密成功', 200, $decryptedData));
-
+        return $this->response->array($this->apiSuccess('解密成功', 200, compact('token' , 'decryptedData')));
     }
 
     /**
