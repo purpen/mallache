@@ -170,6 +170,7 @@ class AuthenticateController extends BaseController
         if (!empty($decryptedData['unionId'])){
             Log::info(333);
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
+            Log::info($oldUser);
             if($oldUser && $oldUser->phone == 11){
                 Log::info(666);
 
