@@ -53,6 +53,7 @@ class DemandController extends BaseController
 
             // 需求公司信息是否认证
             $demand_company = $this->auth_user->demandCompany;
+            Log::info($demand_company);
             if ($demand_company->verify_status == 1) {
                 $all['company_name'] = $demand_company->company_name;
                 $all['company_abbreviation'] = $demand_company->company_abbreviation;

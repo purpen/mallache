@@ -117,13 +117,8 @@ class AuthenticateController extends BaseController
                     'session_key' => $session_key,
                     'union_id' => $decryptedData['unionId'],
                 ]);
-            if ($user->type == 1) {
-                //创建需求公司
-                DemandCompany::createCompany($user);
-                //生成token
-                $token = JWTAuth::fromUser($user);
-            }
-
+            //生成token
+            $token = JWTAuth::fromUser($user);
             // 请求单点登录系统
             $ssoEnable = (int)config('sso.enable');
             if ($ssoEnable) {
@@ -209,6 +204,10 @@ class AuthenticateController extends BaseController
                         'source' => 0,
                         'from_app' => 1,
                     ]);
+                if ($oldUser->type == 1) {
+                    //创建需求公司
+                    DemandCompany::createCompany($oldUser);
+                }
 
                 if (!$oldUser) {
                     return $this->response->array($this->apiError('本地创建用户失败！', 500));
