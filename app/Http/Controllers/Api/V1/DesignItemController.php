@@ -208,7 +208,6 @@ class DesignItemController extends BaseController
 
         $all = $request->except(['token']);
         $designItem = DesignItemModel::where('id', intval($id))->first();
-        Log::info($all);
         $designItem->update($all);
         if (!$designItem) {
             return $this->response->array($this->apiError());
