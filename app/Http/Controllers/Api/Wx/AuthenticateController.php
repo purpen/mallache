@@ -194,7 +194,6 @@ class AuthenticateController extends BaseController
                     'session_key' => $session_key,
                     'union_id' => $decryptedData['unionId'],
                 ]);
-            Cache::forget($openId);
 Log::info(444);
 Log::info($openId);
             if ($user->type == 1) {
