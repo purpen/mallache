@@ -48,6 +48,7 @@ class AuthenticateController extends BaseController
         $open_id = $new_mini['openid'];
         $session_key = $new_mini['session_key'];
         Cache::put($open_id, $session_key, 10);
+        Log::info(Cache::get($open_id));
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('open_id')));
 
 //        $openid = $new_mini['openid'] ?? '';
