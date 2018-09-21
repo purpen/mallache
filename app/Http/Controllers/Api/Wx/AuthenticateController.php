@@ -160,10 +160,17 @@ class AuthenticateController extends BaseController
 
 //        $user = $this->auth_user;
         $session_key = Cache::get($openId);
+        Log::info(111);
+        Log::info($session_key);
         $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
+        Log::info(222);
+        Log::info($decryptedData);
         if (!empty($decryptedData['unionId'])){
+            Log::info(333);
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
             if($oldUser && $oldUser->phone == 11){
+                Log::info(666);
+
                 $token = JWTAuth::fromUser($oldUser);
                 return $this->response->array($this->apiSuccess('获取成功', 200, compact('token' , 'decryptedData')));
             }
@@ -186,7 +193,8 @@ class AuthenticateController extends BaseController
                     'union_id' => $decryptedData['unionId'],
                 ]);
             Cache::forget($openId);
-
+Log::info(444);
+Log::info($openId);
             if ($user->type == 1) {
                 //创建需求公司
                 DemandCompany::createCompany($user);
@@ -214,6 +222,7 @@ class AuthenticateController extends BaseController
                 }
             }
         }
+        Log::info(444);
         return $this->response->array($this->apiSuccess('解密成功', 200, compact('token' , 'decryptedData')));
     }
 
