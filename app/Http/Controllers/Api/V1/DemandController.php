@@ -363,15 +363,14 @@ class DemandController extends BaseController
                 AssetModel::setRandom($item->id, $random);
             }
         }
-
         // 同步调用匹配方法
         /*$recommend = new Recommend($item);
         $recommend->handle();*/
-
-        //新的匹配方法
-        $recommend = new Matching($item);
-        $recommend->handle();
-
+        if ($item->invite_type == 0){
+            //新的匹配方法
+            $recommend = new Matching($item);
+            $recommend->handle();
+        }
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if (!$demand_company || $demand_company->verify_status != 1) {
             $verify_status = 0;
