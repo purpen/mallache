@@ -196,7 +196,7 @@ class DesignItemController extends BaseController
         $messages = [
             'type.required' => '类型不能为空',
             'design_type.required' => '	设计类型不能为空',
-            'roject_cycle.required' => '项目周期不能为空',
+            'project_cycle.required' => '项目周期不能为空',
             'min_price.required' => '最低价格不能为空'
         ];
 

@@ -20,7 +20,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/quotationAdd',[
         'as' => 'wechat.quotationAdd', 'uses' => 'QuotationController@quotationAdd'
     ]);
+    //解密信息
+    $api->get('/wechat/decryptionMessage', [
+        'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
+    ]);
     /**
+     *
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
@@ -31,10 +36,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
         //新用户绑定
         $api->post('/wechat/newBindingUser', [
             'as' => 'wechat.newBindingUser', 'uses' => 'AuthenticateController@newBindingUser'
-        ]);
-        //解密信息
-        $api->get('/wechat/decryptionMessage', [
-            'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
         ]);
         //检测手机号是否注册了
         $api->get('/wechat/phone', [
