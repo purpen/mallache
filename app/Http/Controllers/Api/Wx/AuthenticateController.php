@@ -75,24 +75,30 @@ class AuthenticateController extends BaseController
         $validator = app('validator')->make($payload, $rules);
 
         if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+            // throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+            return $this->response->array($this->apiError('请求参数格式不对！', 500));
         }
 
-        $iv = $request->input('iv');
-        $encryptData = $request->input('encryptData');
-        $isLogin = $request->input('is_login');
-        $openId = $request->input('open_id');
-        if($isLogin != 1){
-            return $this->response->array($this->apiSuccess('不需要解密', 200));
+        try {
+            $iv = $request->input('iv');
+            $encryptData = $request->input('encryptData');
+            $isLogin = $request->input('is_login');
+            $openId = $request->input('open_id');
+            if($isLogin != 1){
+                return $this->response->array($this->apiSuccess('不需要解密', 200));
+            }
+
+            $config = config('wechat.mini_program.default');
+            $mini = Factory::miniProgram($config);
+
+            //获取session_key
+            $session_key = Cache::get($openId);
+            //解密信息
+            $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
+        } catch (Exception $e) {
+            return $this->response->array($this->apiError($e->getMessage(), 500));       
         }
 
-        $config = config('wechat.mini_program.default');
-        $mini = Factory::miniProgram($config);
-
-        //获取session_key
-        $session_key = Cache::get($openId);
-        //解密信息
-        $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
         if (!empty($decryptedData['unionId'])){
 
             // 请求单点登录系统
