@@ -17,6 +17,7 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use EasyWeChat\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -96,6 +97,7 @@ class AuthenticateController extends BaseController
             //检测用户是否存在，存在返回存在的用户
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
             if($oldUser && strlen($oldUser->phone) == 11){
+                //删除没用的帐号
                 $token = JWTAuth::fromUser($oldUser);
                 return $this->response->array($this->apiSuccess('获取成功', 200, compact('token' , 'decryptedData')));
             }
@@ -107,7 +109,7 @@ class AuthenticateController extends BaseController
                     'account' => $randomNumber,
                     'phone' => $randomNumber,
                     'username' => $randomNumber,
-                    'type' => 1,
+                    'type' => 0,
                     'password' => bcrypt($randomNumber),
                     'child_account' => 0,
                     'company_role' => 0,
@@ -197,9 +199,9 @@ class AuthenticateController extends BaseController
                         'account' => $phone,
                         'phone' => $phone,
                         'username' => $phone,
-                        'type' => 1,
                         'password' => bcrypt($payload['password']),
                         'child_account' => 0,
+                        'type' => 0,
                         'company_role' => 0,
                         'source' => 0,
                         'from_app' => 1,
@@ -262,7 +264,7 @@ class AuthenticateController extends BaseController
         $oldUser->union_id = $loginUser->union_id;
         if($oldUser->save()){
             //判断登陆的手机号是否是6位，是的话删除，不是的话清除open_id,session_key
-            if(strlen($loginUser->phone) == 6){
+            if(strlen($loginUser->phone) < 11){
                 $loginUser->delete();
             } else {
                 $loginUser->wx_open_id = "";
