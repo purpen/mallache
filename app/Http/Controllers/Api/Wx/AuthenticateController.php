@@ -98,15 +98,15 @@ class AuthenticateController extends BaseController
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
             if($oldUser && strlen($oldUser->phone) == 11){
                 //删除没用的帐号
-//                $deleteUsers = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->get();
-//                if(!empty($deleteUsers)){
-//                    foreach ($deleteUsers as $deleteUser){
-//                        if(strlen($deleteUser->phone) == 11){
-//                            continue;
-//                        }
-//                        $deleteUser->delete();
-//                    }
-//                }
+                $deleteUsers = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->get();
+                if(!empty($deleteUsers)){
+                    foreach ($deleteUsers as $deleteUser){
+                        if(strlen($deleteUser->phone) == 11){
+                            continue;
+                        }
+                        $deleteUser->delete();
+                    }
+                }
                 $token = JWTAuth::fromUser($oldUser);
                 return $this->response->array($this->apiSuccess('获取成功', 200, compact('token' , 'decryptedData')));
             }
@@ -210,6 +210,7 @@ class AuthenticateController extends BaseController
                         'username' => $phone,
                         'password' => bcrypt($payload['password']),
                         'child_account' => 0,
+                        'type' => 0,
                         'company_role' => 0,
                         'source' => 0,
                         'from_app' => 1,
