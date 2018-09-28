@@ -94,10 +94,27 @@ class AuthenticateController extends BaseController
         //解密信息
         $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
         if (!empty($decryptedData['unionId'])){
+
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 快捷登录或注册
+                $ssoParam = array(
+                    'name' => $decryptedData['unionId'],
+                    'evt' => 5,
+                    'device_to' => 3,
+                    'wx_uid' => $decryptedData['openId'],
+                );
+                $ssoResult = Sso::request(3, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
+
             //检测用户是否存在，存在返回存在的用户
             $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
             if($oldUser && strlen($oldUser->phone) == 11){
-                //删除没用的帐号
+                // 获取token
                 $token = JWTAuth::fromUser($oldUser);
                 return $this->response->array($this->apiSuccess('获取成功', 200, compact('token' , 'decryptedData')));
             }
@@ -119,23 +136,10 @@ class AuthenticateController extends BaseController
                     'session_key' => $session_key,
                     'union_id' => $decryptedData['unionId'],
                 ]);
+
+
             //生成token
             $token = JWTAuth::fromUser($user);
-            // 请求单点登录系统
-            $ssoEnable = (int)config('sso.enable');
-            if ($ssoEnable) {
-                // 快捷登录或注册
-                $ssoParam = array(
-                    'name' => $decryptedData['unionId'],
-                    'evt' => 5,
-                    'device_to' => 3,
-                    'wx_uid' => $decryptedData['openId'],
-                );
-                $ssoResult = Sso::request(3, $ssoParam);
-                if (!$ssoResult['success']) {
-                    return $this->response->array($this->apiError($ssoResult['message'], 412));
-                }
-            }
         }
         return $this->response->array($this->apiSuccess('解密成功', 200, compact('token' , 'decryptedData')));
     }
