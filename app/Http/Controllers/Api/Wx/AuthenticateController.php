@@ -666,7 +666,7 @@ class AuthenticateController extends BaseController
         $output = curl_exec($ch);
         curl_close($ch);
         //打印获得的数据
-        $smallImage = file_put_contents(Tools::microsecondUniqueStr().".png", $output);
+        $smallImage = file_put_contents(uniqid().".png", $output);
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
