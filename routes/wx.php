@@ -24,6 +24,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->get('/wechat/decryptionMessage', [
         'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
     ]);
+    //获取accessToken
+    $api->get('/wechat/accessToken', [
+        'as' => 'wechat.accessToken', 'uses' => 'AuthenticateController@accessToken'
+    ]);
     /**
      *
      * 需验证用户token
