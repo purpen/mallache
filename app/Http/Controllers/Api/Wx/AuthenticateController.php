@@ -658,7 +658,7 @@ class AuthenticateController extends BaseController
         // post数据
         curl_setopt($ch, CURLOPT_POST, 1);
         // post的变量
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         $output = curl_exec($ch);
         Log::info($output);
         curl_close($ch);
