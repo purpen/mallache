@@ -675,12 +675,12 @@ class AuthenticateController extends BaseController
         $bucket = config('filesystems.disks.qiniu.bucket');
 
         $token = $auth->uploadToken($bucket);
-        $filePath = file_get_contents($smallImage);
+//        $filePath = file_get_contents($smallImage);
         $key = 'smallWx/'.date("Ymd").'/'.uniqid();
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 put 方法进行文件的上传。
-        list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $smallImage);
         $smallImg = config('filesystems.disks.qiniu.upload_url').$key;
         unlink('/tmp/'.uniqid().".png");
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('smallImg')));
