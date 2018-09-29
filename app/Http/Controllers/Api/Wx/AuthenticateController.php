@@ -96,7 +96,7 @@ class AuthenticateController extends BaseController
             $session_key = Cache::get($sessionId);
             //解密信息
             $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
-        } catch (DecryptException $e) {
+        } catch (\Exception $e) {
             return $this->response->array($this->apiError($e->getMessage(), 500));       
         }
 
