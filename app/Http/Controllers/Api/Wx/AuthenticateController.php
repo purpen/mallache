@@ -666,8 +666,7 @@ class AuthenticateController extends BaseController
         $output = curl_exec($ch);
         curl_close($ch);
         //打印获得的数据
-        $smallImage = file_put_contents('/tmp/'.uniqid().".png", $output);
-        $filePath = $smallImage->getRealPath();
+//        $smallImage = file_put_contents('/tmp/'.uniqid().".png", $output);
 
         $accessKey = config('filesystems.disks.qiniu.access_key');
         $secretKey = config('filesystems.disks.qiniu.secret_key');
@@ -681,9 +680,9 @@ class AuthenticateController extends BaseController
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 put 方法进行文件的上传。
-        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        list($ret, $err) = $uploadMgr->put($token, $key, $output);
         $smallImg = config('filesystems.disks.qiniu.upload_url').$key;
-        unlink('/tmp/'.uniqid().".png");
+//        unlink('/tmp/'.uniqid().".png");
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('smallImg')));
 
     }
