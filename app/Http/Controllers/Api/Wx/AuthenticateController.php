@@ -619,10 +619,11 @@ class AuthenticateController extends BaseController
      * @apiName WxAccessToken accessToken
      * @apiGroup Wx
      *
-     *
+     * @apiParam {string} page
      */
-    public function accessToken()
+    public function accessToken(Request $request)
     {
+        //get获取access_token
         $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".config('wechat.mini_program.default.app_id')."&secret=".config('wechat.mini_program.default.secret');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -632,8 +633,25 @@ class AuthenticateController extends BaseController
         $dataBlock = curl_exec($ch);//这是json数据
         curl_close($ch);
         $res = json_decode($dataBlock, true); //接受一个json格式的字符串并且把它转换为 PHP 变量
+        $accessToken = $res['access_token'];
 
-        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('res')));
+        //post获取小程序图片
+        $page = $request->input('page');
+        $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
+        $post_data = 'page='.$page;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $post_usl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // post数据
+        curl_setopt($ch, CURLOPT_POST, 1);
+        // post的变量
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        //打印获得的数据
+        $output_array = json_decode($output,true);
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('output_array')));
 
     }
 }
