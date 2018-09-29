@@ -665,8 +665,8 @@ class AuthenticateController extends BaseController
         $output = curl_exec($ch);
         curl_close($ch);
         //打印获得的数据
-        $output_array = json_decode($output,true);
-        $smallImage = file_put_contents("/tmp/qrcode.png", $output_array);
+//        $output_array = json_decode($output,true);
+        $smallImage = file_put_contents("/tmp/qrcode.png", $output);
         dd($smallImage);
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('output_array')));
