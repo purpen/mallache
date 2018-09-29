@@ -619,6 +619,7 @@ class AuthenticateController extends BaseController
      * @apiName WxAccessToken accessToken
      * @apiGroup Wx
      *
+     * @apiParam {string} scene
      * @apiParam {string} page
      */
     public function accessToken(Request $request)
@@ -636,6 +637,7 @@ class AuthenticateController extends BaseController
         $accessToken = $res['access_token'];
 
         //post获取小程序图片
+        $scene = $request->input('scene');
         $page = $request->input('page');
         $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
         $lineColor = '255，255，255';
@@ -645,8 +647,8 @@ class AuthenticateController extends BaseController
         $lineColorRgb['g'] = $lineColorArr[1];
         $lineColorRgb['b'] = $lineColorArr[2];
         $data = array(
-            'scene' =>Tools::microsecondUniqueStr(),
-            'path' => $page,
+//            'scene' => $scene,
+//            'path' => $page,
             'width' => 430,
             'is_hyaline' => false,
             'auto_color' => false,
@@ -660,7 +662,7 @@ class AuthenticateController extends BaseController
         // post的变量
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         $output = curl_exec($ch);
-        Log::info($output);
+        dd($output);
         curl_close($ch);
         //打印获得的数据
         $output_array = json_decode($output,true);
