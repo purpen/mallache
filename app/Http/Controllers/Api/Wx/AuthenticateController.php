@@ -678,7 +678,7 @@ class AuthenticateController extends BaseController
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 put 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->put($token, $key, $output);
-        $smallImg = config('filesystems.disks.qiniu.upload_url').$key;
+        $smallImg = config('filesystems.disks.qiniu.url').$key;
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('smallImg')));
 
     }
