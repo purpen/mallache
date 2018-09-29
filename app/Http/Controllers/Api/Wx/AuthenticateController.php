@@ -638,15 +638,16 @@ class AuthenticateController extends BaseController
         //post获取小程序图片
         $page = $request->input('page');
         $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
-        $post_data = 'scene='.Tools::microsecondUniqueStr().'&page='.$page;
+        $post_data = 'scene='.Tools::microsecondUniqueStr().'&page='.$page.'&width=430';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $post_usl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // post数据
         curl_setopt($ch, CURLOPT_POST, 1);
         // post的变量
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         $output = curl_exec($ch);
+        Log::info($output);
         curl_close($ch);
         //打印获得的数据
         $output_array = json_decode($output,true);
