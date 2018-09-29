@@ -621,7 +621,7 @@ class AuthenticateController extends BaseController
      *
      *
      */
-    public function accessToken(Request $request)
+    public function accessToken()
     {
         $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".config('wechat.mini_program.default.app_id')."&secret=".config('wechat.mini_program.default.secret');
         $ch = curl_init();
@@ -633,9 +633,7 @@ class AuthenticateController extends BaseController
         curl_close($ch);
         $res = json_decode($dataBlock, true); //接受一个json格式的字符串并且把它转换为 PHP 变量
 
-        $WxAccessToken = $res['access_token'];
-
-        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('WxAccessToken')));
+        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('res')));
 
     }
 }
