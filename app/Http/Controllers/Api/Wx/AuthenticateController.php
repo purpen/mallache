@@ -84,7 +84,7 @@ class AuthenticateController extends BaseController
             $iv = $request->input('iv');
             $encryptData = $request->input('encryptData');
             $isLogin = $request->input('is_login');
-            $openId = $request->input('open_id');
+            $sessionId = $request->input('session_id');
             if($isLogin != 1){
                 return $this->response->array($this->apiSuccess('不需要解密', 200));
             }
@@ -93,7 +93,7 @@ class AuthenticateController extends BaseController
             $mini = Factory::miniProgram($config);
 
             //获取session_key
-            $session_key = Cache::get($openId);
+            $session_key = Cache::get($sessionId);
             //解密信息
             $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
         } catch (DecryptException $e) {
@@ -119,7 +119,7 @@ class AuthenticateController extends BaseController
             }
 
             //检测用户是否存在，存在返回存在的用户
-            $oldUser = User::where('wx_open_id' , $openId)->where('union_id' , $decryptedData['unionId'])->first();
+            $oldUser = User::where('wx_open_id' , $decryptedData['openId'])->where('union_id' , $decryptedData['unionId'])->first();
             if($oldUser && strlen($oldUser->phone) == 11){
                 // 获取token
                 $token = JWTAuth::fromUser($oldUser);
@@ -139,7 +139,7 @@ class AuthenticateController extends BaseController
                     'company_role' => 0,
                     'source' => 0,
                     'from_app' => 1,
-                    'wx_open_id' => $openId,
+                    'wx_open_id' => $decryptedData['openId'],
                     'session_key' => $session_key,
                     'union_id' => $decryptedData['unionId'],
                 ]);
