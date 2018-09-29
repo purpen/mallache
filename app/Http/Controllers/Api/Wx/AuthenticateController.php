@@ -639,8 +639,8 @@ class AuthenticateController extends BaseController
         //post获取小程序图片
         $scene = $request->input('scene');
         $page = $request->input('page');
-//        $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
-        $post_usl = "https://api.weixin.qq.com/wxa/getwxacode?access_token=".$accessToken;
+        $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
+//        $post_usl = "https://api.weixin.qq.com/wxa/getwxacode?access_token=".$accessToken;
         $lineColor = '255，255，255';
         $lineColor = str_replace('，', ',', $lineColor);
         $lineColorArr = explode(',', $lineColor);
@@ -648,7 +648,7 @@ class AuthenticateController extends BaseController
         $lineColorRgb['g'] = $lineColorArr[1];
         $lineColorRgb['b'] = $lineColorArr[2];
         $data = array(
-//            'scene' => $scene,
+            'scene' => $scene,
             'path' => $page,
             'width' => 430,
             'is_hyaline' => false,
@@ -666,7 +666,8 @@ class AuthenticateController extends BaseController
         curl_close($ch);
         //打印获得的数据
         $output_array = json_decode($output,true);
-        dd($output_array);
+        $smallImage = file_put_contents("/tmp/qrcode.png", $output_array);
+        dd($smallImage);
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('output_array')));
 
