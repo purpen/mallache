@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -640,7 +642,6 @@ class AuthenticateController extends BaseController
         $scene = $request->input('scene');
         $page = $request->input('page');
         $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
-//        $post_usl = "https://api.weixin.qq.com/wxa/getwxacode?access_token=".$accessToken;
         $lineColor = '255，255，255';
         $lineColor = str_replace('，', ',', $lineColor);
         $lineColorArr = explode(',', $lineColor);
@@ -665,11 +666,24 @@ class AuthenticateController extends BaseController
         $output = curl_exec($ch);
         curl_close($ch);
         //打印获得的数据
-//        $output_array = json_decode($output,true);
-        $smallImage = file_put_contents("/tmp/qrcode.png", $output);
-        dd($smallImage);
+        $smallImage = file_put_contents(Tools::microsecondUniqueStr().".png", $output);
 
-        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('output_array')));
+        $accessKey = config('filesystems.disks.qiniu.access_key');
+        $secretKey = config('filesystems.disks.qiniu.secret_key');
+        $auth = new Auth($accessKey, $secretKey);
+
+        $bucket = config('filesystems.disks.qiniu.bucket');
+
+        $token = $auth->uploadToken($bucket);
+        $filePath = file_get_contents($smallImage);
+        $key = 'smallWx/'.date("Ymd").'/'.uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 put 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
+        $smallImg = config('filesystems.disks.qiniu.upload_url').$key;
+
+        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('smallImg')));
 
     }
 }
