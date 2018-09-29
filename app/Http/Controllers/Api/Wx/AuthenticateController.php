@@ -15,6 +15,7 @@ use App\Models\DemandCompany;
 use App\Models\User;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use EasyWeChat\Factory;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -46,10 +47,10 @@ class AuthenticateController extends BaseController
 
         //获取openid和session_key
         $new_mini = $mini->auth->session($code);
-        $open_id = $new_mini['openid'];
         $session_key = $new_mini['session_key'];
-        Cache::put($open_id, $session_key, 10);
-        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('open_id')));
+        $session_id = Tools::microsecondUniqueStr();
+        Cache::put($session_id, $session_key, 10080);
+        return $this->response->array($this->apiSuccess('获取成功', 200 , compact('session_id')));
     }
 
     /**
@@ -60,7 +61,7 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} iv
      * @apiParam {string} encryptData
-     * @apiParam {string} open_id
+     * @apiParam {string} session_id
      * @apiParam {integer} is_login 是否需要解密
      *
      */
@@ -95,7 +96,7 @@ class AuthenticateController extends BaseController
             $session_key = Cache::get($openId);
             //解密信息
             $decryptedData = $mini->encryptor->decryptData($session_key, $iv, $encryptData);
-        } catch (Exception $e) {
+        } catch (DecryptException $e) {
             return $this->response->array($this->apiError($e->getMessage(), 500));       
         }
 
