@@ -72,7 +72,7 @@ class AuthenticateController extends BaseController
             'encryptData' => 'required',
         ];
 
-        $payload = $request->only('iv', 'encryptData' , 'is_login' , 'open_id');
+        $payload = $request->only('iv', 'encryptData' , 'is_login' , 'session_id');
         $validator = app('validator')->make($payload, $rules);
 
         if ($validator->fails()) {
