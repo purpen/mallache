@@ -662,10 +662,10 @@ class AuthenticateController extends BaseController
         // post的变量
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         $output = curl_exec($ch);
-        dd($output);
         curl_close($ch);
         //打印获得的数据
         $output_array = json_decode($output,true);
+        dd($output_array);
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('output_array')));
 
