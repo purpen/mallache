@@ -673,7 +673,7 @@ class AuthenticateController extends BaseController
         $bucket = config('filesystems.disks.qiniu.bucket');
 
         $token = $auth->uploadToken($bucket);
-        $key = '/smallWx/'.date("Ymd").'/'.uniqid();
+        $key = 'smallWx/'.date("Ymd").'/'.uniqid();
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 put 方法进行文件的上传。
