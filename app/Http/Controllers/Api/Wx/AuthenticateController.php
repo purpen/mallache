@@ -638,12 +638,19 @@ class AuthenticateController extends BaseController
         //post获取小程序图片
         $page = $request->input('page');
         $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
+        $lineColor = '255，255，255';
+        $lineColor = str_replace('，', ',', $lineColor);
+        $lineColorArr = explode(',', $lineColor);
+        $lineColorRgb['r'] = $lineColorArr[0];
+        $lineColorRgb['g'] = $lineColorArr[1];
+        $lineColorRgb['b'] = $lineColorArr[2];
         $data = array(
             'scene' =>Tools::microsecondUniqueStr(),
             'path' => $page,
             'width' => 430,
             'is_hyaline' => false,
             'auto_color' => false,
+            'line_color' => $lineColorRgb
         );
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $post_usl);
