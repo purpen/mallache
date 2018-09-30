@@ -547,7 +547,6 @@ class AuthenticateController extends BaseController
      * @apiParam {string} phone 手机号
      * @apiParam {integer} sms_code 短信验证码
      * @apiParam {string} password
-     * @apiParam {string} token
      *
      */
     public function findPassword(Request $request)
