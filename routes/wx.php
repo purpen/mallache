@@ -24,7 +24,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->get('/wechat/decryptionMessage', [
         'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
     ]);
-    //获取accessToken
+    //获取smallImage
     $api->get('/wechat/smallImage', [
         'as' => 'wechat.smallImage', 'uses' => 'AuthenticateController@smallImage'
     ]);
