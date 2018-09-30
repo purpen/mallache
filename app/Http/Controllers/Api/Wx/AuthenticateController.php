@@ -616,15 +616,15 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {get} /wechat/accessToken 获取accessToken
+     * @api {get} /wechat/smallImage 生成小程序二维码
      * @apiVersion 1.0.0
-     * @apiName WxAccessToken accessToken
+     * @apiName WxSmallImage smallImage
      * @apiGroup Wx
      *
      * @apiParam {string} scene
      * @apiParam {string} page
      */
-    public function accessToken(Request $request)
+    public function smallImage(Request $request)
     {
         //get获取access_token
         $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".config('wechat.mini_program.default.app_id')."&secret=".config('wechat.mini_program.default.secret');
