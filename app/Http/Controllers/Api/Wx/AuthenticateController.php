@@ -546,6 +546,7 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} phone 手机号
      * @apiParam {integer} sms_code 短信验证码
+     * @apiParam {string} password
      * @apiParam {string} token
      *
      */
@@ -554,36 +555,14 @@ class AuthenticateController extends BaseController
         // 验证规则
         $rules = [
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
         ];
 
-
-        $payload = app('request')->only('phone', 'sms_code');
-        $validator = app('validator')->make($payload, $rules);
-
-        // 验证格式
+        $payload = $request->only('phone', 'password', 'sms_code');
+        $validator = Validator::make($payload, $rules);
         if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
-        }
-
-        $phone = $request->input('phone');
-        //查看是否注册了
-        // 请求单点登录系统
-        $ssoEnable = (int)config('sso.enable');
-        if ($ssoEnable) {
-            // 查看是否存在账号
-            $ssoParam = array(
-                'phone' => (string)$phone
-            );
-            $ssoResult = Sso::request(6, $ssoParam);
-            if (!$ssoResult['success']) {
-                return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
-            }
-        } else {
-            $oldUser = User::where('account' , $phone)->first();
-            if(!$oldUser){
-                return $this->response->array($this->apiError('没有找到该用户，请重新绑定', 404));
-            }
+            throw new StoreResourceFailedException('找回密码失败！', $validator->errors());
         }
 
         //验证手机验证码
@@ -593,8 +572,61 @@ class AuthenticateController extends BaseController
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
             Cache::forget($key);
-            return $this->response->array($this->apiSuccess('获取成功', 200));
         }
+
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'name' => $request->input('phone'),
+                'evt' => 5,
+                'password' => $request->input('password'),
+                'device_to' => 3,
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
+            }
+        }
+
+        $user = User::where('phone', intval($request->input('phone')))->first();
+
+        if ($ssoEnable) {
+            // 用户不存在，则注册
+            if (!$user) {
+                $user = User::query()
+                    ->create([
+                        'account' => $request->input('phone'),
+                        'phone' => $request->input('phone'),
+                        'username' => $request->input('phone'),
+                        'password' => bcrypt($request->input('password')),
+                        'child_account' => 0,
+                        'source' => 0,
+                        'from_app' => 1,
+                    ]);
+
+                if (!$user) {
+                    return $this->response->array($this->apiError('生成本地用户失败！', 500));
+                }
+
+            }
+        } else {
+            if (!$user) {
+                return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+            }
+        }
+
+        if (!$ssoEnable) {
+            $newPassword = $request->input('password');
+            $user->password = bcrypt($newPassword);
+            if ($user->save()) {
+                return $this->response->array($this->apiSuccess('修改成功', 200));
+            } else {
+                return $this->response->array($this->apiError('修改失败', 500));
+            }
+        }
+        return $this->response->array($this->apiSuccess('修改成功!', 200));
     }
 
     /**
