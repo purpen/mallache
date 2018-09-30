@@ -636,6 +636,7 @@ class AuthenticateController extends BaseController
         $dataBlock = curl_exec($ch);//这是json数据
         curl_close($ch);
         $res = json_decode($dataBlock, true); //接受一个json格式的字符串并且把它转换为 PHP 变量
+        Log::info($res);
         $accessToken = $res['access_token'];
 
         //post获取小程序图片
