@@ -579,7 +579,7 @@ class AuthenticateController extends BaseController
             // 查看是否存在账号
             $ssoParam = array(
                 'name' => $request->input('phone'),
-                'evt' => 5,
+                'evt' => 2,
                 'password' => $request->input('password'),
                 'device_to' => 3,
             );
