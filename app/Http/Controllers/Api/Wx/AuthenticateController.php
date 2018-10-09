@@ -673,6 +673,7 @@ class AuthenticateController extends BaseController
         $scene = $request->input('scene');
         $page = $request->input('page');
         $post_usl = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accessToken;
+        Log::info($request->all());
         $lineColor = '255，255，255';
         $lineColor = str_replace('，', ',', $lineColor);
         $lineColorArr = explode(',', $lineColor);
