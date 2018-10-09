@@ -681,7 +681,7 @@ class AuthenticateController extends BaseController
         $lineColorRgb['b'] = $lineColorArr[2];
         $data = array(
             'scene' => $scene,
-            'path' => $page,
+            'page' => $page,
             'width' => 430,
             'is_hyaline' => false,
             'auto_color' => false,
