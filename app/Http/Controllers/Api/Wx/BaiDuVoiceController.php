@@ -19,7 +19,7 @@ class BaiDuVoiceController extends BaseController
      * @apiName WxVoice voice
      * @apiGroup Wx
      *
-     * @apiParam {file} file 文件
+     * @apiParam {file} file 文件  只支持wav格式的文件
      */
     public function voice(Request $request)
     {
