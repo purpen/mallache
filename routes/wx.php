@@ -28,6 +28,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->get('/wechat/smallImage', [
         'as' => 'wechat.smallImage', 'uses' => 'AuthenticateController@smallImage'
     ]);
+    //语音转换文字
+    $api->post('/wechat/voice', [
+        'as' => 'wechat.voice', 'uses' => 'BaiDuVoiceController@voice'
+    ]);
     /**
      *
      * 需验证用户token
