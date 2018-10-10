@@ -20,6 +20,23 @@ class BaiDuVoiceController extends BaseController
      * @apiGroup Wx
      *
      * @apiParam {file} file 文件  只支持wav格式的文件
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "meta": {
+    "message": "Success",
+    "status_code": 200
+    },
+    "data": {
+    "corpus_no": "6610636590409593688",
+    "err_msg": "success.",
+    "err_no": 0,
+    "result": [
+    "北京科技馆"  //转换的文字
+    ],
+    "sn": "174349361691539158772"
+    }
+    }
      */
     public function voice(Request $request)
     {
