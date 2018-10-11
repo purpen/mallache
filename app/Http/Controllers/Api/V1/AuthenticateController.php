@@ -177,6 +177,8 @@ class AuthenticateController extends BaseController
      */
     public function authenticate(Request $request)
     {
+        $err_count = 0;
+
         try {
             // 验证规则
             $rules = [
@@ -238,10 +240,9 @@ class AuthenticateController extends BaseController
                     return $this->response->array($this->apiError('用户不存在！', 404));
                 }
                 if (!Hash::check($payload['password'], $user->password)) {
-                    $count=0;
-                    $count+=1;
-                    Cache::put($payload['account'],$count,10);
-                    return $this->response->array($this->apiError('密码不正确', 403));
+                    $err_count += 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiError('密码不正确', 403, compact('err_count')));
                 }
             }
 
@@ -250,11 +251,22 @@ class AuthenticateController extends BaseController
                     return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
                 }
             }
-
+            //密码错误的次数
+            $err_count = Cache::get($payload['account']);
+            if($err_count >= 3){
+                $str = $request->input('str');
+                $captcha = $request->input('captcha');
+                if (!Tools::checkCaptcha($str, $captcha)) {
+                    $err_count += 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiSuccess('验证码错误', 403, compact('err_count')));
+                }
+            }
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
         }
+        Cache::put($payload['account'] , 0 , 10);
         // return the token
         return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token')));
     }
