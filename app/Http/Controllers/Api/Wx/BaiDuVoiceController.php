@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\Wx;
 
 use App\Helper\Tools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BaiDuVoiceController extends BaseController
 {
@@ -40,9 +41,10 @@ class BaiDuVoiceController extends BaseController
      */
     public function voice(Request $request)
     {
-        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-            return $this->response->array($this->apiError('上传失败', 412));
-        }
+        Log::info($request->all());
+//        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+//            return $this->response->array($this->apiError('上传失败', 412));
+//        }
         $file = $request->file('file');
         $filePath = $file->getRealPath();
         //文件记录表保存
