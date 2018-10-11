@@ -46,20 +46,11 @@ class BaiDuVoiceController extends BaseController
      */
     public function voice(Request $request)
     {
-//        $upload_res = $_FILES['file'];
-//Log::info($upload_res);
-//        $tempfile = file_get_contents($upload_res['tmp_name']);
-//        $wavname = substr($upload_res['name'],0,strripos($upload_res['name'],".")).".wav";
-
-//        $arr = explode(",", $tempfile);
-
-//        $path = '/tmp/'.$upload_res['name'];
-        //微信模拟器录制的音频文件可以直接存储返回
-
-//        file_put_contents($path, base64_decode($arr[1]));
-
+        //创建转换的对象
         $ffmpeg = FFMpeg::create(array(
+            //安装的地址路径
             'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg',
+            //安装的地址路径
             'ffprobe.binaries' => '/usr/local/bin/ffprobe',
             'timeout'          => 3600, // The timeout for the underlying process
             'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
@@ -67,12 +58,12 @@ class BaiDuVoiceController extends BaseController
 
         $audio_path = '/tmp/';
         $random_string = str_random(10);
-        $amr_filename = $random_string.'.aac';
+        $aac_filename = $random_string.'.aac';
         $wav_filename = $random_string.'.wav';
 
-        Input::file('file')->move($audio_path, $amr_filename);
+        Input::file('file')->move($audio_path, $aac_filename);
 
-        $audio = $ffmpeg->open($audio_path.$amr_filename);
+        $audio = $ffmpeg->open($audio_path.$aac_filename);
         $format = new Wav();
         $format->setAudioChannels(1);
         $audio->filters()->resample('16000');
@@ -137,6 +128,9 @@ class BaiDuVoiceController extends BaseController
         $res = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($res, true);
-        return $this->response->array($this->apiSuccess('Success', 200, $response));
+        $date['message'] = $response['result'][0];
+        unlink($audio_path.$aac_filename);
+        unlink($audio_path.$wav_filename);
+        return $this->response->array($this->apiSuccess('Success', 200, $date));
     }
 }
