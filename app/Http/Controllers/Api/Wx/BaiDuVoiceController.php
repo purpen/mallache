@@ -9,7 +9,11 @@ namespace App\Http\Controllers\Api\Wx;
 
 
 use App\Helper\Tools;
+use FFMpeg\FFMpeg;
+use FFMpeg\Format\Audio\Flac;
+use FFMpeg\Format\Audio\Wav;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
@@ -42,25 +46,45 @@ class BaiDuVoiceController extends BaseController
      */
     public function voice(Request $request)
     {
-        $upload_res = $_FILES['file'];
-Log::info($upload_res);
-        $tempfile = file_get_contents($upload_res['tmp_name']);
+//        $upload_res = $_FILES['file'];
+//Log::info($upload_res);
+//        $tempfile = file_get_contents($upload_res['tmp_name']);
 //        $wavname = substr($upload_res['name'],0,strripos($upload_res['name'],".")).".wav";
 
-        $arr = explode(",", $tempfile);
+//        $arr = explode(",", $tempfile);
 
-        $path = '/tmp/'.$upload_res['name'];
+//        $path = '/tmp/'.$upload_res['name'];
         //微信模拟器录制的音频文件可以直接存储返回
 
-        file_put_contents($path, base64_decode($arr[1]));
+//        file_put_contents($path, base64_decode($arr[1]));
 
-        $filePath = $path;
-        //填写网页上申请的appkey 如 $apiKey="g8eBUMSokVB1BHGmgxxxxxx"
+        $ffmpeg = FFMpeg::create(array(
+            'ffmpeg.binaries'  => '/opt/local/ffmpeg/bin/ffmpeg',
+            'ffprobe.binaries' => '/opt/local/ffmpeg/bin/ffprobe',
+            'timeout'          => 3600, // The timeout for the underlying process
+            'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
+        ));
+
+        $audio_path = '/tmp/';
+        $random_string = str_random(10);
+        $amr_filename = $random_string.'.aac';
+        $wav_filename = $random_string.'.wav';
+
+        Input::file('file')->move($audio_path, $amr_filename);
+
+        $audio = $ffmpeg->open($audio_path.$amr_filename);
+        $format = new Wav();
+        $format->setAudioChannels(1);
+        $audio->filters()->resample('16000');
+
+        $audio->save($format, $audio_path.$wav_filename);
+
+            //填写网页上申请的appkey 如 $apiKey="g8eBUMSokVB1BHGmgxxxxxx"
         $apiKey = config('baiduapi.yai.api_key');
         //填写网页上申请的APP SECRET 如 $secretKey="94dc99566550d87f8fa8ece112xxxxx"
         $secretKey = config('baiduapi.yai.secret_key');
         //需要识别的文件
-        $audio_file = $filePath;
+        $audio_file = $audio_path.$wav_filename;
         //文件格式
         $format = "wav"; // 文件后缀 pcm/wav/amr
         //根据文档填写PID，选择语言及识别模型
