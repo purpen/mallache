@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\Wx;
 use App\Helper\Tools;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class BaiDuVoiceController extends BaseController
 {
@@ -41,14 +42,9 @@ class BaiDuVoiceController extends BaseController
      */
     public function voice(Request $request)
     {
-//        Log::info($request->all());
-//        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-//            return $this->response->array($this->apiError('上传失败', 412));
-//        }
         $upload_res = $_FILES['file'];
-
+Log::info($upload_res);
         $tempfile = file_get_contents($upload_res['tmp_name']);
-
 //        $wavname = substr($upload_res['name'],0,strripos($upload_res['name'],".")).".wav";
 
         $arr = explode(",", $tempfile);
@@ -59,17 +55,6 @@ class BaiDuVoiceController extends BaseController
         file_put_contents($path, base64_decode($arr[1]));
 
         $filePath = $path;
-Log::info($filePath);
-//        $file = $request->file('file');
-        //文件记录表保存
-//        $fileName = $file->getClientOriginalName();
-//        $file_type = explode('.', $fileName);
-//        $mime = $file_type[1];
-//        if(!in_array($mime , ["wav"])){
-//            return $this->response->array($this->apiError('文件格式不对', 412));
-//
-//
-//        }
         //填写网页上申请的appkey 如 $apiKey="g8eBUMSokVB1BHGmgxxxxxx"
         $apiKey = config('baiduapi.yai.api_key');
         //填写网页上申请的APP SECRET 如 $secretKey="94dc99566550d87f8fa8ece112xxxxx"
@@ -128,7 +113,6 @@ Log::info($filePath);
         $res = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($res, true);
-
         return $this->response->array($this->apiSuccess('Success', 200, $response));
     }
 }

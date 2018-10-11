@@ -160,6 +160,8 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
+     * @apiParam {string} str 随机码
+     * @apiParam {string} captcha 验证码
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -236,6 +238,9 @@ class AuthenticateController extends BaseController
                     return $this->response->array($this->apiError('用户不存在！', 404));
                 }
                 if (!Hash::check($payload['password'], $user->password)) {
+                    $count=0;
+                    $count+=1;
+                    Cache::put($payload['account'],$count,10);
                     return $this->response->array($this->apiError('密码不正确', 403));
                 }
             }
