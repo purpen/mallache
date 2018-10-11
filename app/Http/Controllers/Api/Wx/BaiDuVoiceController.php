@@ -59,8 +59,8 @@ class BaiDuVoiceController extends BaseController
 //        file_put_contents($path, base64_decode($arr[1]));
 
         $ffmpeg = FFMpeg::create(array(
-            'ffmpeg.binaries'  => '/opt/local/bin/ffmpeg',
-            'ffprobe.binaries' => '/opt/local/bin/ffprobe',
+            'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg',
+            'ffprobe.binaries' => '/usr/local/bin/ffprobe',
             'timeout'          => 3600, // The timeout for the underlying process
             'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
         ),$logger);
