@@ -128,11 +128,14 @@ class BaiDuVoiceController extends BaseController
         $res = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($res, true);
-        $date['message'] = $response['result'][0];
+        if($response['err_msg'] == "success"){
+            $date['message'] = $response['result'][0];
+            unlink($audio_path.$aac_filename);
+            unlink($audio_path.$wav_filename);
+            return $this->response->array($this->apiSuccess('Success', 200, $date));
+        }
         unlink($audio_path.$aac_filename);
         unlink($audio_path.$wav_filename);
-        Log::info($audio_path.$aac_filename);
-        Log::info($audio_path.$wav_filename);
-        return $this->response->array($this->apiSuccess('Success', 200, $date));
+        return $this->response->array($this->apiSuccess('Success', 200, $response));
     }
 }
