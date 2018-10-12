@@ -209,9 +209,10 @@ class AuthenticateController extends BaseController
                     'device_to' => 1,
                 );
                 $ssoResult = Sso::request(1, $ssoParam);
-                Log::info($ssoResult);
                 if (!$ssoResult['success']) {
-                    return $this->response->array($this->apiError($ssoResult['message'], 401));
+                    $err_count += 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiError($ssoResult['message'], 403, compact('err_count')));
                 }
             }
 
