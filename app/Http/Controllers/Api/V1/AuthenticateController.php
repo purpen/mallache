@@ -210,7 +210,7 @@ class AuthenticateController extends BaseController
                 );
                 $ssoResult = Sso::request(1, $ssoParam);
                 if (!$ssoResult['success']) {
-                    $err_count += 1;
+                    $err_count = Cache::get($payload['account']) + 1;
                     Cache::put($payload['account'] , $err_count , 10);
                     return $this->response->array($this->apiSuccess($ssoResult['message'], 403, compact('err_count')));
                 }
@@ -242,7 +242,7 @@ class AuthenticateController extends BaseController
                     return $this->response->array($this->apiError('用户不存在！', 404));
                 }
                 if (!Hash::check($payload['password'], $user->password)) {
-                    $err_count += 1;
+                    $err_count = Cache::get($payload['account']) + 1;
                     Cache::put($payload['account'] , $err_count , 10);
                     return $this->response->array($this->apiSuccess('密码不正确', 403, compact('err_count')));
                 }
@@ -259,7 +259,7 @@ class AuthenticateController extends BaseController
                 $str = $request->input('str');
                 $captcha = $request->input('captcha');
                 if (!Tools::checkCaptcha($str, $captcha)) {
-                    $err_count += 1;
+                    $err_count = Cache::get($payload['account']) + 1;
                     Cache::put($payload['account'] , $err_count , 10);
                     return $this->response->array($this->apiSuccess('验证码错误', 403, compact('err_count')));
                 }
