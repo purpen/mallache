@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Wx;
 use App\Http\WxTransformer\SmallItemTransformer;
 use App\Models\SmallItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SmallDemandController extends BaseController
 {
@@ -40,6 +41,7 @@ class SmallDemandController extends BaseController
      * @apiParam {integer} id 项目ID
      * @apiParam {string} user_name 联系人
      * @apiParam {string} phone 手机号
+     * @apiParam {string} sms_code 验证码
      *
      */
     public function update(Request $request)
@@ -47,6 +49,14 @@ class SmallDemandController extends BaseController
         $id = (int)$request->input('id');
         $all['user_name'] = $request->input('user_name');
         $all['phone'] = $request->input('phone');
+        //验证手机验证码
+        $key = 'sms_code:' . strval($all['phone']);
+        $sms_code_value = Cache::get($key);
+        if (intval($request->input['sms_code']) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+        }
         $smallItem = SmallItem::find($id);
         if(!$smallItem){
             return $this->response->array($this->apiError('没有找到该项目', 404));
