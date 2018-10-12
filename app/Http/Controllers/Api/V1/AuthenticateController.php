@@ -177,8 +177,6 @@ class AuthenticateController extends BaseController
      */
     public function authenticate(Request $request)
     {
-        $err_count = 0;
-
         try {
             // 验证规则
             $rules = [
@@ -258,6 +256,9 @@ class AuthenticateController extends BaseController
             if($err_count >= 3){
                 $str = $request->input('str');
                 $captcha = $request->input('captcha');
+                if(empty($str && $captcha)){
+                    return $this->response->array($this->apiError('验证码信息不能为空', 412));
+                }
                 if (!Tools::checkCaptcha($str, $captcha)) {
                     $err_count = Cache::get($payload['account']) + 1;
                     Cache::put($payload['account'] , $err_count , 10);
