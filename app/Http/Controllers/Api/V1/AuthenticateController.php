@@ -884,4 +884,19 @@ class AuthenticateController extends BaseController
         }
     }
 
+    /**
+     * @api {post} /auth/errCount 检测错误次数
+     * @apiVersion 1.0.0
+     * @apiName user errCount
+     * @apiGroup User
+     *
+     * @apiParam {string} account 用户账号(手机号)
+     */
+    public function errCount(Request $request)
+    {
+        $account = $request->input('account');
+        $err_count = Cache::get($account);
+        return $this->response->array($this->apiSuccess('Success', 200, compact('err_count')));
+
+    }
 }

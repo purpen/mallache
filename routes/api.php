@@ -44,6 +44,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
     ]);
+    //用户注册
+    $api->post('/auth/errCount', [
+        'as' => 'auth.errCount', 'uses' => 'AuthenticateController@errCount'
+    ]);
     //设计公司子用户注册
     $api->post('/auth/childRegister', [
         'as' => 'auth.childRegister', 'uses' => 'AuthenticateController@childRegister'
