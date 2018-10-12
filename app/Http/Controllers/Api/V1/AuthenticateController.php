@@ -212,7 +212,7 @@ class AuthenticateController extends BaseController
                 if (!$ssoResult['success']) {
                     $err_count += 1;
                     Cache::put($payload['account'] , $err_count , 10);
-                    return $this->response->array($this->apiError($ssoResult['message'], 403, compact('err_count')));
+                    return $this->response->array($this->apiSuccess($ssoResult['message'], 403, compact('err_count')));
                 }
             }
 
@@ -244,7 +244,7 @@ class AuthenticateController extends BaseController
                 if (!Hash::check($payload['password'], $user->password)) {
                     $err_count += 1;
                     Cache::put($payload['account'] , $err_count , 10);
-                    return $this->response->array($this->apiError('密码不正确', 403, compact('err_count')));
+                    return $this->response->array($this->apiSuccess('密码不正确', 403, compact('err_count')));
                 }
             }
 
