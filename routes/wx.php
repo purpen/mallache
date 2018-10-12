@@ -32,6 +32,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/voice', [
         'as' => 'wechat.voice', 'uses' => 'BaiDuVoiceController@voice'
     ]);
+    //名字发布项目
+    $api->post('/wechat/demand/nameRelease', [
+        'as' => 'wechat.demandRelease', 'uses' => 'SmallDemandController@release'
+    ]);
+    //更改项目
+    $api->put('/wechat/demand/smallUpdate', [
+        'as' => 'wechat.smallUpdate', 'uses' => 'SmallDemandController@update'
+    ]);
     /**
      *
      * 需验证用户token
