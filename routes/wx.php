@@ -40,6 +40,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->put('/wechat/demand/smallUpdate', [
         'as' => 'wechat.smallUpdate', 'uses' => 'SmallDemandController@update'
     ]);
+    //获取微信项目案例
+    $api->get('/wechat/designCase', [
+        'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@designCase'
+    ]);
     /**
      *
      * 需验证用户token
