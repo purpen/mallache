@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class DesignCaseController extends BaseController
 {
     /**
-     * @api {post} /wechat/designCase 设计案例搜索项目名称
+     * @api {get} /wechat/designCase 设计案例搜索项目名称
      * @apiVersion 1.0.0
      * @apiName designCase designCase
      * @apiGroup wechatDemandType
