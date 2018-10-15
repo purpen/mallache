@@ -42,7 +42,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     ]);
     //获取微信项目案例
     $api->get('/wechat/designCase', [
-        'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@designCase'
+        'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@lists'
     ]);
     /**
      *
