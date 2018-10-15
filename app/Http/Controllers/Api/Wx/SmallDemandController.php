@@ -52,7 +52,7 @@ class SmallDemandController extends BaseController
         //验证手机验证码
         $key = 'sms_code:' . strval($all['phone']);
         $sms_code_value = Cache::get($key);
-        if (intval($request->input['sms_code']) !== intval($sms_code_value)) {
+        if (intval($request->input('sms_code')) !== intval($sms_code_value)) {
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
             Cache::forget($key);
