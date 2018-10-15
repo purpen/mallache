@@ -17,7 +17,7 @@ class DesignCaseController extends BaseController
     /**
      * @api {post} /wechat/designCase 设计案例搜索项目名称
      * @apiVersion 1.0.0
-     * @apiName wechatDemand create
+     * @apiName designCase designCase
      * @apiGroup wechatDemandType
      *
      * @apiParam {string} item_name
