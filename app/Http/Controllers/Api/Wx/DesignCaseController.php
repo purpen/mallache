@@ -28,7 +28,7 @@ class DesignCaseController extends BaseController
         $item_name = $request->input('item_name');
         //模糊查询有的话，走上面，没有的话走下面
         $designCases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
-
+dd($designCases);
         $designCaseCount = $designCases->count();
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
