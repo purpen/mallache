@@ -41,8 +41,10 @@ class DesignCaseController extends BaseController
                 ->get();
 
             $merge_case = collect(array_merge($designCases->toArray() , $mend_design_cases->toArray()));
-            dd($merge_case);
-            return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+//            dd($merge_case);
+//            return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            return $this->response->array($this->apiSuccess('请求成功！', 200 , compact('merge_case')));
+
         }
     }
 }
