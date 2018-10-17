@@ -41,6 +41,7 @@ class DesignCaseController extends BaseController
                 ->get();
 
             $merge_case = collect(array_merge((array)$designCases , (array)$mend_design_cases));
+            dd($merge_case);
             return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
