@@ -43,7 +43,7 @@ class DesignCaseController extends BaseController
             orderBy(DB::raw('RAND()'))
                 ->take($mendCount)
                 ->get();
-            $merge_cases = (collect([$merge_cases->toArray() , $mend_design_cases->toArray()]))->collapse();
+            $merge_cases = (collect([$merge_cases , $mend_design_cases]))->collapse();
             dd($merge_cases);
             foreach ($merge_cases as $merge_case){
                 $merge_case['design_company'] = DesignCompanyModel::find($merge_case['design_company_id']);
