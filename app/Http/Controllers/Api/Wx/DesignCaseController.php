@@ -33,7 +33,7 @@ class DesignCaseController extends BaseController
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
             foreach ($merge_cases as $merge_case){
-                $merge_cases['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
+                $merge_case['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
             }
             return $this->response->array($this->apiSuccess('请求成功！', 200 , compact('merge_cases')));
         } else {
@@ -44,7 +44,7 @@ class DesignCaseController extends BaseController
                 ->get();
             $merge_cases = collect(array_merge($merge_cases->toArray() , $mend_design_cases->toArray()));
             foreach ($merge_cases as $merge_case){
-                $merge_cases['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
+                $merge_case['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
             }
             return $this->response->array($this->apiSuccess('请求成功！', 200 , compact('merge_cases')));
         }
