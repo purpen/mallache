@@ -32,6 +32,7 @@ class DesignCaseController extends BaseController
         $designCaseCount = $merge_cases->count();
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
+            dd($merge_cases);
             foreach ($merge_cases as $merge_case){
                 $merge_case['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
             }
@@ -42,7 +43,8 @@ class DesignCaseController extends BaseController
             orderBy(DB::raw('RAND()'))
                 ->take($mendCount)
                 ->get();
-            $merge_cases = collect(array_merge($merge_cases->toArray() , $mend_design_cases->toArray()));
+            $merge_cases = collect($merge_cases->toArray() , $mend_design_cases->toArray());
+            dd($merge_cases);
             foreach ($merge_cases as $merge_case){
                 $merge_case['design_company'] = DesignCompanyModel::find($merge_case['design_company_id']);
             }
