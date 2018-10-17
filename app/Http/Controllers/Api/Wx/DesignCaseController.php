@@ -32,7 +32,7 @@ class DesignCaseController extends BaseController
         $designCaseCount = $design_cases->count();
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
-            return $this->response->item($design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            return $this->response->collection($design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
             $mendCount = 10 - $designCaseCount;
             $mend_design_cases = DesignCaseModel::
@@ -41,7 +41,7 @@ class DesignCaseController extends BaseController
                 ->get();
             //合并对象集合
             $merge_cases = (collect([$design_cases , $mend_design_cases]))->collapse();
-            return $this->response->item($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
 
         }
     }
