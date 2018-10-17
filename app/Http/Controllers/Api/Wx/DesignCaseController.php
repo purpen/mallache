@@ -29,8 +29,19 @@ class DesignCaseController extends BaseController
         //模糊查询有的话，走上面，没有的话走下面
         $designCases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
         $designCaseCount = $designCases->count();
-        if($designCaseCount > 0){
+        //等于10的话走上面，下面不够10的话补全
+        if($designCaseCount == 10){
             return $this->response->collection($designCases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+        } else {
+            $mendCount = 10 - $designCaseCount;
+            $mend_design_cases = DesignCaseModel::
+            orderBy(DB::raw('RAND()'))
+                ->take($mendCount)
+                ->get();
+
+            $merge_case = (object) array_merge((array)$designCases , (array)$mend_design_cases);
+            return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+
         }
         $design_cases = DesignCaseModel::
         orderBy(DB::raw('RAND()'))
