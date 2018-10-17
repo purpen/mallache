@@ -28,27 +28,21 @@ class DesignCaseController extends BaseController
     {
         $item_name = $request->input('item_name');
         //模糊查询有的话，走上面，没有的话走下面
-        $merge_cases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
-        $designCaseCount = $merge_cases->count();
+        $design_cases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
+        $designCaseCount = $design_cases->count();
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
-            dd($merge_cases);
-            foreach ($merge_cases as $merge_case){
-                $merge_case['design_company'] = DesignCompanyModel::find($merge_case->design_company_id);
-            }
-            return $this->response->array($this->apiSuccess('请求成功！', 200 , compact('merge_cases')));
+            return $this->response->item($design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
             $mendCount = 10 - $designCaseCount;
             $mend_design_cases = DesignCaseModel::
             orderBy(DB::raw('RAND()'))
                 ->take($mendCount)
                 ->get();
-            $merge_cases = (collect([$merge_cases , $mend_design_cases]))->collapse();
-            dd($merge_cases);
-            foreach ($merge_cases as $merge_case){
-                $merge_case['design_company'] = DesignCompanyModel::find($merge_case['design_company_id']);
-            }
-            return $this->response->array($this->apiSuccess('请求成功！', 200 , compact('merge_cases')));
+            //合并对象集合
+            $merge_cases = (collect([$design_cases , $mend_design_cases]))->collapse();
+            return $this->response->item($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+
         }
     }
 }
