@@ -41,13 +41,6 @@ class DesignCaseController extends BaseController
 
             $merge_case = (object) array_merge((array)$designCases , (array)$mend_design_cases);
             return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-
         }
-        $design_cases = DesignCaseModel::
-        orderBy(DB::raw('RAND()'))
-            ->take(10)
-            ->get();
-        return $this->response->collection($design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-
     }
 }
