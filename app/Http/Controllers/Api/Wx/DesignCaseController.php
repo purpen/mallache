@@ -28,7 +28,8 @@ class DesignCaseController extends BaseController
         $item_name = $request->input('item_name');
         //模糊查询有的话，走上面，没有的话走下面
         $designCases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
-        if($designCases){
+        $designCaseCount = $designCases->count();
+        if($designCaseCount > 0){
             return $this->response->collection($designCases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
         $design_cases = DesignCaseModel::
