@@ -31,6 +31,7 @@ class DesignCaseController extends BaseController
         $designCaseCount = $designCases->count();
         //等于10的话走上面，下面不够10的话补全
         if($designCaseCount == 10){
+            dd($designCases);
             return $this->response->collection($designCases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
             $mendCount = 10 - $designCaseCount;
@@ -40,6 +41,7 @@ class DesignCaseController extends BaseController
                 ->get();
 
             $merge_case = collect(array_merge($designCases->toArray() , $mend_design_cases->toArray()));
+            dd($merge_case);
             return $this->response->collection($merge_case, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
