@@ -44,6 +44,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     $api->post('/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
     ]);
+    //用户注册
+    $api->post('/auth/errCount', [
+        'as' => 'auth.errCount', 'uses' => 'AuthenticateController@errCount'
+    ]);
     //设计公司子用户注册
     $api->post('/auth/childRegister', [
         'as' => 'auth.childRegister', 'uses' => 'AuthenticateController@childRegister'
@@ -183,6 +187,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //修改用户资料
         $api->post('/auth/updateUser', [
             'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+        ]);
+
+        // api {put} /auth/setUserType 用户设置账户类型
+        $api->post('/auth/setUserType', [
+            'as' => 'auth.setUserType', 'uses' => 'AuthenticateController@setUserType'
         ]);
 
         //用户钱包信息

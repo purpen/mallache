@@ -14,6 +14,7 @@
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^2.1",
         "overtrue/wechat": "~4.0",
+        "php-ffmpeg/php-ffmpeg": "~0.5",
         "predis/predis": "~1.0",
         "qiniu/php-sdk": "^7.1",
         "tymon/jwt-auth": "1.0.x-dev"
@@ -60,7 +61,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://packagist.laravel-china.org"
         }
     }
 }

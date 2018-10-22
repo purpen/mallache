@@ -103,15 +103,11 @@ class DemandController extends BaseController
     public function show($id)
     {
         if (!$item = Item::find(intval($id))) {
-            return $this->response->array($this->apiSuccess());
+            return $this->response->array($this->apiError('not found item!', 404));
         }
         //验证是否是当前用户对应的项目
         if ($item->user_id !== $this->auth_user_id) {
-            return $this->response->array($this->apiError('not found!', 404));
-        }
-
-        if (!$item) {
-            return $this->response->array($this->apiError());
+            return $this->response->array($this->apiError('没有权限!', 403));
         }
         return $this->response->item($item, new ItemTransformer)->setMeta($this->apiMeta());
     }
@@ -252,6 +248,9 @@ class DemandController extends BaseController
 
             // 需求公司信息是否认证
             $demand_company = $this->auth_user->demandCompany;
+            if(!$demand_company){
+                return $this->response->array($this->apiError('需求公司没有认证', 412));
+            }
             if ($demand_company->verify_status == 1) {
                 $all['company_name'] = $demand_company->company_name;
                 $all['company_abbreviation'] = $demand_company->company_abbreviation;
@@ -367,15 +366,14 @@ class DemandController extends BaseController
                 AssetModel::setRandom($item->id, $random);
             }
         }
-
         // 同步调用匹配方法
         /*$recommend = new Recommend($item);
         $recommend->handle();*/
-
-        //新的匹配方法
-        $recommend = new Matching($item);
-        $recommend->handle();
-
+        if ($item->invite_type == 0){
+            //新的匹配方法
+            $recommend = new Matching($item);
+            $recommend->handle();
+        }
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if (!$demand_company || $demand_company->verify_status != 1) {
             $verify_status = 0;
@@ -677,9 +675,6 @@ class DemandController extends BaseController
         }
 
         $items = $items->orderBy('id', 'desc')->paginate($per_page);
-        if ($items->isEmpty()) {
-            return $this->response->array($this->apiSuccess());
-        }
 
         return $this->response->paginator($items, new ItemListTransformer)->setMeta($this->apiMeta());
     }

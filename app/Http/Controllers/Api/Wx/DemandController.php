@@ -94,6 +94,8 @@ class DemandController extends BaseController
      * @apiParam {string} position 职位
      * @apiParam {string} phone 手机号
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     * @apiParam {integer} invite_type 0.默认；1.邀请设计公司参加的项目
+     * @apiParam {integer} design_company_id 邀请的设计公司ID
      * @apiParam {string} token
      */
     public function release(Request $request)
@@ -126,10 +128,20 @@ class DemandController extends BaseController
         $item->position = $request->input('position') ?? '';
         $item->phone = $request->input('phone') ?? '';
         $item->name = $request->input('name') ?? '';
-        $item->save();
-        // 同步调用匹配方法
-        $recommend = new Recommend($item);
-        $recommend->handle();
+        $invite_type = $request->input('invite_type') ?? 0;
+        $design_company_id = $request->input('design_company_id') ?? 0;
+        if ($invite_type != 0){
+            $item->invite_type = $invite_type;
+            $item->recommend = $design_company_id;
+            $item->save();
+        } else {
+            $item->invite_type = $invite_type;
+            $item->save();
+            // 同步调用匹配方法
+            $recommend = new Recommend($item);
+            $recommend->handle();
+        }
+
 
         $demand_company = DemandCompany::find($auth_user->demand_company_id);
         if (!$demand_company || $demand_company->verify_status != 1) {

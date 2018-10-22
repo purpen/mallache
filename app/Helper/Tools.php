@@ -375,4 +375,22 @@ class Tools
             Log::error($e);
         }
     }
+
+
+    /**
+     * stdClass Object转array
+     * @param array 转换的数据
+     * @return array 格式化后的数组
+     *
+     */
+    public static function objectToArray($array) {  
+        if(is_object($array)) {
+            $array = (array)$array;  
+         } if(is_array($array)) {  
+            foreach($array as $key=>$value) {  
+                $array[$key] = self::objectToArray($value);  
+            }  
+         }  
+         return $array;  
+    }
 }
