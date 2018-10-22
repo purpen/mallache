@@ -96,9 +96,8 @@
 <style scoped>
   h3 {
     color: #666;
-    /* padding-left: 15px; */
-    font-size: 14px;
-    line-height: 30px;
+    font-size: 16px;
+    line-height: 20px;
     height: 30px;
     border-bottom: 1px solid #D2D2D2;
   }

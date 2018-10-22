@@ -13,6 +13,9 @@ html {
   box-sizing: inherit;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+*:focus {
+  outline: none
+}
 
 body {
   font-family: "Microsoft Yahei", PingFangSC-Regular, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -31,6 +34,24 @@ body {
   overflow-x: hidden
 }
 
+.cancel-icon {
+  position: relative;
+}
+.cancel-icon::before, .cancel-icon::after {
+  position: relative;
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 14px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: #999;
+}
+
+.cancel-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
 .el-input-group--append {
   padding-left: 2px;
   min-width: 110px;
@@ -236,6 +257,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   margin-top: 20px;
 }
 
+.blank30 {
+  margin-top: 30px;
+}
+
 .blank40 {
   margin-top: 40px;
 }
@@ -272,6 +297,10 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   cursor: pointer;
 }
 
+[class^="fx-icon-"]:hover, [class*=" fx-icon-"]:hover {
+  color: #222
+}
+
 .fx-0 {
   font-size: 12px;
 }
@@ -299,7 +328,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .fx-6 {
   font-size: 24px;
 }
-
+.fx-black:hover {
+  color: #222!important
+}
 .pointer {
   cursor: pointer;
 }
@@ -1666,12 +1697,17 @@ td.fc-day.fc-widget-content.fc-today::before {
 
 /* 云盘上传 */
 
-p.file-icon {
+  p.file-icon {
     display: block;
     width: 30px;
     height: 30px;
     margin-top: 20px;
     text-indent: -999em;
+  }
+  
+  p.file-icon.other {
+    background: url('../images/tools/cloud_drive/type/other@2x.png') 0 0 no-repeat;
+    background-size: contain;
   }
   p.file-icon.artboard {
     background: url('../images/tools/cloud_drive/type/artboard@2x.png') 0 0 no-repeat;
@@ -1695,10 +1731,6 @@ p.file-icon {
   }
   p.file-icon.image {
     background: url('../images/tools/cloud_drive/type/image@2x.png') 0 0 no-repeat;
-    background-size: contain;
-  }
-  p.file-icon.other {
-    background: url('../images/tools/cloud_drive/type/other@2x.png') 0 0 no-repeat;
     background-size: contain;
   }
   p.file-icon.powerpoint {

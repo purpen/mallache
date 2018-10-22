@@ -566,6 +566,8 @@
 
   .anli {
     overflow: hidden;
+    max-width: 1280px;
+    margin: 0 auto;
   }
 
   .el-row {
