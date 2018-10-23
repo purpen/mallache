@@ -93,7 +93,7 @@ class SmallDemandController extends BaseController
         }
         $smallItem->user_name = $request->input('user_name');
         $smallItem->item_name = '';
-        $smallItem->is_ok = '';
+        $smallItem->is_ok = 0;
         $smallItem->summary = '';
         $smallItem->phone = $request->input('phone');
         if($smallItem->save()){
