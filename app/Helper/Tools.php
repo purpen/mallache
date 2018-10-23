@@ -143,7 +143,7 @@ class Tools
             'message' => 0,
             'notice' => 0,
             'quantity' => 0,
-            'design_notice' => 0,
+//            'design_notice' => 0,
         );
 
         if (!$user_id) {
@@ -161,8 +161,9 @@ class Tools
 
         if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
         if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
-        if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
-        $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
+//        if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
+//        $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
+        $data['quantity'] = $data['message'] + $data['notice'];
 
         return $data;
     }
