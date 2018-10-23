@@ -92,6 +92,9 @@ class SmallDemandController extends BaseController
             return $this->response->array($this->apiError('没有找到设计公司', 404));
         }
         $smallItem->user_name = $request->input('user_name');
+        $smallItem->item_name = '';
+        $smallItem->is_ok = '';
+        $smallItem->summary = '';
         $smallItem->phone = $request->input('phone');
         if($smallItem->save()){
             $text = '【太火鸟铟果】小程序榜单获客。榜单公司名称：'.$design_company->company_name.'；客户姓名：'.$request->input('user_name').'；联系方式：'.$request->input('phone');
