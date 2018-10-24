@@ -30,7 +30,7 @@ class DesignDemand extends BaseModel
         return $this->belongsTo('App\Models\DemandCompany', 'design_company_id');
     }
     /**
-     * 需求列表返回信息
+     * 需求列表信息
      */
     public function demandListInfo()
     {

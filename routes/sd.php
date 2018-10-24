@@ -46,7 +46,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
         ]);
 
 
-
+        //设计公司收藏某个需求
+        $api->post('/sd/design/collectDemand', [
+            'as' => 'sd.collectDemand', 'uses' => 'DesignCollectDemandController@collectDemand'
+        ]);
+        //设计公司收藏列表
+        $api->get('/sd/design/designCollectList', [
+            'as' => 'sd.designCollectList', 'uses' => 'DesignCollectDemandController@designCollectList'
+        ]);
+        //设计公司收藏列表
+        $api->post('/sd/design/cancelCollectDemand', [
+            'as' => 'sd.cancelCollectDemand', 'uses' => 'DesignCollectDemandController@cancelCollectDemand'
+        ]);
 
     });
 
