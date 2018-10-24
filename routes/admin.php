@@ -344,6 +344,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //平台评价项目
         $api->post('/admin/platform/evaluate', 'AdminEvaluateController@platformEvaluate');
+
+        //小程序项目表
+        //项目列表
+        $api->get('/admin/smallItem/lists', 'AdminSmallItemController@lists');
+        //小程序项目后台编辑
+        $api->put('/admin/smallItem/update', 'AdminSmallItemController@update');
+        //详情
+        $api->get('/admin/smallItem/show', 'AdminSmallItemController@show');
+        //删除
+        $api->delete('/admin/smallItem/delete', 'AdminSmallItemController@delete');
+
+
     });
 
 });
