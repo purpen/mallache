@@ -51,6 +51,7 @@ class DesignCaseController extends BaseController
             if($design_cases->isEmpty()){
                 continue;
             }
+            //遍历到最小单位
             foreach ($design_cases as $design_case){
                 $design_cases_array[] = $design_case;
             }
@@ -63,7 +64,7 @@ class DesignCaseController extends BaseController
                 ->get();
             return $this->response->collection($mend_design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
-            dd($design_cases_array->count());
+            dd(count($design_cases_array));
             //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
 //            if ($merge_cases->count() < 10) {
 //                $mend_count = 10 - $merge_cases->count();
