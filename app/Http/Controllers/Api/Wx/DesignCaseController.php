@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Transformer\DesignCaseListsTransformer;
 use App\Models\DesignCaseModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DesignCaseController extends BaseController
 {
@@ -62,15 +63,24 @@ class DesignCaseController extends BaseController
         } else {
             //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
             $merge_cases = (collect([$design_cases_array]))->collapse();
+Log::info(11);
             if ($merge_cases->count() < 10) {
+                Log::info(222);
+
                 $mend_count = 10 - $merge_cases->count();
                 $mend_design_cases = DesignCaseModel::
                 orderBy(DB::raw('RAND()'))
                     ->take($mend_count)
                     ->get();
+                Log::info(444);
+
                 $new_merge_cases = (collect([$merge_cases, $mend_design_cases]))->collapse();
+                Log::info(555);
+
                 return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
             }
+            Log::info(333);
+
             return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
