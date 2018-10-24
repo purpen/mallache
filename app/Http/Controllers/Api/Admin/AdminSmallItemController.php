@@ -67,7 +67,7 @@ class AdminSmallItemController extends Controller
     }
 
     /**
-     * @api {update} /admin/smallItem/update 小程序项目编辑
+     * @api {put} /admin/smallItem/update 小程序项目编辑
      * @apiVersion 1.0.0
      * @apiName AdminSmallItem update
      * @apiGroup AdminSmallItem
