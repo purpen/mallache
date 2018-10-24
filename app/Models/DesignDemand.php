@@ -76,8 +76,6 @@ class DesignDemand extends BaseModel
     static public function getDemandList($user_id, $demand_company_id)
     {
         $design_demand = self::query()
-            ->with('User')
-            ->with('DemandCompany')
             ->where(['user_id'=>$user_id, 'demand_company_id'=>$demand_company_id])
             ->get();
         if($design_demand){

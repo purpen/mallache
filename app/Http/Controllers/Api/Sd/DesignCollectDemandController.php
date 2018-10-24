@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\Sd;
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Models\DesignCompanyModel;
+use App\Models\DesignDemand;
 use App\Models\Follow;
 
 class DesignCollectDemandController extends BaseController
@@ -22,7 +23,6 @@ class DesignCollectDemandController extends BaseController
      * @apiGroup sdDesignType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 	//类型：1. 设计需求 2.设计成果
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -47,30 +47,18 @@ class DesignCollectDemandController extends BaseController
      */
     public function designCollectList(Request $request)
     {
-        $rules = [
-            'type' => 'required|integer|regex:/[1-2]/',
-        ];
-
-        $payload = $request->only('type');
-        $validator = app('validator')->make($payload, $rules);
-
-        // 验证格式
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
-        }
-
-        $type = $request->input('type');
+        // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;
         if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->isVerify();
-        if(!$design_company){
+        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+        if(!$design_company->isVerify()){
             return $this->response->array($this->apiError('设计公司没有认证', 403));
         }
 
-        $demand_info = Follow::showDemandList($type,$design_company_id);
+        $demand_info = Follow::showDemandList($design_company_id);
         return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
     }
 
@@ -81,9 +69,7 @@ class DesignCollectDemandController extends BaseController
      * @apiGroup sdDesignType
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 	//类型：1. 设计需求 2.设计成果
      * @apiParam {integer} design_demand_id 设计需求ID
-     * @apiParam {integer} demand_company_id 需求公司ID
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -96,12 +82,10 @@ class DesignCollectDemandController extends BaseController
     public function collectDemand(Request $request)
     {
         $rules = [
-            'type' => 'required|integer|regex:/[1-2]/',
             'design_demand_id' => 'required|integer',
-            'demand_company_id' => 'required|integer',
             ];
 
-        $payload = $request->only('type','design_demand_id','demand_company_id');
+        $payload = $request->only('design_demand_id');
         $validator = app('validator')->make($payload, $rules);
 
         // 验证格式
@@ -109,20 +93,24 @@ class DesignCollectDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
-        $all = $request->all();
+        // 需求ID
+        $design_demand_id = $request->input('design_demand_id');
+        // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;
         if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
         $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if($design_company->isVerify() == false){
+        if(!$design_company->isVerify()){
             return $this->response->array($this->apiError('设计公司没有认证', 403));
         }
+        // 查找需求对应的需求公司
+        $demand_company_id = DesignDemand::where('id',$design_demand_id)->first();
         $design_follow = new Follow;
-        $design_follow->type = $all['type'];
-        $design_follow->design_demand_id = $all['design_demand_id'];
-        $design_follow->demand_company_id = $all['demand_company_id'];
+        $design_follow->type = 1;
+        $design_follow->design_demand_id = $design_demand_id;
+        $design_follow->demand_company_id = $demand_company_id->demand_company_id;
         $design_follow->design_company_id = $design_company_id;
         if($design_follow->save()){
             return $this->response->array($this->apiSuccess('Success', 200));
@@ -160,14 +148,16 @@ class DesignCollectDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 需求ID
         $design_demand_id = $request->input('design_demand_id');
+        // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;
         if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->isVerify();
-        if(!$design_company){
+        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+        if(!$design_company->isVerify()){
             return $this->response->array($this->apiError('设计公司没有认证', 403));
         }
 
