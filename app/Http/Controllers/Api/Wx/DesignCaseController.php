@@ -9,6 +9,8 @@ namespace App\Http\Controllers\Api\Wx;
 
 
 use App\Models\DesignCompanyModel;
+use Fukuball\Jieba\Finalseg;
+use Fukuball\Jieba\Jieba;
 use Illuminate\Http\Request;
 use App\Http\Transformer\DesignCaseListsTransformer;
 use App\Models\DesignCaseModel;
@@ -27,22 +29,49 @@ class DesignCaseController extends BaseController
     public function lists(Request $request)
     {
         $item_name = $request->input('item_name');
-        //模糊查询有的话，走上面，没有的话走下面
-        $design_cases = DesignCaseModel::where('title' , 'like', '%' . $item_name . '%')->limit(10)->get();
-        $designCaseCount = $design_cases->count();
-        //等于10的话走上面，下面不够10的话补全
-        if($designCaseCount == 10){
-            return $this->response->collection($design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-        } else {
-            $mendCount = 10 - $designCaseCount;
+        if(empty($item_name)){
+            return $this->response->array($this->apiError('项目名称不能为空', 412));
+        }
+        //这边要给内存，不然会炸
+        ini_set('memory_limit', '1024M');
+
+        Jieba::init();
+        Finalseg::init();
+        //把标题分词
+        $seg_lists = Jieba::cut($item_name);
+        $design_cases_array = [];
+        foreach ($seg_lists as $seg_list){
+            //　过滤掉一个字和标点符号
+            if(strlen($seg_list) < 6){
+                continue;
+            }
+            //模糊查询有的话，走上面，没有的话走下面
+            $design_cases = DesignCaseModel::where('label' , 'like', '%' . $seg_list . '%')->get();
+            if($design_cases->isEmpty()){
+                continue;
+            }
+            $design_cases_array[] = $design_cases;
+        }
+        //分词搜索为空的话，随机返回10个
+        if($design_cases_array == null){
             $mend_design_cases = DesignCaseModel::
             orderBy(DB::raw('RAND()'))
-                ->take($mendCount)
+                ->take(10)
                 ->get();
-            //合并对象集合
-            $merge_cases = (collect([$design_cases , $mend_design_cases]))->collapse();
+            return $this->response->collection($mend_design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+        } else {
+            //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
+            $merge_cases = (collect([$design_cases_array]))->collapse();
+            if ($merge_cases->count() < 10) {
+                $mend_count = 10 - $merge_cases->count();
+                $mend_design_cases = DesignCaseModel::
+                orderBy(DB::raw('RAND()'))
+                    ->take($mend_count)
+                    ->get();
+                $new_merge_cases = (collect([$merge_cases, $mend_design_cases]))->collapse();
+                return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            }
             return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-
         }
     }
 }
