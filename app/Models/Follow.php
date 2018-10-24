@@ -10,7 +10,7 @@ class Follow extends BaseModel
      *
      * @var string
      */
-    protected $table = 'design_demand';
+    protected $table = 'follow';
 
 
     /**
@@ -39,9 +39,9 @@ class Follow extends BaseModel
      * @return array
      */
 
-    public function showDemandList($type, $design_company_id)
+    public function showDemandList( $design_company_id)
     {
-        $data = self::where(['type'=>$type,'design_company_id'=>$design_company_id])->get();
+        $data = self::where(['type'=>1,'design_company_id'=>$design_company_id])->get();
         if($data){
             //获取用户
             $arr = [];

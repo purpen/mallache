@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\Sd;
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Models\DemandCompany;
+use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
 
 class DesignDemandController extends BaseController
@@ -49,13 +50,19 @@ class DesignDemandController extends BaseController
      */
     public function demandList(Request $request)
     {
+        // 用户ID
         $user_id = $this->auth_user_id;
+        // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
         if ($this->auth_user->type != 1 || !$demand_company_id) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
-
+        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
+        if (!$demand_company->isVerify()) {
+            return $this->response->array($this->apiError('需求公司没有认证', 403));
+        }
+        // 获取需求列表
         $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id);
         return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
     }
@@ -88,7 +95,6 @@ class DesignDemandController extends BaseController
     public function release(Request $request)
     {
         $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer|regex:/[1-11]/', 'content' => 'required|string',];
-        $all = $request->all();
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -97,14 +103,18 @@ class DesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 获取数据
+        $all = $request->all();
+        // 需求公司ID
+        $demand_company_id = $this->auth_user->demand_company_id;
+
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
 
-        // 需求公司信息是否认证
-        $demand_company = $this->auth_user->demandCompany;
-        if (!$demand_company) {
-            return $this->response->array($this->apiError('需求公司没有认证', 412));
+        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
+        if (!$demand_company->isVerify()) {
+            return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
 
         $demand_name = DesignDemand::where(['user_id' => $this->auth_user_id, 'demand_company_id' => $this->auth_user->demand_company_id, 'name' => $all['name']])->first();
@@ -180,11 +190,20 @@ class DesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 获取需求ID
+        $demand_id = $request->input('demand_id');
+        // 需求公司ID
+        $demand_company_id = $this->auth_user->demand_company_id;
+
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
-        $demand_id = $request->input('demand_id');
-        $demand_company_id = $this->auth_user->demand_company_id;
+
+        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
+        if (!$demand_company->isVerify()) {
+            return $this->response->array($this->apiError('需求公司没有认证', 403));
+        }
+
         $demand_info = DesignDemand::where(['id'=>$demand_id,'demand_company_id'=>$demand_company_id])->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
@@ -221,11 +240,18 @@ class DesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 获取需求ID
         $demand_id = $request->input('demand_id');
+        // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
         if ($this->auth_user->type != 1 || !$demand_company_id) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
+        }
+
+        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
+        if (!$demand_company->isVerify()) {
+            return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
 
         $demand = DesignDemand::where(['id'=>$demand_id,'demand_company_id'=>$demand_company_id])->first();
@@ -277,22 +303,25 @@ class DesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 获取数据
         $all = $request->all();
+        // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
+
         if ($this->auth_user->type != 1 || !$demand_company_id) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
 
-        // 需求公司信息是否认证
-        $demand_company = $this->auth_user->demandCompany;
-        if (!$demand_company) {
-            return $this->response->array($this->apiError('需求公司没有认证', 412));
+        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
+        if (!$demand_company->isVerify()) {
+            return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
 
         $demand = DesignDemand::where(['id'=>$all['demand_id'],'demand_company_id'=>$demand_company_id])->first();
         if (!$demand) {
             return $this->response->array($this->apiError('没有找到该项目', 404));
         }
+        // 判断状态
         if ($demand->status != -1) {
             return $this->response->array($this->apiError('不是未通过状态无法编辑', 403));
         }
@@ -342,10 +371,18 @@ class DesignDemandController extends BaseController
      */
     public function designDemandList(Request $request)
     {
-        if ($this->auth_user->type != 2) {
+        // 设计公司ID
+        $design_company_id = $this->auth_user->design_company_id;;
+        if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
+        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+        if(!$design_company->isVerify()){
+            return $this->response->array($this->apiError('设计公司没有认证', 403));
+        }
+
+        // 设计公司获取需求列表
         $design_demand = DesignDemand::getDesignObtainDemand();
         return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
     }
@@ -395,15 +432,25 @@ class DesignDemandController extends BaseController
         $payload = $request->only('demand_id');
         $validator = app('validator')->make($payload, $rules);
 
+        // 需求ID
+        $demand_id = $request->input('demand_id');
+        // 设计公司ID
+        $design_company_id = $this->auth_user->design_company_id;;
+
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
-        if ($this->auth_user->type != 2) {
+        if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
-        $demand_id = $request->input('demand_id');
+
+        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+        if(!$design_company->isVerify()){
+            return $this->response->array($this->apiError('设计公司没有认证', 403));
+        }
+
         $demand_info = DesignDemand::where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
