@@ -70,8 +70,7 @@ class DesignCaseController extends BaseController
                 orderBy(DB::raw('RAND()'))
                     ->take($mend_count)
                     ->get();
-                $new_merge_cases = (collect([$merge_cases, $mend_design_cases]))->collapse();
-                dd($new_merge_cases);
+                $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
                 return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
             }
             return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
