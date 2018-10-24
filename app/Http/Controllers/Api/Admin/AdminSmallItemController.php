@@ -53,6 +53,7 @@ class AdminSmallItemController extends Controller
      * @apiGroup AdminSmallItem
      *
      * @apiParam {integer} id 小程序项目id
+     * @apiParam {string} token
      */
     public function show(Request $request)
     {
@@ -74,6 +75,7 @@ class AdminSmallItemController extends Controller
      * @apiParam {integer} id 小程序项目id
      * @apiParam {integer} is_ok 0.未解决; 1.已解决；
      * @apiParam {string} summary 备注
+     * @apiParam {string} token
      */
     public function update(Request $request)
     {
@@ -98,6 +100,7 @@ class AdminSmallItemController extends Controller
      * @apiGroup AdminSmallItem
      *
      * @apiParam {integer} id 小程序项目id
+     * @apiParam {string} token
      */
     public function delete(Request $request)
     {
