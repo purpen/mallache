@@ -107,9 +107,9 @@ class AuthenticateController extends BaseController
                     'company_role' => $company_role,
                     'source' => $request->header('source-type') ?? 0,
                 ]);
-            if ($user->type == 1) {
+            if ($user->type == 3) {
                 DemandCompany::createCompany($user);
-            } else if ($user->type == 2) {
+            } else if ($user->type == 3) {
                 $res = DesignCompanyModel::createDesign($user);
                 $res = $res->toArray();
                 $statistics = new Statistics;

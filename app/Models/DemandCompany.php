@@ -203,6 +203,13 @@ class DemandCompany extends BaseModel
     }
 
     /**
+     * 一对一关联顺德设计需求
+     */
+    public function designDemand()
+    {
+        return $this->hasOne('App\Models\DesignDemand', 'design_company_id');
+    }
+    /**
      * 创建需求公司信息
      *
      * @param int $user_id

@@ -188,6 +188,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 一对一关联顺德设计需求
+     */
+    public function designDemand()
+    {
+        return $this->hasOne('App\Models\DesignDemand', 'user_id');
+    }
+
+    /**
      * 增加用户账户金额（总金额、冻结金额）
      *
      * @param int $user_id
