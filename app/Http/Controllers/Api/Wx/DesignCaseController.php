@@ -61,8 +61,10 @@ class DesignCaseController extends BaseController
                 ->get();
             return $this->response->collection($mend_design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
+            foreach ($design_cases_array as $new_design_case){
+                dd($new_design_case);
+            }
             //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
-            dd($design_cases_array);
 //            if ($merge_cases->count() < 10) {
 //                $mend_count = 10 - $merge_cases->count();
 //                $mend_design_cases = DesignCaseModel::
