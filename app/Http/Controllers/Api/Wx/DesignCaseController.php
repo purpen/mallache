@@ -62,19 +62,18 @@ class DesignCaseController extends BaseController
             return $this->response->collection($mend_design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
             //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
-            $merge_cases = $design_cases_array->collapse();
-            dd($merge_cases);
-            if ($merge_cases->count() < 10) {
-                $mend_count = 10 - $merge_cases->count();
-                $mend_design_cases = DesignCaseModel::
-                orderBy(DB::raw('RAND()'))
-                    ->take($mend_count)
-                    ->get();
-                $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
-                dd($new_merge_cases);
-                return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-            }
-            return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            dd($design_cases_array);
+//            if ($merge_cases->count() < 10) {
+//                $mend_count = 10 - $merge_cases->count();
+//                $mend_design_cases = DesignCaseModel::
+//                orderBy(DB::raw('RAND()'))
+//                    ->take($mend_count)
+//                    ->get();
+//                $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
+//                dd($new_merge_cases);
+//                return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+//            }
+//            return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
 }
