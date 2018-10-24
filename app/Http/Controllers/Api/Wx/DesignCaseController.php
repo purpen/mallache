@@ -64,19 +64,19 @@ class DesignCaseController extends BaseController
                 ->get();
             return $this->response->collection($mend_design_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         } else {
-            dd(count($design_cases_array));
+            //检测分词搜索出来的数量
+            $count = count($design_cases_array);
             //合并新的，看看是否够10条数据，不够的话补全10条，够的话直接返回
-//            if ($merge_cases->count() < 10) {
-//                $mend_count = 10 - $merge_cases->count();
-//                $mend_design_cases = DesignCaseModel::
-//                orderBy(DB::raw('RAND()'))
-//                    ->take($mend_count)
-//                    ->get();
-//                $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
-//                dd($new_merge_cases);
-//                return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
-//            }
-//            return $this->response->collection($merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            if ($count < 10) {
+                $mend_count = 10 - $count;
+                $mend_design_cases = DesignCaseModel::
+                orderBy(DB::raw('RAND()'))
+                    ->take($mend_count)
+                    ->get();
+                $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
+                return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            }
+            return $this->response->collection($design_cases_array, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
 }
