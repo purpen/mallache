@@ -58,6 +58,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
         $api->post('/sd/design/cancelCollectDemand', [
             'as' => 'sd.cancelCollectDemand', 'uses' => 'DesignCollectDemandController@cancelCollectDemand'
         ]);
+        //设计公司联系需求方
+        $api->get('/sd/design/contactDemand', [
+            'as' => 'sd.contactDemand', 'uses' => 'DesignCollectDemandController@contactDemand'
+        ]);
 
     });
 

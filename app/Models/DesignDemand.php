@@ -29,6 +29,7 @@ class DesignDemand extends BaseModel
     {
         return $this->belongsTo('App\Models\DemandCompany', 'design_company_id');
     }
+
     /**
      * 需求列表信息
      */
@@ -67,6 +68,20 @@ class DesignDemand extends BaseModel
             "updated_at"=>$this->updated_at,
         ];
     }
+
+    /**
+     * 设计公司获取需求联系信息
+     */
+    public function contactInfo()
+    {
+        return [
+            'company_name'=>$this->company_name,
+            'name'=>$this->realname,
+            'phone'=>$this->phone
+        ];
+    }
+
+
     /**
      * 获取需求列表
      * @param $user_id
@@ -105,4 +120,26 @@ class DesignDemand extends BaseModel
         }
         return $design_demand;
     }
+
+    /**
+     * 获取需求方联系方式
+     *
+     * @param $type
+     * @param $design_demand_id
+     * @return array
+     */
+    static public function getDemandContact($design_demand_id)
+    {
+        $user = self::query()
+            ->join('demand_company','demand_company.id','=','design_demand.demand_company_id')
+            ->join('users','users.id','=','design_demand.user_id')
+            ->where('design_demand.id',$design_demand_id)
+            ->get();
+        $arr = [];
+        foreach ($user as $v) {
+            $arr[] = $v->contactInfo();
+        }
+        return $arr;
+    }
+
 }

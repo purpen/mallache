@@ -94,7 +94,7 @@ class DesignDemandController extends BaseController
      */
     public function release(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer|regex:/[1-11]/', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -294,7 +294,7 @@ class DesignDemandController extends BaseController
      */
     public function demandUpdate(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer|regex:/[1-11]/', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 

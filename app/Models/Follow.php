@@ -14,32 +14,13 @@ class Follow extends BaseModel
 
 
     /**
-     * 设计公司获取需求列表信息
-     */
-    public function collectListInfo()
-    {
-        return [
-            'id'=>$this->id,
-            'user_id'=>$this->user_id,
-            'demand_company_id'=>$this->demand_company_id,
-            'design_types'=>$this->design_types,
-            'name'=>$this->name,
-            'cycle'=>$this->cycle,
-            'design_cost'=>$this->design_cost,
-            "created_at"=>$this->created_at,
-            "updated_at"=>$this->updated_at,
-        ];
-    }
-
-    /**
      * 获取需求列表信息
      *
-     * @param $type
      * @param $design_company_id
      * @return array
      */
 
-    public function showDemandList( $design_company_id)
+    static public function showDemandList($design_company_id)
     {
         $data = self::where(['type'=>1,'design_company_id'=>$design_company_id])->get();
         if($data){
@@ -51,10 +32,29 @@ class Follow extends BaseModel
             $designDemand = DesignDemand::whereIn('id',$arr)->get();
             $demand = [];
             foreach ($designDemand as $v) {
-                $demand[] = $v->collectListInfo();
+                $demand[] = $v->designObtainDemandInfo();
             }
-            return $demand;
+            return $designDemand;
         }
         return $data;
     }
+
+    /**
+     * 判断设计公司是否收藏某个设计需求
+     *
+     * @param $type
+     * @param $design_demand_id
+     * @param $design_company_id
+     * @return bool
+     */
+    static public function isCollectDemand($design_demand_id, $design_company_id)
+    {
+        $follow = self::where(['design_demand_id'=>$design_demand_id,'design_company_id'=>$design_company_id])->first();
+        if($follow){
+            return true;
+        }
+        return false;
+    }
+
+
 }
