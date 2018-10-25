@@ -714,6 +714,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //所有项目的任务统计
         $api->get('/design/itemTasks', 'DesignTargetController@itemTasks');
 
+        /**
+         * 设计成果
+         */
+        //保存设计成果
+        $api->post('/designResults/add', 'DesignResultController@addDesignResults');
+        //设计成果详情
+        $api->get('/designResults/show', 'DesignResultController@designResultsShow');
+        //设计成果列表
+        $api->get('/designResults/list', 'DesignResultController@list');
     });
 
 });
