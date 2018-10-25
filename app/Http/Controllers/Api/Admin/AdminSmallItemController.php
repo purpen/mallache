@@ -86,7 +86,8 @@ class AdminSmallItemController extends Controller
         if(!$smallItem){
             return $this->response->array($this->apiError('not found smallItem', 404));
         }
-        if($smallItem->update($all)){
+        $new_all = array_diff($all , array(null));
+        if($smallItem->update($new_all)){
             return $this->response->array($this->apiSuccess());
         }
         return $this->response->array($this->apiError('更改失败', 412));
