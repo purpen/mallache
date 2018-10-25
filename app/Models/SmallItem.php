@@ -12,6 +12,6 @@ class SmallItem extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['item_name' , 'user_name' , 'phone' , 'status'];
+    protected $fillable = ['item_name' , 'user_name' , 'phone' , 'status' , 'design_company_id' , 'summary' , 'is_ok'];
 
 }

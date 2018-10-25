@@ -9,6 +9,7 @@
         "barryvdh/laravel-dompdf": "^0.8.2",
         "dingo/api": "1.0.*@dev",
         "doctrine/dbal": "2.5.*",
+        "fukuball/jieba-php": "dev-master",
         "gregwar/captcha": "^1.1",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",

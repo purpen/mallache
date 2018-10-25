@@ -221,6 +221,14 @@ return [
          */
         //平台评价项目
         '/admin/platform/evaluate',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
+        '/admin/smallItem/show',
+        '/admin/smallItem/update',
+        '/admin/smallItem/delete',
     ],
 
     /**
@@ -436,6 +444,14 @@ return [
          */
         //平台评价项目
         '/admin/platform/evaluate',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
+        '/admin/smallItem/show',
+        '/admin/smallItem/update',
+        '/admin/smallItem/delete',
     ],
 
     /**
@@ -581,6 +597,11 @@ return [
         '/admin/invoice/pullLists',
         // 需要平台给需求公司开具发票列表
         '/admin/invoice/pushLists',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
     ],
 
     /**
