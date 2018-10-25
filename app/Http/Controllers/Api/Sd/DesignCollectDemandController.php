@@ -1,19 +1,19 @@
 <?php
 /**
- * 设计需求控制器
+ * 设计公司收藏需求控制器
  *
  * @User yht
- * @time 2018-10-22
+ * @time 2018-10-24
  */
 
 namespace App\Http\Controllers\Api\Sd;
 
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use App\Http\Transformer\DesignCollectDemandListTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
 use App\Models\Follow;
-
 class DesignCollectDemandController extends BaseController
 {
     /**
@@ -22,6 +22,8 @@ class DesignCollectDemandController extends BaseController
      * @apiName sdDesign designCollectList
      * @apiGroup sdDesignType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -47,6 +49,8 @@ class DesignCollectDemandController extends BaseController
      */
     public function designCollectList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;
         if ($this->auth_user->type != 2 || !$design_company_id) {
@@ -58,8 +62,8 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('设计公司没有认证', 403));
         }
 
-        $demand_info = Follow::showDemandList($design_company_id);
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+        $demand_info = Follow::showDemandList($design_company_id,$per_page);
+        return $this->response->paginator($demand_info, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**

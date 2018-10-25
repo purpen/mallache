@@ -17,10 +17,11 @@ class Follow extends BaseModel
      * 获取需求列表信息
      *
      * @param $design_company_id
+     * @param $per_page
      * @return array
      */
 
-    static public function showDemandList($design_company_id)
+    static public function showDemandList($design_company_id, $per_page)
     {
         $data = self::where(['type'=>1,'design_company_id'=>$design_company_id])->get();
         if($data){
@@ -29,11 +30,7 @@ class Follow extends BaseModel
             foreach ($data as $v) {
                 $arr[] = $v->design_demand_id;
             }
-            $designDemand = DesignDemand::whereIn('id',$arr)->get();
-            $demand = [];
-            foreach ($designDemand as $v) {
-                $demand[] = $v->designObtainDemandInfo();
-            }
+            $designDemand = DesignDemand::whereIn('id',$arr)->paginate($per_page);
             return $designDemand;
         }
         return $data;

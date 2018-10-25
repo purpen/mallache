@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Api\Sd;
 
 use Illuminate\Http\Request;
+use App\Http\Transformer\DesignDemandTransformer;
+use App\Http\Transformer\DesignDemandListTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
@@ -22,6 +24,8 @@ class DesignDemandController extends BaseController
      * @apiName sdDemand demandList
      * @apiGroup sdDemandType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -29,27 +33,29 @@ class DesignDemandController extends BaseController
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
-     *      }
+     *      },
      *       "data": [
      *          {
-     * "id": 1,                    //需求ID
-     * "user_id": 12,              //用户ID
-     * "demand_company_id": 1,     //需求公司ID
-     * "status": 0,                //状态：-1.关闭 0.待发布 1. 审核中 2.已发布
-     * "type": 1,                  //设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
-     * "design_types": "\"[1,2]\"",//设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
-     * "name": "测试1",            //项目名称
-     * "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
-     * "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-     * "follow_count": 0,          //关注数量
-     * "created_at": 1540281300,
-     * "updated_at": 1540281300
-     * }
+     *              "id": 1,                    //需求ID
+     *              "user_id": 12,              //用户ID
+     *              "demand_company_id": 1,     //需求公司ID
+     *              "status": 0,                //状态：-1.关闭 0.待发布 1. 审核中 2.已发布
+     *              "type": 1,                  //设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
+     *              "design_types": "\"[1,2]\"",//设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     *              "name": "测试1",            //项目名称
+     *              "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
+     *              "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *              "follow_count": 0,          //关注数量
+     *              "created_at": 1540281300,
+     *              "updated_at": 1540281300
+     *          }
      *       ]
      *  }
      */
     public function demandList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 用户ID
         $user_id = $this->auth_user_id;
         // 需求公司ID
@@ -63,8 +69,8 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
         // 获取需求列表
-        $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id);
-        return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
+        $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id,$per_page);
+        return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -136,7 +142,7 @@ class DesignDemandController extends BaseController
         $design_demand->item_city = $all['item_city'];
         $design_demand->content = $all['content'];
         if ($design_demand->save()) {
-            return $this->response->array($this->apiSuccess('Success', 200));
+            return $this->response->item($design_demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
     }
 
@@ -208,7 +214,8 @@ class DesignDemandController extends BaseController
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+
+        return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -336,7 +343,7 @@ class DesignDemandController extends BaseController
         $demand->item_city = $all['item_city'];
         $demand->content = $all['content'];
         if ($demand->save()) {
-            return $this->response->array($this->apiSuccess('Success', 200));
+            return $this->response->item($demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
     }
 
@@ -346,6 +353,8 @@ class DesignDemandController extends BaseController
      * @apiName sdDemand designDemandList
      * @apiGroup sdDemandType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -371,6 +380,8 @@ class DesignDemandController extends BaseController
      */
     public function designDemandList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;;
         if ($this->auth_user->type != 2 || !$design_company_id) {
@@ -383,8 +394,8 @@ class DesignDemandController extends BaseController
         }
 
         // 设计公司获取需求列表
-        $design_demand = DesignDemand::getDesignObtainDemand();
-        return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
+        $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
+        return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -455,6 +466,7 @@ class DesignDemandController extends BaseController
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+        return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
+
     }
 }

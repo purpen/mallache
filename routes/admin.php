@@ -355,7 +355,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //删除
         $api->delete('/admin/smallItem/delete', 'AdminSmallItemController@delete');
 
-
+        //顺德设计需求列表
+        $api->get('/admin/designDemand/lists', 'AdminDesignDemandController@lists');
+        //设计需求信息审核
+        $api->put('/admin/designDemand/auditStatus', 'AdminDesignDemandController@auditStatus');
     });
 
 });
