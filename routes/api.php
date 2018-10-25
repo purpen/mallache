@@ -731,7 +731,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         //设计成果详情
         $api->get('/designResults/show', 'DesignResultController@designResultsShow');
         //设计成果列表
-        $api->get('/designResults/list', 'DesignResultController@list');
+        $api->get('/designResults/list', 'DesignResultController@lists');
     });
 
 });

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Follow;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use App\Http\Transformer\DesignResultListTransformer;
 
 class DesignResultController extends BaseController
 {
@@ -176,9 +178,9 @@ class DesignResultController extends BaseController
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
             if($cover_url){
-                $design_result->cover_url = $cover_url;
+                $design_result->cover = $cover_url;
             }else{
-                $design_result->cover_url = '';
+                $design_result->cover = '';
             }
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
@@ -190,44 +192,174 @@ class DesignResultController extends BaseController
      * @api {get} /designResults/list 设计成果列表
      * @author 王松
      * @apiVersion 1.0.0
-     * @apiName designResultsList
+     * @apiName designResultsLists
      * @apiGroup designResults
      * @apiParam {integer} status 状态 0:全部,1:待提交,2:审核中,3:已上架,-1:已下架
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
      * @apiParam {integer} page 页数
      * @apiParam {integer} collect 收藏状态：0.默认 1.收藏
      * @apiParam {integer} per_page 页面条数
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     *   {
-     *
-     *   }
+     * {
+     * "data": [
+     *     {
+     *         "id": 1,
+     *         "title": "标题", //标题
+     *         "content": "内容", //描述
+     *         "cover_id": 999,
+     *         "sell_type": 1, //售卖类型 1.全款 2.股权合作
+     *         "price": "100000.00", //售价
+     *         "share_ratio": 100, //股权比例
+     *         "design_company_id": 66, //设计公司ID
+     *         "user_id": 87,
+     *         "cover": { //封面
+     *             "id": 999,
+     *             "name": "participants@2x.png",
+     *             "created_at": 1524207783,
+     *             "summary": null,
+     *             "size": 939,
+     *             "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *             "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *             "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *             "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *             "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          },
+     *          "status": 1, //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
+     *          "thn_cost": "10.00", //平台佣金比例
+     *          "follow_count": 0, //关注数量
+     *          "demand_company_id": 0, //购买需求公司ID
+     *          "purchase_user_id": 0, //购买用户ID
+     *          "created_at": 1540448935, //创建时间
+     *          "updated_at": 1540448935
+     *     }
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200,
+     *     "pagination": {
+     *         "total": 1,
+     *         "count": 1,
+     *         "per_page": 10,
+     *         "current_page": 1,
+     *         "total_pages": 1,
+     *         "links": []
+     *      }
+     *  }
+     * }
      */
-    public function list(Request $request)
+    public function lists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = $request->input('status') ?? 0;
         $collect = $request->input('collect') ?? 0;
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
         //收藏的项目成果
         $query = DesignResult::query();
         if ($collect > 0){
-            //获取收藏的所有项目id
-            //$collectId = CollectItem::collectId($this->auth_user_id , $status , $collect);
+            $follow = new Follow;
+            if($this->auth_user->type == 1){
+                //需求公司
+                $follow_data = $follow->getResultFollow($this->auth_user->design_company_id,1);
+            }else{
+                //设计公司
+                $follow_data = $follow->getResultFollow($this->auth_user->demand_company_id,2);
+            }
             if($status != 0){
                 $query->where('status',$status);
             }
             $list = $query->where('user_id',$this->auth_user_id)
-                //->whereIn('id', $collectId)
+                ->whereIn('id',$follow_data)
+                ->orderBy('id',$sort)
                 ->paginate($per_page);
         } else {
             if($status != 0){
                 $query->where('status',$status);
             }
             $list = $query->where('user_id',$this->auth_user_id)
+                ->orderBy('id',$sort)
                 ->paginate($per_page);
         }
-        return $list;
-        //return $this->response->paginator($list, new DesignProjectTransformer())->setMeta($this->apiMeta());
+        return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /designResults/unauditedLists 待审核设计成果列表
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName designResultsUnauditedLists
+     * @apiGroup designResults
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *     {
+     *         "id": 1,
+     *         "title": "标题", //标题
+     *         "content": "内容", //描述
+     *         "cover_id": 999,
+     *         "sell_type": 1, //售卖类型 1.全款 2.股权合作
+     *         "price": "100000.00", //售价
+     *         "share_ratio": 100, //股权比例
+     *         "design_company_id": 66, //设计公司ID
+     *         "user_id": 87,
+     *         "cover": { //封面
+     *             "id": 999,
+     *             "name": "participants@2x.png",
+     *             "created_at": 1524207783,
+     *             "summary": null,
+     *             "size": 939,
+     *             "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *             "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *             "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *             "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *             "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          },
+     *          "status": 1, //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
+     *          "thn_cost": "10.00", //平台佣金比例
+     *          "follow_count": 0, //关注数量
+     *          "demand_company_id": 0, //购买需求公司ID
+     *          "purchase_user_id": 0, //购买用户ID
+     *          "created_at": 1540448935, //创建时间
+     *          "updated_at": 1540448935
+     *     }
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200,
+     *     "pagination": {
+     *         "total": 1,
+     *         "count": 1,
+     *         "per_page": 10,
+     *         "current_page": 1,
+     *         "total_pages": 1,
+     *         "links": []
+     *      }
+     *  }
+     * }
+     */
+    public function unauditedLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        //$status = $request->input('status') ?? 0;
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        //收藏的项目成果
+        $query = DesignResult::query();
+        $list = $query->where('status',2)->orderBy('id',$sort)->paginate($per_page);
+        return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 
 }

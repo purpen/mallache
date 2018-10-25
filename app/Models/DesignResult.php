@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AssetModel;
 
 class DesignResult extends BaseModel
 {
@@ -42,4 +43,11 @@ class DesignResult extends BaseModel
         return false;
     }
 
+    /**
+     * 常用网站封面图
+     */
+    public function getCoverAttribute()
+    {
+        return AssetModel::getOneImage($this->cover_id) ?? AssetModel::getOneImageUrl($this->id, 18, 1);
+    }
 }
