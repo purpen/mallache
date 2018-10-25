@@ -71,6 +71,8 @@ class Kernel extends ConsoleKernel
         Commands\AveragePrice::class,
         //更新报价合同记录表的状态
         Commands\ChangeNotification::class,
+        //导出用户信息
+        Commands\userExcel::class,
 
     ];
 

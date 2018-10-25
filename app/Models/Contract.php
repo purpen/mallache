@@ -90,6 +90,7 @@ class Contract extends BaseModel
             'unique_id' => strval($this->unique_id),
             'item_name' => $this->item_name,
             'title' => strval($this->title),
+            'item_content' => strval($this->item_content),
             'warranty_money' => $this->warranty_money,
             'first_payment' => $this->first_payment,
             'warranty_money_proportion' => $this->warranty_money_proportion,

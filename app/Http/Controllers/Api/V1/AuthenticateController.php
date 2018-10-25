@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Helper\Tools;
+use App\Helper\Sso;
 use App\Http\Transformer\UserTransformer;
 use App\Jobs\SendOneSms;
 use App\Models\DemandCompany;
@@ -80,6 +81,19 @@ class AuthenticateController extends BaseController
             $company_role = 20;
         }
         try {
+
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 查看是否存在账号
+                $ssoParam = array(
+                    'phone' => $payload['account']
+                );
+                $ssoResult = Sso::request(6, $ssoParam);
+                if ($ssoResult['success']) {
+                    return $this->response->array($this->apiError('用户系统已存在该账号!', 412));
+                }
+            }
             DB::beginTransaction();
             // 创建用户
             $user = User::query()
@@ -93,14 +107,13 @@ class AuthenticateController extends BaseController
                     'company_role' => $company_role,
                     'source' => $request->header('source-type') ?? 0,
                 ]);
-            if ($user->type == 1) {
+            if ($user->type == 3) {
                 DemandCompany::createCompany($user);
-            } else if ($user->type == 2) {
+            } else if ($user->type == 3) {
                 $res = DesignCompanyModel::createDesign($user);
                 $res = $res->toArray();
                 $statistics = new Statistics;
                 $statistics->saveDesignInfo($res['id']);
-                DesignCompanyModel::createDesign($user);
 
             }
             DB::commit();
@@ -111,6 +124,20 @@ class AuthenticateController extends BaseController
         }
         if ($user) {
             $token = JWTAuth::fromUser($user);
+            if ($ssoEnable) {
+                // 当前系统创建成功后再创建太火鸟用户 
+                $ssoParam = array(
+                    'account' => $payload['account'],
+                    'phone' => $payload['account'],
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                    'status' => 1,
+                );
+                $ssoResult = Sso::request(2, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
             return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
@@ -133,6 +160,8 @@ class AuthenticateController extends BaseController
      *
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
+     * @apiParam {string} str 随机码
+     * @apiParam {string} captcha 验证码
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -148,8 +177,6 @@ class AuthenticateController extends BaseController
      */
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('account', 'password');
-
         try {
             // 验证规则
             $rules = [
@@ -166,25 +193,83 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
 
-            if (!$this->phoneIsRegister($credentials['account'])) {
+            if (!$this->phoneIsRegister($payload['account'])) {
                 return $this->response->array($this->apiError('手机号未注册', 401));
             }
 
-            $user = User::where('account', $credentials['account'])->first();
+            // 单点登录
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 访问单点登录系统
+                $ssoParam = array(
+                    'account' => $payload['account'],
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                );
+                $ssoResult = Sso::request(1, $ssoParam);
+                if (!$ssoResult['success']) {
+                    $err_count = Cache::get($payload['account']) + 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiSuccess($ssoResult['message'], 403, compact('err_count')));
+                }
+            }
+
+            $user = User::query()->where('account', $payload['account'])->first();
             $source = $request->header('source-type') ?? 0;
+
+            // 如果本地用户不存在，则创建 
+            if ($ssoEnable) {
+                if (!$user) {
+                    $user = User::query()
+                        ->create([
+                            'account' => $payload['account'],
+                            'phone' => $payload['account'],
+                            'username' => $payload['account'],
+                            'password' => bcrypt($payload['password']),
+                            'child_account' => 0,
+                            'source' => $source,
+                            'type' => 0,
+                        ]);
+
+                    if (!$user) {
+                        return $this->response->array($this->apiError('生成本地用户失败！', 500));
+                    }
+                }
+            } else {
+                if (!$user) {
+                    return $this->response->array($this->apiError('用户不存在！', 404));
+                }
+                if (!Hash::check($payload['password'], $user->password)) {
+                    $err_count = Cache::get($payload['account']) + 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiSuccess('密码不正确', 403, compact('err_count')));
+                }
+            }
+
             if ($source != 0) {
                 if ($user->type == 2) {
                     return $this->response->array($this->apiError('设计公司账户不可登录，请使用铟果平台登录', 401));
                 }
             }
-
-            // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->response->array($this->apiError('账户名或密码错误', 401));
+            //密码错误的次数
+            $err_count = Cache::get($payload['account']);
+            if($err_count >= 3){
+                $str = $request->input('str');
+                $captcha = $request->input('captcha');
+                if(empty($str && $captcha)){
+                    return $this->response->array($this->apiError('验证码信息不能为空', 412));
+                }
+                if (!Tools::checkCaptcha($str, $captcha)) {
+                    $err_count = Cache::get($payload['account']) + 1;
+                    Cache::put($payload['account'] , $err_count , 10);
+                    return $this->response->array($this->apiSuccess('验证码错误', 403, compact('err_count')));
+                }
             }
+            $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
             return $this->response->array($this->apiError('could_not_create_token', 500));
         }
+        Cache::put($payload['account'] , 0 , 10);
         // return the token
         return $this->response->array($this->apiSuccess('登录成功！', 200, compact('token')));
     }
@@ -292,6 +377,8 @@ class AuthenticateController extends BaseController
         $source = $request->header('source-type') ?? 0;
         if ($source == 1) {
             $text = ' 【京东云艺火】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        } else if ($source == 2) {
+            $text = ' 【义乌设计大脑】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         } else {
             $text = ' 【太火鸟铟果】验证码：' . $sms_code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         }
@@ -334,8 +421,27 @@ class AuthenticateController extends BaseController
 
         $user = JWTAuth::parseToken()->authenticate();
 
-        if (!Hash::check($old_password, $user->password)) {
-            return $this->response->array($this->apiError('原密码不正确', 403));
+        // 单点登录
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 访问单点登录系统
+            $ssoParam = array(
+                'name' => $user->account,
+                'evt' => 1,
+                'password' => $old_password,
+                'new_password' => $newPassword,
+                'device_to' => 1,
+            );
+            $ssoResult = Sso::request(5, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
+            }
+        }
+
+        if (!$ssoEnable) {
+            if (!Hash::check($old_password, $user->password)) {
+                return $this->response->array($this->apiError('原密码不正确', 403));
+            }
         }
 
         $user->password = bcrypt($newPassword);
@@ -374,11 +480,23 @@ class AuthenticateController extends BaseController
 
     protected function phoneIsRegister($account)
     {
-        if (User::where('account', intval($account))->count() > 0) {
-            return true;
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return true;
+            }
         } else {
-            return false;
+            if (User::where('account', intval($account))->count() > 0) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -457,18 +575,59 @@ class AuthenticateController extends BaseController
         } else {
             Cache::forget($key);
         }
-        $user = User::where('phone', intval($request->input('phone')))->first();
-        if (!$user) {
-            return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'name' => $request->input('phone'),
+                'evt' => 2,
+                'password' => $request->input('password'),
+                'device_to' => 1,
+            );
+            $ssoResult = Sso::request(4, $ssoParam);
+            if (!$ssoResult['success']) {
+                return $this->response->array($this->apiError($ssoResult['message'], 500));
+            }
         }
 
-        $newPassword = $request->input('password');
-        $user->password = bcrypt($newPassword);
-        if ($user->save()) {
-            return $this->response->array($this->apiSuccess('修改成功', 200));
+        $user = User::where('phone', intval($request->input('phone')))->first();
+
+        if ($ssoEnable) {
+            // 用户不存在，则注册
+            if (!$user) {
+                $user = User::query()
+                    ->create([
+                        'account' => $request->input('phone'),
+                        'phone' => $request->input('phone'),
+                        'username' => $request->input('phone'),
+                        'password' => bcrypt($request->input('password')),
+                        'child_account' => 0,
+                        'source' => 0,
+                    ]);
+
+                if (!$user) {
+                    return $this->response->array($this->apiError('生成本地用户失败！', 500));
+                }
+
+            }
         } else {
-            return $this->response->array($this->apiError('修改失败', 500));
+            if (!$user) {
+                return $this->response->array($this->apiError('手机号还没有注册过！', 404));
+            }
         }
+
+        if (!$ssoEnable) {
+            $newPassword = $request->input('password');
+            $user->password = bcrypt($newPassword);
+            if ($user->save()) {
+                return $this->response->array($this->apiSuccess('修改成功', 200));
+            } else {
+                return $this->response->array($this->apiError('修改失败', 500));
+            }
+        }
+        return $this->response->array($this->apiSuccess('修改成功!', 200));
     }
 
     /**
@@ -574,8 +733,8 @@ class AuthenticateController extends BaseController
                 return $this->response->array($this->apiError('邀请的用户不是管理员或超级管理员', 403));
             }
             //判断子账户的数量
-            if($user->child_count >= config('constant.child_count')){
-                return $this->response->array($this->apiError('当前只能邀请30个用户' , 403));
+            if ($user->child_count >= config('constant.child_count')) {
+                return $this->response->array($this->apiError('当前只能邀请30个用户', 403));
             }
         } else {
             return $this->response->array($this->apiError('没有找到该用户', 404));
@@ -679,4 +838,65 @@ class AuthenticateController extends BaseController
         return $this->response->item($user, new UserTransformer)->setMeta($this->apiMeta());
     }
 
+    /**
+     * @api {post} /auth/setUserType 用户设置账户类型
+     * @apiVersion 1.0.0
+     * @apiName user setUserType
+     * @apiGroup User
+     *
+     * @apiParam {integer} type 用户类型：1.需求公司；2.设计公司；
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function setUserType(Request $request)
+    {
+        $type = (int)$request->input('type');
+        $user = $this->auth_user;
+        if ($user->type == 0 && in_array($type, [1, 2])) {
+            DB::beginTransaction();
+
+            if ($type == 1) {
+                $user->type = 1;
+                $user->save();
+                DemandCompany::createCompany($user);
+            } else if ($type == 2) {
+                $user->type = 2;
+                $user->company_role = 20;
+                $user->save();
+
+                $res = DesignCompanyModel::createDesign($user);
+                $statistics = new Statistics;
+                $statistics->saveDesignInfo($res->id);
+            }
+
+            DB::commit();
+            return $this->response->array($this->apiSuccess());
+
+        } else {
+            return $this->response->array($this->apiError('用户类型已设置', 403));
+        }
+    }
+
+    /**
+     * @api {post} /auth/errCount 检测错误次数
+     * @apiVersion 1.0.0
+     * @apiName user errCount
+     * @apiGroup User
+     *
+     * @apiParam {string} account 用户账号(手机号)
+     */
+    public function errCount(Request $request)
+    {
+        $account = $request->input('account');
+        $err_count = Cache::get($account);
+        return $this->response->array($this->apiSuccess('Success', 200, compact('err_count')));
+
+    }
 }

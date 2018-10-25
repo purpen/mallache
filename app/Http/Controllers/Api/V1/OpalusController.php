@@ -17,6 +17,7 @@ class OpalusController extends BaseController
      * @apiGroup Opalus
      *
      * @apiParam {string} ids 多个ID查询，用,分隔，传入此参数，下列参数传入无效
+     * @apiParam {integer} d3in_id 铟果ID
      * @apiParam {string} mark 配置名称
      * @apiParam {integer} no 期数 默认1
      * @apiParam {integer} size 显示数量，默认10
@@ -61,6 +62,7 @@ class OpalusController extends BaseController
         $ids = $request->input('ids') ? $request->input('ids') : '';
         $mark = $request->input('mark') ? $request->input('mark') : 'plan_a';
         $no = $request->input('no') ? (int)$request->input('no') : 1;
+        $d3in_id = $request->input('d3in_id') ? $request->input('d3in_id') : '';
         $size = $request->input('size') ? (int)$request->input('size') : 10;
         $sort = $request->input('sort') ? (int)$request->input('sort') : 0;
         $url = config('app.opalus_api') . 'design_record/list';
@@ -69,6 +71,7 @@ class OpalusController extends BaseController
           'ids' => $ids,
           'mark'=> $mark,
           'no'=> $no,
+          'd3in_id'=> $d3in_id,
           'sort'=> $sort,
           'per_page'=> $size,
         ];

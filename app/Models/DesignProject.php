@@ -253,6 +253,7 @@ class DesignProject extends BaseModel
             'project_demand' => $this->project_demand,
             'pigeonhole' => $this->pigeonhole,
             'user_name' => $user_name,
+            'collect' => $this->collect
         ];
     }
 

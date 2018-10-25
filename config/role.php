@@ -12,6 +12,7 @@ return [
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
         '/admin/item/closeItem',        // 后台强制关闭当前项目并分配项目款
         '/admin/item/testStatus',        // 后台设定项目类型
+        '/admin/item/deleteIds',        // 后台批量删除项目
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
@@ -220,6 +221,14 @@ return [
          */
         //平台评价项目
         '/admin/platform/evaluate',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
+        '/admin/smallItem/show',
+        '/admin/smallItem/update',
+        '/admin/smallItem/delete',
     ],
 
     /**
@@ -242,6 +251,7 @@ return [
         '/admin/item/addDesignToItem',   // 为项目添加推荐公司
         '/admin/item/trueItem',          // //确认项目给推荐的设计公司
         '/admin/item/testStatus',        // 后台设定项目类型
+        '/admin/item/deleteIds',        // 后台批量删除项目
 
         //更新设计公司审核状态
         '/admin/designCompany/verifyStatus',
@@ -434,6 +444,14 @@ return [
          */
         //平台评价项目
         '/admin/platform/evaluate',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
+        '/admin/smallItem/show',
+        '/admin/smallItem/update',
+        '/admin/smallItem/delete',
     ],
 
     /**
@@ -579,6 +597,11 @@ return [
         '/admin/invoice/pullLists',
         // 需要平台给需求公司开具发票列表
         '/admin/invoice/pushLists',
+
+        /**
+         * 小程序后台项目
+         */
+        '/admin/smallItem/lists',
     ],
 
     /**

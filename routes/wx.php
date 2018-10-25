@@ -20,7 +20,36 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/quotationAdd',[
         'as' => 'wechat.quotationAdd', 'uses' => 'QuotationController@quotationAdd'
     ]);
+    //解密信息
+    $api->get('/wechat/decryptionMessage', [
+        'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
+    ]);
+    //获取smallImage
+    $api->get('/wechat/smallImage', [
+        'as' => 'wechat.smallImage', 'uses' => 'AuthenticateController@smallImage'
+    ]);
+    //语音转换文字
+    $api->post('/wechat/voice', [
+        'as' => 'wechat.voice', 'uses' => 'BaiDuVoiceController@voice'
+    ]);
+    //名字发布项目
+    $api->post('/wechat/demand/nameRelease', [
+        'as' => 'wechat.demandRelease', 'uses' => 'SmallDemandController@release'
+    ]);
+    //更改项目
+    $api->put('/wechat/demand/smallUpdate', [
+        'as' => 'wechat.smallUpdate', 'uses' => 'SmallDemandController@update'
+    ]);
+    //设计公司客户
+    $api->post('/wechat/demand/designAdd', [
+        'as' => 'wechat.designAdd', 'uses' => 'SmallDemandController@designAdd'
+    ]);
+    //获取微信项目案例
+    $api->get('/wechat/designCase', [
+        'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@lists'
+    ]);
     /**
+     *
      * 需验证用户token
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
@@ -31,10 +60,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
         //新用户绑定
         $api->post('/wechat/newBindingUser', [
             'as' => 'wechat.newBindingUser', 'uses' => 'AuthenticateController@newBindingUser'
-        ]);
-        //解密信息
-        $api->get('/wechat/decryptionMessage', [
-            'as' => 'wechat.decryptionMessage', 'uses' => 'AuthenticateController@decryptionMessage'
         ]);
         //检测手机号是否注册了
         $api->get('/wechat/phone', [

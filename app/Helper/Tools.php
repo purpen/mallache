@@ -143,7 +143,7 @@ class Tools
             'message' => 0,
             'notice' => 0,
             'quantity' => 0,
-            'design_notice' => 0,
+//            'design_notice' => 0,
         );
 
         if (!$user_id) {
@@ -161,8 +161,9 @@ class Tools
 
         if (isset($user->message_count)) $data['message'] = (int)$user->message_count;
         if (isset($user->notice_count)) $data['notice'] = (int)$user->notice_count;
-        if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
-        $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
+//        if (isset($user->design_notice_count)) $data['design_notice'] = (int)$user->design_notice_count;
+//        $data['quantity'] = $data['message'] + $data['notice'] + $data['design_notice'];
+        $data['quantity'] = $data['message'] + $data['notice'];
 
         return $data;
     }
@@ -271,7 +272,7 @@ class Tools
 
 
         //可以设置图片宽高及字体
-        $builder->build(102, 34);
+        $builder->build(120, 38);
 
         // 启用失真
         $builder->setDistortion(true);
@@ -374,5 +375,23 @@ class Tools
         }catch (\Exception $e){
             Log::error($e);
         }
+    }
+
+
+    /**
+     * stdClass Object转array
+     * @param array 转换的数据
+     * @return array 格式化后的数组
+     *
+     */
+    public static function objectToArray($array) {  
+        if(is_object($array)) {
+            $array = (array)$array;  
+         } if(is_array($array)) {  
+            foreach($array as $key=>$value) {  
+                $array[$key] = self::objectToArray($value);  
+            }  
+         }  
+         return $array;  
     }
 }

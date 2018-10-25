@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\ApiHelper;
 use Dingo\Api\Routing\Helpers;
+use Dompdf\Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -26,7 +27,7 @@ class Controller extends BaseController
     protected $auth_user;
 
     //当前登陆用户ID
-    protected  $auth_user_id;
+    protected $auth_user_id;
 
     /**
      * 默认页数
@@ -52,6 +53,10 @@ class Controller extends BaseController
             if ($user = JWTAuth::parseToken()->authenticate()) {
                 $this->auth_user = $user;
                 $this->auth_user_id = $user->id;
+
+                if ($user->status == -1) {
+                    throw new Exception('禁止登录', 403);
+                }
                 return;
             }
         } catch (TokenExpiredException $e) {

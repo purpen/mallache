@@ -23,6 +23,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->post('/admin/item/closeItem', 'ItemActionController@closeItem');
         // 后台设定项目类型
         $api->put('/admin/item/testStatus', 'ItemActionController@testStatus');
+        //后台批量删除项目
+        $api->delete('/admin/item/deleteIds', 'ItemActionController@deleteIds');
 
         //更新设计公司审核状态
         $api->put('/admin/designCompany/verifyStatus', [
@@ -342,6 +344,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
          */
         //平台评价项目
         $api->post('/admin/platform/evaluate', 'AdminEvaluateController@platformEvaluate');
+
+        //小程序项目表
+        //项目列表
+        $api->get('/admin/smallItem/lists', 'AdminSmallItemController@lists');
+        //小程序项目后台编辑
+        $api->put('/admin/smallItem/update', 'AdminSmallItemController@update');
+        //详情
+        $api->get('/admin/smallItem/show', 'AdminSmallItemController@show');
+        //删除
+        $api->delete('/admin/smallItem/delete', 'AdminSmallItemController@delete');
+
+
     });
 
 });

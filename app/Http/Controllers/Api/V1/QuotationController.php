@@ -222,6 +222,7 @@ class QuotationController extends BaseController
                     'position'
                 ]);
                 $jia_info['position'] = $request->input('position') ?? '';
+                $jia_info['design_company_name'] = $request->input('design_company_name') ?? '';
                 if (!$design_project) {
                     throw new MassageException('not found', 404);
                 }

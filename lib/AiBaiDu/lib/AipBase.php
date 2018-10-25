@@ -14,6 +14,7 @@
 * License for the specific language governing permissions and limitations under
 * the License.
 */
+namespace Lib\AiBaiDu\lib;
 
 require_once 'AipHttpClient.php';
 require_once 'AipBCEUtil.php';

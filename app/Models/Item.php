@@ -19,7 +19,7 @@ class Item extends BaseModel
     /**
      * 允许批量赋值属性
      */
-    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types', 'source', 'name' , 'test_status'];
+    protected $fillable = ['stage_status', 'user_id', 'type', 'design_type', 'company_name', 'company_abbreviation', 'company_size', 'company_web', 'company_province', 'company_city', 'company_area', 'address', 'contact_name', 'phone', 'email', 'status', 'contract_id', 'position', 'design_types', 'source', 'name' , 'test_status' , 'invite_type'];
 
     /**
      * 添加返回字段
@@ -231,7 +231,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' => (int)$item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'stage_status' => (int)$item->stage_status,
                     'created_at' => $item->created_at,
@@ -239,6 +239,7 @@ class Item extends BaseModel
                     'tax_rate' => $item->tax_rate,
                     'tax' => $item->tax,
                     'test_status' => $item->test_status,
+                    'invite_type' => $item->invite_type,
                 ];
                 break;
             case 2:
@@ -295,7 +296,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' => (int)$item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => (int)$item->source,
@@ -303,6 +304,7 @@ class Item extends BaseModel
                     'tax' => $item->tax,
                     'product_features' => $info->product_features,
                     'test_status' => $item->test_status,
+                    'invite_type' => $item->invite_type,
 
 
                 ];
@@ -357,7 +359,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' => (int)$item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => (int)$item->source,
@@ -368,6 +370,7 @@ class Item extends BaseModel
                     'existing_content' => $info->existing_content ? explode('&', $info->existing_content) : [],
                     'test_status' => $item->test_status,
                     'other_content' => $info->other_content,
+                    'invite_type' => $item->invite_type,
 
                 ];
                 break;
@@ -421,7 +424,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' =>(int) $item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => (int)$item->source,
@@ -430,6 +433,7 @@ class Item extends BaseModel
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                     'test_status' => $item->test_status,
+                    'invite_type' => $item->invite_type,
 
                 ];
                 break;
@@ -483,7 +487,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' => (int)$item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => (int)$item->source,
@@ -494,6 +498,7 @@ class Item extends BaseModel
                     'existing_content' =>  $info->existing_content ? explode('&', $info->existing_content) : [],
                     'test_status' => $item->test_status,
                     'other_content' => $info->other_content,
+                    'invite_type' => $item->invite_type,
 
                 ];
                 break;
@@ -547,7 +552,7 @@ class Item extends BaseModel
                     'address' => $item->address,
                     'position' => $item->position,
                     'contact_name' => $item->contact_name,
-                    'phone' => (int)$item->phone,
+                    'phone' => $item->phone,
                     'email' => $item->email,
                     'created_at' => $item->created_at,
                     'source' => (int)$item->source,
@@ -556,6 +561,7 @@ class Item extends BaseModel
                     'product_features' => $info->product_features,
                     'present_situation' => (int)$info->present_situation,
                     'test_status' => $item->test_status,
+                    'invite_type' => $item->invite_type,
 
                 ];
                 break;
@@ -585,7 +591,7 @@ class Item extends BaseModel
             'company_area_value' => $item->company_area_value,
             'address' => $item->address,
             'contact_name' => $item->contact_name,
-            'phone' => (int)$item->phone,
+            'phone' => $item->phone,
             'email' => $item->email,
             'stage_status' => (int)$item->stage_status,
             'created_at' => $item->created_at,
@@ -598,6 +604,7 @@ class Item extends BaseModel
             'design_cost' => $item->design_cost,
             'design_cost_value' => $item->design_cost_value,
             'test_status' => $item->test_status,
+            'invite_type' => $item->invite_type,
 
         ];
     }
