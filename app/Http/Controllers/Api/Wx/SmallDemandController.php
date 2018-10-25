@@ -65,8 +65,7 @@ class SmallDemandController extends BaseController
         }
         if($smallItem->update($all)){
             $text = '【太火鸟铟果】小程序项目获客。设计需求名称：'.$smallItem->item_name.'；客户姓名：'.$request->input('user_name').'；联系方式：'.$request->input('phone');
-//            $this->dispatch(new SendOneSms(config('constant.new_item_send_phone') , $text));
-            $this->dispatch(new SendOneSms(15810295774 , $text));
+            $this->dispatch(new SendOneSms(config('constant.new_item_send_phone') , $text));
             return $this->response->item($smallItem, new SmallItemTransformer())->setMeta($this->apiMeta());
         }
         return $this->response->array($this->apiError('更改项目失败', 412));
@@ -98,8 +97,7 @@ class SmallDemandController extends BaseController
         $smallItem->phone = $request->input('phone');
         if($smallItem->save()){
             $text = '【太火鸟铟果】小程序榜单获客。榜单公司名称：'.$design_company->company_name.'；客户姓名：'.$request->input('user_name').'；联系方式：'.$request->input('phone');
-//            $this->dispatch(new SendOneSms(config('constant.new_item_send_phone') , $text));
-            $this->dispatch(new SendOneSms(15810295774 , $text));
+            $this->dispatch(new SendOneSms(config('constant.new_item_send_phone') , $text));
             return $this->response->item($smallItem, new SmallItemTransformer())->setMeta($this->apiMeta());
         }
         return $this->response->array($this->apiError('添加失败', 412));
