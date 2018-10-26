@@ -109,8 +109,11 @@ class DesignCollectDemandController extends BaseController
         if(!$design_company->isVerify()){
             return $this->response->array($this->apiError('设计公司没有认证', 403));
         }
-        // 查找需求对应的需求公司
+        // 查找需求
         $demand_company_id = DesignDemand::where('id',$design_demand_id)->first();
+        if (!$demand_company_id) {
+            return $this->response->array($this->apiError('没有找到该需求', 404));
+        }
         $design_follow = new Follow;
         $design_follow->type = 1;
         $design_follow->design_demand_id = $design_demand_id;

@@ -326,7 +326,7 @@ class DesignDemandController extends BaseController
 
         $demand = DesignDemand::where(['id'=>$all['demand_id'],'demand_company_id'=>$demand_company_id])->first();
         if (!$demand) {
-            return $this->response->array($this->apiError('没有找到该项目', 404));
+            return $this->response->array($this->apiError('没有找到该需求', 404));
         }
         // 判断状态
         if ($demand->status != -1) {

@@ -89,7 +89,7 @@ class AdminDesignDemandController extends BaseController
      * @apiName AdminDesignDemand auditStatus
      * @apiGroup AdminDesignDemand
      *
-     * @apiParam {integer} demand_id 需求状态
+     * @apiParam {integer} demand_id 需求ID
      * @apiParam {integer} status -1: 失败 2: 成功
      * @apiParam {string} token
      *
