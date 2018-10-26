@@ -39,7 +39,8 @@ class DesignDemand extends BaseModel
         return [
             'id'=>$this->id,
             'user_id'=>$this->user_id,
-            'user_name'=>$this->User ? $this->User->realname : null,
+            'account'=>$this->User ? $this->User->account : null,
+            'user_name'=>$this->User ? $this->User->username : null,
             'demand_company_id'=>$this->demand_company_id,
             'logo' => $this->demandCompany ? $this->demandCompany->logo : null,
             'logo_image' => $this->demandCompany ? $this->demandCompany->logo_image : null,
@@ -151,7 +152,7 @@ class DesignDemand extends BaseModel
     {
         $design_demand = self::query()
             ->where(['user_id'=>$user_id, 'demand_company_id'=>$demand_company_id])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->paginate($per_page);
         return $design_demand;
     }

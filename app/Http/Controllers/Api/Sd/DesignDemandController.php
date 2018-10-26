@@ -81,7 +81,7 @@ class DesignDemandController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {string} name  项目名称
-     * @apiParam {json} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     * @apiParam {array} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} field 产品类型：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
@@ -100,7 +100,7 @@ class DesignDemandController extends BaseController
      */
     public function release(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -111,6 +111,8 @@ class DesignDemandController extends BaseController
 
         // 获取数据
         $all = $request->all();
+        // 类型转成json
+        $design_types = json_encode($all['design_types'],true);
         // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
@@ -133,7 +135,7 @@ class DesignDemandController extends BaseController
         $design_demand->demand_company_id = $this->auth_user->demand_company_id;
         $design_demand->status = 1;
         $design_demand->type = 1;
-        $design_demand->design_types = $all['design_types'];
+        $design_demand->design_types = $design_types;
         $design_demand->cycle = $all['cycle'];
         $design_demand->design_cost = $all['design_cost'];
         $design_demand->field = $all['field'];
@@ -282,7 +284,7 @@ class DesignDemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} demand_id //需求ID
      * @apiParam {string} name  项目名称
-     * @apiParam {json} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     * @apiParam {array} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} field 产品类型：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
@@ -301,7 +303,7 @@ class DesignDemandController extends BaseController
      */
     public function demandUpdate(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -312,6 +314,8 @@ class DesignDemandController extends BaseController
 
         // 获取数据
         $all = $request->all();
+        // 类型转成json
+        $design_types = json_encode($all['design_types']);
         // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
@@ -332,8 +336,12 @@ class DesignDemandController extends BaseController
         if ($demand->status != -1) {
             return $this->response->array($this->apiError('不是未通过状态无法编辑', 403));
         }
+        $demand_name = DesignDemand::where(['name'=>$all['name'],'demand_company_id'=>$demand_company_id])->first();
+        if($demand_name){
+            return $this->response->array($this->apiError('项目名称已存在', 412));
+        }
         $demand->name = $all['name'];
-        $demand->design_types = $all['design_types'];
+        $demand->design_types = $design_types;
         $demand->cycle = $all['cycle'];
         $demand->status = 1;
         $demand->design_cost = $all['design_cost'];
