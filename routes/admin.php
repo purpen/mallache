@@ -355,6 +355,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         //删除
         $api->delete('/admin/smallItem/delete', 'AdminSmallItemController@delete');
 
+        /**
+         * 交易会
+         */
+        //交易会设计成果待审核列表
+        $api->get('/admin/designResult/list', 'AdminDesignResultController@unauditedLists');
+        //交易会设计成果审核
+        $api->get('/admin/designResult/save', 'AdminDesignResultController@toExamine');
+        //交易会设计成果详情
+        $api->get('/admin/designResult/show', 'AdminDesignResultController@designResultsShow');
+
 
     });
 

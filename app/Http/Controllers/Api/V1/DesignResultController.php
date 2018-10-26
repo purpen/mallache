@@ -14,12 +14,13 @@ use App\Http\Transformer\DesignResultListTransformer;
 class DesignResultController extends BaseController
 {
     /**
-     * @api {post} /designResults/add 保存设计成果
+     * @api {post} /designResults/save 保存设计成果
      * @author 王松
      * @apiVersion 1.0.0
-     * @apiName addDesignResults
+     * @apiName saveDesignResults
      * @apiGroup designResults
      * @apiParam {string} token
+     * @apiParam {string} id 修改时必传
      * @apiParam {string} title 标题
      * @apiParam {string} content 描述
      * @apiParam {array} images 图片
@@ -56,7 +57,7 @@ class DesignResultController extends BaseController
      *      }
      * }
      */
-    public function addDesignResults(Request $request)
+    public function saveDesignResults(Request $request)
     {
         $all = $request->all();
         $rules = [
@@ -85,20 +86,35 @@ class DesignResultController extends BaseController
         }else{
             $images = $images->toArray();
         }
-        $design_result = new DesignResult;
+        //修改
+        if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
+            $design_result = DesignResult::find((int)$all['id']);
+            if(!$design_result){
+                return $this->apiError('保存失败',400);
+            }
+            if($user_id != $design_result->user_id){
+                return $this->apiError('保存失败', 400);
+            }
+            if($design_result->status == 3){
+                return $this->apiError('上架中不能编辑',400);
+            }
+            $design_result->status = 1;
+        }else{
+            $design_result = new DesignResult;
+            $design_result->follow_count = 0; //关注数量
+            $design_result->demand_company_id = 0; //购买需求公司ID
+            $design_result->purchase_user_id = 0; //购买用户ID
+            $design_result->thn_cost = config('commission.rate'); //平台佣金比例
+            $design_result->user_id = $user_id; //用户ID
+            $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
+            $design_result->design_company_id = $all['design_company_id']; //设计公司ID
+        }
         $design_result->title = $all['title']; //标题
         $design_result->content = $all['content']; //描述
         $design_result->cover_id = $images[0]['id']; //封面图
         $design_result->sell_type = $all['sell_type']; //售卖类型
         $design_result->price = $all['price']; //售价
-        $design_result->status = $all['status']; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
         $design_result->share_ratio = $all['share_ratio']; //股权比例
-        $design_result->design_company_id = $all['design_company_id']; //设计公司ID
-        $design_result->user_id = $user_id; //用户ID
-        $design_result->thn_cost = config('commission.rate'); //平台佣金比例
-        $design_result->follow_count = 0; //关注数量
-        $design_result->demand_company_id = 0; //购买需求公司ID
-        $design_result->purchase_user_id = 0; //购买用户ID
         DB::beginTransaction();
         $res = $design_result->save();
         $images_arr = array_column($images,'id');
@@ -114,9 +130,9 @@ class DesignResultController extends BaseController
         }
         $cover_url = AssetModel::find($design_result->cover_id);
         if($cover_url){
-            $design_result->cover_url = $cover_url;
+            $design_result->cover = $cover_url;
         }else{
-            $design_result->cover_url = '';
+            $design_result->cover = '';
         }
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
         if(!empty($res) && !empty($asset)){
@@ -185,7 +201,7 @@ class DesignResultController extends BaseController
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
         }
-        return $this->apiSuccess('Success', 200,$design_result);
+        return $this->apiSuccess('Success', 200,$design_result ?? []);
     }
 
     /**
@@ -272,6 +288,8 @@ class DesignResultController extends BaseController
             }
             if($status != 0){
                 $query->where('status',$status);
+            }else{
+                $query->where('status','>',0);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->whereIn('id',$follow_data)
@@ -289,77 +307,89 @@ class DesignResultController extends BaseController
     }
 
     /**
-     * @api {get} /designResults/unauditedLists 待审核设计成果列表
+     * @api {get} /designResults/saveStatus 设计成果状态修改
      * @author 王松
      * @apiVersion 1.0.0
-     * @apiName designResultsUnauditedLists
+     * @apiName designResultsSaveStatus
      * @apiGroup designResults
-     * @apiParam {integer} page 页数
-     * @apiParam {integer} per_page 页面条数
-     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {integer} id 设计成果ID
+     * @apiParam {integer} status 状态 1:待提交,2:审核中,3:已上架,-1:已下架
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      * {
-     * "data": [
-     *     {
-     *         "id": 1,
-     *         "title": "标题", //标题
-     *         "content": "内容", //描述
-     *         "cover_id": 999,
-     *         "sell_type": 1, //售卖类型 1.全款 2.股权合作
-     *         "price": "100000.00", //售价
-     *         "share_ratio": 100, //股权比例
-     *         "design_company_id": 66, //设计公司ID
-     *         "user_id": 87,
-     *         "cover": { //封面
-     *             "id": 999,
-     *             "name": "participants@2x.png",
-     *             "created_at": 1524207783,
-     *             "summary": null,
-     *             "size": 939,
-     *             "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
-     *             "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
-     *             "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
-     *             "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
-     *             "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
-     *          },
-     *          "status": 1, //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
-     *          "thn_cost": "10.00", //平台佣金比例
-     *          "follow_count": 0, //关注数量
-     *          "demand_company_id": 0, //购买需求公司ID
-     *          "purchase_user_id": 0, //购买用户ID
-     *          "created_at": 1540448935, //创建时间
-     *          "updated_at": 1540448935
-     *     }
-     * ],
      * "meta": {
-     *     "message": "Success",
-     *     "status_code": 200,
-     *     "pagination": {
-     *         "total": 1,
-     *         "count": 1,
-     *         "per_page": 10,
-     *         "current_page": 1,
-     *         "total_pages": 1,
-     *         "links": []
-     *      }
+     *     "message": "保存状态成功",
+     *     "status_code": 200
      *  }
      * }
      */
-    public function unauditedLists(Request $request)
+    public function saveStatus(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        //$status = $request->input('status') ?? 0;
-        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
-            $sort = 'asc';
-        } else {
-            $sort = 'desc';
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer',
+            'status' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
         }
-        //收藏的项目成果
-        $query = DesignResult::query();
-        $list = $query->where('status',2)->orderBy('id',$sort)->paginate($per_page);
-        return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
+        if(!$design_result){
+            return $this->apiError('设计成果不存在', 400);
+        }
+        if($this->auth_user_id != $design_result->user_id){
+            return $this->apiError('保存状态失败', 400);
+        }
+        $design_result->status = $all['status'];
+        if($design_result->save()){
+            return $this->apiSuccess('保存状态成功', 200);
+        }
+        return $this->apiError('保存状态失败', 400);
+    }
+
+    /**
+     * @api {post} /designResults/delete 设计成果状态删除
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName deleteDesignResult
+     * @apiGroup designResults
+     * @apiParam {array} id 设计成果ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     *     "message": "删除成功",
+     *     "status_code": 200
+     *  }
+     * }
+     */
+    public function deleteDesignResult(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|array'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $all['id'] = [2];
+        $design_results = DesignResult::whereIn('id',$all['id'])->get();
+        if($design_results->isEmpty()){
+            return $this->apiError('设计成果不存在', 400);
+        }
+        foreach ($design_results as $design_result){
+            if($this->auth_user_id != $design_result->user_id){
+                return $this->apiError('没有权限', 400);
+            }
+            if(!$design_result->delete()){
+                return $this->apiError('删除失败', 400);
+            }
+        }
+        return $this->apiSuccess('删除成功', 200);
     }
 
 }

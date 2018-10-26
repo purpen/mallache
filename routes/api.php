@@ -727,11 +727,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
          * 设计成果
          */
         //保存设计成果
-        $api->post('/designResults/add', 'DesignResultController@addDesignResults');
+        $api->post('/designResults/save', 'DesignResultController@saveDesignResults');
         //设计成果详情
         $api->get('/designResults/show', 'DesignResultController@designResultsShow');
         //设计成果列表
         $api->get('/designResults/list', 'DesignResultController@lists');
+        //设计成果列表
+        $api->get('/designResults/saveStatus', 'DesignResultController@saveStatus');
+        //设计成果删除
+        $api->post('/designResults/delete', 'DesignResultController@deleteDesignResult');
     });
 
 });

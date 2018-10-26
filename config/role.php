@@ -229,6 +229,16 @@ return [
         '/admin/smallItem/show',
         '/admin/smallItem/update',
         '/admin/smallItem/delete',
+
+        /**
+         * 交易会
+         */
+        //设计成果待审核列表
+        '/admin/designResult/list',
+        //设计成果审核
+        '/admin/designResult/save',
+        //设计成果详情
+        '/admin/designResult/show',
     ],
 
     /**
@@ -452,6 +462,15 @@ return [
         '/admin/smallItem/show',
         '/admin/smallItem/update',
         '/admin/smallItem/delete',
+        /**
+         * 交易会
+         */
+        //设计成果待审核列表
+        '/admin/designResult/list',
+        //设计成果审核
+        '/admin/designResult/save',
+        //设计成果详情
+        '/admin/designResult/show',
     ],
 
     /**
@@ -602,6 +621,16 @@ return [
          * 小程序后台项目
          */
         '/admin/smallItem/lists',
+
+        /**
+         * 交易会
+         */
+        //设计成果待审核列表
+        '/admin/designResult/list',
+        //设计成果审核
+        '/admin/designResult/save',
+        //设计成果详情
+        '/admin/designResult/show',
     ],
 
     /**
