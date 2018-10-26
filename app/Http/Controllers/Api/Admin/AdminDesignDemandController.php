@@ -1,9 +1,9 @@
 <?php
 /**
- * 设计需求控制器
+ * 后台设计需求审核控制器
  *
  * @User yht
- * @time 2018-10-22
+ * @time 2018-10-25
  */
 
 namespace App\Http\Controllers\Api\Admin;
@@ -12,7 +12,6 @@ use App\Helper\Tools;
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\AdminTransformer\AdminDesignDemandListTransformer;
-
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
@@ -28,7 +27,7 @@ class AdminDesignDemandController extends BaseController
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      * @apiParam {integer} status -1.未通过审核；1.审核中；2.已发布
-     * @apiParam {integer} sort 0.升序；1.降序（默认）;2.推荐降序；
+     * @apiParam {integer} sort 0.降序；1.升序（默认）;2.推荐降序；
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:

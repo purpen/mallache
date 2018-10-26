@@ -13,10 +13,11 @@ class Follow extends BaseModel
     protected $table = 'follow';
 
     /**
-     * 获取需求列表信息
+     * 获取收藏的需求列表信息
      *
-     * @param $design_company_id
-     * @param $per_page
+     * @author 于海涛
+     * @param $design_company_id 设计公司ID
+     * @param $per_page 分页
      * @return array
      */
     static public function showDemandList($design_company_id, $per_page)
@@ -37,9 +38,9 @@ class Follow extends BaseModel
     /**
      * 判断设计公司是否收藏某个设计需求
      *
-     * @param $type
-     * @param $design_demand_id
-     * @param $design_company_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
+     * @param $design_company_id 设计公司ID
      * @return bool
      */
     static public function isCollectDemand($design_demand_id, $design_company_id)
@@ -89,7 +90,7 @@ class Follow extends BaseModel
     }
 
     /**
-     * 添加收藏
+     * 取消收藏
      *
      * @param $design_demand_id
      * @return bool

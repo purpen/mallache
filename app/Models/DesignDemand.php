@@ -60,9 +60,9 @@ class DesignDemand extends BaseModel
             'field_value'=>$this->field_value,
             "follow_count"=>$this->follow_count,
             'item_province'=>$this->item_province,
-            'item_province_value'=>$this->item_province_value,
+            'item_province_value'=>$this->province_value,
             'item_city'=>$this->item_city,
-            'item_city_value'=>$this->item_city_value,
+            'item_city_value'=>$this->city_value,
             'content'=>$this->content,
             "created_at"=>$this->created_at,
             "updated_at"=>$this->updated_at,
@@ -143,9 +143,11 @@ class DesignDemand extends BaseModel
 
     /**
      * 获取需求列表
-     * @param $user_id
-     * @param $demand_company_id
-     * @param $per_page
+     *
+     * @author 于海涛
+     * @param $user_id 用户ID
+     * @param $demand_company_id 需求公司ID
+     * @param $per_page 分页
      * @return array
      */
     static public function getDemandList($user_id, $demand_company_id, $per_page)
@@ -161,8 +163,8 @@ class DesignDemand extends BaseModel
     /**
      * 获取需求方联系方式
      *
-     * @param $type
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return array
      */
     static public function getDemandContact($design_demand_id)

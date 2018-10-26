@@ -332,14 +332,7 @@ class DesignDemandController extends BaseController
         if (!$demand) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        // 判断状态
-        if ($demand->status != -1) {
-            return $this->response->array($this->apiError('不是未通过状态无法编辑', 403));
-        }
-        $demand_name = DesignDemand::where(['name'=>$all['name'],'demand_company_id'=>$demand_company_id])->first();
-        if($demand_name){
-            return $this->response->array($this->apiError('项目名称已存在', 412));
-        }
+        
         $demand->name = $all['name'];
         $demand->design_types = $design_types;
         $demand->cycle = $all['cycle'];
