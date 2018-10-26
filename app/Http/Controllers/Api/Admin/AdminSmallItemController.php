@@ -5,6 +5,7 @@
  * Date: 2018/10/24
  * Time: 下午4:35
  */
+
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\AdminTransformer\AdminSmallItemListsTransformer;
@@ -32,12 +33,12 @@ class AdminSmallItemController extends Controller
         $sort = $request->input('sort') ? $request->input('sort') : 0;
         $is_ok = $request->input('is_ok') ? $request->input('is_ok') : 0;
         $query = SmallItem::query();
-        if($is_ok != 10){
-            $query->where('is_ok' , $is_ok);
+        if ($is_ok != 10) {
+            $query->where('is_ok', $is_ok);
         }
-        if($sort == 0 ){
+        if ($sort == 0) {
             $query->orderBy('id', 'desc');
-        }else{
+        } else {
             $query->orderBy('id', 'asc');
         }
 
@@ -59,7 +60,7 @@ class AdminSmallItemController extends Controller
     {
         $id = $request->input('id');
         $smallItem = SmallItem::find($id);
-        if(!$smallItem){
+        if (!$smallItem) {
             return $this->response->array($this->apiError('not found smallItem', 404));
         }
         return $this->response->item($smallItem, new AdminSmallItemListsTransformer())->setMeta($this->apiMeta());
@@ -83,10 +84,11 @@ class AdminSmallItemController extends Controller
         $all['is_ok'] = $request->input('is_ok');
         $all['summary'] = $request->input('summary');
         $smallItem = SmallItem::find($id);
-        if(!$smallItem){
+        if (!$smallItem) {
             return $this->response->array($this->apiError('not found smallItem', 404));
         }
-        if($smallItem->update($all)){
+        $new_all = array_diff($all, array(null));
+        if ($smallItem->update($new_all)) {
             return $this->response->array($this->apiSuccess());
         }
         return $this->response->array($this->apiError('更改失败', 412));
@@ -99,19 +101,13 @@ class AdminSmallItemController extends Controller
      * @apiName AdminSmallItem delete
      * @apiGroup AdminSmallItem
      *
-     * @apiParam {integer} id 小程序项目id
+     * @apiParam {array} id 小程序项目id
      * @apiParam {string} token
      */
     public function delete(Request $request)
     {
-        $id = $request->input('id');
-        $smallItem = SmallItem::find($id);
-        if(!$smallItem){
-            return $this->response->array($this->apiError('not found smallItem', 404));
-        }
-        if($smallItem->delete()){
-            return $this->response->array($this->apiSuccess());
-        }
-        return $this->response->array($this->apiError('删除失败', 412));
+        $id = (array)$request->input('id');
+        $n = SmallItem::query()->whereIn('id', $id)->delete();
+        return $this->response->array($this->apiSuccess());
     }
 }

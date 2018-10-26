@@ -17,6 +17,7 @@ class AdminSmallItemListsTransformer extends TransformerAbstract
             'phone' => $smallItem->phone,
             'is_ok' => $smallItem->is_ok,
             'summary' => $smallItem->summary,
+            'created_at' => $smallItem->created_at,
         ];
     }
 }

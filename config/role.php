@@ -231,7 +231,7 @@ return [
         '/admin/smallItem/delete',
 
         /**
-         * 交易会
+         * 顺德交易会
          */
         //设计成果待审核列表
         '/admin/designResult/list',
@@ -239,6 +239,10 @@ return [
         '/admin/designResult/save',
         //设计成果详情
         '/admin/designResult/show',
+        //顺德设计需求列表
+        '/admin/designDemand/lists',
+        //顺德设计需求信息审核
+        '/admin/designDemand/auditStatus',
     ],
 
     /**
@@ -463,7 +467,7 @@ return [
         '/admin/smallItem/update',
         '/admin/smallItem/delete',
         /**
-         * 交易会
+         * 顺德交易会
          */
         //设计成果待审核列表
         '/admin/designResult/list',
@@ -471,6 +475,10 @@ return [
         '/admin/designResult/save',
         //设计成果详情
         '/admin/designResult/show',
+        //顺德设计需求列表
+        '/admin/designDemand/lists',
+        //顺德设计需求信息审核
+        '/admin/designDemand/auditStatus',
     ],
 
     /**
@@ -623,7 +631,7 @@ return [
         '/admin/smallItem/lists',
 
         /**
-         * 交易会
+         * 顺德交易会
          */
         //设计成果待审核列表
         '/admin/designResult/list',
@@ -631,6 +639,10 @@ return [
         '/admin/designResult/save',
         //设计成果详情
         '/admin/designResult/show',
+        //顺德设计需求列表
+        '/admin/designDemand/lists',
+        //顺德设计需求信息审核
+        '/admin/designDemand/auditStatus',
     ],
 
     /**

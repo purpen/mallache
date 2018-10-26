@@ -364,7 +364,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/designResult/save', 'AdminDesignResultController@toExamine');
         //交易会设计成果详情
         $api->get('/admin/designResult/show', 'AdminDesignResultController@designResultsShow');
-
+        //顺德设计需求列表
+        $api->get('/admin/designDemand/lists', 'AdminDesignDemandController@lists');
+        //设计需求信息审核
+        $api->put('/admin/designDemand/auditStatus', 'AdminDesignDemandController@auditStatus');
 
     });
 

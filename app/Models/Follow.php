@@ -16,9 +16,10 @@ class Follow extends BaseModel
      * 获取需求列表信息
      *
      * @param $design_company_id
+     * @param $per_page
      * @return array
      */
-    static public function showDemandList($design_company_id)
+    static public function showDemandList($design_company_id, $per_page)
     {
         $data = self::where(['type'=>1,'design_company_id'=>$design_company_id])->get();
         if($data){
@@ -27,11 +28,7 @@ class Follow extends BaseModel
             foreach ($data as $v) {
                 $arr[] = $v->design_demand_id;
             }
-            $designDemand = DesignDemand::whereIn('id',$arr)->get();
-            $demand = [];
-            foreach ($designDemand as $v) {
-                $demand[] = $v->designObtainDemandInfo();
-            }
+            $designDemand = DesignDemand::whereIn('id',$arr)->paginate($per_page);
             return $designDemand;
         }
         return $data;
@@ -72,6 +69,40 @@ class Follow extends BaseModel
                 ->pluck('design_result_id')->all();
         }
         return $data;
+    }
+
+    /**
+     * 添加收藏
+     *
+     * @param $design_demand_id
+     * @return bool
+     */
+    public function addCollect($design_demand_id)
+    {
+        $demand = DesignDemand::where('id',$design_demand_id)->first();
+        if($demand){
+            $demand->follow_count = $demand->follow_count+1;
+            return $demand->save();
+        }
+
+        return $demand;
+    }
+
+    /**
+     * 添加收藏
+     *
+     * @param $design_demand_id
+     * @return bool
+     */
+    public function cancelCollect($design_demand_id)
+    {
+        $demand = DesignDemand::where('id',$design_demand_id)->first();
+        if($demand){
+            $demand->follow_count = $demand->follow_count-1;
+            return $demand->save();
+        }
+
+        return $demand;
     }
 
 }
