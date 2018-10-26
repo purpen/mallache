@@ -10,7 +10,7 @@ class AdminDesignDemandListTransformer extends TransformerAbstract
     public function transform(DesignDemand $design_demand)
     {
 
-        return $design_demand->demandListInfo();
+        return $design_demand->adminDemandInfo();
 
     }
 }

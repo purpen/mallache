@@ -61,7 +61,7 @@ class AdminDesignDemandController extends BaseController
         $status = in_array($request->input('status'), [-1, 1, 2]) ? $request->input('status') : null;
         $sort = in_array($request->input('sort'), [0, 1, 2]) ? $request->input('sort') : 0;
 
-        $demand = DesignDemand::with('demandCompany');
+        $demand = DesignDemand::with('demandCompany','User');
         if ($status !== null && $status !== '') {
             $demand->where('status', $status);
         }

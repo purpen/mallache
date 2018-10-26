@@ -32,6 +32,43 @@ class DesignDemand extends BaseModel
     }
 
     /**
+     * 后台查看需求信息
+     */
+    public function adminDemandInfo()
+    {
+        return [
+            'id'=>$this->id,
+            'user_id'=>$this->user_id,
+            'user_name'=>$this->User ? $this->User->realname : null,
+            'demand_company_id'=>$this->demand_company_id,
+            'logo' => $this->demandCompany ? $this->demandCompany->logo : null,
+            'logo_image' => $this->demandCompany ? $this->demandCompany->logo_image : null,
+            'status'=>$this->status,
+            'type'=>$this->type,
+            'type_value' => $this->type_value,
+            'design_types'=>$this->design_types,
+            'design_types_value' => $this->design_types_value,
+            'name'=>$this->name,
+            'cycle'=>$this->cycle,
+            'cycle_value' => $this->cycle_value,
+            'design_cost'=>$this->design_cost,
+            'design_cost_value' => $this->design_cost_value,
+            'industry'=>$this->industry,
+            'industry_value'=>$this->industry_value,
+            'field'=>$this->field,
+            'field_value'=>$this->field_value,
+            "follow_count"=>$this->follow_count,
+            'item_province'=>$this->item_province,
+            'item_province_value'=>$this->item_province_value,
+            'item_city'=>$this->item_city,
+            'item_city_value'=>$this->item_city_value,
+            'content'=>$this->content,
+            "created_at"=>$this->created_at,
+            "updated_at"=>$this->updated_at,
+        ];
+    }
+
+    /**
      * 需求信息
      */
     public function demandInfo()
@@ -50,13 +87,15 @@ class DesignDemand extends BaseModel
             'cycle_value' => $this->cycle_value,
             'design_cost'=>$this->design_cost,
             'design_cost_value' => $this->design_cost_value,
+            'industry'=>$this->industry,
+            'industry_value'=>$this->industry_value,
             'field'=>$this->field,
             'field_value'=>$this->field_value,
             "follow_count"=>$this->follow_count,
             'item_province'=>$this->item_province,
-            'item_province_value'=>$this->item_province_value,
+            'item_province_value'=>$this->province_value,
             'item_city'=>$this->item_city,
-            'item_city_value'=>$this->item_city_value,
+            'item_city_value'=>$this->city_value,
             'content'=>$this->content,
             "created_at"=>$this->created_at,
             "updated_at"=>$this->updated_at,
@@ -112,6 +151,7 @@ class DesignDemand extends BaseModel
     {
         $design_demand = self::query()
             ->where(['user_id'=>$user_id, 'demand_company_id'=>$demand_company_id])
+            ->orderBy('created_at', 'desc')
             ->paginate($per_page);
         return $design_demand;
     }

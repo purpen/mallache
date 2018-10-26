@@ -124,7 +124,7 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiSuccess('Success', 200));
         }
         return $this->response->array($this->apiError('关注失败', 500));
-        
+
     }
 
     /**
