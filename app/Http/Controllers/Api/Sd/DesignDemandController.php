@@ -100,7 +100,7 @@ class DesignDemandController extends BaseController
      */
     public function release(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -303,7 +303,7 @@ class DesignDemandController extends BaseController
      */
     public function demandUpdate(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -332,7 +332,7 @@ class DesignDemandController extends BaseController
         if (!$demand) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        
+
         $demand->name = $all['name'];
         $demand->design_types = $design_types;
         $demand->cycle = $all['cycle'];
