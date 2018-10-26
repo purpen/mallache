@@ -460,6 +460,14 @@ return [
         '/admin/smallItem/show',
         '/admin/smallItem/update',
         '/admin/smallItem/delete',
+
+        /**
+         *顺德交易会
+         */
+        //顺德设计需求列表
+        '/admin/designDemand/lists',
+        //顺德设计需求信息审核
+        '/admin/designDemand/auditStatus',
     ],
 
     /**
@@ -610,6 +618,14 @@ return [
          * 小程序后台项目
          */
         '/admin/smallItem/lists',
+
+        /**
+         *顺德交易会
+         */
+        //顺德设计需求列表
+        '/admin/designDemand/lists',
+        //顺德设计需求信息审核
+        '/admin/designDemand/auditStatus',
     ],
 
     /**

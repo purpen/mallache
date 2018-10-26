@@ -53,5 +53,39 @@ class Follow extends BaseModel
         return false;
     }
 
+    /**
+     * 添加收藏
+     *
+     * @param $design_demand_id
+     * @return bool
+     */
+    public function addCollect($design_demand_id)
+    {
+        $demand = DesignDemand::where('id',$design_demand_id)->first();
+        if($demand){
+            $demand->follow_count = $demand->follow_count+1;
+            return $demand->save();
+        }
+
+        return $demand;
+    }
+
+    /**
+     * 添加收藏
+     *
+     * @param $design_demand_id
+     * @return bool
+     */
+    public function cancelCollect($design_demand_id)
+    {
+        $demand = DesignDemand::where('id',$design_demand_id)->first();
+        if($demand){
+            $demand->follow_count = $demand->follow_count-1;
+            return $demand->save();
+        }
+
+        return $demand;
+    }
+
 
 }

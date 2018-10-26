@@ -120,8 +120,11 @@ class DesignCollectDemandController extends BaseController
         $design_follow->demand_company_id = $demand_company_id->demand_company_id;
         $design_follow->design_company_id = $design_company_id;
         if($design_follow->save()){
+            $design_follow->addCollect($design_demand_id);
             return $this->response->array($this->apiSuccess('Success', 200));
         }
+        return $this->response->array($this->apiError('关注失败', 500));
+        
     }
 
     /**
@@ -171,6 +174,7 @@ class DesignCollectDemandController extends BaseController
         $follow = Follow::where(['design_demand_id'=>$design_demand_id,'design_company_id'=>$design_company_id])->first();
         if($follow){
             $follow->delete();
+            $follow->cancelCollect($design_demand_id);
             return $this->response->array($this->apiSuccess('Success', 200));
         }
         return $this->response->array($this->apiError('没有找到收藏的设计需求', 404));

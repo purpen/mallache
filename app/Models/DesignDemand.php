@@ -57,6 +57,7 @@ class DesignDemand extends BaseModel
             'item_province_value'=>$this->item_province_value,
             'item_city'=>$this->item_city,
             'item_city_value'=>$this->item_city_value,
+            'content'=>$this->content,
             "created_at"=>$this->created_at,
             "updated_at"=>$this->updated_at,
         ];
