@@ -40,7 +40,7 @@ class DesignDemand extends BaseModel
             'id'=>$this->id,
             'user_id'=>$this->user_id,
             'account'=>$this->User ? $this->User->account : null,
-            'user_name'=>$this->User ? $this->User->username : null,
+            'realname'=>$this->User ? $this->User->realname : null,
             'demand_company_id'=>$this->demand_company_id,
             'logo' => $this->demandCompany ? $this->demandCompany->logo : null,
             'logo_image' => $this->demandCompany ? $this->demandCompany->logo_image : null,
