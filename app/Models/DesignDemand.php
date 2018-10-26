@@ -152,7 +152,7 @@ class DesignDemand extends BaseModel
     {
         $design_demand = self::query()
             ->where(['user_id'=>$user_id, 'demand_company_id'=>$demand_company_id])
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate($per_page);
         return $design_demand;
     }
