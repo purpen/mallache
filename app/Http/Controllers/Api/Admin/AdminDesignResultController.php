@@ -41,7 +41,10 @@ class AdminDesignResultController extends BaseController
      *          "purchase_user_id": 0, //购买用户ID
      *          "updated_at": 1540433203,
      *          "created_at": 1540433203, //创建时间
-     *          "id": 1 //设计成果ID
+     *          "id": 1, //设计成果ID
+     *          "images_url":[], //图片地址
+     *          "illustrate_url":[], //产品说明书
+     *          "patent_url":[], //专利证书
      *      }
      * }
      */
@@ -57,16 +60,12 @@ class AdminDesignResultController extends BaseController
         }
         $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
         if(!empty($design_result)){
-            $cover_url = AssetModel::find($design_result->cover_id);
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
-            if($cover_url){
-                $design_result->cover = $cover_url;
-            }else{
-                $design_result->cover = '';
-            }
+            $patent_url = AssetModel::getImageUrl($design_result->id,39,2);
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
+            $design_result->patent_url = $patent_url;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
             return $this->apiError('设计成果已下架',400);

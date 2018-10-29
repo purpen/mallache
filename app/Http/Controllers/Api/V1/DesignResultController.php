@@ -25,7 +25,8 @@ class DesignResultController extends BaseController
      * @apiParam {string} id 修改时必传
      * @apiParam {string} title 标题
      * @apiParam {string} content 描述
-     * @apiParam {array} images 图片
+     * @apiParam {array} images 图片最大20
+     * @apiParam {array} patent 专利证书
      * @apiParam {array} illustrate 说明书
      * @apiParam {integer} sell_type 售卖类型  1:全款,2:股权合作
      * @apiParam {string} price 售价
@@ -55,8 +56,20 @@ class DesignResultController extends BaseController
      *          "purchase_user_id": 0, //购买用户ID
      *          "updated_at": 1540433203,
      *          "created_at": 1540433203, //创建时间
-     *          "id": 1 //设计成果ID
-     *      }
+     *          "id": 1, //设计成果ID
+     *          "cover": { //封面图
+     *             "id": 999,
+     *              "name": "participants@2x.png",
+     *              "created_at": 1524207783,
+     *              "summary": null,
+     *              "size": 939,
+     *              "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *              "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *              "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *              "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *              "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          }
+     *     }
      * }
      */
     public function saveDesignResults(Request $request)
@@ -65,7 +78,8 @@ class DesignResultController extends BaseController
         $rules = [
             'title' => 'required',
             'content' => 'required',
-            'images' => 'required|array',
+            'images' => 'required|array|max:20',
+            'patent' => 'array',
             'illustrate' => 'array',
             'sell_type' => 'required|integer',
             'price' => 'required',
@@ -78,6 +92,7 @@ class DesignResultController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $user_id = $this->auth_user_id;
+        $patent = $all['patent'];
         $images_random = $all['images'];
         $illustrate_random = $all['illustrate'];
         //设计成果图片
@@ -95,12 +110,9 @@ class DesignResultController extends BaseController
                 return $this->apiError('保存失败',400);
             }
             if($user_id != $design_result->user_id){
-                return $this->apiError('保存失败', 400);
+                return $this->apiError('没有权限', 400);
             }
-            if($design_result->status == 3){
-                return $this->apiError('上架中不能编辑',400);
-            }
-            $design_result->status = 1;
+            $design_result->status = 2;
         }else{
             $design_result = new DesignResult;
             $design_result->follow_count = 0; //关注数量
@@ -129,6 +141,14 @@ class DesignResultController extends BaseController
             $arr = array_merge($images_arr,$illustrate_arr);
         }else{
             $arr = $images_arr;
+        }
+        //专利证书
+        $patent_data = AssetModel::select('id','target_id','user_id','name','random','path')
+            ->whereIn('random',$patent)
+            ->where('type',39)->get();
+        if($patent_data){
+            $patent_arr = array_column($patent_data->toArray(),'id');
+            $arr = array_merge($arr,$patent_arr);
         }
         $cover_url = AssetModel::find($design_result->cover_id);
         if($cover_url){
@@ -176,7 +196,11 @@ class DesignResultController extends BaseController
      *          "purchase_user_id": 0, //购买用户ID
      *          "updated_at": 1540433203,
      *          "created_at": 1540433203, //创建时间
-     *          "id": 1 //设计成果ID
+     *          "id": 1, //设计成果ID
+     *          "images_url":[], //图片地址
+     *          "illustrate_url":[], //产品说明书
+     *          "patent_url":[], //专利证书
+     *
      *      }
      * }
      */
@@ -192,16 +216,12 @@ class DesignResultController extends BaseController
         }
         $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
         if(!empty($design_result)){
-            $cover_url = AssetModel::find($design_result->cover_id);
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
-            if($cover_url){
-                $design_result->cover = $cover_url;
-            }else{
-                $design_result->cover = '';
-            }
+            $patent_url = AssetModel::getImageUrl($design_result->id,39,2);
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
+            $design_result->patent_url = $patent_url;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
             return $this->apiError('设计成果已下架',400);
