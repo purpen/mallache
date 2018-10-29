@@ -46,6 +46,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapJdRoutes();
 
         $this->mapWxRoutes();
+
+        $this->mapSdRoutes();
     }
 
     /**
@@ -111,5 +113,14 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/wx.php'));
+    }
+
+    //顺德路由文件
+    protected function mapSdRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/sd.php'));
     }
 }
