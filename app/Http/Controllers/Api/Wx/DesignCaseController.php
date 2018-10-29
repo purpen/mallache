@@ -49,7 +49,7 @@ class DesignCaseController extends BaseController
                 continue;
             }
             //模糊查询有的话，走上面，没有的话走下面
-            $design_cases = DesignCaseModel::where('label' , 'like', '%' . $seg_list . '%')->get();
+            $design_cases = DesignCaseModel::where('label' , 'like', '%' . $seg_list . '%')->orWhere('title' , 'like', '%' . $seg_list . '%')->get();
             if($design_cases->isEmpty()){
                 continue;
             }
