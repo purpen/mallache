@@ -55,7 +55,7 @@ class AdminDesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::find($all['id']);
+        $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
         if(!empty($design_result)){
             $cover_url = AssetModel::find($design_result->cover_id);
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
@@ -67,8 +67,10 @@ class AdminDesignResultController extends BaseController
             }
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
+            return $this->apiSuccess('Success', 200,$design_result);
+        }else{
+            return $this->apiError('设计成果已下架',400);
         }
-        return $this->apiSuccess('Success', 200,$design_result ?? []);
     }
 
     /**

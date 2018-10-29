@@ -188,7 +188,7 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::find($all['id']);
+        $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
         if(!empty($design_result)){
             $cover_url = AssetModel::find($design_result->cover_id);
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
@@ -200,8 +200,10 @@ class DesignResultController extends BaseController
             }
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
+            return $this->apiSuccess('Success', 200,$design_result);
+        }else{
+            return $this->apiError('设计成果已下架',400);
         }
-        return $this->apiSuccess('Success', 200,$design_result ?? []);
     }
 
     /**
@@ -390,6 +392,90 @@ class DesignResultController extends BaseController
             }
         }
         return $this->apiSuccess('删除成功', 200);
+    }
+
+    /**
+     * @api {get} /designResults/collectionOperation 设计成果状态关注与取消关注
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName DesignResultCollectionOperation
+     * @apiGroup designResults
+     * @apiParam {integer} id 设计成果ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     *     "message": "收藏成功",
+     *     "status_code": 200
+     *  }
+     * }
+     */
+    public function collectionOperation(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $follow = new Follow;
+        $design_result = new DesignResult;
+        $id = $all['id'];
+        if($this->auth_user->type == 1){
+            //需求公司
+            $data = $follow->where(['design_company_id'=>$this->auth_user->design_company_id,'design_result_id'=>$id,'type'=>2])->first();
+            if($data){
+                DB::beginTransaction();
+                if($data->delete() && $design_result->save_follow_count($id,2)){
+                    DB::commit();
+                    return $this->apiSuccess('取消收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('取消收藏失败', 400);
+            }else{
+                $follow->design_company_id = $this->auth_user->design_company_id;
+                $follow->design_result_id = $id;
+                $follow->type = 2;
+                DB::beginTransaction();
+                if($follow->save() && $design_result->save_follow_count($id,1)){
+                    DB::commit();
+                    return $this->apiSuccess('收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('收藏失败', 400);
+            }
+        }else{
+            //设计公司
+            $data = $follow->where(['demand_company_id'=>$this->auth_user->demand_company_id,'design_result_id'=>$id,'type'=>2])->first();
+            if($data){
+                DB::beginTransaction();
+                if($data->delete() && $design_result->save_follow_count($id,2)){
+                    DB::commit();
+                    return $this->apiSuccess('取消收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('取消收藏失败', 400);
+            }else{
+                $follow->demand_company_id = $this->auth_user->demand_company_id;
+                $follow->design_result_id = $id;
+                $follow->type = 2;
+                DB::beginTransaction();
+                if($follow->save() && $design_result->save_follow_count($id,1)){
+                    DB::commit();
+                    return $this->apiSuccess('收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('收藏失败', 400);
+            }
+        }
+    }
+
+    public function myCollectionList()
+    {
+
     }
 
 }
