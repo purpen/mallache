@@ -200,7 +200,7 @@ class DesignDemand extends BaseModel
             }
             return $arr;
         }
-        return $demand_id;
+        return [];
     }
 
     //设计类型

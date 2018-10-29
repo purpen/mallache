@@ -12,7 +12,6 @@ class Follow extends BaseModel
      */
     protected $table = 'follow';
 
-
     /**
      * 获取收藏的需求列表信息
      *
@@ -105,6 +104,33 @@ class Follow extends BaseModel
         }
 
         return $demand;
+    }
+
+    /**
+     * 后台查看需求被那些设计公司收藏
+     *
+     * @param $design_demand_id
+     * @return array
+     */
+    static public function adminCollectInfo($design_demand_id)
+    {
+        $designs = self::where(['type'=>1,'design_demand_id'=>$design_demand_id])->get();
+        if($designs) {
+            $arr = [];
+            foreach ($designs as $v) {
+                $arr[] = $v->design_company_id;
+            }
+            $design_info = DesignCompanyModel::query()
+                ->join('users','users.id','=','design_company.user_id')
+                ->whereIn('design_company.id',$arr)
+                ->get();
+            $all = [];
+            foreach ($design_info as $v) {
+                $all[] = $v->designInfo();
+            }
+            return $all;
+        }
+        return [];
     }
 
 }

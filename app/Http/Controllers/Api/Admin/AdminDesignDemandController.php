@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Helper\Tools;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\AdminTransformer\AdminDesignDemandListTransformer;
@@ -138,5 +139,50 @@ class AdminDesignDemandController extends BaseController
         $tools->message($design_demand->user_id, $title, $content, 1, null);
 
         return $this->response->array($this->apiSuccess('Success', 200));
+    }
+
+    /**
+     * @api {get} /admin/designDemand/showCollectList 查看设计需求被那些设计公司收藏
+     * @apiVersion 1.0.0
+     * @apiName AdminDesignDemand showCollectList
+     * @apiGroup AdminDesignDemand
+     *
+     * @apiParam {integer} demand_id 需求ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *  "meta": {
+     *    "code": 200,
+     *    "message": "Success.",
+     *  },
+     *      "data": [
+     *          {
+     *              "design_company_id": 1,         设计公司ID
+     *              "design_company_name": "小冷",    设计公司名称
+     *              "phone": "18511143873",         手机号
+     *              "account": "18511143873",       用户名
+     *              "realname": null                真实姓名
+     *          }
+     *      ]
+     * }
+     */
+    public function showCollectList(Request $request)
+    {
+        $rules = ['demand_id' => 'required|integer'];
+        $payload = $request->only('demand_id');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $design_demand = DesignDemand::where('id', $payload)->first();
+        if (!$design_demand) {
+            return $this->response->array($this->apiSuccess('设计需求不存在', 404));
+        }
+        $design = Follow::adminCollectInfo($payload);
+        return $this->response->array($this->apiSuccess('Success', 200, $design));
     }
 }

@@ -407,14 +407,19 @@ class DesignDemandController extends BaseController
         // 设计公司获取需求列表
         $demandIds = DesignDemand::getCollectDemandId($design_company_id);
         $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
-        foreach ($design_demand as $v) {
-            if(in_array($v->id,$demandIds)){
-                $v->follow_status = 1;
-            }else{
+        if(!$demandIds){
+            foreach ($design_demand as $v){
                 $v->follow_status = 2;
             }
+        }else{
+            foreach ($design_demand as $v) {
+                if(in_array($v->id,$demandIds)){
+                    $v->follow_status = 1;
+                }else{
+                    $v->follow_status = 2;
+                }
+            }
         }
-
         return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
