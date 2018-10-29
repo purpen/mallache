@@ -40,8 +40,10 @@ class DesignCaseController extends BaseController
         Finalseg::init();
         //把标题分词
         $seg_lists = Jieba::cut($item_name);
+        //过滤掉无用的词
+        $new_seg_lists = array_diff($seg_lists , ["设计" , "案例" , "系列" , "升级"]);
         $design_cases_array = [];
-        foreach ($seg_lists as $seg_list){
+        foreach ($new_seg_lists as $seg_list){
             //　过滤掉一个字和标点符号
             if(strlen($seg_list) < 6){
                 continue;
