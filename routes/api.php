@@ -738,6 +738,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/designResults/delete', 'DesignResultController@deleteDesignResult');
         //设计成果关注
         $api->get('/designResults/collectionOperation', 'DesignResultController@collectionOperation');
+        //设计成果我的收藏列表
+        $api->get('/designResults/myCollectionList', 'DesignResultController@myCollectionList');
     });
 
 });

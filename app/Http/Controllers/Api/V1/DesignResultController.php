@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Follow;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
+use App\Models\DesignDemand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\DesignResultListTransformer;
+use App\Http\Transformer\DesignCollectDemandListTransformer;
 
 class DesignResultController extends BaseController
 {
@@ -426,29 +428,6 @@ class DesignResultController extends BaseController
         $id = $all['id'];
         if($this->auth_user->type == 1){
             //需求公司
-            $data = $follow->where(['design_company_id'=>$this->auth_user->design_company_id,'design_result_id'=>$id,'type'=>2])->first();
-            if($data){
-                DB::beginTransaction();
-                if($data->delete() && $design_result->save_follow_count($id,2)){
-                    DB::commit();
-                    return $this->apiSuccess('取消收藏成功', 200);
-                }
-                DB::rollBack();
-                return $this->apiError('取消收藏失败', 400);
-            }else{
-                $follow->design_company_id = $this->auth_user->design_company_id;
-                $follow->design_result_id = $id;
-                $follow->type = 2;
-                DB::beginTransaction();
-                if($follow->save() && $design_result->save_follow_count($id,1)){
-                    DB::commit();
-                    return $this->apiSuccess('收藏成功', 200);
-                }
-                DB::rollBack();
-                return $this->apiError('收藏失败', 400);
-            }
-        }else{
-            //设计公司
             $data = $follow->where(['demand_company_id'=>$this->auth_user->demand_company_id,'design_result_id'=>$id,'type'=>2])->first();
             if($data){
                 DB::beginTransaction();
@@ -470,12 +449,148 @@ class DesignResultController extends BaseController
                 DB::rollBack();
                 return $this->apiError('收藏失败', 400);
             }
+        }else{
+            //设计公司
+            $data = $follow->where(['design_company_id'=>$this->auth_user->design_company_id,'design_result_id'=>$id,'type'=>2])->first();
+            if($data){
+                DB::beginTransaction();
+                if($data->delete() && $design_result->save_follow_count($id,2)){
+                    DB::commit();
+                    return $this->apiSuccess('取消收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('取消收藏失败', 400);
+            }else{
+                $follow->design_company_id = $this->auth_user->design_company_id;
+                $follow->design_result_id = $id;
+                $follow->type = 2;
+                DB::beginTransaction();
+                if($follow->save() && $design_result->save_follow_count($id,1)){
+                    DB::commit();
+                    return $this->apiSuccess('收藏成功', 200);
+                }
+                DB::rollBack();
+                return $this->apiError('收藏失败', 400);
+            }
         }
     }
 
-    public function myCollectionList()
+    /**
+     * @api {get} /designResults/myCollectionList 我的设计成果收藏列表
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName DesignResultMyCollectionList
+     * @apiGroup designResults
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {integer} type 1:设计需求,2:设计成果
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *     {
+     *         "id": 1,
+     *         "title": "标题", //标题
+     *         "content": "内容", //描述
+     *         "cover_id": 999,
+     *         "sell_type": 1, //售卖类型 1.全款 2.股权合作
+     *         "price": "100000.00", //售价
+     *         "share_ratio": 100, //股权比例
+     *         "design_company_id": 66, //设计公司ID
+     *         "user_id": 87,
+     *         "cover": { //封面
+     *             "id": 999,
+     *             "name": "participants@2x.png",
+     *             "created_at": 1524207783,
+     *             "summary": null,
+     *             "size": 939,
+     *             "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *             "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *             "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *             "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *             "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          },
+     *          "status": 1, //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
+     *          "thn_cost": "10.00", //平台佣金比例
+     *          "follow_count": 0, //关注数量
+     *          "demand_company_id": 0, //购买需求公司ID
+     *          "purchase_user_id": 0, //购买用户ID
+     *          "created_at": 1540448935, //创建时间
+     *          "updated_at": 1540448935
+     *     }
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200
+     *  }
+     * }
+     */
+    public function myCollectionList(Request $request)
     {
-
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $all = $request->all();
+        $rules = [
+            'type' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $type = $all['type'];
+        if($type == 1){
+            //设计需求
+            if ($this->auth_user->type == 1) {
+                //需求公司
+                $demand_company_id = $this->auth_user->demand_company_id;
+                $list = Follow::select('design_demand_id')->where(['type'=>1,'demand_company_id'=>$demand_company_id])->paginate($per_page);
+            }else{
+                //设计公司
+                $design_company_id = $this->auth_user->design_company_id;
+                $list = Follow::select('design_demand_id')->where(['type'=>1,'design_company_id'=>$design_company_id])->paginate($per_page);
+            }
+        }else{
+            //设计成果
+            if ($this->auth_user->type == 1) {
+                //需求公司
+                $demand_company_id = $this->auth_user->demand_company_id;
+                $list = Follow::select('design_result_id')->where(['type'=>2,'demand_company_id'=>$demand_company_id])->paginate($per_page);
+            }else{
+                //设计公司
+                $design_company_id = $this->auth_user->design_company_id;
+                $list = Follow::select('design_result_id')->where(['type'=>2,'design_company_id'=>$design_company_id])->paginate($per_page);
+            }
+        }
+        $list = $list->toArray();
+        if($type == 1){
+            if(!empty($list['data'])){
+                $arr = array_column($list['data'],'design_demand_id');
+            }else{
+                $arr = [];
+            }
+            $data = DesignDemand::whereIn('id',$arr)->paginate($per_page);
+            return $this->response->paginator($data, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
+        }else{
+            if(!empty($list['data'])){
+                $arr = array_column($list['data'],'design_result_id');
+            }else{
+                $arr = [];
+            }
+            $data = DesignResult::whereIn('id',$arr)->orderBy('id',$sort)->paginate($per_page);
+            return $this->response->paginator($data, new DesignResultListTransformer)->setMeta($this->apiMeta());
+        }
     }
 
 }
+
+
+
+
+
+
+
+
