@@ -94,6 +94,7 @@ class DesignDemand extends BaseModel
             'field'=>$this->field,
             'field_value'=>$this->field_value,
             "follow_count"=>$this->follow_count,
+            "follow_status"=>$this->follow_status,
             'item_province'=>$this->item_province,
             'item_province_value'=>$this->province_value,
             'item_city'=>$this->item_city,

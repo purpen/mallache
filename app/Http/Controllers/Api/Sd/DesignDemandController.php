@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Sd;
 
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Transformer\DesignDemandTransformer;
@@ -407,6 +408,7 @@ class DesignDemandController extends BaseController
         // 设计公司获取需求列表
         $demandIds = DesignDemand::getCollectDemandId($design_company_id);
         $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
+        // 判断是否关注
         if(!$demandIds){
             foreach ($design_demand as $v){
                 $v->follow_status = 2;
@@ -487,9 +489,17 @@ class DesignDemandController extends BaseController
 //            return $this->response->array($this->apiError('设计公司没有认证', 403));
 //        }
 
+
         $demand_info = DesignDemand::where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
+        }
+        $follow = Follow::where(['design_demand_id'=>$demand_id,'design_company_id'=>$design_company_id])->first();
+        // 判断是否关注
+        if ($follow) {
+            $demand_info->follow_status = 1;
+        }else{
+            $demand_info->follow_status = 2;
         }
         return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
 
