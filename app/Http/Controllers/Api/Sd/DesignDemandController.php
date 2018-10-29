@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Sd;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Transformer\DesignDemandTransformer;
 use App\Http\Transformer\DesignDemandListTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -129,6 +130,7 @@ class DesignDemandController extends BaseController
         if ($demand_name) {
             return $this->response->array($this->apiError('项目名称已存在', 400));
         }
+        DB::beginTransaction();
         $design_demand = new DesignDemand;
         $design_demand->name = $all['name'];
         $design_demand->user_id = $this->auth_user_id;
@@ -144,8 +146,12 @@ class DesignDemandController extends BaseController
         $design_demand->item_city = $all['item_city'];
         $design_demand->content = $all['content'];
         if ($design_demand->save()) {
+            DB::commit();
             return $this->response->item($design_demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
+        DB::rollBack();
+        return $this->response->array($this->apiError('发布失败', 500));
+
     }
 
     /**
@@ -333,6 +339,11 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
 
+        $demand_name = DesignDemand::where(['demand_company_id'=>$demand_company_id,'name'=>$all['name']])->whereNotIn('id', [$all['demand_id']])->get();
+        if(!$demand_name->isEmpty()){
+            return $this->response->array($this->apiError('项目名称已存在', 412));
+        }
+        DB::beginTransaction();
         $demand->name = $all['name'];
         $demand->design_types = $design_types;
         $demand->cycle = $all['cycle'];
@@ -344,8 +355,11 @@ class DesignDemandController extends BaseController
         $demand->item_city = $all['item_city'];
         $demand->content = $all['content'];
         if ($demand->save()) {
+            DB::commit();
             return $this->response->item($demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
+        DB::rollBack();
+        return $this->response->array($this->apiError('更改失败', 500));
     }
 
     /**
@@ -373,6 +387,7 @@ class DesignDemandController extends BaseController
      *              "name": "测试1",            //项目名称
      *              "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      *              "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *              "follow_status": 1,         //是否关注 1.已收藏 .2未收藏
      *              "created_at": 1540281300,
      *              "updated_at": 1540281300
      *          }
@@ -389,13 +404,17 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
+        // 设计公司获取需求列表
+        $demandIds = DesignDemand::getCollectDemandId($design_company_id);
+        $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
+        foreach ($design_demand as $v) {
+            if(in_array($v->id,$demandIds)){
+                $v->follow_status = 1;
+            }else{
+                $v->follow_status = 2;
+            }
         }
 
-        // 设计公司获取需求列表
-        $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
         return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
@@ -458,10 +477,10 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
+//        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+//        if(!$design_company->isVerify()){
+//            return $this->response->array($this->apiError('设计公司没有认证', 403));
+//        }
 
         $demand_info = DesignDemand::where('id', $demand_id)->first();
         if (!$demand_info) {

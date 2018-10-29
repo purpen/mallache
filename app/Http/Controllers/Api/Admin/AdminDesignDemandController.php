@@ -64,7 +64,6 @@ class AdminDesignDemandController extends BaseController
         if ($status !== null && $status !== '') {
             $demand->where('status', $status);
         }
-
         //排序
         switch ($sort) {
             case 0:

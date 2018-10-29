@@ -12,6 +12,7 @@ class Follow extends BaseModel
      */
     protected $table = 'follow';
 
+
     /**
      * 获取收藏的需求列表信息
      *
@@ -73,7 +74,7 @@ class Follow extends BaseModel
     }
 
     /**
-     * 添加收藏
+     * 添加收藏更改收藏数量
      *
      * @param $design_demand_id
      * @return bool
@@ -90,7 +91,7 @@ class Follow extends BaseModel
     }
 
     /**
-     * 取消收藏
+     * 取消收藏更改收藏数量
      *
      * @param $design_demand_id
      * @return bool

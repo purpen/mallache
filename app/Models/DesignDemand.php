@@ -31,6 +31,7 @@ class DesignDemand extends BaseModel
         return $this->belongsTo('App\Models\DemandCompany', 'demand_company_id');
     }
 
+
     /**
      * 后台查看需求信息
      */
@@ -123,6 +124,7 @@ class DesignDemand extends BaseModel
             'design_cost'=>$this->design_cost,
             'design_cost_value' => $this->design_cost_value,
             "follow_count"=>$this->follow_count,
+            "follow_status"=>$this->follow_status,
             "created_at"=>$this->created_at,
             "updated_at"=>$this->updated_at,
         ];
@@ -179,6 +181,26 @@ class DesignDemand extends BaseModel
             $arr[] = $v->contactInfo();
         }
         return $arr;
+    }
+
+    /**
+     * 获取设计方收藏的需求ID
+     *
+     * @author 于海涛
+     * @param $design_company_id 设计公司ID
+     * @return array
+     */
+    static public function getCollectDemandId($design_company_id)
+    {
+        $demand_id = Follow::where(['type'=>1,'design_company_id'=>$design_company_id])->get();
+        if(!$demand_id->isEmpty()){
+            $arr = [];
+            foreach ($demand_id as $v) {
+                $arr[] = $v->design_demand_id;
+            }
+            return $arr;
+        }
+        return $demand_id;
     }
 
     //设计类型
