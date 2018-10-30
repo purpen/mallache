@@ -181,7 +181,7 @@ class DesignResultController extends BaseController
      * @apiSuccessExample 成功响应:
      * {
      *      "meta": {
-     *          "message": "保存成功",
+     *          "message": "Success",
      *          "status_code": 200
      *      },
      *      "data": {
@@ -376,7 +376,7 @@ class DesignResultController extends BaseController
     }
 
     /**
-     * @api {post} /designResults/delete 设计成果状态删除
+     * @api {post} /designResults/delete 设计成果删除
      * @author 王松
      * @apiVersion 1.0.0
      * @apiName deleteDesignResult
