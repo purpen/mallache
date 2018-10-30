@@ -402,7 +402,6 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $all['id'] = [2];
         $design_results = DesignResult::whereIn('id',$all['id'])->get();
         if($design_results->isEmpty()){
             return $this->apiError('设计成果不存在', 400);
