@@ -79,6 +79,7 @@ class AdminDesignResultController extends BaseController
      * @apiName designResultsUnauditedLists
      * @apiGroup designResults
      * @apiParam {integer} page 页数
+     * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} sort 0:升序,1:降序(默认)
      * @apiParam {string} token
@@ -140,8 +141,17 @@ class AdminDesignResultController extends BaseController
             $sort = 'desc';
         }
         //收藏的项目成果
+        $res = DesignResult::where('id',4)->first();
+        return $res;
+
         $query = DesignResult::query();
-        $list = $query->where('status',2)->orderBy('id',$sort)->paginate($per_page);
+        $status = (int)$request->input('status');
+        if(!empty($status) && $status != 1){
+            $query->where('status','=',$status);
+        }else{
+            $query->where('status','>',1);
+        }
+        return $list = $query->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 

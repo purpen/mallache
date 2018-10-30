@@ -61,6 +61,7 @@ class Pay
     // 收到项目首付款
     protected function itemFirstPay()
     {
+        //需求用户付款后增加钱包账户总金额和冻结金额
         $this->addPrice();
 
         $item = Item::query()->find($this->pay_order->item_id);

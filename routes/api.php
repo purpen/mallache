@@ -740,6 +740,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designResults/collectionOperation', 'DesignResultController@collectionOperation');
         //设计成果我的收藏列表
         $api->get('/designResults/myCollectionList', 'DesignResultController@myCollectionList');
+        //已上架设计成果列表
+        $api->get('/designResults/alLists', 'DesignResultController@alLists');
     });
 
 });

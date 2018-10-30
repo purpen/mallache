@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\AssetModel;
+use App\Models\DesignCompanyModel;
 
 class DesignResult extends BaseModel
 {
@@ -13,6 +13,14 @@ class DesignResult extends BaseModel
      */
     protected $table = 'design_result';
     protected $datas = ['deleted_at'];
+
+    /*
+     * 相对关联设计公司
+     */
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
 
     /**
      * 修改设计成果关注数量

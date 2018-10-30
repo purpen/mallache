@@ -109,6 +109,9 @@ class DesignResultController extends BaseController
             if(!$design_result){
                 return $this->apiError('保存失败',400);
             }
+            if($design_result->status < 0){
+                return $this->apiError('设计成果已下架',400);
+            }
             if($user_id != $design_result->user_id){
                 return $this->apiError('没有权限', 400);
             }
@@ -122,11 +125,12 @@ class DesignResultController extends BaseController
             $design_result->user_id = $user_id; //用户ID
             $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
             $design_result->design_company_id = $all['design_company_id']; //设计公司ID
+            $design_result->sell = 0; //0:未出售,1:已出售,2:已确认
         }
         $design_result->title = $all['title']; //标题
         $design_result->content = $all['content']; //描述
         $design_result->cover_id = $images[0]['id']; //封面图
-        $design_result->sell_type = $all['sell_type']; //售卖类型
+        $design_result->sell_type = $all['sell_type']; //售卖类型 1:全款,2:股权合作
         $design_result->price = $all['price']; //售价
         $design_result->share_ratio = $all['share_ratio']; //股权比例
         DB::beginTransaction();
@@ -197,10 +201,10 @@ class DesignResultController extends BaseController
      *          "updated_at": 1540433203,
      *          "created_at": 1540433203, //创建时间
      *          "id": 1, //设计成果ID
+     *          "sell":0, //0:未出售,1:已出售,2:已确认
      *          "images_url":[], //图片地址
      *          "illustrate_url":[], //产品说明书
      *          "patent_url":[], //专利证书
-     *
      *      }
      * }
      */
@@ -312,8 +316,6 @@ class DesignResultController extends BaseController
             }
             if($status != 0){
                 $query->where('status',$status);
-            }else{
-                $query->where('status','>',0);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->whereIn('id',$follow_data)
@@ -417,7 +419,7 @@ class DesignResultController extends BaseController
     }
 
     /**
-     * @api {get} /designResults/collectionOperation 设计成果状态关注与取消关注
+     * @api {get} /designResults/collectionOperation 设计成果收藏与取消收藏
      * @author 王松
      * @apiVersion 1.0.0
      * @apiName DesignResultCollectionOperation
@@ -603,6 +605,77 @@ class DesignResultController extends BaseController
             $data = DesignResult::whereIn('id',$arr)->orderBy('id',$sort)->paginate($per_page);
             return $this->response->paginator($data, new DesignResultListTransformer)->setMeta($this->apiMeta());
         }
+    }
+
+    /**
+     * @api {get} /designResults/alLists 所有上架设计成果列表
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName designResultsAlLists
+     * @apiGroup designResults
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *     {
+     *         "id": 1,
+     *         "title": "标题", //标题
+     *         "content": "内容", //描述
+     *         "cover_id": 999,
+     *         "sell_type": 1, //售卖类型 1.全款 2.股权合作
+     *         "price": "100000.00", //售价
+     *         "share_ratio": 100, //股权比例
+     *         "design_company_id": 66, //设计公司ID
+     *         "user_id": 87,
+     *         "cover": { //封面
+     *             "id": 999,
+     *             "name": "participants@2x.png",
+     *             "created_at": 1524207783,
+     *             "summary": null,
+     *             "size": 939,
+     *             "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *             "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *             "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *             "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *             "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          },
+     *          "status": 1, //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
+     *          "thn_cost": "10.00", //平台佣金比例
+     *          "follow_count": 0, //关注数量
+     *          "demand_company_id": 0, //购买需求公司ID
+     *          "purchase_user_id": 0, //购买用户ID
+     *          "created_at": 1540448935, //创建时间
+     *          "updated_at": 1540448935
+     *     }
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200,
+     *     "pagination": {
+     *         "total": 1,
+     *         "count": 1,
+     *         "per_page": 10,
+     *         "current_page": 1,
+     *         "total_pages": 1,
+     *         "links": []
+     *      }
+     *  }
+     * }
+     */
+    public function alLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $list = DesignResult::where('status',3)->orderBy('id',$sort)->paginate($per_page);
+        return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 
 }
