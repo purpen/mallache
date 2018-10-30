@@ -75,13 +75,18 @@ class Follow extends BaseModel
     /**
      * 添加收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function addCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count < 0){
+                $demand->follow_count = 0;
+                $demand->save();
+            }
             $demand->follow_count = $demand->follow_count+1;
             return $demand->save();
         }
@@ -92,13 +97,18 @@ class Follow extends BaseModel
     /**
      * 取消收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function cancelCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count <= 0){
+                $demand->follow_count = 0;
+                return $demand->save();
+            }
             $demand->follow_count = $demand->follow_count-1;
             return $demand->save();
         }
@@ -109,7 +119,8 @@ class Follow extends BaseModel
     /**
      * 后台查看需求被那些设计公司收藏
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return array
      */
     static public function adminCollectInfo($design_demand_id)

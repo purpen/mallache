@@ -17,6 +17,8 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
+use App\Models\DesignResult;
+use App\Models\ResultEvaluate;
 
 class DesignDemandController extends BaseController
 {
@@ -432,7 +434,7 @@ class DesignDemandController extends BaseController
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} demand_id
+     * @apiParam {integer} demand_id 需求ID
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -488,7 +490,7 @@ class DesignDemandController extends BaseController
 //        if(!$design_company->isVerify()){
 //            return $this->response->array($this->apiError('设计公司没有认证', 403));
 //        }
-        
+
         $demand_info = DesignDemand::where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
@@ -501,6 +503,80 @@ class DesignDemandController extends BaseController
             $demand_info->follow_status = 2;
         }
         return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {post} /sd/demand/evaluateResult 需求公司评价设计成果
+     * @apiVersion 1.0.0
+     * @apiName sdDemand evaluateResult
+     * @apiGroup sdDemandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} design_level     设计水平 1-5
+     * @apiParam {integer} response_speed   响应速度 1-5
+     * @apiParam {integer} serve_attitude   服务态度 1-5
+     * @apiParam {string} content           评价内容
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      },
+     *  }
+     */
+
+    public function evaluateResult(Request $request)
+    {
+        $rules = [
+            'design_result_id' => 'required|integer',
+        ];
+        $payload = $request->only('design_result_id');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $arr = [1,2,3,4,5];
+        $design_level = in_array($request->input('design_level'), $arr) ? $request->input('design_level') : null;
+        $response_speed = in_array($request->input('response_speed'), $arr) ? $request->input('response_speed') : null;
+        $serve_attitude = in_array($request->input('serve_attitude'), $arr) ? $request->input('serve_attitude') : null;
+        $content = $request->input('content');
+        $demand_company_id = $this->auth_user->demand_company_id;
+        $design_result_id = $request->input('design_result_id');
+        $result = DesignResult::where('id',$design_result_id)->first();
+        // 判断有没有此设计成果
+        if(!$result){
+            return $this->response->array($this->apiError('没有找到此设计成果', 404));
+        }
+        // 判断是否购买此设计成果
+        if($result->demand_company_id !== $demand_company_id){
+            return $this->response->array($this->apiError('您没有购买此设计成果,无法评价', 403));
+        }
+        // 判断交易状态
+        if($result->sell !== 2){
+            return $this->response->array($this->apiError('交易没有成功,无法评价', 403));
+        }
+
+        DB::beginTransaction();
+        // 保存评价
+        $evaluate = new ResultEvaluate;
+        $evaluate->design_company_id = $result->design_company_id;
+        $evaluate->design_result_id = $design_result_id;
+        $evaluate->demand_company_id = $demand_company_id;
+        $evaluate->design_level = $design_level;
+        $evaluate->response_speed = $response_speed;
+        $evaluate->serve_attitude = $serve_attitude;
+        $evaluate->content = $content;
+        if($evaluate->save()){
+            DB::commit();
+            return $this->response->array($this->apiSuccess('Success', 200));
+        }
+        DB::rollBack();
+        return $this->response->array($this->apiError('评价失败', 500));
 
     }
 }
