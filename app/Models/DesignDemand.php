@@ -178,6 +178,16 @@ class DesignDemand extends BaseModel
         return [];
     }
 
+    /**
+     * 获取图片logo
+     *
+     * @return array
+     */
+    public function getLogoImageAttribute()
+    {
+        return AssetModel::getOneImage($this->logo);
+    }
+
     //设计类型
     public function getTypeValueAttribute()
     {
