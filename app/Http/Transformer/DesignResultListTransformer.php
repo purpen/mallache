@@ -26,6 +26,9 @@ class DesignResultListTransformer extends TransformerAbstract
             'purchase_user_id' => $designResult->purchase_user_id,
             'created_at' => $designResult->created_at,
             'updated_at' => $designResult->updated_at,
+            'contacts' => $designResult->contacts,
+            'contact_number' => $designResult->contact_number,
+            'design_company' => $designResult->designCompany,
         ];
     }
 }
