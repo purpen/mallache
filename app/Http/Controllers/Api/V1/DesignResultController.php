@@ -179,7 +179,7 @@ class DesignResultController extends BaseController
     }
 
     /**
-     * @api {post} /designResults/show 设计成果详情
+     * @api {get} /designResults/show 设计成果详情
      * @author 王松
      * @apiVersion 1.0.0
      * @apiName designResultsShow
@@ -237,6 +237,7 @@ class DesignResultController extends BaseController
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
             $design_result->patent_url = $patent_url;
+            $design_result->design_company = $design_result->designCompany;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
             return $this->apiError('设计成果已下架',400);
@@ -381,6 +382,9 @@ class DesignResultController extends BaseController
         }
         if($this->auth_user_id != $design_result->user_id){
             return $this->apiError('保存状态失败', 400);
+        }
+        if($design_result->sell > 0){
+            return $this->apiError('设计成果已出售', 400);
         }
         $design_result->status = $all['status'];
         if($design_result->save()){

@@ -12,67 +12,6 @@ use App\Http\Transformer\DesignResultListTransformer;
 class AdminDesignResultController extends BaseController
 {
     /**
-     * @api {post} /admin/designResult/show 设计成果详情
-     * @author 王松
-     * @apiVersion 1.0.0
-     * @apiName designResultsShow
-     * @apiGroup designResults
-     * @apiParam {string} token
-     * @apiParam {string} id
-     * @apiSuccessExample 成功响应:
-     * {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      },
-     *      "data": {
-     *          "title": "标题", //标题
-     *          "content": "内容", //描述
-     *          "cover_id": 999, //封面图id
-     *          "sell_type": "1", //售卖类型 1:全款,2:股权合作
-     *          "price": "100000", //售卖价格
-     *          "status": "1", //状态 1:待提交,2:审核中,3:已上架,-1:已下架
-     *          "share_ratio": "100", //股权比例
-     *          "design_company_id": "66", //设计公司ID
-     *          "user_id": 11, //用户id
-     *          "thn_cost": 10, //平台佣金比例
-     *          "follow_count": 0, //关注数量
-     *          "demand_company_id": 0, //购买需求公司ID
-     *          "purchase_user_id": 0, //购买用户ID
-     *          "updated_at": 1540433203,
-     *          "created_at": 1540433203, //创建时间
-     *          "id": 1, //设计成果ID
-     *          "images_url":[], //图片地址
-     *          "illustrate_url":[], //产品说明书
-     *          "patent_url":[], //专利证书
-     *      }
-     * }
-     */
-    public function designResultsShow(Request $request)
-    {
-        $all = $request->all();
-        $rules = [
-            'id' => 'required|integer'
-        ];
-        $validator = Validator::make($all, $rules);
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException(403,$validator->errors());
-        }
-        $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
-        if(!empty($design_result)){
-            $images_url = AssetModel::getImageUrl($design_result->id,37,2);
-            $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
-            $patent_url = AssetModel::getImageUrl($design_result->id,39,2);
-            $design_result->images_url = $images_url;
-            $design_result->illustrate_url = $illustrate_url;
-            $design_result->patent_url = $patent_url;
-            return $this->apiSuccess('Success', 200,$design_result);
-        }else{
-            return $this->apiError('设计成果已下架',400);
-        }
-    }
-
-    /**
      * @api {get} /admin/designResult/list 设计成果待审核列表
      * @author 王松
      * @apiVersion 1.0.0
@@ -140,10 +79,6 @@ class AdminDesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        //收藏的项目成果
-        $res = DesignResult::where('id',4)->first();
-        return $res;
-
         $query = DesignResult::query();
         $status = (int)$request->input('status');
         if(!empty($status) && $status != 1){
@@ -151,7 +86,7 @@ class AdminDesignResultController extends BaseController
         }else{
             $query->where('status','>',1);
         }
-        return $list = $query->orderBy('id',$sort)->paginate($per_page);
+        $list = $query->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 
@@ -195,7 +130,7 @@ class AdminDesignResultController extends BaseController
             $design_result->status = 3;
             $msg = '审核通过';
         }else{
-            $design_result->status = 1;
+            $design_result->status = -1;
             $msg = '审核驳回';
         }
         if($design_result->save()){
