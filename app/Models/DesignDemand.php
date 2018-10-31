@@ -116,6 +116,10 @@ class DesignDemand extends BaseModel
             'id'=>$this->id,
             'user_id'=>$this->user_id,
             'demand_company_id'=>$this->demand_company_id,
+            'company_name'=>$this->company_name,
+            'logo'=>$this->logo,
+            'logo_image'=>$this->logo_image,
+            'phone'=>$this->phone,
             'status'=>$this->status,
             'type'=>$this->type,
             'type_value' => $this->type_value,
@@ -130,18 +134,6 @@ class DesignDemand extends BaseModel
             "follow_status"=>$this->follow_status,
             "created_at"=>$this->created_at,
             "updated_at"=>$this->updated_at,
-        ];
-    }
-
-    /**
-     * 设计公司获取需求联系信息
-     */
-    public function contactInfo()
-    {
-        return [
-            'company_name'=>$this->company_name,
-            'name'=>$this->realname,
-            'phone'=>$this->phone
         ];
     }
 
@@ -165,26 +157,6 @@ class DesignDemand extends BaseModel
     }
 
 
-    /**
-     * 获取需求方联系方式
-     *
-     * @author 于海涛
-     * @param $design_demand_id 设计需求ID
-     * @return array
-     */
-    static public function getDemandContact($design_demand_id)
-    {
-        $user = self::query()
-            ->join('demand_company','demand_company.id','=','design_demand.demand_company_id')
-            ->join('users','users.id','=','design_demand.user_id')
-            ->where('design_demand.id',$design_demand_id)
-            ->get();
-        $arr = [];
-        foreach ($user as $v) {
-            $arr[] = $v->contactInfo();
-        }
-        return $arr;
-    }
 
     /**
      * 获取设计方收藏的需求ID

@@ -409,7 +409,11 @@ class DesignDemandController extends BaseController
 
         // 设计公司获取需求列表
         $demandIds = DesignDemand::getCollectDemandId($design_company_id);
-        $design_demand = DesignDemand::where('status', 2)->paginate($per_page);
+        $design_demand = DesignDemand::query()
+            ->join('users','users.id','=','design_demand.user_id')
+            ->join('demand_company','demand_company.id','=','design_demand.demand_company_id')
+            ->where('design_demand.status', 2)->paginate($per_page);
+
         // 判断是否关注
         if(!$demandIds){
             foreach ($design_demand as $v){
