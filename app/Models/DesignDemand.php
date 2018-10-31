@@ -118,7 +118,7 @@ class DesignDemand extends BaseModel
             'demand_company_id'=>$this->demand_company_id,
             'company_name'=>$this->demandCompany ? $this->demandCompany->company_name : null,
             'logo'=>$this->demandCompany ? $this->demandCompany->logo : null,
-            'logo_image'=>$this->logo_image,
+            'logo_image'=>$this->demandCompany ? $this->demandCompany->logo_image : null,
             'phone'=>$this->User ? $this->User->phone : null,
             'status'=>$this->status,
             'type'=>$this->type,

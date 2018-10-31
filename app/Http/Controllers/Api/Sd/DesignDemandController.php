@@ -614,12 +614,15 @@ class DesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
+        // 设计成果ID
         $design_result_id = $request->input('design_result_id');
+        // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
         if ($this->auth_user->type != 1 || !$demand_company_id) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
 
+        // 获取评价
         $evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->get();
         return $this->response->array($this->apiSuccess('Success', 200, $evaluate));
 
