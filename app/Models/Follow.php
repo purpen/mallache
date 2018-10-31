@@ -117,6 +117,30 @@ class Follow extends BaseModel
     }
 
     /**
+     * 是否收藏设计成果
+     *
+     * @author 王松
+     * @param $type 类型
+     * @param $id 类型为1时是需求公司,为2时是设计公司
+     * @return bool
+     */
+    public function isFollow($type,$id,$design_result_id)
+    {
+        if ($type == 1) {
+            //需求公司
+            $res = Follow::where(['type' => 2, 'demand_company_id' => $id, 'design_result_id' => $design_result_id])->first();
+        } else {
+            //设计公司
+            $res = Follow::where(['type' => 2, 'design_company_id' => $id, 'design_result_id' => $design_result_id])->first();
+        }
+        if ($res) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    /*
      * 后台查看需求被那些设计公司收藏
      *
      * @author 于海涛

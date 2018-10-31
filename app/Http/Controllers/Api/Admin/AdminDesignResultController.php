@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\AssetModel;
+use App\Models\Follow;
 use App\Models\DesignResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -54,7 +54,10 @@ class AdminDesignResultController extends BaseController
      *          "demand_company_id": 0, //购买需求公司ID
      *          "purchase_user_id": 0, //购买用户ID
      *          "created_at": 1540448935, //创建时间
-     *          "updated_at": 1540448935
+     *          "updated_at": 1540448935,
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
+     *          "is_follow": 1, //是否已收藏
      *     }
      * ],
      * "meta": {
@@ -87,6 +90,21 @@ class AdminDesignResultController extends BaseController
             $query->whereIn('status',[-1,2,3]);
         }
         $list = $query->orderBy('id',$sort)->paginate($per_page);
+        $user = $this->auth_user;
+        $design_company_id = $user->design_company_id;
+        $demand_company_id = $user->demand_company_id;
+        $follow = new Follow;
+        if(!$list->isEmpty()){
+            foreach ($list as $k => $v) {
+                if($user->type == 1){
+                    //需求公司
+                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                }else{
+                    //设计公司
+                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                }
+            }
+        }
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 

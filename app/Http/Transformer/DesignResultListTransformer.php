@@ -28,6 +28,7 @@ class DesignResultListTransformer extends TransformerAbstract
             'updated_at' => $designResult->updated_at,
             'contacts' => $designResult->contacts,
             'contact_number' => $designResult->contact_number,
+            'is_follow' => $designResult->is_follow,
             'design_company' => $designResult->designCompany,
         ];
     }

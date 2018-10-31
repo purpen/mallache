@@ -237,6 +237,16 @@ class DesignResultController extends BaseController
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
             $design_result->patent_url = $patent_url;
+            $user = $this->auth_user;
+            $follow = new Follow;
+            if($user->type == 1){
+                //需求公司
+                $design_result->is_follow = $follow->isFollow(1,$user->design_company_id,$design_result->id);
+            }else{
+                //设计公司
+                $design_result->is_follow = $follow->isFollow(2,$user->demand_company_id,$design_result->id);
+            }
+            //设计公司信息
             $design_result->design_company = $design_result->designCompany;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
@@ -291,6 +301,7 @@ class DesignResultController extends BaseController
      *          "updated_at": 1540448935
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
+     *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
      *     }
      * ],
@@ -320,14 +331,17 @@ class DesignResultController extends BaseController
         }
         //收藏的项目成果
         $query = DesignResult::query();
+        $user = $this->auth_user;
+        $design_company_id = $user->design_company_id;
+        $demand_company_id = $user->demand_company_id;
+        $follow = new Follow;
         if ($collect > 0){
-            $follow = new Follow;
-            if($this->auth_user->type == 1){
+            if($user->type == 1){
                 //需求公司
-                $follow_data = $follow->getResultFollow($this->auth_user->design_company_id,1);
+                $follow_data = $follow->getResultFollow($design_company_id,1);
             }else{
                 //设计公司
-                $follow_data = $follow->getResultFollow($this->auth_user->demand_company_id,2);
+                $follow_data = $follow->getResultFollow($demand_company_id,2);
             }
             if($status != 0){
                 $query->where('status',$status);
@@ -343,6 +357,17 @@ class DesignResultController extends BaseController
             $list = $query->where('user_id',$this->auth_user_id)
                 ->orderBy('id',$sort)
                 ->paginate($per_page);
+        }
+        if(!$list->isEmpty()){
+            foreach ($list as $k => $v) {
+                if($user->type == 1){
+                    //需求公司
+                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                }else{
+                    //设计公司
+                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                }
+            }
         }
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
@@ -558,6 +583,7 @@ class DesignResultController extends BaseController
      *          "updated_at": 1540448935,
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
+     *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
      *     }
      * ],
@@ -584,26 +610,25 @@ class DesignResultController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $type = $all['type'];
+        $user = $this->auth_user;
+        $design_company_id = $user->design_company_id;
+        $demand_company_id = $user->demand_company_id;
         if($type == 1){
             //设计需求
-            if ($this->auth_user->type == 1) {
+            if ($user->type == 1) {
                 //需求公司
-                $demand_company_id = $this->auth_user->demand_company_id;
                 $list = Follow::select('design_demand_id')->where(['type'=>1,'demand_company_id'=>$demand_company_id])->paginate($per_page);
             }else{
                 //设计公司
-                $design_company_id = $this->auth_user->design_company_id;
                 $list = Follow::select('design_demand_id')->where(['type'=>1,'design_company_id'=>$design_company_id])->paginate($per_page);
             }
         }else{
             //设计成果
-            if ($this->auth_user->type == 1) {
+            if ($user->type == 1) {
                 //需求公司
-                $demand_company_id = $this->auth_user->demand_company_id;
                 $list = Follow::select('design_result_id')->where(['type'=>2,'demand_company_id'=>$demand_company_id])->paginate($per_page);
             }else{
                 //设计公司
-                $design_company_id = $this->auth_user->design_company_id;
                 $list = Follow::select('design_result_id')->where(['type'=>2,'design_company_id'=>$design_company_id])->paginate($per_page);
             }
         }
@@ -672,6 +697,7 @@ class DesignResultController extends BaseController
      *          "updated_at": 1540448935,
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
+     *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
      *     }
      * ],
@@ -698,6 +724,21 @@ class DesignResultController extends BaseController
             $sort = 'desc';
         }
         $list = DesignResult::where('status',3)->orderBy('id',$sort)->paginate($per_page);
+        $user = $this->auth_user;
+        $design_company_id = $user->design_company_id;
+        $demand_company_id = $user->demand_company_id;
+        $follow = new Follow;
+        if(!$list->isEmpty()){
+            foreach ($list as $k => $v) {
+                if($user->type == 1){
+                    //需求公司
+                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                }else{
+                    //设计公司
+                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                }
+            }
+        }
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 
