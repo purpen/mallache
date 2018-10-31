@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Follow;
+use App\Models\PayOrder;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\DesignDemand;
@@ -743,6 +744,70 @@ class DesignResultController extends BaseController
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
     }
 
+    /**
+     * @api {post} /designResults/savePrice 设计成果价格修改
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName saveDesignResultPrice
+     * @apiGroup designResults
+     * @apiParam {integer} id 设计成果ID
+     * @apiParam {integer} sell_type 售卖类型  1:全款,2:股权合作
+     * @apiParam {integer} share_ratio 股权比例
+     * @apiParam {string} price 售价
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     *     "message": "保存成功",
+     *     "status_code": 200
+     *  }
+     * }
+     */
+    public function saveDesignResultPrice(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer',
+            'sell_type' => 'required|integer',
+            'price' => 'required',
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
+        if(!$design_result){
+            return $this->apiError('设计成果不存在', 400);
+        }
+        if($this->auth_user_id != $design_result->user_id){
+            return $this->apiError('保存状态失败', 400);
+        }
+        if($design_result->sell > 0){
+            return $this->apiError('设计成果已出售', 400);
+        }
+        $design_result->sell_type = $all['sell_type'];
+        $design_result->price = $all['price'];
+        $design_result->share_ratio = $all['share_ratio']; //股权比例
+        //未付款成果订单id
+        $id = PayOrder::where(['design_result_id'=>$all['id'],'type'=>5,'status'=>0])->get()->pluck('id')->all();
+        DB::beginTransaction();
+        $res = $design_result->save();
+        if(!empty($id)){
+            $pay_order_res = PayOrder::whereIn('id',$id)->update(['status'=>-1]);
+            if(!empty($res) && !empty($pay_order_res)){
+                DB::commit();
+                return $this->apiSuccess('保存成功', 200,$design_result);
+            }
+        }else{
+            if(!empty($res)){
+                DB::commit();
+                return $this->apiSuccess('保存成功', 200,$design_result);
+            }
+        }
+        DB::rollBack();
+        return $this->apiError('保存失败',400);
+    }
 }
 
 
