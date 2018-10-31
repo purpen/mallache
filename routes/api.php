@@ -742,6 +742,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designResults/myCollectionList', 'DesignResultController@myCollectionList');
         //已上架设计成果列表
         $api->get('/designResults/alLists', 'DesignResultController@alLists');
+        //创建设计成果支付订单
+        $api->get('/pay/designResults/{design_result_id}','PayController@payDesignResults');
+        //设计成果价格修改
+        $api->post('/designResults/savePrice','DesignResultController@saveDesignResultPrice');
     });
 
 });
