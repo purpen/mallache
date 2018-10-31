@@ -604,6 +604,7 @@ class DesignDemandController extends BaseController
 
     public function evaluateInfo(Request $request)
     {
+
         $rules = [
             'design_result_id' => 'required|integer',
         ];

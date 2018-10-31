@@ -183,6 +183,7 @@ class AdminDesignDemandController extends BaseController
         if (!$design_demand) {
             return $this->response->array($this->apiSuccess('设计需求不存在', 404));
         }
+        // 获取设计公司信息
         $design = Follow::adminCollectInfo($demand_id);
         return $this->response->array($this->apiSuccess('Success', 200, $design));
     }
