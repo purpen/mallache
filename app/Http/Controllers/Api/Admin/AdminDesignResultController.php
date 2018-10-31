@@ -82,9 +82,9 @@ class AdminDesignResultController extends BaseController
         $query = DesignResult::query();
         $status = (int)$request->input('status');
         if(!empty($status) && $status != 1){
-            $query->where('status','=',$status);
+            $query->where('status',$status);
         }else{
-            $query->where('status','>',1);
+            $query->whereIn('status',[-1,2,3]);
         }
         $list = $query->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
