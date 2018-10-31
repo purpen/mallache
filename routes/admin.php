@@ -368,7 +368,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/designDemand/lists', 'AdminDesignDemandController@lists');
         //设计需求信息审核
         $api->put('/admin/designDemand/auditStatus', 'AdminDesignDemandController@auditStatus');
-
+        //查看设计需求被那些设计公司收藏
+        $api->get('/admin/designDemand/showCollectList', 'AdminDesignDemandController@showCollectList');
     });
 
 });

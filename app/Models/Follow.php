@@ -73,15 +73,20 @@ class Follow extends BaseModel
     }
 
     /**
-     * 添加收藏
+     * 添加收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function addCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count < 0){
+                $demand->follow_count = 0;
+                $demand->save();
+            }
             $demand->follow_count = $demand->follow_count+1;
             return $demand->save();
         }
@@ -90,15 +95,20 @@ class Follow extends BaseModel
     }
 
     /**
-     * 取消收藏
+     * 取消收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function cancelCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count <= 0){
+                $demand->follow_count = 0;
+                return $demand->save();
+            }
             $demand->follow_count = $demand->follow_count-1;
             return $demand->save();
         }
@@ -118,16 +128,44 @@ class Follow extends BaseModel
     {
         if ($type == 1) {
             //需求公司
-            $res = Follow::where(['type'=>2,'demand_company_id'=>$id,'design_result_id'=>$design_result_id])->first();
-        }else{
+            $res = Follow::where(['type' => 2, 'demand_company_id' => $id, 'design_result_id' => $design_result_id])->first();
+        } else {
             //设计公司
-            $res = Follow::where(['type'=>2,'design_company_id'=>$id,'design_result_id'=>$design_result_id])->first();
+            $res = Follow::where(['type' => 2, 'design_company_id' => $id, 'design_result_id' => $design_result_id])->first();
         }
-        if($res){
+        if ($res) {
             return 1;
-        }else{
+        } else {
             return 0;
         }
+    }
+
+    /*
+     * 后台查看需求被那些设计公司收藏
+     *
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
+     * @return array
+     */
+    static public function adminCollectInfo($design_demand_id)
+    {
+        $designs = self::where(['type'=>1,'design_demand_id'=>$design_demand_id])->get();
+        if($designs) {
+            $arr = [];
+            foreach ($designs as $v) {
+                $arr[] = $v->design_company_id;
+            }
+            $design_info = DesignCompanyModel::query()
+                ->join('users','users.id','=','design_company.user_id')
+                ->whereIn('design_company.id',$arr)
+                ->get();
+            $all = [];
+            foreach ($design_info as $v) {
+                $all[] = $v->designInfo();
+            }
+            return $all;
+        }
+        return [];
     }
 
 }

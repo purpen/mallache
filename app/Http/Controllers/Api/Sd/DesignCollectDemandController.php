@@ -57,11 +57,6 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
         $demand_info = Follow::showDemandList($design_company_id,$per_page);
         return $this->response->paginator($demand_info, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
     }
@@ -105,10 +100,6 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
         // 查找需求
         $demand_company_id = DesignDemand::where('id',$design_demand_id)->first();
         if (!$demand_company_id) {
@@ -166,11 +157,6 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
         $follow = Follow::where(['design_demand_id'=>$design_demand_id,'design_company_id'=>$design_company_id])->first();
         if($follow){
             $follow->delete();
@@ -180,57 +166,4 @@ class DesignCollectDemandController extends BaseController
         return $this->response->array($this->apiError('没有找到收藏的设计需求', 404));
     }
 
-    /**
-     * @api {get} /sd/design/contactDemand 设计公司联系需求方
-     * @apiVersion 1.0.0
-     * @apiName sdDesign contactDemand
-     * @apiGroup sdDesignType
-     *
-     * @apiParam {string} token
-     * @apiParam {integer} design_demand_id 设计需求ID
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200
-     *      }
-     *  }
-     */
-
-    public function contactDemand(Request $request)
-    {
-        $rules = [
-            'design_demand_id' => 'required|integer',
-        ];
-
-        $payload = $request->only('design_demand_id');
-        $validator = app('validator')->make($payload, $rules);
-
-        // 验证格式
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
-        }
-
-        // 需求ID
-        $design_demand_id = $request->input('design_demand_id');
-        // 设计公司ID
-        $design_company_id = $this->auth_user->design_company_id;
-        if ($this->auth_user->type != 2 || !$design_company_id) {
-            return $this->response->array($this->apiError('此用户不是设计公司', 403));
-        }
-
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
-        $is_follow = Follow::isCollectDemand($design_demand_id,$design_company_id);
-        if(!$is_follow){
-            return $this->response->array($this->apiError('您没有关注此需求无法获取需求方', 403));
-        }
-
-        $contact = DesignDemand::getDemandContact($design_demand_id);
-        return $this->response->array($this->apiSuccess('Success', 200, $contact));
-    }
 }

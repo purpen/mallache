@@ -9,7 +9,6 @@ class DesignDemandListTransformer extends TransformerAbstract
 {
     public function transform(DesignDemand $design_demand)
     {
-
         return $design_demand->demandListInfo();
 
     }

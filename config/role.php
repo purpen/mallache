@@ -243,6 +243,8 @@ return [
         '/admin/designDemand/lists',
         //顺德设计需求信息审核
         '/admin/designDemand/auditStatus',
+        //查看设计需求被那些设计公司收藏
+        '/admin/designDemand/showCollectList',
     ],
 
     /**
@@ -479,6 +481,8 @@ return [
         '/admin/designDemand/lists',
         //顺德设计需求信息审核
         '/admin/designDemand/auditStatus',
+        //查看设计需求被那些设计公司收藏
+        '/admin/designDemand/showCollectList',
     ],
 
     /**
@@ -643,6 +647,8 @@ return [
         '/admin/designDemand/lists',
         //顺德设计需求信息审核
         '/admin/designDemand/auditStatus',
+        //查看设计需求被那些设计公司收藏
+        '/admin/designDemand/showCollectList',
     ],
 
     /**
