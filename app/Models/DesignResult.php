@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\DesignCompanyModel;
 
 class DesignResult extends BaseModel
 {

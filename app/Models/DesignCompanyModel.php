@@ -96,14 +96,6 @@ class DesignCompanyModel extends BaseModel
     }
 
     /**
-     * 关联设计公司模型
-     */
-    public function designResult()
-    {
-        return $this->belongsTo('App\Models\DesignResult','design_company_id');
-    }
-
-    /**
      * 一对一关联到公司信息统计
      */
     public function designStatistic()

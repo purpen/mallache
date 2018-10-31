@@ -33,6 +33,8 @@ class DesignResultController extends BaseController
      * @apiParam {integer} share_ratio 股权比例
      * @apiParam {integer} design_company_id 设计公司ID
      * @apiParam {integer} status 状态 1:待提交,2:审核中,3:已上架,-1:已下架
+     * @apiParam {integer} contacts 联系人
+     * @apiParam {integer} contact_number 联系电话
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -56,6 +58,8 @@ class DesignResultController extends BaseController
      *          "purchase_user_id": 0, //购买用户ID
      *          "updated_at": 1540433203,
      *          "created_at": 1540433203, //创建时间
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
      *          "id": 1, //设计成果ID
      *          "cover": { //封面图
      *             "id": 999,
@@ -85,7 +89,9 @@ class DesignResultController extends BaseController
             'price' => 'required',
             'share_ratio' => 'required|integer',
             'design_company_id' => 'required|integer',
-            'status' => 'required|integer'
+            'status' => 'required|integer',
+            'contacts' => 'required|integer',
+            'contact_number' => 'required|integer|max:11'
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -133,6 +139,8 @@ class DesignResultController extends BaseController
         $design_result->sell_type = $all['sell_type']; //售卖类型 1:全款,2:股权合作
         $design_result->price = $all['price']; //售价
         $design_result->share_ratio = $all['share_ratio']; //股权比例
+        $design_result->contacts = $all['contacts']; //联系人
+        $design_result->contact_number = $all['contact_number']; //联系电话
         DB::beginTransaction();
         $res = $design_result->save();
         $images_arr = array_column($images,'id');
@@ -205,6 +213,9 @@ class DesignResultController extends BaseController
      *          "images_url":[], //图片地址
      *          "illustrate_url":[], //产品说明书
      *          "patent_url":[], //专利证书
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
+     *          "design_company": {}, //设计公司信息
      *      }
      * }
      */
@@ -277,6 +288,9 @@ class DesignResultController extends BaseController
      *          "purchase_user_id": 0, //购买用户ID
      *          "created_at": 1540448935, //创建时间
      *          "updated_at": 1540448935
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
+     *          "design_company": {}, //设计公司信息
      *     }
      * ],
      * "meta": {
@@ -537,7 +551,10 @@ class DesignResultController extends BaseController
      *          "demand_company_id": 0, //购买需求公司ID
      *          "purchase_user_id": 0, //购买用户ID
      *          "created_at": 1540448935, //创建时间
-     *          "updated_at": 1540448935
+     *          "updated_at": 1540448935,
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
+     *          "design_company": {}, //设计公司信息
      *     }
      * ],
      * "meta": {
@@ -648,7 +665,10 @@ class DesignResultController extends BaseController
      *          "demand_company_id": 0, //购买需求公司ID
      *          "purchase_user_id": 0, //购买用户ID
      *          "created_at": 1540448935, //创建时间
-     *          "updated_at": 1540448935
+     *          "updated_at": 1540448935,
+     *          "contacts": "羽落", //联系人
+     *          "contact_number": 13217229788, //联系电话
+     *          "design_company": {}, //设计公司信息
      *     }
      * ],
      * "meta": {
