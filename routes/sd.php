@@ -48,6 +48,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
         $api->post('/sd/demand/evaluateResult', [
             'as' => 'sd.evaluateResult', 'uses' => 'DesignDemandController@evaluateResult'
         ]);
+        //设计成果的评价详情
+        $api->get('/sd/demand/evaluateInfo', [
+            'as' => 'sd.evaluateInfo', 'uses' => 'DesignDemandController@evaluateInfo'
+        ]);
 
 
 
