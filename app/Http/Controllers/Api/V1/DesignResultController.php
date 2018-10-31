@@ -90,8 +90,8 @@ class DesignResultController extends BaseController
             'share_ratio' => 'required|integer',
             'design_company_id' => 'required|integer',
             'status' => 'required|integer',
-            'contacts' => 'required|integer',
-            'contact_number' => 'required|integer|max:11'
+            'contacts' => 'required',
+            'contact_number' => 'required|max:11'
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -215,6 +215,7 @@ class DesignResultController extends BaseController
      *          "patent_url":[], //专利证书
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
+     *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
      *      }
      * }
@@ -241,10 +242,10 @@ class DesignResultController extends BaseController
             $follow = new Follow;
             if($user->type == 1){
                 //需求公司
-                $design_result->is_follow = $follow->isFollow(1,$user->design_company_id,$design_result->id);
+                $design_result->is_follow = $follow->isFollow(1,$user->demand_company_id,$design_result->id);
             }else{
                 //设计公司
-                $design_result->is_follow = $follow->isFollow(2,$user->demand_company_id,$design_result->id);
+                $design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$design_result->id);
             }
             //设计公司信息
             $design_result->design_company = $design_result->designCompany;
@@ -362,10 +363,10 @@ class DesignResultController extends BaseController
             foreach ($list as $k => $v) {
                 if($user->type == 1){
                     //需求公司
-                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(1,$demand_company_id,$v->id);
                 }else{
                     //设计公司
-                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(2,$design_company_id,$v->id);
                 }
             }
         }
@@ -732,10 +733,10 @@ class DesignResultController extends BaseController
             foreach ($list as $k => $v) {
                 if($user->type == 1){
                     //需求公司
-                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(1,$demand_company_id,$v->id);
                 }else{
                     //设计公司
-                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(2,$design_company_id,$v->id);
                 }
             }
         }
