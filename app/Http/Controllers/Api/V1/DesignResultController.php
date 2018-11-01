@@ -27,6 +27,7 @@ class DesignResultController extends BaseController
      * @apiParam {string} id 修改时必传
      * @apiParam {string} title 标题
      * @apiParam {string} content 描述
+     * @apiParam {integer} cover_id 封面图
      * @apiParam {array} images 图片最大20
      * @apiParam {array} patent 专利证书
      * @apiParam {array} illustrate 说明书
@@ -85,9 +86,10 @@ class DesignResultController extends BaseController
             'title' => 'required',
             'content' => 'required',
             'images' => 'required|array|max:20',
-            'patent' => 'array',
-            'illustrate' => 'array',
+            'patent' => 'array|max:10',
+            'illustrate' => 'array|max:10',
             'sell_type' => 'required|integer',
+            'cover_id' => 'required|integer',
             'price' => 'required',
             'share_ratio' => 'required|integer',
             'design_company_id' => 'required|integer',
@@ -100,14 +102,12 @@ class DesignResultController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $user_id = $this->auth_user_id;
-        $images_random = $all['images'];
+        $images = $all['images'];
         //设计成果图片
-        $images = AssetModel::select('id','target_id','user_id','name','random','path')->whereIn('random',$images_random)->where('type',37)->get();
+        $images_id = AssetModel::select('id')->whereIn('id',$images)->get()->pluck('id')->all();
 
-        if($images->isEmpty()){
+        if(!$images_id){
             return $this->apiError('图片信息不存在',403);
-        }else{
-            $images = $images->toArray();
         }
         //修改
         if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
@@ -135,7 +135,7 @@ class DesignResultController extends BaseController
         }
         $design_result->title = $all['title']; //标题
         $design_result->content = $all['content']; //描述
-        $design_result->cover_id = $images[0]['id']; //封面图
+        $design_result->cover_id = $all['cover_id']; //封面图
         $design_result->sell_type = $all['sell_type']; //售卖类型 1:全款,2:股权合作
         $design_result->price = $all['price']; //售价
         $design_result->share_ratio = $all['share_ratio']; //股权比例
@@ -143,42 +143,32 @@ class DesignResultController extends BaseController
         $design_result->contact_number = $all['contact_number']; //联系电话
         DB::beginTransaction();
         $res = $design_result->save();
-        $images_arr = array_column($images,'id');
         $patent = $all['patent'];
-        $illustrate_random = $all['illustrate'];
-        if(!empty($illustrate_random)){
+        $illustrate = $all['illustrate'];
+        if(!empty($illustrate)){
             //产品说明书
-            $illustrate = AssetModel::select('id','target_id','user_id','name','random','path')
-                ->whereIn('random',$illustrate_random)
-                ->where('type',38)->get();
-            if($illustrate){
-                $illustrate_arr = array_column($illustrate->toArray(),'id');
-                $arr = array_merge($images_arr,$illustrate_arr);
+            $illustrate_id = AssetModel::select('id')
+                ->whereIn('id',$illustrate)->get()->pluck('id')->all();
+            if($illustrate_id){
+                $arr = array_merge($images_id,$illustrate_id);
             }else{
-                $arr = $images_arr;
+                $arr = $images_id;
             }
         }else{
-            $arr = $images_arr;
+            $arr = $images_id;
         }
         if(!empty($patent)){
             //专利证书
-            $patent_data = AssetModel::select('id','target_id','user_id','name','random','path')
-                ->whereIn('random',$patent)
-                ->where('type',39)->get();
+            $patent_data = AssetModel::select('id')
+                ->whereIn('id',$patent)->get()->pluck('id')->all();
             if($patent_data){
-                $patent_arr = array_column($patent_data->toArray(),'id');
-                $arr = array_merge($arr,$patent_arr);
+                $arr = array_merge($arr,$patent_data);
             }
         }
         Log::info(json_encode($arr));
-        $data = AssetModel::whereIn('id',$arr)->get();
+        $data = AssetModel::select('id','type','created_at')->whereIn('id',$arr)->get();
         Log::info(json_encode($data));
-        $cover_url = AssetModel::find($design_result->cover_id);
-        if($cover_url){
-            $design_result->cover = $cover_url;
-        }else{
-            $design_result->cover = '';
-        }
+        $design_result->cover = $design_result->cover;
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
         if(!empty($res) && !empty($asset)){
             DB::commit();
