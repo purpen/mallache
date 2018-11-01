@@ -9,6 +9,7 @@ use App\Models\DesignResult;
 use App\Models\DesignDemand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\DesignResultListTransformer;
@@ -92,16 +93,14 @@ class DesignResultController extends BaseController
             'design_company_id' => 'required|integer',
             'status' => 'required|integer',
             'contacts' => 'required',
-            'contact_number' => 'required|max:11'
+            'contact_number' => 'required'
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $user_id = $this->auth_user_id;
-        $patent = $all['patent'];
         $images_random = $all['images'];
-        $illustrate_random = $all['illustrate'];
         //设计成果图片
         $images = AssetModel::select('id','target_id','user_id','name','random','path')->whereIn('random',$images_random)->where('type',37)->get();
 
@@ -145,24 +144,34 @@ class DesignResultController extends BaseController
         DB::beginTransaction();
         $res = $design_result->save();
         $images_arr = array_column($images,'id');
-        //产品说明书
-        $illustrate = AssetModel::select('id','target_id','user_id','name','random','path')
-            ->whereIn('random',$illustrate_random)
-            ->where('type',38)->get();
-        if($illustrate){
-            $illustrate_arr = array_column($illustrate->toArray(),'id');
-            $arr = array_merge($images_arr,$illustrate_arr);
+        $patent = $all['patent'];
+        $illustrate_random = $all['illustrate'];
+        if(!empty($illustrate_random)){
+            //产品说明书
+            $illustrate = AssetModel::select('id','target_id','user_id','name','random','path')
+                ->whereIn('random',$illustrate_random)
+                ->where('type',38)->get();
+            if($illustrate){
+                $illustrate_arr = array_column($illustrate->toArray(),'id');
+                $arr = array_merge($images_arr,$illustrate_arr);
+            }else{
+                $arr = $images_arr;
+            }
         }else{
             $arr = $images_arr;
         }
-        //专利证书
-        $patent_data = AssetModel::select('id','target_id','user_id','name','random','path')
-            ->whereIn('random',$patent)
-            ->where('type',39)->get();
-        if($patent_data){
-            $patent_arr = array_column($patent_data->toArray(),'id');
-            $arr = array_merge($arr,$patent_arr);
+        if(!empty($patent)){
+            //专利证书
+            $patent_data = AssetModel::select('id','target_id','user_id','name','random','path')
+                ->whereIn('random',$patent)
+                ->where('type',39)->get();
+            if($patent_data){
+                $patent_arr = array_column($patent_data->toArray(),'id');
+                $arr = array_merge($arr,$patent_arr);
+            }
         }
+        $data = AssetModel::whereIn('id',$arr)->get();
+        Log::info(json_encode($data));
         $cover_url = AssetModel::find($design_result->cover_id);
         if($cover_url){
             $design_result->cover = $cover_url;
@@ -217,6 +226,18 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
+     *          "cover": { //封面图
+     *             "id": 999,
+     *              "name": "participants@2x.png",
+     *              "created_at": 1524207783,
+     *              "summary": null,
+     *              "size": 939,
+     *              "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *              "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *              "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *              "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *              "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *          },
      *          "design_company": {}, //设计公司信息
      *      }
      * }
@@ -236,6 +257,7 @@ class DesignResultController extends BaseController
             $images_url = AssetModel::getImageUrl($design_result->id,37,2);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2);
+            $design_result->cover = $design_result->cover;
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
             $design_result->patent_url = $patent_url;
