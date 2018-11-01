@@ -143,9 +143,6 @@ class AdminDesignResultController extends BaseController
         if(!$design_result){
             return $this->apiError('设计成果不存在', 400);
         }
-        if( $design_result->status != 2){
-            return $this->apiError('不是待审核状态', 400);
-        }
         if($all['type'] == 1){
             $design_result->status = 3;
             $msg = '审核通过';

@@ -9,7 +9,6 @@ use App\Models\DesignResult;
 use App\Models\DesignDemand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\DesignResultListTransformer;
@@ -90,7 +89,7 @@ class DesignResultController extends BaseController
             'illustrate' => 'array|max:10',
             'sell_type' => 'required|integer',
             'cover_id' => 'required|integer',
-            'price' => 'required',
+            'price' => 'required|max:8',
             'share_ratio' => 'required|integer',
             'design_company_id' => 'required|integer',
             'status' => 'required|integer',
@@ -145,7 +144,6 @@ class DesignResultController extends BaseController
         $res = $design_result->save();
         $patent = $all['patent'];
         $illustrate = $all['illustrate'];
-        Log::info(json_encode($images_id));
         if(!empty($illustrate)){
             //产品说明书
             $illustrate_id = AssetModel::select('id')
@@ -158,7 +156,6 @@ class DesignResultController extends BaseController
         }else{
             $arr = $images_id;
         }
-        Log::info(json_encode($arr));
         if(!empty($patent)){
             //专利证书
             $patent_data = AssetModel::select('id')
@@ -167,7 +164,6 @@ class DesignResultController extends BaseController
                 $arr = array_merge($arr,$patent_data);
             }
         }
-        Log::info(json_encode($arr));
         $design_result->cover = $design_result->cover;
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
         if(!empty($res) && !empty($asset)){
@@ -248,7 +244,6 @@ class DesignResultController extends BaseController
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
-            Log::info(json_encode($images_url));
             $design_result->cover = $design_result->cover;
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;
