@@ -170,6 +170,7 @@ class DesignResultController extends BaseController
                 $arr = array_merge($arr,$patent_arr);
             }
         }
+        Log::info(json_encode($arr));
         $data = AssetModel::whereIn('id',$arr)->get();
         Log::info(json_encode($data));
         $cover_url = AssetModel::find($design_result->cover_id);
