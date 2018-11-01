@@ -5,6 +5,7 @@
  * Date: 2018/10/15
  * Time: 下午4:40
  */
+
 namespace App\Http\Controllers\Api\Wx;
 
 
@@ -30,7 +31,7 @@ class DesignCaseController extends BaseController
     public function lists(Request $request)
     {
         $item_name = $request->input('item_name');
-        if(empty($item_name)){
+        if (empty($item_name)) {
             return $this->response->array($this->apiError('项目名称不能为空', 412));
         }
         //这边要给内存，不然会炸
@@ -43,9 +44,10 @@ class DesignCaseController extends BaseController
         //过滤掉无用的词
         $new_seg_lists = array_diff($seg_lists , ["设计" , "案例" , "系列" , "升级"]);
         $design_cases_array = [];
+
         foreach ($new_seg_lists as $seg_list){
             //　过滤掉一个字和标点符号
-            if(strlen($seg_list) < 6){
+            if (strlen($seg_list) < 6) {
                 continue;
             }
             //模糊查询有的话，走上面，没有的话走下面
@@ -54,12 +56,12 @@ class DesignCaseController extends BaseController
                 continue;
             }
             //遍历到最小单位
-            foreach ($design_cases as $design_case){
+            foreach ($design_cases as $design_case) {
                 $design_cases_array[] = $design_case;
             }
         }
         //分词搜索为空的话，随机返回10个
-        if($design_cases_array == null){
+        if ($design_cases_array == null) {
             $mend_design_cases = DesignCaseModel::
             orderBy(DB::raw('RAND()'))
                 ->take(10)
@@ -78,7 +80,7 @@ class DesignCaseController extends BaseController
                 $new_merge_cases = (collect([$design_cases_array, $mend_design_cases]))->collapse();
                 return $this->response->collection($new_merge_cases, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
             }
-            return $this->response->collection($design_cases_array, new DesignCaseListsTransformer())->setMeta($this->apiMeta());
+            return $this->response->collection(collect($design_cases_array), new DesignCaseListsTransformer())->setMeta($this->apiMeta());
         }
     }
 }
