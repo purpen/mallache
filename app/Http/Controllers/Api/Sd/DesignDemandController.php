@@ -493,7 +493,7 @@ class DesignDemandController extends BaseController
 //            return $this->response->array($this->apiError('设计公司没有认证', 403));
 //        }
 
-        $demand_info = DesignDemand::where('id', $demand_id)->first();
+        $demand_info = DesignDemand::with('demandCompany','User')->where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }

@@ -80,7 +80,11 @@ class DesignDemand extends BaseModel
         return [
             'id'=>$this->id,
             'user_id'=>$this->user_id,
+            'phone'=>$this->User ? $this->User->phone : null,
             'demand_company_id'=>$this->demand_company_id,
+            'logo' => $this->demandCompany ? $this->demandCompany->logo : null,
+            'logo_image' => $this->demandCompany ? $this->demandCompany->logo_image : null,
+            'demand_company_name' => $this->demandCompany ? $this->demandCompany->company_name : null,
             'status'=>$this->status,
             'type'=>$this->type,
             'type_value' => $this->type_value,
