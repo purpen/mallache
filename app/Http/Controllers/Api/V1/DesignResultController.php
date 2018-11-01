@@ -145,6 +145,7 @@ class DesignResultController extends BaseController
         $res = $design_result->save();
         $patent = $all['patent'];
         $illustrate = $all['illustrate'];
+        Log::info(json_encode($images_id));
         if(!empty($illustrate)){
             //产品说明书
             $illustrate_id = AssetModel::select('id')
@@ -157,6 +158,7 @@ class DesignResultController extends BaseController
         }else{
             $arr = $images_id;
         }
+        Log::info(json_encode($arr));
         if(!empty($patent)){
             //专利证书
             $patent_data = AssetModel::select('id')
@@ -166,8 +168,6 @@ class DesignResultController extends BaseController
             }
         }
         Log::info(json_encode($arr));
-        $data = AssetModel::select('id','type','created_at')->whereIn('id',$arr)->get();
-        Log::info(json_encode($data));
         $design_result->cover = $design_result->cover;
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
         if(!empty($res) && !empty($asset)){
@@ -243,11 +243,12 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('status','>',0)->where('id',$all['id'])->first();
+        $design_result = DesignResult::where('id',$all['id'])->first();
         if(!empty($design_result)){
-            $images_url = AssetModel::getImageUrl($design_result->id,37,2);
-            $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2);
-            $patent_url = AssetModel::getImageUrl($design_result->id,39,2);
+            $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
+            $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
+            $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
+            Log::info(json_encode($images_url));
             $design_result->cover = $design_result->cover;
             $design_result->images_url = $images_url;
             $design_result->illustrate_url = $illustrate_url;

@@ -6,8 +6,9 @@ use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
+use App\Http\Transformer\PayDesignResultTransformer;
 use App\Models\AssetModel;
-use App\Models\DesignCompanyModel;
+use App\Models\DesignResult;
 use App\Models\Item;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
@@ -593,6 +594,99 @@ class PayController extends BaseController
             return $this->response->array($this->apiError('未上传转账凭证附件!', 403));
         }
 
+    }
+
+    /**
+     * @api {get} /pay/designResults/{design_result_id} 创建设计成果支付订单
+     * @apiVersion 1.0.0
+     * @apiName payDesignResults
+     * @apiGroup pay
+     *
+     * @apiParam {string} token
+     * @apiParam {int} design_result_id  设计成果ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *      "data": {
+     *          "id": 1,
+     *          "uid": "zf59006e63b3445",  //支付单号
+     *          "user_id": 2,              //用户ID
+     *          "type": 1,                 //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
+     *          "item_id": 0,               //项目ID
+     *          "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *          "summary": "发布需求保证金",  //备注
+     *          "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *          "pay_no": "2017042621001004550211582926",  //平台交易号
+     *          "amount"：123， //应支付金额
+     *          "total": 22, //总金额
+     *          "item_name": ""  //项目名称
+     *          "company_name": "公司名称"  //公司名称
+     *          "first_pay": 11, //已支付金额
+     *      }
+     *  }
+     */
+    public function payDesignResults($design_result_id)
+    {
+        // 设计成果类型
+        $type = 5;
+        $design_result = DesignResult::find($design_result_id);
+        if (!$design_result) {
+            return $this->response->array('设计成果不存在',404);
+        }
+        if ($design_result->status != 3) {
+            return $this->response->array('设计成果未上架',403);
+        }
+        if ($design_result->sell > 0) {
+            return $this->response->array('设计成果已出售',403);
+        }
+
+        //支付说明
+        $summary = '设计成果付款';
+
+        $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id);
+        $pay_order->total_price = $design_result->price;
+        return $this->response->item($pay_order, new PayDesignResultTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * 创建设计成果支付单
+     * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款
+     * @param float $amount 支付金额
+     * @param int $item_id 项目ID
+     * @param int $user_id 用户ID
+     * @param string $summary 备注
+     * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     * @param int $item_stage_id 项目阶段ID
+     * @return mixed
+     */
+    protected function designResultsPayOrder($summary = '',$amount,$type = 1,$pay_type = 0,$design_result_id = 0)
+    {
+        $pay_order = PayOrder::query()->where([
+            'type' => $type,
+            'user_id' => $this->auth_user_id,
+            'status' => 0,
+            'design_result_id' => $design_result_id])
+            ->first();
+        if ($pay_order) {
+            return $pay_order;
+        }
+        $uid = Tools::orderId($this->auth_user_id);
+        $pay_order = PayOrder::query()->create([
+            'uid' => $uid,
+            'user_id' => $this->auth_user_id,
+            'type' => $type,
+            'summary' => $summary,
+            'item_id' => 0,
+            'amount' => $amount,
+            'pay_type' => $pay_type,
+            'design_result_id' => $design_result_id,
+            'source' => 0,  // 添加来源
+        ]);
+        return $pay_order;
     }
 
 }
