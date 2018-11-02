@@ -28,7 +28,9 @@ class AdminDesignDemandController extends BaseController
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      * @apiParam {integer} status -1.未通过审核；1.审核中；2.已发布
-     * @apiParam {integer} sort 0.降序；1.升序（默认）;2.推荐降序；
+     * @apiParam {integer} sort 0.降序（默认）；1.升序;2.推荐降序；
+     * @apiParam {integer} evt 查询条件：1.需求ID; 2.需求名称;
+     * @apiParam {string} val 查询值
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -60,11 +62,28 @@ class AdminDesignDemandController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = in_array($request->input('status'), [-1, 1, 2]) ? $request->input('status') : null;
         $sort = in_array($request->input('sort'), [0, 1, 2]) ? $request->input('sort') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
+
 
         $demand = DesignDemand::with('demandCompany','User');
         if ($status !== null && $status !== '') {
             $demand->where('status', $status);
         }
+
+        if ($val) {
+            switch ($evt) {
+                case 1:
+                    $demand->where('id', (int)$val);
+                    break;
+                case 2:
+                    $demand->where('name', 'like', '%' . $val . '%');
+                    break;
+                default:
+                    $demand->where('id', (int)$val);
+            }
+        }
+
         //排序
         switch ($sort) {
             case 0:
