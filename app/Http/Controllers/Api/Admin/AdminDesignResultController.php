@@ -92,6 +92,7 @@ class AdminDesignResultController extends BaseController
         }else{
             $query->whereIn('status',[-1,2,3]);
         }
+        $query->where('sell',0);
         $list = $query->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
@@ -149,11 +150,11 @@ class AdminDesignResultController extends BaseController
         if($all['type'] == 1){
             $design_result->status = 3;
             $msg = '已通过';
-            $message = '【设计成果'.$design_result->title.'】审核未通过，请前往设计成果列表查看';
+            $message = '设计成果【'.$design_result->title.'】审核已通过，请前往设计成果列表查看';
         }else{
             $design_result->status = -1;
             $msg = '已驳回';
-            $message = '【设计成果'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因:'.$all['content'];
+            $message = '设计成果【'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因：'.$all['content'];
         }
         if($design_result->save()){
             $tools->message($design_result->user_id,'设计成果审核',$message,1,$design_result->id,null);
