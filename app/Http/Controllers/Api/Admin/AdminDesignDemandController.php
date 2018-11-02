@@ -109,6 +109,7 @@ class AdminDesignDemandController extends BaseController
      *
      * @apiParam {integer} demand_id 需求ID
      * @apiParam {integer} status -1: 失败 2: 成功
+     * @apiParam {string} content
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -128,6 +129,7 @@ class AdminDesignDemandController extends BaseController
         ]);
         $demand_id = $request->input('demand_id');
         $status = $request->input('status');
+        $text = $request->input('content');
 
         if (!in_array($status, [-1, 2])) {
             return $this->response->array($this->apiSuccess('状态参数错误', 403));
@@ -149,10 +151,10 @@ class AdminDesignDemandController extends BaseController
         $content = '';
         switch ($status) {
             case -1:
-                $content = '设计需求未通过审核，请修改资料重新提交';
+                $content = '【设计需求'.$design_demand->name.'】审核未通过，请重新修改上传，拒绝原因:'.$text;
                 break;
             case 2:
-                $content = '设计需求已通过审核';
+                $content = '【设计需求'.$design_demand->name.'】已通过审核';
                 break;
         }
         $tools->message($design_demand->user_id, $title, $content, 1, null);
