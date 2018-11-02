@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Helper\Tools;
 use App\Models\Follow;
 use App\Models\DesignResult;
 use App\Models\DemandCompany;
@@ -118,12 +119,13 @@ class AdminDesignResultController extends BaseController
      * @apiGroup designResults
      * @apiParam {integer} id 设计成果ID
      * @apiParam {integer} type 审核类型 1:通过,2:驳回
+     * @apiParam {string} content 拒绝原因
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      * {
      * "meta": {
-     *     "message": "保存状态成功",
+     *     "message": "已通过",
      *     "status_code": 200
      *  }
      * }
@@ -139,18 +141,22 @@ class AdminDesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',1)->first();
         if(!$design_result){
             return $this->apiError('设计成果不存在', 400);
         }
+        $tools = new Tools;
         if($all['type'] == 1){
             $design_result->status = 3;
-            $msg = '审核通过';
+            $msg = '已通过';
+            $message = $design_result->title.'审核未通过，请前往设计成果列表查看';
         }else{
             $design_result->status = -1;
-            $msg = '审核驳回';
+            $msg = '已驳回';
+            $message = '【设计成果'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因:'.$all['content'];
         }
         if($design_result->save()){
+            $tools->message($design_result->user_id,'设计成果审核',$message,1,$design_result->id,null);
             return $this->apiSuccess($msg, 200);
         }
         return $this->apiError('审核失败', 400);
