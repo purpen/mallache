@@ -114,7 +114,7 @@ class DesignResultController extends BaseController
             if(!$design_result){
                 return $this->apiError('保存失败',400);
             }
-            if($design_result->sell < 0){
+            if($design_result->sell > 0){
                 return $this->apiError('设计成果已出售',400);
             }
             if($user_id != $design_result->user_id){
