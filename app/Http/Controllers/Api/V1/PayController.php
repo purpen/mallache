@@ -631,7 +631,7 @@ class PayController extends BaseController
      */
     public function payDesignResults($design_result_id)
     {
-        // 设计成果类型
+        //设计成果类型
         $type = 5;
         $design_result = DesignResult::find($design_result_id);
         if (!$design_result) {
@@ -654,7 +654,7 @@ class PayController extends BaseController
 
     /**
      * 创建设计成果支付单
-     * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款
+     * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款 5.设计成果
      * @param float $amount 支付金额
      * @param int $item_id 项目ID
      * @param int $user_id 用户ID

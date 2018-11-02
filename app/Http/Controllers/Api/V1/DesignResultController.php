@@ -90,7 +90,7 @@ class DesignResultController extends BaseController
             'sell_type' => 'required|integer',
             'cover_id' => 'required|integer',
             'price' => 'required|max:8',
-            'share_ratio' => 'required|integer',
+            'share_ratio' => 'required|integer|min:0|max:100',
             'design_company_id' => 'required|integer',
             'status' => 'required|integer',
             'contacts' => 'required',
