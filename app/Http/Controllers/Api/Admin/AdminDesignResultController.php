@@ -149,7 +149,7 @@ class AdminDesignResultController extends BaseController
         if($all['type'] == 1){
             $design_result->status = 3;
             $msg = '已通过';
-            $message = $design_result->title.'审核未通过，请前往设计成果列表查看';
+            $message = '【设计成果'.$design_result->title.'】审核未通过，请前往设计成果列表查看';
         }else{
             $design_result->status = -1;
             $msg = '已驳回';
