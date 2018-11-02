@@ -237,8 +237,8 @@ return [
         '/admin/designResult/list',
         //设计成果审核
         '/admin/designResult/save',
-        //设计成果详情
-        '/admin/designResult/show',
+        //设计成果收藏列表
+        '/admin/designResult/collect',
         //顺德设计需求列表
         '/admin/designDemand/lists',
         //顺德设计需求信息审核
@@ -475,8 +475,8 @@ return [
         '/admin/designResult/list',
         //设计成果审核
         '/admin/designResult/save',
-        //设计成果详情
-        '/admin/designResult/show',
+        //设计成果收藏列表
+        '/admin/designResult/collect',
         //顺德设计需求列表
         '/admin/designDemand/lists',
         //顺德设计需求信息审核
@@ -641,8 +641,8 @@ return [
         '/admin/designResult/list',
         //设计成果审核
         '/admin/designResult/save',
-        //设计成果详情
-        '/admin/designResult/show',
+        //设计成果收藏列表
+        '/admin/designResult/collect',
         //顺德设计需求列表
         '/admin/designDemand/lists',
         //顺德设计需求信息审核

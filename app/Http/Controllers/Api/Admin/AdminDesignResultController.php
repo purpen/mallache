@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Follow;
 use App\Models\DesignResult;
+use App\Models\DemandCompany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\DesignResultListTransformer;
+use App\Http\AdminTransformer\AdminDesignResultCollectTransformer;
 
 class AdminDesignResultController extends BaseController
 {
@@ -98,10 +100,10 @@ class AdminDesignResultController extends BaseController
             foreach ($list as $k => $v) {
                 if($user->type == 1){
                     //需求公司
-                    $list{$k}->is_follow = $follow->isFollow(1,$design_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(1,$demand_company_id,$v->id);
                 }else{
                     //设计公司
-                    $list{$k}->is_follow = $follow->isFollow(2,$demand_company_id,$v->id);
+                    $list{$k}->is_follow = $follow->isFollow(2,$design_company_id,$v->id);
                 }
             }
         }
@@ -141,9 +143,6 @@ class AdminDesignResultController extends BaseController
         if(!$design_result){
             return $this->apiError('设计成果不存在', 400);
         }
-        if( $design_result->status != 2){
-            return $this->apiError('不是待审核状态', 400);
-        }
         if($all['type'] == 1){
             $design_result->status = 3;
             $msg = '审核通过';
@@ -155,6 +154,71 @@ class AdminDesignResultController extends BaseController
             return $this->apiSuccess($msg, 200);
         }
         return $this->apiError('审核失败', 400);
+    }
+
+    /**
+     * @api {get} /admin/designResult/collect 设计成果收藏列表
+     * @author 王松
+     * @apiVersion 1.0.0
+     * @apiName designResultsCollect
+     * @apiGroup designResults
+     * @apiParam {integer} id 设计成果ID
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *     {
+     *         "company_name": "公司名称", //公司名称
+     *         "contact_name": "联系人姓名", //联系人名称
+     *         "company_abbreviation": "公司简称", //公司简称
+     *         "address": "详细地址", //详细地址
+     *         "phone": "3217229788", //手机号
+     *     }
+     * ],
+     * "meta": {
+     *     "message": "Success",
+     *     "status_code": 200,
+     *     "pagination": {
+     *         "total": 1,
+     *         "count": 1,
+     *         "per_page": 10,
+     *         "current_page": 1,
+     *         "total_pages": 1,
+     *         "links": []
+     *      }
+     *  }
+     * }
+     */
+    public function designResultCollect(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $data = Follow::select('demand_company_id')->where(['design_result_id'=>$all['id'],'type'=>2])
+            ->where('demand_company_id','>',0)
+            ->orderBy('id',$sort)->paginate($per_page);
+        $array = [];
+        if(!$data->isEmpty()){
+            $data = $data->toArray();
+            $array = array_column($data['data'],'demand_company_id');
+        }
+        $list = DemandCompany::whereIn('id',$array)->paginate($per_page);
+        return $this->response->paginator($list, new AdminDesignResultCollectTransformer())->setMeta($this->apiMeta());
     }
 
 }
