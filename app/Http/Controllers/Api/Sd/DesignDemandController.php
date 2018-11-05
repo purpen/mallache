@@ -411,7 +411,9 @@ class DesignDemandController extends BaseController
         $demandIds = DesignDemand::getCollectDemandId($design_company_id);
         $design_demand = DesignDemand::query()
             ->with('DemandCompany','User')
-            ->where('design_demand.status', 2)->paginate($per_page);
+            ->where('design_demand.status', 2)
+            ->orderBy('created_at', 'desc')
+            ->paginate($per_page);
         // 判断是否关注
         if(!$demandIds){
             foreach ($design_demand as $v){
