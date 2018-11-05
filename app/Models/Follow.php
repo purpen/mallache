@@ -30,6 +30,10 @@ class Follow extends BaseModel
                 $arr[] = $v->design_demand_id;
             }
             $designDemand = DesignDemand::whereIn('id',$arr)->paginate($per_page);
+            // 添加是否关注的状态
+            foreach ($designDemand as $v) {
+                $v->follow_status = 2;
+            }
             return $designDemand;
         }
         return $data;

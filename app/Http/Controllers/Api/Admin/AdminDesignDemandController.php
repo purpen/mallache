@@ -115,7 +115,7 @@ class AdminDesignDemandController extends BaseController
      * {
      *  "meta": {
      *    "code": 200,
-     *    "message": "Success.",
+     *    "message": "Success",
      *  }
      * }
      */

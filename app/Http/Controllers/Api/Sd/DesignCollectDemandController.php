@@ -57,8 +57,8 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $demand_info = Follow::showDemandList($design_company_id,$per_page);
-        return $this->response->paginator($demand_info, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
+        $demand_list = Follow::showDemandList($design_company_id,$per_page);
+        return $this->response->paginator($demand_list, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
