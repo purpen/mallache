@@ -104,7 +104,6 @@ class DesignResultController extends BaseController
         $images = $all['images'];
         //设计成果图片
         $images_id = AssetModel::select('id')->whereIn('id',$images)->get()->pluck('id')->all();
-
         if(!$images_id){
             return $this->apiError('图片信息不存在',403);
         }
@@ -142,8 +141,8 @@ class DesignResultController extends BaseController
         $design_result->contact_number = $all['contact_number']; //联系电话
         DB::beginTransaction();
         $res = $design_result->save();
-        $patent = $all['patent'];
-        $illustrate = $all['illustrate'];
+        $patent = $all['patent'] ?? [];
+        $illustrate = $all['illustrate'] ?? [];
         if(!empty($illustrate)){
             //产品说明书
             $illustrate_id = AssetModel::select('id')
@@ -165,6 +164,7 @@ class DesignResultController extends BaseController
             }
         }
         $design_result->cover = $design_result->cover;
+        AssetModel::where('target_id',$design_result->id)->update(['target_id'=>0,'status'=>2]);
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
         if(!empty($res) && !empty($asset)){
             DB::commit();
