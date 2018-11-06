@@ -7,6 +7,7 @@ use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Http\Transformer\PayOrderTransformer;
 use App\Http\Transformer\PayDesignResultTransformer;
+use App\Http\Transformer\MyOrderListTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\Item;
@@ -687,6 +688,78 @@ class PayController extends BaseController
             'source' => 0,  // 添加来源
         ]);
         return $pay_order;
+    }
+
+    /**
+     * @api {get} /pay/myOrderList 我的设计成果订单列表
+     * @apiVersion 1.0.0
+     * @apiName pay myOrderList
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {integer} page 页数
+     * @apiParam {integer} per_page 页面条数
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200,
+     * *        "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *          }
+     *      }
+     *      "data": {
+     *          "id": 10,
+     *          "uid": "110182900008714",   //支付单号
+     *          "user_id": 2,               //用户ID
+     *          "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
+     *          "item_id": 0,               //项目ID
+     *          "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *          "summary": "发布需求保证金",  //备注
+     *          "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *          "pay_no": "20170426211292", //平台交易号
+     *          "amount"：123,              //应支付金额
+     *          "design_result_id": "",     //项目名称
+     *          "company_name": "公司名称",  //公司名称
+     *          "design_result": {          //设计成果信息
+     *              "id": 4,
+     *              "title": "标题1",
+     *              "content": "内容",
+     *              "cover_id": 999,
+     *              "sell_type": 1,
+     *              "price": "200.00",
+     *              "share_ratio": 20,
+     *              "design_company_id": 66,
+     *              "user_id": 87,
+     *              "status": 3,
+     *              "thn_cost": "10.00",
+     *              "follow_count": 1,
+     *              "demand_company_id": 0,
+     *              "purchase_user_id": 0,
+     *              "created_at": 15404515,
+     *              "sell": 0,
+     *              "contacts": "",
+     *              "contact_number": "0"
+     *          }
+     *      }
+     *  }
+     */
+    public function myOrderList(Request $request)
+    {
+        if ($request->input('sort') == 0 && $request->input('sort') !== null) {
+            $sort = 'asc';
+        } else {
+            $sort = 'desc';
+        }
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $where['user_id'] = $this->auth_user_id;
+        $where['type'] = 5; //设计成果
+        $list = PayOrder::where($where)->orderBy('id',$sort)->paginate($per_page);
+        return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
     }
 
 }

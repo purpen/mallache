@@ -746,6 +746,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/designResults/{design_result_id}','PayController@payDesignResults');
         //设计成果价格修改
         $api->post('/designResults/savePrice','DesignResultController@saveDesignResultPrice');
+        //设计成果订单列表
+        $api->get('/pay/myOrderList','PayController@myOrderList');
     });
 
 });
