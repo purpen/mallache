@@ -819,7 +819,7 @@ class PayController extends BaseController
                     //$user->totalAndFrozenDecrease($order->user_id, $order->amount);
                     //平台佣金
                     $amount = $order->amount / 100 * $design_result->thn_cost;
-                    $design_amount = bcsub(111,11,2);
+                    $design_amount = bcsub($order->amount,$amount,2);
                     return $design_amount;
                     //增加用户总金额
                     $user->totalIncrease($order->user_id, $amount);
@@ -871,7 +871,9 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+        Log::info($this->auth_user_id);
+        Log::info($pay_order);
+        if (empty($pay_order) || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
         if($pay_order->status == 0 && $pay_order->type == 5){
