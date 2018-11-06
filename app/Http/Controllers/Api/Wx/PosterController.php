@@ -140,20 +140,20 @@ class PosterController extends BaseController
         $blue_img->insert($new_company_img, 'top-left' , 360 ,380);
         //设计公司名称 *变量
         $blue_img->text($company_name , 444, 620, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(45);
             $font->color('#223A94');
             $font->align('center');
         });
         //公司指数
         $blue_img->text('公司指数', 444, 735, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(30);
             $font->color('#223A94');
         });
         //行业平均数
         $blue_img->text('行业平均数', 612, 735, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(30);
             $font->color('#223A94');
         });
@@ -164,19 +164,19 @@ class PosterController extends BaseController
         $blue_img->insert($small_blue_img, 'top' , 111 , 750);
         //创新力指数
         $blue_img->text('创新力指数', 135, 798, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
         //创新力指数,公司指数*变量
         $blue_img->text($innovate , 444, 798, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FF6E73');
         });
         //创新力指数,行业平均数*变量
         $blue_img->text($innovate_avg , 612, 798, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
@@ -184,19 +184,19 @@ class PosterController extends BaseController
         $blue_img->insert($small_blue_img, 'top' , 111 , 837);
         //服务分
         $blue_img->text('服务分', 135, 885, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
         //服务分,公司指数*变量
         $blue_img->text($serve , 444, 885, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FF6E73');
         });
         //服务分,行业平均数*变量
         $blue_img->text($serve_avg , 612, 885, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
@@ -204,19 +204,19 @@ class PosterController extends BaseController
         $blue_img->insert($small_blue_img, 'top' , 111 , 924);
         //经营年限
         $blue_img->text('经营年限', 135, 972, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
         //经营年限,公司指数*变量
         $blue_img->text($age , 444, 972, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FF6E73');
         });
         //经营年限,行业平均数*变量
         $blue_img->text($age_avg , 612, 972, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
@@ -224,19 +224,19 @@ class PosterController extends BaseController
         $blue_img->insert($small_blue_img, 'top' , 111 , 1011);
         //团队规模
         $blue_img->text('团队规模', 135, 1059, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
         //团队规模,公司指数*变量
         $blue_img->text($scale , 444, 1059, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FF6E73');
         });
         //团队规模,行业平均数*变量
         $blue_img->text($scale_avg , 612, 1059, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#F9DB59');
         });
@@ -250,13 +250,13 @@ class PosterController extends BaseController
 
         //长按图片识别小程序
         $blue_img->text('长按图片识别小程序', 360, 1260, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FFFFFF');
         });
         //立即查看榜单
         $blue_img->text('立即查看榜单', 360, 1350, function($font) {
-            $font->file(base_path('storage/fonts/SourceHanSerifCN-Bold1.ttf'));
+            $font->file(base_path('storage/fonts/SourceHanSerifCN-Light.ttf'));
             $font->size(42);
             $font->color('#FFFFFF');
         });
