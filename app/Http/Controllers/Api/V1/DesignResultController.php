@@ -593,6 +593,7 @@ class DesignResultController extends BaseController
      *          "created_at": 1540448935, //创建时间
      *          "updated_at": 1540448935,
      *          "contacts": "羽落", //联系人
+     *          "sell": 1", //0:未出售,1:已出售,2:已确认
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
