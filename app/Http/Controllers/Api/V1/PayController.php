@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Api\V1;
 use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Helper\Tools;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Transformer\PayOrderTransformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Http\Transformer\PayDesignResultTransformer;
 use App\Http\Transformer\MyOrderListTransformer;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\Item;
+use App\Models\User;
+use App\Models\FundLog;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
 use App\Service\Pay;
@@ -627,6 +631,7 @@ class PayController extends BaseController
      *          "item_name": ""  //项目名称
      *          "company_name": "公司名称"  //公司名称
      *          "first_pay": 11, //已支付金额
+     *          "design_result": {}, //设计成果信息
      *      }
      *  }
      */
@@ -636,20 +641,22 @@ class PayController extends BaseController
         $type = 5;
         $design_result = DesignResult::find($design_result_id);
         if (!$design_result) {
-            return $this->response->array('设计成果不存在',404);
+            return $this->response->array($this->apiError('设计成果不存在',404));
         }
         if ($design_result->status != 3) {
-            return $this->response->array('设计成果未上架',403);
+            return $this->response->array($this->apiError('设计成果未上架',403));
         }
         if ($design_result->sell > 0) {
-            return $this->response->array('设计成果已出售',403);
+            return $this->response->array($this->apiError('设计成果已出售', 403));
         }
 
         //支付说明
-        $summary = '设计成果付款';
+        $summary = '设计成果订单';
 
         $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id);
-        $pay_order->total_price = $design_result->price;
+        $pay_order->total_price = $design_result->price; //售价
+        $pay_order->sell_type = $design_result->sell_type; //售卖类型 1.全款 2.股权合作
+        $pay_order->share_ratio = $design_result->share_ratio; //股权比例
         return $this->response->item($pay_order, new PayDesignResultTransformer)->setMeta($this->apiMeta());
     }
 
@@ -760,6 +767,145 @@ class PayController extends BaseController
         $where['type'] = 5; //设计成果
         $list = PayOrder::where($where)->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /pay/confirmFile 确认设计成果文件
+     * @apiVersion 1.0.0
+     * @apiName pay confirmFile
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function confirmFile(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $order = PayOrder::find($all['id']);
+        if(!empty($order)){
+            if($order->status == 1){
+                $design_result = DesignResult::find($order->design_result_id);
+                if($design_result->sell == 1){
+                    $design_result->status = -1;
+                    $design_result->sell = 2;
+                    DB::beginTransaction();
+                    //减少用户总金额和冻结金额
+                    $user = new User();
+                    //$user->totalAndFrozenDecrease($order->user_id, $order->amount);
+                    //平台佣金
+                    $amount = $order->amount / 100 * $design_result->thn_cost;
+                    $design_amount = bcsub(111,11,2);
+                    return $design_amount;
+                    //增加用户总金额
+                    $user->totalIncrease($order->user_id, $amount);
+
+                    $fund_log = new FundLog();
+                    //需求公司资金流水记录
+                    //$fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
+                    //设计公司资金流水记录
+                    //$fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
+
+
+                    DB::commit();
+                    $design_result->save();
+
+                    DB::rollBack();
+                }else{
+                    return $this->apiError('设计成果状态错误',403);
+                }
+            }else{
+                return $this->apiError('订单状态错误',403);
+            }
+        }
+        return $this->apiError('订单错误',404);
+    }
+
+    /**
+     * @api {get} /pay/closeOrder 关闭未支付订单
+     * @apiVersion 1.0.0
+     * @apiName pay closeOrder
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function closeOrder(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $pay_order = PayOrder::find($all['id']);
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+        if($pay_order->status == 0 && $pay_order->type == 5){
+            $pay_order->status = -1;
+            if($pay_order->save()){
+                return $this->apiSuccess('取消订单成功',200);
+            }
+        }
+        return $this->apiError('取消订单失败',403);
+    }
+
+    /**
+     * @api {get} /pay/deleteOrder 删除设计成果已关闭订单
+     * @apiVersion 1.0.0
+     * @apiName pay deleteOrder
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function deleteOrder(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $pay_order = PayOrder::find($all['id']);
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('无操作权限', 403));
+        }
+        if($pay_order->status == -1 && $pay_order->type == 5){
+            if($pay_order->delete()){
+                return $this->apiSuccess('关闭订单成功',200);
+            }
+        }
+        return $this->apiError('关闭订单失败',403);
     }
 
 }

@@ -748,6 +748,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->post('/designResults/savePrice','DesignResultController@saveDesignResultPrice');
         //设计成果订单列表
         $api->get('/pay/myOrderList','PayController@myOrderList');
+        //设计成果确认文件
+        $api->get('/pay/confirmFile','PayController@confirmFile');
+        //关闭未支付订单
+        $api->get('/pay/closeOrder','PayController@closeOrder');
+        //删除设计成果已关闭订单
+        $api->get('/pay/deleteOrder','PayController@deleteOrder');
     });
 
 });
