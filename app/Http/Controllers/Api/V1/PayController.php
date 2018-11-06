@@ -707,53 +707,65 @@ class PayController extends BaseController
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
      * @apiSuccessExample 成功响应:
-     *   {
-     *      "meta": {
-     *          "message": "Success",
-     *          "status_code": 200,
-     * *        "pagination": {
-     *              "total": 1,
-     *              "count": 1,
-     *              "per_page": 10,
-     *              "current_page": 1,
-     *              "total_pages": 1,
-     *          }
-     *      }
-     *      "data": {
-     *          "id": 10,
-     *          "uid": "110182900008714",   //支付单号
-     *          "user_id": 2,               //用户ID
-     *          "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
-     *          "item_id": 0,               //项目ID
-     *          "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
-     *          "summary": "发布需求保证金",  //备注
-     *          "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-     *          "pay_no": "20170426211292", //平台交易号
-     *          "amount"：123,              //应支付金额
-     *          "design_result_id": "",     //项目名称
-     *          "company_name": "公司名称",  //公司名称
-     *          "design_result": {          //设计成果信息
-     *              "id": 4,
-     *              "title": "标题1",
-     *              "content": "内容",
-     *              "cover_id": 999,
-     *              "sell_type": 1,
-     *              "price": "200.00",
-     *              "share_ratio": 20,
-     *              "design_company_id": 66,
-     *              "user_id": 87,
-     *              "status": 3,
-     *              "thn_cost": "10.00",
-     *              "follow_count": 1,
-     *              "demand_company_id": 0,
-     *              "purchase_user_id": 0,
-     *              "created_at": 15404515,
-     *              "sell": 0,
-     *              "contacts": "",
-     *              "contact_number": "0"
-     *          }
-     *      }
-     *  }
+     * {
+     *    "meta": {
+     *        "message": "Success",
+     *        "status_code": 200,
+     *        "pagination": {
+     *            "total": 1,
+     *            "count": 1,
+     *            "per_page": 10,
+     *            "current_page": 1,
+     *            "total_pages": 1,
+     *        }
+     *    }
+     *    "data": {
+     *        "id": 10,
+     *        "uid": "110182900008714",   //支付单号
+     *        "user_id": 2,               //用户ID
+     *        "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
+     *        "item_id": 0,               //项目ID
+     *        "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *        "summary": "发布需求保证金",  //备注
+     *        "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *        "pay_no": "20170426211292", //平台交易号
+     *        "amount"：123,              //应支付金额
+     *        "company_name": "公司名称",  //公司名称
+     *        "created_at": "1541487779", //下单时间
+     *        "cover": { //封面
+     *           "id": 999,
+     *           "name": "participants@2x.png",
+     *           "created_at": 1524207783,
+     *           "summary": null,
+     *           "size": 939,
+     *           "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *           "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *           "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *           "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *           "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *        },
+     *        "design_result": {          //设计成果信息
+     *            "id": 4,
+     *            "title": "标题1",
+     *            "content": "内容",
+     *            "cover_id": 999,
+     *            "sell_type": 1,
+     *            "price": "200.00",
+     *            "share_ratio": 20,
+     *            "design_company_id": 66,
+     *            "user_id": 87,
+     *            "status": 3,
+     *            "thn_cost": "10.00",
+     *            "follow_count": 1,
+     *            "demand_company_id": 0,
+     *            "purchase_user_id": 0,
+     *            "created_at": 15404515,
+     *            "sell": 0, //0:未出售,1:已出售,2:已确认
+     *            "contacts": "",
+     *            "contact_number": "0"
+     *        }
+     *    }
+     * }
      */
     public function myOrderList(Request $request)
     {
@@ -906,6 +918,92 @@ class PayController extends BaseController
             }
         }
         return $this->apiError('关闭订单失败',403);
+    }
+
+    /**
+     * @api {get} /pay/orderShow 设计成果订单详情
+     * @apiVersion 1.0.0
+     * @apiName pay orderShow
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiSuccessExample 成功响应:
+     * * {
+     *    "meta": {
+     *        "message": "Success",
+     *        "status_code": 200
+     *    }
+     *    "data": {
+     *        "id": 10,
+     *        "uid": "110182900008714",   //支付单号
+     *        "user_id": 2,               //用户ID
+     *        "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
+     *        "item_id": 0,               //项目ID
+     *        "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *        "summary": "发布需求保证金",  //备注
+     *        "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     *        "pay_no": "20170426211292", //平台交易号
+     *        "amount"：123,              //应支付金额
+     *        "company_name": "公司名称",  //公司名称
+     *        "created_at": "1541487779", //下单时间
+     *        "status_value": "支付完成",
+     *        "pay_type_value": "",
+     *        "bank": "",
+     *        "cover": { //封面
+     *           "id": 999,
+     *           "name": "participants@2x.png",
+     *           "created_at": 1524207783,
+     *           "summary": null,
+     *           "size": 939,
+     *           "file": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30",
+     *           "small": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p280x210.jpg",
+     *           "big": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p800.jpg",
+     *           "logo": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p180x180.jpg",
+     *           "middle": "https://d3g.taihuoniao.com/saas/20180420/5ad990a7daf30-p450x255"
+     *        },
+     *        "design_result": {          //设计成果信息
+     *            "id": 4,
+     *            "title": "标题1",       //标题
+     *            "content": "内容",      //描述
+     *            "cover_id": 999,
+     *            "sell_type": 1,        //售卖类型 1.全款 2.股权合作
+     *            "price": "200.00",     //售价
+     *            "share_ratio": 20,     //股权比例
+     *            "design_company_id": 66,
+     *            "user_id": 87,         //用户id
+     *            "status": 3,           //状态 1. 待提交，2.审核中；3.已上架;-1.已下架
+     *            "thn_cost": "10.00",   //平台佣金比例
+     *            "follow_count": 1,     //关注数量
+     *            "demand_company_id": 0,
+     *            "purchase_user_id": 0,
+     *            "created_at": 15404515,
+     *            "sell": 0,             //0:未出售,1:已出售,2:已确认
+     *            "contacts": "联系人",   //联系人
+     *            "contact_number": "0"  //	联系电话
+     *        }
+     *    }
+     * }
+     */
+    public function orderShow(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $pay_order = PayOrder::find($all['id']);
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+            return $this->apiError('订单不存在',404);
+        }
+        $pay_order->design_result = $pay_order->designResult;
+        unset($pay_order->design_result->designCompany->user);
+        $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? $pay_order->designResult->designCompany->contact_name;
+        $pay_order->design_result->cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
+        unset($pay_order->design_result->designCompany);
+        return $this->apiSuccess('Success',200,$pay_order);
     }
 
 }
