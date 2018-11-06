@@ -85,6 +85,35 @@ class PosterController extends BaseController
         //释放空间
         imagedestroy($src_img);
         imagedestroy($img);
+
+        //小程序截图圆形
+        $small_src_img = imagecreatefromstring(file_get_contents($small_img));
+        $small_w = imagesx($small_src_img);
+        $small_h = imagesy($small_src_img);
+        $small_w = $small_h = min($small_w, $small_h);
+
+        $small_img = imagecreatetruecolor($small_w, $small_h);
+        //这一句一定要有
+        imagesavealpha($small_img, true);
+        //拾取一个完全透明的颜色,最后一个参数127为全透明
+        $small_bg = imagecolorallocatealpha($small_img, 0, 0, 0, 127);
+        imagefill($small_img, 0, 0, $small_bg);
+        $small_r   = $small_w / 2; //圆半径
+        for ($small_x = 0; $small_x < $small_w; $small_x++) {
+            for ($small_y = 0; $small_y < $small_h; $small_y++) {
+                $small_rgbColor = imagecolorat($small_src_img, $small_x, $small_y);
+                if (((($small_x - $small_r) * ($small_x - $small_r) + ($small_y - $small_r) * ($small_y - $small_r)) < ($small_r * $small_r))) {
+                    imagesetpixel($small_img, $small_x, $small_y, $small_rgbColor);
+                }
+            }
+        }
+        $small_save_name = uniqid();
+        //输出图片到文件
+        imagepng ($small_img,'/tmp/'.$small_save_name.'.jpg');
+        //释放空间
+        imagedestroy($small_src_img);
+        imagedestroy($small_img);
+
         // create empty canvas with background color
         $manager = new ImageManager(array('driver' => 'imagick'));
         //蓝色底
@@ -215,9 +244,9 @@ class PosterController extends BaseController
         $blue_img->circle(205, 190, 1290, function ($draw) {
             $draw->background('#FFFFFF');
         });
-        $new_small_img = $manager->make($small_img)->resize(198,198);
+        $new_small__company_img = $manager->make('/tmp/'.$small_save_name.'.jpg')->resize(198,198);
 
-        $blue_img->insert($new_small_img, 'top-left' , 90 ,1190);
+        $blue_img->insert($new_small__company_img, 'top-left' , 90 ,1190);
 
         //长按图片识别小程序
         $blue_img->text('长按图片识别小程序', 360, 1260, function($font) {
@@ -248,6 +277,7 @@ class PosterController extends BaseController
         list($ret, $err) = $uploadMgr->putFile($token, $key, '/tmp/'.$merge_img_name.'.jpg');
         $posterImg = config('filesystems.disks.qiniu.url').$key;
         unlink('/tmp/'.$save_name.'.jpg');
+        unlink('/tmp/'.$small_save_name.'.jpg');
         unlink('/tmp/'.$merge_img_name.'.jpg');
 
         return $this->response->array($this->apiSuccess('获取成功', 200 , compact('posterImg')));
