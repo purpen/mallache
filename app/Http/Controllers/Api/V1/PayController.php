@@ -652,7 +652,6 @@ class PayController extends BaseController
 
         //支付说明
         $summary = '设计成果订单';
-
         $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id);
         $pay_order->total_price = $design_result->price; //售价
         $pay_order->sell_type = $design_result->sell_type; //售卖类型 1.全款 2.股权合作
@@ -787,7 +786,7 @@ class PayController extends BaseController
      * @apiName pay confirmFile
      * @apiGroup pay
      * @apiParam {string} token
-     * @apiParam {integer} id 订单id
+     * @apiParam {integer} id 订单ID
      * @apiSuccessExample 成功响应:
      * {
      *     "meta": {
@@ -811,38 +810,46 @@ class PayController extends BaseController
             if($order->status == 1){
                 $design_result = DesignResult::find($order->design_result_id);
                 if($design_result->sell == 1){
-                    $design_result->status = -1;
-                    $design_result->sell = 2;
                     DB::beginTransaction();
-                    //减少用户总金额和冻结金额
-                    $user = new User();
-                    //$user->totalAndFrozenDecrease($order->user_id, $order->amount);
-                    //平台佣金
-                    $amount = $order->amount / 100 * $design_result->thn_cost;
-                    $design_amount = bcsub($order->amount,$amount,2);
-                    return $design_amount;
-                    //增加用户总金额
-                    $user->totalIncrease($order->user_id, $amount);
-
-                    $fund_log = new FundLog();
-                    //需求公司资金流水记录
-                    //$fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $item_info['name'] . '】项目阶段项目款');
-                    //设计公司资金流水记录
-                    //$fund_log->inFund($design_user_id, $amount, 1, $demand_user_id, '收到【' . $item_info['name'] . '】项目阶段项目款');
-
-
-                    DB::commit();
-                    $design_result->save();
-
-                    DB::rollBack();
+                    try {
+                        $design_result->status = -1;
+                        $design_result->sell = 2;
+                        //购买用户id
+                        $demand_user_id = $order->user_id;
+                        //设计公司用户id
+                        $design_user_id = $design_result->user_id;
+                        //减少用户总金额和冻结金额
+                        $user = new User();
+                        $user->totalAndFrozenDecrease($order->user_id,$order->amount);
+                        //平台佣金
+                        $amount = $order->amount / 100 * $design_result->thn_cost;
+                        //扣除平台佣金
+                        $design_amount = bcsub($order->amount,$amount,2);
+                        //增加设计方总金额
+                        $user->totalIncrease($design_result->user_id,$design_amount);
+                        $fund_log = new FundLog();
+                        //需求公司资金流水记录
+                        $fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $design_result['title'] . '】设计成果交易款');
+                        //设计公司资金流水记录
+                        $fund_log->inFund($design_user_id, $order->amount, 1, $demand_user_id, '收到【' . $design_result['title'] . '】设计成果交易款');
+                        //扣除设计公司资金流水记录
+                        $fund_log->outFund($design_user_id, $amount, 1, $demand_user_id, '扣除【' . $design_result['title'] . '】设计成果佣金');
+                        $design_result->save();
+                        DB::commit();
+                        return $this->apiSuccess('文件已确认',200);
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        Log::error($e);
+                        return $this->apiError('确认文件失败',400);
+                    }
                 }else{
-                    return $this->apiError('设计成果状态错误',403);
+                    return $this->apiError('设计成果异常',403);
                 }
             }else{
-                return $this->apiError('订单状态错误',403);
+                return $this->apiError('订单异常',403);
             }
         }
-        return $this->apiError('订单错误',404);
+        return $this->apiError('文件确认失败',400);
     }
 
     /**
@@ -871,8 +878,6 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        Log::info($this->auth_user_id);
-        Log::info($pay_order);
         if (empty($pay_order) || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
@@ -928,7 +933,7 @@ class PayController extends BaseController
      * @apiName pay orderShow
      * @apiGroup pay
      * @apiParam {string} token
-     * @apiParam {integer} id 订单id
+     * @apiParam {integer} id 订单ID
      * @apiSuccessExample 成功响应:
      * * {
      *    "meta": {
