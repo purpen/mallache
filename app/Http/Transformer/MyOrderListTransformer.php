@@ -3,6 +3,7 @@
 namespace App\Http\Transformer;
 
 use App\Models\PayOrder;
+use App\Models\User;
 use App\Models\AssetModel;
 use League\Fractal\TransformerAbstract;
 
@@ -10,11 +11,14 @@ class MyOrderListTransformer extends TransformerAbstract
 {
     public function transform(PayOrder $pay_order)
     {
+        if($pay_order->design_user_id > 0){
+            $pay_order->demand_company = $pay_order->user->demandCompany;
+        }
         $pay_order->design_result = $pay_order->designResult;
         unset($pay_order->design_result->designCompany->user);
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? $pay_order->designResult->designCompany->contact_name;
-        $pay_order->cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
         unset($pay_order->design_result->designCompany);
+        $pay_order->cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
         return [
             'id' => $pay_order->id,
             'uid' => $pay_order->uid,
@@ -34,6 +38,7 @@ class MyOrderListTransformer extends TransformerAbstract
             'design_result' => $pay_order->design_result,
             'company_name' => $pay_order->company_name,
             'cover' => $pay_order->cover,
+            'design_demand' => $pay_order->design_demand ?? '',
         ];
     }
 }

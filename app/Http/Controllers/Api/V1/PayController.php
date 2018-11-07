@@ -652,7 +652,7 @@ class PayController extends BaseController
 
         //支付说明
         $summary = '设计成果订单';
-        $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id);
+        $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id,$design_result->user_id);
         $pay_order->total_price = $design_result->price; //售价
         $pay_order->sell_type = $design_result->sell_type; //售卖类型 1.全款 2.股权合作
         $pay_order->share_ratio = $design_result->share_ratio; //股权比例
@@ -667,10 +667,11 @@ class PayController extends BaseController
      * @param int $user_id 用户ID
      * @param string $summary 备注
      * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
+     * @param int $design_user_id 设计方用户id
      * @param int $item_stage_id 项目阶段ID
      * @return mixed
      */
-    protected function designResultsPayOrder($summary = '',$amount,$type = 1,$pay_type = 0,$design_result_id = 0)
+    protected function designResultsPayOrder($summary = '',$amount,$type = 1,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
     {
         $pay_order = PayOrder::query()->where([
             'type' => $type,
@@ -691,6 +692,7 @@ class PayController extends BaseController
             'amount' => $amount,
             'pay_type' => $pay_type,
             'design_result_id' => $design_result_id,
+            'design_user_id' => $design_user_id,
             'source' => 0,  // 添加来源
         ]);
         return $pay_order;
@@ -774,8 +776,16 @@ class PayController extends BaseController
             $sort = 'desc';
         }
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $where['user_id'] = $this->auth_user_id;
         $where['type'] = 5; //设计成果
+        $query = PayOrder::query();
+        if($this->auth_user->type == 1) {
+            //需求公司
+            $query->where('user_id',$this->auth_user_id);
+        }else{
+            $where['status'] = '< 0';
+            $query->where('design_user_id',$this->auth_user_id);
+            $query->where('status','>',0);
+        }
         $list = PayOrder::where($where)->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
     }
@@ -832,8 +842,8 @@ class PayController extends BaseController
                         $fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $design_result['title'] . '】设计成果交易款');
                         //设计公司资金流水记录
                         $fund_log->inFund($design_user_id, $order->amount, 1, $demand_user_id, '收到【' . $design_result['title'] . '】设计成果交易款');
-                        //扣除设计公司资金流水记录
-                        $fund_log->outFund($design_user_id, $amount, 1, $demand_user_id, '扣除【' . $design_result['title'] . '】设计成果佣金');
+                        //扣除设计公司佣金流水记录
+                        $fund_log->outFund($design_user_id, $amount, 1, $demand_user_id, '扣除【' . $design_result['title'] . '】设计成果平台佣金');
                         $design_result->save();
                         DB::commit();
                         return $this->apiSuccess('文件已确认',200);
