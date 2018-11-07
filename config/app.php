@@ -186,6 +186,8 @@ return [
 
         // pdf
         Barryvdh\DomPDF\ServiceProvider::class,
+        //画图
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -235,6 +237,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
     // 与官网对接接口

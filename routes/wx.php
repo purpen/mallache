@@ -48,6 +48,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->get('/wechat/designCase', [
         'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@lists'
     ]);
+    //生成海报
+    $api->post('/wechat/poster', [
+        'as' => 'wechat.poster', 'uses' => 'PosterController@poster'
+    ]);
     /**
      *
      * 需验证用户token
