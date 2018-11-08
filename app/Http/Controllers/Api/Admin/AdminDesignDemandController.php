@@ -21,6 +21,7 @@ class AdminDesignDemandController extends BaseController
 {
     /**
      * @api {get} /admin/designDemand/lists 发布的设计需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand lists
      * @apiGroup AdminDesignDemand
@@ -103,6 +104,7 @@ class AdminDesignDemandController extends BaseController
 
     /**
      * @api {put} /admin/designDemand/auditStatus 设计需求信息审核
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand auditStatus
      * @apiGroup AdminDesignDemand
@@ -162,6 +164,7 @@ class AdminDesignDemandController extends BaseController
 
     /**
      * @api {get} /admin/designDemand/showCollectList 查看设计需求被那些设计公司收藏
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand showCollectList
      * @apiGroup AdminDesignDemand

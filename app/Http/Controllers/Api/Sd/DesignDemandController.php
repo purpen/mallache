@@ -24,6 +24,7 @@ class DesignDemandController extends BaseController
 {
     /**
      * @api {get} /sd/demand/demandList 需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandList
      * @apiGroup sdDemandType
@@ -79,6 +80,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/release 发布需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand release
      * @apiGroup sdDemandType
@@ -159,6 +161,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/demandInfo 查看某个需求详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandInfo
      * @apiGroup sdDemandType
@@ -231,6 +234,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/demandShut 关闭某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandShut
      * @apiGroup sdDemandType
@@ -290,6 +294,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/demandUpdate 更改需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandUpdate
      * @apiGroup sdDemandType
@@ -371,6 +376,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/designDemandList 设计公司查看需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand designDemandList
      * @apiGroup sdDemandType
@@ -437,6 +443,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/designDemandInfo 设计公司查看某个需求详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand designDemandInfo
      * @apiGroup sdDemandType
@@ -515,6 +522,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/evaluateResult 需求公司评价设计成果
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand evaluateResult
      * @apiGroup sdDemandType
@@ -590,6 +598,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/evaluateInfo 设计成果评价详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand evaluateInfo
      * @apiGroup sdDemandType

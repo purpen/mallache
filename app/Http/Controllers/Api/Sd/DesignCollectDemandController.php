@@ -18,6 +18,7 @@ class DesignCollectDemandController extends BaseController
 {
     /**
      * @api {get} /sd/design/designCollectList 设计公司收藏列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign designCollectList
      * @apiGroup sdDesignType
@@ -63,6 +64,7 @@ class DesignCollectDemandController extends BaseController
 
     /**
      * @api {post} /sd/design/collectDemand 设计公司收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign collectDemand
      * @apiGroup sdDesignType
@@ -120,6 +122,7 @@ class DesignCollectDemandController extends BaseController
 
     /**
      * @api {post} /sd/design/cancelCollectDemand 设计公司取消收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign cancelCollectDemand
      * @apiGroup sdDesignType
