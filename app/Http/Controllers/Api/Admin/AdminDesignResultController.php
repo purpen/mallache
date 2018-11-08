@@ -104,6 +104,7 @@ class AdminDesignResultController extends BaseController
         $follow = new Follow;
         if(!$list->isEmpty()){
             foreach ($list as $k => $v) {
+                //是否已收藏
                 if($user->type == 1){
                     //需求公司
                     $list{$k}->is_follow = $follow->isFollow(1,$demand_company_id,$v->id);

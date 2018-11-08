@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Service\Pay;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -140,6 +141,12 @@ class DesignResultController extends BaseController
         $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
         DB::beginTransaction();
         $res = $design_result->save();
+        if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
+            $pay = new Pay;
+            $pay_res = $pay->ClosePayOrders($design_result->id);
+        }else{
+            $pay_res = 1;
+        }
         $patent = $all['patent'] ?? [];
         $illustrate = $all['illustrate'] ?? [];
         if(!empty($illustrate)){
@@ -165,7 +172,7 @@ class DesignResultController extends BaseController
         $design_result->cover = $design_result->cover;
         AssetModel::where('target_id',$design_result->id)->update(['target_id'=>0,'status'=>2]);
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
-        if(!empty($res) && !empty($asset)){
+        if(!empty($res) && !empty($asset) && !empty($pay_res)){
             DB::commit();
             return $this->apiSuccess('保存成功', 200,$design_result);
         }else{
@@ -814,21 +821,14 @@ class DesignResultController extends BaseController
         $design_result->sell_type = $all['sell_type'];
         $design_result->price = $all['price'];
         $design_result->share_ratio = $all['share_ratio']; //股权比例
-        //未付款成果订单id
-        $id = PayOrder::where(['design_result_id'=>$all['id'],'type'=>5,'status'=>0])->get()->pluck('id')->all();
         DB::beginTransaction();
         $res = $design_result->save();
-        if(!empty($id)){
-            $pay_order_res = PayOrder::whereIn('id',$id)->update(['status'=>-1]);
-            if(!empty($res) && !empty($pay_order_res)){
-                DB::commit();
-                return $this->apiSuccess('保存成功', 200,$design_result);
-            }
-        }else{
-            if(!empty($res)){
-                DB::commit();
-                return $this->apiSuccess('保存成功', 200,$design_result);
-            }
+        $pay = new Pay;
+        //关闭所有设计成果未支付订单
+        $pay_res = $pay->ClosePayOrders($design_result->id);
+        if(!empty($res) && !empty($pay_res)){
+            DB::commit();
+            return $this->apiSuccess('保存成功', 200,$design_result);
         }
         DB::rollBack();
         return $this->apiError('保存失败',400);

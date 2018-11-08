@@ -14,10 +14,11 @@ use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\FundLog;
-use App\Models\ItemStage;
-use App\Models\PayOrder;
 use App\Models\Follow;
+use App\Models\FundLog;
+use App\Models\PayOrder;
+use App\Models\ItemStage;
+use App\Models\ResultEvaluate;
 use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -695,6 +696,7 @@ class PayController extends BaseController
             'design_user_id' => $design_user_id,
             'source' => 0,  // 添加来源
         ]);
+        Log::info($pay_order);
         return $pay_order;
     }
 
@@ -764,7 +766,8 @@ class PayController extends BaseController
      *            "created_at": 15404515,
      *            "sell": 0, //0:未出售,1:已出售,2:已确认
      *            "contacts": "",
-     *            "contact_number": "0"
+     *            "contact_number": "0",
+     *            "is_evaluate": 0      //是否已评价
      *        }
      *    }
      * }
@@ -1000,6 +1003,18 @@ class PayController extends BaseController
      *            "images_url": [],      //图片
      *            "illustrate_url": [],  //说明书
      *            "patent_url": [],      //专利证书
+     *            "evaluate": {          //评价
+     *                "id": 11,          //评价ID
+     *                "design_company_id": 11,  //设计公司ID
+     *                "design_result_id": 34,   //设计成果ID
+     *                "demand_company_id": 1,   //需求公司ID
+     *                "design_level": 5,        //设计水平
+     *                "response_speed": 6,      //响应速度
+     *                "serve_attitude": 7,      //服务态度
+     *                "content": "7",           //评价内容
+     *                "created_at": 1541669981, //创建时间
+     *                "updated_at": 1541669985
+     *            },
      *        }
      *    }
      * }
@@ -1025,11 +1040,15 @@ class PayController extends BaseController
         $images_url = AssetModel::getImageUrl($pay_order->design_result->id,37,2,20);
         $illustrate_url = AssetModel::getImageUrl($pay_order->design_result->id,38,2,10);
         $patent_url = AssetModel::getImageUrl($pay_order->design_result->id,39,2,10);
+        //图片
         $pay_order->design_result->images_url = $images_url;
+        //说明书
         $pay_order->design_result->illustrate_url = $illustrate_url;
+        //专利证书
         $pay_order->design_result->patent_url = $patent_url;
         $follow = new Follow;
         $user = $this->auth_user;
+        //是否已收藏
         if($user->type == 1){
             //需求公司
             $pay_order->design_result->is_follow = $follow->isFollow(1,$user->demand_company_id,$pay_order->design_result->id);
@@ -1037,6 +1056,7 @@ class PayController extends BaseController
             //设计公司
             $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
         }
+        //$pay_order->design_result->evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->first() ?? '';
         unset($pay_order->design_result->designCompany);
         return $this->apiSuccess('Success',200,$pay_order);
     }

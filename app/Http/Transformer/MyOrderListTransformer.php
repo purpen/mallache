@@ -2,9 +2,10 @@
 
 namespace App\Http\Transformer;
 
-use App\Models\PayOrder;
 use App\Models\User;
+use App\Models\PayOrder;
 use App\Models\AssetModel;
+use App\Models\ResultEvaluate ;
 use League\Fractal\TransformerAbstract;
 
 class MyOrderListTransformer extends TransformerAbstract
@@ -19,6 +20,7 @@ class MyOrderListTransformer extends TransformerAbstract
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? '';
         $cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
         unset($pay_order->design_result->designCompany);
+        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count();
         return [
             'id' => $pay_order->id,
             'uid' => $pay_order->uid,
@@ -38,7 +40,7 @@ class MyOrderListTransformer extends TransformerAbstract
             'company_name' => $pay_order->company_name,
             'demand_company_name' => $pay_order->demand_company_name,
             'cover' => $cover,
-            'design_result' => $pay_order->design_result,
+            'design_result' => $pay_order->design_result ?? '',
         ];
     }
 }
