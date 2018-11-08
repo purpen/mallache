@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\FundLog;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
+use App\Models\Follow;
 use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -649,7 +650,6 @@ class PayController extends BaseController
         if ($design_result->sell > 0) {
             return $this->response->array($this->apiError('设计成果已出售', 403));
         }
-
         //支付说明
         $summary = '设计成果订单';
         $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id,$design_result->user_id);
@@ -996,7 +996,10 @@ class PayController extends BaseController
      *            "created_at": 15404515,
      *            "sell": 0,             //0:未出售,1:已出售,2:已确认
      *            "contacts": "联系人",   //联系人
-     *            "contact_number": "0"  //	联系电话
+     *            "contact_number": "0"  //联系电话
+     *            "images_url": [],      //图片
+     *            "illustrate_url": [],  //说明书
+     *            "patent_url": [],      //专利证书
      *        }
      *    }
      * }
@@ -1019,6 +1022,21 @@ class PayController extends BaseController
         unset($pay_order->design_result->designCompany->user);
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? $pay_order->designResult->designCompany->contact_name;
         $pay_order->design_result->cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
+        $images_url = AssetModel::getImageUrl($pay_order->design_result->id,37,2,20);
+        $illustrate_url = AssetModel::getImageUrl($pay_order->design_result->id,38,2,10);
+        $patent_url = AssetModel::getImageUrl($pay_order->design_result->id,39,2,10);
+        $pay_order->design_result->images_url = $images_url;
+        $pay_order->design_result->illustrate_url = $illustrate_url;
+        $pay_order->design_result->patent_url = $patent_url;
+        $follow = new Follow;
+        $user = $this->auth_user;
+        if($user->type == 1){
+            //需求公司
+            $pay_order->design_result->is_follow = $follow->isFollow(1,$user->demand_company_id,$pay_order->design_result->id);
+        }else{
+            //设计公司
+            $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
+        }
         unset($pay_order->design_result->designCompany);
         return $this->apiSuccess('Success',200,$pay_order);
     }

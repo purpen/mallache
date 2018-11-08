@@ -21,7 +21,7 @@ class AdminDesignResultController extends BaseController
      * @apiName designResultsUnauditedLists
      * @apiGroup designResults
      * @apiParam {integer} page 页数
-     * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架
+     * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架,-2:已删除
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} sort 0:升序,1:降序(默认)
      * @apiParam {string} title 搜索名称(搜索时使用)
@@ -88,7 +88,7 @@ class AdminDesignResultController extends BaseController
         }
         $query = DesignResult::query();
         $status = (int)$request->input('status');
-        if(!empty($status) && $status != 1){
+        if(!empty($status) && $status != 1 && $status != -2){
             $query->where('status',$status);
         }else{
             $query->whereIn('status',[-1,2,3]);

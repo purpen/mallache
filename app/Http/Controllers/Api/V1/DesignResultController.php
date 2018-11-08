@@ -109,9 +109,9 @@ class DesignResultController extends BaseController
         }
         //修改
         if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
-            $design_result = DesignResult::find((int)$all['id']);
+            $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
             if(!$design_result){
-                return $this->apiError('保存失败',400);
+                return $this->apiError('设计成果不存在',404);
             }
             if($design_result->sell > 0){
                 return $this->apiError('设计成果已出售',400);
@@ -238,7 +238,7 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('id',$all['id'])->first();
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
@@ -260,7 +260,7 @@ class DesignResultController extends BaseController
             $design_result->design_company = $design_result->designCompany;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
-            return $this->apiError('设计成果已下架',400);
+            return $this->apiError('设计成果不存在',404);
         }
     }
 
@@ -353,8 +353,10 @@ class DesignResultController extends BaseController
                 //设计公司
                 $follow_data = $follow->getResultFollow($demand_company_id,2);
             }
-            if($status != 0){
+            if($status != 0 && $status != -2){
                 $query->where('status',$status);
+            }else{
+                $query->where('status','>',-2);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->whereIn('id',$follow_data)
@@ -411,6 +413,9 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
+        if($all['status'] > -2 && $all['status'] < 4){
+            return $this->apiError('设计成果', 403);
+        }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
         if(!$design_result){
             return $this->apiError('设计成果不存在', 400);
@@ -455,15 +460,16 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_results = DesignResult::whereIn('id',$all['id'])->get();
+        $design_results = DesignResult::whereIn('id',$all['id'])->where('sell','<',1)->get();
         if($design_results->isEmpty()){
-            return $this->apiError('设计成果不存在', 400);
+            return $this->apiError('设计成果不存在', 404);
         }
         foreach ($design_results as $design_result){
             if($this->auth_user_id != $design_result->user_id){
-                return $this->apiError('没有权限', 400);
+                return $this->apiError('没有权限', 404);
             }
-            if(!$design_result->delete()){
+            $design_result->status = -2;
+            if(!$design_result->save()){
                 return $this->apiError('删除失败', 400);
             }
         }
@@ -795,9 +801,9 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!$design_result){
-            return $this->apiError('设计成果不存在', 400);
+            return $this->apiError('设计成果不存在', 404);
         }
         if($this->auth_user_id != $design_result->user_id){
             return $this->apiError('保存状态失败', 400);
