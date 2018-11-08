@@ -24,6 +24,7 @@ class AdminDesignResultController extends BaseController
      * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {string} title 搜索名称(搜索时使用)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -91,6 +92,9 @@ class AdminDesignResultController extends BaseController
             $query->where('status',$status);
         }else{
             $query->whereIn('status',[-1,2,3]);
+        }
+        if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
+            $query->where('title', 'like', '%' . $all['title'] . '%');
         }
         $query->where('sell',0);
         $list = $query->orderBy('id',$sort)->paginate($per_page);

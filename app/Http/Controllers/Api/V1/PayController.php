@@ -731,7 +731,8 @@ class PayController extends BaseController
      *        "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      *        "pay_no": "20170426211292", //平台交易号
      *        "amount"：123,              //应支付金额
-     *        "company_name": "公司名称",  //公司名称
+     *        "company_name": "设计公司名称",  //设计公司名称
+     *        "demand_company_name": "需求公司名称",  //需求公司名称
      *        "created_at": "1541487779", //下单时间
      *        "cover": { //封面
      *           "id": 999,
@@ -776,17 +777,16 @@ class PayController extends BaseController
             $sort = 'desc';
         }
         $per_page = $request->input('per_page') ?? $this->per_page;
-        $where['type'] = 5; //设计成果
         $query = PayOrder::query();
+        $query->where('type',5); //设计成果类型
         if($this->auth_user->type == 1) {
             //需求公司
             $query->where('user_id',$this->auth_user_id);
         }else{
-            $where['status'] = '< 0';
             $query->where('design_user_id',$this->auth_user_id);
             $query->where('status','>',0);
         }
-        $list = PayOrder::where($where)->orderBy('id',$sort)->paginate($per_page);
+        $list = $query->orderBy('id',$sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
     }
 

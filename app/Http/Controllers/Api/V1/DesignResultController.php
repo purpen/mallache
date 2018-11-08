@@ -119,7 +119,6 @@ class DesignResultController extends BaseController
             if($user_id != $design_result->user_id){
                 return $this->apiError('没有权限', 400);
             }
-            $design_result->status = 2;
         }else{
             $design_result = new DesignResult;
             $design_result->follow_count = 0; //关注数量
@@ -127,7 +126,6 @@ class DesignResultController extends BaseController
             $design_result->purchase_user_id = 0; //购买用户ID
             $design_result->thn_cost = config('commission.rate'); //平台佣金比例
             $design_result->user_id = $user_id; //用户ID
-            $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
             $design_result->design_company_id = $all['design_company_id']; //设计公司ID
             $design_result->sell = 0; //0:未出售,1:已出售,2:已确认
         }
@@ -139,6 +137,7 @@ class DesignResultController extends BaseController
         $design_result->share_ratio = $all['share_ratio']; //股权比例
         $design_result->contacts = $all['contacts']; //联系人
         $design_result->contact_number = $all['contact_number']; //联系电话
+        $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
         DB::beginTransaction();
         $res = $design_result->save();
         $patent = $all['patent'] ?? [];
@@ -558,6 +557,7 @@ class DesignResultController extends BaseController
      * @apiGroup designResults
      * @apiParam {integer} sort 0:升序,1:降序(默认)
      * @apiParam {integer} type 1:设计需求,2:设计成果
+     * @apiParam {string} title 搜索名称(搜索时使用)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -625,6 +625,15 @@ class DesignResultController extends BaseController
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;
+        /*$query = Follow::query();
+        $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
+        $query->join('design_result','design_result.id','=','follow.design_result_id');
+        if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
+            $query->where('design_result.title', 'like', '%' . $all['title'] . '%');
+        }
+        $list = $query->select('design_result.*')
+            ->orderBy('design_result.id',$sort)
+            ->paginate($per_page);*/
         if($type == 1){
             //设计需求
             if ($user->type == 1) {
