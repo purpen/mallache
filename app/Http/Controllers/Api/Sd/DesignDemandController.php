@@ -280,6 +280,10 @@ class DesignDemandController extends BaseController
                 return $this->response->array($this->apiError('审核中无法关闭', 403));
             }
             DesignDemand::where('id', $demand_id)->delete();
+            $follow = Follow::where(['type'=>1,'design_demand_id'=>$demand_id])->get();
+            if(!$follow->isEmpty()){
+                Follow::where(['type'=>1,'design_demand_id'=>$demand_id])->delete();
+            }
             return $this->response->array($this->apiSuccess('Success', 200));
         }
     }
