@@ -1022,7 +1022,7 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id || $this->auth_user_id != $pay_order->design_user_id) {
+        if (!$pay_order) {
             return $this->apiError('订单不存在',404);
         }
         $pay_order->design_result = $pay_order->designResult;
@@ -1053,6 +1053,15 @@ class PayController extends BaseController
         //设计公司logo
         $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
+        //需求公司信息
+        $demand_company = DemandCompany::query()->where('user_id',$pay_order->user_id)->first();
+        if($demand_company){
+            $pay_order->demand_company_name = $demand_company->company_name ?? '';
+            $pay_order->demand_company_phone = $demand_company->phone ?? '';
+        }else{
+            $pay_order->demand_company_name = '';
+            $pay_order->demand_company_phone = '';
+        }
         return $this->apiSuccess('Success',200,$pay_order);
     }
 
