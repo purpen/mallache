@@ -195,7 +195,7 @@ class PayOrderActionController extends BaseController
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->response->array($this->apiError('error', 500));
+            return $this->response->array($this->apiError('error', 500));
         }
 
 
