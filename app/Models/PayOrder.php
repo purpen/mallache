@@ -100,6 +100,7 @@ class PayOrder extends BaseModel
     {
         $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
         $order = PayOrder::where($where)->get();
+        Log::info($order);
         if($order->isEmpty()){
             return true;
         }
