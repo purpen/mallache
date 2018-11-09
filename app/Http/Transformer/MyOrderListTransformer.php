@@ -20,7 +20,7 @@ class MyOrderListTransformer extends TransformerAbstract
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? '';
         $cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
         unset($pay_order->design_result->designCompany);
-        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count();
+        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count() ? 1 : 0;
         return [
             'id' => $pay_order->id,
             'uid' => $pay_order->uid,

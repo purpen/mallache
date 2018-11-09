@@ -1055,7 +1055,7 @@ class PayController extends BaseController
             //设计公司
             $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
         }
-        //$pay_order->design_result->evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->first() ?? '';
+        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count() ? 1 : 0;
         unset($pay_order->design_result->designCompany);
         return $this->apiSuccess('Success',200,$pay_order);
     }

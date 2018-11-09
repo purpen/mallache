@@ -30,7 +30,6 @@ class DesignResultListTransformer extends TransformerAbstract
             'contacts' => $designResult->contacts,
             'contact_number' => $designResult->contact_number,
             'is_follow' => $designResult->is_follow,
-            'design_company' => $designResult->designCompany,
         ];
     }
 }

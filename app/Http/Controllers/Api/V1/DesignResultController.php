@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Service\Pay;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -757,7 +756,7 @@ class DesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        $list = DesignResult::where('status',3)->orderBy('id',$sort)->paginate($per_page);
+        $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;
