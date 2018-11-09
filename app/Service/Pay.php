@@ -162,9 +162,11 @@ class Pay
         Log::info($this->pay_order);
         $design_result = DesignResult::find($this->pay_order->design_result_id);
         $demand_company = DemandCompany::where('user_id',$this->pay_order->design_user_id)->first();
-        if(!$design_result || !$demand_company){
+        Log::info($design_result);
+        Log::info($demand_company);
+        /*if(!$design_result || !$demand_company){
             return false;
-        }
+        }*/
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;
         //修改为已出售
