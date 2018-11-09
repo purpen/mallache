@@ -467,7 +467,7 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_results = DesignResult::whereIn('id',$all['id'])->where('sell','<',1)->get();
+        $design_results = DesignResult::whereIn('id',$all['id'])->get();
         if($design_results->isEmpty()){
             return $this->apiError('设计成果不存在', 404);
         }
@@ -475,9 +475,11 @@ class DesignResultController extends BaseController
             if($this->auth_user_id != $design_result->user_id){
                 return $this->apiError('没有权限', 404);
             }
-            $design_result->status = -2;
-            if(!$design_result->save()){
-                return $this->apiError('删除失败', 400);
+            if($design_result->status == 1 || $design_result->status == -1 || $design_result->sell == 2){
+                $design_result->status = -2;
+                if(!$design_result->save()){
+                    return $this->apiError('删除失败', 400);
+                }
             }
         }
         return $this->apiSuccess('删除成功', 200);

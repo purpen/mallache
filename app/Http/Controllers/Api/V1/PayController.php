@@ -1022,7 +1022,7 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id || $this->auth_user_id != $pay_order->design_user_id) {
             return $this->apiError('订单不存在',404);
         }
         $pay_order->design_result = $pay_order->designResult;
