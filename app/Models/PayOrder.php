@@ -100,10 +100,10 @@ class PayOrder extends BaseModel
     {
         $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
         $order = PayOrder::where($where)->get();
-        if(empty($order)){
+        if($order->isEmpty()){
             return true;
         }
-        $pay_order = PayOrder::where($where)->update('status',-1);
+        $pay_order = PayOrder::where($where)->update(['status'=>-1]);
         if(!$pay_order){
             return false;
         }

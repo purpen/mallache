@@ -637,17 +637,20 @@ class DesignResultController extends BaseController
         $type = $all['type'];
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
+        //需求公司
         $demand_company_id = $user->demand_company_id;
-        /*$query = Follow::query();
+        $query = DesignResult::query();
+        $query->join('follow','design_result.id','=','follow.design_result_id');
         $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
-        $query->join('design_result','design_result.id','=','follow.design_result_id');
         if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
             $query->where('design_result.title', 'like', '%' . $all['title'] . '%');
         }
         $list = $query->select('design_result.*')
             ->orderBy('design_result.id',$sort)
-            ->paginate($per_page);*/
-        if($type == 1){
+            ->paginate($per_page);
+
+        return $this->response->paginator($list, new DesignResultListTransformer)->setMeta($this->apiMeta());
+        /*if($type == 1){
             //设计需求
             if ($user->type == 1) {
                 //需求公司
@@ -682,8 +685,9 @@ class DesignResultController extends BaseController
                 $arr = [];
             }
             $data = DesignResult::whereIn('id',$arr)->orderBy('id',$sort)->paginate($per_page);
+            return $data;
             return $this->response->paginator($data, new DesignResultListTransformer)->setMeta($this->apiMeta());
-        }
+        }*/
     }
 
     /**
