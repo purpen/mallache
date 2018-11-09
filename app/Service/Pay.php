@@ -161,34 +161,34 @@ class Pay
         $this->addPrice();
 
         $design_result = DesignResult::query()->find($this->pay_order->design_result_id);
-
+        $demand_company = DemandCompany::where('user_id',$this->pay_order->design_user_id)->first();
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;
         $design_result->sell = 1;
+        $design_result->demand_company_id = $demand_company->id;
+        $design_result->purchase_user_id = $this->pay_order->design_user_id;
         $design_result->save();
+        //关闭所有设计成果未支付订单
+        $this->ClosePayOrders($this->pay_order->design_result_id);
+    }
 
-        //发送消息
-        //event(new ItemStatusEvent($item));
-
-        // 计算平台佣金
-        /*$commission = ItemCommissionAction::getCommission($item);
-        // 设计公司收到金额（扣除平台佣金）
-        $design_amount = bcsub($this->pay_order->amount, $commission, 2);
-
-        // 扣除税点
-        $quotation = $item->quotation;
-        $tax = $quotation->getTax();
-        // 设计公司收到金额（扣除平台税点）
-        $design_amount = bcsub($design_amount, $tax, 2);
-
-        // 生成需要收取设计公司发票的信息
-        $design_invoice = new Invoice();
-        $design_result = $design_invoice->createPullInvoice(1, $item->design_company_id, $design_amount, $this->pay_order->item_id, null, $quotation->taxable_type, $quotation->invoice_type);
-        if (!$design_result) {
-            Log::error('生成需要收取设计公司发票的信息失败');
-            throw new \Exception('生成需要收取设计公司发票的信息失败');
-
-        }*/
+    /**
+     * 关闭所有设计成果未支付订单
+     * @author 王松
+     * @param $design_result_id 设计成果ID
+     */
+    public function ClosePayOrders($design_result_id)
+    {
+        $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
+        $order = PayOrder::where($where)->get();
+        if(empty($order)){
+            return true;
+        }
+        $pay_order = PayOrder::where($where)->update('status',-1);
+        if(!$pay_order){
+            return false;
+        }
+        return true;
     }
 
 }

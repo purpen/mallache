@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Service\Pay;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -104,23 +105,21 @@ class DesignResultController extends BaseController
         $images = $all['images'];
         //设计成果图片
         $images_id = AssetModel::select('id')->whereIn('id',$images)->get()->pluck('id')->all();
-
         if(!$images_id){
             return $this->apiError('图片信息不存在',403);
         }
         //修改
         if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
-            $design_result = DesignResult::find((int)$all['id']);
+            $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
             if(!$design_result){
-                return $this->apiError('保存失败',400);
+                return $this->apiError('设计成果不存在',404);
             }
-            if($design_result->status < 0){
-                return $this->apiError('设计成果已下架',400);
+            if($design_result->sell > 0){
+                return $this->apiError('设计成果已出售',400);
             }
             if($user_id != $design_result->user_id){
                 return $this->apiError('没有权限', 400);
             }
-            $design_result->status = 2;
         }else{
             $design_result = new DesignResult;
             $design_result->follow_count = 0; //关注数量
@@ -128,7 +127,6 @@ class DesignResultController extends BaseController
             $design_result->purchase_user_id = 0; //购买用户ID
             $design_result->thn_cost = config('commission.rate'); //平台佣金比例
             $design_result->user_id = $user_id; //用户ID
-            $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
             $design_result->design_company_id = $all['design_company_id']; //设计公司ID
             $design_result->sell = 0; //0:未出售,1:已出售,2:已确认
         }
@@ -140,10 +138,17 @@ class DesignResultController extends BaseController
         $design_result->share_ratio = $all['share_ratio']; //股权比例
         $design_result->contacts = $all['contacts']; //联系人
         $design_result->contact_number = $all['contact_number']; //联系电话
+        $design_result->status = $all['status'] == 1 ? 1 : 2; //状态 1.待提交，2.审核中；3.已上架;-1.已下架
         DB::beginTransaction();
         $res = $design_result->save();
-        $patent = $all['patent'];
-        $illustrate = $all['illustrate'];
+        if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
+            $pay = new Pay;
+            $pay_res = $pay->ClosePayOrders($design_result->id);
+        }else{
+            $pay_res = 1;
+        }
+        $patent = $all['patent'] ?? [];
+        $illustrate = $all['illustrate'] ?? [];
         if(!empty($illustrate)){
             //产品说明书
             $illustrate_id = AssetModel::select('id')
@@ -165,8 +170,9 @@ class DesignResultController extends BaseController
             }
         }
         $design_result->cover = $design_result->cover;
+        AssetModel::where('target_id',$design_result->id)->update(['target_id'=>0,'status'=>2]);
         $asset = AssetModel::whereIn('id',$arr)->update(['target_id'=>$design_result->id]);
-        if(!empty($res) && !empty($asset)){
+        if(!empty($res) && !empty($asset) && !empty($pay_res)){
             DB::commit();
             return $this->apiSuccess('保存成功', 200,$design_result);
         }else{
@@ -239,7 +245,7 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('id',$all['id'])->first();
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
@@ -261,7 +267,7 @@ class DesignResultController extends BaseController
             $design_result->design_company = $design_result->designCompany;
             return $this->apiSuccess('Success', 200,$design_result);
         }else{
-            return $this->apiError('设计成果已下架',400);
+            return $this->apiError('设计成果不存在',404);
         }
     }
 
@@ -354,8 +360,10 @@ class DesignResultController extends BaseController
                 //设计公司
                 $follow_data = $follow->getResultFollow($demand_company_id,2);
             }
-            if($status != 0){
+            if($status != 0 && $status != -2){
                 $query->where('status',$status);
+            }else{
+                $query->where('status','>',-2);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->whereIn('id',$follow_data)
@@ -412,6 +420,9 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
+        if($all['status'] > -2 && $all['status'] < 4){
+            return $this->apiError('设计成果', 403);
+        }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
         if(!$design_result){
             return $this->apiError('设计成果不存在', 400);
@@ -456,15 +467,16 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_results = DesignResult::whereIn('id',$all['id'])->get();
+        $design_results = DesignResult::whereIn('id',$all['id'])->where('sell','<',1)->get();
         if($design_results->isEmpty()){
-            return $this->apiError('设计成果不存在', 400);
+            return $this->apiError('设计成果不存在', 404);
         }
         foreach ($design_results as $design_result){
             if($this->auth_user_id != $design_result->user_id){
-                return $this->apiError('没有权限', 400);
+                return $this->apiError('没有权限', 404);
             }
-            if(!$design_result->delete()){
+            $design_result->status = -2;
+            if(!$design_result->save()){
                 return $this->apiError('删除失败', 400);
             }
         }
@@ -558,6 +570,7 @@ class DesignResultController extends BaseController
      * @apiGroup designResults
      * @apiParam {integer} sort 0:升序,1:降序(默认)
      * @apiParam {integer} type 1:设计需求,2:设计成果
+     * @apiParam {string} title 搜索名称(搜索时使用)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -593,6 +606,7 @@ class DesignResultController extends BaseController
      *          "created_at": 1540448935, //创建时间
      *          "updated_at": 1540448935,
      *          "contacts": "羽落", //联系人
+     *          "sell": 1", //0:未出售,1:已出售,2:已确认
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "design_company": {}, //设计公司信息
@@ -624,6 +638,15 @@ class DesignResultController extends BaseController
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;
+        /*$query = Follow::query();
+        $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
+        $query->join('design_result','design_result.id','=','follow.design_result_id');
+        if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
+            $query->where('design_result.title', 'like', '%' . $all['title'] . '%');
+        }
+        $list = $query->select('design_result.*')
+            ->orderBy('design_result.id',$sort)
+            ->paginate($per_page);*/
         if($type == 1){
             //设计需求
             if ($user->type == 1) {
@@ -785,9 +808,9 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
+        $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!$design_result){
-            return $this->apiError('设计成果不存在', 400);
+            return $this->apiError('设计成果不存在', 404);
         }
         if($this->auth_user_id != $design_result->user_id){
             return $this->apiError('保存状态失败', 400);
@@ -798,21 +821,14 @@ class DesignResultController extends BaseController
         $design_result->sell_type = $all['sell_type'];
         $design_result->price = $all['price'];
         $design_result->share_ratio = $all['share_ratio']; //股权比例
-        //未付款成果订单id
-        $id = PayOrder::where(['design_result_id'=>$all['id'],'type'=>5,'status'=>0])->get()->pluck('id')->all();
         DB::beginTransaction();
         $res = $design_result->save();
-        if(!empty($id)){
-            $pay_order_res = PayOrder::whereIn('id',$id)->update(['status'=>-1]);
-            if(!empty($res) && !empty($pay_order_res)){
-                DB::commit();
-                return $this->apiSuccess('保存成功', 200,$design_result);
-            }
-        }else{
-            if(!empty($res)){
-                DB::commit();
-                return $this->apiSuccess('保存成功', 200,$design_result);
-            }
+        $pay = new Pay;
+        //关闭所有设计成果未支付订单
+        $pay_res = $pay->ClosePayOrders($design_result->id);
+        if(!empty($res) && !empty($pay_res)){
+            DB::commit();
+            return $this->apiSuccess('保存成功', 200,$design_result);
         }
         DB::rollBack();
         return $this->apiError('保存失败',400);

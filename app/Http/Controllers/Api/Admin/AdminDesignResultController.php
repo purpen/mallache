@@ -21,9 +21,10 @@ class AdminDesignResultController extends BaseController
      * @apiName designResultsUnauditedLists
      * @apiGroup designResults
      * @apiParam {integer} page 页数
-     * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架
+     * @apiParam {integer} status 状态 0:全部,2:审核中,3:已上架,-1:已下架,-2:已删除
      * @apiParam {integer} per_page 页面条数
      * @apiParam {integer} sort 0:升序,1:降序(默认)
+     * @apiParam {string} title 搜索名称(搜索时使用)
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -87,11 +88,15 @@ class AdminDesignResultController extends BaseController
         }
         $query = DesignResult::query();
         $status = (int)$request->input('status');
-        if(!empty($status) && $status != 1){
+        if(!empty($status) && $status != 1 && $status != -2){
             $query->where('status',$status);
         }else{
             $query->whereIn('status',[-1,2,3]);
         }
+        if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
+            $query->where('title', 'like', '%' . $all['title'] . '%');
+        }
+        $query->where('sell',0);
         $list = $query->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
@@ -99,6 +104,7 @@ class AdminDesignResultController extends BaseController
         $follow = new Follow;
         if(!$list->isEmpty()){
             foreach ($list as $k => $v) {
+                //是否已收藏
                 if($user->type == 1){
                     //需求公司
                     $list{$k}->is_follow = $follow->isFollow(1,$demand_company_id,$v->id);
@@ -149,11 +155,11 @@ class AdminDesignResultController extends BaseController
         if($all['type'] == 1){
             $design_result->status = 3;
             $msg = '已通过';
-            $message = $design_result->title.'审核未通过，请前往设计成果列表查看';
+            $message = '设计成果【'.$design_result->title.'】审核已通过，请前往设计成果列表查看';
         }else{
             $design_result->status = -1;
             $msg = '已驳回';
-            $message = '【设计成果'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因:'.$all['content'];
+            $message = '设计成果【'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因：'.$all['content'];
         }
         if($design_result->save()){
             $tools->message($design_result->user_id,'设计成果审核',$message,1,$design_result->id,null);
