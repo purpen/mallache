@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\Log;
 
 class PayOrder extends BaseModel
 {
