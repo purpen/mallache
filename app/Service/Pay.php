@@ -160,14 +160,15 @@ class Pay
         //需求用户付款后增加钱包账户总金额和冻结金额
         $this->addPrice();
         $design_result = DesignResult::find($this->pay_order->design_result_id);
-        //需求公司
-        $demand_company = DemandCompany::where('user_id',$this->pay_order->user_id)->first();
-        if($demand_company){
-            Log::Error('设计成果订单中的需求公司信息不存在');
-        }
+        //需求公司信息
+        $demand_company = DemandCompany::query()->where('user_id',$this->pay_order->user_id)->first();
         if($design_result){
             Log::Error('设计成果订单中的设计成果信息不存在');
         }
+        if($demand_company){
+            Log::Error('设计成果订单中的需求公司信息不存在');
+        }
+        Log::info('需求公司信息'.$demand_company);
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;
         //修改为已出售
