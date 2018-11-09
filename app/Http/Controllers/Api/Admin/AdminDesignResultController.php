@@ -61,6 +61,7 @@ class AdminDesignResultController extends BaseController
      *          "updated_at": 1540448935,
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
+     *          "company_name": "设计公司名称", //设计公司名称
      *          "is_follow": 1, //是否已收藏
      *     }
      * ],

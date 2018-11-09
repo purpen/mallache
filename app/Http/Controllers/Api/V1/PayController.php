@@ -967,6 +967,7 @@ class PayController extends BaseController
      *        "created_at": "1541487779", //下单时间
      *        "status_value": "支付完成",
      *        "pay_type_value": "",
+     *        "design_company_logo": '',  //设计公司logo
      *        "bank": "",
      *        "cover": { //封面
      *           "id": 999,
@@ -1002,18 +1003,7 @@ class PayController extends BaseController
      *            "images_url": [],      //图片
      *            "illustrate_url": [],  //说明书
      *            "patent_url": [],      //专利证书
-     *            "evaluate": {          //评价
-     *                "id": 11,          //评价ID
-     *                "design_company_id": 11,  //设计公司ID
-     *                "design_result_id": 34,   //设计成果ID
-     *                "demand_company_id": 1,   //需求公司ID
-     *                "design_level": 5,        //设计水平
-     *                "response_speed": 6,      //响应速度
-     *                "serve_attitude": 7,      //服务态度
-     *                "content": "7",           //评价内容
-     *                "created_at": 1541669981, //创建时间
-     *                "updated_at": 1541669985
-     *            },
+     *            "is_evaluate": 1,      //是否已评价
      *        }
      *    }
      * }
@@ -1055,7 +1045,10 @@ class PayController extends BaseController
             //设计公司
             $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
         }
+        //是否已评价
         $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count() ? 1 : 0;
+        //设计公司logo
+        $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
         return $this->apiSuccess('Success',200,$pay_order);
     }

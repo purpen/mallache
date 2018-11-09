@@ -63,6 +63,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "id": 1, //设计成果ID
+     *          "design_company_name": "设计公司名称", //设计公司名称
      *          "cover": { //封面图
      *             "id": 999,
      *              "name": "participants@2x.png",
@@ -318,7 +319,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
@@ -608,7 +609,7 @@ class DesignResultController extends BaseController
      *          "sell": 1", //0:未出售,1:已出售,2:已确认
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
@@ -731,7 +732,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
