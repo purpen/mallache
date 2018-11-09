@@ -38,6 +38,7 @@ class PayDesignResultTransformer extends TransformerAbstract
             'design_result' => $pay_order->designResult,
             'created_at' => $pay_order->created_at,
             'design_result_id' => $pay_order->design_result_id,
+            'design_user_id' => $pay_order->design_user_id,
             'bank_transfer' => $pay_order->bank_transfer,
             'assets' => AssetModel::getOneImageUrl($pay_order->id, 33), // 转账附件
             'source' => $pay_order->source,

@@ -682,7 +682,7 @@ class PayController extends BaseController
             return $pay_order;
         }
         $uid = Tools::orderId($this->auth_user_id);
-        $pay_order = PayOrder::query()->create([
+        $data = [
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
             'type' => $type,
@@ -693,7 +693,8 @@ class PayController extends BaseController
             'design_result_id' => $design_result_id, //设计成果ID
             'design_user_id' => $design_user_id, //设计公司用户ID
             'source' => 0,  // 添加来源
-        ]);
+        ];
+        $pay_order = PayOrder::query()->create($data);
         return $pay_order;
     }
 
