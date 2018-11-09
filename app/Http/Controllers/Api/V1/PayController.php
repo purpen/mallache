@@ -696,7 +696,6 @@ class PayController extends BaseController
             'design_user_id' => $design_user_id,
             'source' => 0,  // 添加来源
         ]);
-        Log::info($pay_order);
         return $pay_order;
     }
 

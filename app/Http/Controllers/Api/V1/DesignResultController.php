@@ -142,7 +142,7 @@ class DesignResultController extends BaseController
         DB::beginTransaction();
         $res = $design_result->save();
         if(isset($all['id']) && !empty($all['id']) && $all['id'] != 'undefined'){
-            $pay = new Pay;
+            $pay = new PayOrder();
             $pay_res = $pay->ClosePayOrders($design_result->id);
         }else{
             $pay_res = 1;
@@ -823,7 +823,7 @@ class DesignResultController extends BaseController
         $design_result->share_ratio = $all['share_ratio']; //股权比例
         DB::beginTransaction();
         $res = $design_result->save();
-        $pay = new Pay;
+        $pay = new PayOrder();
         //关闭所有设计成果未支付订单
         $pay_res = $pay->ClosePayOrders($design_result->id);
         if(!empty($res) && !empty($pay_res)){

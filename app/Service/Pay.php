@@ -164,31 +164,17 @@ class Pay
         $demand_company = DemandCompany::where('user_id',$this->pay_order->design_user_id)->first();
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;
+        //修改为已出售
         $design_result->sell = 1;
+        //购买需求公司ID
         $design_result->demand_company_id = $demand_company->id;
+        //购买用户ID
         $design_result->purchase_user_id = $this->pay_order->design_user_id;
         $design_result->save();
+        Log::info($design_result);
         //关闭所有设计成果未支付订单
-        $this->ClosePayOrders($this->pay_order->design_result_id);
-    }
-
-    /**
-     * 关闭所有设计成果未支付订单
-     * @author 王松
-     * @param $design_result_id 设计成果ID
-     */
-    public function ClosePayOrders($design_result_id)
-    {
-        $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
-        $order = PayOrder::where($where)->get();
-        if(empty($order)){
-            return true;
-        }
-        $pay_order = PayOrder::where($where)->update('status',-1);
-        if(!$pay_order){
-            return false;
-        }
-        return true;
+        $pay = new PayOrder();
+        $pay->ClosePayOrders($this->pay_order->design_result_id);
     }
 
 }
