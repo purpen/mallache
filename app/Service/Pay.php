@@ -164,11 +164,9 @@ class Pay
         $demand_company = DemandCompany::where('user_id',$this->pay_order->user_id)->first();
         if($demand_company){
             Log::Error('设计成果订单中的需求公司信息不存在');
-            return false;
         }
         if($design_result){
             Log::Error('设计成果订单中的设计成果信息不存在');
-            return false;
         }
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;

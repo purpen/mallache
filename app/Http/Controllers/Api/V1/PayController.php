@@ -679,6 +679,7 @@ class PayController extends BaseController
             'design_result_id' => $design_result_id])
             ->first();
         if ($pay_order) {
+            Log::info('创建订单1'.$pay_order);
             return $pay_order;
         }
         $uid = Tools::orderId($this->auth_user_id);
@@ -695,6 +696,7 @@ class PayController extends BaseController
             'source' => 0,  // 添加来源
         ];
         $pay_order = PayOrder::query()->create($data);
+        Log::info('创建订单2'.$pay_order);
         return $pay_order;
     }
 
