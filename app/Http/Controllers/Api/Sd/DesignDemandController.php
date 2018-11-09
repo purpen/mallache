@@ -19,6 +19,7 @@ use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
 use App\Models\DesignResult;
 use App\Models\ResultEvaluate;
+use App\Models\PayOrder;
 
 class DesignDemandController extends BaseController
 {
@@ -528,7 +529,7 @@ class DesignDemandController extends BaseController
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} order_id 订单号
      * @apiParam {integer} design_level     设计水平 1-5
      * @apiParam {integer} response_speed   响应速度 1-5
      * @apiParam {integer} serve_attitude   服务态度 1-5
@@ -546,9 +547,9 @@ class DesignDemandController extends BaseController
     public function evaluateResult(Request $request)
     {
         $rules = [
-            'design_result_id' => 'required|integer',
+            'order_id' => 'required|integer',
         ];
-        $payload = $request->only('design_result_id');
+        $payload = $request->only('order_id');
         $validator = app('validator')->make($payload, $rules);
 
         // 验证格式
@@ -562,19 +563,31 @@ class DesignDemandController extends BaseController
         $serve_attitude = in_array($request->input('serve_attitude'), $arr) ? $request->input('serve_attitude') : null;
         $content = $request->input('content');
         $demand_company_id = $this->auth_user->demand_company_id;
-        $design_result_id = $request->input('design_result_id');
+        $user_id = $this->auth_user_id;
+        $order_id = $request->input('order_id');
+
+        // 是否有此订单
+        $order = PayOrder::where(['type'=>5,'user_id'=>$user_id,'uid'=>$order_id])->first();
+        if(!$order){
+            return $this->response->array($this->apiError('您没有此订单,无法评价', 404));
+        }
+
+        $design_result_id = $order->design_result_id;
         $result = DesignResult::where('id',$design_result_id)->first();
         // 判断有没有此设计成果
         if(!$result){
             return $this->response->array($this->apiError('没有找到此设计成果', 404));
         }
-        // 判断是否购买此设计成果
-        if($result->demand_company_id !== $demand_company_id){
-            return $this->response->array($this->apiError('您没有购买此设计成果,无法评价', 403));
-        }
+
         // 判断交易状态
         if($result->sell !== 2){
             return $this->response->array($this->apiError('交易没有成功,无法评价', 403));
+        }
+
+        // 是否已经评价
+        $is_evaluate = ResultEvaluate::where(['demand_company_id'=>$demand_company_id,'design_result_id'=>$design_result_id])->first();
+        if($is_evaluate){
+            return $this->response->array($this->apiError('已评价,无法重复评价', 412));
         }
 
         DB::beginTransaction();
@@ -589,7 +602,7 @@ class DesignDemandController extends BaseController
         $evaluate->content = $content;
         if($evaluate->save()){
             DB::commit();
-            return $this->response->array($this->apiSuccess('Success', 200));
+            return $this->response->array($this->apiSuccess('Success', 200,$evaluate));
         }
         DB::rollBack();
         return $this->response->array($this->apiError('评价失败', 500));
@@ -604,7 +617,7 @@ class DesignDemandController extends BaseController
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} order_id 订单号
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -619,26 +632,36 @@ class DesignDemandController extends BaseController
     {
 
         $rules = [
-            'design_result_id' => 'required|integer',
+            'order_id' => 'required|integer',
         ];
-        $payload = $request->only('design_result_id');
+        $payload = $request->only('order_id');
         $validator = app('validator')->make($payload, $rules);
 
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
-
         // 设计成果ID
-        $design_result_id = $request->input('design_result_id');
-        // 需求公司ID
-        $demand_company_id = $this->auth_user->demand_company_id;
-        if ($this->auth_user->type != 1 || !$demand_company_id) {
-            return $this->response->array($this->apiError('此用户不是需求公司', 403));
+        $order_id = $request->input('order_id');
+
+        // 需求方
+        if($this->auth_user->type == 1){
+            $user_id = $this->auth_user_id;
+            $order = PayOrder::where(['type'=>5,'user_id'=>$user_id,'uid'=>$order_id])->first();
+
+            // 设计方
+        }else if ($this->auth_user->type == 2) {
+            $user_id = $this->auth_user_id;
+            $order = PayOrder::where(['type'=>5,'design_user_id'=>$user_id,'uid'=>$order_id])->first();
+        }
+
+        // 是否有此订单
+        if(!$order){
+            return $this->response->array($this->apiError('您没有此订单', 404));
         }
 
         // 获取评价
-        $evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->get();
+        $evaluate = ResultEvaluate::where('design_result_id',$order->design_result_id)->get();
         return $this->response->array($this->apiSuccess('Success', 200, $evaluate));
 
     }
