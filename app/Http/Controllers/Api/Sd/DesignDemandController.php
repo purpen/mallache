@@ -585,7 +585,7 @@ class DesignDemandController extends BaseController
         }
 
         // 是否已经评价
-        $is_evaluate = ResultEvaluate::where(['demand_company_id'=>$demand_company_id,'design_result_id'=>$design_result_id])->first();
+        $is_evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->first();
         if($is_evaluate){
             return $this->response->array($this->apiError('已评价,无法重复评价', 412));
         }
@@ -657,7 +657,7 @@ class DesignDemandController extends BaseController
 
         // 是否有此订单
         if(!$order){
-            return $this->response->array($this->apiError('您没有此订单', 404));
+            return $this->response->array($this->apiError('您没有此订单', 412));
         }
 
         // 获取评价
