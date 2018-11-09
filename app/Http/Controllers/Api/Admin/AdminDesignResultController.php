@@ -87,6 +87,7 @@ class AdminDesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
+        $all = $request->all();
         $query = DesignResult::query();
         $status = (int)$request->input('status');
         if(!empty($status) && $status != 1 && $status != -2){
