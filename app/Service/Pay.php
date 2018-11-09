@@ -173,26 +173,8 @@ class Pay
         $design_result->save();
         Log::info($design_result);
         //关闭所有设计成果未支付订单
-        $this->ClosePayOrders($this->pay_order->design_result_id);
-    }
-
-    /**
-     * 关闭所有设计成果未支付订单
-     * @author 王松
-     * @param $design_result_id 设计成果ID
-     */
-    public function ClosePayOrders($design_result_id)
-    {
-        $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
-        $order = PayOrder::where($where)->get();
-        if(empty($order)){
-            return true;
-        }
-        $pay_order = PayOrder::where($where)->update('status',-1);
-        if(!$pay_order){
-            return false;
-        }
-        return true;
+        $pay = new PayOrder();
+        $pay->ClosePayOrders($this->pay_order->design_result_id);
     }
 
 }
