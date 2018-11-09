@@ -159,14 +159,17 @@ class Pay
     {
         //需求用户付款后增加钱包账户总金额和冻结金额
         $this->addPrice();
-        Log::info($this->pay_order);
         $design_result = DesignResult::find($this->pay_order->design_result_id);
-        $demand_company = DemandCompany::where('user_id',$this->pay_order->design_user_id)->first();
-        Log::info($design_result);
-        Log::info($demand_company);
-        /*if(!$design_result || !$demand_company){
+        //需求公司
+        $demand_company = DesignCompany::where('user_id',$this->pay_order->user_id)->first();
+        if($demand_company){
+            Log::Error('设计成果订单中的需求公司信息不存在');
             return false;
-        }*/
+        }
+        if($design_result){
+            Log::Error('设计成果订单中的设计成果信息不存在');
+            return false;
+        }
         //修改设计成果状态为已付款并下架
         $design_result->status = -1;
         //修改为已出售
@@ -174,7 +177,7 @@ class Pay
         //购买需求公司ID
         $design_result->demand_company_id = $demand_company->id;
         //购买用户ID
-        $design_result->purchase_user_id = $this->pay_order->design_user_id;
+        $design_result->purchase_user_id = $this->pay_order->user_id;
         $design_result->save();
         Log::info($design_result);
         //关闭所有设计成果未支付订单

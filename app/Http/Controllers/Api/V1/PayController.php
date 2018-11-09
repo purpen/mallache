@@ -664,15 +664,13 @@ class PayController extends BaseController
      * 创建设计成果支付单
      * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款 5.设计成果
      * @param float $amount 支付金额
-     * @param int $item_id 项目ID
-     * @param int $user_id 用户ID
      * @param string $summary 备注
      * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-     * @param int $design_user_id 设计方用户id
-     * @param int $item_stage_id 项目阶段ID
+     * @param int $design_user_id 设计成果用户ID
+     * @param int $design_result_id 设计成果ID
      * @return mixed
      */
-    protected function designResultsPayOrder($summary = '',$amount,$type = 1,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
+    protected function designResultsPayOrder($summary = '',$amount,$type = 5,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
     {
         $pay_order = PayOrder::query()->where([
             'type' => $type,
@@ -692,8 +690,8 @@ class PayController extends BaseController
             'item_id' => 0,
             'amount' => $amount,
             'pay_type' => $pay_type,
-            'design_result_id' => $design_result_id,
-            'design_user_id' => $design_user_id,
+            'design_result_id' => $design_result_id, //设计成果ID
+            'design_user_id' => $design_user_id, //设计公司用户ID
             'source' => 0,  // 添加来源
         ]);
         return $pay_order;

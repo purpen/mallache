@@ -103,12 +103,15 @@ class PayOrder extends BaseModel
         $order = PayOrder::where($where)->get();
         Log::info($order);
         if($order->isEmpty()){
+            Log::info('成功');
             return true;
         }
         $pay_order = PayOrder::where($where)->update(['status'=>-1]);
         if(!$pay_order){
             return false;
+            Log::info('失败');
         }
+        Log::info('成功');
         return true;
     }
 
