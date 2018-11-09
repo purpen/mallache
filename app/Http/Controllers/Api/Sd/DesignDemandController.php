@@ -625,6 +625,20 @@ class DesignDemandController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      },
+     *          "data": [
+     *              {
+     *                  "id": 2,
+     *                  "design_company_id": 1,     设计公司ID
+     *                  "design_result_id": 1,      设计成果ID
+     *                  "demand_company_id": 1,     需求公司ID
+     *                  "design_level": 1,          设计水平
+     *                  "response_speed": 1,        响应速度
+     *                  "serve_attitude": 1,        服务态度
+     *                  "content": "测试",          评价内容
+     *                  "created_at": 1541727197,
+     *                  "updated_at": 1541727197
+     *              }
+     *          ]
      *  }
      */
 
