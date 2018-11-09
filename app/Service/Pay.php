@@ -161,7 +161,7 @@ class Pay
         $this->addPrice();
         $design_result = DesignResult::find($this->pay_order->design_result_id);
         //需求公司
-        $demand_company = DesignCompany::where('user_id',$this->pay_order->user_id)->first();
+        $demand_company = DemandCompany::where('user_id',$this->pay_order->user_id)->first();
         if($demand_company){
             Log::Error('设计成果订单中的需求公司信息不存在');
             return false;
