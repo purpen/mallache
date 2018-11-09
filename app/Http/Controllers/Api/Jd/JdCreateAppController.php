@@ -11,56 +11,32 @@ use Jdcloud\Result;
 use Jdcloud\Vm\VmClient;
 
 
-class JdCreateAppController extends BaseController
+class JdCodeController extends BaseController
 {
     /**
-     * @api {get} /jd/create/app 创建应用
+     * @api {get} /jd/code 创建应用
      * @apiVersion 1.0.0
-     * @apiName JdCreateApp test
-     * @apiGroup JdCreateApp
+     * @apiName JdCode code
+     * @apiGroup JdCode
      *
      */
-    public function test()
+    public function code()
     {
-        $vm = new VmClient([
-            'credentials' => new Credentials('3F1AA9CF28626825E429650F65A0E652', '23F5AF109781B0302317F9ED1DD1837C'),
-            'version' => 'latest',
-            'scheme' => 'https',
-//            'http'    => [
-//                'verify' => 'C:/ca-bundle.crt'
-//            ]
-        ]);
+        $url = 'https://oauth2.jdcloud.com/authorize';
+        $post_data = 'client_id=9651541661345895&redirect_uri=http://jdyun.taihuoniao.com&response_type=code&state=22222&code_challe nge_method=S256&code_challenge=Vuu-tYpwl_4xB8miLyRO2p__zQoADgG1A40LoYCYsgU';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // post数据
+        curl_setopt($ch, CURLOPT_POST, 1);
+        // post的变量
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        //打印获得的数据
+        $output_array = json_decode($output,true);
 
-        try{
-            $res = $vm->createInstances([
-                'regionId'  => 'cn-north-1',
-                'instanceSpec' => [
-                    'az' => 'cn-north-1a',
-                    'imageId' => '8e187a0a-ea7c-4ad1-ba32-f21e52fb8926',
-                    'instanceType' =>  'g.n2.medium',
-                    'name' => 'phpcreate',
-                    'primaryNetworkInterface' => [
-                        'networkInterface' => [
-                            'subnetId' => 'subnet-ll47yy373i'
-                        ]
-                    ],
-                    'systemDisk' => [
-                        'diskCategory' => 'local'
-                    ]
-                ]
-            ]);
-            dd($res);
-            print_r($res);
-            print("Request Id: ". $res['requestId']. "\n");
-            print_r($res['result']);
-        }catch (\Jdcloud\Exception\JdcloudException $e) {
-            print("Detail Message: " . $e->getMessage(). "\n");
-            print("Request Id: ". $e->getJdcloudRequestId(). "\n");
-            print("Error Type: ". $e->getJdcloudErrorType(). "\n");
-            print("Error Code: " . $e->getJdcloudErrorCode(). "\n");
-            print("Error Detail Status: ". $e->getJdcloudErrorStatus(). "\n");
-            print("Error Detail Message: ". $e->getJdcloudErrorMessage(). "\n");
-        }
+        Log::info($output_array);
 
     }
 }

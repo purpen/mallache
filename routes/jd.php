@@ -10,8 +10,8 @@ $api = app('Dingo\Api\Routing\Router');
 //管理员权限
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($api) {
     //京东创建应用
-    $api->get('/jd/create/app', [
-        'as' => 'JdCreateApp.store', 'uses' => 'JdCreateAppController@test'
+    $api->get('/jd/code', [
+        'as' => 'JdCode.code', 'uses' => 'JdCodeController@code'
     ]);
 
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
