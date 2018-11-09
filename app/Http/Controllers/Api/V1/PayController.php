@@ -735,6 +735,7 @@ class PayController extends BaseController
      *        "amount"：123,              //应支付金额
      *        "company_name": "设计公司名称",  //设计公司名称
      *        "demand_company_name": "需求公司名称",  //需求公司名称
+     *        "demand_company_phone": "15534567890",  //需求公司手机号
      *        "created_at": "1541487779", //下单时间
      *        "cover": { //封面
      *           "id": 999,

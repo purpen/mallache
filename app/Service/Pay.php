@@ -162,10 +162,10 @@ class Pay
         $design_result = DesignResult::find($this->pay_order->design_result_id);
         //需求公司信息
         $demand_company = DemandCompany::query()->where('user_id',$this->pay_order->user_id)->first();
-        if($design_result){
+        if(!$design_result){
             Log::Error('设计成果订单中的设计成果信息不存在');
         }
-        if($demand_company){
+        if(!$demand_company){
             Log::Error('设计成果订单中的需求公司信息不存在');
         }
         Log::info('需求公司信息'.$demand_company);
@@ -178,7 +178,7 @@ class Pay
         //购买用户ID
         $design_result->purchase_user_id = $this->pay_order->user_id;
         $design_result->save();
-        Log::info($design_result);
+        Log::info('设计成果信息'.$design_result);
         //关闭所有设计成果未支付订单
         $pay_order = new PayOrder();
         $pay_order->ClosePayOrders($this->pay_order->design_result_id);

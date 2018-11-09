@@ -5,7 +5,8 @@ namespace App\Http\Transformer;
 use App\Models\User;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
-use App\Models\ResultEvaluate ;
+use App\Models\DemandCompany;
+use App\Models\ResultEvaluate;
 use League\Fractal\TransformerAbstract;
 
 class MyOrderListTransformer extends TransformerAbstract
@@ -13,8 +14,15 @@ class MyOrderListTransformer extends TransformerAbstract
     public function transform(PayOrder $pay_order)
     {
         if($pay_order->design_user_id > 0){
-            $user = User::find($pay_order->design_user_id);
-            $pay_order->demand_company_name = $user->demandCompany->company_name ?? '';
+            //需求公司信息
+            $demand_company = DemandCompany::query()->where('user_id',$pay_order->design_user_id)->first();
+            if($demand_company){
+                $pay_order->demand_company_name = $demand_company->company_name ?? '';
+                $pay_order->demand_company_phone = $demand_company->phone ?? '';
+            }else{
+                $pay_order->demand_company_name = '';
+                $pay_order->demand_company_phone = '';
+            }
         }
         $pay_order->design_result = $pay_order->designResult;
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? '';
@@ -36,9 +44,11 @@ class MyOrderListTransformer extends TransformerAbstract
             'bank_id' => $pay_order->bank_id,
             'bank_transfer' => $pay_order->bank_transfer,
             'design_result_id' => $pay_order->design_result_id,
+            'design_user_id' => $pay_order->design_user_id,
             'created_at' => $pay_order->created_at,
             'company_name' => $pay_order->company_name,
             'demand_company_name' => $pay_order->demand_company_name,
+            'demand_company_phone' => $pay_order->demand_company_phone,
             'cover' => $cover,
             'design_result' => $pay_order->design_result ?? '',
         ];
