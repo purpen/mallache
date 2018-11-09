@@ -14,7 +14,7 @@ use Jdcloud\Vm\VmClient;
 class JdCodeController extends BaseController
 {
     /**
-     * @api {get} /jd/code 创建应用
+     * @api {get} /jd/code 获取京东code值
      * @apiVersion 1.0.0
      * @apiName JdCode code
      * @apiGroup JdCode
