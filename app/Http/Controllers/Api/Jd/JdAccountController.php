@@ -40,7 +40,9 @@ class JdAccountController extends BaseController
         $access_token = $response['access_token'];
         //拿token获取用户
         $account_url = 'https://oauth2.jdcloud.com/userinfo';
-        $aHeader['Authorization:'] = 'Bearer '.$access_token;
+        $aHeader = array(
+            'Authorization:Bearer '.$access_token,
+        );
 
         $account_ch = curl_init();
         curl_setopt($account_ch, CURLOPT_URL, $account_url);
