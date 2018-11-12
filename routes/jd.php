@@ -17,6 +17,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($a
     $api->get('/jd/checkAccount', [
         'as' => 'jdAccount.checkAccount', 'uses' => 'JdAccountController@checkAccount'
     ]);
+    //老用户绑定
+    $api->post('/jd/bindingUser', [
+        'as' => 'jdAccount.bindingUser', 'uses' => 'JdAccountController@bindingUser'
+    ]);
+    //新用户绑定
+    $api->post('/jd/newBindingUser', [
+        'as' => 'jdAccount.newBindingUser', 'uses' => 'JdAccountController@newBindingUser'
+    ]);
 
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
 
