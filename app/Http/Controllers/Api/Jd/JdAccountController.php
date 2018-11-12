@@ -12,8 +12,8 @@ class JdAccountController extends BaseController
     /**
      * @api {get} /jd/jdAccount 获取京东account
      * @apiVersion 1.0.0
-     * @apiName jdAccount account
-     * @apiGroup jdAccount
+     * @apiName JdAccount account
+     * @apiGroup JdAccount
      *
      * @apiParam {string} code
      */
@@ -56,8 +56,8 @@ class JdAccountController extends BaseController
     /**
      * @api {get} /jd/checkAccount 检查京东account是否存在
      * @apiVersion 1.0.0
-     * @apiName jdAccount checkAccount
-     * @apiGroup jdAccount
+     * @apiName JdAccount checkAccount
+     * @apiGroup JdAccount
      *
      * @apiParam {string} account
      */
