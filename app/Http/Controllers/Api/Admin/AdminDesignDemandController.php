@@ -21,6 +21,7 @@ class AdminDesignDemandController extends BaseController
 {
     /**
      * @api {get} /admin/designDemand/lists 发布的设计需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand lists
      * @apiGroup AdminDesignDemand
@@ -28,7 +29,9 @@ class AdminDesignDemandController extends BaseController
      * @apiParam {integer} per_page 分页数量
      * @apiParam {integer} page 页码
      * @apiParam {integer} status -1.未通过审核；1.审核中；2.已发布
-     * @apiParam {integer} sort 0.降序；1.升序（默认）;2.推荐降序；
+     * @apiParam {integer} sort 0.降序（默认）；1.升序;2.推荐降序；
+     * @apiParam {integer} evt 查询条件：1.需求ID; 2.需求名称;
+     * @apiParam {string} val 查询值
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -60,11 +63,28 @@ class AdminDesignDemandController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $status = in_array($request->input('status'), [-1, 1, 2]) ? $request->input('status') : null;
         $sort = in_array($request->input('sort'), [0, 1, 2]) ? $request->input('sort') : 0;
+        $evt = $request->input('evt') ? (int)$request->input('evt') : 1;
+        $val = $request->input('val') ? $request->input('val') : '';
+
 
         $demand = DesignDemand::with('demandCompany','User');
         if ($status !== null && $status !== '') {
             $demand->where('status', $status);
         }
+
+        if ($val) {
+            switch ($evt) {
+                case 1:
+                    $demand->where('id', (int)$val);
+                    break;
+                case 2:
+                    $demand->where('name', 'like', '%' . $val . '%');
+                    break;
+                default:
+                    $demand->where('id', (int)$val);
+            }
+        }
+
         //排序
         switch ($sort) {
             case 0:
@@ -84,6 +104,7 @@ class AdminDesignDemandController extends BaseController
 
     /**
      * @api {put} /admin/designDemand/auditStatus 设计需求信息审核
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand auditStatus
      * @apiGroup AdminDesignDemand
@@ -96,7 +117,7 @@ class AdminDesignDemandController extends BaseController
      * {
      *  "meta": {
      *    "code": 200,
-     *    "message": "Success.",
+     *    "message": "Success",
      *  }
      * }
      */
@@ -130,10 +151,10 @@ class AdminDesignDemandController extends BaseController
         $content = '';
         switch ($status) {
             case -1:
-                $content = '设计需求未通过审核，请修改资料重新提交';
+                $content = '【设计需求'.$design_demand->name.'】审核未通过，请重新修改上传';
                 break;
             case 2:
-                $content = '设计需求已通过审核';
+                $content = '【设计需求'.$design_demand->name.'】已通过审核';
                 break;
         }
         $tools->message($design_demand->user_id, $title, $content, 1, null);
@@ -143,6 +164,7 @@ class AdminDesignDemandController extends BaseController
 
     /**
      * @api {get} /admin/designDemand/showCollectList 查看设计需求被那些设计公司收藏
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName AdminDesignDemand showCollectList
      * @apiGroup AdminDesignDemand
