@@ -24,7 +24,7 @@ class JdAccountController extends BaseController
     public function account(Request $request)
     {
 //        $code = $request->input('code');
-        $code = 'h4DCwPpT';
+        $code = 'yZrLHthb';
         if(empty($code)){
             return $this->response->array($this->apiError('code值不能为空', 416));
         }
@@ -39,12 +39,12 @@ class JdAccountController extends BaseController
         $date = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($date, true);
-
+Log::info($response);
         $access_token = $response['access_token'];
-
-        if(empty($access_token)){
-            return $this->response->array($this->apiError('access_token不能为空', 416));
-        }
+//
+//        if(empty($access_token)){
+//            return $this->response->array($this->apiError('access_token不能为空', 416));
+//        }
         //拿token获取用户
         $account_url = 'http://oauth2.jdcloud.com/userinfo';
         $aHeader['Authorization'] = 'Bearer '.$access_token;
