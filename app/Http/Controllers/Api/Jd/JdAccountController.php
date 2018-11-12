@@ -23,14 +23,13 @@ class JdAccountController extends BaseController
      */
     public function account(Request $request)
     {
-//        $code = $request->input('code');
-        $code = 'yZrLHthb';
+        $code = $request->input('code');
         if(empty($code)){
             return $this->response->array($this->apiError('code值不能为空', 416));
         }
         $client_id = config('constant.client_id');
         $client_secret = config('constant.client_secret');
-        $url = 'http://oauth2.jdcloud.com/token?client_id='.$client_id.'&grant_type=authorization_code&code='.$code.'&client_secret='.$client_secret;
+        $url = 'https://oauth2.jdcloud.com/token?client_id='.$client_id.'&grant_type=authorization_code&code='.$code.'&client_secret='.$client_secret;
         //获取access_token
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -38,15 +37,14 @@ class JdAccountController extends BaseController
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $date = curl_exec($curl);
         curl_close($curl);
-        $response = json_decode($date, true);
-Log::info($response);
-        $access_token = $response['access_token'];
+Log::info($date);
+        $access_token = $date->access_token;
 //
 //        if(empty($access_token)){
 //            return $this->response->array($this->apiError('access_token不能为空', 416));
 //        }
         //拿token获取用户
-        $account_url = 'http://oauth2.jdcloud.com/userinfo';
+        $account_url = 'https://oauth2.jdcloud.com/userinfo';
         $aHeader['Authorization'] = 'Bearer '.$access_token;
         $account_ch = curl_init();
         curl_setopt($account_ch, CURLOPT_URL, $account_url);
@@ -54,8 +52,7 @@ Log::info($response);
 
         $account = curl_exec($account_ch);
         curl_close($account_ch);
-        $account_response = json_decode($account, true);
-        Log::info($account_response);
+        Log::info($account);
 
     }
 }
