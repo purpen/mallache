@@ -38,7 +38,7 @@ class JdAccountController extends BaseController
         curl_close($curl);
         $response = json_decode($date, true);
         $access_token = $response['access_token'];
-        if(empty($access_token)){
+        if(!$access_token){
             return $this->response->array($this->apiError('code值已过期', 416));
         }
         //拿token获取用户
