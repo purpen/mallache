@@ -63,7 +63,7 @@ class JdAccountController extends BaseController
      */
     public function checkAccount(Request $request)
     {
-        $jd_account = $request->input('jd_account');
+        $jd_account = $request->input('account');
         if(empty($jd_account)){
             return $this->response->array($this->apiError('jd帐号不能为空' , 416));
         }
