@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Events\ItemStatusEvent;
 use App\Events\PayOrderEvent;
 use App\Helper\Tools;
+use App\Models\DemandCompany;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Transformer\PayOrderTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -643,17 +644,17 @@ class PayController extends BaseController
         $type = 5;
         $design_result = DesignResult::find($design_result_id);
         if (!$design_result) {
-            return $this->response->array($this->apiError('设计成果不存在',404));
+            return $this->response->array($this->apiError('设计成果不存在', 404));
         }
         if ($design_result->status != 3) {
-            return $this->response->array($this->apiError('设计成果未上架',403));
+            return $this->response->array($this->apiError('设计成果未上架', 403));
         }
         if ($design_result->sell > 0) {
             return $this->response->array($this->apiError('设计成果已出售', 403));
         }
         //支付说明
         $summary = '设计成果订单';
-        $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id,$design_result->user_id);
+        $pay_order = $this->designResultsPayOrder($summary, $design_result->price, $type, 0, $design_result_id, $design_result->user_id);
         $pay_order->total_price = $design_result->price; //售价
         $pay_order->sell_type = $design_result->sell_type; //售卖类型 1.全款 2.股权合作
         $pay_order->share_ratio = $design_result->share_ratio; //股权比例
@@ -670,7 +671,7 @@ class PayController extends BaseController
      * @param int $design_result_id 设计成果ID
      * @return mixed
      */
-    protected function designResultsPayOrder($summary = '',$amount,$type = 5,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
+    protected function designResultsPayOrder($summary = '', $amount, $type = 5, $pay_type = 0, $design_result_id = 0, $design_user_id = 0)
     {
         $pay_order = PayOrder::query()->where([
             'type' => $type,
@@ -679,7 +680,7 @@ class PayController extends BaseController
             'design_result_id' => $design_result_id])
             ->first();
         if ($pay_order) {
-            Log::info('创建订单1'.$pay_order);
+            Log::info('创建订单1' . $pay_order);
             return $pay_order;
         }
         $uid = Tools::orderId($this->auth_user_id);
@@ -696,7 +697,7 @@ class PayController extends BaseController
             'source' => 0,  // 添加来源
         ];
         $pay_order = PayOrder::query()->create($data);
-        Log::info('创建订单2'.$pay_order);
+        Log::info('创建订单2' . $pay_order);
         return $pay_order;
     }
 
@@ -783,15 +784,15 @@ class PayController extends BaseController
         }
         $per_page = $request->input('per_page') ?? $this->per_page;
         $query = PayOrder::query();
-        $query->where('type',5); //设计成果类型
-        if($this->auth_user->type == 1) {
+        $query->where('type', 5); //设计成果类型
+        if ($this->auth_user->type == 1) {
             //需求公司
-            $query->where('user_id',$this->auth_user_id);
-        }else{
-            $query->where('design_user_id',$this->auth_user_id);
-            $query->where('status','>',0);
+            $query->where('user_id', $this->auth_user_id);
+        } else {
+            $query->where('design_user_id', $this->auth_user_id);
+            $query->where('status', '>', 0);
         }
-        $list = $query->orderBy('id',$sort)->paginate($per_page);
+        $list = $query->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
     }
 
@@ -818,13 +819,13 @@ class PayController extends BaseController
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
-            throw new StoreResourceFailedException(403,$validator->errors());
+            throw new StoreResourceFailedException(403, $validator->errors());
         }
         $order = PayOrder::find($all['id']);
-        if(!empty($order)){
-            if($order->status == 1){
+        if (!empty($order)) {
+            if ($order->status == 1) {
                 $design_result = DesignResult::find($order->design_result_id);
-                if($design_result->sell == 1){
+                if ($design_result->sell == 1) {
                     DB::beginTransaction();
                     try {
                         $design_result->status = -1;
@@ -835,13 +836,13 @@ class PayController extends BaseController
                         $design_user_id = $design_result->user_id;
                         //减少用户总金额和冻结金额
                         $user = new User();
-                        $user->totalAndFrozenDecrease($order->user_id,$order->amount);
+                        $user->totalAndFrozenDecrease($order->user_id, $order->amount);
                         //平台佣金
                         $amount = $order->amount / 100 * $design_result->thn_cost;
                         //扣除平台佣金
-                        $design_amount = bcsub($order->amount,$amount,2);
+                        $design_amount = bcsub($order->amount, $amount, 2);
                         //增加设计方总金额
-                        $user->totalIncrease($design_result->user_id,$design_amount);
+                        $user->totalIncrease($design_result->user_id, $design_amount);
                         $fund_log = new FundLog();
                         //需求公司资金流水记录
                         $fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $design_result['title'] . '】设计成果交易款');
@@ -851,20 +852,20 @@ class PayController extends BaseController
                         $fund_log->outFund($design_user_id, $amount, 1, $demand_user_id, '扣除【' . $design_result['title'] . '】设计成果平台佣金');
                         $design_result->save();
                         DB::commit();
-                        return $this->apiSuccess('文件已确认',200);
+                        return $this->apiSuccess('文件已确认', 200);
                     } catch (\Exception $e) {
                         DB::rollBack();
                         Log::error($e);
-                        return $this->apiError('确认文件失败',400);
+                        return $this->apiError('确认文件失败', 400);
                     }
-                }else{
-                    return $this->apiError('设计成果异常',403);
+                } else {
+                    return $this->apiError('设计成果异常', 403);
                 }
-            }else{
-                return $this->apiError('订单异常',403);
+            } else {
+                return $this->apiError('订单异常', 403);
             }
         }
-        return $this->apiError('文件确认失败',400);
+        return $this->apiError('文件确认失败', 400);
     }
 
     /**
@@ -890,19 +891,19 @@ class PayController extends BaseController
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
-            throw new StoreResourceFailedException(403,$validator->errors());
+            throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
         if (empty($pay_order) || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
-        if($pay_order->status == 0 && $pay_order->type == 5){
+        if ($pay_order->status == 0 && $pay_order->type == 5) {
             $pay_order->status = -1;
-            if($pay_order->save()){
-                return $this->apiSuccess('取消订单成功',200);
+            if ($pay_order->save()) {
+                return $this->apiSuccess('取消订单成功', 200);
             }
         }
-        return $this->apiError('取消订单失败',403);
+        return $this->apiError('取消订单失败', 403);
     }
 
     /**
@@ -928,18 +929,18 @@ class PayController extends BaseController
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
-            throw new StoreResourceFailedException(403,$validator->errors());
+            throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
         if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
-        if($pay_order->status == -1 && $pay_order->type == 5){
-            if($pay_order->delete()){
-                return $this->apiSuccess('关闭订单成功',200);
+        if ($pay_order->status == -1 && $pay_order->type == 5) {
+            if ($pay_order->delete()) {
+                return $this->apiSuccess('关闭订单成功', 200);
             }
         }
-        return $this->apiError('关闭订单失败',403);
+        return $this->apiError('关闭订单失败', 403);
     }
 
     /**
@@ -1019,19 +1020,19 @@ class PayController extends BaseController
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
-            throw new StoreResourceFailedException(403,$validator->errors());
+            throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
         if (!$pay_order) {
-            return $this->apiError('订单不存在',404);
+            return $this->apiError('订单不存在', 404);
         }
         $pay_order->design_result = $pay_order->designResult;
         unset($pay_order->design_result->designCompany->user);
         $pay_order->company_name = $pay_order->design_result->designCompany->company_name ?? $pay_order->designResult->designCompany->contact_name;
         $pay_order->design_result->cover = AssetModel::getOneImage($pay_order->design_result->cover_id);
-        $images_url = AssetModel::getImageUrl($pay_order->design_result->id,37,2,20);
-        $illustrate_url = AssetModel::getImageUrl($pay_order->design_result->id,38,2,10);
-        $patent_url = AssetModel::getImageUrl($pay_order->design_result->id,39,2,10);
+        $images_url = AssetModel::getImageUrl($pay_order->design_result->id, 37, 2, 20);
+        $illustrate_url = AssetModel::getImageUrl($pay_order->design_result->id, 38, 2, 10);
+        $patent_url = AssetModel::getImageUrl($pay_order->design_result->id, 39, 2, 10);
         //图片
         $pay_order->design_result->images_url = $images_url;
         //说明书
@@ -1041,28 +1042,28 @@ class PayController extends BaseController
         $follow = new Follow;
         $user = $this->auth_user;
         //是否已收藏
-        if($user->type == 1){
+        if ($user->type == 1) {
             //需求公司
-            $pay_order->design_result->is_follow = $follow->isFollow(1,$user->demand_company_id,$pay_order->design_result->id);
-        }else{
+            $pay_order->design_result->is_follow = $follow->isFollow(1, $user->demand_company_id, $pay_order->design_result->id);
+        } else {
             //设计公司
-            $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
+            $pay_order->design_result->is_follow = $follow->isFollow(2, $user->design_company_id, $pay_order->design_result->id);
         }
         //是否已评价
-        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count() ? 1 : 0;
+        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id', $pay_order->design_result->id)->count() ? 1 : 0;
         //设计公司logo
         $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
         //需求公司信息
-        $demand_company = DemandCompany::query()->where('user_id',$pay_order->user_id)->first();
-        if($demand_company){
+        $demand_company = DemandCompany::query()->where('user_id', $pay_order->user_id)->first();
+        if ($demand_company) {
             $pay_order->demand_company_name = $demand_company->company_name ?? '';
             $pay_order->demand_company_phone = $demand_company->phone ?? '';
-        }else{
+        } else {
             $pay_order->demand_company_name = '';
             $pay_order->demand_company_phone = '';
         }
-        return $this->apiSuccess('Success',200,$pay_order);
+        return $this->apiSuccess('Success', 200, $pay_order);
     }
 
 }
