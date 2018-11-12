@@ -354,4 +354,8 @@ return [
     //通知时间5分钟
     'inform_time' => 172800,
 
+    //京东client_id，client_secret
+    'client_id' => '9651541661345895',
+    'client_secret' => 'yp1yZ0FgTRJh',
+
 ];
