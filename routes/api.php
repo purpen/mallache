@@ -743,6 +743,26 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/designResults/saveStatus', 'DesignResultController@saveStatus');
         //设计成果删除
         $api->post('/designResults/delete', 'DesignResultController@deleteDesignResult');
+        //设计成果关注
+        $api->get('/designResults/collectionOperation', 'DesignResultController@collectionOperation');
+        //设计成果我的收藏列表
+        $api->get('/designResults/myCollectionList', 'DesignResultController@myCollectionList');
+        //已上架设计成果列表
+        $api->get('/designResults/alLists', 'DesignResultController@alLists');
+        //创建设计成果支付订单
+        $api->get('/pay/designResults/{design_result_id}','PayController@payDesignResults');
+        //设计成果价格修改
+        $api->post('/designResults/savePrice','DesignResultController@saveDesignResultPrice');
+        //设计成果订单列表
+        $api->get('/pay/myOrderList','PayController@myOrderList');
+        //设计成果确认文件
+        $api->get('/pay/confirmFile','PayController@confirmFile');
+        //关闭未支付订单
+        $api->get('/pay/closeOrder','PayController@closeOrder');
+        //删除设计成果已关闭订单
+        $api->get('/pay/deleteOrder','PayController@deleteOrder');
+        //设计成果订单详情
+        $api->get('/pay/orderShow','PayController@orderShow');
     });
 
 });

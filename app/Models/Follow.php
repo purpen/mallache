@@ -75,13 +75,18 @@ class Follow extends BaseModel
     /**
      * 添加收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function addCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count < 0){
+                $demand->follow_count = 0;
+                $demand->save();
+            }
             $demand->follow_count = $demand->follow_count+1;
             return $demand->save();
         }
@@ -92,13 +97,18 @@ class Follow extends BaseModel
     /**
      * 取消收藏更改收藏数量
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return bool
      */
     public function cancelCollect($design_demand_id)
     {
         $demand = DesignDemand::where('id',$design_demand_id)->first();
         if($demand){
+            if($demand->follow_count <= 0){
+                $demand->follow_count = 0;
+                return $demand->save();
+            }
             $demand->follow_count = $demand->follow_count-1;
             return $demand->save();
         }
@@ -107,9 +117,34 @@ class Follow extends BaseModel
     }
 
     /**
+     * 是否收藏设计成果
+     *
+     * @author 王松
+     * @param $type 类型
+     * @param $id 类型为1时是需求公司,为2时是设计公司
+     * @return bool
+     */
+    public function isFollow($type,$id,$design_result_id)
+    {
+        if ($type == 1) {
+            //需求公司
+            $res = Follow::where(['type' => 2, 'demand_company_id' => $id, 'design_result_id' => $design_result_id])->first();
+        } else {
+            //设计公司
+            $res = Follow::where(['type' => 2, 'design_company_id' => $id, 'design_result_id' => $design_result_id])->first();
+        }
+        if ($res) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    /*
      * 后台查看需求被那些设计公司收藏
      *
-     * @param $design_demand_id
+     * @author 于海涛
+     * @param $design_demand_id 设计需求ID
      * @return array
      */
     static public function adminCollectInfo($design_demand_id)

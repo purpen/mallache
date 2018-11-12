@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\AssetModel;
 
 class DesignResult extends BaseModel
 {
@@ -13,6 +12,14 @@ class DesignResult extends BaseModel
      */
     protected $table = 'design_result';
     protected $datas = ['deleted_at'];
+
+    /*
+     * 相对关联设计公司
+     */
+    public function designCompany()
+    {
+        return $this->belongsTo('App\Models\DesignCompanyModel', 'design_company_id');
+    }
 
     /**
      * 修改设计成果关注数量
@@ -29,11 +36,9 @@ class DesignResult extends BaseModel
                 $design_result->follow_count = $design_result->follow_count + 1;
                 return $design_result->save();
             }elseif($type == 2){
-                if($design_result->follow_count >= 0){
+                $design_result->follow_count = $design_result->follow_count - 1;
+                if($design_result->follow_count < 0){
                     $design_result->follow_count = 0;
-                    return true;
-                }else{
-                    $design_result->follow_count = $design_result->follow_count - 1;
                 }
                 return $design_result->save();
             }else{

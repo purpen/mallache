@@ -10,6 +10,7 @@ use App\Models\DesignCompanyModel;
 use App\Models\FundLog;
 use App\Models\Invoice;
 use App\Models\Item;
+use App\Models\DesignResult;
 use App\Models\ItemStage;
 use App\Models\PayOrder;
 use App\Models\User;
@@ -54,6 +55,11 @@ class Pay
             case 4:
                 $this->itemStagePay();
                 break;
+
+            //设计成果支付
+            case 5:
+                $this->designResultStagePay();
+                break;
         }
 
     }
@@ -61,6 +67,7 @@ class Pay
     // 收到项目首付款
     protected function itemFirstPay()
     {
+        //需求用户付款后增加钱包账户总金额和冻结金额
         $this->addPrice();
 
         $item = Item::query()->find($this->pay_order->item_id);
@@ -145,6 +152,36 @@ class Pay
         // 生成需要收取设计公司发票的信息
         $design_invoice = new Invoice();
         $design_invoice->createPullInvoice(2, $item->design_company_id, $this->pay_order->amount, $this->pay_order->item_id, $this->pay_order->item_stage_id, $quotation->taxable_type, $quotation->invoice_type);
+    }
+
+    // 设计成果
+    protected function designResultStagePay()
+    {
+        //需求用户付款后增加钱包账户总金额和冻结金额
+        $this->addPrice();
+        $design_result = DesignResult::find($this->pay_order->design_result_id);
+        //需求公司信息
+        $demand_company = DemandCompany::query()->where('user_id',$this->pay_order->user_id)->first();
+        if(!$design_result){
+            Log::Error('设计成果订单中的设计成果信息不存在');
+        }
+        if(!$demand_company){
+            Log::Error('设计成果订单中的需求公司信息不存在');
+        }
+        Log::info('需求公司信息'.$demand_company);
+        //修改设计成果状态为已付款并下架
+        $design_result->status = -1;
+        //修改为已出售
+        $design_result->sell = 1;
+        //购买需求公司ID
+        $design_result->demand_company_id = $demand_company->id;
+        //购买用户ID
+        $design_result->purchase_user_id = $this->pay_order->user_id;
+        $design_result->save();
+        Log::info('设计成果信息'.$design_result);
+        //关闭所有设计成果未支付订单
+        $pay_order = new PayOrder();
+        $pay_order->ClosePayOrders($this->pay_order->design_result_id);
     }
 
 }

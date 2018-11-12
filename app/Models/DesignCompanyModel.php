@@ -111,7 +111,6 @@ class DesignCompanyModel extends BaseModel
         return $this->hasMany('App\Models\ItemRecommend', 'design_company_id');
     }
 
-
     /**
      * 一对多关联合同表
      */

@@ -85,10 +85,10 @@ class DemandCompany extends BaseModel
     }
 
     /**
-     * 获取图片url
-     *
-     * @return array
-     */
+ * 获取图片url
+ *
+ * @return array
+ */
     public function getLogoImageAttribute()
     {
         return AssetModel::getOneImage($this->logo);

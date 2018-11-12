@@ -21,7 +21,7 @@ class PayOrderActionController extends BaseController
      * @apiGroup AdminPayOrder
      *
      * @apiParam {string} token
-     * @apiParam {integer} type 0.全部；支付类型：1.预付押金；2.项目款；
+     * @apiParam {integer} type 0.全部；支付类型：1.预付押金；2.项目款；5.设计成果；
      * @apiParam {integer} pay_type  支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      * @apiParam {integer} status 状态：0.未支付；1.支付成功；
      * @apiParam {integer} bank_transfer 银行转账状态：0.未上传转账凭证；1.已上传转账凭证；
@@ -190,14 +190,12 @@ class PayOrderActionController extends BaseController
             // 支付成功需要处理的业务
             $pay = new Pay($pay_order);
             $pay->paySuccess();
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->response->array($this->apiError('error', 500));
+            return $this->response->array($this->apiError('error', 500));
         }
-
 
         return $this->response->array($this->apiSuccess());
     }

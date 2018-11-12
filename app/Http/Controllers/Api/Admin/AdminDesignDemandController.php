@@ -178,11 +178,13 @@ class AdminDesignDemandController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
-        $design_demand = DesignDemand::where('id', $payload)->first();
+        $demand_id = $request->input('demand_id');
+        $design_demand = DesignDemand::where('id', $demand_id)->first();
         if (!$design_demand) {
             return $this->response->array($this->apiSuccess('设计需求不存在', 404));
         }
-        $design = Follow::adminCollectInfo($payload);
+        // 获取设计公司信息
+        $design = Follow::adminCollectInfo($demand_id);
         return $this->response->array($this->apiSuccess('Success', 200, $design));
     }
 }
