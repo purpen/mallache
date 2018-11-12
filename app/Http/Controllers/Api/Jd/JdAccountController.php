@@ -43,14 +43,14 @@ class JdAccountController extends BaseController
         $aHeader['Authorization'] = 'Bearer '.$access_token;
         $account_ch = curl_init();
         curl_setopt($account_ch, CURLOPT_URL, $account_url);
+        curl_setopt($account_ch, CURLOPT_HEADER, 1);
         curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
 
         $account = curl_exec($account_ch);
         Log::info($account);
-        curl_close($account_ch);
-        $response_account = json_decode($account, true);
-        Log::info($response_account);
-
-        return $this->response->array($this->apiError('获取成功', 200 , $response_account));
+//        curl_close($account_ch);
+//        $response_account = json_decode($account, true);
+//        Log::info($response_account);
+//        return $this->response->array($this->apiError('获取成功', 200 , $response_account));
     }
 }
