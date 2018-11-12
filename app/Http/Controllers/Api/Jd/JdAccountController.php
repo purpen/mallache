@@ -37,9 +37,7 @@ class JdAccountController extends BaseController
         $date = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($date, true);
-        if(empty($response)){
-            return $this->response->array($this->apiError('code值已过期', 416));
-        }
+        Log::info($response);
         $access_token = $response['access_token'];
         //拿token获取用户
         $account_url = 'https://oauth2.jdcloud.com/userinfo';
