@@ -190,14 +190,12 @@ class PayOrderActionController extends BaseController
             // 支付成功需要处理的业务
             $pay = new Pay($pay_order);
             $pay->paySuccess();
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->response->array($this->apiError('error', 500));
+            return $this->response->array($this->apiError('error', 500));
         }
-
 
         return $this->response->array($this->apiSuccess());
     }

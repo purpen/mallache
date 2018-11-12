@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\Log;
 
 class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id', 'source','design_result_id'];
+    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id', 'source','design_result_id','design_user_id'];
 
     protected $appends = ['status_value', 'pay_type_value', 'bank'];
 
@@ -100,13 +101,17 @@ class PayOrder extends BaseModel
     {
         $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
         $order = PayOrder::where($where)->get();
-        if(empty($order)){
+        Log::info($order);
+        if($order->isEmpty()){
+            Log::info('成功');
             return true;
         }
-        $pay_order = PayOrder::where($where)->update('status',-1);
+        $pay_order = PayOrder::where($where)->update(['status'=>-1]);
         if(!$pay_order){
             return false;
+            Log::info('失败');
         }
+        Log::info('成功');
         return true;
     }
 

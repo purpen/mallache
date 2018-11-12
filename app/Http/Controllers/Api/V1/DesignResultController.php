@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Service\Pay;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -64,6 +63,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "id": 1, //设计成果ID
+     *          "design_company_name": "设计公司名称", //设计公司名称
      *          "cover": { //封面图
      *             "id": 999,
      *              "name": "participants@2x.png",
@@ -319,7 +319,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
@@ -467,7 +467,7 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        $design_results = DesignResult::whereIn('id',$all['id'])->where('sell','<',1)->get();
+        $design_results = DesignResult::whereIn('id',$all['id'])->get();
         if($design_results->isEmpty()){
             return $this->apiError('设计成果不存在', 404);
         }
@@ -475,9 +475,11 @@ class DesignResultController extends BaseController
             if($this->auth_user_id != $design_result->user_id){
                 return $this->apiError('没有权限', 404);
             }
-            $design_result->status = -2;
-            if(!$design_result->save()){
-                return $this->apiError('删除失败', 400);
+            if($design_result->status == 1 || $design_result->status == -1 || $design_result->sell == 2){
+                $design_result->status = -2;
+                if(!$design_result->save()){
+                    return $this->apiError('删除失败', 400);
+                }
             }
         }
         return $this->apiSuccess('删除成功', 200);
@@ -609,7 +611,7 @@ class DesignResultController extends BaseController
      *          "sell": 1", //0:未出售,1:已出售,2:已确认
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
@@ -637,17 +639,20 @@ class DesignResultController extends BaseController
         $type = $all['type'];
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
+        //需求公司
         $demand_company_id = $user->demand_company_id;
-        /*$query = Follow::query();
+        $query = DesignResult::query();
+        $query->join('follow','design_result.id','=','follow.design_result_id');
         $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
-        $query->join('design_result','design_result.id','=','follow.design_result_id');
         if(isset($all['title']) && !empty($all['title']) && $all['title'] != 'undefined'){
             $query->where('design_result.title', 'like', '%' . $all['title'] . '%');
         }
         $list = $query->select('design_result.*')
             ->orderBy('design_result.id',$sort)
-            ->paginate($per_page);*/
-        if($type == 1){
+            ->paginate($per_page);
+
+        return $this->response->paginator($list, new DesignResultListTransformer)->setMeta($this->apiMeta());
+        /*if($type == 1){
             //设计需求
             if ($user->type == 1) {
                 //需求公司
@@ -682,8 +687,9 @@ class DesignResultController extends BaseController
                 $arr = [];
             }
             $data = DesignResult::whereIn('id',$arr)->orderBy('id',$sort)->paginate($per_page);
+            return $data;
             return $this->response->paginator($data, new DesignResultListTransformer)->setMeta($this->apiMeta());
-        }
+        }*/
     }
 
     /**
@@ -732,7 +738,7 @@ class DesignResultController extends BaseController
      *          "contacts": "羽落", //联系人
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
-     *          "design_company": {}, //设计公司信息
+     *          "company_name": "设计公司名称", //设计公司名称
      *     }
      * ],
      * "meta": {
@@ -757,7 +763,7 @@ class DesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        $list = DesignResult::where('status',3)->orderBy('id',$sort)->paginate($per_page);
+        $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;

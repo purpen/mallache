@@ -664,15 +664,13 @@ class PayController extends BaseController
      * 创建设计成果支付单
      * @param int $type 支付类型：1.预付押金;2.项目款；3.首付款 4.阶段款 5.设计成果
      * @param float $amount 支付金额
-     * @param int $item_id 项目ID
-     * @param int $user_id 用户ID
      * @param string $summary 备注
      * @param int $pay_type 支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
-     * @param int $design_user_id 设计方用户id
-     * @param int $item_stage_id 项目阶段ID
+     * @param int $design_user_id 设计成果用户ID
+     * @param int $design_result_id 设计成果ID
      * @return mixed
      */
-    protected function designResultsPayOrder($summary = '',$amount,$type = 1,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
+    protected function designResultsPayOrder($summary = '',$amount,$type = 5,$pay_type = 0,$design_result_id = 0,$design_user_id = 0)
     {
         $pay_order = PayOrder::query()->where([
             'type' => $type,
@@ -681,10 +679,11 @@ class PayController extends BaseController
             'design_result_id' => $design_result_id])
             ->first();
         if ($pay_order) {
+            Log::info('创建订单1'.$pay_order);
             return $pay_order;
         }
         $uid = Tools::orderId($this->auth_user_id);
-        $pay_order = PayOrder::query()->create([
+        $data = [
             'uid' => $uid,
             'user_id' => $this->auth_user_id,
             'type' => $type,
@@ -692,10 +691,12 @@ class PayController extends BaseController
             'item_id' => 0,
             'amount' => $amount,
             'pay_type' => $pay_type,
-            'design_result_id' => $design_result_id,
-            'design_user_id' => $design_user_id,
+            'design_result_id' => $design_result_id, //设计成果ID
+            'design_user_id' => $design_user_id, //设计公司用户ID
             'source' => 0,  // 添加来源
-        ]);
+        ];
+        $pay_order = PayOrder::query()->create($data);
+        Log::info('创建订单2'.$pay_order);
         return $pay_order;
     }
 
@@ -733,7 +734,9 @@ class PayController extends BaseController
      *        "pay_no": "20170426211292", //平台交易号
      *        "amount"：123,              //应支付金额
      *        "company_name": "设计公司名称",  //设计公司名称
+     *        "company_phone": "1317229788", //设计公司手机号
      *        "demand_company_name": "需求公司名称",  //需求公司名称
+     *        "demand_company_phone": "15534567890",  //需求公司手机号
      *        "created_at": "1541487779", //下单时间
      *        "cover": { //封面
      *           "id": 999,
@@ -967,6 +970,7 @@ class PayController extends BaseController
      *        "created_at": "1541487779", //下单时间
      *        "status_value": "支付完成",
      *        "pay_type_value": "",
+     *        "design_company_logo": '',  //设计公司logo
      *        "bank": "",
      *        "cover": { //封面
      *           "id": 999,
@@ -1002,18 +1006,7 @@ class PayController extends BaseController
      *            "images_url": [],      //图片
      *            "illustrate_url": [],  //说明书
      *            "patent_url": [],      //专利证书
-     *            "evaluate": {          //评价
-     *                "id": 11,          //评价ID
-     *                "design_company_id": 11,  //设计公司ID
-     *                "design_result_id": 34,   //设计成果ID
-     *                "demand_company_id": 1,   //需求公司ID
-     *                "design_level": 5,        //设计水平
-     *                "response_speed": 6,      //响应速度
-     *                "serve_attitude": 7,      //服务态度
-     *                "content": "7",           //评价内容
-     *                "created_at": 1541669981, //创建时间
-     *                "updated_at": 1541669985
-     *            },
+     *            "is_evaluate": 1,      //是否已评价
      *        }
      *    }
      * }
@@ -1029,7 +1022,7 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403,$validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+        if (!$pay_order) {
             return $this->apiError('订单不存在',404);
         }
         $pay_order->design_result = $pay_order->designResult;
@@ -1055,8 +1048,20 @@ class PayController extends BaseController
             //设计公司
             $pay_order->design_result->is_follow = $follow->isFollow(2,$user->design_company_id,$pay_order->design_result->id);
         }
-        //$pay_order->design_result->evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->first() ?? '';
+        //是否已评价
+        $pay_order->design_result->is_evaluate = ResultEvaluate::where('design_result_id',$pay_order->design_result->id)->count() ? 1 : 0;
+        //设计公司logo
+        $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
+        //需求公司信息
+        $demand_company = DemandCompany::query()->where('user_id',$pay_order->user_id)->first();
+        if($demand_company){
+            $pay_order->demand_company_name = $demand_company->company_name ?? '';
+            $pay_order->demand_company_phone = $demand_company->phone ?? '';
+        }else{
+            $pay_order->demand_company_name = '';
+            $pay_order->demand_company_phone = '';
+        }
         return $this->apiSuccess('Success',200,$pay_order);
     }
 
