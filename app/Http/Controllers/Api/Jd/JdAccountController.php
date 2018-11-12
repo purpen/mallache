@@ -38,11 +38,10 @@ class JdAccountController extends BaseController
         $date = curl_exec($curl);
         curl_close($curl);
 Log::info($date);
-        $access_token = $date->access_token;
-//
-//        if(empty($access_token)){
-//            return $this->response->array($this->apiError('access_token不能为空', 416));
-//        }
+        $access_token = $date['access_token'];
+        if(empty($access_token)){
+            return $this->response->array($this->apiError('access_token不能为空', 416));
+        }
         //拿token获取用户
         $account_url = 'https://oauth2.jdcloud.com/userinfo';
         $aHeader['Authorization'] = 'Bearer '.$access_token;
