@@ -36,19 +36,16 @@ class JdAccountController extends BaseController
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $date = curl_exec($curl);
         curl_close($curl);
-        Log::info('1'.$date);
         $response = json_decode($date, true);
         $access_token = $response['access_token'];
-        Log::info('2'.$access_token);
-//        //拿token获取用户
-//        $account_url = 'https://oauth2.jdcloud.com/userinfo';
-//        $aHeader['Authorization'] = 'Bearer '.$access_token;
-//        $account_ch = curl_init();
-//        curl_setopt($account_ch, CURLOPT_URL, $account_url);
-//        curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
-//
-//        $account = curl_exec($account_ch);
-//        Log::info($account);
+        //拿token获取用户
+        $account_url = 'https://oauth2.jdcloud.com/userinfo';
+        $aHeader['Authorization'] = 'Bearer '.$access_token;
+        $account_ch = curl_init();
+        curl_setopt($account_ch, CURLOPT_URL, $account_url);
+        curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
 
+        $account = curl_exec($account_ch);
+        return $this->response->array($this->apiError('获取成功', 200 , $account));
     }
 }
