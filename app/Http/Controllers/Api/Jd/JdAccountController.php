@@ -45,6 +45,8 @@ class JdAccountController extends BaseController
         );
 
         $account_ch = curl_init();
+        curl_setopt($account_ch, CURLOPT_HTTPGET, true);
+        curl_setopt($account_ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($account_ch, CURLOPT_URL, $account_url);
         curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
         $account = curl_exec($account_ch);
