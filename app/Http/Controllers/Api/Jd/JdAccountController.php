@@ -37,8 +37,9 @@ class JdAccountController extends BaseController
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $date = curl_exec($curl);
         curl_close($curl);
+        $response = json_decode($date, true);
 Log::info($date);
-        $access_token = $date['access_token'];
+        $access_token = $response['access_token'];
         if(empty($access_token)){
             return $this->response->array($this->apiError('access_token不能为空', 416));
         }
