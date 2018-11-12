@@ -13,6 +13,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($a
     $api->get('/jd/jdAccount', [
         'as' => 'jdAccount.jdAccount', 'uses' => 'JdAccountController@account'
     ]);
+    //检测帐号是否注册
+    $api->get('/jd/checkAccount', [
+        'as' => 'jdAccount.checkAccount', 'uses' => 'JdAccountController@checkAccount'
+    ]);
 
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
 

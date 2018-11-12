@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Api\Jd;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Jdcloud\Credentials\Credentials;
-use Jdcloud\Result;
-use Jdcloud\Vm\VmClient;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class JdAccountController extends BaseController
@@ -16,7 +12,7 @@ class JdAccountController extends BaseController
     /**
      * @api {get} /jd/jdAccount 获取京东account
      * @apiVersion 1.0.0
-     * @apiName jdAccount token
+     * @apiName jdAccount account
      * @apiGroup jdAccount
      *
      * @apiParam {string} code
@@ -55,5 +51,29 @@ class JdAccountController extends BaseController
         curl_close($account_ch);
         $response_account = json_decode($account, true);
         return $this->response->array($this->apiSuccess('获取成功', 200 , $response_account));
+    }
+
+    /**
+     * @api {get} /jd/checkAccount 检查京东account是否存在
+     * @apiVersion 1.0.0
+     * @apiName jdAccount checkAccount
+     * @apiGroup jdAccount
+     *
+     * @apiParam {string} account
+     */
+    public function checkAccount(Request $request)
+    {
+        $jd_account = $request->input('jd_account');
+        if(empty($jd_account)){
+            return $this->response->array($this->apiError('jd帐号不能为空' , 416));
+        }
+        $user = User::where('jd_account' , $jd_account)->first();
+        if($user){
+            $token = JWTAuth::fromUser($user);
+            return $this->response->array($this->apiSuccess('获取成功', 200 , $token));
+        }else{
+            return $this->response->array($this->apiError('用户没有绑定铟果账户', 404));
+        }
+
     }
 }
