@@ -231,9 +231,9 @@ class JdAccountController extends BaseController
         $phone = $request->input('phone');
         $user = User::where('account', $phone)->first();
         if ($user) {
-            return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
+            return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 412));
         }
 
-        return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
+        return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 200));
     }
 }
