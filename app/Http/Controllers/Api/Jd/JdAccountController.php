@@ -73,7 +73,7 @@ class JdAccountController extends BaseController
         $user = User::where('jd_account' , $jd_account)->first();
         if($user){
             $token = JWTAuth::fromUser($user);
-            return $this->response->array($this->apiSuccess('获取成功', 200 , $token));
+            return $this->response->array($this->apiSuccess('获取成功', 200 , compact('token')));
         }else{
             return $this->response->array($this->apiError('用户没有绑定铟果账户', 404));
         }
@@ -81,7 +81,7 @@ class JdAccountController extends BaseController
     }
 
     /**
-     * @api {post} /jd/bindingUser 已注册铟果，绑定京东云账户
+     * @api {post} /jd/bindingUser 已注册艺火，绑定京东云账户
      * @apiVersion 1.0.0
      * @apiName JdAccount bindingUser
      * @apiGroup JdAccount
@@ -116,7 +116,7 @@ class JdAccountController extends BaseController
         }
         $user = User::where('account' , $phone)->first();
         if(!$user){
-            return $this->response->array($this->apiError('还没有注册铟果', 404));
+            return $this->response->array($this->apiError('还没有注册艺火', 404));
         }
         $data = [
             'phone' => $credentials['phone'],
@@ -128,14 +128,14 @@ class JdAccountController extends BaseController
         $user->jd_account = $jd_account;
 
         if($user->save()){
-            return $this->response->array($this->apiSuccess('绑定成功', 200 , $token));
+            return $this->response->array($this->apiSuccess('绑定成功', 200 , compact('token')));
         }
         return $this->response->array($this->apiError('绑定失败', 416));
 
     }
 
     /**
-     * @api {post} /jd/newBindingUser 新用户注册铟果，绑定京东云账户
+     * @api {post} /jd/newBindingUser 新用户注册艺火，绑定京东云账户
      * @apiVersion 1.0.0
      * @apiName JdAccount newBindingUser
      * @apiGroup JdAccount
