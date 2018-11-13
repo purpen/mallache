@@ -756,6 +756,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/pay/deleteOrder','PayController@deleteOrder');
         //设计成果订单详情
         $api->get('/pay/orderShow','PayController@orderShow');
+        //解散设计成果支付订单
+        $api->post('/pay/dissolutionPayOrder','PayController@dissolutionPayOrder');
     });
 
 });

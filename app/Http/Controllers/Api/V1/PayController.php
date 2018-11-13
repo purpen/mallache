@@ -17,7 +17,7 @@ use App\Models\Follow;
 use App\Models\FundLog;
 use App\Models\PayOrder;
 use App\Models\ItemStage;
-use App\Models\DemandCompany;
+use App\Models\DemandCompany as Demand;
 use App\Models\ResultEvaluate;
 use App\Service\Pay;
 use Illuminate\Http\Request;
@@ -1053,7 +1053,7 @@ class PayController extends BaseController
         $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
         //需求公司信息
-        $demand_company = DemandCompany::query()->where('user_id',$pay_order->user_id)->first();
+        $demand_company = Demand::query()->where('user_id',$pay_order->user_id)->first();
         if($demand_company){
             $pay_order->demand_company_name = $demand_company->company_name ?? '';
             $pay_order->demand_company_phone = $demand_company->phone ?? '';
@@ -1062,6 +1062,75 @@ class PayController extends BaseController
             $pay_order->demand_company_phone = '';
         }
         return $this->apiSuccess('Success',200,$pay_order);
+    }
+
+    /**
+     * @api {post} /pay/dissolutionPayOrder 解散支付订单
+     * @apiVersion 1.0.0
+     * @apiName pay closeOrder
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiParam {integer} design 设计方金额
+     * @apiParam {integer} demand 需求方金额
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function dissolutionPayOrder(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer',
+            'design' => 'required',
+            'demand' => 'required'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $pay = new PayOrder;
+        $pay_data = $pay->where(['id'=>$all['id'],])->first();
+        if(!$pay_data){
+            return $this->apiError('设计成果订单不存在',404);
+        }
+        if(empty($pay_data->user_id) || empty($pay_data->design_user_id)){
+            return $this->apiError('设计成果订单错误',403);
+        }
+        $design = $all['design'];//设计方金额
+        $demand = $all['demand'];//需求方金额
+        $amount = $pay_data->amount;
+        $price = $design + $demand;
+        if($amount != $price){
+            return $this->apiError('金额不正确',403);
+        }
+        $design_result = DesignResult::where('id',$pay_data->design_result_id)->first();
+        if(!$design_result){
+            return $this->apiError('设计成果不存在',404);
+        }
+        DB::beginTransaction();
+        try {
+            $user = new User();
+            DB::beginTransaction();
+            $user->totalIncrease($pay_data->user_id,$demand); //需求方
+            $user->totalIncrease($pay_data->design_user_id,$design); //设计方
+            $fund_log = new FundLog();
+            //需求公司资金流水记录
+            $fund_log->outFund($pay_data->user_id, $demand, $pay_data->pay_type, $pay_data->design_user_id, '设计成果【' . $design_result->title . '】订单解散');
+            //设计公司资金流水记录
+            $fund_log->outFund($pay_data->design_user_id, $design, $pay_data->pay_type, $pay_data->user_id, '设计成果【' . $design_result->title . '】订单解散');
+            DB::commit();
+            return $this->apiSuccess('Success',200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return $this->apiError('Error',400);
+        }
+        return $pay_data->amount;
     }
 
 }
