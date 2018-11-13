@@ -348,7 +348,8 @@ class DesignCompanyController extends BaseController
 
         $design = DesignCompanyModel::where(['user_id' => $user_id])->first();
         if (!$design) {
-            $design = DesignCompanyModel::createDesign($user_id);
+            $user = User::find($user_id);
+            $design = DesignCompanyModel::createDesign($user);
         }
 
         $design->update($all);
