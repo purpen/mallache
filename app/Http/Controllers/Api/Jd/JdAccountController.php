@@ -113,7 +113,7 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('还没有注册铟果', 404));
         }
         $data = [
-            'phone' => $credentials['account'],
+            'phone' => $credentials['phone'],
             'password' => $credentials['password'],
         ];
         if (!$token = JWTAuth::attempt($data)) {
@@ -122,6 +122,7 @@ class JdAccountController extends BaseController
         $user->jd_account = $jd_account;
 
         if($user->save()){
+            dd($user);
             return $this->response->array($this->apiSuccess('绑定成功', 200 , $token));
         }
         return $this->response->array($this->apiError('绑定失败', 416));
