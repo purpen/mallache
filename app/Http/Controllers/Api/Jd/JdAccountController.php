@@ -108,6 +108,12 @@ class JdAccountController extends BaseController
         //铟果的手机号直接绑定
         $phone = $request->input('phone');
         $jd_account = $request->input('jd_account');
+        //检测是否注册京东账户
+        $jd_user = User::where('jd_account' , $jd_account)->first();
+        if($jd_user){
+            $token = JWTAuth::fromUser($jd_user);
+            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
+        }
         $user = User::where('account' , $phone)->first();
         if(!$user){
             return $this->response->array($this->apiError('还没有注册铟果', 404));
@@ -122,7 +128,6 @@ class JdAccountController extends BaseController
         $user->jd_account = $jd_account;
 
         if($user->save()){
-            dd($user);
             return $this->response->array($this->apiSuccess('绑定成功', 200 , $token));
         }
         return $this->response->array($this->apiError('绑定失败', 416));
@@ -158,6 +163,7 @@ class JdAccountController extends BaseController
         }
 
         $phone = $request->input('phone');
+        $jd_account = $request->input('jd_account');
         $user = User::where('account' , $phone)->first();
         if($user){
             return $this->response->array($this->apiError('该用户已注册', 412));
@@ -169,6 +175,12 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('验证码错误', 412));
         } else {
             Cache::forget($key);
+        }
+        //检测是否注册京东账户
+        $jd_user = User::where('jd_account' , $jd_account)->first();
+        if($jd_user){
+            $token = JWTAuth::fromUser($jd_user);
+            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
         }
         $user = User::query()
             ->create([
