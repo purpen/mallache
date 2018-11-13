@@ -355,7 +355,7 @@ return [
     'inform_time' => 172800,
 
     //京东client_id，client_secret
-    'client_id' => env('CLIENT_ID', '9651541661345895'),
+    'client_id' => env('CLIENT_ID', '9741542107197570'),
     'client_secret' => env('CLIENT_SECRET', 'yp1yZ0FgTRJh'),
 
 ];
