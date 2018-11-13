@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
-use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Transformer\PayOrderTransformer;
@@ -18,12 +17,12 @@ use App\Models\Follow;
 use App\Models\FundLog;
 use App\Models\PayOrder;
 use App\Models\ItemStage;
+use App\Models\DemandCompany;
 use App\Models\ResultEvaluate;
 use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
 use Lib\JdPay\JdPay;
 use Lib\WxPay\PayNotifyCallBack;

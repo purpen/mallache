@@ -370,8 +370,10 @@ class DesignResultController extends BaseController
                 ->orderBy('id',$sort)
                 ->paginate($per_page);
         } else {
-            if($status != 0){
+            if($status != 0 && $status != -2){
                 $query->where('status',$status);
+            }else{
+                $query->where('status','>',-2);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->orderBy('id',$sort)
@@ -420,8 +422,8 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        if($all['status'] > -2 && $all['status'] < 4){
-            return $this->apiError('设计成果', 403);
+        if($all['status'] < -1 || $all['status'] > 4){
+            return $this->apiError('参数错误', 403);
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
         if(!$design_result){

@@ -164,7 +164,7 @@ class AdminDesignResultController extends BaseController
             $message = '设计成果【'.$design_result->title.'】审核未通过，已下架，请重新修改上传，拒绝原因：'.$all['content'];
         }
         if($design_result->save()){
-            $tools->message($design_result->user_id,'设计成果审核',$message,1,$design_result->id,null);
+            $tools->message($design_result->user_id,'设计成果审核',$message,4,$design_result->id,null);
             return $this->apiSuccess($msg, 200);
         }
         return $this->apiError('审核失败', 400);

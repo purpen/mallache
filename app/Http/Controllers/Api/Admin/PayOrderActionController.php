@@ -6,6 +6,7 @@ use App\Events\PayOrderEvent;
 use App\Http\AdminTransformer\PayOrderTransformer;
 use App\Models\PayOrder;
 use App\Service\Pay;
+use App\Helper\Tools;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -185,11 +186,16 @@ class PayOrderActionController extends BaseController
             $pay_order->pay_no = $all['pay_no'];
             $pay_order->status = 1; //支付成功
             $pay_order->bank_id = $all['bank_id'];
-            $pay_order->save();
+            $res = $pay_order->save();
 
             // 支付成功需要处理的业务
             $pay = new Pay($pay_order);
             $pay->paySuccess();
+            if($res){
+                $tools = new Tools;
+                $message = '您的设计成果订单【'.$pay_order->uid.'】支付凭证平台已确认，请前往订单列表查看';
+                $tools->message($pay_order->user_id,'设计成果订单',$message,5,$pay_order->id,null);
+            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
