@@ -25,6 +25,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Jd'], function ($a
     $api->post('/jd/newBindingUser', [
         'as' => 'jdAccount.newBindingUser', 'uses' => 'JdAccountController@newBindingUser'
     ]);
+    //检测手机号是否注册艺火
+    $api->get('/jd/phoneState', [
+        'as' => 'jdAccount.phoneState', 'uses' => 'JdAccountController@phoneState'
+    ]);
 
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
 

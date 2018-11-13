@@ -75,7 +75,7 @@ class JdAccountController extends BaseController
             $token = JWTAuth::fromUser($user);
             return $this->response->array($this->apiSuccess('获取成功', 200 , compact('token')));
         }else{
-            return $this->response->array($this->apiError('用户没有绑定铟果账户', 404));
+            return $this->response->array($this->apiError('用户没有绑定艺火账户', 404));
         }
 
     }
@@ -202,5 +202,38 @@ class JdAccountController extends BaseController
 
         return $this->response->array($this->apiError('绑定失败', 412));
 
+    }
+
+    /**
+     * @api {get} /jd/phoneState 检查手机号是否注册
+     * @apiVersion 1.0.0
+     * @apiName JdAccount phoneState
+     * @apiGroup JdAccount
+     *
+     * @apiParam {string} phone 手机号
+     */
+    public function phoneState(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+        ];
+
+
+        $payload = app('request')->only('phone');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $phone = $request->input('phone');
+        $user = User::where('account', $phone)->first();
+        if ($user) {
+            return $this->response->array($this->apiSuccess('已经存在,可以直接绑定', 200));
+        }
+
+        return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 404));
     }
 }
