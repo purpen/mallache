@@ -54,7 +54,7 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[579]|5[0-35-9]|6[6]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
             'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
             'type' => ['required', Rule::in([1, 2])],
@@ -180,7 +180,7 @@ class AuthenticateController extends BaseController
         try {
             // 验证规则
             $rules = [
-                'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+                'account' => ['required', 'regex:/^1(3[0-9]|4[579]|5[0-35-9]|6[6]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
                 'password' => ['required', 'min:6']
             ];
 
@@ -345,7 +345,7 @@ class AuthenticateController extends BaseController
     public function getSmsCode(Request $request)
     {
         $rules = [
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[579]|5[0-35-9]|6[6]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
             'str' => 'required|string',
             'captcha' => 'required|string',
         ];
@@ -556,7 +556,7 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[579]|5[0-35-9]|6[6]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
             'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
         ];
@@ -750,7 +750,7 @@ class AuthenticateController extends BaseController
 
         // 验证规则
         $rules = [
-            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'account' => ['required', 'unique:users', 'regex:/^1(3[0-9]|4[579]|5[0-35-9]|6[6]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
             'password' => ['required', 'min:6'],
             'sms_code' => ['required', 'regex:/^[0-9]{6}$/'],
             'realname' => ['required'],

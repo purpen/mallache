@@ -21,6 +21,13 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
 
+
+    // api {post} /setNewVersion 设计版本号
+    $api->post('/setNewVersion', 'VersionController@setNewVersion');
+
+    // @api {get} /getVersion 设计版本号
+    $api->get('/getVersion', 'VersionController@getVersion');
+
     /**
      * Opalus
      */

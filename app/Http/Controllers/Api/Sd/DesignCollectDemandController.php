@@ -18,6 +18,7 @@ class DesignCollectDemandController extends BaseController
 {
     /**
      * @api {get} /sd/design/designCollectList 设计公司收藏列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign designCollectList
      * @apiGroup sdDesignType
@@ -57,12 +58,13 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $demand_info = Follow::showDemandList($design_company_id,$per_page);
-        return $this->response->paginator($demand_info, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
+        $demand_list = Follow::showDemandList($design_company_id,$per_page);
+        return $this->response->paginator($demand_list, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
      * @api {post} /sd/design/collectDemand 设计公司收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign collectDemand
      * @apiGroup sdDesignType
@@ -120,6 +122,7 @@ class DesignCollectDemandController extends BaseController
 
     /**
      * @api {post} /sd/design/cancelCollectDemand 设计公司取消收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign cancelCollectDemand
      * @apiGroup sdDesignType

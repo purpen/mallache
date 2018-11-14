@@ -19,11 +19,13 @@ use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
 use App\Models\DesignResult;
 use App\Models\ResultEvaluate;
+use App\Models\PayOrder;
 
 class DesignDemandController extends BaseController
 {
     /**
      * @api {get} /sd/demand/demandList 需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandList
      * @apiGroup sdDemandType
@@ -79,6 +81,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/release 发布需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand release
      * @apiGroup sdDemandType
@@ -159,6 +162,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/demandInfo 查看某个需求详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandInfo
      * @apiGroup sdDemandType
@@ -231,6 +235,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/demandShut 关闭某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandShut
      * @apiGroup sdDemandType
@@ -280,12 +285,17 @@ class DesignDemandController extends BaseController
                 return $this->response->array($this->apiError('审核中无法关闭', 403));
             }
             DesignDemand::where('id', $demand_id)->delete();
+            $follow = Follow::where(['type'=>1,'design_demand_id'=>$demand_id])->get();
+            if(!$follow->isEmpty()){
+                Follow::where(['type'=>1,'design_demand_id'=>$demand_id])->delete();
+            }
             return $this->response->array($this->apiSuccess('Success', 200));
         }
     }
 
     /**
      * @api {post} /sd/demand/demandUpdate 更改需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand demandUpdate
      * @apiGroup sdDemandType
@@ -367,6 +377,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/designDemandList 设计公司查看需求列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand designDemandList
      * @apiGroup sdDemandType
@@ -410,10 +421,10 @@ class DesignDemandController extends BaseController
         // 设计公司获取需求列表
         $demandIds = DesignDemand::getCollectDemandId($design_company_id);
         $design_demand = DesignDemand::query()
-            ->join('users','users.id','=','design_demand.user_id')
-            ->join('demand_company','demand_company.id','=','design_demand.demand_company_id')
-            ->where('design_demand.status', 2)->paginate($per_page);
-
+            ->with('DemandCompany','User')
+            ->where('design_demand.status', 2)
+            ->orderBy('created_at', 'desc')
+            ->paginate($per_page);
         // 判断是否关注
         if(!$demandIds){
             foreach ($design_demand as $v){
@@ -433,6 +444,7 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/designDemandInfo 设计公司查看某个需求详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand designDemandInfo
      * @apiGroup sdDemandType
@@ -495,7 +507,7 @@ class DesignDemandController extends BaseController
 //            return $this->response->array($this->apiError('设计公司没有认证', 403));
 //        }
 
-        $demand_info = DesignDemand::where('id', $demand_id)->first();
+        $demand_info = DesignDemand::with('demandCompany','User')->where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
@@ -511,12 +523,13 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {post} /sd/demand/evaluateResult 需求公司评价设计成果
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand evaluateResult
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} order_id 订单号
      * @apiParam {integer} design_level     设计水平 1-5
      * @apiParam {integer} response_speed   响应速度 1-5
      * @apiParam {integer} serve_attitude   服务态度 1-5
@@ -534,9 +547,9 @@ class DesignDemandController extends BaseController
     public function evaluateResult(Request $request)
     {
         $rules = [
-            'design_result_id' => 'required|integer',
+            'order_id' => 'required|integer',
         ];
-        $payload = $request->only('design_result_id');
+        $payload = $request->only('order_id');
         $validator = app('validator')->make($payload, $rules);
 
         // 验证格式
@@ -550,19 +563,31 @@ class DesignDemandController extends BaseController
         $serve_attitude = in_array($request->input('serve_attitude'), $arr) ? $request->input('serve_attitude') : null;
         $content = $request->input('content');
         $demand_company_id = $this->auth_user->demand_company_id;
-        $design_result_id = $request->input('design_result_id');
+        $user_id = $this->auth_user_id;
+        $order_id = $request->input('order_id');
+
+        // 是否有此订单
+        $order = PayOrder::where(['type'=>5,'user_id'=>$user_id,'uid'=>$order_id])->first();
+        if(!$order){
+            return $this->response->array($this->apiError('您没有此订单,无法评价', 404));
+        }
+
+        $design_result_id = $order->design_result_id;
         $result = DesignResult::where('id',$design_result_id)->first();
         // 判断有没有此设计成果
         if(!$result){
             return $this->response->array($this->apiError('没有找到此设计成果', 404));
         }
-        // 判断是否购买此设计成果
-        if($result->demand_company_id !== $demand_company_id){
-            return $this->response->array($this->apiError('您没有购买此设计成果,无法评价', 403));
-        }
+
         // 判断交易状态
         if($result->sell !== 2){
             return $this->response->array($this->apiError('交易没有成功,无法评价', 403));
+        }
+
+        // 是否已经评价
+        $is_evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->first();
+        if($is_evaluate){
+            return $this->response->array($this->apiError('已评价,无法重复评价', 412));
         }
 
         DB::beginTransaction();
@@ -577,7 +602,7 @@ class DesignDemandController extends BaseController
         $evaluate->content = $content;
         if($evaluate->save()){
             DB::commit();
-            return $this->response->array($this->apiSuccess('Success', 200));
+            return $this->response->array($this->apiSuccess('Success', 200,$evaluate));
         }
         DB::rollBack();
         return $this->response->array($this->apiError('评价失败', 500));
@@ -586,12 +611,13 @@ class DesignDemandController extends BaseController
 
     /**
      * @api {get} /sd/demand/evaluateInfo 设计成果评价详情
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDemand evaluateInfo
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} order_id 订单号
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -599,6 +625,20 @@ class DesignDemandController extends BaseController
      *          "message": "Success",
      *          "status_code": 200
      *      },
+     *          "data": [
+     *              {
+     *                  "id": 2,
+     *                  "design_company_id": 1,     设计公司ID
+     *                  "design_result_id": 1,      设计成果ID
+     *                  "demand_company_id": 1,     需求公司ID
+     *                  "design_level": 1,          设计水平
+     *                  "response_speed": 1,        响应速度
+     *                  "serve_attitude": 1,        服务态度
+     *                  "content": "测试",          评价内容
+     *                  "created_at": 1541727197,
+     *                  "updated_at": 1541727197
+     *              }
+     *          ]
      *  }
      */
 
@@ -606,23 +646,36 @@ class DesignDemandController extends BaseController
     {
 
         $rules = [
-            'design_result_id' => 'required|integer',
+            'order_id' => 'required|integer',
         ];
-        $payload = $request->only('design_result_id');
+        $payload = $request->only('order_id');
         $validator = app('validator')->make($payload, $rules);
 
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
+        // 设计成果ID
+        $order_id = $request->input('order_id');
 
-        $design_result_id = $request->input('design_result_id');
-        $demand_company_id = $this->auth_user->demand_company_id;
-        if ($this->auth_user->type != 1 || !$demand_company_id) {
-            return $this->response->array($this->apiError('此用户不是需求公司', 403));
+        // 需求方
+        if($this->auth_user->type == 1){
+            $user_id = $this->auth_user_id;
+            $order = PayOrder::where(['type'=>5,'user_id'=>$user_id,'uid'=>$order_id])->first();
+
+            // 设计方
+        }else if ($this->auth_user->type == 2) {
+            $user_id = $this->auth_user_id;
+            $order = PayOrder::where(['type'=>5,'design_user_id'=>$user_id,'uid'=>$order_id])->first();
         }
 
-        $evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->get();
+        // 是否有此订单
+        if(!$order){
+            return $this->response->array($this->apiError('您没有此订单', 412));
+        }
+
+        // 获取评价
+        $evaluate = ResultEvaluate::where('design_result_id',$order->design_result_id)->get();
         return $this->response->array($this->apiSuccess('Success', 200, $evaluate));
 
     }
