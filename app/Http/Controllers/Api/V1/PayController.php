@@ -17,7 +17,7 @@ use App\Models\Follow;
 use App\Models\FundLog;
 use App\Models\PayOrder;
 use App\Models\ItemStage;
-use App\Models\DemandCompany as Demand;
+use App\Models\DemandCompany;
 use App\Models\ResultEvaluate;
 use App\Service\Pay;
 use Illuminate\Http\Request;
@@ -1053,7 +1053,7 @@ class PayController extends BaseController
         $pay_order->design_company_logo = AssetModel::getOneImage($pay_order->design_result->designCompany->logo) ?? '';
         unset($pay_order->design_result->designCompany);
         //需求公司信息
-        $demand_company = Demand::query()->where('user_id',$pay_order->user_id)->first();
+        $demand_company = DemandCompany::query()->where('user_id',$pay_order->user_id)->first();
         if($demand_company){
             $pay_order->demand_company_name = $demand_company->company_name ?? '';
             $pay_order->demand_company_phone = $demand_company->phone ?? '';
