@@ -38,6 +38,10 @@
            :class="{'item': true, 'is-active': currentName === 'modify_pwd'}">
           安全设置
         </a>
+        <a @click="alick" :to="'/vcenter/member/list'"
+           :class="{'item': true, 'is-active': currentName === 'member'}">
+          成员管理
+        </a>
         <a :class="{'item': true, 'is-active': currentName === 'company'}" @click="redirectCompany" v-if="isMob">
           查看公司主页
         </a>

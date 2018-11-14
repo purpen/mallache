@@ -14,25 +14,25 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
      */
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
         /**
-         * 发布需求
+         * 需求公司发布需求
          */
         //需求列表
         $api->get('/sd/demand/demandList', [
             'as' => 'sd.demandDemandList', 'uses' => 'DesignDemandController@demandList'
         ]);
-        //发布需求
+        //需求公司发布需求
         $api->post('/sd/demand/release', [
             'as' => 'sd.demandRelease', 'uses' => 'DesignDemandController@release'
         ]);
-        //查看某个需求详情
+        //需求公司查看某个需求详情
         $api->get('/sd/demand/demandInfo', [
             'as' => 'sd.demandInfo', 'uses' => 'DesignDemandController@demandInfo'
         ]);
-        //关闭某个需求
+        //需求公司关闭某个需求
         $api->post('/sd/demand/demandShut', [
             'as' => 'sd.demandShut', 'uses' => 'DesignDemandController@demandShut'
         ]);
-        //更改某个需求
+        //需求公司更改某个需求
         $api->post('/sd/demand/demandUpdate', [
             'as' => 'sd.demandUpdate', 'uses' => 'DesignDemandController@demandUpdate'
         ]);
@@ -44,6 +44,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
         $api->get('/sd/demand/designDemandInfo', [
             'as' => 'sd.designDemandInfo', 'uses' => 'DesignDemandController@designDemandInfo'
         ]);
+        //需求公司评价某个设计成果
+        $api->post('/sd/demand/evaluateResult', [
+            'as' => 'sd.evaluateResult', 'uses' => 'DesignDemandController@evaluateResult'
+        ]);
+        //设计成果的评价详情
+        $api->get('/sd/demand/evaluateInfo', [
+            'as' => 'sd.evaluateInfo', 'uses' => 'DesignDemandController@evaluateInfo'
+        ]);
+
 
 
         //设计公司收藏某个需求
@@ -58,6 +67,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
         $api->post('/sd/design/cancelCollectDemand', [
             'as' => 'sd.cancelCollectDemand', 'uses' => 'DesignCollectDemandController@cancelCollectDemand'
         ]);
+
 
     });
 

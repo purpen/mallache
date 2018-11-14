@@ -236,7 +236,6 @@
           if (response.data.meta.status_code === 200) {
             let item = null
             that.item = item = response.data.data
-            console.log(response.data.data)
             let verifyStatus = 0
             if (isCompany) {
               if (item.design_info_status === 0 || item.design_verify_status !== 1 || item.design_case_status === 0 || item.design_item_status === 0) {
@@ -249,7 +248,6 @@
               }
               verifyStatus = item.demand_verify_status
             }
-            console.log(verifyStatus)
             switch (verifyStatus) {
               case 0:
                 item.verify_label = '未认证'

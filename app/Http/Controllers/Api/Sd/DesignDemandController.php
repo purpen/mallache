@@ -8,11 +8,17 @@
 
 namespace App\Http\Controllers\Api\Sd;
 
+use App\Models\Follow;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Transformer\DesignDemandTransformer;
+use App\Http\Transformer\DesignDemandListTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
+use App\Models\DesignResult;
+use App\Models\ResultEvaluate;
 
 class DesignDemandController extends BaseController
 {
@@ -22,6 +28,8 @@ class DesignDemandController extends BaseController
      * @apiName sdDemand demandList
      * @apiGroup sdDemandType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -29,27 +37,29 @@ class DesignDemandController extends BaseController
      *      "meta": {
      *          "message": "Success",
      *          "status_code": 200
-     *      }
+     *      },
      *       "data": [
      *          {
-     * "id": 1,                    //需求ID
-     * "user_id": 12,              //用户ID
-     * "demand_company_id": 1,     //需求公司ID
-     * "status": 0,                //状态：-1.关闭 0.待发布 1. 审核中 2.已发布
-     * "type": 1,                  //设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
-     * "design_types": "\"[1,2]\"",//设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
-     * "name": "测试1",            //项目名称
-     * "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
-     * "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
-     * "follow_count": 0,          //关注数量
-     * "created_at": 1540281300,
-     * "updated_at": 1540281300
-     * }
+     *              "id": 1,                    //需求ID
+     *              "user_id": 12,              //用户ID
+     *              "demand_company_id": 1,     //需求公司ID
+     *              "status": 0,                //状态：-1.关闭 0.待发布 1. 审核中 2.已发布
+     *              "type": 1,                  //设计类型：1.产品设计；2.UI UX 设计；3. 平面设计 4.H5 5.包装设计 6.插画设计
+     *              "design_types": "\"[1,2]\"",//设计类别：产品设计（1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     *              "name": "测试1",            //项目名称
+     *              "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
+     *              "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *              "follow_count": 0,          //关注数量
+     *              "created_at": 1540281300,
+     *              "updated_at": 1540281300
+     *          }
      *       ]
      *  }
      */
     public function demandList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 用户ID
         $user_id = $this->auth_user_id;
         // 需求公司ID
@@ -63,8 +73,8 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
         // 获取需求列表
-        $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id);
-        return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
+        $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id,$per_page);
+        return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -75,7 +85,7 @@ class DesignDemandController extends BaseController
      *
      * @apiParam {string} token
      * @apiParam {string} name  项目名称
-     * @apiParam {json} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     * @apiParam {array} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} field 产品类型：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
@@ -94,7 +104,7 @@ class DesignDemandController extends BaseController
      */
     public function release(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer|regex:/[1-11]/', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -105,6 +115,8 @@ class DesignDemandController extends BaseController
 
         // 获取数据
         $all = $request->all();
+        // 类型转成json
+        $design_types = json_encode($all['design_types'],true);
         // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
@@ -121,13 +133,14 @@ class DesignDemandController extends BaseController
         if ($demand_name) {
             return $this->response->array($this->apiError('项目名称已存在', 400));
         }
+        DB::beginTransaction();
         $design_demand = new DesignDemand;
         $design_demand->name = $all['name'];
         $design_demand->user_id = $this->auth_user_id;
         $design_demand->demand_company_id = $this->auth_user->demand_company_id;
         $design_demand->status = 1;
         $design_demand->type = 1;
-        $design_demand->design_types = $all['design_types'];
+        $design_demand->design_types = $design_types;
         $design_demand->cycle = $all['cycle'];
         $design_demand->design_cost = $all['design_cost'];
         $design_demand->field = $all['field'];
@@ -136,8 +149,12 @@ class DesignDemandController extends BaseController
         $design_demand->item_city = $all['item_city'];
         $design_demand->content = $all['content'];
         if ($design_demand->save()) {
-            return $this->response->array($this->apiSuccess('Success', 200));
+            DB::commit();
+            return $this->response->item($design_demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
+        DB::rollBack();
+        return $this->response->array($this->apiError('发布失败', 500));
+
     }
 
     /**
@@ -208,7 +225,8 @@ class DesignDemandController extends BaseController
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+
+        return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -275,7 +293,7 @@ class DesignDemandController extends BaseController
      * @apiParam {string} token
      * @apiParam {integer} demand_id //需求ID
      * @apiParam {string} name  项目名称
-     * @apiParam {json} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
+     * @apiParam {array} design_types 设计类型：1.产品策略；2.产品设计；3.结构设计 4.其他；[1,2]
      * @apiParam {integer} cycle 设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      * @apiParam {integer} design_cost 设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
      * @apiParam {integer} field 产品类型：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
@@ -294,7 +312,7 @@ class DesignDemandController extends BaseController
      */
     public function demandUpdate(Request $request)
     {
-        $rules = ['name' => 'required|string|max:100', 'design_types' => 'JSON', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer|regex:/[1-6]/', 'industry' => 'required|integer|regex:/[1-11]/', 'content' => 'required|string',];
+        $rules = ['name' => 'required|string|max:100', 'design_types' => 'array', 'cycle' => 'required|integer|regex:/[1-5]/', 'design_cost' => 'required|integer|regex:/[1-6]/', 'field' => 'required|integer', 'industry' => 'required|integer', 'content' => 'required|string',];
         $payload = $request->only('name', 'design_types', 'cycle', 'design_cost', 'field', 'industry', 'content');
         $validator = app('validator')->make($payload, $rules);
 
@@ -305,6 +323,8 @@ class DesignDemandController extends BaseController
 
         // 获取数据
         $all = $request->all();
+        // 类型转成json
+        $design_types = json_encode($all['design_types']);
         // 需求公司ID
         $demand_company_id = $this->auth_user->demand_company_id;
 
@@ -319,14 +339,16 @@ class DesignDemandController extends BaseController
 
         $demand = DesignDemand::where(['id'=>$all['demand_id'],'demand_company_id'=>$demand_company_id])->first();
         if (!$demand) {
-            return $this->response->array($this->apiError('没有找到该项目', 404));
+            return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        // 判断状态
-        if ($demand->status != -1) {
-            return $this->response->array($this->apiError('不是未通过状态无法编辑', 403));
+
+        $demand_name = DesignDemand::where(['demand_company_id'=>$demand_company_id,'name'=>$all['name']])->whereNotIn('id', [$all['demand_id']])->get();
+        if(!$demand_name->isEmpty()){
+            return $this->response->array($this->apiError('项目名称已存在', 412));
         }
+        DB::beginTransaction();
         $demand->name = $all['name'];
-        $demand->design_types = $all['design_types'];
+        $demand->design_types = $design_types;
         $demand->cycle = $all['cycle'];
         $demand->status = 1;
         $demand->design_cost = $all['design_cost'];
@@ -336,8 +358,11 @@ class DesignDemandController extends BaseController
         $demand->item_city = $all['item_city'];
         $demand->content = $all['content'];
         if ($demand->save()) {
-            return $this->response->array($this->apiSuccess('Success', 200));
+            DB::commit();
+            return $this->response->item($demand, new DesignDemandTransformer)->setMeta($this->apiMeta());
         }
+        DB::rollBack();
+        return $this->response->array($this->apiError('更改失败', 500));
     }
 
     /**
@@ -346,6 +371,8 @@ class DesignDemandController extends BaseController
      * @apiName sdDemand designDemandList
      * @apiGroup sdDemandType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -363,6 +390,7 @@ class DesignDemandController extends BaseController
      *              "name": "测试1",            //项目名称
      *              "cycle": 1,                 //设计周期：1.1个月内；2.1-2个月；3.2-3个月；4.3-4个月；5.4个月以上
      *              "design_cost": 1,           //设计费用：1、1-5万；2、5-10万；3.10-20；4、20-30；5、30-50；6、50以上
+     *              "follow_status": 1,         //是否关注 1.已收藏 .2未收藏
      *              "created_at": 1540281300,
      *              "updated_at": 1540281300
      *          }
@@ -371,20 +399,36 @@ class DesignDemandController extends BaseController
      */
     public function designDemandList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;;
         if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
         // 设计公司获取需求列表
-        $design_demand = DesignDemand::getDesignObtainDemand();
-        return $this->response->array($this->apiSuccess('Success', 200, $design_demand));
+        $demandIds = DesignDemand::getCollectDemandId($design_company_id);
+        $design_demand = DesignDemand::query()
+            ->join('users','users.id','=','design_demand.user_id')
+            ->join('demand_company','demand_company.id','=','design_demand.demand_company_id')
+            ->where('design_demand.status', 2)->paginate($per_page);
+
+        // 判断是否关注
+        if(!$demandIds){
+            foreach ($design_demand as $v){
+                $v->follow_status = 2;
+            }
+        }else{
+            foreach ($design_demand as $v) {
+                if(in_array($v->id,$demandIds)){
+                    $v->follow_status = 1;
+                }else{
+                    $v->follow_status = 2;
+                }
+            }
+        }
+        return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
@@ -394,7 +438,7 @@ class DesignDemandController extends BaseController
      * @apiGroup sdDemandType
      *
      * @apiParam {string} token
-     * @apiParam {integer} demand_id
+     * @apiParam {integer} demand_id 需求ID
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -446,15 +490,140 @@ class DesignDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
+//        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
+//        if(!$design_company->isVerify()){
+//            return $this->response->array($this->apiError('设计公司没有认证', 403));
+//        }
 
         $demand_info = DesignDemand::where('id', $demand_id)->first();
         if (!$demand_info) {
             return $this->response->array($this->apiError('没有找到该需求', 404));
         }
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+        $follow = Follow::where(['design_demand_id'=>$demand_id,'design_company_id'=>$design_company_id])->first();
+        // 判断是否关注
+        if ($follow) {
+            $demand_info->follow_status = 1;
+        }else{
+            $demand_info->follow_status = 2;
+        }
+        return $this->response->item($demand_info, new DesignDemandTransformer)->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {post} /sd/demand/evaluateResult 需求公司评价设计成果
+     * @apiVersion 1.0.0
+     * @apiName sdDemand evaluateResult
+     * @apiGroup sdDemandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} design_result_id 设计成果ID
+     * @apiParam {integer} design_level     设计水平 1-5
+     * @apiParam {integer} response_speed   响应速度 1-5
+     * @apiParam {integer} serve_attitude   服务态度 1-5
+     * @apiParam {string} content           评价内容
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      },
+     *  }
+     */
+
+    public function evaluateResult(Request $request)
+    {
+        $rules = [
+            'design_result_id' => 'required|integer',
+        ];
+        $payload = $request->only('design_result_id');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $arr = [1,2,3,4,5];
+        $design_level = in_array($request->input('design_level'), $arr) ? $request->input('design_level') : null;
+        $response_speed = in_array($request->input('response_speed'), $arr) ? $request->input('response_speed') : null;
+        $serve_attitude = in_array($request->input('serve_attitude'), $arr) ? $request->input('serve_attitude') : null;
+        $content = $request->input('content');
+        $demand_company_id = $this->auth_user->demand_company_id;
+        $design_result_id = $request->input('design_result_id');
+        $result = DesignResult::where('id',$design_result_id)->first();
+        // 判断有没有此设计成果
+        if(!$result){
+            return $this->response->array($this->apiError('没有找到此设计成果', 404));
+        }
+        // 判断是否购买此设计成果
+        if($result->demand_company_id !== $demand_company_id){
+            return $this->response->array($this->apiError('您没有购买此设计成果,无法评价', 403));
+        }
+        // 判断交易状态
+        if($result->sell !== 2){
+            return $this->response->array($this->apiError('交易没有成功,无法评价', 403));
+        }
+
+        DB::beginTransaction();
+        // 保存评价
+        $evaluate = new ResultEvaluate;
+        $evaluate->design_company_id = $result->design_company_id;
+        $evaluate->design_result_id = $design_result_id;
+        $evaluate->demand_company_id = $demand_company_id;
+        $evaluate->design_level = $design_level;
+        $evaluate->response_speed = $response_speed;
+        $evaluate->serve_attitude = $serve_attitude;
+        $evaluate->content = $content;
+        if($evaluate->save()){
+            DB::commit();
+            return $this->response->array($this->apiSuccess('Success', 200));
+        }
+        DB::rollBack();
+        return $this->response->array($this->apiError('评价失败', 500));
+
+    }
+
+    /**
+     * @api {get} /sd/demand/evaluateInfo 设计成果评价详情
+     * @apiVersion 1.0.0
+     * @apiName sdDemand evaluateInfo
+     * @apiGroup sdDemandType
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} design_result_id 设计成果ID
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      },
+     *  }
+     */
+
+    public function evaluateInfo(Request $request)
+    {
+
+        $rules = [
+            'design_result_id' => 'required|integer',
+        ];
+        $payload = $request->only('design_result_id');
+        $validator = app('validator')->make($payload, $rules);
+
+        // 验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+        }
+
+        $design_result_id = $request->input('design_result_id');
+        $demand_company_id = $this->auth_user->demand_company_id;
+        if ($this->auth_user->type != 1 || !$demand_company_id) {
+            return $this->response->array($this->apiError('此用户不是需求公司', 403));
+        }
+
+        $evaluate = ResultEvaluate::where('design_result_id',$design_result_id)->get();
+        return $this->response->array($this->apiSuccess('Success', 200, $evaluate));
+
     }
 }

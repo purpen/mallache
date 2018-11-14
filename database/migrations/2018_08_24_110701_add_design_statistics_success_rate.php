@@ -25,6 +25,8 @@ class AddDesignStatisticsSuccessRate extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('design_statistics', function (Blueprint $table) {
+            $table->dropColumn(['success_rate']);
+        });
     }
 }

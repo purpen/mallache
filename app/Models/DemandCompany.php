@@ -85,10 +85,10 @@ class DemandCompany extends BaseModel
     }
 
     /**
-     * 获取图片url
-     *
-     * @return array
-     */
+ * 获取图片url
+ *
+ * @return array
+ */
     public function getLogoImageAttribute()
     {
         return AssetModel::getOneImage($this->logo);
@@ -203,11 +203,11 @@ class DemandCompany extends BaseModel
     }
 
     /**
-     * 一对一关联顺德设计需求
+     * 一对多关联顺德设计需求
      */
     public function designDemand()
     {
-        return $this->hasOne('App\Models\DesignDemand', 'design_company_id');
+        return $this->hasOne('App\Models\DesignDemand', 'demand_company_id');
     }
     /**
      * 创建需求公司信息

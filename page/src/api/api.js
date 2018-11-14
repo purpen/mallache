@@ -18,6 +18,7 @@ export default {
   login: '/auth/login', // 登录
   logout: '/auth/logout', // 退出登录
   register: '/auth/register', // 注册
+  inviteRegister: '/auth/childRegister', // POST 邀请注册
   forget: '/auth/forgetPassword', // POST 找回密码
   modifyPwd: '/auth/changePassword', // POST 修改密码
   check_account: '/auth/phoneState/{0}',  // 验证手机号是否存在
@@ -255,8 +256,20 @@ export default {
   veerImage: '/veerImage/list',
   block: '/block',
 
+  /**
+   * Tools
+   */
+
   // 云盘
   yunpanUpToken: '/upload/yunpanUpToken', // 云盘上传upToken
+  yunpanList: '/yunpan/lists', // 云盘文件列表
+
+  // 成员管理
+  designMemberList: '/design/members',  // GET 获取成员列表
+  designMemberSetRole: '/design/is_admin', // PUT 设计成员权限
+
+  inviteKey: '/urlKey',  // 生成邀请字符串
+  inviteValue: '/urlValue',  // 解析邀请字符串
   // test
   test: '/'  // End
 }
