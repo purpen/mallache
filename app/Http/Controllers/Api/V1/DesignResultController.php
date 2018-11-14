@@ -8,6 +8,7 @@ use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\DesignDemand;
 use Illuminate\Http\Request;
+use App\Models\DemandCompany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -744,6 +745,7 @@ class DesignResultController extends BaseController
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "company_name": "设计公司名称", //设计公司名称
+     *          "is_trade_fair": 1, //交易会权限
      *     }
      * ],
      * "meta": {
@@ -770,6 +772,12 @@ class DesignResultController extends BaseController
         }
         $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company){
+            $is_trade_fair = $demand_company->isTradeFair();
+        }else{
+            $is_trade_fair = 0;
+        }
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;
         $follow = new Follow;
@@ -782,6 +790,7 @@ class DesignResultController extends BaseController
                     //设计公司
                     $list{$k}->is_follow = $follow->isFollow(2,$design_company_id,$v->id);
                 }
+                $list{$k}->is_trade_fair = $is_trade_fair;
             }
         }
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
