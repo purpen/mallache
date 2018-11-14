@@ -61,6 +61,9 @@ return [
         '/admin/payOrder/lists',
         //后台确认项目支付单付款
         '/admin/payOrder/truePay',
+        //解散设计成果支付订单
+        '/admin/payOrder/dissolution',
+
 
         /**
          * 提现相关
@@ -300,6 +303,9 @@ return [
         '/admin/payOrder/lists',
         //后台确认项目支付单付款
         '/admin/payOrder/truePay',
+        //解散设计成果支付订单
+        '/admin/payOrder/dissolution',
+
 
         /**
          * 提现相关

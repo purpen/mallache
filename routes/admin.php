@@ -107,6 +107,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->get('/admin/payOrder/lists', 'PayOrderActionController@lists');
         //后台确认项目支付单付款
         $api->post('/admin/payOrder/truePay', 'PayOrderActionController@truePay');
+        //解散设计成果支付订单
+        $api->post('/admin/payOrder/dissolution','PayOrderActionController@payOrderDissolution');
 
         /**
          * 提现相关
