@@ -11,6 +11,8 @@
         "doctrine/dbal": "2.5.*",
         "fukuball/jieba-php": "dev-master",
         "gregwar/captcha": "^1.1",
+        "intervention/image": "^2.4",
+        "jdcloud-api/jdcloud-sdk-php": "1.0.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^2.1",
