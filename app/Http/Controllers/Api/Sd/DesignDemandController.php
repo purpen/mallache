@@ -566,6 +566,10 @@ class DesignDemandController extends BaseController
         $user_id = $this->auth_user_id;
         $order_id = $request->input('order_id');
 
+        if ($this->auth_user->type != 1 || !$demand_company_id) {
+            return $this->response->array($this->apiError('此用户不是需求公司,无法评价', 403));
+        }
+
         // 是否有此订单
         $order = PayOrder::where(['type'=>5,'user_id'=>$user_id,'uid'=>$order_id])->first();
         if(!$order){
