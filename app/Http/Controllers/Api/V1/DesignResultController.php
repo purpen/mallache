@@ -247,6 +247,9 @@ class DesignResultController extends BaseController
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
+            if(!$this->isAuthority($this->auth_user,$design_result)){
+                return $this->apiError('您没有权限',400);
+            }
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
@@ -841,6 +844,32 @@ class DesignResultController extends BaseController
         DB::rollBack();
         return $this->apiError('保存失败',400);
     }
+
+    /**
+     * 是否有权限查看设计成果
+     *
+     * @param $user 用户信息
+     * @param $design_result 设计成果信息
+     * @return bool
+     */
+    public function isAuthority($user,$design_result)
+    {
+        //是否是自己或购买人
+        if($user->id == $design_result->user_id || $user->id == $design_result->purchase_user_id){
+            return 1;
+        }
+        //需求公司信息
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company && $demand_company->is_trade_fair == 1){
+            return 1;
+        }
+        //是否是管理员
+        if ($user->type == 2 && $user->company_role > 0) {
+            return 1;
+        }
+        return 0;
+    }
+
 }
 
 

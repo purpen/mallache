@@ -372,6 +372,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Admin'], function 
         $api->put('/admin/designDemand/auditStatus', 'AdminDesignDemandController@auditStatus');
         //查看设计需求被那些设计公司收藏
         $api->get('/admin/designDemand/showCollectList', 'AdminDesignDemandController@showCollectList');
+        //修改交易会权限
+        $api->get('/admin/demandCompany/saveTradeFair', 'AdminDesignDemandController@saveTradeFair');
     });
 
 });

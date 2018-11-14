@@ -248,6 +248,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**
@@ -489,6 +491,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**
@@ -655,6 +659,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**
