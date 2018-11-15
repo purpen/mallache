@@ -618,6 +618,7 @@ class DesignResultController extends BaseController
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "company_name": "设计公司名称", //设计公司名称
+     *          "is_trade_fair": 1, //是否开启交易会权限
      *     }
      * ],
      * "meta": {
@@ -647,6 +648,12 @@ class DesignResultController extends BaseController
         $design_company_id = $user->design_company_id;
         //需求公司
         $demand_company_id = $user->demand_company_id;
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company){
+            $is_trade_fair = $demand_company->isTradeFair();
+        }else{
+            $is_trade_fair = 0;
+        }
         $query = DesignResult::query();
         $query->join('follow','design_result.id','=','follow.design_result_id');
         $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
@@ -657,6 +664,11 @@ class DesignResultController extends BaseController
             ->orderBy('design_result.id',$sort)
             ->paginate($per_page);
 
+        if($list){
+            foreach ($list as $k => $v) {
+                $list{$k}->is_trade_fair = $is_trade_fair;
+            }
+        }
         return $this->response->paginator($list, new DesignResultListTransformer)->setMeta($this->apiMeta());
         /*if($type == 1){
             //设计需求

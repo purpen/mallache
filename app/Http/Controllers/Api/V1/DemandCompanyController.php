@@ -246,11 +246,11 @@ class DemandCompanyController extends BaseController
         //需求公司信息
         $demand_company = DemandCompany::where('user_id', $user_id)->first();
         if(!$demand_company){
-            return $this->apiError('不是需求公司', 404);
+            return $this->apiError('不是需求公司,请去认证', 404);
         }
         $demand_company->is_trade_fair = 1;
         if($demand_company->save()){
-            return $this->apiSuccess('Success', 200,$demand_company);
+            return $this->apiSuccess('Success', 200);
         }
         return $this->apiError('Error', 400);
     }
