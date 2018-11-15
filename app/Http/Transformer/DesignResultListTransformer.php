@@ -31,6 +31,7 @@ class DesignResultListTransformer extends TransformerAbstract
             'contact_number' => $designResult->contact_number,
             'is_follow' => $designResult->is_follow,
             'design_company_name' => $designResult->designCompany->company_name,
+            'is_trade_fair' => $designResult->is_trade_fair,
         ];
     }
 }

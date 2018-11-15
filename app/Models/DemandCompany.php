@@ -258,4 +258,17 @@ class DemandCompany extends BaseModel
 
         return false;
     }
+
+    /**
+     * 判断需求公司是否通过交易会
+     * @return bool
+     */
+    public function isTradeFair()
+    {
+        if ($this->is_trade_fair == 1) {
+            return 1;
+        }
+        return 0;
+    }
+
 }
