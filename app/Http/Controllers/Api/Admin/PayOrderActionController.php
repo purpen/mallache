@@ -247,6 +247,9 @@ class PayOrderActionController extends BaseController
         if(empty($pay_data->user_id) || empty($pay_data->design_user_id)){
             return $this->apiError('设计成果订单错误',403);
         }
+        if($pay_data->status != 1){
+            return $this->apiError('设计成果订单状态不正确',400);
+        }
         $design = $all['design'];//设计方金额
         $demand = $all['demand'];//需求方金额
         $amount = $pay_data->amount;
@@ -280,6 +283,7 @@ class PayOrderActionController extends BaseController
             //设计公司资金流水记录
             $fund_log->outFund($pay_data->design_user_id, $design, $pay_data->pay_type, $pay_data->user_id, '设计成果【' . $design_result->title . '】订单解散退款');
             DB::commit();
+            Log::info('异常退款成功'.$all);
             return $this->apiSuccess('Success',200);
         } catch (\Exception $e) {
             DB::rollBack();
