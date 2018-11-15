@@ -70,10 +70,6 @@ class DesignDemandController extends BaseController
         if ($this->auth_user->type != 1 || !$demand_company_id) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
         }
-        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
-        if (!$demand_company->isVerify()) {
-            return $this->response->array($this->apiError('需求公司没有认证', 403));
-        }
         // 获取需求列表
         $design_demand = DesignDemand::getDemandList($user_id, $demand_company_id,$per_page);
         return $this->response->paginator($design_demand, new DesignDemandListTransformer)->setMeta($this->apiMeta());
@@ -218,11 +214,6 @@ class DesignDemandController extends BaseController
 
         if ($this->auth_user->type != 1) {
             return $this->response->array($this->apiError('此用户不是需求公司', 403));
-        }
-
-        $demand_company = DemandCompany::where('id', $demand_company_id)->first();
-        if (!$demand_company->isVerify()) {
-            return $this->response->array($this->apiError('需求公司没有认证', 403));
         }
 
         $demand_info = DesignDemand::where(['id'=>$demand_id,'demand_company_id'=>$demand_company_id])->first();
