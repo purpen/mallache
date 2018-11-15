@@ -876,7 +876,7 @@ class DesignResultController extends BaseController
     public function isAuthority($user,$design_result)
     {
         //是否是自己或购买人
-        if($user->id == $design_result->user_id || $user->id == $design_result->purchase_user_id){
+        if($user->id == $design_result->user_id || $user->type == 1){
             return 1;
         }
         //需求公司信息
