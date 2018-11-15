@@ -92,7 +92,7 @@ class PayOrderActionController extends BaseController
         //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
         $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? $request->input('pay_type') : null;
         //支付单类型 支付类型：1.预付押金；2.项目款；
-        $type = in_array($request->input('type'), [1,2,3,4]) ? $request->input('type') : null;
+        $type = in_array($request->input('type'), [1,2,3,4,5]) ? $request->input('type') : null;
 
         $status = in_array($request->input('status'), [0, 1]) ? $request->input('status') : null;
 
@@ -108,7 +108,6 @@ class PayOrderActionController extends BaseController
         } else {
             $sort = 'desc';
         }
-
         $query = PayOrder::query();
 
         if ($type !== null) {
