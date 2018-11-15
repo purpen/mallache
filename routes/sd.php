@@ -12,6 +12,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Sd'], function ($a
      *
      * 需验证用户token
      */
+    //游客数量
+    $api->get('/sd/tourist', [
+        'as' => 'sd.touristCount', 'uses' => 'StatisticController@tourist'
+    ]);
+    //有志向数量
+    $api->get('/sd/willing', [
+        'as' => 'sd.willingCount', 'uses' => 'StatisticController@willing'
+    ]);
     $api->group(['middleware' => ['jwt.auth']], function ($api) {
         /**
          * 需求公司发布需求
