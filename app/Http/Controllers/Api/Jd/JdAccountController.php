@@ -62,6 +62,7 @@ class JdAccountController extends BaseController
         $account = curl_exec($account_ch);
         curl_close($account_ch);
         $response_account = json_decode($account, true);
+        Log::info($response_account['account']);
         return $this->response->array($this->apiSuccess('获取成功', 200 , $response_account['account']));
 
     }
