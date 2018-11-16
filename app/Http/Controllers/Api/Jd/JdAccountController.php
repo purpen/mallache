@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Jd;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +14,7 @@ use App\Models\DemandCompany;
 class JdAccountController extends BaseController
 {
     /**
-     * @api {get} /jd/jdAccount 获取京东access_token
+     * @api {get} /jd/jdAccount 获取京东云access_token
      * @apiVersion 1.0.0
      * @apiName JdAccount account
      * @apiGroup JdAccount
@@ -31,6 +32,7 @@ class JdAccountController extends BaseController
         $url = 'https://oauth2.jdcloud.com/token?client_id='.$client_id.'&grant_type=authorization_code&code='.$code.'&client_secret='.$client_secret;
         //获取access_token
         $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPGET, true);
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $date = curl_exec($curl);
@@ -61,6 +63,7 @@ class JdAccountController extends BaseController
         curl_close($account_ch);
         $response_account = json_decode($account, true);
         return $this->response->array($this->apiSuccess('获取成功', 200 , $response_account['account']));
+
     }
 
     /**
@@ -69,7 +72,7 @@ class JdAccountController extends BaseController
      * @apiName JdAccount checkAccount
      * @apiGroup JdAccount
      *
-     * @apiParam {string} access_token 京东token
+     * @apiParam {string} access_token 京东云token
      */
     public function checkAccount(Request $request)
     {
@@ -78,6 +81,7 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('京东云token不能为空' , 412));
         }
         $jd_account = $this->jdAccount($access_token);
+
         $user = User::where('jd_account' , $jd_account)->first();
         if($user){
             $token = JWTAuth::fromUser($user);
@@ -86,6 +90,25 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('用户没有绑定艺火账户', 404));
         }
 
+    }
+
+    //获取京东云账户
+    protected function access_token($access_token)
+    {
+        //拿token获取用户
+        $account_url = 'https://oauth2.jdcloud.com/userinfo';
+        $aHeader = array(
+            'Authorization:Bearer '.$access_token,
+        );
+        $account_ch = curl_init();
+        curl_setopt($account_ch, CURLOPT_HTTPGET, true);
+        curl_setopt($account_ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($account_ch, CURLOPT_URL, $account_url);
+        curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
+        $account = curl_exec($account_ch);
+        curl_close($account_ch);
+        $response_account = json_decode($account, true);
+        return $response_account['account'];
     }
 
     /**
@@ -120,6 +143,7 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('京东云token不能为空' , 412));
         }
         $jd_account = $this->jdAccount($access_token);
+
         //检测是否注册京东账户
         $jd_user = User::where('jd_account' , $jd_account)->first();
         if($jd_user){
@@ -180,6 +204,7 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError('京东云token不能为空' , 412));
         }
         $jd_account = $this->jdAccount($access_token);
+
         $user = User::where('account' , $phone)->first();
         if($user){
             return $this->response->array($this->apiError('该用户已注册', 412));
