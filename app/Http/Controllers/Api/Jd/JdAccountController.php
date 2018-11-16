@@ -37,14 +37,14 @@ class JdAccountController extends BaseController
         $date = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($date, true);
-        Log::info($response);
+//        Log::info($response);
         if(!empty($response['error'])){
             return $this->response->array($this->apiError($response['error_description'], 412));
         }
-        Log::info($response['access_token']);
-        $access_token = $response['access_token'];
+//        Log::info($response['access_token']);
+//        $access_token = $response['access_token'];
 
-        return $this->response->array($this->apiSuccess('获取成功', 200 , $access_token));
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $response));
     }
 
     /**
