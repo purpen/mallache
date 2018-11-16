@@ -19,7 +19,7 @@ class ColumnController extends BaseController
      * @apiName column columnStore
      * @apiGroup AdminColumn
      *
-     * @apiParam {integer} type *栏目类型：1.灵感；
+     * @apiParam {integer} type *栏目类型：1.灵感；；2.轮播图
      * @apiParam {string} title *文章标题
      * @apiParam {string} content *内容
      * @apiParam {string} url 链接
@@ -76,7 +76,7 @@ class ColumnController extends BaseController
      * @apiGroup AdminColumn
      *
      * @apiParam {integer} id 文章ID
-     * @apiParam {integer} type 栏目类型：1.灵感；
+     * @apiParam {integer} type 栏目类型：1.灵感；；2.轮播图
      * @apiParam {string} title 文章标题
      * @apiParam {string} content 内容
      * @apiParam {string} url 链接
@@ -170,7 +170,7 @@ class ColumnController extends BaseController
      * @apiName column columnLists
      * @apiGroup AdminColumn
      *
-     * @apiParam {integer} type 类型；1.灵感
+     * @apiParam {integer} type 类型；1.灵感；2.轮播图
      * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
