@@ -43,8 +43,9 @@ class JdAccountController extends BaseController
 //        }
 //        Log::info($response['access_token']);
 //        $access_token = $response['access_token'];
-
-        return $this->response->array($this->apiSuccess('获取成功', 200 , $response));
+        if(!empty($response['account'])){
+            return $this->response->array($this->apiSuccess('获取成功', 200 , $response['account']));
+        }
     }
 
     /**
