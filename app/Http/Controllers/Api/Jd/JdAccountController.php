@@ -32,20 +32,17 @@ class JdAccountController extends BaseController
         $url = 'https://oauth2.jdcloud.com/token?client_id='.$client_id.'&grant_type=authorization_code&code='.$code.'&client_secret='.$client_secret;
         //获取access_token
         $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPGET, true);
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $date = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($date, true);
-//        Log::info($response);
-//        if(!empty($response['error'])){
-//            return $this->response->array($this->apiError($response['error_description'], 412));
-//        }
-//        Log::info($response['access_token']);
-//        $access_token = $response['access_token'];
-        if(!empty($response['account'])){
-            return $this->response->array($this->apiSuccess('获取成功', 200 , $response['account']));
+        if(!empty($response['error'])){
+            return $this->response->array($this->apiError($response['error_description'], 412));
         }
+        $access_token = $response['access_token'];
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $access_token));
     }
 
     /**
