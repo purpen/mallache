@@ -42,9 +42,9 @@ class JdAccountController extends BaseController
 //            return $this->response->array($this->apiError($response['error_description'], 412));
 //        }
 //        Log::info($response['access_token']);
-        $access_token = $response['access_token'];
+//        $access_token = $response['access_token'];
 
-        return $this->response->array($this->apiSuccess('获取成功', 200 , $access_token));
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $response));
     }
 
     /**
