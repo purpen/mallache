@@ -92,25 +92,6 @@ class JdAccountController extends BaseController
 
     }
 
-    //获取京东云账户
-    protected function access_token($access_token)
-    {
-        //拿token获取用户
-        $account_url = 'https://oauth2.jdcloud.com/userinfo';
-        $aHeader = array(
-            'Authorization:Bearer '.$access_token,
-        );
-        $account_ch = curl_init();
-        curl_setopt($account_ch, CURLOPT_HTTPGET, true);
-        curl_setopt($account_ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($account_ch, CURLOPT_URL, $account_url);
-        curl_setopt($account_ch, CURLOPT_HTTPHEADER, $aHeader);
-        $account = curl_exec($account_ch);
-        curl_close($account_ch);
-        $response_account = json_decode($account, true);
-        return $response_account['account'];
-    }
-
     /**
      * @api {post} /jd/bindingUser 已注册艺火，绑定京东云账户
      * @apiVersion 1.0.0
