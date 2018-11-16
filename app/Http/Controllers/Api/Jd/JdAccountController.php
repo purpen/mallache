@@ -13,7 +13,7 @@ use App\Models\DemandCompany;
 class JdAccountController extends BaseController
 {
     /**
-     * @api {get} /jd/jdAccount 获取京东account
+     * @api {get} /jd/jdAccount 获取京东access_token
      * @apiVersion 1.0.0
      * @apiName JdAccount account
      * @apiGroup JdAccount
@@ -40,6 +40,13 @@ class JdAccountController extends BaseController
             return $this->response->array($this->apiError($response['error_description'], 412));
         }
         $access_token = $response['access_token'];
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $access_token));
+
+    }
+
+    //获取京东用用户信息
+    protected function jdAccount($access_token)
+    {
         //拿token获取用户
         $account_url = 'https://oauth2.jdcloud.com/userinfo';
         $aHeader = array(
@@ -53,7 +60,7 @@ class JdAccountController extends BaseController
         $account = curl_exec($account_ch);
         curl_close($account_ch);
         $response_account = json_decode($account, true);
-        return $this->response->array($this->apiSuccess('获取成功', 200 , $response_account));
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $response_account['account']));
     }
 
     /**
@@ -62,14 +69,15 @@ class JdAccountController extends BaseController
      * @apiName JdAccount checkAccount
      * @apiGroup JdAccount
      *
-     * @apiParam {string} account
+     * @apiParam {string} access_token 京东token
      */
     public function checkAccount(Request $request)
     {
-        $jd_account = $request->input('account');
-        if(empty($jd_account)){
-            return $this->response->array($this->apiError('jd帐号不能为空' , 412));
+        $access_token = $request->input('access_token');
+        if(empty($access_token)){
+            return $this->response->array($this->apiError('京东云token不能为空' , 412));
         }
+        $jd_account = $this->jdAccount($access_token);
         $user = User::where('jd_account' , $jd_account)->first();
         if($user){
             $token = JWTAuth::fromUser($user);
@@ -88,7 +96,7 @@ class JdAccountController extends BaseController
      *
      * @apiParam {string} phone 手机号
      * @apiParam {string} password 密码
-     * @apiParam {string} jd_account 京东账号
+     * @apiParam {string} access_token 京东云token
      */
     public function bindingUser(Request $request)
     {
@@ -107,7 +115,11 @@ class JdAccountController extends BaseController
         }
         //铟果的手机号直接绑定
         $phone = $request->input('phone');
-        $jd_account = $request->input('jd_account');
+        $access_token = $request->input('access_token');
+        if(empty($access_token)){
+            return $this->response->array($this->apiError('京东云token不能为空' , 412));
+        }
+        $jd_account = $this->jdAccount($access_token);
         //检测是否注册京东账户
         $jd_user = User::where('jd_account' , $jd_account)->first();
         if($jd_user){
@@ -143,7 +155,7 @@ class JdAccountController extends BaseController
      * @apiParam {string} phone 手机号
      * @apiParam {string} password 密码
      * @apiParam {integer} sms_code 短信验证码
-     * @apiParam {string} jd_account 京东账号
+     * @apiParam {string} access_token 京东云token
      */
     public function newBindingUser(Request $request)
     {
@@ -163,7 +175,11 @@ class JdAccountController extends BaseController
         }
 
         $phone = $request->input('phone');
-        $jd_account = $request->input('jd_account');
+        $access_token = $request->input('access_token');
+        if(empty($access_token)){
+            return $this->response->array($this->apiError('京东云token不能为空' , 412));
+        }
+        $jd_account = $this->jdAccount($access_token);
         $user = User::where('account' , $phone)->first();
         if($user){
             return $this->response->array($this->apiError('该用户已注册', 412));
@@ -189,7 +205,7 @@ class JdAccountController extends BaseController
                 'username' => $payload['phone'],
                 'type' => 1,
                 'password' => bcrypt($payload['password']),
-                'jd_account' => $request->input('jd_account'),
+                'jd_account' => $jd_account,
                 'child_account' => 0,
                 'company_role' => 0,
                 'source' => 1,
