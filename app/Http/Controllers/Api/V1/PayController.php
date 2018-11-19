@@ -721,13 +721,14 @@ class PayController extends BaseController
      *            "total_pages": 1,
      *        }
      *    }
-     *    "data": {
+     *    "data": [
+     *        {
      *        "id": 10,
      *        "uid": "110182900008714",   //支付单号
      *        "user_id": 2,               //用户ID
      *        "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
      *        "item_id": 0,               //项目ID
-     *        "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *        "status": 1,                //状态：-2.订单异常关闭(解散订单并退款)；-1.关闭；0.未支付；1.支付成功；2.退款；
      *        "summary": "发布需求保证金",  //备注
      *        "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      *        "pay_no": "20170426211292", //平台交易号
@@ -769,7 +770,9 @@ class PayController extends BaseController
      *            "contacts": "",
      *            "contact_number": "0",
      *            "is_evaluate": 0      //是否已评价
-     *        }
+     *        },
+     *        ...
+     *        ]
      *    }
      * }
      */
@@ -787,8 +790,9 @@ class PayController extends BaseController
             //需求公司
             $query->where('user_id', $this->auth_user_id);
         } else {
+            //设计方
             $query->where('design_user_id', $this->auth_user_id);
-            $query->where('status', '>', 0);
+            $query->whereIn('status', [-2,1]);
         }
         $list = $query->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
