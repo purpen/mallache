@@ -678,6 +678,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->put('/designNotice/trueRead', 'DesignNoticeController@trueRead');
         // api {delete} /designNotice/delete 设计管理工具--消息删除
         $api->delete('/designNotice/delete', 'DesignNoticeController@delete');
+        //阅读所有
+        $api->put('/designNotice/allTrueRead', 'DesignNoticeController@allTrueRead');
 
 
         //设计公司确认发票已开出
