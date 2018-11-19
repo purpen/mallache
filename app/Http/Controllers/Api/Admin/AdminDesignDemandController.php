@@ -133,12 +133,12 @@ class AdminDesignDemandController extends BaseController
         $status = $request->input('status');
 
         if (!in_array($status, [-1, 2])) {
-            return $this->response->array($this->apiSuccess('状态参数错误', 403));
+            return $this->response->array($this->apiError('状态参数错误', 403));
         }
 
         $design_demand = DesignDemand::where('id', $demand_id)->first();
         if (!$design_demand) {
-            return $this->response->array($this->apiSuccess('设计需求不存在', 404));
+            return $this->response->array($this->apiError('设计需求不存在', 404));
         }
 
         $design = DesignDemand::where('id', $demand_id)->update(['status'=>$status]);
@@ -204,7 +204,7 @@ class AdminDesignDemandController extends BaseController
         $demand_id = $request->input('demand_id');
         $design_demand = DesignDemand::where('id', $demand_id)->first();
         if (!$design_demand) {
-            return $this->response->array($this->apiSuccess('设计需求不存在', 404));
+            return $this->response->array($this->apiError('设计需求不存在', 404));
         }
         // 获取设计公司信息
         $design = Follow::adminCollectInfo($demand_id);
