@@ -16,7 +16,7 @@ class Column extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['type', 'title', 'content', 'url', 'sort', 'status', 'cover_id'];
+    protected $fillable = ['type', 'title', 'content', 'url', 'sort', 'status', 'cover_id' , 'facility'];
 
     // 栏目位名称访问修改器
     public function getTypeValueAttribute()

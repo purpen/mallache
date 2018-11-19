@@ -25,6 +25,7 @@ class ColumnController extends BaseController
      * @apiParam {string} url 链接
      * @apiParam {integer} sort 排序权重
      * @apiParam {integer} cover_id 封面图ID
+     * @apiParam {integer} facility 设备；1.pc端 2.手机端
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -55,6 +56,7 @@ class ColumnController extends BaseController
         }
 
         $all['url'] = $request->input('url') ?? '';
+        $all['facility'] = $request->input('facility') ?? 0;
         $all['status'] = 0;
         $all['user_id'] = $this->auth_user_id;
         if (!$column = Column::create($all)) {
@@ -81,6 +83,7 @@ class ColumnController extends BaseController
      * @apiParam {string} content 内容
      * @apiParam {string} url 链接
      * @apiParam {integer} sort 排序权重
+     * @apiParam {integer} facility 设备；1.pc端 2.手机端
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -174,6 +177,7 @@ class ColumnController extends BaseController
      * @apiParam {integer} status 状态 -1.未发布；0.全部；1.发布；
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} facility 设备；1.pc端 2.手机端
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -190,6 +194,7 @@ class ColumnController extends BaseController
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->type;
         $status = $request->status;
+        $facility = $request->facility;
 
         switch ($status) {
             case -1:
@@ -214,7 +219,9 @@ class ColumnController extends BaseController
         if ($status != null) {
             $query->where('status', (int)$status);
         }
-
+        if ($facility != null) {
+            $query->where('facility', (int)$facility);
+        }
         $lists = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new AdminColumnListsTransformer)->setMeta($this->apiMeta());
