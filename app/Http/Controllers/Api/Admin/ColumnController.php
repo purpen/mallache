@@ -216,10 +216,10 @@ class ColumnController extends BaseController
         if ($type != 0) {
             $query->where('type', (int)$type);
         }
-        if ($status != null) {
+        if ($status != 0) {
             $query->where('status', (int)$status);
         }
-        if ($facility != null) {
+        if ($facility != 0) {
             $query->where('facility', (int)$facility);
         }
         $lists = $query->orderBy('id', 'desc')->paginate($per_page);

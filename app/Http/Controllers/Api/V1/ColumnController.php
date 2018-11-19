@@ -55,9 +55,10 @@ class ColumnController extends BaseController
      * @apiName column columnLists
      * @apiGroup column
      *
-     * @apiParam {integer} type 类型；1.灵感
+     * @apiParam {integer} type 类型；1.灵感 2.轮播图
      * @apiParam {integer} page 页数
      * @apiParam {integer} per_page 页面条数
+     * @apiParam {integer} facility 设备；1.pc端 2.手机端
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -73,13 +74,16 @@ class ColumnController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $type = $request->type;
+        $facility = $request->facility;
 
         $query = Column::query()->where('status', 1);
 
         if ($type != 0) {
             $query->where('type', (int)$type);
         }
-
+        if ($facility != 0) {
+            $query->where('facility', (int)$facility);
+        }
         $lists = $query->orderBy('id', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new ColumnTransformer)->setMeta($this->apiMeta());
