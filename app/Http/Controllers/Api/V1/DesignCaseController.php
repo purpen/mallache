@@ -642,8 +642,6 @@ class DesignCaseController extends BaseController
      */
     public function stickFieldList(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        $sort = $request->input('sort');
         $list = array();
         $query = ['type'=>1, 'open'=>1, 'status'=>1];
 
@@ -691,8 +689,34 @@ class DesignCaseController extends BaseController
         $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
         if ($item) array_push($list, $item);
 
+        for ($i=0; $i<count($list); $i++) {
+            $item = $list[$i];
+            $row = [
+                'id' => $item->id,
+                'title' => $item->title,
+                'type' => $item->type,
+                'field' => $item->field,
+                'filed_val' => $item->field_val,
+                'profile' => $item->profile,
+                'cover_url' => '',
+                'company_id' => '',
+                'company_name' => '',
+                'company_logo_url' => '',
+            ];
+            if ($item->cover) {
+                $row['cover_url'] = $item->cover->middle;
+            }
+            if ($item->design_company) {
+                $row['company_id'] = $item->design_company->id;
+                $row['company_name'] = $item->design_company->company_name;
+                if ($item->design_company->logo_image) {
+                    $row['company_logo_url'] = $item->design_company->logo_image->middle;
+                }
+            }
+            $list[$i] = $row;
+        }
 
-        return $this->response->paginator($list, new DesignCaseListsTransformer)->setMeta($this->apiMeta());
+        return $this->response->array($this->apiSuccess('Success.', 200, $list));
     }
 
 
