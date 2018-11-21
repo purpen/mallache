@@ -34,6 +34,9 @@ class PayOrder extends BaseModel
     public function getStatusValueAttribute()
     {
         switch ($this->status) {
+            case -2:
+                $val = '解散并退款';
+                break;
             case -1:
                 $val = '已关闭';
                 break;
