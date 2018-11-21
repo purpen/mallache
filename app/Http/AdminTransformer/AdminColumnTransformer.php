@@ -22,6 +22,7 @@ class AdminColumnTransformer extends TransformerAbstract
             'image' => $column->image,
             'created_at' => $column->created_at,
             'facility' => $column->facility,
+            'sort' => $column->sort,
 
         ];
     }
