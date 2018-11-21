@@ -102,6 +102,9 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
+        if ($this->auth_user->type != 2) {
+            return $this->response->array($this->apiError('请先去认证 入驻铟果', 403));
+        }
         $user_id = $this->auth_user_id;
         $images = $all['images'];
         //设计成果图片
