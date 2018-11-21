@@ -704,13 +704,13 @@ class DesignCaseController extends BaseController
                 'company_logo_url' => '',
             ];
             if ($item->cover) {
-                $row['cover_url'] = $item->cover->middle;
+                $row['cover_url'] = $item->cover['middle'];
             }
-            if ($item->design_company) {
-                $row['company_id'] = $item->design_company->id;
-                $row['company_name'] = $item->design_company->company_name;
-                if ($item->design_company->logo_image) {
-                    $row['company_logo_url'] = $item->design_company->logo_image->middle;
+            if ($item->designCompany) {
+                $row['company_id'] = $item->designCompany->id;
+                $row['company_name'] = $item->designCompany->company_name;
+                if ($item->designCompany->logo_image) {
+                    $row['company_logo_url'] = $item->designCompany->logo_image['middle'];
                 }
             }
             $list[$i] = $row;
