@@ -84,7 +84,7 @@ class ColumnController extends BaseController
         if ($facility != 0) {
             $query->where('facility', (int)$facility);
         }
-        $lists = $query->orderBy('id', 'desc')->paginate($per_page);
+        $lists = $query->orderBy('sort', 'desc')->paginate($per_page);
 
         return $this->response->paginator($lists, new ColumnTransformer)->setMeta($this->apiMeta());
     }
