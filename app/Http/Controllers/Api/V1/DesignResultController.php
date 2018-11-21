@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\DesignCompanyModel;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -101,6 +102,10 @@ class DesignResultController extends BaseController
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $design_company = DesignCompanyModel::find($all['design_company_id']);
+        if (!$design_company || $design_company->verify_status != 1) {
+            return $this->response->array($this->apiError('请先去认证 入驻铟果', 403));
         }
         $user_id = $this->auth_user_id;
         $images = $all['images'];
@@ -782,7 +787,13 @@ class DesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
+        $list = DesignResult::query()
+            ->where(function ($query) {
+                $query->where('status', '=','3')->where('sell', '=','0');
+            })
+            ->orWhere(function ($query){
+                $query->where('status', '=','-1')->where('sell', '>','0');
+            })->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $demand_company = DemandCompany::where('user_id', $user->id)->first();
         if($demand_company){
