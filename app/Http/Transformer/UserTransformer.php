@@ -48,6 +48,8 @@ class UserTransformer extends TransformerAbstract
             'design_company_name' => $design ? $design->company_name : '',
             'design_company_abbreviation' => $design ? $design->company_abbreviation : '',
             'design_company_logo_image' => $design ? $design->logo_image : '',
+            'design_user_name' => $design ? $design->contact_name : '',
+            'design_user_phone' => $design ? $design->phone : '',
             'verify_status' => $design ? $design->verify_status : -1,
 
             'demand_company_name' => $demand ? $demand->company_name : '',
