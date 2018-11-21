@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\DesignCompanyModel;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
@@ -102,7 +103,8 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        if ($this->auth_user->type != 2) {
+        $design_company = DesignCompanyModel::find($all['design_company_id']);
+        if (!$design_company || $design_company->verify_status != 1) {
             return $this->response->array($this->apiError('请先去认证 入驻铟果', 403));
         }
         $user_id = $this->auth_user_id;
