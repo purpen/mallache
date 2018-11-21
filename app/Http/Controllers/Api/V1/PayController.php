@@ -789,10 +789,12 @@ class PayController extends BaseController
         if ($this->auth_user->type == 1) {
             //需求公司
             $query->where('user_id', $this->auth_user_id);
+            $query->where('demand_delete', 1);
         } else {
             //设计方
             $query->where('design_user_id', $this->auth_user_id);
             $query->whereIn('status', [-2,1]);
+            $query->where('design_delete', 1);
         }
         $list = $query->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
@@ -934,11 +936,20 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+        if (!$pay_order || $pay_order->user_id != $this->auth_user_id && $pay_order->design_user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
+        if ($this->auth_user->type == 1) {
+            $pay_order->demand_delete = 0;
+        } else {
+            $pay_order->design_delete = 0;
+        }
         if ($pay_order->status == -1 && $pay_order->type == 5) {
-            if ($pay_order->delete()) {
+            if ($pay_order->save()) {
+                return $this->apiSuccess('关闭订单成功', 200);
+            }
+        } elseif ($pay_order->status == -2 && $pay_order->type == 5){
+            if ($pay_order->save()) {
                 return $this->apiSuccess('关闭订单成功', 200);
             }
         }
