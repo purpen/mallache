@@ -710,7 +710,7 @@ class DesignCaseController extends BaseController
                 $row['company_id'] = $item->designCompany->id;
                 $row['company_name'] = $item->designCompany->company_name;
                 if ($item->designCompany->logo_image) {
-                    $row['company_logo_url'] = $item->designCompany->logo_image['middle'];
+                    $row['company_logo_url'] = $item->designCompany->logo_image['logo'];
                 }
             }
             $list[$i] = $row;
