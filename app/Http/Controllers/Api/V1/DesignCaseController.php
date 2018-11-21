@@ -494,6 +494,8 @@ class DesignCaseController extends BaseController
      *
      * @apiParam {integer} page 页码
      * @apiParam {integer} per_page  页面数量
+     * @apiParam {integer} type  类型
+     * @apiParam {integer} field  产品下所属领域
      * @apiParam {integer} sort 创建时间排序 0.创建时间倒序；1.创建时间正序；2.推荐倒序；5.随机数正序；
      * @apiParam {string} token
      *
@@ -547,10 +549,16 @@ class DesignCaseController extends BaseController
     public function openLists(Request $request)
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
+        $type = $request->input('type') ?? 0;
+        $field = $request->input('field') ?? 0;
         $sort = $request->input('sort');
 
         $query = DesignCaseModel::with('DesignCompany')
-            ->where('status', 1)->where('open', 1);
+
+        if ($type) $query->where('type', (int)$type);
+        if ($field) $query->where('field', (int)$field);
+
+        $query->where('open', 1)->where('status', 1);
 
         //排序
         switch ($sort) {
@@ -578,6 +586,115 @@ class DesignCaseController extends BaseController
 
         return $this->response->paginator($lists, new DesignCaseListsTransformer)->setMeta($this->apiMeta());
     }
+
+    /**
+     * @api {get} /designCase/stickFieldList  设计案例产品类别下领域推荐列表(官网调用)
+     * @apiVersion 1.0.0
+     * @apiName designCase stickFieldList
+     * @apiGroup designCase
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     *   {
+     *    "data": [
+     *  {
+     *      "id": 23,
+     *      "prize": 1,
+     *      "prize_val": "德国红点设计奖",
+     *      "title": "1",
+     *      "prize_time": "1991-01-20",
+     *      "sales_volume": 1,
+     *      "sales_volume_val": "100-500w",
+     *      "customer": "1",
+     *      "field": 2,
+     *      "field_val": "消费电子",
+     *      "profile": "1",
+     *      "status": 0,
+     *      "case_image": [],
+     *      "industry": 2,
+     *      "industry_val": "消费零售",
+     *      "type": 1,
+     *      "type_val": "产品设计",
+     *      "design_type": 1,
+     *      "design_type_val": "产品策略",
+     *      "other_prize": "",
+     *      "mass_production": 1,
+     *      "design_company":{},
+     *      "cover": "",
+     *      "cover_id": 2,
+     *      "patent": [{'time':2018-1-1,'type': 1}], // 获得专利 1.发明专利；2.实用新型专利；3.外观设计专利
+     *      "prizes": [{'time':2018-1-1,'type': 1}], // 奖项:1.德国红点设计奖;2.德国IF设计奖;3.IDEA工业设计奖;4.中国红星奖;5.中国红棉奖;6.台湾金点奖;7.香港DFA设计奖 ;8.日本G-Mark设计奖;9.韩国好设计奖;10.新加坡设计奖;11.意大利—Compasso dOro设计奖;12.英国设计奖;13.中国优秀工业设计奖；14.DIA中国设计智造大奖；15.中国好设计奖；16.澳大利亚国际设计奖;20:其他
+     *      "design_company": {
+     *          "id":1,
+     *          "company_name": "公司名称",
+     *          "company_abbreviation": "公司简称",
+     *          "logo": 1,
+     *          "logo_image": {},    //logo图片
+     *      }
+     *  }
+     * ],
+     *      "meta": {
+     *      "message": "Success",
+     *      "status_code": 200
+     *      }
+     *   }
+     *
+     */
+    public function stickFieldList(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $sort = $request->input('sort');
+        $list = array();
+        $query = ['type'=>1, 'open'=>1, 'status'=>1];
+
+        // 智能硬件
+        $query['field'] = 1;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+        // 消费电子
+        $query['field'] = 2;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 交通工具
+        $query['field'] = 3;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 厨电厨具
+        $query['field'] = 5;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 医疗设备 
+        $query['field'] = 6;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 家具用品
+        $query['field'] = 7;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 办公用品 
+        $query['field'] = 8;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 小家电 
+        $query['field'] = 10;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+        // 卫浴
+        $query['field'] = 11;
+        $item = DesignCaseModel::with('DesignCompany')->where($query)->orderBy('open_time', 'desc')->first();
+        if ($item) array_push($list, $item);
+
+
+        return $this->response->paginator($list, new DesignCaseListsTransformer)->setMeta($this->apiMeta());
+    }
+
 
     /**
      * @api {put} /designCase/imageSummary  设计案例图片添加描述
