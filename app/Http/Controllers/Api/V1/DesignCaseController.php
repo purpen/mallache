@@ -553,7 +553,7 @@ class DesignCaseController extends BaseController
         $field = $request->input('field') ?? 0;
         $sort = $request->input('sort');
 
-        $query = DesignCaseModel::with('DesignCompany')
+        $query = DesignCaseModel::with('DesignCompany');
 
         if ($type) $query->where('type', (int)$type);
         if ($field) $query->where('field', (int)$field);
