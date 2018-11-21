@@ -20,6 +20,8 @@ class AdminColumnListsTransformer extends TransformerAbstract
             'cover_id' => $column->cover_id,
             'cover' => $column->cover,
             'created_at' => $column->created_at,
+            'facility' => $column->facility,
+
         ];
     }
 }
