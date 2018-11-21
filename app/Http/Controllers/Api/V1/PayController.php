@@ -936,7 +936,9 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id && $pay_order->design_user_id != $this->auth_user_id) {
+        if (!$pay_order || $pay_order->design_user_id != $this->auth_user_id) {
+            return $this->response->array($this->apiError('无操作权限', 403));
+        } elseif (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
         if ($this->auth_user->type == 1) {
