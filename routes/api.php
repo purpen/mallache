@@ -88,6 +88,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
 
     // 设计案例推荐列表
     $api->get('/designCase/openLists', 'DesignCaseController@openLists');
+    // 设计案例指定产品领域推荐列表
+    $api->get('/designCase/stickFieldList', 'DesignCaseController@stickFieldList');
     // 公司案例ID查看详情
     $api->get('/designCase/{case_id}', 'DesignCaseController@show');
     //公司ID查看设计公司信息
