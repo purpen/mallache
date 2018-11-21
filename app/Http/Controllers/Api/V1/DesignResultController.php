@@ -782,7 +782,13 @@ class DesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
+        $list = DesignResult::query()
+            ->where(function ($query) {
+                $query->where('status', '=','3')->where('sell', '=','0');
+            })
+            ->orWhere(function ($query){
+                $query->where('status', '=','-1')->where('sell', '>','0');
+            })->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
         $demand_company = DemandCompany::where('user_id', $user->id)->first();
         if($demand_company){
