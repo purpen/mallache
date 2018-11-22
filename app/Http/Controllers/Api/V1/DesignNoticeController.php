@@ -136,4 +136,40 @@ class DesignNoticeController extends BaseController
 
         return $this->response->array($this->apiSuccess());
     }
+
+    /**
+     * @api {put} /designNotice/allTrueRead 设计工具--全部消息确认阅读
+     * @apiVersion 1.0.0
+     * @apiName designNotice allTrueRead
+     * @apiGroup designNotice
+     *
+     * @apiParam {array} ids 消息ID [1,2,3]
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *      "meta": {
+     *          "message": "Success",
+     *          "status_code": 200
+     *      }
+     *  }
+     */
+    public function allTrueRead(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        $design_notices = DesignNotice::whereIn('id' , $ids)->where('user_id' , $this->auth_user_id)->get();
+        foreach ($design_notices as $design_notice){
+
+            if ($design_notice->is_read == 0){
+                $design_notice->is_read = 1;
+                $design_notice->save();
+
+                // 设计通知数量减少
+                $user = $this->auth_user;
+                $user->designNoticeCount();
+            }
+        }
+        return $this->response->array($this->apiSuccess());
+    }
 }
