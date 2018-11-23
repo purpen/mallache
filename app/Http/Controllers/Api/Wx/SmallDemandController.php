@@ -118,7 +118,7 @@ class SmallDemandController extends BaseController
         $per_page = $request->input('per_page') ?? 20;
         $users = SmallItem::where('user_name' , '!=' ,'')->where('phone' , '!=' ,'')->orderBy('id' , 'desc')->paginate($per_page);
         foreach ($users as $user){
-            $s_user = substr($user->user_name , 0 , 1);
+            $s_user = mb_substr($user->user_name , 0 , 1,'utf-8');
             if(strlen($user->phone) < 11){
                 $new_phone = '139****6866';
             }else{
@@ -129,7 +129,6 @@ class SmallDemandController extends BaseController
             $user['new_user_name'] = $s_user.'用户';
             $user['new_phone'] = $new_phone;
         }
-        dd($users);
         return $this->response->paginator($users, new SmallItemTransformer())->setMeta($this->apiMeta());
     }
 
