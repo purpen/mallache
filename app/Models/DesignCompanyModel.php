@@ -111,7 +111,6 @@ class DesignCompanyModel extends BaseModel
         return $this->hasMany('App\Models\ItemRecommend', 'design_company_id');
     }
 
-
     /**
      * 一对多关联合同表
      */
@@ -486,5 +485,17 @@ class DesignCompanyModel extends BaseModel
         }
 
         return false;
+    }
+
+    // 顺德交易会后台查看收藏的设计公司信息
+    public function designInfo()
+    {
+        return [
+            'design_company_id'=>$this->design_company_id,
+            'design_company_name'=>$this->company_name,
+            'phone'=>$this->phone,
+            'account'=>$this->account,
+            'realname'=>$this->realname,
+        ];
     }
 }

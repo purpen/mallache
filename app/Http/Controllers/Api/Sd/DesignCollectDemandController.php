@@ -1,27 +1,30 @@
 <?php
 /**
- * 设计需求控制器
+ * 设计公司收藏需求控制器
  *
  * @User yht
- * @time 2018-10-22
+ * @time 2018-10-24
  */
 
 namespace App\Http\Controllers\Api\Sd;
 
 use Illuminate\Http\Request;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use App\Http\Transformer\DesignCollectDemandListTransformer;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
 use App\Models\Follow;
-
 class DesignCollectDemandController extends BaseController
 {
     /**
      * @api {get} /sd/design/designCollectList 设计公司收藏列表
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign designCollectList
      * @apiGroup sdDesignType
      *
+     * @apiParam {integer} per_page 分页数量
+     * @apiParam {integer} page 页码
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
@@ -47,23 +50,21 @@ class DesignCollectDemandController extends BaseController
      */
     public function designCollectList(Request $request)
     {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+
         // 设计公司ID
         $design_company_id = $this->auth_user->design_company_id;
         if ($this->auth_user->type != 2 || !$design_company_id) {
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
-        $demand_info = Follow::showDemandList($design_company_id);
-        return $this->response->array($this->apiSuccess('Success', 200, $demand_info));
+        $demand_list = Follow::showDemandList($design_company_id,$per_page);
+        return $this->response->paginator($demand_list, new DesignCollectDemandListTransformer)->setMeta($this->apiMeta());
     }
 
     /**
      * @api {post} /sd/design/collectDemand 设计公司收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign collectDemand
      * @apiGroup sdDesignType
@@ -101,24 +102,27 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-        // 查找需求对应的需求公司
+        // 查找需求
         $demand_company_id = DesignDemand::where('id',$design_demand_id)->first();
+        if (!$demand_company_id) {
+            return $this->response->array($this->apiError('没有找到该需求', 404));
+        }
         $design_follow = new Follow;
         $design_follow->type = 1;
         $design_follow->design_demand_id = $design_demand_id;
         $design_follow->demand_company_id = $demand_company_id->demand_company_id;
         $design_follow->design_company_id = $design_company_id;
         if($design_follow->save()){
+            $design_follow->addCollect($design_demand_id);
             return $this->response->array($this->apiSuccess('Success', 200));
         }
+        return $this->response->array($this->apiError('关注失败', 500));
+
     }
 
     /**
      * @api {post} /sd/design/cancelCollectDemand 设计公司取消收藏某个需求
+     * @author 于海涛
      * @apiVersion 1.0.0
      * @apiName sdDesign cancelCollectDemand
      * @apiGroup sdDesignType
@@ -156,16 +160,13 @@ class DesignCollectDemandController extends BaseController
             return $this->response->array($this->apiError('此用户不是设计公司', 403));
         }
 
-        $design_company = DesignCompanyModel::where('id',$design_company_id)->first();
-        if(!$design_company->isVerify()){
-            return $this->response->array($this->apiError('设计公司没有认证', 403));
-        }
-
-        $follow = Follow::where('design_demand_id',$design_demand_id)->first();
+        $follow = Follow::where(['design_demand_id'=>$design_demand_id,'design_company_id'=>$design_company_id])->first();
         if($follow){
             $follow->delete();
+            $follow->cancelCollect($design_demand_id);
             return $this->response->array($this->apiSuccess('Success', 200));
         }
         return $this->response->array($this->apiError('没有找到收藏的设计需求', 404));
     }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDesignStatisticsSuccessRate extends Migration
+class AddDesignResultContacts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddDesignStatisticsSuccessRate extends Migration
      */
     public function up()
     {
-        Schema::table('design_statistics', function (Blueprint $table) {
-            $table->float('success_rate',6,4)->default(0);
+        Schema::table('design_result', function (Blueprint $table) {
+            $table->string('contacts',30);
+            $table->integer('contact_number');
         });
     }
 
@@ -25,8 +26,8 @@ class AddDesignStatisticsSuccessRate extends Migration
      */
     public function down()
     {
-        Schema::table('design_statistics', function (Blueprint $table) {
-            $table->dropColumn(['success_rate']);
+        Schema::table('design_result', function (Blueprint $table) {
+            $table->dropColumn(['contacts','contact_number']);
         });
     }
 }

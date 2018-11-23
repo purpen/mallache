@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\Log;
 
 class PayOrder extends BaseModel
 {
     protected $table = 'pay_order';
 
-    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id', 'source'];
+    protected $fillable = ['uid', 'user_id', 'type', 'item_id', 'summary', 'amount', 'bank_id', 'pay_type', 'item_stage_id', 'source','design_result_id','design_user_id'];
 
     protected $appends = ['status_value', 'pay_type_value', 'bank'];
 
@@ -19,6 +20,14 @@ class PayOrder extends BaseModel
     public function item()
     {
         return $this->belongsTo('App\Models\Item', 'item_id');
+    }
+
+    /*
+     * 相对关联设计成果
+     */
+    public function designResult()
+    {
+        return $this->belongsTo('App\Models\DesignResult', 'design_result_id');
     }
 
     //支付状态值
@@ -81,6 +90,29 @@ class PayOrder extends BaseModel
             $bank = '';
         }
         return $bank;
+    }
+
+    /**
+     * 关闭所有设计成果未支付订单
+     * @author 王松
+     * @param $design_result_id 设计成果ID
+     */
+    public function ClosePayOrders($design_result_id)
+    {
+        $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
+        $order = PayOrder::where($where)->get();
+        Log::info($order);
+        if($order->isEmpty()){
+            Log::info('成功');
+            return true;
+        }
+        $pay_order = PayOrder::where($where)->update(['status'=>-1]);
+        if(!$pay_order){
+            return false;
+            Log::info('失败');
+        }
+        Log::info('成功');
+        return true;
     }
 
 }
