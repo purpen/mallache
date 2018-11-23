@@ -120,7 +120,7 @@ class SmallDemandController extends BaseController
         foreach ($users as $user){
             $s_user = mb_substr($user->user_name , 0 , 1,'utf-8');
             if(strlen($user->phone) < 11){
-                $new_phone = '139****6866';
+                $new_phone = '139****'.rand(1000,9999);
             }else{
                 $start_phone = substr($user->phone , 0 , 3);
                 $end_phone = substr($user->phone , 7);
