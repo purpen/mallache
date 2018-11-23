@@ -116,7 +116,7 @@ class SmallDemandController extends BaseController
     public function users(Request $request)
     {
         $per_page = $request->input('per_page') ?? 20;
-        $users = SmallItem::where('user_name' , '!=' , null)->where('phone' , '!=' , null)->orderBy('id' , 'desc')->paginate($per_page);
+        $users = SmallItem::whereNotNull('user_name')->whereNotNull('phone')->orderBy('id' , 'desc')->paginate($per_page);
         return $this->response->paginator($users, new SmallItemTransformer())->setMeta($this->apiMeta());
     }
 
@@ -129,7 +129,7 @@ class SmallDemandController extends BaseController
      */
     public function usersCount()
     {
-        $usersCount = SmallItem::where('user_name' , '!=' , null)->where('phone' , '!=' , null)->count();
+        $usersCount = SmallItem::whereNotNull('user_name')->whereNotNull('phone')->count();
         $count = $usersCount + config('constant.small_count');
         return $this->response->array($this->apiSuccess('获取成功', 200 , $count));
     }

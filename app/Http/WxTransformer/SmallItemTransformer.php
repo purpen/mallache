@@ -15,6 +15,7 @@ class SmallItemTransformer extends TransformerAbstract
             'item_name' => $smallItem->item_name,
             'user_name' => $smallItem->user_name,
             'phone' => $smallItem->phone,
+            'created_at' => $smallItem->created_at,
         ];
     }
 
