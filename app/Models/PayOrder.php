@@ -34,6 +34,9 @@ class PayOrder extends BaseModel
     public function getStatusValueAttribute()
     {
         switch ($this->status) {
+            case -2:
+                $val = '解散并退款';
+                break;
             case -1:
                 $val = '已关闭';
                 break;
@@ -101,17 +104,17 @@ class PayOrder extends BaseModel
     {
         $where = ['design_result_id'=>$design_result_id,'type'=>5,'status'=>0];
         $order = PayOrder::where($where)->get();
-        Log::info($order);
+        //Log::info($order);
         if($order->isEmpty()){
-            Log::info('成功');
+            //Log::info('成功');
             return true;
         }
         $pay_order = PayOrder::where($where)->update(['status'=>-1]);
         if(!$pay_order){
             return false;
-            Log::info('失败');
+            Log::info('关闭所有设计成果未支付订单失败');
         }
-        Log::info('成功');
+        //Log::info('成功');
         return true;
     }
 

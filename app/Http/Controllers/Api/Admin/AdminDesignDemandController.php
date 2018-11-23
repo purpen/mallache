@@ -16,6 +16,7 @@ use App\Http\AdminTransformer\AdminDesignDemandListTransformer;
 use App\Models\DemandCompany;
 use App\Models\DesignCompanyModel;
 use App\Models\DesignDemand;
+use Illuminate\Support\Facades\Validator;
 
 class AdminDesignDemandController extends BaseController
 {
@@ -209,4 +210,48 @@ class AdminDesignDemandController extends BaseController
         $design = Follow::adminCollectInfo($demand_id);
         return $this->response->array($this->apiSuccess('Success', 200, $design));
     }
+
+    /**
+     * @api {get} /admin/demandCompany/saveTradeFair 修改交易会权限
+     * @apiVersion 1.0.0
+     * @apiName admin saveTradeFair
+     * @apiGroup demandCompany
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id 需求公司ID
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta":{
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function saveTradeFair(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('Error', $validator->errors());
+        }
+        //需求公司信息
+        $demand_company = DemandCompany::where('id', $all['id'])->first();
+        if(!$demand_company){
+            return $this->apiError('需求公司不存在', 404);
+        }
+        if($demand_company->is_trade_fair == 1){
+            $demand_company->is_trade_fair = 0;
+        }else{
+            $demand_company->is_trade_fair = 1;
+        }
+        if($demand_company->save()){
+            return $this->apiSuccess('Success', 200,$demand_company);
+        }
+        return $this->apiError('Error', 400);
+    }
+
 }

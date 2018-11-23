@@ -61,6 +61,9 @@ return [
         '/admin/payOrder/lists',
         //后台确认项目支付单付款
         '/admin/payOrder/truePay',
+        //解散设计成果支付订单
+        '/admin/payOrder/dissolution',
+
 
         /**
          * 提现相关
@@ -245,6 +248,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**
@@ -300,6 +305,9 @@ return [
         '/admin/payOrder/lists',
         //后台确认项目支付单付款
         '/admin/payOrder/truePay',
+        //解散设计成果支付订单
+        '/admin/payOrder/dissolution',
+
 
         /**
          * 提现相关
@@ -483,6 +491,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**
@@ -649,6 +659,8 @@ return [
         '/admin/designDemand/auditStatus',
         //查看设计需求被那些设计公司收藏
         '/admin/designDemand/showCollectList',
+        //修改交易会权限
+        '/admin/demandCompany/saveTradeFair',
     ],
 
     /**

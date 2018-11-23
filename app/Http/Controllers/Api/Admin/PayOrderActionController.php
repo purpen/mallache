@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Events\PayOrderEvent;
 use App\Http\AdminTransformer\PayOrderTransformer;
+use App\Models\User;
+use App\Models\FundLog;
 use App\Models\PayOrder;
+use App\Models\DesignResult;
 use App\Service\Pay;
+use App\Helper\Tools;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,9 +40,9 @@ class PayOrderActionController extends BaseController
      *          "id": 1,
      *          "uid": "zf59005935a069f",  //支付单号
      *          "user_id": 1,
-     *          "type": 1,  //支付类型：1.预付押金；2.项目款；
+     *          "type": 1,  //支付类型：1.预付押金；2.项目款；3.首付款；4.阶段款；5.设计成果；
      *          "item_id": 0,
-     *          "status": 0,  //状态：0.未支付；1.支付成功；
+     *          "status": 0,  //状态：-2.订单异常关闭(解散订单并退款)；-1.关闭；0.未支付；1.支付成功；2.退款；
      *          "summary": "发布需求保证金",
      *          "created_at": "2017-04-26 16:24:21",
      *          "updated_at": "2017-04-26 16:24:21",
@@ -88,7 +92,7 @@ class PayOrderActionController extends BaseController
         //支付方式； 1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
         $pay_type = in_array($request->input('pay_type'), [1, 2, 3, 4, 5]) ? $request->input('pay_type') : null;
         //支付单类型 支付类型：1.预付押金；2.项目款；
-        $type = in_array($request->input('type'), [1, 2]) ? $request->input('type') : null;
+        $type = in_array($request->input('type'), [1,2,3,4,5]) ? $request->input('type') : null;
 
         $status = in_array($request->input('status'), [0, 1]) ? $request->input('status') : null;
 
@@ -104,11 +108,12 @@ class PayOrderActionController extends BaseController
         } else {
             $sort = 'desc';
         }
-
         $query = PayOrder::query();
 
         if ($type !== null) {
             $query->where('type', $type);
+        }else{
+            $query->whereIn('type', [1,2,3,4]);
         }
         if ($status !== null) {
             $query->where('status', $status);
@@ -185,11 +190,16 @@ class PayOrderActionController extends BaseController
             $pay_order->pay_no = $all['pay_no'];
             $pay_order->status = 1; //支付成功
             $pay_order->bank_id = $all['bank_id'];
-            $pay_order->save();
+            $res = $pay_order->save();
 
             // 支付成功需要处理的业务
             $pay = new Pay($pay_order);
             $pay->paySuccess();
+            if($res){
+                $tools = new Tools;
+                $message = '您的设计成果订单【'.$pay_order->uid.'】支付凭证平台已确认，请前往订单列表查看';
+                $tools->message($pay_order->user_id,'设计成果订单',$message,5,$pay_order->id,null);
+            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -198,6 +208,91 @@ class PayOrderActionController extends BaseController
         }
 
         return $this->response->array($this->apiSuccess());
+    }
+
+    /**
+     * @api {post} /admin/payOrder/dissolution 解散支付订单
+     * @apiVersion 1.0.0
+     * @apiName pay closeOrder
+     * @apiGroup pay
+     * @apiParam {string} token
+     * @apiParam {integer} id 订单id
+     * @apiParam {integer} design 设计方金额
+     * @apiParam {integer} demand 需求方金额
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function payOrderDissolution(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            'id' => 'required|integer',
+            'design' => 'required',
+            'demand' => 'required'
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $pay = new PayOrder;
+        $pay_data = $pay->where(['id'=>$all['id'],'type'=>5])->first();
+        if(!$pay_data){
+            return $this->apiError('设计成果订单不存在',404);
+        }
+        if(empty($pay_data->user_id) || empty($pay_data->design_user_id)){
+            return $this->apiError('设计成果订单错误',403);
+        }
+        if($pay_data->status != 1){
+            return $this->apiError('设计成果订单状态不正确',400);
+        }
+        $design = $all['design'];//设计方金额
+        $demand = $all['demand'];//需求方金额
+        if($design < 0 || $demand < 0){
+            return $this->apiError('金额不能小于0',403);
+        }
+        $amount = $pay_data->amount;
+        $price = $design + $demand;
+        if($amount != $price){
+            return $this->apiError('金额不正确',403);
+        }
+        $design_result = DesignResult::where('id',$pay_data->design_result_id)->first();
+        if(!$design_result){
+            return $this->apiError('设计成果不存在',404);
+        }
+        if($design_result->sell != 1){
+            return $this->apiError('设计成果状态不正确',400);
+        }
+        DB::beginTransaction();
+        try {
+            $user = new User();
+            $pay_data->status = -2;
+            //下架状态时改变为上架
+            if($design_result->sell < 2){
+                $design_result->sell = 0;
+                $design_result->status = -1;
+                $design_result->save();
+            }
+            $pay_data->save();
+            $user->totalIncrease($pay_data->user_id,$demand); //需求方
+            $user->totalIncrease($pay_data->design_user_id,$design); //设计方
+            $fund_log = new FundLog();
+            //需求公司资金流水记录
+            $fund_log->outFund($pay_data->user_id, $demand, $pay_data->pay_type, $pay_data->design_user_id, '设计成果【' . $design_result->title . '】订单解散退款');
+            //设计公司资金流水记录
+            $fund_log->outFund($pay_data->design_user_id, $design, $pay_data->pay_type, $pay_data->user_id, '设计成果【' . $design_result->title . '】订单解散退款');
+            DB::commit();
+            Log::info(json_encode($all));
+            return $this->apiSuccess('Success',200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return $this->apiError('Error',400);
+        }
     }
 
 }

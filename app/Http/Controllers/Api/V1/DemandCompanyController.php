@@ -223,4 +223,36 @@ class DemandCompanyController extends BaseController
     {
         //
     }
+
+    /**
+     * @api {get} /demandCompany/saveTradeFair 修改交易会权限
+     * @apiVersion 1.0.0
+     * @apiName save tradeFair
+     * @apiGroup demandCompany
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta":{
+     *         "message": "Success",
+     *         "status_code": 200
+     *     }
+     * }
+     */
+    public function saveTradeFair()
+    {
+        $user_id = $this->auth_user_id;
+        //需求公司信息
+        $demand_company = DemandCompany::where('user_id', $user_id)->first();
+        if(!$demand_company){
+            return $this->apiError('不是需求公司,请去认证', 404);
+        }
+        $demand_company->is_trade_fair = 1;
+        if($demand_company->save()){
+            return $this->apiSuccess('Success', 200);
+        }
+        return $this->apiError('Error', 400);
+    }
+
 }

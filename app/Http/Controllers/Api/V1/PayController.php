@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Events\ItemStatusEvent;
-use App\Events\PayOrderEvent;
 use App\Helper\Tools;
 use App\Models\DemandCompany;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +23,6 @@ use App\Service\Pay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 use Lib\AliPay\Alipay;
 use Lib\JdPay\JdPay;
 use Lib\WxPay\PayNotifyCallBack;
@@ -680,7 +678,7 @@ class PayController extends BaseController
             'design_result_id' => $design_result_id])
             ->first();
         if ($pay_order) {
-            Log::info('创建订单1' . $pay_order);
+            //Log::info('创建订单1' . $pay_order);
             return $pay_order;
         }
         $uid = Tools::orderId($this->auth_user_id);
@@ -697,7 +695,7 @@ class PayController extends BaseController
             'source' => 0,  // 添加来源
         ];
         $pay_order = PayOrder::query()->create($data);
-        Log::info('创建订单2' . $pay_order);
+        //Log::info('创建订单2' . $pay_order);
         return $pay_order;
     }
 
@@ -723,13 +721,14 @@ class PayController extends BaseController
      *            "total_pages": 1,
      *        }
      *    }
-     *    "data": {
+     *    "data": [
+     *        {
      *        "id": 10,
      *        "uid": "110182900008714",   //支付单号
      *        "user_id": 2,               //用户ID
      *        "type": 1,                  //支付类型：1.预付押金；2.项目款；3.首付款 4.阶段款 5.设计成果
      *        "item_id": 0,               //项目ID
-     *        "status": 1,                //状态：-1.关闭；0.未支付；1.支付成功；2.退款；
+     *        "status": 1,                //状态：-2.订单异常关闭(解散订单并退款)；-1.关闭；0.未支付；1.支付成功；2.退款；
      *        "summary": "发布需求保证金",  //备注
      *        "pay_type": 1,              //支付方式；1.自平台；2.支付宝；3.微信；4：京东；5.银行转账
      *        "pay_no": "20170426211292", //平台交易号
@@ -771,7 +770,9 @@ class PayController extends BaseController
      *            "contacts": "",
      *            "contact_number": "0",
      *            "is_evaluate": 0      //是否已评价
-     *        }
+     *        },
+     *        ...
+     *        ]
      *    }
      * }
      */
@@ -788,9 +789,12 @@ class PayController extends BaseController
         if ($this->auth_user->type == 1) {
             //需求公司
             $query->where('user_id', $this->auth_user_id);
+            $query->where('demand_delete', 1);
         } else {
+            //设计方
             $query->where('design_user_id', $this->auth_user_id);
-            $query->where('status', '>', 0);
+            $query->whereIn('status', [-2,1]);
+            $query->where('design_delete', 1);
         }
         $list = $query->orderBy('id', $sort)->paginate($per_page);
         return $this->response->paginator($list, new MyOrderListTransformer())->setMeta($this->apiMeta());
@@ -932,11 +936,24 @@ class PayController extends BaseController
             throw new StoreResourceFailedException(403, $validator->errors());
         }
         $pay_order = PayOrder::find($all['id']);
-        if (!$pay_order || $pay_order->user_id != $this->auth_user_id) {
+        if (!$pay_order){
+            return $this->response->array($this->apiError('无操作权限', 403));
+        } elseif ($pay_order->design_user_id != $this->auth_user_id && $pay_order->user_id != $this->auth_user_id) {
             return $this->response->array($this->apiError('无操作权限', 403));
         }
+        if ($this->auth_user->type == 1) {
+            $pay_order->demand_delete = 0;
+        } else {
+            $pay_order->design_delete = 0;
+        }
         if ($pay_order->status == -1 && $pay_order->type == 5) {
-            if ($pay_order->delete()) {
+            if ($pay_order->save()) {
+                Log::info('关闭订单1'.$pay_order);
+                return $this->apiSuccess('关闭订单成功', 200);
+            }
+        } elseif ($pay_order->status == -2 && $pay_order->type == 5){
+            if ($pay_order->save()) {
+                Log::info('关闭订单2'.$pay_order);
                 return $this->apiSuccess('关闭订单成功', 200);
             }
         }
@@ -1065,6 +1082,7 @@ class PayController extends BaseController
         }
         return $this->apiSuccess('Success', 200, $pay_order);
     }
+
 
 }
 

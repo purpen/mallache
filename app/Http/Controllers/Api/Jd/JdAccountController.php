@@ -279,8 +279,8 @@ class JdAccountController extends BaseController
             if ($ssoEnable) {
                 // 当前系统创建成功后再创建太火鸟用户
                 $ssoParam = array(
-                    'account' => $payload['account'],
-                    'phone' => $payload['account'],
+                    'account' => $payload['phone'],
+                    'phone' => $payload['phone'],
                     'password' => $payload['password'],
                     'device_to' => 1,
                     'status' => 1,
@@ -294,25 +294,6 @@ class JdAccountController extends BaseController
         } else {
             return $this->response->array($this->apiError('注册失败，请重试!', 412));
         }
-//        $user = User::query()
-//            ->create([
-//                'account' => $payload['phone'],
-//                'phone' => $payload['phone'],
-//                'username' => $payload['phone'],
-//                'type' => 1,
-//                'password' => bcrypt($payload['password']),
-//                'jd_account' => $jd_account,
-//                'child_account' => 0,
-//                'company_role' => 0,
-//                'source' => 1,
-//            ]);
-//        $demand_company =  DemandCompany::createCompany($user);
-//        if($demand_company == true){
-//            $token = JWTAuth::fromUser($user);
-//            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
-//        }
-//
-//        return $this->response->array($this->apiError('绑定失败', 412));
 
     }
 

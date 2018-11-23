@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\DesignCompanyModel;
 use App\Models\Follow;
 use App\Models\PayOrder;
 use App\Models\AssetModel;
 use App\Models\DesignResult;
 use App\Models\DesignDemand;
 use Illuminate\Http\Request;
+use App\Models\DemandCompany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -100,6 +102,10 @@ class DesignResultController extends BaseController
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
+        }
+        $design_company = DesignCompanyModel::find($all['design_company_id']);
+        if (!$design_company || $design_company->verify_status != 1) {
+            return $this->response->array($this->apiError('请先去认证 入驻铟果', 403));
         }
         $user_id = $this->auth_user_id;
         $images = $all['images'];
@@ -247,6 +253,9 @@ class DesignResultController extends BaseController
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
+            if(!$this->isAuthority($this->auth_user,$design_result)){
+                return $this->apiError('您没有权限',400);
+            }
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
@@ -370,8 +379,10 @@ class DesignResultController extends BaseController
                 ->orderBy('id',$sort)
                 ->paginate($per_page);
         } else {
-            if($status != 0){
+            if($status != 0 && $status != -2){
                 $query->where('status',$status);
+            }else{
+                $query->where('status','>',-2);
             }
             $list = $query->where('user_id',$this->auth_user_id)
                 ->orderBy('id',$sort)
@@ -420,8 +431,8 @@ class DesignResultController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException(403,$validator->errors());
         }
-        if($all['status'] > -2 && $all['status'] < 4){
-            return $this->apiError('设计成果', 403);
+        if($all['status'] < -1 || $all['status'] > 4){
+            return $this->apiError('参数错误', 403);
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',0)->first();
         if(!$design_result){
@@ -612,6 +623,7 @@ class DesignResultController extends BaseController
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "company_name": "设计公司名称", //设计公司名称
+     *          "is_trade_fair": 1, //是否开启交易会权限
      *     }
      * ],
      * "meta": {
@@ -641,6 +653,12 @@ class DesignResultController extends BaseController
         $design_company_id = $user->design_company_id;
         //需求公司
         $demand_company_id = $user->demand_company_id;
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company){
+            $is_trade_fair = $demand_company->isTradeFair();
+        }else{
+            $is_trade_fair = 0;
+        }
         $query = DesignResult::query();
         $query->join('follow','design_result.id','=','follow.design_result_id');
         $query->where(['follow.type'=>2,'follow.demand_company_id'=>$demand_company_id]);
@@ -651,6 +669,11 @@ class DesignResultController extends BaseController
             ->orderBy('design_result.id',$sort)
             ->paginate($per_page);
 
+        if($list){
+            foreach ($list as $k => $v) {
+                $list{$k}->is_trade_fair = $is_trade_fair;
+            }
+        }
         return $this->response->paginator($list, new DesignResultListTransformer)->setMeta($this->apiMeta());
         /*if($type == 1){
             //设计需求
@@ -739,6 +762,7 @@ class DesignResultController extends BaseController
      *          "contact_number": 13217229788, //联系电话
      *          "is_follow": 1, //是否已收藏
      *          "company_name": "设计公司名称", //设计公司名称
+     *          "is_trade_fair": 1, //交易会权限
      *     }
      * ],
      * "meta": {
@@ -763,8 +787,20 @@ class DesignResultController extends BaseController
         } else {
             $sort = 'desc';
         }
-        $list = DesignResult::where('status',3)->orWhere('sell','>',0)->orderBy('id',$sort)->paginate($per_page);
+        $list = DesignResult::query()
+            ->where(function ($query) {
+                $query->where('status', '=','3')->where('sell', '=','0');
+            })
+            ->orWhere(function ($query){
+                $query->where('status', '=','-1')->where('sell', '>','0');
+            })->orderBy('id',$sort)->paginate($per_page);
         $user = $this->auth_user;
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company){
+            $is_trade_fair = $demand_company->isTradeFair();
+        }else{
+            $is_trade_fair = 0;
+        }
         $design_company_id = $user->design_company_id;
         $demand_company_id = $user->demand_company_id;
         $follow = new Follow;
@@ -777,6 +813,7 @@ class DesignResultController extends BaseController
                     //设计公司
                     $list{$k}->is_follow = $follow->isFollow(2,$design_company_id,$v->id);
                 }
+                $list{$k}->is_trade_fair = $is_trade_fair;
             }
         }
         return $this->response->paginator($list, new DesignResultListTransformer())->setMeta($this->apiMeta());
@@ -839,6 +876,32 @@ class DesignResultController extends BaseController
         DB::rollBack();
         return $this->apiError('保存失败',400);
     }
+
+    /**
+     * 是否有权限查看设计成果
+     *
+     * @param $user 用户信息
+     * @param $design_result 设计成果信息
+     * @return bool
+     */
+    public function isAuthority($user,$design_result)
+    {
+        //是否是自己或购买人
+        if($user->id == $design_result->user_id || $user->type == 1){
+            return 1;
+        }
+        //需求公司信息
+        $demand_company = DemandCompany::where('user_id', $user->id)->first();
+        if($demand_company && $demand_company->is_trade_fair == 1){
+            return 1;
+        }
+        //是否是管理员
+        if ($user->type == 2 && $user->company_role > 0) {
+            return 1;
+        }
+        return 0;
+    }
+
 }
 
 

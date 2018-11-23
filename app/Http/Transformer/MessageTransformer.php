@@ -34,6 +34,12 @@ class MessageTransformer extends TransformerAbstract
             case 3:
                 $val = 1;
                 break;
+            case 4:
+                $val = 1;
+                break;
+            case 5:
+                $val = 1;
+                break;
             default:
                 $val = 0;
         }
