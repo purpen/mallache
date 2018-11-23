@@ -177,6 +177,8 @@ class JdAccountController extends BaseController
                 if (!Hash::check($payload['password'], $user->password)) {
                     return $this->response->array($this->apiSuccess('密码不正确', 403));
                 }
+                $user->jd_account = $jd_account;
+                $user->save();
             }
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
