@@ -9,6 +9,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Cache;
 use App\Models\DemandCompany;
+use App\Helper\Sso;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\DB;
 
 
 class JdAccountController extends BaseController
@@ -104,51 +108,87 @@ class JdAccountController extends BaseController
      */
     public function bindingUser(Request $request)
     {
-        $credentials = $request->only('phone', 'password');
-        // 验证规则
-        $rules = [
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-            'password' => ['required', 'min:6']
-        ];
-        $payload = app('request')->only('phone', 'password');
-        $validator = app('validator')->make($payload, $rules);
+        try {
 
-        // 验证格式
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
-        }
-        //铟果的手机号直接绑定
-        $phone = $request->input('phone');
-        $access_token = $request->input('access_token');
-        if(empty($access_token)){
-            return $this->response->array($this->apiError('京东云token不能为空' , 412));
-        }
-        $jd_account = $this->jdAccount($access_token);
+                // 验证规则
+            $rules = [
+                'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+                'password' => ['required', 'min:6']
+            ];
+            $payload = app('request')->only('phone', 'password');
+            $validator = app('validator')->make($payload, $rules);
 
-        //检测是否注册京东账户
-        $jd_user = User::where('jd_account' , $jd_account)->first();
-        if($jd_user){
-            $token = JWTAuth::fromUser($jd_user);
-            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
-        }
-        $user = User::where('account' , $phone)->first();
-        if(!$user){
-            return $this->response->array($this->apiError('还没有注册艺火', 404));
-        }
-        $data = [
-            'phone' => $credentials['phone'],
-            'password' => $credentials['password'],
-        ];
-        if (!$token = JWTAuth::attempt($data)) {
-            return $this->response->array($this->apiError('账户名或密码错误', 412));
-        }
-        $user->jd_account = $jd_account;
+            // 验证格式
+            if ($validator->fails()) {
+                throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
+            }
+            //铟果的手机号直接绑定
+            $access_token = $request->input('access_token');
+            if(empty($access_token)){
+                return $this->response->array($this->apiError('京东云token不能为空' , 412));
+            }
+            $jd_account = $this->jdAccount($access_token);
 
-        if($user->save()){
-            return $this->response->array($this->apiSuccess('绑定成功', 200 , compact('token')));
-        }
-        return $this->response->array($this->apiError('绑定失败', 416));
+            //检测是否注册京东账户
+            $jd_user = User::where('jd_account' , $jd_account)->first();
+            if($jd_user){
+                $token = JWTAuth::fromUser($jd_user);
+                return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
+            }
 
+            if (!$this->phoneIsRegister($payload['phone'])) {
+                return $this->response->array($this->apiError('手机号未注册', 401));
+            }
+            // 单点登录
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 访问单点登录系统
+                $ssoParam = array(
+                    'account' => $payload['phone'],
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                );
+                $ssoResult = Sso::request(1, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiSuccess($ssoResult['message'], 403));
+                }
+            }
+
+            $user = User::query()->where('account', $payload['phone'])->first();
+            $source = $request->header('source-type') ?? 0;
+
+            // 如果本地用户不存在，则创建
+            if ($ssoEnable) {
+                if (!$user) {
+                    $user = User::query()
+                        ->create([
+                            'account' => $payload['phone'],
+                            'phone' => $payload['phone'],
+                            'username' => $payload['phone'],
+                            'password' => bcrypt($payload['password']),
+                            'child_account' => 0,
+                            'source' => $source,
+                            'jd_account' => $jd_account,
+                            'type' => 1,
+                        ]);
+
+                    if (!$user) {
+                        return $this->response->array($this->apiError('生成本地用户失败！', 500));
+                    }
+                }
+            } else {
+                if (!$user) {
+                    return $this->response->array($this->apiError('用户不存在！', 404));
+                }
+                if (!Hash::check($payload['password'], $user->password)) {
+                    return $this->response->array($this->apiSuccess('密码不正确', 403));
+                }
+            }
+            $token = JWTAuth::fromUser($user);
+        } catch (JWTException $e) {
+            return $this->response->array($this->apiError('could_not_create_token', 500));
+        }
+        return $this->response->array($this->apiSuccess('绑定成功', 200 , compact('token')));
     }
 
     /**
@@ -179,17 +219,12 @@ class JdAccountController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
         }
 
-        $phone = $request->input('phone');
         $access_token = $request->input('access_token');
         if(empty($access_token)){
             return $this->response->array($this->apiError('京东云token不能为空' , 412));
         }
         $jd_account = $this->jdAccount($access_token);
 
-        $user = User::where('account' , $phone)->first();
-        if($user){
-            return $this->response->array($this->apiError('该用户已注册', 412));
-        }
         //验证手机验证码
         $key = 'sms_code:' . strval($payload['phone']);
         $sms_code_value = Cache::get($key);
@@ -204,25 +239,80 @@ class JdAccountController extends BaseController
             $token = JWTAuth::fromUser($jd_user);
             return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
         }
-        $user = User::query()
-            ->create([
-                'account' => $payload['phone'],
-                'phone' => $payload['phone'],
-                'username' => $payload['phone'],
-                'type' => 1,
-                'password' => bcrypt($payload['password']),
-                'jd_account' => $jd_account,
-                'child_account' => 0,
-                'company_role' => 0,
-                'source' => 1,
-            ]);
-        $demand_company =  DemandCompany::createCompany($user);
-        if($demand_company == true){
-            $token = JWTAuth::fromUser($user);
-            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
-        }
+        try {
 
-        return $this->response->array($this->apiError('绑定失败', 412));
+            // 请求单点登录系统
+            $ssoEnable = (int)config('sso.enable');
+            if ($ssoEnable) {
+                // 查看是否存在账号
+                $ssoParam = array(
+                    'phone' => $payload['phone']
+                );
+                $ssoResult = Sso::request(6, $ssoParam);
+                if ($ssoResult['success']) {
+                    return $this->response->array($this->apiError('用户系统已存在该账号!', 412));
+                }
+            }
+            DB::beginTransaction();
+            // 创建用户
+            $user = User::query()
+                ->create([
+                    'account' => $payload['phone'],
+                    'phone' => $payload['phone'],
+                    'username' => $payload['phone'],
+                    'type' => 1,
+                    'password' => bcrypt($payload['password']),
+                    'child_account' => 0,
+                    'company_role' => 0,
+                    'jd_account' => $jd_account,
+                    'source' => $request->header('source-type') ?? 0,
+                ]);
+                DemandCompany::createCompany($user);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage(), $e->getCode());
+            return $this->response->array($this->apiError('注册失败，请重试!', 412));
+        }
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+            if ($ssoEnable) {
+                // 当前系统创建成功后再创建太火鸟用户
+                $ssoParam = array(
+                    'account' => $payload['account'],
+                    'phone' => $payload['account'],
+                    'password' => $payload['password'],
+                    'device_to' => 1,
+                    'status' => 1,
+                );
+                $ssoResult = Sso::request(2, $ssoParam);
+                if (!$ssoResult['success']) {
+                    return $this->response->array($this->apiError($ssoResult['message'], 412));
+                }
+            }
+            return $this->response->array($this->apiSuccess('注册成功', 200, compact('token')));
+        } else {
+            return $this->response->array($this->apiError('注册失败，请重试!', 412));
+        }
+//        $user = User::query()
+//            ->create([
+//                'account' => $payload['phone'],
+//                'phone' => $payload['phone'],
+//                'username' => $payload['phone'],
+//                'type' => 1,
+//                'password' => bcrypt($payload['password']),
+//                'jd_account' => $jd_account,
+//                'child_account' => 0,
+//                'company_role' => 0,
+//                'source' => 1,
+//            ]);
+//        $demand_company =  DemandCompany::createCompany($user);
+//        if($demand_company == true){
+//            $token = JWTAuth::fromUser($user);
+//            return $this->response->array($this->apiSuccess('绑定成功！', 200, compact('token')));
+//        }
+//
+//        return $this->response->array($this->apiError('绑定失败', 412));
 
     }
 
@@ -257,5 +347,26 @@ class JdAccountController extends BaseController
         }
 
         return $this->response->array($this->apiError('该账户不存在,需要重新绑定', 200));
+    }
+
+    protected function phoneIsRegister($account)
+    {
+        // 请求单点登录系统
+        $ssoEnable = (int)config('sso.enable');
+        if ($ssoEnable) {
+            // 查看是否存在账号
+            $ssoParam = array(
+                'phone' => (string)$account
+            );
+            $ssoResult = Sso::request(6, $ssoParam);
+            if ($ssoResult['success']) {
+                return true;
+            }
+        } else {
+            if (User::where('account', intval($account))->count() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
