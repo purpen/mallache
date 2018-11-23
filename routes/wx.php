@@ -40,6 +40,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->put('/wechat/demand/smallUpdate', [
         'as' => 'wechat.smallUpdate', 'uses' => 'SmallDemandController@update'
     ]);
+    //人员列表
+    $api->get('/wechat/demand/users', [
+        'as' => 'wechat.users', 'uses' => 'SmallDemandController@users'
+    ]);
+    //人员数量
+    $api->get('/wechat/demand/usersCount', [
+        'as' => 'wechat.usersCount', 'uses' => 'SmallDemandController@usersCount'
+    ]);
     //设计公司客户
     $api->post('/wechat/demand/designAdd', [
         'as' => 'wechat.designAdd', 'uses' => 'SmallDemandController@designAdd'

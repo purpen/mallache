@@ -358,4 +358,7 @@ return [
     'client_id' => env('CLIENT_ID', '9741542107197570'),
     'client_secret' => env('CLIENT_SECRET', 'yp1yZ0FgTRJh'),
 
+    //小程序人员数量
+    'small_count' => 66,
+
 ];
