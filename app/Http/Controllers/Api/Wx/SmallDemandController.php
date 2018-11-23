@@ -102,4 +102,47 @@ class SmallDemandController extends BaseController
         }
         return $this->response->array($this->apiError('添加失败', 412));
     }
+
+    /**
+     * @api {get} /wechat/demand/users 人员列表
+     * @apiVersion 1.0.0
+     * @apiName wechatSmallDemand users
+     * @apiGroup wechatDemandType
+     *
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} per_page  页面数量
+     *
+     */
+    public function users(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? 20;
+        $users = SmallItem::where('user_name' , '!=' ,'')->where('phone' , '!=' ,'')->orderBy('id' , 'desc')->paginate($per_page);
+        foreach ($users as $user){
+            $s_user = mb_substr($user->user_name , 0 , 1,'utf-8');
+            if(strlen($user->phone) < 11){
+                $new_phone = '139****'.rand(1000,9999);
+            }else{
+                $start_phone = substr($user->phone , 0 , 3);
+                $end_phone = substr($user->phone , 7);
+                $new_phone = $start_phone.'****'.$end_phone;
+            }
+            $user['new_user_name'] = $s_user.'用户';
+            $user['new_phone'] = $new_phone;
+        }
+        return $this->response->paginator($users, new SmallItemTransformer())->setMeta($this->apiMeta());
+    }
+
+    /**
+     * @api {get} /wechat/demand/usersCount  人员数量
+     * @apiVersion 1.0.0
+     * @apiName wechatSmallDemand usersCount
+     * @apiGroup wechatDemandType
+     *
+     */
+    public function usersCount()
+    {
+        $usersCount = SmallItem::where('user_name' , '!=' ,'')->where('phone' , '!=' ,'')->count();
+        $count = $usersCount + config('constant.small_count');
+        return $this->response->array($this->apiSuccess('获取成功', 200 , $count));
+    }
 }
