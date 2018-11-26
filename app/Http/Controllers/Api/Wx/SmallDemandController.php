@@ -145,4 +145,30 @@ class SmallDemandController extends BaseController
         $count = $usersCount + config('constant.small_count');
         return $this->response->array($this->apiSuccess('获取成功', 200 , $count));
     }
+
+
+    /**
+     * @api {post} /wechat/demand/userAdd 添加联系人设计公司名称
+     * @apiVersion 1.0.0
+     * @apiName wechatSmallDemand userAdd
+     * @apiGroup wechatDemandType
+     *
+     * @apiParam {string} user_name 联系人
+     * @apiParam {string} phone 手机号
+     * @apiParam {string} design_company_name 公司名称
+     */
+    public function userAdd(Request $request)
+    {
+        $smallItem = new SmallItem();
+        $smallItem->design_company_name = $request->input('design_company_name');
+        $smallItem->user_name = $request->input('user_name');
+        $smallItem->phone = $request->input('phone');
+        $smallItem->item_name = '';
+        $smallItem->is_ok = 0;
+        $smallItem->summary = '';
+        if($smallItem->save()){
+            return $this->response->array($this->apiSuccess('添加成功', 200));
+        }
+        return $this->response->array($this->apiError('添加失败', 412));
+    }
 }
