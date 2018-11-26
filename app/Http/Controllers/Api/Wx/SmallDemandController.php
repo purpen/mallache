@@ -90,6 +90,14 @@ class SmallDemandController extends BaseController
         if(!$design_company){
             return $this->response->array($this->apiError('没有找到设计公司', 404));
         }
+        //验证手机验证码
+        $key = 'sms_code:' . strval($request->input('phone'));
+        $sms_code_value = Cache::get($key);
+        if (intval($request->input('sms_code')) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+        }
         $smallItem->user_name = $request->input('user_name');
         $smallItem->item_name = '';
         $smallItem->is_ok = 0;
@@ -156,9 +164,18 @@ class SmallDemandController extends BaseController
      * @apiParam {string} user_name 联系人
      * @apiParam {string} phone 手机号
      * @apiParam {string} design_company_name 公司名称
+     * @apiParam {string} sms_code 验证码
      */
     public function userAdd(Request $request)
     {
+        //验证手机验证码
+        $key = 'sms_code:' . strval($request->input('phone'));
+        $sms_code_value = Cache::get($key);
+        if (intval($request->input('sms_code')) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+        }
         $smallItem = new SmallItem();
         $smallItem->design_company_name = $request->input('design_company_name');
         $smallItem->user_name = $request->input('user_name');
