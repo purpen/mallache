@@ -253,9 +253,9 @@ class DesignResultController extends BaseController
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
-            /*if(!$this->isAuthority($this->auth_user,$design_result)){
+            if(!$this->isAuthority($this->auth_user,$design_result)){
                 return $this->apiError('您没有权限',400);
-            }*/
+            }
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
@@ -890,11 +890,15 @@ class DesignResultController extends BaseController
         if($user->id == $design_result->user_id || $user->type == 1){
             return 1;
         }
-        //需求公司信息
+        //审核成功的需求公司信息
         $demand_company = DemandCompany::where('user_id', $user->id)->first();
-        if($demand_company && $demand_company->is_trade_fair == 1){
+        if($demand_company && $demand_company->verify_status == 1){
             return 1;
         }
+        //是否是交易会
+        /*if($demand_company && $demand_company->is_trade_fair == 1){
+            return 1;
+        }*/
         //是否是管理员
         if ($user->type == 2 && $user->company_role > 0) {
             return 1;
