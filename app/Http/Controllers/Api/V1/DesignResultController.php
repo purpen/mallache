@@ -253,9 +253,9 @@ class DesignResultController extends BaseController
         }
         $design_result = DesignResult::where('id',$all['id'])->where('status','>',-2)->first();
         if(!empty($design_result)){
-            if(!$this->isAuthority($this->auth_user,$design_result)){
+            /*if(!$this->isAuthority($this->auth_user,$design_result)){
                 return $this->apiError('您没有权限',400);
-            }
+            }*/
             $images_url = AssetModel::getImageUrl($design_result->id,37,2,20);
             $illustrate_url = AssetModel::getImageUrl($design_result->id,38,2,10);
             $patent_url = AssetModel::getImageUrl($design_result->id,39,2,10);
