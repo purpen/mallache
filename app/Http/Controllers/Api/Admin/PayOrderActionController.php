@@ -281,10 +281,13 @@ class PayOrderActionController extends BaseController
             $user->totalIncrease($pay_data->user_id,$demand); //需求方
             $user->totalIncrease($pay_data->design_user_id,$design); //设计方
             $fund_log = new FundLog();
+            //减少用户总金额和冻结金额
+            $user = new User();
+            $user->totalAndFrozenDecrease($pay_data->user_id, $pay_data->amount);
             //需求公司资金流水记录
-            $fund_log->outFund($pay_data->user_id, $demand, $pay_data->pay_type, $pay_data->design_user_id, '设计成果【' . $design_result->title . '】订单解散退款');
+            $fund_log->inFund($pay_data->user_id, $demand, $pay_data->pay_type, $pay_data->design_user_id, '设计成果【' . $design_result->title . '】订单解散退款');
             //设计公司资金流水记录
-            $fund_log->outFund($pay_data->design_user_id, $design, $pay_data->pay_type, $pay_data->user_id, '设计成果【' . $design_result->title . '】订单解散退款');
+            $fund_log->inFund($pay_data->design_user_id, $design, $pay_data->pay_type, $pay_data->user_id, '设计成果【' . $design_result->title . '】订单解散退款');
             DB::commit();
             Log::info(json_encode($all));
             return $this->apiSuccess('Success',200);
