@@ -849,7 +849,7 @@ class PayController extends BaseController
                         $user->totalIncrease($design_result->user_id, $design_amount);
                         $fund_log = new FundLog();
                         //需求公司资金流水记录
-                        $fund_log->outFund($demand_user_id, $amount, $order->pay_type, $design_user_id, '支付【' . $design_result['title'] . '】设计成果交易款');
+                        $fund_log->outFund($demand_user_id, $order->amount, $order->pay_type, $design_user_id, '支付【' . $design_result['title'] . '】设计成果交易款');
                         //设计公司资金流水记录
                         $fund_log->inFund($design_user_id, $order->amount, 1, $demand_user_id, '收到【' . $design_result['title'] . '】设计成果交易款');
                         //扣除设计公司佣金流水记录
