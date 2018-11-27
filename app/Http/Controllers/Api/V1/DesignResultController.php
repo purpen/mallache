@@ -890,11 +890,15 @@ class DesignResultController extends BaseController
         if($user->id == $design_result->user_id || $user->type == 1){
             return 1;
         }
-        //需求公司信息
+        //审核成功的需求公司信息
         $demand_company = DemandCompany::where('user_id', $user->id)->first();
-        if($demand_company && $demand_company->is_trade_fair == 1){
+        if($demand_company && $demand_company->verify_status == 1){
             return 1;
         }
+        //是否是交易会
+        /*if($demand_company && $demand_company->is_trade_fair == 1){
+            return 1;
+        }*/
         //是否是管理员
         if ($user->type == 2 && $user->company_role > 0) {
             return 1;
