@@ -56,6 +56,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\Wx'], function ($a
     $api->post('/wechat/demand/userAdd', [
         'as' => 'wechat.userAdd', 'uses' => 'SmallDemandController@userAdd'
     ]);
+    //报价获客
+    $api->post('/wechat/demand/offerAdd', [
+        'as' => 'wechat.offerAdd', 'uses' => 'SmallDemandController@offerAdd'
+    ]);
     //获取微信项目案例
     $api->get('/wechat/designCase', [
         'as' => 'wechat.designCase', 'uses' => 'DesignCaseController@lists'

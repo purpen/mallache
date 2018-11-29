@@ -184,7 +184,43 @@ class SmallDemandController extends BaseController
         $smallItem->is_ok = 0;
         $smallItem->summary = '';
         if($smallItem->save()){
-            return $this->response->array($this->apiSuccess('添加成功', 200));
+            $text = '【太火鸟铟果】小程序了解铟果获客。客户姓名：'.$request->input('user_name').'；联系方式：'.$request->input('phone');
+            $this->dispatch(new SendOneSms(config('constant.notice_phone') , $text));
+            return $this->response->item($smallItem, new SmallItemTransformer())->setMeta($this->apiMeta());
+        }
+        return $this->response->array($this->apiError('添加失败', 412));
+    }
+
+    /**
+     * @api {post} /wechat/demand/offerAdd 添加报价联系人手机号
+     * @apiVersion 1.0.0
+     * @apiName wechatSmallDemand offerAdd
+     * @apiGroup wechatDemandType
+     *
+     * @apiParam {string} user_name 联系人
+     * @apiParam {string} phone 手机号
+     * @apiParam {string} sms_code 验证码
+     */
+    public function offerAdd(Request $request)
+    {
+        //验证手机验证码
+        $key = 'sms_code:' . strval($request->input('phone'));
+        $sms_code_value = Cache::get($key);
+        if (intval($request->input('sms_code')) !== intval($sms_code_value)) {
+            return $this->response->array($this->apiError('验证码错误', 412));
+        } else {
+            Cache::forget($key);
+        }
+        $smallItem = new SmallItem();
+        $smallItem->user_name = $request->input('user_name');
+        $smallItem->phone = $request->input('phone');
+        $smallItem->item_name = '';
+        $smallItem->is_ok = 0;
+        $smallItem->summary = '';
+        if($smallItem->save()){
+            $text = '【太火鸟铟果】小程序报价获客。客户姓名：'.$request->input('user_name').'；联系方式：'.$request->input('phone');
+            $this->dispatch(new SendOneSms(config('constant.notice_phone') , $text));
+            return $this->response->item($smallItem, new SmallItemTransformer())->setMeta($this->apiMeta());
         }
         return $this->response->array($this->apiError('添加失败', 412));
     }
