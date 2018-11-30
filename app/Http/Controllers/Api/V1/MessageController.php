@@ -156,5 +156,28 @@ class MessageController extends BaseController
         return $this->response->array($this->apiSuccess('Success', 200, $data));
     }
 
+    /**
+     * @api {put} /message/trueAllRead 全部确认阅读
+     * @apiVersion 1.0.0
+     * @apiName message trueAllRead
+     * @apiGroup Message
+     *
+     * @apiParam {string} token
+     */
+    public function trueAllRead()
+    {
+        $user = User::find($this->auth_user_id);
+        if (!$user) {
+            return $this->response->array($this->apiError('没有找到用户' , 400));
+        }
+        $user->message_count = 0;
+        $user->notice_count = 0;
+        if ($user->save()) {
+            return $this->response->array($this->apiSuccess('全部阅读成功', 200));
+        }
+
+        return $this->response->array($this->apiError('全部阅读失败' , 412));
+
+    }
 
 }
