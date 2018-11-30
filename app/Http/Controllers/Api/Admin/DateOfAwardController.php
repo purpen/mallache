@@ -119,7 +119,7 @@ class DateOfAwardController extends BaseController
     {
         $rules = [
             'type' => 'required|integer',
-            'name' => 'required|max:30',
+            'name' => 'required|max:50',
             'summary' => 'required|max:500',
             'start_time' => 'required',
             'end_time' => 'required',
@@ -216,7 +216,7 @@ class DateOfAwardController extends BaseController
     {
         $rules = [
             'type' => 'required|integer',
-            'name' => 'required|max:30',
+            'name' => 'required|max:50',
             'summary' => 'required|max:500',
             'start_time' => 'required',
             'end_time' => 'required',
